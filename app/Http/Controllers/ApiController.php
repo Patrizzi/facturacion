@@ -1938,4 +1938,91 @@ class ApiController extends Controller
         }
         return response()->json($json);
     }
+
+    public function get_cobranzas_nota_venta_table(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
+        $filter = $request->get('value');
+        $documento = $request->get('tipo_documento');
+        $id_documento = $request->get('id_documento');
+        $sortColumns = [
+            0 => 'id',
+            1 => 'n_cuota',
+            2 => 'estado',
+            3 => 'monto',
+            4 => 'saldo',
+            5 => 'fecha_vencimiento',
+            6 => 'id'
+        ];
+
+        // switch ($documento) {
+        //     case 'factura':
+        //         $query = Cuotas_credito::where('facturacion_id', $id_documento);
+        //         $factura = Facturacion::find($id_documento);
+        //         $tipo_cambio = $factura->cambio;
+        //         $moneda_comprobante = $factura->moneda;
+        //         break;
+        //     case 'factura_manual':
+        //         $query = Cuotas_credito::where('facturacion_m_id', $id_documento);
+        //         $factura_m = Facturacion_m::find($id_documento);
+        //         $tipo_cambio = $factura_m->cambio;
+        //         $moneda_comprobante = $factura_m->moneda;
+        //         break;
+        //     case 'boleta':
+        //         $query = Cuotas_credito::where('boleta_id', $id_documento);
+        //         $boleta = Boleta::find($id_documento);
+        //         $tipo_cambio = $boleta->cambio;
+        //         $moneda_comprobante = $boleta->moneda;
+        //         break;
+        //     case 'boleta_manual':
+        //         $query = Cuotas_credito::where('boleta_m_id', $id_documento);
+        //         $boleta_m = Boleta_m::find($id_documento);
+        //         $tipo_cambio = $boleta_m->cambio;
+        //         $moneda_comprobante = $boleta_m->moneda;
+        //         break;
+        // }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $cuotas_credito = $query->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        $cuotas_credito->transform(function ($comprobante) use ($tipo_cambio, $moneda_comprobante) {
+            $pagado = Cuotas_credito::monto_pagado_convertido_cuota($comprobante->id, $moneda_comprobante->id, $tipo_cambio);
+            $restante = Cuotas_credito::restante_pago_convertido_cuota($comprobante->id, $moneda_comprobante->id);
+            $comprobante->fecha_pago = Carbon::parse($comprobante->fecha_pago)->format('d-m-Y');
+            $comprobante->monto_total =  $moneda_comprobante->simbolo . ' ' . number_format(round($comprobante->monto, 2), 2);
+            $comprobante->pagado = $pagado;
+            $comprobante->restante = $restante['moneda'] . ' ' . number_format($restante['saldo_pendiente'],2);
+            // $comprobante->tipo_cambio = $comprobante->tipo_cambio;
+            return $comprobante;
+        });
+
+        foreach ($cuotas_credito as $data) {
+            $json['data'][] = [
+                $data->numero_cuota,
+                $data->estado,
+                $data->monto_total,
+                $data->pagado['prin'],
+                $data->pagado['sec'],
+                $data->restante,
+                $data->fecha_pago ?? "- - -",
+                $data->id,
+            ];
+        }
+        return response()->json($json);
+    }
 }

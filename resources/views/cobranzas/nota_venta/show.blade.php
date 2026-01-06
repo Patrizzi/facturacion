@@ -1,8 +1,8 @@
 @extends('layout')
 
-@section('title', 'Registros de Boletas Manual')
+@section('title', 'Registros de Nota de Venta')
 @section('content')
-    @include('cobranzas.boletas_manuales._shared.modal_boleta_m')
+    @include('cobranzas.nota_venta._shared.modal_nota_venta')
     {{-- Resumen de Factura --}}
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -10,8 +10,8 @@
             <div class="col-lg-12">
                 <div class="ibox border-bottom">
                     <div class="ibox-title">
-                        <h5>Resumen de Pagos {{ $boleta->codigo_boleta }} - </h5>
-                        @switch($boleta->estado_pago)
+                        <h5>Resumen de Pagos {{ $nota_venta->cod_nota_venta }} - </h5>
+                        @switch($nota_venta->estado_pago)
                             @case(0)
                                 <span class="label label-danger">Sin pagar</span>
                             @break
@@ -39,12 +39,12 @@
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="">
-                                    @if ($boleta->forma_pago_id == 1) <!-- Contado -->
+                                    @if ($nota_venta->forma_pago_id == 1) <!-- Contado -->
                                         <h2>Contado</h2>
                                         <div style="cursor: pointer;" class="form-control box-detalle">
                                             <h4 style="display: flex;flex-direction: row;justify-content: space-between;">
                                                 Pago Único
-                                                @switch($boleta->estado_pago)
+                                                @switch($nota_venta->estado_pago)
                                                     @case(0)
                                                         <span class="label label-danger">Sin pagar</span>
                                                     @break
@@ -60,11 +60,11 @@
                                             </h4>
                                             <div style="display: flex;justify-content: space-between">
                                                 <div class="text-left" onclick="event.stopPropagation()">
-                                                    @if ($boleta->estado_pago != 2)
+                                                    @if ($nota_venta->estado_pago != 2)
                                                         <div class="i-checks">
                                                             <input type="checkbox" class="check_cuota" name=""
                                                                 id="" value="0"
-                                                                onchange="check_lote({{ $boleta->id }},0)">
+                                                                onchange="check_lote({{ $nota_venta->id }},0)">
                                                         </div>
                                                     @else
                                                         <div class="i-checks">
@@ -74,61 +74,54 @@
                                                     @endif
                                                 </div>
                                                 <div class="text-right">
-                                                    {{ $boleta->total_precio }}
+                                                    {{ $nota_venta->total_precio }}
                                                 </div>
                                             </div>
                                         </div>
                                     @else
                                         <h3>Lista de Cuotas</h3>
-                                        <div>
-                                            @foreach ($boleta->cuotas_credito as $i => $cuotas)
-                                                <div style="margin-top: 10px;margin-bottom: 10px">
-                                                    <div style="cursor: pointer;" class="form-control box-detalle"
-                                                        onclick="detalle_cuotas(this,{{ $i }},{{ $cuotas->id }})">
-                                                        <h4
-                                                            style="display: flex;flex-direction: row;justify-content: space-between;">
-                                                            Cuota N° {{ $cuotas->numero_cuota }}
-                                                            @switch($cuotas->estado)
-                                                                @case(0)
-                                                                    <span class="label label-danger">Sin pagar</span>
-                                                                @break
+                                        <div style="cursor: pointer;" class="form-control box-detalle">
+                                            <h4 style="display: flex;flex-direction: row;justify-content: space-between;">
+                                                Pago Único
+                                                @switch($nota_venta->estado_pago)
+                                                    @case(0)
+                                                        <span class="label label-danger">Sin pagar</span>
+                                                    @break
 
-                                                                @case(1)
-                                                                    <span class="label label-warning">Pagado Parcial</span>
-                                                                @break
+                                                    @case(1)
+                                                        <span class="label label-warning">Pagado Parcial</span>
+                                                    @break
 
-                                                                @case(2)
-                                                                    <span class="label label-primary">Completo</span>
-                                                                @break
-                                                            @endswitch
-                                                        </h4>
-                                                        <div style="display: flex;justify-content: space-between">
-                                                            <div class="text-left" onclick="event.stopPropagation()">
-                                                                @if ($cuotas->estado != 2)
-                                                                    <div class="i-checks">
-                                                                        <input type="checkbox" class="check_cuota" name="" id="" value="{{$cuotas->id}}" onchange="check_lote({{$boleta->id}},{{ $cuotas->id }})">
-                                                                    </div>
-                                                                @else
-                                                                    <div class="i-checks">
-                                                                        <input type="checkbox" name="" id=""
-                                                                            disabled checked>
-                                                                    </div>
-                                                                @endif
-                                                            </div>
-                                                            <div class="text-right">
-                                                                {{ $boleta->moneda->simbolo }}
-                                                                {{ number_format($cuotas->monto, 2) }}
-                                                            </div>
+                                                    @case(2)
+                                                        <span class="label label-primary">Completo</span>
+                                                    @break
+                                                @endswitch
+                                            </h4>
+                                            <div style="display: flex;justify-content: space-between">
+                                                <div class="text-left" onclick="event.stopPropagation()">
+                                                    @if ($nota_venta->estado_pago != 2)
+                                                        <div class="i-checks">
+                                                            <input type="checkbox" class="check_cuota" name=""
+                                                                id="" value="0"
+                                                                onchange="check_lote({{ $nota_venta->id }},0)">
                                                         </div>
-                                                    </div>
+                                                    @else
+                                                        <div class="i-checks">
+                                                            <input type="checkbox" name="" id="" disabled
+                                                                checked>
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                            @endforeach
+                                                <div class="text-right">
+                                                    {{ $nota_venta->total_precio }}
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
                                 </div>
                             </div>
                             <div class="col-lg-9">
-                                @if ($boleta->forma_pago_id == 1)
+                                @if ($nota_venta->forma_pago_id == 1)
                                     <div class="detalle_contado_general">
                                         <div class="row" style="padding: 0px 15px">
                                             <div class="col-sm-6">
@@ -137,7 +130,7 @@
                                             </div>
                                             <div class="col-sm-6 text-right">
                                                 <div style="display: flex;column-gap: 10px;justify-content: flex-end;">
-                                                    <a href="{{ route('pagos.print_boletas_m_cuotas', $boleta->id) }}"
+                                                    <a href="{{ route('pagos.print_boletas_m_cuotas', $nota_venta->id) }}"
                                                         target="_blank" class="btn btn-primary btn-sm"><i
                                                             class="fa fa-print fa-lg"></i></a>
                                                     <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
@@ -158,21 +151,21 @@
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label for=""><strong>Monto Total</strong></label>
-                                                    <p class="form-control" id="total_contado_{{ $boleta->id }}"
-                                                        style="margin-bottom: 0px">{{ $boleta->total_precio }}</p>
+                                                    <p class="form-control" id="total_contado_{{ $nota_venta->id }}"
+                                                        style="margin-bottom: 0px">{{ $nota_venta->total_precio }}</p>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label for=""><strong>Fecha de Vencimiento</strong></label>
-                                                    <p class="form-control" id="contado_vencimiento_{{ $boleta->id }}"
-                                                        style="margin-bottom: 0px">{{ $boleta->fecha_vencimiento }}</p>
+                                                    <p class="form-control" id="contado_vencimiento_{{ $nota_venta->id }}"
+                                                        style="margin-bottom: 0px">{{ $nota_venta->fecha_vencimiento }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered"
-                                                id="table-detalle-contado-{{ $boleta->id }}">
+                                                id="table-detalle-contado-{{ $nota_venta->id }}">
                                                 <thead>
                                                     <tr>
                                                         <th>Id</th>
@@ -201,7 +194,7 @@
                                             </div>
                                             <div class="col-sm-6 text-right">
                                                 <div style="display: flex;column-gap: 10px;justify-content: flex-end;">
-                                                    <a href="{{ route('pagos.print_boleta_cuotas', $boleta->id) }}"
+                                                    <a href="{{ route('pagos.print_boleta_cuotas', $nota_venta->id) }}"
                                                         target="_blank" class="btn btn-primary btn-sm"><i
                                                             class="fa fa-print fa-lg"></i></a>
                                                     <button class="btn btn-primary btn-sm float-right" data-toggle="modal"
@@ -218,7 +211,7 @@
                                                         <th>N°</th>
                                                         <th>Estado</th>
                                                         <th>Total</th>
-                                                        <th>Pagado ({{ $boleta->moneda->simbolo }} -
+                                                        <th>Pagado ({{ $nota_venta->moneda->simbolo }} -
                                                             {{ $moneda_sec->simbolo }})</th>
                                                         <th>Saldo Restante</th>
                                                         <th>Fecha de Vencimiento</th>
@@ -233,7 +226,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    @foreach ($boleta->cuotas_credito as $f => $cuota)
+                                    {{-- @foreach ($nota_venta->cuotas_credito as $f => $cuota)
                                         <div class="detalle_cuota_detallado d-none" id="cuota_detalla_{{ $f }}">
                                             <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Cuota N°
                                                 {{ $cuota->numero_cuota }}</h3>
@@ -261,14 +254,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            {{-- <h3 style="padding-right: 15px;padding-left: 15px;">Detalle de Pagos</h3> --}}
                                             <div class="table-responsive">
                                                 <table class="table table-bordered"
                                                     id="table-detalle-cuotas-{{ $cuota->id }}">
                                                     <thead>
                                                         <tr>
                                                             <th>Id</th>
-                                                            <th>Tipo de Pago</th> {{-- Si es Adelanto o pago --}}
+                                                            <th>Tipo de Pago</th>
                                                             <th>Monto Pagado</th>
                                                             <th>Método de Pago</th>
                                                             <th>Emisor</th>
@@ -284,7 +276,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                    @endforeach
+                                    @endforeach --}}
                                 @endif
                             </div>
                         </div>
@@ -364,12 +356,12 @@
     {{-- @include('cobranzas.adelanto_view')
     @include('cobranzas.adelanto') --}}
     @include('cobranzas._shared.modal_detalle');
-    @if ($boleta->forma_pago_id == 1)
+    @if ($nota_venta->forma_pago_id == 1)
         {{-- Contado --}}
         <script>
             $(document).ready(function() {
                 console.log("cargando contado");
-                contado_table("{{ $boleta->id }}", "{{ $boleta->fecha_vencimiento }}");
+                contado_table("{{ $nota_venta->id }}", "{{ $nota_venta->fecha_vencimiento }}");
             });
         </script>
     @endif
@@ -391,7 +383,7 @@
                 method: "get",
                 data: function(d) {
                     d.tipo_documento = "boleta_manual";
-                    d.id_documento = "{{ $boleta->id }}"
+                    d.id_documento = "{{ $nota_venta->id }}"
                 }
             },
             "columnDefs": [{
@@ -495,7 +487,7 @@
                     method: "get",
                     data: function(d) {
                         d.id_cuota = id_cuota;
-                        d.id_documento = "{{ $boleta->id }}";
+                        d.id_documento = "{{ $nota_venta->id }}";
                     }
                 },
                 language: {
@@ -599,7 +591,7 @@
                     $('.button-comprobante').attr('data-toggle', 'modal');
 
                     $('#modal_detalle_pago').modal('show');
-                    if ({{ $boleta->forma_pago_id }} == 2) {
+                    if ({{ $nota_venta->forma_pago_id }} == 2) {
                         var total = msg.detalle.comprobante_pago_registros.cuota_credito.monto_total_format;
                         var estado = msg.detalle.comprobante_pago_registros.cuota_credito.estado_format;
                     } else {
@@ -948,7 +940,7 @@
             console.log(ids_cuotas);
             $('#ids_cuotas_lote').val(ids_cuotas.join(','));
             $('#todo_pago').modal('show');
-            var id_boleta = "{{$boleta->id}}";
+            var id_boleta = "{{$nota_venta->id}}";
             var only_id_fact = `
                 <input type="hidden" name="id_boleta[]" class="" id="id_boleta_` + id_boleta + `" value="` +
                 id_boleta + `">
@@ -964,7 +956,7 @@
                 url: "{{ route('pagos.lista_ajax_boletas_m') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
-                    'ids_facturas[]': "{{$boleta->id}}",
+                    'ids_facturas[]': "{{$nota_venta->id}}",
                 },
                 success: function(msg) {
                     // console.log(msg[0])

@@ -391,7 +391,7 @@ class Boleta extends Model
         return $total_igv;
     }
 
-     public function getEstadoPagoTextAttribute()
+    public function getEstadoPagoTextAttribute()
     {
         return match ($this->estado_pago) {
             0 => "Sin pago",

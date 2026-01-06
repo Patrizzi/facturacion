@@ -757,6 +757,7 @@ Route::group(
         //* SISTEMA DE PAGOS DE COMPRABAMTES
         Route::resource('/pagados', 'PagadosController'); // Pagados para Facturas y Facturas Manuales
         Route::post('/pagados/store_boleta', 'PagadosController@store_boleta')->name('pagados.store_boleta'); // Pagados para Boleta y Boletas Manuales
+        Route::post('/pagados/store_n_venta', 'PagadosController@store_n_venta')->name('pagados.store_n_venta'); // Pagados para Boleta y Boletas Manuales
 
         // ! COBRANZAS GENERALES DETALLE
         //* Detalle de Pago
@@ -820,6 +821,23 @@ Route::group(
         Route::get('/creditos_pago/boletas_manuales/pagados', 'PagadosController@index_boletas_m_pagados')->name('cobranzas.index_boletas_m_pagados');
         //* Show de Boletas Comprobantes Pagos
         Route::get('/creditos_pago/boletas_manuales/{id}', 'PagadosController@show_boletas_m')->name('pagos.show_boletas_m');
+        // * Ajax datatable
+        Route::get('/creditos_pago/boletas_manuales/pagados/lista', 'CobranzasComprobantesController@lista_boletas_manual_pagados_index')->name('cobranzas.lista_boletas_manual_pagados_index');
+        //* Impresion de Detalle
+        Route::get('/creditos_pago/boletas_manuales/print/{id}', 'PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas'); 
+            
+        //! COBRANZAS NOTAS DE VENTA 
+        Route::get('/creditos_pago/nota_venta', 'PagadosController@index_nota_venta')->name('cobranzas.index_nota_venta'); //! index de Boletas sin Pagar
+        //* Ajax Datatable
+        Route::get('/creditos_pago/nota_venta/lista', 'CobranzasComprobantesController@lista_nota_venta_index')->name('cobranzas.lista_nota_venta_index');
+        // * Ajax para la obtencion de cuotas de Nota de Venta            
+        Route::post('/pagados/lista_ajax_n_venta', 'PagadosController@lista_ajax_n_venta')->name('pagos.lista_ajax_n_venta');
+        //? index de Boletas Manuales Pagadas
+        Route::get('/creditos_pago/nota_venta/pagados', 'PagadosController@index_nota_venta_pagados')->name('cobranzas.index_nota_venta_pagados');
+        //* Show de Nota Venta Comprobantes Pagos
+        Route::get('/creditos_pago/nota_venta/{id}', 'PagadosController@show_nota_venta')->name('pagos.show_nota_venta');
+        //* Ajax datatable
+        Route::get('/creditos_pago/nota_venta/pagados/lista', 'CobranzasComprobantesController@lista_nota_venta_pagados_index')->name('cobranzas.lista_nota_venta_pagados_index');
         // Route::get('/pagos/boletas', 'PagadosController@view_boletas')->name('pagos.view_boletas');
         // Route::get('/pagos/boletas/{id}', 'PagadosController@show_boletas')->name('pagos.show_boletas');
         // Route::get('/pagos/boletas/cliente/{ruc}', 'PagadosController@show_cliente_boleta')->name('pagos.show_cliente_boleta');
@@ -830,9 +848,7 @@ Route::group(
         // Route::get('/pagos/boletas_m/cliente/{ruc}', 'PagadosController@show_cliente_boleta_m')->name('pagos.show_cliente_boleta_m');
         //PAGADOS DE NOTA DE VENTA
         Route::get('/pagos/nota_venta', 'PagadosController@view_nota_venta')->name('pagos.view_nota_venta');
-        Route::post('/pagados/store_nota_venta', 'PagadosController@store_n_venta')->name('pagos.store_n_venta');
-        Route::post('/pagados/lista_ajax_n_venta', 'PagadosController@lista_ajax_n_venta')->name('pagos.lista_ajax_n_venta');
-        Route::get('/pagos/nota_venta/{id}', 'PagadosController@show_nota_venta')->name('pagos.show_nota_venta');
+        // Route::post('/pagados/store_nota_venta', 'PagadosController@store_n_venta')->name('pagos.store_n_venta');
         Route::get('/pagos/nota_venta/cliente/{ruc}', 'PagadosController@show_cliente_nota_v')->name('pagos.show_cliente_nota_v');
 
         // Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
@@ -876,8 +892,8 @@ Route::group(
         Route::post('/show_cuotas', 'PagadosController@show_cuotas')->name('pagos.show_cuota');
         // Route::get('/show_cuotas/factura_manual/print/{id}', 'PagadosController@print_facturas_m_cuotas')->name('pagos.print_facturas_m_cuotas'); //Facturas M
         // Route::get('/show_cuotas/boleta/print/{id}', 'PagadosController@print_boleta_cuotas')->name('pagos.print_boleta_cuotas'); //Boletas
-        Route::get('/show_cuotas/boleta_manual/print/{id}', 'PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas'); //Boletas M
-        Route::get('/show_cuotas/nota_venta/print/{id}', 'PagadosController@print_n_venta')->name('pagos.print_nota_venta'); //Boletas
+        // Route::get('/show_cuotas/boleta_manual/print/{id}', 'PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas'); //Boletas M
+        // Route::get('/show_cuotas/nota_venta/print/{id}', 'PagadosController@print_n_venta')->name('pagos.print_nota_venta'); //Boletas
         // Route::post('/pagados/store',)
         Route::resource('/pedidos', 'PedidosController');
         Route::resource('/personal', 'PersonalController');

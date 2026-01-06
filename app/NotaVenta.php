@@ -31,6 +31,16 @@ class NotaVenta extends Model
         return $this->belongsTo(Moneda::class, 'moneda_id');
     }
 
+    public function notaventa_registros()
+    {
+        return $this->hasMany(NotaVentaRegistro::class, 'nota_venta_id');
+    }
+
+    public function getFechaEmisionAttribute(){
+        $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y');
+        return $new_emision;
+    }
+
     public function getFormaPagoAttribute(){
         $forma_pago = Forma_pago::find($this->attributes['forma_pago']);
         return $forma_pago->nombre;
@@ -45,6 +55,52 @@ class NotaVenta extends Model
             $precio_tot += round($n_reg->cantidad * $n_reg->precio_nacional, 2);
         }
         return $precio_tot;
+    }
+    public function getTotalPrecioAttribute(){
+        // $nota_venta = NotaVenta::find($this->attributes['id']);
+        $nota_registros = $this->notaventa_registros;
+        $precio_tot = 0;
+        foreach ($nota_registros as $n_reg) {
+            $precio_tot += round($n_reg->cantidad * $n_reg->precio_nacional, 2);
+        }
+        return $this->moneda->simbolo.' '.number_format(round($precio_tot, 2), 2);
+    }
+    public function getTotalPrecioSinFormaAttribute(){
+        // $nota_venta = NotaVenta::find($this->attributes['id']);
+        $nota_registros = $this->notaventa_registros;
+        $precio_tot = 0;
+        foreach ($nota_registros as $n_reg) {
+            $precio_tot += round($n_reg->cantidad * $n_reg->precio_nacional, 2);
+        }
+        return $precio_tot;
+    }
+
+    public function getEstadoPagoTextAttribute()
+    {
+        return match ($this->estado_pago) {
+            0 => "Sin pago",
+            1 => "Pago Parcial",
+            2 => "Pago Total",
+            default => "Desconocido",
+        };
+    }
+
+    public function getSaldoPendienteAttribute()
+    {
+        // return $this->forma_pago_id;
+        $suma_cuota = $this->total_precio_sin_forma;
+        if ($this->estado_pago == 0) {
+            $saldo_pendiente = $this->moneda->simbolo . '' . number_format($suma_cuota, 2);
+        } else {
+            // Sumatoria para los pagos
+            $totalPagado = ComprobantesPagos::where('nota_venta_id', $this->id)
+                ->sum('monto_pago');
+            $saldo_pendiente = $this->moneda->simbolo . '' . number_format(max(0, $this->importe_total - $totalPagado), 2);
+            // $saldo_pendiente = 0;
+        }
+
+        // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
+        return $saldo_pendiente;
     }
 
     public static function count_mes($fecha)
@@ -137,5 +193,11 @@ class NotaVenta extends Model
             return $nota_venta;
         });
         return $total_table;
+    }
+
+    public function getUltimaFechaPagoAttribute()
+    {
+        $ultimo_pago =  ComprobantesPagos::where('nota_venta_id', $this->id)->latest()->first();
+        return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
     }
 }

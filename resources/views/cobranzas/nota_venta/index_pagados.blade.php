@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Boletas Pagadas')
+@section('title', 'Notas de Ventas Pagadas')
 @section('content')
     @if ($errors->any())
         <div style="padding-top: 20px;">
@@ -14,7 +14,7 @@
         </div>
     @endif
 
-    {{-- @include('cobranzas.boletas.shared.statitics') --}}
+    {{-- @include('cobranzas.facturas.shared.statitics') --}}
 
 
     <div class="wrapper wrapper-content animated fadeInRight">
@@ -25,7 +25,7 @@
                         <div class="tabs-container">
                             <ul class="nav nav-tabs" role="tablist"
                                 style="align-items: center;border-bottom: 0px !important;">
-                                @include('cobranzas.boletas_manuales._shared.tabs')
+                                @include('cobranzas.nota_venta._shared.tabs')
                                 {{-- <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
                                             class="fa fa-money"></i></button>
@@ -90,16 +90,15 @@
                                     <br>
                                     <div class="table-responsive">
                                         <table
-                                            class="table table-striped table-bordered table-hover dataTables-example-boletas-pagados">
+                                            class="table table-striped table-bordered table-hover dataTables-example-nota_venta_pagado">
                                             <thead>
                                                 <tr>
                                                     <th>Item</th>
                                                     <th>Estado</th>
-                                                    <th>N° de Boleta</th>
+                                                    <th>N° de Nota Venta</th>
                                                     <th>Cliente</th>
                                                     <th>Emisión</th>
                                                     <th>Forma de Pago</th>
-                                                    <th>N° Cuotas</th>
                                                     <th>Total</th>
                                                     <th>Fecha Cancelado</th>
                                                     <th>Acciones</th>
@@ -267,10 +266,10 @@
         $('#tab-2-tab').addClass('active');
 
         // FUNCION DE DATATABLE FACTURA M
-        var fact_m_table = $('.dataTables-example-boletas-pagados').DataTable({
+        var fact_m_table = $('.dataTables-example-nota_venta_pagado').DataTable({
             "serverSide": true,
             "ajax": {
-                url: "{{ route('cobranzas.lista_boletas_manual_pagados_index') }}",
+                url: "{{ route('cobranzas.lista_nota_venta_pagados_index') }}",
                 method: "get",
                 data: function(d) {
                     d.datarange = $('#data_range_filter').val();
@@ -325,32 +324,11 @@
                     'targets': [7],
                 },
                 {
-                    // 'width': '5%',
-                    'targets': [8],
-                    // 'render': function(data, type, full, meta) {
-                    //     var fechaStr = full[8];
-                    //     if (!fechaStr) return "";
-
-                    //     var partes = fechaStr.split("-");
-                    //     var fecha = new Date(partes[2], partes[1] - 1, partes[0]);
-
-                    //     var hoy = new Date();
-
-
-                    //     if (fecha < hoy) {
-                    //         return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
-                    //     } else {
-
-                    //         return `<span>${fechaStr}</span>`;
-                    //     }
-                    // }
-                },
-                {
                     // 'width': '55%',
-                    'targets': [9],
+                    'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var base_url = "{{ route('pagos.show_boletas_m', ':id') }}";
+                        var base_url = "{{ route('pagos.show_nota_venta', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
                         var view =
                             `<a class="btn btn-primary btn-ls"
