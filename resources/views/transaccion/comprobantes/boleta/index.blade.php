@@ -90,11 +90,11 @@
 
                                                 {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                     <i class="fa fa-envelope"></i> Correo
-                                                </button>
+                                                </button>--}}
 
                                                 <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                     <i class="fa fa-whatsapp"></i> Whatsapp
-                                                </button>--}}
+                                                </button>
                                             </div>
                                         </div>
                                     </ul>
@@ -158,6 +158,7 @@
                                                     <th>Importe T.</th>
                                                     <th>Ver</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
+                                                    <th>Compartir</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -165,7 +166,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="7"></th>
+                                                    <th colspan="8"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                     <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
@@ -293,6 +294,54 @@
 
                         return end;
 
+                    }
+                },
+                {
+                    'targets': [10], // Columna Wspxcorreo
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        const boletaId = full[0];
+                        const codigoBoleta = full[2];
+
+                        return `
+                            <div style="display: inline-block; white-space: nowrap;">
+                                <!-- Botón Correo -->
+                                <button type="button" class="btn btn-secondary btn-correo"
+                                        data-id="${boletaId}" title="Enviar por correo"
+                                        style="margin-right: 5px;">
+                                    <i class="fa fa-envelope fa-lg"></i>
+                                </button>
+
+                                <!-- Contenedor WhatsApp -->
+                                <div class="wsp-container" data-id="${boletaId}"
+                                    style="display: inline-block; position: relative; vertical-align: top;">
+                                    <a class="btn btn-success" style="background: green; border-color: green; cursor: pointer;">
+                                        <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                                    </a>
+
+                                    <!-- Formulario desplegable -->
+                                    <div class="wsp-form" data-id="${boletaId}"
+                                        style="position: absolute; top: 100%; right: 0;
+                                        margin-top: 5px; height: 0px; overflow: hidden; transition: height .4s;
+                                        background: white; box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
+                                        border-radius: 4px; z-index: 9999; white-space: nowrap;">
+                                        <form action="{{ route('agregado.whatsapp_send') }}" method="post"
+                                            target="_blank" style="padding: 10px;">
+                                            @csrf
+                                            <input type="tel" name="numero" placeholder="999999999"
+                                                style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                            <input type="text" name="mensaje" hidden />
+                                            <input type="hidden" name="url" value="{{ route('pdf_bol', '') }}/${boletaId}?archivo=" />
+                                            <input type="hidden" name="name_sin_cambio" value="Boleta_${codigoBoleta}" />
+                                            <button type="submit" class="btn btn-success"
+                                                    style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
+                                                <i class="fa fa-send fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
                     }
                 }
             ],
@@ -526,6 +575,55 @@
 
                     isUpdatingCheckboxes = false;
                 }, 150); // Aumenté el timeout para mayor confiabilidad
+            });
+
+            // Manejador Correo
+            $(document).on('click', '.btn-correo', function() {
+                const boletaId = $(this).data('id');
+
+                @if (Auth::user()->email_creado == 1)
+                    const form = $(`
+                        <form action="{{ route('email.boleta', '') }}/${boletaId}" method="post" target="_blank">
+                            @csrf
+                        </form>
+                    `);
+                    $('body').append(form);
+                    form.submit();
+                    form.remove();
+                @else
+                    swal("Email no configurado", "Por favor configura tu email en el sistema.", "warning");
+                @endif
+            });
+
+            // Hover WhatsApp - Mostrar formulario
+            $(document).on('mouseenter', '.wsp-container', function() {
+                const id = $(this).data('id');
+                $(this).find('.wsp-form').css('height', '50px');
+            });
+
+            // Mantener visible cuando el mouse está en el formulario
+            $(document).on('mouseenter', '.wsp-form', function() {
+                $(this).css('height', '50px');
+            });
+
+            // Ocultar cuando sale del contenedor
+            $(document).on('mouseleave', '.wsp-container', function() {
+                const form = $(this).find('.wsp-form');
+                setTimeout(() => {
+                    if (!form.is(':hover')) {
+                        form.css('height', '0px');
+                    }
+                }, 200);
+            });
+
+            // Ocultar cuando sale del formulario
+            $(document).on('mouseleave', '.wsp-form', function() {
+                const container = $(this).closest('.wsp-container');
+                setTimeout(() => {
+                    if (!container.is(':hover')) {
+                        $(this).css('height', '0px');
+                    }
+                }, 200);
             });
 
             // Función para imprimir boletas seleccionadas
