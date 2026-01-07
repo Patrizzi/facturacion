@@ -668,6 +668,29 @@ class CotizacionController extends Controller
             //validacion dependiendo de la amoneda escogida
         $moneda=Moneda::where('principal',1)->first();
         $moneda_registrada=$cotizacion->moneda_id;
+
+        // NUEVO: Guardar información de renovación
+        if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
+            $renovacion = new RenovacionVentas();
+            $renovacion->cotizacion_id = $cotizacion->id;
+            $renovacion->frecuencia = $request->select_fecha;
+
+            if ($request->select_fecha == 'Mensual') {
+                $renovacion->dia_mensual = $request->dia_mensual; // Este valor ahora es 1-31
+                $renovacion->dia_anual = null;
+                $renovacion->mes_anual = null;
+                $renovacion->anio_anual = null;
+
+            } elseif ($request->select_fecha == 'Anual') {
+                $renovacion->dia_mensual = null;
+                $renovacion->dia_anual = $request->dia_anual;   // Día del mes (1-31)
+                $renovacion->mes_anual = $request->mes_anual;   // Mes (1-12)
+                $renovacion->anio_anual = $request->anio_anual; // Año completo
+            }
+
+            $renovacion->estado = 1;
+            $renovacion->save();
+        }
         // return $cotizacion;
         if($count_articulo = $count_cantidad  = $count_check){
             for($i=0;$i<$count_articulo;$i++){
@@ -841,30 +864,6 @@ class CotizacionController extends Controller
                     }else{
                         $igv_ac = 0;
                     }
-
-                    // NUEVO: Guardar información de renovación
-                    if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
-                        $renovacion = new RenovacionVentas();
-                        $renovacion->cotizacion_id = $cotizacion->id;
-                        $renovacion->frecuencia = $request->select_fecha;
-
-                        if ($request->select_fecha == 'Mensual') {
-                            $renovacion->dia_mensual = $request->dia_mensual; // Este valor ahora es 1-31
-                            $renovacion->dia_anual = null;
-                            $renovacion->mes_anual = null;
-                            $renovacion->anio_anual = null;
-
-                        } elseif ($request->select_fecha == 'Anual') {
-                            $renovacion->dia_mensual = null;
-                            $renovacion->dia_anual = $request->dia_anual;   // Día del mes (1-31)
-                            $renovacion->mes_anual = $request->mes_anual;   // Mes (1-12)
-                            $renovacion->anio_anual = $request->anio_anual; // Año completo
-                        }
-
-                        $renovacion->estado = 1;
-                        $renovacion->save();
-                    }
-
                     $cotizacion_registro->comision=$comi;
 
                     $cotizacion_registro->descuento = $desc_comprobacion;
