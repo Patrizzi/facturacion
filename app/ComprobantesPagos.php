@@ -28,12 +28,12 @@ class ComprobantesPagos extends Model
         'nro_operacion',
         'observacion',
         'tipo_cambio',
-        'monto_cancelacion',
+        // 'monto_cancelacion',
         'simbolo_moneda',
         'importe_total_formateado',
         'guia_remision'
         ];
-
+    
     public function facturacion() {
         return $this->belongsTo(Facturacion::class, 'factuacion_id', 'id');
     }
