@@ -152,6 +152,9 @@ Route::group(['middleware' => ['web', 'auth','cambio_diario']], function () {
     Route::get('get_detalle_pago_cuota', [ApiController::class, 'get_detalle_pago_cuota_table'])->name('api.get_detalle_pago_cuota_table');
     // DETALLE DE REGISTRO DE CONTADO
     Route::get('get_detalle_pago_contado', [ApiController::class, 'get_detalle_pago_contado_table'])->name('api.get_detalle_pago_contado_table');
+    // DETALLE DE REGISTROS PARA LAS NOTAS DE VENTA AMBOS TIPOS DE PAGOS
+    Route::get('get_cobranzas_nota_venta_table', [ApiController::class, 'get_cobranzas_nota_venta_table'])->name('api.get_cobranzas_nota_venta_table');
+    
 });
 
 

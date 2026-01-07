@@ -838,6 +838,10 @@ Route::group(
         Route::get('/creditos_pago/nota_venta/{id}', 'PagadosController@show_nota_venta')->name('pagos.show_nota_venta');
         //* Ajax datatable
         Route::get('/creditos_pago/nota_venta/pagados/lista', 'CobranzasComprobantesController@lista_nota_venta_pagados_index')->name('cobranzas.lista_nota_venta_pagados_index');
+        //* Impresion de Detalle
+        Route::get('/creditos_pago/nota_venta/print/{id}', 'PagadosController@print_n_venta')->name('pagos.print_nota_venta'); //Boletas
+
+
         // Route::get('/pagos/boletas', 'PagadosController@view_boletas')->name('pagos.view_boletas');
         // Route::get('/pagos/boletas/{id}', 'PagadosController@show_boletas')->name('pagos.show_boletas');
         // Route::get('/pagos/boletas/cliente/{ruc}', 'PagadosController@show_cliente_boleta')->name('pagos.show_cliente_boleta');
@@ -847,9 +851,9 @@ Route::group(
         // Route::get('/pagos/boletas_m/{id}', 'PagadosController@show_boletas_m')->name('pagos.show_boletas_m');
         // Route::get('/pagos/boletas_m/cliente/{ruc}', 'PagadosController@show_cliente_boleta_m')->name('pagos.show_cliente_boleta_m');
         //PAGADOS DE NOTA DE VENTA
-        Route::get('/pagos/nota_venta', 'PagadosController@view_nota_venta')->name('pagos.view_nota_venta');
+        // Route::get('/pagos/nota_venta', 'PagadosController@view_nota_venta')->name('pagos.view_nota_venta');
         // Route::post('/pagados/store_nota_venta', 'PagadosController@store_n_venta')->name('pagos.store_n_venta');
-        Route::get('/pagos/nota_venta/cliente/{ruc}', 'PagadosController@show_cliente_nota_v')->name('pagos.show_cliente_nota_v');
+        // Route::get('/pagos/nota_venta/cliente/{ruc}', 'PagadosController@show_cliente_nota_v')->name('pagos.show_cliente_nota_v');
 
         // Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
         // Route::get('/adelantos/comprobantes_pdf/{id}', 'CreditosAdelantosController@comprobantes_pdf')->name('adelantos.comprobantes_pdf');

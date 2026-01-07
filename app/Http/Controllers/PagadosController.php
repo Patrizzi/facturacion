@@ -70,6 +70,7 @@ class PagadosController extends Controller
         // return $request;
         // Objeto de Facturas o Factura manuales
         foreach ($lista_facturas as $index_f => $factura) {
+            
             // return $factura;
             // Busqueda x tipo de factura
             if ($comprobantes == "factura") {
@@ -78,6 +79,10 @@ class PagadosController extends Controller
             } else {
                 $factura_db = Facturacion_m::find($factura);
                 $documento = "factura_manual";
+            }
+            
+            if( !$factura_db || $factura_db->estado_pago == 2){ //*Si ya está pagada x a o b
+                continue;
             }
             // return $factura;
             // Registro de Cabecera
@@ -264,6 +269,11 @@ class PagadosController extends Controller
                 $boleta_db = Boleta_m::find($boleta);
                 $documento = "boleta_manual";
             }
+
+            if( !$boleta_db || $boleta_db->estado_pago == 2){ //*Si ya está pagada x a o b
+                continue;
+            }
+
             // return $boleta;
             // Registro de Cabecera
             $comprobante_header = new ComprobantesPagos();
@@ -437,6 +447,10 @@ class PagadosController extends Controller
             // return $nventa;
             // Busqueda x tipo de factura
             $notaventa_db = NotaVenta::find($nventa);
+            if( !$notaventa_db || $notaventa_db->estado_pago == 2){ //*Si ya está pagada x a o b
+                continue;
+            }
+
             $documento = "nota_venta";
             // return $nventa;
             // Registro de Cabecera

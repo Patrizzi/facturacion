@@ -86,6 +86,7 @@ class ComprobantesPagosDetalleController extends Controller
         if ($otros_registros->isEmpty()) {
             $otros_registros = null;
         }
+        // dd($otros_registros);
 
         return response()->json([
             'detalle' => $detalle,

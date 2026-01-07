@@ -1,4 +1,4 @@
-<div class="modal fade bd-example-modal-lg" id="factura_show" tabindex="-1" role="dialog"
+<div class="modal fade bd-example-modal-lg" id="nota_venta_show" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document" style="max-width: 900px;">
         <div class="modal-content">
@@ -36,7 +36,7 @@
                     <div class="col-lg-6">
                         <div class="form-control">
                             <div class="text-center">
-                                <h3>Información de la Factura </h3>
+                                <h3>Información de la Nota de Venta </h3>
                                 <div class="text-left" style="font-size: 85% !important">
                                     <div style="display: flex;column-gap: 15px">
                                         <div>
@@ -67,7 +67,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 5%">Item</th>
-                                <th style="width: 10%">Código</th>
+                                {{-- <th style="width: 10%">Código</th> --}}
                                 <th style="width: 50%">Descripción</th>
                                 <th>Cantidad</th>
                                 <th>Valor unitario</th>
@@ -100,7 +100,7 @@
                             $v = new NumeroALetras();
                             $letra = $v->toInvoice($end, 2);
                             ?>
-                            Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $nota_venta->moneda->nombre }}
+                            <span>Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $nota_venta->moneda->nombre }}</span>
                         </h3>
                     </div>
                      <div class="col-sm-4">
