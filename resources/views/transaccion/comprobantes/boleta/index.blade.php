@@ -297,29 +297,27 @@
                     }
                 },
                 {
-                    'targets': [10], // Columna Wspxcorreo
+                    'targets': [10],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         const boletaId = full[0];
                         const codigoBoleta = full[2];
+                        const celularCliente = full[12] || '';
 
                         return `
                             <div style="display: inline-block; white-space: nowrap;">
-                                <!-- Botón Correo -->
                                 <button type="button" class="btn btn-secondary btn-correo"
                                         data-id="${boletaId}" title="Enviar por correo"
                                         style="margin-right: 5px;">
                                     <i class="fa fa-envelope fa-lg"></i>
                                 </button>
 
-                                <!-- Contenedor WhatsApp -->
                                 <div class="wsp-container" data-id="${boletaId}"
                                     style="display: inline-block; position: relative; vertical-align: top;">
                                     <a class="btn btn-success" style="background: green; border-color: green; cursor: pointer;">
                                         <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
                                     </a>
 
-                                    <!-- Formulario desplegable -->
                                     <div class="wsp-form" data-id="${boletaId}"
                                         style="position: absolute; top: 100%; right: 0;
                                         margin-top: 5px; height: 0px; overflow: hidden; transition: height .4s;
@@ -329,6 +327,7 @@
                                             target="_blank" style="padding: 10px;">
                                             @csrf
                                             <input type="tel" name="numero" placeholder="999999999"
+                                                value="${celularCliente}"
                                                 style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
                                             <input type="text" name="mensaje" hidden />
                                             <input type="hidden" name="url" value="{{ route('pdf_bol', '') }}/${boletaId}?archivo=" />
@@ -355,7 +354,7 @@
         });
         $('input[name="daterange"]').daterangepicker({
             "locale": {
-                "separator": " | ",
+                "separator": " | |",
                 "applyLabel": "Guardar",
                 "cancelLabel": "Cancelar",
                 "fromLabel": "Desde",
