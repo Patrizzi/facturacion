@@ -815,6 +815,125 @@
                     }
                 });
             });
+
+            // Función para enviar boletas por WhatsApp (masivo)
+            $('#btn-whatsapp-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                console.log('IDs seleccionados para WhatsApp:', allSelectedIds);
+
+                // Validar que hay boletas seleccionadas
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una boleta para enviar por WhatsApp.",
+                        type: "warning",
+                        confirmButtonText: "Entendido"
+                    });
+                    return;
+                }
+
+                // Mostrar modal para ingresar número de WhatsApp
+                swal({
+                    title: "Enviar por WhatsApp",
+                    text: `Ingresa el número de WhatsApp para enviar ${allSelectedIds.length} boleta(s):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "Ejemplo: 999999999"
+                }, function(inputValue) {
+                    if (inputValue === false) return false;
+
+                    if (inputValue === "" || inputValue === null) {
+                        swal.showInputError("Por favor ingresa un número de WhatsApp válido");
+                        return false;
+                    }
+
+                    // Validar que sea un número
+                    if (!/^\d+$/.test(inputValue)) {
+                        swal.showInputError("Por favor ingresa solo números");
+                        return false;
+                    }
+
+                    // Cerrar el modal y procesar
+                    swal.close();
+
+                    // Mostrar loading
+                    swal({
+                        title: "Procesando...",
+                        text: "Enviando boletas por WhatsApp",
+                        type: "info",
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+
+                    // Enviar por WhatsApp
+                    enviarBoletasPorWhatsApp(allSelectedIds, inputValue);
+                });
+            });
+
+            // Función para enviar las boletas
+            function enviarBoletasPorWhatsApp(boletaIds, numero) {
+                // Crear formulario dinámico
+                var form = $('<form>', {
+                    'action': '{{ route('agregado.whatsapp_send_multiple') }}',
+                    'method': 'POST',
+                    'target': '_blank',
+                    'style': 'display:none;'
+                });
+
+                // Agregar CSRF token
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': '_token',
+                    'value': '{{ csrf_token() }}'
+                }));
+
+                // Agregar número de WhatsApp
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': 'numero',
+                    'value': numero
+                }));
+
+                // Agregar mensaje (opcional)
+                form.append($('<input>', {
+                    'type': 'hidden',
+                    'name': 'mensaje',
+                    'value': ''
+                }));
+
+                // Agregar IDs de boletas
+                boletaIds.forEach(function(id) {
+                    form.append($('<input>', {
+                        'type': 'hidden',
+                        'name': 'boleta_ids[]',
+                        'value': id
+                    }));
+                });
+
+                // Agregar al body y enviar
+                $('body').append(form);
+                form.submit();
+
+                // Remover formulario después de enviar
+                setTimeout(function() {
+                    form.remove();
+                }, 1000);
+
+                // Mostrar mensaje de éxito
+                setTimeout(function() {
+                    swal({
+                        title: "¡Enviado!",
+                        text: `Se han enviado ${boletaIds.length} boleta(s) por WhatsApp`,
+                        type: "success",
+                        timer: 3000,
+                        showConfirmButton: true
+                    });
+                }, 500);
+            }
         });
     </script>
 @endsection

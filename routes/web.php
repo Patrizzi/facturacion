@@ -1344,3 +1344,7 @@ Route::get('/ventas/renovacion/exportar', [RenovacionController::class, 'exporta
 
 Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])
     ->name('renovaciones.download.multiple');
+
+
+// Mandar multiples pdf por wsp en comprobantes
+Route::post('/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])->name('agregado.whatsapp_send_multiple');
