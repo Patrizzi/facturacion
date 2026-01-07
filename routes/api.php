@@ -146,6 +146,15 @@ Route::group(['middleware' => ['web', 'auth','cambio_diario']], function () {
     Route::get('get_cantida_precio_producto',[ApiController::class, 'getCantidadPrecioProductTable'])->name('api.get_cantida_precio_producto');
     // CANTIDAD PRECIO SERVICIOS
     Route::get('get_cantida_precio_servicios',[ApiController::class, 'getCantidadPrecioServiceTable'])->name('api.get_cantida_precio_servicios');
+    // CUOTAS CREDITO 
+    Route::get('get_cuotas_creditos',[ApiController::class, 'get_cuotas_credito_table'])->name('api.get_cuotas_credito_table');
+    // DETALLE DE REGISTRO DE CUOTA
+    Route::get('get_detalle_pago_cuota', [ApiController::class, 'get_detalle_pago_cuota_table'])->name('api.get_detalle_pago_cuota_table');
+    // DETALLE DE REGISTRO DE CONTADO
+    Route::get('get_detalle_pago_contado', [ApiController::class, 'get_detalle_pago_contado_table'])->name('api.get_detalle_pago_contado_table');
+    // DETALLE DE REGISTROS PARA LAS NOTAS DE VENTA AMBOS TIPOS DE PAGOS
+    Route::get('get_cobranzas_nota_venta_table', [ApiController::class, 'get_cobranzas_nota_venta_table'])->name('api.get_cobranzas_nota_venta_table');
+    
 });
 
 

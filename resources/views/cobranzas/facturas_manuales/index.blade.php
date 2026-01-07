@@ -39,9 +39,7 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter"
-                                                        value=""
-                                                        readonly="readonly" />
+                                                        id="data_range_filter" value="" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -118,21 +116,10 @@
     </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
-    
 
-    @include('cobranzas.facturas_manuales._shared.modal_pago_all')
+
+    @include('cobranzas._shared.facturas.modal_pago_all')
 
     <style>
         table {
@@ -159,25 +146,6 @@
             margin-bottom: 1rem;
         }
 
-        .select2-search__field {
-            width: 100% !important;
-        }
-
-        .select2.select2-container.select2-container--default {
-            width: 100% !important;
-        }
-
-        .select2-selection.select2-selection--single {
-            height: 100%;
-        }
-
-        .select2-container.select2-container--default.select2-container--open {
-            z-index: 3200;
-        }
-
-        .div_select>.select2.select2-container.select2-container--default {
-            width: 100% !important;
-        }
 
         label.col-form-label {
             font-weight: bold;
@@ -201,9 +169,6 @@
             -moz-appearance: textfield;
         }
 
-        .col-sm-9>.select2.select2-container.select2-container--default {
-            width: 100% !important;
-        }
 
         i.fa.fa-arrow-right.icon.icon-arrow-right.glyphicon.glyphicon-arrow-right {
             color: black;
@@ -278,12 +243,15 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     <script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
-    @include('cobranzas.adelanto')
+    {{-- @include('cobranzas.adelanto') --}}
+
 
     <script>
         $('#tab-1-tab').addClass('active');
 
-
+        $(document).ready(function() {
+           $('#modal_pago_tipo_comprobante').val('factura_manual');
+        });
         $('#collapse-head-three').on('click', function() {
             $('#collapseThree').collapse('show');
             $('#collapseFour').collapse('hide');
@@ -329,6 +297,14 @@
                 {
                     // 'width': '5%',
                     'targets': [1],
+                    'render': function(data, type, full, meta) {
+                        const estados = {
+                            "Sin pago": `<span class="badge badge-danger">Sin Pagar</span>`,
+                            "Pago Parcial": `<span class="badge badge-warning">Pagado Parcial</span>`,
+                        };
+
+                        return estados[data] || `<span class="badge badge-secondary">Desconocido</span>`;
+                    }
                 },
                 {
                     // 'width': '5%',
@@ -370,7 +346,6 @@
                         if (fecha < hoy) {
                             return `<span style="color:red; font-weight:bold;">${fechaStr}</span>`;
                         } else {
-
                             return `<span>${fechaStr}</span>`;
                         }
                     }
@@ -381,7 +356,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas_m', ':id') }}";
-                        var url_view = base_url.replace(':id', full[2]);
+                        var url_view = base_url.replace(':id', full[0]);
                         var view =
                             `<a class="btn btn-primary btn-ls"
                         href=" ` + url_view + `"><i class="fa fa-eye"></i></a>
@@ -442,742 +417,9 @@
             fact_m_table.ajax.reload();
         });
 
-        //*  Campos para el pago con cheque
-
-        function calcular_monto_cheque() {
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $("#moneda_pago_cheque option:selected").text();
-            var tipo_cambio = parseFloat($('#tipo_cambio_cheque').val());
-            var monto_actual = parseFloat($('#cheque_monto').val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#tipo_cambio_cheque').attr('readonly', false);
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#cheque_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    $('#cheque_monto').val(monto_total.toFixed(2));
-                }
-            } else {
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    $('#cheque_monto').val(monto_total.toFixed(2));
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio;
-                    $('#cheque_monto').val(monto_convertido.toFixed(2));
-                }
-
-                $('#tipo_cambio_cheque').attr('readonly', true);
-            }
-        }
-        $('#cheque_fecha_emision').on('change', function() {
-            $.ajax({
-                url: "{{ route('tipo_cambio.busqueda_tipo_cambio') }}",
-                method: "GET",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'fecha': $(this).val()
-                },
-                success: function(data) {
-                    toastr.success('Tipo de cambio obtenido correctamente', '', {
-                        timeOut: 3000
-                    });
-                    $('#tipo_cambio_cheque').val(data.tipo_cambio.paralelo);
-                    calcular_monto_cheque();
-
-                },
-                error: function(data) {
-                    toastr.warning('No se pudo obtener el tipo de cambio, añadirlo manualmente', '', {
-                        timeOut: 3000
-                    });
-                }
-            });
-        });
-        $('#moneda_pago_cheque').on('change', function() { // CUANDO CAMBIA LA MONEDA DE PAGO
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $(this).find('option:selected').text();
-            var tipo_cambio = parseFloat($('#tipo_cambio_cheque').val());
-            var monto_actual = parseFloat($('#cheque_monto').val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#cheque_monto').removeAttr('max');
-                $('#tipo_cambio_cheque').attr('readonly', false);
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#cheque_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    // $('#tipo_cambio_cheque').val(1);
-                    $('#cheque_monto').val(monto_total.toFixed(2));
-                }
-            } else {
-                $('#cheque_monto').attr('max', monto_total);
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    $('#cheque_monto').val(monto_total.toFixed(2));
-                    // $('#tipo_cambio_cheque').val(1);
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio;
-                    $('#cheque_monto').val(monto_convertido.toFixed(2));
-                }
-                $('#tipo_cambio_cheque').attr('readonly', true);
-            }
-        });
-        $('#cheque_monto').on('keyup', function() {
-            var monto = parseFloat($(this).val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_pago = $("#moneda_pago_cheque option:selected").text();
-            if (moneda_pago != moneda_principal) {
-                $('#tipo_cambio_cheque').attr('readonly', false);
-                if (moneda_pago == '$') {
-                    var tipo_cambio = monto_total / monto;
-                    $('#tipo_cambio_cheque').val(tipo_cambio.toFixed(4));
-                } else {
-                    var tipo_cambio = monto / monto_total;
-                    $('#tipo_cambio_cheque').val(tipo_cambio.toFixed(4));
-                }
-            } else {
-                $('#cheque_monto').val(monto_total.toFixed(2));
-                // $('#tipo_cambio_cheque').val(1);
-                $('#tipo_cambio_cheque').attr('readonly', true);
-            }
-        });
-        $('#tipo_cambio_cheque').on('keyup', function() {
-            var tipo_cambio_manual = parseFloat($(this).val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            var monto_actual = parseFloat($('#cheque_monto').val());
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $("#moneda_pago_cheque option:selected").text();
-
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#tipo_cambio_cheque').attr('readonly', false);
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio_manual;
-                    $('#cheque_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    var monto_convertido = monto_total / tipo_cambio_manual;
-                    $('#cheque_monto').val(monto_convertido.toFixed(2));
-                }
-            } else {
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    var monto_convertido = monto_actual / tipo_cambio_manual;
-                    $('#cheque_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio_manual;
-                    $('#cheque_monto').val(monto_convertido.toFixed(2));
-                }
-            }
-        });
-
-        //*!! Campos para el pago con tarjeta
-
-        function calcular_monto_tarjeta() {
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $("#moneda_pago_tarjeta option:selected").text();
-            var tipo_cambio = parseFloat($('#tipo_cambio_tarjeta').val());
-            var monto_total = parseFloat($('#tota_totas').html());
-
-            if (moneda_select != moneda_principal) {
-
-                $('#tipo_cambio_tarjeta').attr('readonly', false);
-
-                if (moneda_select != '$') {
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    $('#tarjeta_monto').val(monto_total.toFixed(2));
-                }
-
-            } else {
-
-                if (moneda_select == '$') {
-                    $('#tarjeta_monto').val(monto_total.toFixed(2));
-                } else {
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
-                }
-
-                $('#tipo_cambio_tarjeta').attr('readonly', true);
-            }
-        }
-        $('#tarjeta_fecha_pago').on('change', function() {
-            // get_tipo_cambio($(this).val(), $('#tipo_cambio_tarjeta'));
-            $.ajax({
-                url: "{{ route('tipo_cambio.busqueda_tipo_cambio') }}",
-                method: "GET",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'fecha': $(this).val()
-                },
-                success: function(data) {
-                    toastr.success('Tipo de cambio obtenido correctamente', '', {
-                        timeOut: 3000
-                    });
-                    $('#tipo_cambio_tarjeta').val(data.tipo_cambio.paralelo);
-                    calcular_monto_tarjeta();
-
-                },
-                error: function(data) {
-                    toastr.warning('No se pudo obtener el tipo de cambio, añadirlo manualmente', '', {
-                        timeOut: 3000
-                    });
-                }
-            });
-        });
-        $('#moneda_pago_tarjeta').on('change', function() { // CUANDO CAMBIA LA MONEDA DE PAGO
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $(this).find('option:selected').text();
-            var tipo_cambio = parseFloat($('#tipo_cambio_tarjeta').val());
-            var monto_actual = parseFloat($('#tarjeta_monto').val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#tipo_cambio_tarjeta').attr('readonly', false);
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    // $('#tipo_cambio_tarjeta').val(1);
-                    $('#tarjeta_monto').val(monto_total.toFixed(2));
-                }
-            } else {
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    // $('#tipo_cambio_tarjeta').val(1);
-                    $('#tarjeta_monto').val(monto_total.toFixed(2));
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio;
-                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
-                }
-
-                $('#tipo_cambio_tarjeta').attr('readonly', true);
-            }
-        });
-        $('#tarjeta_monto').on('keyup', function() {
-            var monto = parseFloat($(this).val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_pago = $("#moneda_pago_tarjeta option:selected").text();
-            if (moneda_pago != moneda_principal) {
-                $('#tipo_cambio_tarjeta').attr('readonly', false);
-                if (moneda_pago == '$') {
-                    var tipo_cambio = monto_total / monto;
-                    $('#tipo_cambio_tarjeta').val(tipo_cambio.toFixed(4));
-                } else {
-                    var tipo_cambio = monto / monto_total;
-                    $('#tipo_cambio_tarjeta').val(tipo_cambio.toFixed(4));
-                }
-            } else {
-                $('#tarjeta_monto').val(monto_total.toFixed(2));
-                // $('#tipo_cambio_tarjeta').val(1);
-                $('#tipo_cambio_tarjeta').attr('readonly', true);
-            }
-        });
-        $('#tipo_cambio_tarjeta').on('keyup', function() {
-            var tipo_cambio_manual = parseFloat($(this).val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            var monto_actual = parseFloat($('#tarjeta_monto').val());
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $("#moneda_pago_tarjeta option:selected").text();
-
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#tipo_cambio_tarjeta').attr('readonly', false);
-                console.log('diferentes');
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio_manual;
-                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    // var monto_convertido = monto_total / tipo_cambio_manual;
-                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
-                }
-            } else {
-                console.log('iguales');
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    var monto_convertido = monto_actual / tipo_cambio_manual;
-                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio_manual;
-                    $('#tarjeta_monto').val(monto_convertido.toFixed(2));
-                }
-            }
-        });
-
-        //*!! Campos para el pago con Efectivo
-
-        function calcular_monto_efectivo() {
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $("#moneda_pago_efectivo option:selected").text();
-            var tipo_cambio = parseFloat($('#tipo_cambio_efectivo').val());
-            var monto_total = parseFloat($('#tota_totas').html());
-
-            if (moneda_select != moneda_principal) {
-
-                $('#tipo_cambio_efectivo').attr('readonly', false);
-
-                if (moneda_select != '$') {
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#efectivo_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    $('#efectivo_monto').val(monto_total.toFixed(2));
-                }
-
-            } else {
-
-                if (moneda_select == '$') {
-                    $('#efectivo_monto').val(monto_total.toFixed(2));
-                } else {
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#efectivo_monto').val(monto_convertido.toFixed(2));
-                }
-
-                $('#tipo_cambio_efectivo').attr('readonly', true);
-            }
-        }
-        $('#efectivo_fecha_pago').on('change', function() {
-            // get_tipo_cambio($(this).val(), $('#tipo_cambio_efectivo'));
-            $.ajax({
-                url: "{{ route('tipo_cambio.busqueda_tipo_cambio') }}",
-                method: "GET",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'fecha': $(this).val()
-                },
-                success: function(data) {
-                    toastr.success('Tipo de cambio obtenido correctamente', '', {
-                        timeOut: 3000
-                    });
-                    $('#tipo_cambio_efectivo').val(data.tipo_cambio.paralelo);
-                    calcular_monto_efectivo();
-
-                },
-                error: function(data) {
-                    toastr.warning('No se pudo obtener el tipo de cambio, añadirlo manualmente', '', {
-                        timeOut: 3000
-                    });
-                }
-            });
-        });
-        $('#moneda_pago_efectivo').on('change', function() { // CUANDO CAMBIA LA MONEDA DE PAGO
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $(this).find('option:selected').text();
-            var tipo_cambio = parseFloat($('#tipo_cambio_efectivo').val());
-            var monto_actual = parseFloat($('#efectivo_monto').val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#tipo_cambio_efectivo').attr('readonly', false);
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#efectivo_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    // $('#tipo_cambio_efectivo').val(1);
-                    $('#efectivo_monto').val(monto_total.toFixed(2));
-                }
-            } else {
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    // $('#tipo_cambio_efectivo').val(1);
-                    $('#efectivo_monto').val(monto_total.toFixed(2));
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio;
-                    $('#efectivo_monto').val(monto_convertido.toFixed(2));
-                }
-
-                $('#tipo_cambio_efectivo').attr('readonly', true);
-            }
-        });
-        $('#efectivo_monto').on('keyup', function() {
-            var monto = parseFloat($(this).val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_pago = $("#moneda_pago_efectivo option:selected").text();
-            if (moneda_pago != moneda_principal) {
-                $('#tipo_cambio_efectivo').attr('readonly', false);
-                if (moneda_pago == '$') {
-                    var tipo_cambio = monto_total / monto;
-                    $('#tipo_cambio_efectivo').val(tipo_cambio.toFixed(4));
-                } else {
-                    var tipo_cambio = monto / monto_total;
-                    $('#tipo_cambio_efectivo').val(tipo_cambio.toFixed(4));
-                }
-            } else {
-                $('#efectivo_monto').val(monto_total.toFixed(2));
-                // $('#tipo_cambio_efectivo').val(1);
-                $('#tipo_cambio_efectivo').attr('readonly', true);
-            }
-        });
-        $('#tipo_cambio_efectivo').on('keyup', function() {
-            var tipo_cambio_manual = parseFloat($(this).val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            var monto_actual = parseFloat($('#efectivo_monto').val());
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $("#moneda_pago_efectivo option:selected").text();
-
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#tipo_cambio_efectivo').attr('readonly', false);
-                console.log('diferentes');
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio_manual;
-                    $('#efectivo_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    // var monto_convertido = monto_total / tipo_cambio_manual;
-                    $('#efectivo_monto').val(monto_convertido.toFixed(2));
-                }
-            } else {
-                console.log('iguales');
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    var monto_convertido = monto_actual / tipo_cambio_manual;
-                    $('#efectivo_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio_manual;
-                    $('#efectivo_monto').val(monto_convertido.toFixed(2));
-                }
-            }
-        });
-
-        //*!! Campos para el pago con Transferencia
-
-        function calcular_monto_transferencia() {
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $("#moneda_pago_transferencia option:selected").text();
-            var tipo_cambio = parseFloat($('#tipo_cambio_transferencia').val());
-            var monto_total = parseFloat($('#tota_totas').html());
-
-            if (moneda_select != moneda_principal) {
-
-                $('#tipo_cambio_transferencia').attr('readonly', false);
-
-                if (moneda_select != '$') {
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#transferencia_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    $('#transferencia_monto').val(monto_total.toFixed(2));
-                }
-
-            } else {
-
-                if (moneda_select == '$') {
-                    $('#transferencia_monto').val(monto_total.toFixed(2));
-                } else {
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#transferencia_monto').val(monto_convertido.toFixed(2));
-                }
-
-                $('#tipo_cambio_transferencia').attr('readonly', true);
-            }
-        }
-        $('#transferencia_fecha_pago').on('change', function() {
-            $.ajax({
-                url: "{{ route('tipo_cambio.busqueda_tipo_cambio') }}",
-                method: "GET",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'fecha': $(this).val()
-                },
-                success: function(data) {
-                    toastr.success('Tipo de cambio obtenido correctamente', '', {
-                        timeOut: 3000
-                    });
-                    $('#tipo_cambio_transferencia').val(data.tipo_cambio.paralelo);
-                    calcular_monto_efectivo();
-
-                },
-                error: function(data) {
-                    toastr.warning('No se pudo obtener el tipo de cambio, añadirlo manualmente', '', {
-                        timeOut: 3000
-                    });
-                }
-            });
-        });
-        $('#moneda_pago_transferencia').on('change', function() { // CUANDO CAMBIA LA MONEDA DE PAGO
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $(this).find('option:selected').text();
-            var tipo_cambio = parseFloat($('#tipo_cambio_transferencia').val());
-            var monto_actual = parseFloat($('#transferencia_monto').val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#tipo_cambio_transferencia').attr('readonly', false);
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio;
-                    $('#transferencia_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    // $('#tipo_cambio_transferencia').val(1);
-                    $('#transferencia_monto').val(monto_total.toFixed(2));
-                }
-            } else {
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    // $('#tipo_cambio_transferencia').val(1);
-                    $('#transferencia_monto').val(monto_total.toFixed(2));
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio;
-                    $('#transferencia_monto').val(monto_convertido.toFixed(2));
-                }
-
-                $('#tipo_cambio_transferencia').attr('readonly', true);
-            }
-        });
-        $('#transferencia_monto').on('keyup', function() {
-            var monto = parseFloat($(this).val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_pago = $("#moneda_pago_transferencia option:selected").text();
-            if (moneda_pago != moneda_principal) {
-                $('#tipo_cambio_transferencia').attr('readonly', false);
-                if (moneda_pago == '$') {
-                    var tipo_cambio = monto_total / monto;
-                    $('#tipo_cambio_transferencia').val(tipo_cambio.toFixed(4));
-                } else {
-                    var tipo_cambio = monto / monto_total;
-                    $('#tipo_cambio_transferencia').val(tipo_cambio.toFixed(4));
-                }
-            } else {
-                $('#transferencia_monto').val(monto_total.toFixed(2));
-                // $('#tipo_cambio_transferencia').val(1);
-                $('#tipo_cambio_transferencia').attr('readonly', true);
-            }
-        });
-        $('#tipo_cambio_transferencia').on('keyup', function() {
-            var tipo_cambio_manual = parseFloat($(this).val());
-            var monto_total = parseFloat($('#tota_totas').html());
-            var monto_actual = parseFloat($('#transferencia_monto').val());
-            var moneda_principal = $('#simbolor_label').html();
-            var moneda_select = $("#moneda_pago_transferencia option:selected").text();
-
-            if (moneda_select != moneda_principal) { //Si la moneda es diferente a la principal
-                $('#tipo_cambio_transferencia').attr('readonly', false);
-                console.log('diferentes');
-                if (moneda_select != '$') { // Si la moneda no es dolar
-                    var monto_convertido = monto_total * tipo_cambio_manual;
-                    $('#transferencia_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    // var monto_convertido = monto_total / tipo_cambio_manual;
-                    $('#transferencia_monto').val(monto_convertido.toFixed(2));
-                }
-            } else {
-                console.log('iguales');
-                if (moneda_select == '$') { // Si la moneda no es sol
-                    var monto_convertido = monto_actual / tipo_cambio_manual;
-                    $('#transferencia_monto').val(monto_convertido.toFixed(2));
-                } else {
-                    var monto_convertido = monto_actual * tipo_cambio_manual;
-                    $('#transferencia_monto').val(monto_convertido.toFixed(2));
-                }
-            }
-        });
+        
     </script>
 
-
-    <script>
-        var elem_2 = document.querySelector('.js-switch-pago');
-        var switchery_2 = new Switchery(elem_2, {
-            color: '#ED5565'
-        });
-
-        $(document).ready(function() {
-            $('#select_banco_pagos').select2({
-                placeholder: "Seleccionar",
-            });
-            $('#select_cuenta_pago').select2({
-                placeholder: "Seleccionar",
-            });
-
-            $('#select_banco_transf_pag').select2({
-                placeholder: "Seleccionar",
-            });
-            $('#select_cuenta_adl_pag').select2({
-                placeholder: "Seleccionar",
-            });
-        });
-
-        function changue_bancos_pagos(val) {
-            // $("#select_banco_adl").attr('disabled', false);
-            $('#select_bancos_pago').val(val);
-            var id_banc = $("#select_banco_pagos").val();
-            $('#select_cuenta_pago').select2({
-                placeholder: `Seleccionar N° Cuenta de ${val.options[val.selectedIndex].text}`,
-                ajax: {
-                    minimumInputLength: 1,
-                    url: "{{ route('bancos.registros_search') }}",
-                    dataType: 'json',
-                    type: "POST",
-                    data: function(params) {
-                        return {
-                            '_token': $('input[name=_token]').val(),
-                            'id_bancos': id_banc
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: $.map(data, function(item) {
-                                return {
-                                    id: item.id,
-                                    text: item.tipo_cuenta + ' - ' + item.nombre_cuenta,
-                                };
-                            })
-                        };
-                    },
-                    cache: true
-                }
-            });
-        }
-
-        function changue_bancos_pago_tr() {
-            // $("#select_banco_adl").attr('disabled', false);
-            console.log('a');
-            var id_banc = $("#select_banco_transf_pag").val();
-            $('#select_cuenta_adl_pag').select2({
-                placeholder: "Seleccionar",
-                ajax: {
-                    minimumInputLength: 1,
-                    url: "{{ route('bancos.registros_search') }}",
-                    dataType: 'json',
-                    type: "POST",
-                    data: function(params) {
-                        return {
-                            '_token': $('input[name=_token]').val(),
-                            'id_bancos': id_banc
-                        };
-                    },
-                    processResults: function(data) {
-                        return {
-                            results: $.map(data, function(item) {
-                                return {
-                                    id: item.id,
-                                    text: item.tipo_cuenta + ' - ' + item.nombre_cuenta,
-                                };
-                            })
-                        };
-                    },
-                    cache: true
-                }
-            });
-        }
-
-        $("#select_cuenta_adl").select2();
-        $("#select_cuenta_adl_transf").select2();
-        $(document).ready(function() {
-
-            // $('input[name="daterange2"]').daterangepicker({
-            //         "locale": {
-            //             "format": "DD-MM-YYYY",
-            //             "separator": " | ",
-            //             "applyLabel": "Guardar",
-            //             "cancelLabel": "Cancelar",
-            //             "fromLabel": "Desde",
-            //             "toLabel": "Hasta",
-            //             "customRangeLabel": "Custom",
-            //             "daysOfWeek": [
-            //                 "Do",
-            //                 "Lu",
-            //                 "Ma",
-            //                 "Mi",
-            //                 "Ju",
-            //                 "Vi",
-            //                 "Sa"
-            //             ],
-            //             "monthNames": [
-            //                 "Enero",
-            //                 "Febrero",
-            //                 "Marzo",
-            //                 "Abril",
-            //                 "Mayo",
-            //                 "Junio",
-            //                 "Julio",
-            //                 "Agosto",
-            //                 "Septiembre",
-            //                 "Octubre",
-            //                 "Noviembre",
-            //                 "Diciembre"
-            //             ],
-            //             "firstDay": 1
-            //         }
-            //     },
-            //     function(start, end, label) {
-            //         var startDate = start.format('DD-MM-YYYY');
-            //         var endDate = end.format('DD-MM-YYYY');
-            //         var dates = [];
-            //         var currentDate = new Date(start);
-
-            //         while (currentDate <= end) {
-            //             var day = ('0' + currentDate.getDate()).slice(-2);
-            //             var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-            //             var year = currentDate.getFullYear();
-
-            //             var formattedDate = day + '-' + month + '-' + year;
-            //             dates.push(formattedDate);
-
-            //             currentDate.setDate(currentDate.getDate() + 1);
-            //         }
-            //         var dateRangeString = dates.join('|');
-            //         // console.log(dateRangeString);
-            //         table2.column(6).search(dateRangeString, true, false).draw();
-            //     }
-            // );
-        });
-
-        function limpiar_fechas() {
-            var table_lp = $('.dataTables-example').DataTable();
-            table_lp.column(5).search('').draw();
-        }
-
-        function limpiar_fechas_2() {
-            var table_lp_2 = $('.dataTables-examaple-2').DataTable();
-            table_lp_2.column(6).search('').draw();
-        }
-        var tipo_coti = 3;
-        $(".select2_demo_client").select2({
-            placeholder: "Seleccionar Cliente",
-            ajax: {
-                minimumInputLength: 1,
-                url: "{{ route('pa.clients') }}",
-                dataType: 'json',
-                type: "POST",
-                delay: 10,
-                data: function(params) {
-                    var tipo_coti = $('[name="tipo_coti"]:checked').val();
-                    return {
-                        _token: "{{ csrf_token() }}",
-                        search: params.term, // search term
-                        tipo_coti: tipo_coti
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                id: item.nombre,
-                                text: item.nombre + ' | ' + item.numero_documento,
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-        $(".select2_demo_client_2").select2({
-            placeholder: "Seleccionar Cliente",
-            ajax: {
-                minimumInputLength: 1,
-                url: "{{ route('pa.clients') }}",
-                dataType: 'json',
-                type: "POST",
-                delay: 10,
-                data: function(params) {
-                    var tipo_coti = $('[name="tipo_coti"]:checked').val();
-                    return {
-                        _token: "{{ csrf_token() }}",
-                        search: params.term, // search term
-                        tipo_coti: tipo_coti
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                id: item.nombre,
-                                text: item.nombre + ' | ' + item.numero_documento,
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
-    </script>
     <script>
         $(".select_2_multipl").select2();
         $('.select_2_estado').select2();
@@ -1405,29 +647,29 @@
             });
         }
 
-        function select_pago(item) {
-            $('.pago_m').css('display', 'none');
-            $(`.m_pago_` + item).css('display', 'block');
+        // function select_pago(item) {
+        //     $('.pago_m').css('display', 'none');
+        //     $(`.m_pago_` + item).css('display', 'block');
 
-            $('.class_pago').attr('required', false);
-            // $('.class_pago').val('');
-            $(`.pago_class_` + item).attr('required', true);
-            $(`.file_input`).attr('required', false);
+        //     $('.class_pago').attr('required', false);
+        //     // $('.class_pago').val('');
+        //     $(`.pago_class_` + item).attr('required', true);
+        //     $(`.file_input`).attr('required', false);
 
-            $('.btn_pago_selec').addClass("btn-outline");
-            $(`#bm_pago_` + item).removeClass("btn-outline");
-            $('#input_pago').val(item);
+        //     $('.btn_pago_selec').addClass("btn-outline");
+        //     $(`#bm_pago_` + item).removeClass("btn-outline");
+        //     $('#input_pago').val(item);
 
-            var fecha = $('#fecha_value_php').val();
-            // console.log(fecha);
-            $('.fecha_hoy').val(fecha);
-        }
-        $('#efectivo_pago').on('keyup', function() {
-            var pago = this.value;
-            var total = $('#tota_totas').text();
-            var vuelto = parseFloat(this.value) - parseFloat(total);
-            $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
-        })
+        //     var fecha = $('#fecha_value_php').val();
+        //     // console.log(fecha);
+        //     $('.fecha_hoy').val(fecha);
+        // }
+        // $('#efectivo_pago').on('keyup', function() {
+        //     var pago = this.value;
+        //     var total = $('#tota_totas').text();
+        //     var vuelto = parseFloat(this.value) - parseFloat(total);
+        //     $('#efectivo_vuelto').val(Math.round(vuelto * 100) / 100);
+        // })
 
         // PAGO MULTIPLE
 
@@ -1478,6 +720,11 @@
         $('#pago_lote_total').on('click', function() {
 
             $('#div_facturas').empty();
+            $('#ids_divs_factura').empty();
+
+            $('input[name="select_row"]:checked').each(function() {
+                check_lote($(this).val());
+            });
             $('#tot_simbolo').empty();
 
             var count_check = document.querySelectorAll('.check_only');
@@ -1493,7 +740,6 @@
 
                     arr.push(id_one[1]);
                 }
-
             });
             pago_lote_total(arr);
 
@@ -1502,7 +748,7 @@
         function pago_lote_total(n_factura) {
             console.log(n_factura);
             // console.log(n_factura)
-            $('#todo_pago').modal('show');
+            // $('#todo_pago').modal('show');
             // console.log('a');
             $('#div_facturas').empty();
             $('#tot_simbolo').empty();
@@ -1714,4 +960,12 @@
             });
         })
     </script>
+    @include('cobranzas._shared.js')
+    @if (session('success'))
+        <script>
+            setTimeout(function() {
+                toastr.success("{{ session('success') }}");
+            }, 300);
+        </script>
+    @endif
 @endsection
