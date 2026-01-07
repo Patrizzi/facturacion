@@ -102,7 +102,6 @@
                                     <strong>Dirección:</strong>&nbsp; {{$cotizacion->cliente->direccion}}<br>
                                     <strong>Teléfono:</strong>&nbsp; {{$cotizacion->cliente->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <strong>Celular:</strong>&nbsp; {{$cotizacion->cliente->celular}}<br>
-
                                     {{-- DATOS DE RENOVACIÓN --}}
                                     @if($renovacion && $fecha_vencimiento)
                                         <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;
@@ -600,266 +599,265 @@
         /* display: inline-table; */
     }
 
-
     //Estilos nuevos para la seccion de renovacion
     .renovacion {
-    padding: 0;
-    margin-bottom: 15px;
-    margin-top: 8px;
-}
+        padding: 0;
+        margin-bottom: 15px;
+        margin-top: 8px;
+    }
 
-.switch-container {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-}
+    .switch-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-    margin: 0;
-    flex-shrink: 0;
-}
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+        margin: 0;
+        flex-shrink: 0;
+    }
 
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .3s;
-    border-radius: 24px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .3s;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-input:checked + .slider {
-    background-color: #1ab394;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 2px #1ab394;
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
-
-.switch-label {
-    font-size: 13px;
-    color: #676a6c;
-    font-weight: 500;
-    cursor: pointer;
-    user-select: none;
-    margin: 0;
-    line-height: 24px;
-    white-space: nowrap;
-}
-
-#renovacion_container {
-    animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-    from {
+    .switch input {
         opacity: 0;
-        transform: translateY(-10px);
+        width: 0;
+        height: 0;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .3s;
+        border-radius: 24px;
     }
-}
 
-.renovacion select:focus {
-    outline: none;
-    box-shadow: none;
-    border-color: #e5e6e7;
-}
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
 
-.renovacion hr {
-    display: none;
-}
+    input:checked + .slider {
+        background-color: #1ab394;
+    }
 
-.form-control-sm {
-    height: 34px;
-    padding: 0.375rem 0.75rem;
-    font-size: 13px;
-    line-height: 1.5;
-    border-radius: 1px;
-}
+    input:focus + .slider {
+        box-shadow: 0 0 2px #1ab394;
+    }
 
-#renovacion_container select {
-    font-size: 13px;
-    height: 34px;
-    padding: 0.375rem 0.75rem;
-    line-height: 1.5;
-    border: 1px solid #e5e6e7;
-    width: 100%;
-}
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
 
-#extra_selects select {
-    font-size: 13px;
-    height: 34px;
-    padding: 0.375rem 0.75rem;
-    line-height: 1.5;
-    margin-bottom: 0;
-    border: 1px solid #e5e6e7;
-    width: 100%;
-}
+    .switch-label {
+        font-size: 13px;
+        color: #676a6c;
+        font-weight: 500;
+        cursor: pointer;
+        user-select: none;
+        margin: 0;
+        line-height: 24px;
+        white-space: nowrap;
+    }
 
-.calendar-container {
-    background: #fff;
-    border-radius: 4px;
-    padding: 8px;
-    border: 1px solid #e5e6e7;
-    margin-top: 6px;
-    max-width: 260px;
-}
+    #renovacion_container {
+        animation: slideDown 0.3s ease-out;
+    }
 
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #e5e6e7;
-}
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-.calendar-header h6 {
-    font-size: 12px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-    flex: 1;
-    text-align: center;
-}
+    .renovacion select:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: #e5e6e7;
+    }
 
-.calendar-nav-btn {
-    background: #fff;
-    border: 1px solid #e5e6e7;
-    border-radius: 3px;
-    width: 26px;
-    height: 26px;
-    padding: 0;
-    color: #676a6c;
-    transition: all 0.2s;
-    cursor: pointer;
-}
+    .renovacion hr {
+        display: none;
+    }
 
-.calendar-nav-btn:hover:not(:disabled) {
-    background: #1ab394;
-    color: white;
-    border-color: #1ab394;
-}
+    .form-control-sm {
+        height: 34px;
+        padding: 0.375rem 0.75rem;
+        font-size: 13px;
+        line-height: 1.5;
+        border-radius: 1px;
+    }
 
-.calendar-nav-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-}
+    #renovacion_container select {
+        font-size: 13px;
+        height: 34px;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+        border: 1px solid #e5e6e7;
+        width: 100%;
+    }
 
-.calendar-nav-btn i {
-    font-size: 11px;
-}
+    #extra_selects select {
+        font-size: 13px;
+        height: 34px;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+        margin-bottom: 0;
+        border: 1px solid #e5e6e7;
+        width: 100%;
+    }
 
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-}
+    .calendar-container {
+        background: #fff;
+        border-radius: 4px;
+        padding: 8px;
+        border: 1px solid #e5e6e7;
+        margin-top: 6px;
+        max-width: 260px;
+    }
 
-.calendar-day-header {
-    text-align: center;
-    font-weight: 600;
-    font-size: 10px;
-    padding: 5px 0;
-    color: #676a6c;
-    background: #f8f9fa;
-    border-radius: 2px;
-}
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #e5e6e7;
+    }
 
-.calendar-day {
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 2px;
-    cursor: pointer;
-    font-size: 10px;
-    border: 1px solid transparent;
-    transition: all 0.2s;
-    color: #333;
-    min-height: 24px;
-    max-height: 26px;
-}
+    .calendar-header h6 {
+        font-size: 12px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+        flex: 1;
+        text-align: center;
+    }
 
-.calendar-day.selectable {
-    cursor: pointer;
-    background: #fff;
-}
+    .calendar-nav-btn {
+        background: #fff;
+        border: 1px solid #e5e6e7;
+        border-radius: 3px;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        color: #676a6c;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
 
-.calendar-day.selectable:hover {
-    background: #e8f4f8;
-    border-color: #1c84c6;
-}
+    .calendar-nav-btn:hover:not(:disabled) {
+        background: #1ab394;
+        color: white;
+        border-color: #1ab394;
+    }
 
-.calendar-day.disabled {
-    color: #ccc;
-    cursor: not-allowed;
-    background: #f9f9f9;
-}
+    .calendar-nav-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
 
-.calendar-day.selected {
-    background: #1c84c6 !important;
-    color: white !important;
-    font-weight: 600;
-    border-color: #1c84c6;
-}
+    .calendar-nav-btn i {
+        font-size: 11px;
+    }
 
-.calendar-day.fecha-emision {
-    background: #1ab394 !important;
-    color: white !important;
-    font-weight: 600;
-    border-color: #1ab394 !important;
-}
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+    }
 
-.calendar-day.fecha-emision:hover {
-    background: #18a689 !important;
-    border-color: #18a689 !important;
-}
+    .calendar-day-header {
+        text-align: center;
+        font-weight: 600;
+        font-size: 10px;
+        padding: 5px 0;
+        color: #676a6c;
+        background: #f8f9fa;
+        border-radius: 2px;
+    }
 
-.calendar-day.fecha-emision.selected {
-    background: #1c84c6 !important;
-    color: white !important;
-    box-shadow: 0 0 0 2px #1ab394;
-    border-color: #1c84c6 !important;
-}
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 2px;
+        cursor: pointer;
+        font-size: 10px;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+        color: #333;
+        min-height: 24px;
+        max-height: 26px;
+    }
 
-.renovacion .row {
-    margin-bottom: 6px;
-}
-</style>
+    .calendar-day.selectable {
+        cursor: pointer;
+        background: #fff;
+    }
+
+    .calendar-day.selectable:hover {
+        background: #e8f4f8;
+        border-color: #1c84c6;
+    }
+
+    .calendar-day.disabled {
+        color: #ccc;
+        cursor: not-allowed;
+        background: #f9f9f9;
+    }
+
+    .calendar-day.selected {
+        background: #1c84c6 !important;
+        color: white !important;
+        font-weight: 600;
+        border-color: #1c84c6;
+    }
+
+    .calendar-day.fecha-emision {
+        background: #1ab394 !important;
+        color: white !important;
+        font-weight: 600;
+        border-color: #1ab394 !important;
+    }
+
+    .calendar-day.fecha-emision:hover {
+        background: #18a689 !important;
+        border-color: #18a689 !important;
+    }
+
+    .calendar-day.fecha-emision.selected {
+        background: #1c84c6 !important;
+        color: white !important;
+        box-shadow: 0 0 0 2px #1ab394;
+        border-color: #1c84c6 !important;
+    }
+
+    .renovacion .row {
+        margin-bottom: 6px;
+    }
+    </style>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -1375,15 +1373,15 @@ let mesSeleccionadoAnual = null;
 // ==================== CALENDARIO MENSUAL CORREGIDO ====================
 function generarCalendarioMensual(mesOffset = 0) {
     const extraSelects = document.getElementById("extra_selects");
-    
+
     @if($renovacion && $fecha_vencimiento)
         const fechaVencimientoText = "{{ $fecha_vencimiento->format('d-m-Y') }}";
         let fechaReferencia;
-        
+
         if (fechaVencimientoText) {
             const separador = fechaVencimientoText.includes('/') ? '/' : '-';
             const partes = fechaVencimientoText.split(separador);
-            
+
             if (partes.length === 3) {
                 const dia = parseInt(partes[0]);
                 const mes = parseInt(partes[1]) - 1;
@@ -1399,11 +1397,11 @@ function generarCalendarioMensual(mesOffset = 0) {
         // Si no hay vencimiento, usar fecha de emisión
         const fechaEmisionText = "{{ $cotizacion->fecha_emision }}";
         let fechaReferencia;
-        
+
         if (fechaEmisionText) {
             const separador = fechaEmisionText.includes('/') ? '/' : '-';
             const partes = fechaEmisionText.split(separador);
-            
+
             if (partes.length === 3) {
                 const dia = parseInt(partes[0]);
                 const mes = parseInt(partes[1]) - 1;
@@ -1416,11 +1414,11 @@ function generarCalendarioMensual(mesOffset = 0) {
             fechaReferencia = new Date();
         }
     @endif
-    
+
     if (isNaN(fechaReferencia.getTime())) {
         fechaReferencia = new Date();
     }
-    
+
     fechaEmisionGlobal = fechaReferencia;
 
     if (mesOffset === 0) {
@@ -1441,7 +1439,7 @@ function generarCalendarioMensual(mesOffset = 0) {
     // Calcular si se puede retroceder (solo meses que contengan la fecha de referencia o posteriores)
     const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
     const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
-    
+
     // Calcular si se puede avanzar (hasta 30 días después de la fecha de referencia)
     const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
 
@@ -1488,7 +1486,7 @@ function generarCalendarioMensual(mesOffset = 0) {
     // Días del mes actual
     for (let dia = 1; dia <= diasEnMes; dia++) {
         const fechaDia = new Date(anioVista, mesVista, dia);
-        
+
         // Normalizar fechas a medianoche para comparación correcta
         const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
         const fechaReferenciaNormalizada = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), fechaReferencia.getDate());
@@ -1554,15 +1552,9 @@ function generarCalendarioMensual(mesOffset = 0) {
 
             this.classList.add('selected');
 
+            // ✅ ÚNICO CAMBIO: Guardar día del mes (1-31) directamente
             const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
-            const mesSeleccionado = parseInt(this.getAttribute('data-mes'));
-            const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
-
-            const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionado - 1, diaSeleccionado);
-            const diffTime = fechaSeleccionada - fechaEmisionGlobal;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            document.getElementById('dia_mensual_hidden').value = diffDays;
+            document.getElementById('dia_mensual_hidden').value = diaSeleccionado;
         });
     });
 
@@ -1589,16 +1581,16 @@ function generarCalendarioMensual(mesOffset = 0) {
 // ==================== CALENDARIO ANUAL CORREGIDO ====================
 function generarCalendarioAnual(mesOffset = 0) {
     const extraSelects = document.getElementById("extra_selects");
-    
+
     // EN EL SHOW, USAR LA FECHA DE VENCIMIENTO COMO REFERENCIA
     @if($renovacion && $fecha_vencimiento)
         const fechaVencimientoText = "{{ $fecha_vencimiento->format('d-m-Y') }}";
         let fechaReferencia;
-        
+
         if (fechaVencimientoText) {
             const separador = fechaVencimientoText.includes('/') ? '/' : '-';
             const partes = fechaVencimientoText.split(separador);
-            
+
             if (partes.length === 3) {
                 const dia = parseInt(partes[0]);
                 const mes = parseInt(partes[1]) - 1;
@@ -1614,11 +1606,11 @@ function generarCalendarioAnual(mesOffset = 0) {
         // Si no hay vencimiento, usar fecha de emisión
         const fechaEmisionText = "{{ $cotizacion->fecha_emision }}";
         let fechaReferencia;
-        
+
         if (fechaEmisionText) {
             const separador = fechaEmisionText.includes('/') ? '/' : '-';
             const partes = fechaEmisionText.split(separador);
-            
+
             if (partes.length === 3) {
                 const dia = parseInt(partes[0]);
                 const mes = parseInt(partes[1]) - 1;
@@ -1631,7 +1623,7 @@ function generarCalendarioAnual(mesOffset = 0) {
             fechaReferencia = new Date();
         }
     @endif
-    
+
     if (isNaN(fechaReferencia.getTime())) {
         fechaReferencia = new Date();
     }
@@ -1693,7 +1685,7 @@ function generarCalendarioAnual(mesOffset = 0) {
     // Días del mes actual
     for (let dia = 1; dia <= diasEnMes; dia++) {
         const fechaDia = new Date(anioVista, mesVista, dia);
-        
+
         // Normalizar fechas a medianoche para comparación correcta
         const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
         const fechaReferenciaNormalizada = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), fechaReferencia.getDate());
@@ -1758,15 +1750,12 @@ function generarCalendarioAnual(mesOffset = 0) {
 
             this.classList.add('selected');
 
+            // ✅ ÚNICO CAMBIO: Guardar día, mes y año directamente
             diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
             mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
             const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
 
-            const fechaSeleccionada = new Date(anioSeleccionado, mesSeleccionadoAnual - 1, diaSeleccionadoAnual);
-            const diffTime = fechaSeleccionada - fechaReferencia;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            document.getElementById('dia_anual_hidden').value = diffDays;
+            document.getElementById('dia_anual_hidden').value = diaSeleccionadoAnual;
             document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
             document.getElementById('anio_anual_hidden').value = anioSeleccionado;
         });
@@ -1778,16 +1767,16 @@ function generarCalendarioAnual(mesOffset = 0) {
 
     if (diaGuardado && diaGuardado !== "" && mesGuardado && mesGuardado !== "") {
         const diasAcumulados = parseInt(diaGuardado);
-        
+
         // Calcular la fecha real sumando días acumulados a la fecha de referencia
         @if($renovacion && $fecha_vencimiento)
             const fechaVencimientoBase = "{{ $fecha_vencimiento->format('d-m-Y') }}";
             let fechaBase;
-            
+
             if (fechaVencimientoBase) {
                 const separador = fechaVencimientoBase.includes('/') ? '/' : '-';
                 const partes = fechaVencimientoBase.split(separador);
-                
+
                 if (partes.length === 3) {
                     const dia = parseInt(partes[0]);
                     const mes = parseInt(partes[1]) - 1;
@@ -1802,11 +1791,11 @@ function generarCalendarioAnual(mesOffset = 0) {
         @else
             const fechaEmisionBase = "{{ $cotizacion->fecha_emision }}";
             let fechaBase;
-            
+
             if (fechaEmisionBase) {
                 const separador = fechaEmisionBase.includes('/') ? '/' : '-';
                 const partes = fechaEmisionBase.split(separador);
-                
+
                 if (partes.length === 3) {
                     const dia = parseInt(partes[0]);
                     const mes = parseInt(partes[1]) - 1;
@@ -1819,7 +1808,7 @@ function generarCalendarioAnual(mesOffset = 0) {
                 fechaBase = new Date();
             }
         @endif
-        
+
         const fechaSeleccionada = new Date(fechaBase);
         fechaSeleccionada.setDate(fechaSeleccionada.getDate() + diasAcumulados);
 

@@ -302,6 +302,15 @@
                             @endif
                         </h3>
                     </td>
+                    <td class="col-sm-4 qr-container">
+                        <div class="qr-box">
+                            @if(!empty($qrCode))
+                                <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
+                            @else
+                                <span class="qr-placeholder">QR</span>
+                            @endif
+                        </div>
+                    </td>
                     <td style="width: auto;border: 1px #808080 solid;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;" align="left">
                         <span > Subtotal:</span><br>
                         <span > Op. Gravada:</span><br>
@@ -376,6 +385,35 @@
         }
         .form-control {
             background-color: transparent !important;
+        }
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-box {
+            width: 120px;
+            height: 120px;
+            border: 2px solid #3D3D3D;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            background: white;
+        }
+
+        .qr-image {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+
+        .qr-placeholder {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
         }
     </style>
 </html>

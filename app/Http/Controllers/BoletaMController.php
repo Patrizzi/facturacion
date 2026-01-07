@@ -498,10 +498,12 @@ class BoletaMController extends Controller
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
+        $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
 
         // $archivo=$name.'_'.$boleta->codigo_boleta;
         // return View('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
-        $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
+        $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','textoQR','qrCode'));
         return $pdf->download('BoletaM - '.$boleta->codigo_boleta.'.pdf');
     }
 
@@ -533,7 +535,7 @@ class BoletaMController extends Controller
 
         if ($request->has('boleta_ids') && !empty($request->input('boleta_ids'))) {
             $boletaIds = $request->input('boleta_ids');
-            
+
             $boletasM = Boleta_m::with([
                 'almacen',
                 'cotizacionM',
@@ -823,6 +825,8 @@ class BoletaMController extends Controller
                     $sum = 0;
                     $sub_total = 0;
                     $j = 1;
+                    $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+                    $qrCode  = $this->generarImagenQR($textoQR);
 
                     $pdf = PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact(
                         'j',
@@ -832,7 +836,9 @@ class BoletaMController extends Controller
                         'sum',
                         'igv',
                         'sub_total',
-                        'banco'
+                        'banco',
+                        'textoQR',
+                        'qrCode'
                     ));
 
                     $pdfContent = $pdf->output();
@@ -892,6 +898,8 @@ class BoletaMController extends Controller
             $sub_total = 0;
             $banco = Banco::where('estado', 0)->get();
             $j = 1;
+            $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+            $qrCode  = $this->generarImagenQR($textoQR);
 
             $pdf = PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact(
                 'j',
@@ -901,7 +909,9 @@ class BoletaMController extends Controller
                 'sum',
                 'igv',
                 'sub_total',
-                'banco'
+                'banco',
+                'textoQR'
+                ,'qrCode'
             ));
 
             return $pdf->download('BoletaM_' . $boleta->codigo_boleta . '.pdf');

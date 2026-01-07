@@ -138,6 +138,11 @@
                                     @if(isset($cotizacion->cliente->telefono ))
                                         / {{$cotizacion->cliente->telefono}}<br>
                                     @endif
+                                    {{-- DATOS DE RENOVACIÓN --}}
+                                    @if($renovacion && $fecha_vencimiento)
+                                        <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Días restantes:</strong>&nbsp;{{ $dias_restantes_texto }}<br>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -315,6 +320,37 @@
                                     @else
                                         <input class="form-control" readonly type="text" id="" value="Sin Comisionista - 0">
                                     @endif
+                                </div>
+
+                                <!-- Sección de Renovación -->
+                                <div class="col-sm-4" style="margin-top: 15px; display: flex; align-items: center; justify-content: flex-start; padding-right: 15px; padding-left: 55px;">
+                                    <div class="switch-container">
+                                        <strong>Renovación:</strong>
+                                        <label class="switch">
+                                            <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1"
+                                                {{ $cotizacion->estado_renovacion == 1 ? 'checked' : '' }}>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8" style="margin-top: 15px;">
+                                    <div id="renovacion_container" style="display: {{ $cotizacion->estado_renovacion == 1 ? 'block' : 'none' }};">
+                                        <div class="row" style="margin: 0;">
+                                            <div class="col-sm-6" style="padding-right: 5px; padding-left: 0;">
+                                                <select class="form-control form-control-sm" name="select_fecha" id="select_fecha" autocomplete="off">
+                                                    <option value="">Frecuencia</option>
+                                                    <option value="Mensual" {{ $cotizacion->frecuencia_renovacion == 'Mensual' ? 'selected' : '' }}>Mensual</option>
+                                                    <option value="Anual" {{ $cotizacion->frecuencia_renovacion == 'Anual' ? 'selected' : '' }}>Anual</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-6" style="padding-left: 5px; padding-right: 0;" id="extra_selects"></div>
+                                        </div>
+                                        <!-- Inputs ocultos para guardar los valores -->
+                                        <input type="hidden" name="dia_mensual" id="dia_mensual_hidden" value="{{ $cotizacion->dia_mensual ?? '' }}">
+                                        <input type="hidden" name="dia_anual" id="dia_anual_hidden" value="{{ $cotizacion->dia_anual ?? '' }}">
+                                        <input type="hidden" name="mes_anual" id="mes_anual_hidden" value="{{ $cotizacion->mes_anual ?? '' }}">
+                                        <input type="hidden" name="anio_anual" id="anio_anual_hidden" value="{{ $cotizacion->anio_anual ?? '' }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -573,6 +609,265 @@
     }
     .select2-selection.select2-selection--single{
         text-align: left;
+    }
+
+    //Estilos nuevos para la seccion de renovacion
+    .renovacion {
+        padding: 0;
+        margin-bottom: 15px;
+        margin-top: 8px;
+    }
+
+    .switch-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+        margin: 0;
+        flex-shrink: 0;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .3s;
+        border-radius: 24px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    input:checked + .slider {
+        background-color: #1ab394;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 2px #1ab394;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    .switch-label {
+        font-size: 13px;
+        color: #676a6c;
+        font-weight: 500;
+        cursor: pointer;
+        user-select: none;
+        margin: 0;
+        line-height: 24px;
+        white-space: nowrap;
+    }
+
+    #renovacion_container {
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .renovacion select:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: #e5e6e7;
+    }
+
+    .renovacion hr {
+        display: none;
+    }
+
+    .form-control-sm {
+        height: 34px;
+        padding: 0.375rem 0.75rem;
+        font-size: 13px;
+        line-height: 1.5;
+        border-radius: 1px;
+    }
+
+    #renovacion_container select {
+        font-size: 13px;
+        height: 34px;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+        border: 1px solid #e5e6e7;
+        width: 100%;
+    }
+
+    #extra_selects select {
+        font-size: 13px;
+        height: 34px;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+        margin-bottom: 0;
+        border: 1px solid #e5e6e7;
+        width: 100%;
+    }
+
+    .calendar-container {
+        background: #fff;
+        border-radius: 4px;
+        padding: 8px;
+        border: 1px solid #e5e6e7;
+        margin-top: 6px;
+        max-width: 260px;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #e5e6e7;
+    }
+
+    .calendar-header h6 {
+        font-size: 12px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+        flex: 1;
+        text-align: center;
+    }
+
+    .calendar-nav-btn {
+        background: #fff;
+        border: 1px solid #e5e6e7;
+        border-radius: 3px;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        color: #676a6c;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+
+    .calendar-nav-btn:hover:not(:disabled) {
+        background: #1ab394;
+        color: white;
+        border-color: #1ab394;
+    }
+
+    .calendar-nav-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .calendar-nav-btn i {
+        font-size: 11px;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+    }
+
+    .calendar-day-header {
+        text-align: center;
+        font-weight: 600;
+        font-size: 10px;
+        padding: 5px 0;
+        color: #676a6c;
+        background: #f8f9fa;
+        border-radius: 2px;
+    }
+
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 2px;
+        cursor: pointer;
+        font-size: 10px;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+        color: #333;
+        min-height: 24px;
+        max-height: 26px;
+    }
+
+    .calendar-day.selectable {
+        cursor: pointer;
+        background: #fff;
+    }
+
+    .calendar-day.selectable:hover {
+        background: #e8f4f8;
+        border-color: #1c84c6;
+    }
+
+    .calendar-day.disabled {
+        color: #ccc;
+        cursor: not-allowed;
+        background: #f9f9f9;
+    }
+
+    .calendar-day.selected {
+        background: #1c84c6 !important;
+        color: white !important;
+        font-weight: 600;
+        border-color: #1c84c6;
+    }
+
+    .calendar-day.fecha-emision {
+        background: #1ab394 !important;
+        color: white !important;
+        font-weight: 600;
+        border-color: #1ab394 !important;
+    }
+
+    .calendar-day.fecha-emision:hover {
+        background: #18a689 !important;
+        border-color: #18a689 !important;
+    }
+
+    .calendar-day.fecha-emision.selected {
+        background: #1c84c6 !important;
+        color: white !important;
+        box-shadow: 0 0 0 2px #1ab394;
+        border-color: #1c84c6 !important;
+    }
+
+    .renovacion .row {
+        margin-bottom: 6px;
     }
 </style>
 
@@ -1070,6 +1365,517 @@
         // console.log(tot);
         ajax_l();
     });
+</script>
+
+{{-- script para manejar las renovaciones --}}
+<script>
+// ==================== VARIABLES GLOBALES ====================
+let calendarioMesActual = new Date();
+let calendarioAnualMesActual = new Date();
+let fechaEmisionGlobal = new Date();
+let diaSeleccionadoAnual = null;
+let mesSeleccionadoAnual = null;
+
+// ==================== CALENDARIO MENSUAL CORREGIDO ====================
+function generarCalendarioMensual(mesOffset = 0) {
+    const extraSelects = document.getElementById("extra_selects");
+
+    @if($renovacion && $fecha_vencimiento)
+        const fechaVencimientoText = "{{ $fecha_vencimiento->format('d-m-Y') }}";
+        let fechaReferencia;
+
+        if (fechaVencimientoText) {
+            const separador = fechaVencimientoText.includes('/') ? '/' : '-';
+            const partes = fechaVencimientoText.split(separador);
+
+            if (partes.length === 3) {
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]) - 1;
+                const anio = parseInt(partes[2]);
+                fechaReferencia = new Date(anio, mes, dia);
+            } else {
+                fechaReferencia = new Date();
+            }
+        } else {
+            fechaReferencia = new Date();
+        }
+    @else
+        // Si no hay vencimiento, usar fecha de emisión
+        const fechaEmisionText = "{{ $cotizacion->fecha_emision }}";
+        let fechaReferencia;
+
+        if (fechaEmisionText) {
+            const separador = fechaEmisionText.includes('/') ? '/' : '-';
+            const partes = fechaEmisionText.split(separador);
+
+            if (partes.length === 3) {
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]) - 1;
+                const anio = parseInt(partes[2]);
+                fechaReferencia = new Date(anio, mes, dia);
+            } else {
+                fechaReferencia = new Date();
+            }
+        } else {
+            fechaReferencia = new Date();
+        }
+    @endif
+
+    if (isNaN(fechaReferencia.getTime())) {
+        fechaReferencia = new Date();
+    }
+
+    fechaEmisionGlobal = fechaReferencia;
+
+    if (mesOffset === 0) {
+        // Iniciar el calendario en el mes de la fecha de referencia (vencimiento)
+        calendarioMesActual = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
+    }
+
+    const mesVista = calendarioMesActual.getMonth();
+    const anioVista = calendarioMesActual.getFullYear();
+
+    // Fecha máxima: 30 días después de la fecha de referencia (vencimiento)
+    const fechaMaxima = new Date(fechaReferencia);
+    fechaMaxima.setDate(fechaMaxima.getDate() + 30);
+
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    // Calcular si se puede retroceder (solo meses que contengan la fecha de referencia o posteriores)
+    const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
+    const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
+
+    // Calcular si se puede avanzar (hasta 30 días después de la fecha de referencia)
+    const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
+
+    let html = `
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <h6>${meses[mesVista]} ${anioVista}</h6>
+                <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">Lu</div>
+                <div class="calendar-day-header">Ma</div>
+                <div class="calendar-day-header">Mi</div>
+                <div class="calendar-day-header">Ju</div>
+                <div class="calendar-day-header">Vi</div>
+                <div class="calendar-day-header">Sa</div>
+                <div class="calendar-day-header">Do</div>
+    `;
+
+    const ultimoDia = new Date(anioVista, mesVista + 1, 0);
+    const diasEnMes = ultimoDia.getDate();
+    const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
+
+    const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+
+    const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
+    const diasMesAnterior = ultimoDiaMesAnterior.getDate();
+
+    // Días del mes anterior (SIEMPRE deshabilitados en el show)
+    for (let i = ajusteDia - 1; i >= 0; i--) {
+        const dia = diasMesAnterior - i;
+        html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
+    }
+
+    const diaReferencia = fechaReferencia.getDate();
+    const mesReferencia = fechaReferencia.getMonth();
+    const anioReferencia = fechaReferencia.getFullYear();
+
+    // Días del mes actual
+    for (let dia = 1; dia <= diasEnMes; dia++) {
+        const fechaDia = new Date(anioVista, mesVista, dia);
+
+        // Normalizar fechas a medianoche para comparación correcta
+        const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
+        const fechaReferenciaNormalizada = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), fechaReferencia.getDate());
+
+        const esFechaReferencia = dia === diaReferencia && mesVista === mesReferencia && anioVista === anioReferencia;
+        const esAnteriorReferencia = fechaDiaNormalizada < fechaReferenciaNormalizada;
+        const esPosteriorMaximo = fechaDia > fechaMaxima;
+        const esDeshabilitado = esAnteriorReferencia || esPosteriorMaximo;
+
+        let clases = 'calendar-day';
+        if (esDeshabilitado) {
+            clases += ' disabled';
+        } else {
+            clases += ' selectable';
+            if (esFechaReferencia) clases += ' fecha-emision';
+        }
+
+        html += `<div class="${clases}"
+                    data-dia="${dia}"
+                    data-mes="${mesVista + 1}"
+                    data-anio="${anioVista}">${dia}</div>`;
+    }
+
+    // Días vacíos al final
+    const celdasUsadas = ajusteDia + diasEnMes;
+    const filasNecesarias = Math.ceil(celdasUsadas / 7);
+    const totalCeldas = filasNecesarias * 7;
+    const diasVaciosFinal = totalCeldas - celdasUsadas;
+
+    for (let i = 1; i <= diasVaciosFinal; i++) {
+        html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
+    }
+
+    html += `</div></div>`;
+    extraSelects.innerHTML = html;
+
+    // Eventos de navegación
+    const prevBtn = document.getElementById('prevMonth');
+    const nextBtn = document.getElementById('nextMonth');
+
+    if (prevBtn && !prevBtn.disabled) {
+        prevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            calendarioMesActual.setMonth(calendarioMesActual.getMonth() - 1);
+            generarCalendarioMensual(-1);
+        });
+    }
+
+    if (nextBtn && !nextBtn.disabled) {
+        nextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            calendarioMesActual.setMonth(calendarioMesActual.getMonth() + 1);
+            generarCalendarioMensual(1);
+        });
+    }
+
+    // Eventos de selección de día
+    document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
+        elemento.addEventListener('click', function() {
+            document.querySelectorAll('.calendar-day').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            this.classList.add('selected');
+
+            // ✅ ÚNICO CAMBIO: Guardar día del mes (1-31) directamente
+            const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
+            document.getElementById('dia_mensual_hidden').value = diaSeleccionado;
+        });
+    });
+
+    // Restaurar selección guardada
+    const diaGuardado = document.getElementById('dia_mensual_hidden').value;
+    if (diaGuardado && diaGuardado !== "") {
+        const fechaSeleccionada = new Date(fechaEmisionGlobal);
+        fechaSeleccionada.setDate(fechaSeleccionada.getDate() + parseInt(diaGuardado));
+
+        const diaSelec = fechaSeleccionada.getDate();
+        const mesSelec = fechaSeleccionada.getMonth();
+        const anioSelec = fechaSeleccionada.getFullYear();
+
+        if (mesSelec === mesVista && anioSelec === anioVista) {
+            document.querySelectorAll('.calendar-day.selectable').forEach(el => {
+                if (parseInt(el.getAttribute('data-dia')) === diaSelec) {
+                    el.classList.add('selected');
+                }
+            });
+        }
+    }
+}
+
+// ==================== CALENDARIO ANUAL CORREGIDO ====================
+function generarCalendarioAnual(mesOffset = 0) {
+    const extraSelects = document.getElementById("extra_selects");
+
+    // EN EL SHOW, USAR LA FECHA DE VENCIMIENTO COMO REFERENCIA
+    @if($renovacion && $fecha_vencimiento)
+        const fechaVencimientoText = "{{ $fecha_vencimiento->format('d-m-Y') }}";
+        let fechaReferencia;
+
+        if (fechaVencimientoText) {
+            const separador = fechaVencimientoText.includes('/') ? '/' : '-';
+            const partes = fechaVencimientoText.split(separador);
+
+            if (partes.length === 3) {
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]) - 1;
+                const anio = parseInt(partes[2]);
+                fechaReferencia = new Date(anio, mes, dia);
+            } else {
+                fechaReferencia = new Date();
+            }
+        } else {
+            fechaReferencia = new Date();
+        }
+    @else
+        // Si no hay vencimiento, usar fecha de emisión
+        const fechaEmisionText = "{{ $cotizacion->fecha_emision }}";
+        let fechaReferencia;
+
+        if (fechaEmisionText) {
+            const separador = fechaEmisionText.includes('/') ? '/' : '-';
+            const partes = fechaEmisionText.split(separador);
+
+            if (partes.length === 3) {
+                const dia = parseInt(partes[0]);
+                const mes = parseInt(partes[1]) - 1;
+                const anio = parseInt(partes[2]);
+                fechaReferencia = new Date(anio, mes, dia);
+            } else {
+                fechaReferencia = new Date();
+            }
+        } else {
+            fechaReferencia = new Date();
+        }
+    @endif
+
+    if (isNaN(fechaReferencia.getTime())) {
+        fechaReferencia = new Date();
+    }
+
+    if (mesOffset === 0) {
+        calendarioAnualMesActual = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
+    }
+
+    const mesVista = calendarioAnualMesActual.getMonth();
+    const anioVista = calendarioAnualMesActual.getFullYear();
+
+    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    // Calcular si se puede retroceder (solo meses que contengan la fecha de referencia o posteriores)
+    const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
+    const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
+
+    let html = `
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonthAnual" ${!puedeRetroceder ? 'disabled' : ''}>
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <h6>${meses[mesVista]} ${anioVista}</h6>
+                <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonthAnual">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="calendar-grid">
+                <div class="calendar-day-header">Lu</div>
+                <div class="calendar-day-header">Ma</div>
+                <div class="calendar-day-header">Mi</div>
+                <div class="calendar-day-header">Ju</div>
+                <div class="calendar-day-header">Vi</div>
+                <div class="calendar-day-header">Sa</div>
+                <div class="calendar-day-header">Do</div>
+    `;
+
+    const ultimoDia = new Date(anioVista, mesVista + 1, 0);
+    const diasEnMes = ultimoDia.getDate();
+    const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
+
+    const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+
+    const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
+    const diasMesAnterior = ultimoDiaMesAnterior.getDate();
+
+    // Días del mes anterior (SIEMPRE deshabilitados)
+    for (let i = ajusteDia - 1; i >= 0; i--) {
+        const dia = diasMesAnterior - i;
+        html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
+    }
+
+    const diaReferencia = fechaReferencia.getDate();
+    const mesReferencia = fechaReferencia.getMonth();
+    const anioReferencia = fechaReferencia.getFullYear();
+
+    // Días del mes actual
+    for (let dia = 1; dia <= diasEnMes; dia++) {
+        const fechaDia = new Date(anioVista, mesVista, dia);
+
+        // Normalizar fechas a medianoche para comparación correcta
+        const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
+        const fechaReferenciaNormalizada = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), fechaReferencia.getDate());
+
+        const esFechaReferencia = dia === diaReferencia && mesVista === mesReferencia && anioVista === anioReferencia;
+        const esAnteriorReferencia = fechaDiaNormalizada < fechaReferenciaNormalizada;
+
+        let clases = 'calendar-day';
+        if (esAnteriorReferencia) {
+            clases += ' disabled';
+        } else {
+            clases += ' selectable';
+            if (esFechaReferencia) clases += ' fecha-emision';
+        }
+
+        html += `<div class="${clases}"
+                    data-dia="${dia}"
+                    data-mes="${mesVista + 1}"
+                    data-anio="${anioVista}">${dia}</div>`;
+    }
+
+    // Días vacíos al final
+    const celdasUsadas = ajusteDia + diasEnMes;
+    const filasNecesarias = Math.ceil(celdasUsadas / 7);
+    const totalCeldas = filasNecesarias * 7;
+    const diasVaciosFinal = totalCeldas - celdasUsadas;
+
+    for (let i = 1; i <= diasVaciosFinal; i++) {
+        html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
+    }
+
+    html += `</div></div>`;
+
+    extraSelects.innerHTML = html;
+
+    // Navegación
+    const prevBtn = document.getElementById('prevMonthAnual');
+    const nextBtn = document.getElementById('nextMonthAnual');
+
+    if (prevBtn && !prevBtn.disabled) {
+        prevBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() - 1);
+            generarCalendarioAnual(-1);
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() + 1);
+            generarCalendarioAnual(1);
+        });
+    }
+
+    // Eventos de selección
+    document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
+        elemento.addEventListener('click', function() {
+            document.querySelectorAll('.calendar-day').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            this.classList.add('selected');
+
+            // ✅ ÚNICO CAMBIO: Guardar día, mes y año directamente
+            diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
+            mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
+            const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
+
+            document.getElementById('dia_anual_hidden').value = diaSeleccionadoAnual;
+            document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
+            document.getElementById('anio_anual_hidden').value = anioSeleccionado;
+        });
+    });
+
+    // Restaurar selección guardada
+    const diaGuardado = document.getElementById('dia_anual_hidden').value;
+    const mesGuardado = document.getElementById('mes_anual_hidden').value;
+
+    if (diaGuardado && diaGuardado !== "" && mesGuardado && mesGuardado !== "") {
+        const diasAcumulados = parseInt(diaGuardado);
+
+        // Calcular la fecha real sumando días acumulados a la fecha de referencia
+        @if($renovacion && $fecha_vencimiento)
+            const fechaVencimientoBase = "{{ $fecha_vencimiento->format('d-m-Y') }}";
+            let fechaBase;
+
+            if (fechaVencimientoBase) {
+                const separador = fechaVencimientoBase.includes('/') ? '/' : '-';
+                const partes = fechaVencimientoBase.split(separador);
+
+                if (partes.length === 3) {
+                    const dia = parseInt(partes[0]);
+                    const mes = parseInt(partes[1]) - 1;
+                    const anio = parseInt(partes[2]);
+                    fechaBase = new Date(anio, mes, dia);
+                } else {
+                    fechaBase = new Date();
+                }
+            } else {
+                fechaBase = new Date();
+            }
+        @else
+            const fechaEmisionBase = "{{ $cotizacion->fecha_emision }}";
+            let fechaBase;
+
+            if (fechaEmisionBase) {
+                const separador = fechaEmisionBase.includes('/') ? '/' : '-';
+                const partes = fechaEmisionBase.split(separador);
+
+                if (partes.length === 3) {
+                    const dia = parseInt(partes[0]);
+                    const mes = parseInt(partes[1]) - 1;
+                    const anio = parseInt(partes[2]);
+                    fechaBase = new Date(anio, mes, dia);
+                } else {
+                    fechaBase = new Date();
+                }
+            } else {
+                fechaBase = new Date();
+            }
+        @endif
+
+        const fechaSeleccionada = new Date(fechaBase);
+        fechaSeleccionada.setDate(fechaSeleccionada.getDate() + diasAcumulados);
+
+        diaSeleccionadoAnual = fechaSeleccionada.getDate();
+        mesSeleccionadoAnual = fechaSeleccionada.getMonth() + 1;
+
+        if (mesSeleccionadoAnual === mesVista + 1) {
+            document.querySelectorAll('.calendar-day.selectable').forEach(el => {
+                if (parseInt(el.getAttribute('data-dia')) === diaSeleccionadoAnual) {
+                    el.classList.add('selected');
+                }
+            });
+        }
+    }
+}
+
+// ==================== EVENT LISTENERS ====================
+document.addEventListener("DOMContentLoaded", function () {
+    const checkRenovacion = document.getElementById("estado_renovacion");
+    const contenedorRenovacion = document.getElementById("renovacion_container");
+    const selectFecha = document.getElementById("select_fecha");
+    const extraSelects = document.getElementById("extra_selects");
+
+    // Al cargar, si hay frecuencia seleccionada, generar el calendario correspondiente
+    if (selectFecha.value === "Mensual") {
+        generarCalendarioMensual(0);
+    } else if (selectFecha.value === "Anual") {
+        generarCalendarioAnual(0);
+    }
+
+    checkRenovacion.addEventListener("change", function () {
+        contenedorRenovacion.style.display = this.checked ? "block" : "none";
+        if (!this.checked) {
+            selectFecha.value = "";
+            extraSelects.innerHTML = "";
+            document.getElementById('dia_mensual_hidden').value = "";
+            document.getElementById('dia_anual_hidden').value = "";
+            document.getElementById('mes_anual_hidden').value = "";
+            document.getElementById('anio_anual_hidden').value = "";
+            diaSeleccionadoAnual = null;
+            mesSeleccionadoAnual = null;
+        }
+    });
+
+    selectFecha.addEventListener("change", function () {
+        const selected = this.value;
+        extraSelects.innerHTML = "";
+        document.getElementById('dia_mensual_hidden').value = "";
+        document.getElementById('dia_anual_hidden').value = "";
+        document.getElementById('mes_anual_hidden').value = "";
+        document.getElementById('anio_anual_hidden').value = "";
+        diaSeleccionadoAnual = null;
+        mesSeleccionadoAnual = null;
+
+        if (selected === "Mensual") {
+            generarCalendarioMensual(0);
+        } else if (selected === "Anual") {
+            generarCalendarioAnual(0);
+        }
+    });
+});
 </script>
 
 @endsection

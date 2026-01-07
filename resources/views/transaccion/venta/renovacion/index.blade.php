@@ -338,13 +338,19 @@
                     }
                 },
                 {
-                    'targets': [10], // Acciones (ahora es la columna 10)
+                    'targets': [10], // Acciones
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var url = '{{ route('cotizacion_manual.show', ':id') }}';
+                        // ✅ Detectar tipo usando full[12]
+                        var url;
+                        if (full[12] === 'manual') {
+                            url = '{{ route('cotizacion_manual.show', ':id') }}';
+                        } else {
+                            url = '{{ route('cotizacion.show', ':id') }}';
+                        }
                         url = url.replace(':id', full[1]);
 
-                        if (full[11] == '0') { // Estado ahora está en full[11]
+                        if (full[11] == '0') {
                             return `<a href="${url}">
                                         <button type="button" class="btn btn-primary btn-sm">
                                             <i class="fa fa-eye"></i>

@@ -51,6 +51,10 @@
             $igv_p = round($cotizacion->op_gravada, 2) * $igv->igv_total / 100;
             $end = round($sub_total, 2) + round($igv_p, 2);
             $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2);
+            $renovacion = $cotizacionData['renovacion'];
+            $fecha_vencimiento = $cotizacionData['fecha_vencimiento'];
+            $dias_restantes_texto = $cotizacionData['dias_restantes_texto'];
+            $dias_restantes_numero = $cotizacionData['dias_restantes_numero'];
             $i = 1;
         @endphp
 
@@ -83,6 +87,11 @@
                                             <strong>N° Contacto:</strong>&nbsp; {{ $cotizacion->cliente->celular }}
                                             @if (isset($cotizacion->cliente->telefono))
                                                 / {{ $cotizacion->cliente->telefono }}
+                                            @endif<br>
+                                            {{-- Datos de la renovacion --}}
+                                            @if($renovacion && $fecha_vencimiento)
+                                                <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <strong>Días restantes:</strong>&nbsp;{{ $dias_restantes_texto }}<br>
                                             @endif
                                         </div>
                                     </div>
