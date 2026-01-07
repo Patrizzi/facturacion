@@ -297,7 +297,7 @@
                     }
                 },
                 {
-                    'targets': [10],
+                    'targets': [10], // Columna Wspxcorreo
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         const boletaId = full[0];
@@ -321,8 +321,7 @@
                                         margin-top: 5px; height: 0px; overflow: hidden; transition: height .4s;
                                         background: white; box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
                                         border-radius: 4px; z-index: 9999; white-space: nowrap; min-width: 250px;">
-                                        <form action="{{ route('email.boleta', '') }}/${boletaId}" method="post"
-                                            target="_blank" style="padding: 10px;">
+                                        <form class="form-enviar-email" data-boleta-id="${boletaId}" style="padding: 10px;">
                                             @csrf
                                             <div style="margin-bottom: 5px;">
                                                 <input type="email" name="emails[]" placeholder="correo@ejemplo.com" 
@@ -677,6 +676,51 @@
                 // Ajustar altura del formulario
                 const contentHeight = form.find('form').outerHeight() + 20;
                 form.css('height', contentHeight + 'px');
+            });
+
+            // Enviar correo con Ajax
+            $(document).on('submit', '.form-enviar-email', function(e) {
+                e.preventDefault();
+                
+                const form = $(this);
+                const boletaId = form.data('boleta-id');
+                const submitBtn = form.find('button[type="submit"]');
+                const originalHtml = submitBtn.html();
+                
+                // Deshabilitar botón y mostrar loading
+                submitBtn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+                
+                // Obtener todos los emails
+                const formData = new FormData(form[0]);
+                
+                $.ajax({
+                    url: "{{ route('email.boleta', '') }}/" + boletaId,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        swal("Correo enviado", "El correo se envió correctamente", "success");
+                        
+                        // Cerrar el formulario
+                        form.closest('.email-form').css('height', '0px');
+                        
+                        // Restaurar botón
+                        submitBtn.prop('disabled', false).html(originalHtml);
+                    },
+                    error: function(xhr) {
+                        let mensaje = "Hubo un error al enviar el correo";
+                        
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            mensaje = xhr.responseJSON.message;
+                        }
+                        
+                        swal("Error", mensaje, "error");
+                        
+                        // Restaurar botón
+                        submitBtn.prop('disabled', false).html(originalHtml);
+                    }
+                });
             });
 
             // ============ MANEJADORES WHATSAPP ============
