@@ -46,7 +46,7 @@
 
         /* ========== COMPONENTES ========== */
         .logo {
-            max-height: 34px;
+            max-height: 67px;
         }
 
         .ruc-box {
@@ -56,7 +56,9 @@
             text-align: center;
             min-width: 210px;
         }
-
+        .title{
+            margin: 3px 0px;
+        }
         .ruc-box .title,
         .ruc-box .serie {
             font-weight: 700;
@@ -195,20 +197,20 @@
         {{-- Encabezado --}}
         <div class="row" style="align-items:flex-start; margin-bottom:8px;">
             <div class="col">
-                <div class="row" style="align-items:center; gap:10px;">
+                <div class="row" style="align-items:center !important; gap:10px;">
                     @if(!empty($empresa->foto))
                         <img class="logo" src="{{ asset('img/logos/' . $empresa->foto) }}" alt="logo">
                     @else
                         <div style="font-size:14px; font-weight:700;">{{ $empresa->nombre ?? 'EMPRESA' }}</div>
                     @endif
                 </div>
-                <div class="muted" style="margin-top:4px;">{{ $empresa->direccion ?? '' }}</div>
-                <div class="muted">R.U.C.: {{ $empresa->ruc ?? '' }}</div>
+                <div class="muted" style="margin-top:2px;"><small>{{ $empresa->calle ?? '' }}</small></div>
+                {{-- <div class="muted">R.U.C.: {{ $empresa->ruc ?? '' }}</div> --}}
             </div>
 
             <div class="ruc-box">
                 <div style="font-weight:700;">R.U.C. N° {{ $empresa->ruc ?? '' }}</div>
-                <div class="title">GUÍA DE REMISIÓN ELECTRÓNICA</div>
+                <div class="title">GUÍA DE REMISIÓN <br> ELECTRÓNICA</div>
                 <div class="serie">{{ $guia_remision->cod_guia }}</div>
             </div>
         </div>

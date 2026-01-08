@@ -381,7 +381,7 @@
             color: rgba(120, 120, 120, 0.31);
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
             font-weight: bolder;
-            font-size: 95px;
+            font-size: 95px !important;
             pointer-events: none;
             -webkit-transform: rotate(-45deg);
             -moz-transform: rotate(-45deg);

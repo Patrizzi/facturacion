@@ -21,9 +21,9 @@
     <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
     {{-- FUNCION CERRAR AUTOMATICAMENTE --}}
     <SCRIPT LANGUAGE="JavaScript">
-        function cerrar() {
-            window.close();
-        }
+        // function cerrar() {
+        //     window.close();
+        // }
     </SCRIPT>
     <style>
     @media print {
@@ -544,10 +544,10 @@
 
                 #watermark p {
                     position: absolute;
-                    color: rgba(120, 120, 120, 0.31);
+                    color: rgba(120, 120, 120, 0);
                     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
                     font-weight: bolder;
-                    font-size: 95px;
+                    font-size: 95px !important;
                     pointer-events: none;
                     -webkit-transform: rotate(-45deg);
                     -moz-transform: rotate(-45deg);
