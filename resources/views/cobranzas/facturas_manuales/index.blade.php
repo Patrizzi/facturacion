@@ -48,20 +48,20 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <div class="input-group" style="flex-wrap: nowrap;">
+                                                {{-- <div class="input-group" style="flex-wrap: nowrap;max-width: 90% !important"> --}}
                                                     <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
-                                                    <span class="input-group-append">
+                                                    {{-- <span class="input-group-append">
                                                         <button type="button" class="btn btn-primary"
                                                             onclick="limpiar_select()">
                                                             <i class="fa fa-eraser"></i>
                                                         </button>
-                                                    </span>
-                                                </div>
+                                                    </span> --}}
+                                                {{-- </div> --}}
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_estado" name="" id="select_estado">
+                                                    <select class="select_2_estado" name="select_estado" id="select_estado">
                                                         <option value="">Seleccionar Estado de Pago</option>
                                                         <option value="0">Sin Pagar</option>
                                                         <option value="1">Pagado Parcial</option>
@@ -70,7 +70,7 @@
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_tipo_pago" name="" id="select_tipo_pago">
+                                                    <select class="select_2_tipo_pago" name="select_tipo_pago" id="select_tipo_pago">
                                                         <option value="">Seleccionar Forma de Pago</option>
                                                         <option value="1">Contado</option>
                                                         <option value="2">Credito</option>
@@ -213,6 +213,14 @@
             padding-right: 15px;
             padding-left: 15px;
         }
+        .select2.select2-container.select2-container--default{
+            height: 100% !important;
+            /* display: flex; */
+            align-items: center;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered{
+            line-height: 33px !important;
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -274,7 +282,7 @@
                     d.datarange = $('#data_range_filter').val();
                     d.cliente_id = $("#cliente option:selected").val();
                     d.estado_pago = $('#select_estado').val();
-                    d.tipo = $('#select_estado').val();
+                    d.tipo = $('#select_tipo_pago').val();
                 }
             },
             "drawCallback": function(settings) {
@@ -425,23 +433,23 @@
         $('.select_2_estado').select2();
         $('.select_2_tipo_pago').select2();
 
-        $(document).ready(function() {
-            table = $('.dataTables-example').DataTable({
-                pageLength: 20,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                bAutoWidth: true,
-                buttons: []
-            });
-            $(document).on('change', '#select_estado', function(event) {
-                var nombre = $("#select_estado option:selected").val();
-                table.column(2).search(nombre).draw();
-            });
-            $(document).on('change', '#cliente', function(event) {
-                var nombre_2 = $("#cliente option:selected").val();
-                table.column(4).search(nombre_2).draw();
-            });
-        });
+        // $(document).ready(function() {
+        //     table = $('.dataTables-example').DataTable({
+        //         pageLength: 20,
+        //         responsive: true,
+        //         dom: '<"html5buttons"B>lTfgitp',
+        //         bAutoWidth: true,
+        //         buttons: []
+        //     });
+        //     $(document).on('change', '#select_estado', function(event) {
+        //         var nombre = $("#select_estado option:selected").val();
+        //         table.column(2).search(nombre).draw();
+        //     });
+        //     $(document).on('change', '#cliente', function(event) {
+        //         var nombre_2 = $("#cliente option:selected").val();
+        //         table.column(4).search(nombre_2).draw();
+        //     });
+        // });
 
         function limpiar_select() {
             // console.log('a');
@@ -451,34 +459,6 @@
 
         }
 
-        $(document).ready(function() {
-            table2 = $('.dataTables-examaple-2').DataTable({
-                pageLength: 20,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
-            $(document).on('change', '#cliente_2', function(event) {
-                var nombre2 = $("#cliente_2 option:selected").val();
-                table2.column(3).search(nombre2).draw();
-            });
-        });
-
-        function limpiar_select_2() {
-            // console.log('a');
-            var table2_2l = $('.dataTables-examaple-2').DataTable();
-            table2_2l.column(3).search('').draw();
-            $('#cliente_2').val(null).trigger('change');
-
-        }
-        $(document).ready(function() {
-            table3 = $('.dataTables-examaple-3').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
-        });
         // PAGO INDIVIDUAL
         function pago_factura(n_factura) {
             // console.log('a');

@@ -22,7 +22,7 @@ class CobranzasComprobantesController extends Controller
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
 
-        // dd($request);
+        dd($request);
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
@@ -64,7 +64,7 @@ class CobranzasComprobantesController extends Controller
          if ($tipo != null) {
             $query->where('forma_pago_id', $tipo);
         } else {
-            $query->whereIn('estado_pago', [0, 1]);
+            $query->whereIn('forma_pago_id', [0, 1]);
         }
 
         $recordsTotal = $query->count();
@@ -211,7 +211,7 @@ class CobranzasComprobantesController extends Controller
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
 
-        // dd($request);
+        // dd($request->get('estado_pago'));
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
@@ -233,8 +233,13 @@ class CobranzasComprobantesController extends Controller
             8 => 'ultima_fecha_pago',
             9 => 'id'
         ];
-
-        if ($request->datarange != null) {
+        // dd([
+        //     'estado_pago_request' => $request->estado_pago,
+        //     'filled' => $request->filled('estado_pago'),
+        //     'is_null' => is_null($request->estado_pago),
+        //     'type' => gettype($request->estado_pago),
+        // ]);
+        if ($request->datarange !== null && $request->datarange !== "") {
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[1])->endOfDay();
 
@@ -245,16 +250,22 @@ class CobranzasComprobantesController extends Controller
         if($cliente != null){
             $query->where('cliente_id', $cliente);
         }
+        // return $query->where('estado_pago', 0)->get();
         if ($estado_pago != null) {
             $query->where('estado_pago', $estado_pago);
         } else {
             $query->whereIn('estado_pago', [0, 1]);
         }
-         if ($tipo != null) {
-            $query->where('forma_pago_id', $tipo);
-        } else {
-            $query->whereIn('estado_pago', [0, 1]);
+        // return $query->get();
+        if ($request->filled('forma_pago_id')) {
+            $query->where('forma_pago_id', (int)$request->forma_pago_id);
         }
+        // dd(
+        //     $query->toSql(),
+        //     $query->getBindings()
+        // );
+        // return $query->get();
+
         // if (!empty($filter)) {
         //     $query->where(function ($q) use ($filter) {
         //         $q->where('nombre', 'like', '%' . $filter . '%')

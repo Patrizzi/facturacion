@@ -629,6 +629,7 @@
     var tipo_coti = 3;
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
+        allowClear: true,
         ajax: {
             minimumInputLength: 1,
             url: "{{ route('pa.clients') }}",
@@ -647,36 +648,7 @@
                 return {
                     results: $.map(data, function(item) {
                         return {
-                            id: item.nombre,
-                            text: item.nombre + ' | ' + item.numero_documento,
-                        };
-                    })
-                };
-            },
-            cache: true
-        }
-    });
-    $(".select2_demo_client_2").select2({
-        placeholder: "Seleccionar Cliente",
-        ajax: {
-            minimumInputLength: 1,
-            url: "{{ route('pa.clients') }}",
-            dataType: 'json',
-            type: "POST",
-            delay: 10,
-            data: function(params) {
-                var tipo_coti = $('[name="tipo_coti"]:checked').val();
-                return {
-                    _token: "{{ csrf_token() }}",
-                    search: params.term, // search term
-                    tipo_coti: tipo_coti
-                };
-            },
-            processResults: function(data) {
-                return {
-                    results: $.map(data, function(item) {
-                        return {
-                            id: item.nombre,
+                            id: item.id,
                             text: item.nombre + ' | ' + item.numero_documento,
                         };
                     })

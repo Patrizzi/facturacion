@@ -839,65 +839,11 @@ Route::group(
         //* Ajax datatable
         Route::get('/creditos_pago/nota_venta/pagados/lista', 'CobranzasComprobantesController@lista_nota_venta_pagados_index')->name('cobranzas.lista_nota_venta_pagados_index');
         //* Impresion de Detalle
-        Route::get('/creditos_pago/nota_venta/print/{id}', 'PagadosController@print_n_venta')->name('pagos.print_nota_venta'); //Boletas
-
-
-        // Route::get('/pagos/boletas', 'PagadosController@view_boletas')->name('pagos.view_boletas');
-        // Route::get('/pagos/boletas/{id}', 'PagadosController@show_boletas')->name('pagos.show_boletas');
-        // Route::get('/pagos/boletas/cliente/{ruc}', 'PagadosController@show_cliente_boleta')->name('pagos.show_cliente_boleta');
-        // PAGADOS BOLETAS MANUALES
-        // Route::get('/pagos/boletas_m', 'PagadosController@view_boletas_m')->name('pagos.view_boletas_m');
-        // Route::post('/pagados/lista_ajax_boletas_m', 'PagadosController@lista_ajax_boletas_m')->name('pagos.lista_ajax_boletas_m');
-        // Route::get('/pagos/boletas_m/{id}', 'PagadosController@show_boletas_m')->name('pagos.show_boletas_m');
-        // Route::get('/pagos/boletas_m/cliente/{ruc}', 'PagadosController@show_cliente_boleta_m')->name('pagos.show_cliente_boleta_m');
-        //PAGADOS DE NOTA DE VENTA
-        // Route::get('/pagos/nota_venta', 'PagadosController@view_nota_venta')->name('pagos.view_nota_venta');
-        // Route::post('/pagados/store_nota_venta', 'PagadosController@store_n_venta')->name('pagos.store_n_venta');
-        // Route::get('/pagos/nota_venta/cliente/{ruc}', 'PagadosController@show_cliente_nota_v')->name('pagos.show_cliente_nota_v');
-
-        // Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
-        // Route::get('/adelantos/comprobantes_pdf/{id}', 'CreditosAdelantosController@comprobantes_pdf')->name('adelantos.comprobantes_pdf');
-        // PAGADOS
-        // Route::resource('/pagados', 'PagadosController');
-        // Route::post('/pagados/lista_ajax', 'PagadosController@lista_ajax')->name('pagos.lista_ajax');
-        // Route::get('/pagos/facturas','PagadosController@index_factura')->name('pagos.index_factura');index_factura
-        // PAGADOS FACTURAS
-        // Route::get('/pagos/facturas', 'PagadosController@view_facturas')->name('pagos.view_facturas');
-        // Route::post('/pagados/lista_ajax_fact', 'PagadosController@lista_ajax_fact')->name('pagos.lista_ajax_fact');
-        // Route::get('/pagos/facturas/{id}', 'PagadosController@show_facturas')->name('pagos.show_facturas');
-        // Route::get('/pagos/facturas/cliente/{ruc}', 'PagadosController@show_cliente_factura')->name('pagos.show_cliente_factura');
-        // PAGADOS FACTURAS MANUALES
-        // Route::get('/pagos/facturas_m', 'PagadosController@view_facturas_m')->name('pagos.view_facturas_m');
-        // Route::post('/pagados/lista_ajax_fact_m', 'PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
-        // Route::get('/pagos/facturas_m/{id}', 'PagadosController@show_facturas_m')->name('pagos.show_facturas_m');
-        // Route::get('/pagos/facturas_m/cliente/{ruc}', 'PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
-        // PAGADOS BOLETAS
-        // Route::post('/pagados/store_boleta', 'PagadosController@store_boleta')->name('pagos.store_boleta');
-
-        // Route::get('/pagos/boletas', 'PagadosController@view_boletas')->name('pagos.view_boletas');
-        // Route::post('/pagados/lista_ajax_boletas', 'PagadosController@lista_ajax_boleta')->name('pagos.lista_ajax_boletas');
-        // Route::get('/pagos/boletas/{id}', 'PagadosController@show_boletas')->name('pagos.show_boletas');
-        // Route::get('/pagos/boletas/cliente/{ruc}', 'PagadosController@show_cliente_boleta')->name('pagos.show_cliente_boleta');
-        // // PAGADOS BOLETAS MANUALES
-        // Route::get('/pagos/boletas_m', 'PagadosController@view_boletas_m')->name('pagos.view_boletas_m');
-        // Route::post('/pagados/lista_ajax_boletas_m', 'PagadosController@lista_ajax_boletas_m')->name('pagos.lista_ajax_boletas_m');
-        // Route::get('/pagos/boletas_m/{id}', 'PagadosController@show_boletas_m')->name('pagos.show_boletas_m');
-        // Route::get('/pagos/boletas_m/cliente/{ruc}', 'PagadosController@show_cliente_boleta_m')->name('pagos.show_cliente_boleta_m');
-        // //PAGADOS DE NOTA DE VENTA
-        // Route::post('/pagados/store_nota_venta', 'PagadosController@store_n_venta')->name('pagos.store_n_venta');
-
-        // Route::get('/pagos/nota_venta', 'PagadosController@view_nota_venta')->name('pagos.view_nota_venta');
-        // Route::post('/pagados/lista_ajax_n_venta', 'PagadosController@lista_ajax_n_venta')->name('pagos.lista_ajax_n_venta');
-        // Route::get('/pagos/nota_venta/{id}', 'PagadosController@show_nota_venta')->name('pagos.show_nota_venta');
-        // Route::get('/pagos/nota_venta/cliente/{ruc}', 'PagadosController@show_cliente_nota_v')->name('pagos.show_cliente_nota_v');
-
+        Route::get('/creditos_pago/nota_venta/print/{id}', 'PagadosController@print_n_venta')->name('pagos.print_nota_venta'); //Nota de Venta
 
 
         Route::post('/show_cuotas', 'PagadosController@show_cuotas')->name('pagos.show_cuota');
-        // Route::get('/show_cuotas/factura_manual/print/{id}', 'PagadosController@print_facturas_m_cuotas')->name('pagos.print_facturas_m_cuotas'); //Facturas M
-        // Route::get('/show_cuotas/boleta/print/{id}', 'PagadosController@print_boleta_cuotas')->name('pagos.print_boleta_cuotas'); //Boletas
-        // Route::get('/show_cuotas/boleta_manual/print/{id}', 'PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas'); //Boletas M
-        // Route::get('/show_cuotas/nota_venta/print/{id}', 'PagadosController@print_n_venta')->name('pagos.print_nota_venta'); //Boletas
+
         // Route::post('/pagados/store',)
         Route::resource('/pedidos', 'PedidosController');
         Route::resource('/personal', 'PersonalController');
