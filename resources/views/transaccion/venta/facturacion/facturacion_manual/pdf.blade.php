@@ -154,7 +154,7 @@
         <footer style="padding-top: 120px">
             <table style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
                 <tr>
-                    <td style="width: 70%;border: none">
+                    <td style="width: 50%;border: none">
                         <h3 align="left">
                             <?php use Luecano\NumeroALetras\NumeroALetras;
                             $v = new NumeroALetras();
@@ -178,10 +178,10 @@
                             Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
                         </small>
                     </td>
-                    <td class="col-sm-4 qr-container">
+                    <td style="width: 14%;border: none;padding-right: 25px;padding-top: 0px !important;">
                         <div class="qr-box">
                             @if(!empty($qrCode))
-                                <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
+                                <img src="{{ $qrCode }}" alt="Código QR" style="max-width: 100%;">
                             @else
                                 <span class="qr-placeholder">QR</span>
                             @endif
@@ -330,7 +330,7 @@
                     pointer-events: none;
                     -webkit-transform: rotate(-45deg);
                     -moz-transform: rotate(-45deg);
-                    top: 35%;
+                    top: 25%;
                     right: 35%;
                     z-index: 0;
                 }
@@ -350,8 +350,8 @@
                 }
 
                 .qr-box {
-                    width: 120px;
-                    height: 120px;
+                    width: 100%;
+                    /* height: 120px; */
                     border: 2px solid #3D3D3D;
                     border-radius: 10px;
                     display: flex;
