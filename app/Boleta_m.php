@@ -217,7 +217,7 @@ class Boleta_m extends Model
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where
             $query->where(function ($q) use ($filter) {
-                $q->where('cod_boleta', 'like', '%' . $filter . '%');
+                $q->where('codigo_boleta', 'like', '%' . $filter . '%');
                 $q->orWhereHas('cliente', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%')
                         ->orWhere('numero_documento', 'like', '%' . $filter . '%');
