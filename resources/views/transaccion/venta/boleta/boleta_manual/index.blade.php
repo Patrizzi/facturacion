@@ -38,7 +38,7 @@
                             <thead>
                                 <tr>
                                     <th>Item</th>
-                                    <th>Código de Factura</th>
+                                    <th>Código de Boleta</th>
                                     <th>Cliente</th>
                                     <th>N°Documento</th>
                                     <th>Fecha Emisión</th>
