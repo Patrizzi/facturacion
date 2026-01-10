@@ -407,6 +407,8 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_proceso,
                 $factura->estado_nota_credito,
                 $factura->estado_nota_debito,
+                $factura->cliente->celular ?? '',
+                $factura->cliente->email ?? '',
             ];
         }
         // Llamado para la suma total
@@ -540,6 +542,9 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_proceso,
                 $factura->estado_nota_credito,
                 $factura->estado_nota_debito,
+                $factura->cliente->celular ?? '',
+                $factura->cliente->email ?? '',
+
             ];
         }
         // Llamado para la suma total
@@ -714,7 +719,9 @@ class ComprobantesVentasController extends Controller
                 $n_credito->forma_pago,
                 // $n_credito->total,
                 $n_credito->id,
-                $n_credito->estado_proceso
+                $n_credito->estado_proceso,
+                $n_credito->cliente->celular ?? '',
+                $n_credito->cliente->email ?? '',
             ];
         }
         return response()->json($json);
@@ -885,7 +892,9 @@ class ComprobantesVentasController extends Controller
                 $n_debito->forma_pago,
                 // $n_debito->total,
                 $n_debito->id,
-                $n_debito->estado_proceso
+                $n_debito->estado_proceso,
+                $n_debito->cliente->celular ?? '',
+                $n_debito->cliente->email ?? '',
             ];
         }
         return response()->json($json);
@@ -1038,6 +1047,8 @@ class ComprobantesVentasController extends Controller
                 $guia_r->fecha_entrega_formatted,     // 6 - Entrega
                 $guia_r->id,                          // 7 - Ver (para link)
                 $guia_r->estado_proceso,              // 8 - Estado
+                $guia_r->cliente->celular ?? '',
+                $guia_r->cliente->email ?? '',
             ];
         }
 
@@ -1209,6 +1220,8 @@ class ComprobantesVentasController extends Controller
                 $row->fecha_entrega_formatted,         // 6 - Entrega
                 $row->id,                              // 7 - Ver (para link)
                 $row->estado_proceso,                  // 8 - Estado SUNAT (0/1/2)
+                $row->cliente->celular ?? '',
+                $row->cliente->email ?? '',
             ];
         }
 

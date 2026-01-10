@@ -763,7 +763,7 @@ Route::group(
         //* Detalle de Pago
         Route::post('/creditos_pago/detalle_comprobante/', 'ComprobantesPagosDetalleController@show')->name('cobranzas.show_detalle_pago');
 
-        //! COBRANZAS FACTURAS 
+        //! COBRANZAS FACTURAS
         Route::get('/creditos_pago/facturas', 'PagadosController@index_factura')->name('cobranzas.index_factura'); //! index de Facturas sin Pagar
         // * Ajax datatable
         Route::get('/creditos_pago/facturas/lista', 'CobranzasComprobantesController@lista_facturas_index')->name('cobranzas.lista_facturas_index');
@@ -792,7 +792,7 @@ Route::group(
         // * Ajax datatable
         Route::get('/creditos_pago/facturas_manuales/pagados/lista', 'CobranzasComprobantesController@lista_facturas_manual_pagados_index')->name('cobranzas.lista_facturas_manual_pagados_index');
         //* Impresion de Detalle
-        Route::get('/creditos_pago/facturas_manuales/print/{id}', 'PagadosController@print_facturas_m_cuotas')->name('pagos.print_facturas_m_cuotas'); 
+        Route::get('/creditos_pago/facturas_manuales/print/{id}', 'PagadosController@print_facturas_m_cuotas')->name('pagos.print_facturas_m_cuotas');
 
         // Route::get('/creditos_pago/facturas_manuales/resumen_cliente', 'PagadosController@index_facturas_m_clientes')->name('cobranzas.lista_facturas_manual_clientes_index'); //! index de Facturas Manuales Clientes
 
@@ -809,8 +809,8 @@ Route::group(
         // * Ajax datatable
         Route::get('/creditos_pago/boletas/pagados/lista', 'CobranzasComprobantesController@lista_boletas_pagados_index')->name('cobranzas.lista_boletas_pagados_index');
         //* Impresion de Detalle
-        Route::get('/creditos_pago/boletas/print/{id}', 'PagadosController@print_boleta_cuotas')->name('pagos.print_boleta_cuotas'); 
-        
+        Route::get('/creditos_pago/boletas/print/{id}', 'PagadosController@print_boleta_cuotas')->name('pagos.print_boleta_cuotas');
+
         //! COBRANZAS BOLETAS MANUALES
         Route::get('/creditos_pago/boletas_manuales', 'PagadosController@index_boletas_manual')->name('cobranzas.index_boletas_manual'); //! index de Boletas Manual sin Pagar
         // * Ajax datatable
@@ -824,13 +824,13 @@ Route::group(
         // * Ajax datatable
         Route::get('/creditos_pago/boletas_manuales/pagados/lista', 'CobranzasComprobantesController@lista_boletas_manual_pagados_index')->name('cobranzas.lista_boletas_manual_pagados_index');
         //* Impresion de Detalle
-        Route::get('/creditos_pago/boletas_manuales/print/{id}', 'PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas'); 
-            
-        //! COBRANZAS NOTAS DE VENTA 
+        Route::get('/creditos_pago/boletas_manuales/print/{id}', 'PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas');
+
+        //! COBRANZAS NOTAS DE VENTA
         Route::get('/creditos_pago/nota_venta', 'PagadosController@index_nota_venta')->name('cobranzas.index_nota_venta'); //! index de Boletas sin Pagar
         //* Ajax Datatable
         Route::get('/creditos_pago/nota_venta/lista', 'CobranzasComprobantesController@lista_nota_venta_index')->name('cobranzas.lista_nota_venta_index');
-        // * Ajax para la obtencion de cuotas de Nota de Venta            
+        // * Ajax para la obtencion de cuotas de Nota de Venta
         Route::post('/pagados/lista_ajax_n_venta', 'PagadosController@lista_ajax_n_venta')->name('pagos.lista_ajax_n_venta');
         //? index de Boletas Manuales Pagadas
         Route::get('/creditos_pago/nota_venta/pagados', 'PagadosController@index_nota_venta_pagados')->name('cobranzas.index_nota_venta_pagados');
@@ -1348,8 +1348,46 @@ Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class,
 
 
 // Mandar multiples pdf por wsp en comprobantes
-Route::post('/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])
+Route::post('/comprobantes/boleta/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boleta.multiple');
 
-Route::post('/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
+Route::post('/comprobantes/boleta_manual/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boletaM.multiple');
+
+Route::post('/comprobantes/factura/whatsapp/send-multiple', [FacturacionController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.factura.multiple');
+
+Route::post('/comprobantes/factura_manual/whatsapp/send-multiple', [FacturacionMController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.facturaM.multiple');
+
+Route::post('/comprobantes/nota_credito/whatsapp/send-multiple', [NotaCreditoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.notaCredito.multiple');
+
+Route::post('/comprobantes/nota_debito/whatsapp/send-multiple', [NotaDebitoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.notaDebito.multiple');
+
+Route::post('/comprobantes/guia_remision/whatsapp/send-multiple', [GuiaRemisionController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaRemision.multiple');
+
+Route::post('/comprobantes/guia_remision_manual/whatsapp/send-multiple', [GuiaRemisionManualController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaRemisionM.multiple');
+
+// Mandar multiples pdf por wsp en comprobantes
+Route::post('/ventas/cotizacion/whatsapp/send-multiple', [CotizacionController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.cotizacion.multiple');
+
+Route::post('/ventas/cotizacion_manual/whatsapp/send-multiple', [CotizacionManualController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.cotizacionM.multiple');
+
+Route::post('/ventas/nota_venta/whatsapp/send-multiple', [NotaVentaController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.notaVenta.multiple');
+
+// Mandar multiples pdf por wsp en comprobantes
+Route::post('/garantias/guia_ingreso/whatsapp/send-multiple', [GarantiaGuiaIngresoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaIngreso.multiple');
+
+Route::post('/garantias/guia_egreso/whatsapp/send-multiple', [GarantiaGuiaEgresoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaEgreso.multiple');
+
+Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.informeTecnico.multiple');
