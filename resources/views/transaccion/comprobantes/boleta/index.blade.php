@@ -297,7 +297,7 @@
                     }
                 },
                 {
-                    'targets': [10], // Columna Wspxcorreo
+                    'targets': [10], // Columna de Compartir (Boton de correo sin funcionamiento por ahora)
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         const boletaId = full[0];
@@ -307,64 +307,27 @@
 
                         return `
                             <div style="display: inline-block; white-space: nowrap;">
-                                <!-- Contenedor Correo -->
-                                <div class="email-container" data-id="${boletaId}"
-                                    style="display: inline-block; position: relative; vertical-align: top; margin-right: 5px;">
-                                    <button type="button" class="btn btn-secondary"
-                                            style="cursor: pointer;">
-                                        <i class="fa fa-envelope fa-lg"></i>
-                                    </button>
-
-                                    <!-- Formulario desplegable Correo -->
-                                    <div class="email-form" data-id="${boletaId}"
-                                        style="position: absolute; top: 100%; right: 0;
-                                        margin-top: 5px; height: 0px; overflow: hidden; transition: height .4s;
-                                        background: white; box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
-                                        border-radius: 4px; z-index: 9999; white-space: nowrap; min-width: 250px;">
-                                        <form class="form-enviar-email" data-boleta-id="${boletaId}" style="padding: 10px;">
-                                            @csrf
-                                            <div style="margin-bottom: 5px;">
-                                                <input type="email" name="emails[]" placeholder="correo@ejemplo.com" 
-                                                    value="${emailCliente}"
-                                                    style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
-                                            </div>
-                                            <div class="emails-adicionales-${boletaId}"></div>
-                                            <button type="button" class="btn-agregar-email btn btn-info btn-xs" data-id="${boletaId}"
-                                                    style="padding: 3px 8px; margin-bottom: 5px; font-size: 11px;">
-                                                <i class="fa fa-plus"></i> Agregar correo
-                                            </button>
-                                            <button type="submit" class="btn btn-secondary"
-                                                    style="padding: 5px 10px; float: right;">
-                                                <i class="fa fa-send fa-lg"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-
+                                <!-- Aqui ira lo del correo -->
                                 <!-- Contenedor WhatsApp -->
                                 <div class="wsp-container" data-id="${boletaId}"
                                     style="display: inline-block; position: relative; vertical-align: top;">
                                     <a class="btn btn-success" style="background: green; border-color: green; cursor: pointer;">
                                         <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
                                     </a>
-
-                                    <!-- Formulario desplegable WhatsApp -->
                                     <div class="wsp-form" data-id="${boletaId}"
-                                        style="position: absolute; top: 100%; right: 0;
-                                        margin-top: 5px; height: 0px; overflow: hidden; transition: height .4s;
-                                        background: white; box-shadow: 0px 0px 5px rgba(0,0,0,0.3);
-                                        border-radius: 4px; z-index: 9999; white-space: nowrap;">
-                                        <form action="{{ route('agregado.whatsapp_send') }}" method="post"
-                                            target="_blank" style="padding: 10px;">
+                                        style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                        overflow: hidden; transition: height .4s; background: white;
+                                        box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                        z-index: 9999; white-space: nowrap;">
+                                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" target="_blank" style="padding: 10px;">
                                             @csrf
-                                            <input type="tel" name="numero" placeholder="999999999" 
-                                                value="${celularCliente}"
+                                            <input type="tel" name="numero" placeholder="999999999" value="${celularCliente}"
                                                 style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
                                             <input type="text" name="mensaje" hidden />
                                             <input type="hidden" name="url" value="{{ route('pdf_bol', '') }}/${boletaId}?archivo=" />
                                             <input type="hidden" name="name_sin_cambio" value="Boleta_${codigoBoleta}" />
                                             <button type="submit" class="btn btn-success"
-                                                    style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
+                                                style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
                                                 <i class="fa fa-send fa-lg"></i>
                                             </button>
                                         </form>
@@ -607,151 +570,25 @@
                 }, 150); // Aumenté el timeout para mayor confiabilidad
             });
 
-            // Correo
-            $(document).on('mouseenter', '.email-container', function() {
-                const id = $(this).data('id');
-                const form = $(this).find('.email-form');
-                // Calcular altura dinámica basada en el contenido
-                const contentHeight = form.find('form').outerHeight() + 20;
-                form.css('height', contentHeight + 'px');
-            });
+            // ============ AQUI IRA LO DEL CORREO ============
 
-            // Mantener visible cuando el mouse está en el formulario de correo
-            $(document).on('mouseenter', '.email-form', function() {
-                const contentHeight = $(this).find('form').outerHeight() + 20;
-                $(this).css('height', contentHeight + 'px');
-            });
-
-            // Ocultar cuando sale del contenedor de correo
-            $(document).on('mouseleave', '.email-container', function() {
-                const form = $(this).find('.email-form');
-                setTimeout(() => {
-                    if (!form.is(':hover')) {
-                        form.css('height', '0px');
-                    }
-                }, 200);
-            });
-
-            // Ocultar cuando sale del formulario de correo
-            $(document).on('mouseleave', '.email-form', function() {
-                const container = $(this).closest('.email-container');
-                setTimeout(() => {
-                    if (!container.is(':hover')) {
-                        $(this).css('height', '0px');
-                    }
-                }, 200);
-            });
-
-            // Agregar campo de correo adicional
-            $(document).on('click', '.btn-agregar-email', function() {
-                const boletaId = $(this).data('id');
-                const container = $(`.emails-adicionales-${boletaId}`);
-                
-                const nuevoEmail = `
-                    <div style="margin-bottom: 5px; position: relative;">
-                        <input type="email" name="emails[]" placeholder="correo@ejemplo.com" 
-                            style="width: calc(100% - 30px); padding: 5px; border: 1px solid #ccc; border-radius: 3px;" />
-                        <button type="button" class="btn-eliminar-email btn btn-danger btn-xs" 
-                                style="padding: 3px 6px; position: absolute; right: 0; top: 0; height: 100%;">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                `;
-                
-                container.append(nuevoEmail);
-                
-                // Ajustar altura del formulario
-                const form = $(`.email-form[data-id="${boletaId}"]`);
-                const contentHeight = form.find('form').outerHeight() + 20;
-                form.css('height', contentHeight + 'px');
-            });
-
-            // Eliminar campo de correo adicional
-            $(document).on('click', '.btn-eliminar-email', function() {
-                const form = $(this).closest('.email-form');
-                const boletaId = form.data('id');
-                
-                $(this).closest('div').remove();
-                
-                // Ajustar altura del formulario
-                const contentHeight = form.find('form').outerHeight() + 20;
-                form.css('height', contentHeight + 'px');
-            });
-
-            // Enviar correo con Ajax
-            $(document).on('submit', '.form-enviar-email', function(e) {
-                e.preventDefault();
-                
-                const form = $(this);
-                const boletaId = form.data('boleta-id');
-                const submitBtn = form.find('button[type="submit"]');
-                const originalHtml = submitBtn.html();
-                
-                // Deshabilitar botón y mostrar loading
-                submitBtn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
-                
-                // Obtener todos los emails
-                const formData = new FormData(form[0]);
-                
-                $.ajax({
-                    url: "{{ route('email.boleta', '') }}/" + boletaId,
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        swal("Correo enviado", "El correo se envió correctamente", "success");
-                        
-                        // Cerrar el formulario
-                        form.closest('.email-form').css('height', '0px');
-                        
-                        // Restaurar botón
-                        submitBtn.prop('disabled', false).html(originalHtml);
-                    },
-                    error: function(xhr) {
-                        let mensaje = "Hubo un error al enviar el correo";
-                        
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            mensaje = xhr.responseJSON.message;
-                        }
-                        
-                        swal("Error", mensaje, "error");
-                        
-                        // Restaurar botón
-                        submitBtn.prop('disabled', false).html(originalHtml);
-                    }
-                });
-            });
-
-            // ============ MANEJADORES WHATSAPP ============
-
-            // Hover WhatsApp - Mostrar formulario
+            // ============ WHATSAPP ============
             $(document).on('mouseenter', '.wsp-container', function() {
-                const id = $(this).data('id');
                 $(this).find('.wsp-form').css('height', '50px');
             });
 
-            // Mantener visible cuando el mouse está en el formulario
             $(document).on('mouseenter', '.wsp-form', function() {
                 $(this).css('height', '50px');
             });
 
-            // Ocultar cuando sale del contenedor
-            $(document).on('mouseleave', '.wsp-container', function() {
-                const form = $(this).find('.wsp-form');
-                setTimeout(() => {
-                    if (!form.is(':hover')) {
-                        form.css('height', '0px');
-                    }
-                }, 200);
-            });
+            $(document).on('mouseleave', '.wsp-container, .wsp-form', function() {
+                const isContainer = $(this).hasClass('wsp-container');
+                const target = isContainer ? $(this).find('.wsp-form') : $(this);
+                const checkElement = isContainer ? target : $(this).closest('.wsp-container');
 
-            // Ocultar cuando sale del formulario
-            $(document).on('mouseleave', '.wsp-form', function() {
-                const container = $(this).closest('.wsp-container');
                 setTimeout(() => {
-                    if (!container.is(':hover')) {
-                        $(this).css('height', '0px');
+                    if (!target.is(':hover') && !checkElement.is(':hover')) {
+                        target.css('height', '0px');
                     }
                 }, 200);
             });
@@ -946,24 +783,19 @@
                 });
             });
 
-            // Función para enviar boletas por WhatsApp (masivo)
+            // Función para enviar boletas por WhatsApp multiple
             $('#btn-whatsapp-filtrado').on('click', function(e) {
                 e.preventDefault();
 
-                console.log('IDs seleccionados para WhatsApp:', allSelectedIds);
-
-                // Validar que hay boletas seleccionadas
                 if (allSelectedIds.length === 0) {
-                    swal({
+                    return swal({
                         title: "Sin selección",
                         text: "Por favor, selecciona al menos una boleta para enviar por WhatsApp.",
                         type: "warning",
                         confirmButtonText: "Entendido"
                     });
-                    return;
                 }
 
-                // Mostrar modal para ingresar número de WhatsApp
                 swal({
                     title: "Enviar por WhatsApp",
                     text: `Ingresa el número de WhatsApp para enviar ${allSelectedIds.length} boleta(s):`,
@@ -975,22 +807,10 @@
                     inputPlaceholder: "Ejemplo: 999999999"
                 }, function(inputValue) {
                     if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");
+                    if (!/^\d+$/.test(inputValue)) return swal.showInputError("Por favor ingresa solo números");
 
-                    if (inputValue === "" || inputValue === null) {
-                        swal.showInputError("Por favor ingresa un número de WhatsApp válido");
-                        return false;
-                    }
-
-                    // Validar que sea un número
-                    if (!/^\d+$/.test(inputValue)) {
-                        swal.showInputError("Por favor ingresa solo números");
-                        return false;
-                    }
-
-                    // Cerrar el modal y procesar
                     swal.close();
-
-                    // Mostrar loading
                     swal({
                         title: "Procesando...",
                         text: "Enviando boletas por WhatsApp",
@@ -999,71 +819,34 @@
                         allowOutsideClick: false
                     });
 
-                    // Enviar por WhatsApp
-                    enviarBoletasPorWhatsApp(allSelectedIds, inputValue);
+                    const form = $('<form>', {
+                        action: '{{ route('envioWhatsapp.boleta.multiple') }}',
+                        method: 'POST',
+                        target: '_blank',
+                        style: 'display:none;'
+                    });
+
+                    form.append($('<input>', {type: 'hidden', name: '_token', value: '{{ csrf_token() }}'}));
+                    form.append($('<input>', {type: 'hidden', name: 'numero', value: inputValue}));
+
+                    allSelectedIds.forEach(id => {
+                        form.append($('<input>', {type: 'hidden', name: 'boleta_ids[]', value: id}));
+                    });
+
+                    $('body').append(form);
+                    form.submit();
+                    setTimeout(() => form.remove(), 1000);
+                    setTimeout(() => {
+                        swal({
+                            title: "¡Enviado!",
+                            text: `Se han enviado ${allSelectedIds.length} boleta(s) por WhatsApp`,
+                            type: "success",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+                    }, 500);
                 });
             });
-
-            // Función para enviar las boletas
-            function enviarBoletasPorWhatsApp(boletaIds, numero) {
-                // Crear formulario dinámico
-                var form = $('<form>', {
-                    'action': '{{ route('agregado.whatsapp_send_multiple') }}',
-                    'method': 'POST',
-                    'target': '_blank',
-                    'style': 'display:none;'
-                });
-
-                // Agregar CSRF token
-                form.append($('<input>', {
-                    'type': 'hidden',
-                    'name': '_token',
-                    'value': '{{ csrf_token() }}'
-                }));
-
-                // Agregar número de WhatsApp
-                form.append($('<input>', {
-                    'type': 'hidden',
-                    'name': 'numero',
-                    'value': numero
-                }));
-
-                // Agregar mensaje (opcional)
-                form.append($('<input>', {
-                    'type': 'hidden',
-                    'name': 'mensaje',
-                    'value': ''
-                }));
-
-                // Agregar IDs de boletas
-                boletaIds.forEach(function(id) {
-                    form.append($('<input>', {
-                        'type': 'hidden',
-                        'name': 'boleta_ids[]',
-                        'value': id
-                    }));
-                });
-
-                // Agregar al body y enviar
-                $('body').append(form);
-                form.submit();
-
-                // Remover formulario después de enviar
-                setTimeout(function() {
-                    form.remove();
-                }, 1000);
-
-                // Mostrar mensaje de éxito
-                setTimeout(function() {
-                    swal({
-                        title: "¡Enviado!",
-                        text: `Se han enviado ${boletaIds.length} boleta(s) por WhatsApp`,
-                        type: "success",
-                        timer: 3000,
-                        showConfirmButton: true
-                    });
-                }, 500);
-            }
         });
     </script>
 @endsection

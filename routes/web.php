@@ -1347,4 +1347,8 @@ Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class,
 
 
 // Mandar multiples pdf por wsp en comprobantes
-Route::post('/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])->name('agregado.whatsapp_send_multiple');
+Route::post('/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.boleta.multiple');
+
+Route::post('/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.boletaM.multiple');

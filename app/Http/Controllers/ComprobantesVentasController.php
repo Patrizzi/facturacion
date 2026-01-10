@@ -273,6 +273,8 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado_proceso,
                 $boleta->estado_nota_credito,
                 $boleta->estado_nota_debito,
+                $boleta->cliente->celular ?? '',
+                $boleta->cliente->email ?? '',
             ];
         }
         // Llamado para la suma total
@@ -1050,7 +1052,7 @@ class ComprobantesVentasController extends Controller
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
         return view('transaccion.comprobantes.guia_remision_manual.index', compact('count_month_comprobantes', 'count_all_comprobantes'));
     }
-    
+
     public function guiaRemisionM_registers(Request $request)
     {
         // DataTables: request base
