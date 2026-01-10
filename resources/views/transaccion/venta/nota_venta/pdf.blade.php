@@ -39,14 +39,11 @@
                 valign="top">
                 <strong>{{ $empresa->razon_social }}</strong><br>
                 <span style="font-size: 80%">
-                    Teléfono : {{ $empresa->telefono }}<br>
-                    Celular : {{ $nota_venta->user->celular }}<br>
-                    Email : {{ $nota_venta->user->email_user }}<br>
-                    Web : {{ $empresa->pagina_web }} <br>
-                    Telefono: {{ $empresa->telefono }} / Móvil: {{ $empresa->movil }}
-                    <br>
-                    {{ $empresa->correo }}
-                    <br>
+                    @if ($empresa->telefono != "0")
+                        Telef: {{ $empresa->telefono }} /
+                    @endif Celular: {{ $empresa->movil }} <br>
+                    Correo: {{ $empresa->correo }}<br>
+                    Web: {{ $empresa->pagina_web }} <br>
                     {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
                     {{ $empresa->pais }}
                 </span>
@@ -131,7 +128,7 @@
                 $letra = $v->toInvoice($sume, 2);
                 ?>
 
-                Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $nota_venta->moneda->nombre }}
+                Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $nota_venta->moneda->nombre }}
             </h3>
 
             <table style="border: white 0px solid;text-align: center;">

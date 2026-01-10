@@ -456,6 +456,7 @@ class GuiaRemisionController extends Controller
         $qrCode  = $this->generarImagenQR($textoQR);
         // $archivo=$name.$regla.$id.".pdf";
         $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact('guia_remision', 'guia_registro', 'banco', 'empresa', 'banco_count','y','textoQR','qrCode'));
+        // return view('transaccion.venta.guia_remision.pdf', compact('guia_remision', 'guia_registro', 'banco', 'empresa', 'banco_count','y','textoQR','qrCode'));
         return $pdf->download('GR - '.$guia_remision->cod_guia .'.pdf');
     }
 
@@ -918,7 +919,7 @@ class GuiaRemisionController extends Controller
         $banco = Banco::where('estado', '0')->get();
         $empresa = Empresa::first();
         $y = 0;
-        $textoQR = $this->generarTextoQRGuiaRemisionManual($guia_remision, $id);
+        $textoQR = $this->generarTextoQRGuiaRemision($guia_remision, $id);
         $qrCode  = $this->generarImagenQR($textoQR);
 
         $pdf = PDF::loadView('transaccion.venta.guia_remision.pdf', compact('guia_remision', 'guia_registro', 'banco', 'empresa', 'banco_count', 'y','qrCode','textoQR'));

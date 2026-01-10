@@ -74,7 +74,7 @@
             color: rgba(120, 120, 120, .31);
             font-family: Cambria, Georgia, Times, 'Times New Roman', serif !important;
             font-weight: bolder;
-            font-size: 95px;
+            font-size: 95px !important;
             pointer-events: none;
             -webkit-transform: rotate(-45deg);
             transform: rotate(-45deg);

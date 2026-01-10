@@ -646,7 +646,7 @@ class BoletaMController extends Controller
             $sunat = $boletaM->b_electronica ? 'Emitido' : 'Pendiente';
             $estadoPago = $boletaM->estado_pago == 0 ? 'Sin pagar' : ($boletaM->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
             $infoOperacion = optional($boletaM->tipo_operacion)->informacion;
-            $infoDocumento = optional($boletaM->tipo_documento)->informacion;
+            $infoDocumento = "Boleta de Venta";
             $subtotal = ($boletaM->op_gravada ?? 0) + ($boletaM->op_inafecta ?? 0) + ($boletaM->op_exonerada ?? 0);
             $subtotalGravado = ($boletaM->op_gravada);
             $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);

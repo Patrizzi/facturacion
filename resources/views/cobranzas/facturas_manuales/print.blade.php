@@ -170,7 +170,7 @@
                                             <tbody>
                                                 {{-- {{$factura}} --}}
                                                 {{-- @foreach ($empresa as $index => $item) --}}
-                                                    <span hidden>{{$subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada }}</span>
+                                                    {{-- <span hidden>{{$subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada }}</span> --}}
                                                     <tr>
                                                        <td>1</td> 
                                                        <td>N° de Cuota 1</td> 
@@ -182,11 +182,11 @@
                                                             @endif
                                                         </td> 
                                                         <td>
-                                                            {{$factura->moneda->simbolo}} {{number_format(round(($subtotal+($factura->op_gravada*$igv->renta/100)),2),2)}}
+                                                            {{$factura->total_precio}}
                                                         </td>
                                                         <td>
                                                             @if ($factura->estado_pago == 2)
-                                                                {{$factura->moneda->simbolo}} {{$pagos_reg[0]->comprobante_pago->monto_pago}}
+                                                                {{ $pagos_deta[0]->calcularMontoPagadoFormat()}}
                                                             @else
                                                                 {{$factura->moneda->simbolo}} 0.00
                                                             @endif
@@ -330,7 +330,7 @@
         color: rgba(120, 120, 120, 0.31);
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
         font-weight: bolder;
-        font-size: 95px;
+        font-size: 95px !important;
         pointer-events: none;
         -webkit-transform: rotate(-45deg);
         -moz-transform: rotate(-45deg);
@@ -357,6 +357,15 @@
         width: 100%;
         height: 350px;
         /* altura de pie de página */
+    }
+    :root {
+        --size-big: 12px;
+        --size-small: 10px;
+    }
+    @media (max-width: 1220px) {
+        body, th, td, textarea, select, label, input, a, li a, span, p, select option, strong, span a, button, a img, small, a, p, div{
+            font-size: var(--size-small) !important;
+        }
     }
 </style>
 <!-- Mainly scripts -->

@@ -543,6 +543,7 @@ class FacturacionMController extends Controller
         // $archivo=$name.'_'.$id;
         // return $detraccion;
         $pdf=PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i','detraccion','cuotas','textoQR','qrCode'));
+        // return view('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i','detraccion','cuotas','textoQR','qrCode'));
         return $pdf->download('FacturaM - '.$facturacion->codigo_fac.'.pdf');
     }
 

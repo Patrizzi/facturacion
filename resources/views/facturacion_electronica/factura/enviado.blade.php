@@ -269,7 +269,7 @@
                         'orderable': false,
                         'render': function(data, type, full, meta) {
                             var url =
-                                `R-{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.zip`;
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-01-${full[2]}.zip`;
                             return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
                         }
                     }

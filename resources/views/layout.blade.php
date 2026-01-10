@@ -152,11 +152,11 @@
                     <li><a href="#"><i class="fa fa-credit-card fa-lg text-white"></i><span
                                 class="nav-label text-white">Creditos y Cobranzas</span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('pagos.view_facturas') }}">Facturas</a></li>
+                            <li><a href="{{ route('cobranzas.index_factura') }}">Facturas</a></li>
                             <li><a href="{{ route('cobranzas.index_facturas_m') }}">Facturas M.</a></li>
-                            <li><a href="{{ route('pagos.view_boletas') }}">Boletas</a></li>
-                            <li><a href="{{ route('pagos.view_boletas_m') }}">Boletas M.</a></li>
-                            <li><a href="{{ route('pagos.view_nota_venta') }}">Nota de Venta</a></li>
+                            <li><a href="{{ route('cobranzas.index_boletas') }}">Boletas</a></li>
+                            <li><a href="{{ route('cobranzas.index_boletas_manual') }}">Boletas M.</a></li>
+                            <li><a href="{{ route('cobranzas.index_nota_venta') }}">Nota de Venta</a></li>
                         </ul>
                     </li>
 
