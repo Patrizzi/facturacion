@@ -1171,4 +1171,27 @@ private function downloadSinglePDF($id)
             return null;
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $notaDebitoIds = $request->nota_ids;
+
+        $mensaje = "";
+
+        foreach ($notaDebitoIds as $id) {
+            $notaDebito = Nota_Debito::find($id);
+            if ($notaDebito) {
+                $codigoNotaDebito= $notaDebito->codigo_n_d;
+                $pdfUrl = route('nota_debito.pdf', $id) . "?archivo=NotaDébito_{$codigoNotaDebito}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }

@@ -554,16 +554,42 @@
             $(this).css('height', '50px');
         });
 
+        $(document).on('click', '.wsp-container .btn-success', function(e) {
+            e.stopPropagation();
+            $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
+        });
+
+        // Fijar también cuando se hace clic en el input o en cualquier parte del formulario
+        $(document).on('click', '.wsp-form', function(e) {
+            e.stopPropagation();
+            $(this).addClass('wsp-fixed').css('height', '50px');
+        });
+
         $(document).on('mouseleave', '.wsp-container, .wsp-form', function() {
             const isContainer = $(this).hasClass('wsp-container');
             const target = isContainer ? $(this).find('.wsp-form') : $(this);
             const checkElement = isContainer ? target : $(this).closest('.wsp-container');
+
+            // No cerrar si está fijado
+            if (target.hasClass('wsp-fixed')) return;
 
             setTimeout(() => {
                 if (!target.is(':hover') && !checkElement.is(':hover')) {
                     target.css('height', '0px');
                 }
             }, 200);
+        });
+
+        $(document).on('submit', '.wsp-form form', function() {
+            const form = $(this).closest('.wsp-form');
+            form.removeClass('wsp-fixed').css('height', '0px');
+        });
+
+        // Cerrar al hacer clic fuera
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
+                $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+            }
         });
 
         // Función de impresión múltiple

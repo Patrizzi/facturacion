@@ -87,11 +87,11 @@
 
                                                 {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                     <i class="fa fa-envelope"></i> Correo
-                                                </button>
+                                                </button>--}}
 
                                                 <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                     <i class="fa fa-whatsapp"></i> Whatsapp
-                                                </button>--}}
+                                                </button>
                                             </div>
                                         </div>
                                     </ul>
@@ -152,6 +152,7 @@
                                                     <th>Entrega</th>
                                                     <th>Ver</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
+                                                    <th>Compartir</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -262,6 +263,47 @@
                                 </button> `;
                         return end;
 
+                    }
+                },
+                {
+                    'targets': [9], // Columna de Compartir (Boton de correo sin funcionamiento por ahora)
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        const guiaId = full[0];
+                        const codigoGuia = full[2];
+                        const celularCliente = full[9] || '';
+                        const emailCliente = full[10] || '';
+
+                        return `
+                            <div style="display: inline-block; white-space: nowrap;">
+                                <!-- Aqui ira lo del correo -->
+                                <!-- Contenedor WhatsApp -->
+                                <div class="wsp-container" data-id="${guiaId}"
+                                    style="display: inline-block; position: relative; vertical-align: top;">
+                                    <a class="btn btn-success" style="background: green; border-color: green; cursor: pointer;">
+                                        <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                                    </a>
+                                    <div class="wsp-form" data-id="${guiaId}"
+                                        style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                        overflow: hidden; transition: height .4s; background: white;
+                                        box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                        z-index: 9999; white-space: nowrap;">
+                                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" target="_blank" style="padding: 10px;">
+                                            @csrf
+                                            <input type="tel" name="numero" placeholder="999999999" value="${celularCliente}"
+                                                style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                            <input type="text" name="mensaje" hidden />
+                                            <input type="hidden" name="url" value="{{ route('pdf_guia', '') }}/${guiaId}?archivo=" />
+                                            <input type="hidden" name="name_sin_cambio" value="GuíaRemisión_${codigoGuia}" />
+                                            <button type="submit" class="btn btn-success"
+                                                style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
+                                                <i class="fa fa-send fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
                     }
                 }
             ],
@@ -540,6 +582,53 @@
             $(activeTab).find('.i-checks').iCheck('update');
         });
 
+        // ============ WHATSAPP ============
+        $(document).on('mouseenter', '.wsp-container', function() {
+            $(this).find('.wsp-form').css('height', '50px');
+        });
+
+        $(document).on('mouseenter', '.wsp-form', function() {
+            $(this).css('height', '50px');
+        });
+
+        $(document).on('click', '.wsp-container .btn-success', function(e) {
+            e.stopPropagation();
+            $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
+        });
+
+        // Fijar también cuando se hace clic en el input o en cualquier parte del formulario
+        $(document).on('click', '.wsp-form', function(e) {
+            e.stopPropagation();
+            $(this).addClass('wsp-fixed').css('height', '50px');
+        });
+
+        $(document).on('mouseleave', '.wsp-container, .wsp-form', function() {
+            const isContainer = $(this).hasClass('wsp-container');
+            const target = isContainer ? $(this).find('.wsp-form') : $(this);
+            const checkElement = isContainer ? target : $(this).closest('.wsp-container');
+
+            // No cerrar si está fijado
+            if (target.hasClass('wsp-fixed')) return;
+
+            setTimeout(() => {
+                if (!target.is(':hover') && !checkElement.is(':hover')) {
+                    target.css('height', '0px');
+                }
+            }, 200);
+        });
+
+        $(document).on('submit', '.wsp-form form', function() {
+            const form = $(this).closest('.wsp-form');
+            form.removeClass('wsp-fixed').css('height', '0px');
+        });
+
+        // Cerrar al hacer clic fuera
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
+                $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+            }
+        });
+
         // Función para imprimir guías de remisión seleccionadas
         $('#btn-imprimir').on('click', function(e) {
             e.preventDefault();
@@ -722,7 +811,71 @@
             return allSelectedIds;
         };
 
-});
+        // Función para enviar guias por WhatsApp multiple
+        $('#btn-whatsapp-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            if (allSelectedIds.length === 0) {
+                return swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una guía de remisión para enviar por WhatsApp.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+            }
+
+            swal({
+                title: "Enviar por WhatsApp",
+                text: `Ingresa el número de WhatsApp para enviar ${allSelectedIds.length} guía(s) de remisión(s):`,
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Enviar",
+                cancelButtonText: "Cancelar",
+                inputPlaceholder: "Ejemplo: 999999999"
+            }, function(inputValue) {
+                if (inputValue === false) return false;
+                if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");
+                if (!/^\d+$/.test(inputValue)) return swal.showInputError("Por favor ingresa solo números");
+
+                swal.close();
+                swal({
+                    title: "Procesando...",
+                    text: "Enviando guías de remisiones por WhatsApp",
+                    type: "info",
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
+
+                const form = $('<form>', {
+                    action: '{{ route('envioWhatsapp.guiaRemision.multiple') }}',
+                    method: 'POST',
+                    target: '_blank',
+                    style: 'display:none;'
+                });
+
+                form.append($('<input>', {type: 'hidden', name: '_token', value: '{{ csrf_token() }}'}));
+                form.append($('<input>', {type: 'hidden', name: 'numero', value: inputValue}));
+
+                allSelectedIds.forEach(id => {
+                    form.append($('<input>', {type: 'hidden', name: 'guia_ids[]', value: id}));
+                });
+
+                $('body').append(form);
+                form.submit();
+                setTimeout(() => form.remove(), 1000);
+                setTimeout(() => {
+                    swal({
+                        title: "¡Enviado!",
+                        text: `Se han enviado ${allSelectedIds.length} guía(s) de remisión(s) por WhatsApp`,
+                        type: "success",
+                        timer: 3000,
+                        showConfirmButton: true
+                    });
+                }, 500);
+            });
+        });
+    });
 </script>
 
 @endsection

@@ -708,6 +708,17 @@ class ComprobantesVentasController extends Controller
         // Bucle de llamada para el llenado del datatable
         foreach ($notas_credito as $n_credito) {
             $total_columna += $n_credito->total_conv;
+
+            // Obtener cliente según el tipo de documento (solo una relación estará llena)
+            $cliente = $n_credito->nota_i_facturacion->cliente
+                    ?? $n_credito->nota_i_fac_manual->cliente
+                    ?? $n_credito->nota_i_boleta->cliente
+                    ?? $n_credito->nota_i_boleta_manual->cliente
+                    ?? null;
+
+            $celular = $cliente->celular ?? '';
+            $email = $cliente->email ?? '';
+
             $json['data'][] = [
                 $n_credito->id,
                 $n_credito->id,
@@ -720,8 +731,8 @@ class ComprobantesVentasController extends Controller
                 // $n_credito->total,
                 $n_credito->id,
                 $n_credito->estado_proceso,
-                $n_credito->cliente->celular ?? '',
-                $n_credito->cliente->email ?? '',
+                $celular,
+                $email,
             ];
         }
         return response()->json($json);
@@ -881,6 +892,18 @@ class ComprobantesVentasController extends Controller
         // Bucle de llamada para el llenado del datatable
         foreach ($notas_debitos as $n_debito) {
             $total_columna += $n_debito->total_conv;
+
+
+            // Obtener cliente según el tipo de documento (solo una relación estará llena)
+            $cliente = $n_debito->nota_i_facturacion->cliente
+                    ?? $n_debito->nota_i_fac_manual->cliente
+                    ?? $n_debito->nota_i_boleta->cliente
+                    ?? $n_debito->nota_i_boleta_manual->cliente
+                    ?? null;
+
+            $celular = $cliente->celular ?? '';
+            $email = $cliente->email ?? '';
+
             $json['data'][] = [
                 $n_debito->id,
                 $n_debito->id,
@@ -893,8 +916,8 @@ class ComprobantesVentasController extends Controller
                 // $n_debito->total,
                 $n_debito->id,
                 $n_debito->estado_proceso,
-                $n_debito->cliente->celular ?? '',
-                $n_debito->cliente->email ?? '',
+                $celular,
+                $email,
             ];
         }
         return response()->json($json);

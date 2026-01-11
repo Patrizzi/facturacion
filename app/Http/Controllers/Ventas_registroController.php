@@ -115,16 +115,16 @@ class Ventas_registroController extends Controller
             7 => 'total_conv',
         ];
 
-// Manejo seguro del rango de fechas
-if ($request->filled('daterange')) {
-    [$from, $to] = explode(' - ', $request->daterange);
-    $startDate = Carbon::createFromFormat('d/m/Y', trim($from))->startOfDay();
-    $endDate   = Carbon::createFromFormat('d/m/Y', trim($to))->endOfDay();
-} else {
-    // Si no hay rango, usar el mes actual
-    $startDate = Carbon::now()->startOfMonth()->startOfDay();
-    $endDate   = Carbon::now()->endOfMonth()->endOfDay();
-}
+        // Manejo seguro del rango de fechas
+        if ($request->filled('daterange')) {
+            [$from, $to] = explode(' - ', $request->daterange);
+            $startDate = Carbon::createFromFormat('d/m/Y', trim($from))->startOfDay();
+            $endDate   = Carbon::createFromFormat('d/m/Y', trim($to))->endOfDay();
+        } else {
+            // Si no hay rango, usar el mes actual
+            $startDate = Carbon::now()->startOfMonth()->startOfDay();
+            $endDate   = Carbon::now()->endOfMonth()->endOfDay();
+        }
 
         $tipo = $request->tipo_coti;
 
@@ -204,7 +204,10 @@ if ($request->filled('daterange')) {
                 $cotizacion->forma_pago->nombre,
                 $cotizacion->total,
                 $cotizacion->id,
-                $cotizacion->estado
+                $cotizacion->estado,
+                $cotizacion->cliente->celular,
+                $cotizacion->cliente->email
+
             ];
         }
         // Llamado para la suma total
@@ -325,7 +328,9 @@ if ($request->filled('daterange')) {
                 $cotizacion_manual->forma_pago->nombre,
                 $cotizacion_manual->total,
                 $cotizacion_manual->id,
-                $cotizacion_manual->estado
+                $cotizacion_manual->estado,
+                $cotizacion_manual->cliente->celular,
+                $cotizacion_manual->cliente->email,
             ];
         }
         // Llamado para la suma total
@@ -701,7 +706,9 @@ if ($request->filled('daterange')) {
                 $n_venta->forma_pago,
                 $n_venta->total,
                 $n_venta->id,
-                $n_venta->estado
+                $n_venta->estado,
+                $n_venta->cliente->celular,
+                $n_venta->cliente->email
             ];
         }
         // // Llamado para la suma total

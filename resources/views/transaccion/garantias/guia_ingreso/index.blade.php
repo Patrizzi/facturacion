@@ -55,10 +55,10 @@
                                             </button>
                                             {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                 <i class="fa fa-envelope"></i> Correo
-                                            </button>
+                                            </button>--}}
                                             <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                 <i class="fa fa-whatsapp"></i> Whatsapp
-                                            </button>--}}
+                                            </button>
                                         </div>
                                     </div>
                                 </ul>
@@ -727,6 +727,80 @@ $('#modal-form').on('hidden.bs.modal', function () {
             });
         });
 
+        // Función para enviar guías por WhatsApp múltiple
+        $('#btn-whatsapp-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            // Usar la misma lógica que la descarga para obtener los IDs seleccionados
+            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                return selectedRows[tableId][id] === true &&
+                    id !== '' &&
+                    id !== 'undefined' &&
+                    !isNaN(parseInt(id));
+            });
+
+            console.log('IDs seleccionados para WhatsApp:', selectedIds);
+
+            if (selectedIds.length === 0) {
+                return swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos una guía de ingreso para enviar por WhatsApp.",
+                    type: "warning",
+                    confirmButtonText: "Entendido"
+                });
+            }
+
+            swal({
+                title: "Enviar por WhatsApp",
+                text: `Ingresa el número de WhatsApp para enviar ${selectedIds.length} guía(s) de ingreso:`,
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Enviar",
+                cancelButtonText: "Cancelar",
+                inputPlaceholder: "Ejemplo: 999999999"
+            }, function(inputValue) {
+                if (inputValue === false) return false;
+                if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");
+                if (!/^\d+$/.test(inputValue)) return swal.showInputError("Por favor ingresa solo números");
+
+                swal.close();
+                swal({
+                    title: "Procesando...",
+                    text: "Enviando guías de ingreso por WhatsApp",
+                    type: "info",
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
+
+                const form = $('<form>', {
+                    action: '{{ route('envioWhatsapp.guiaIngreso.multiple') }}',
+                    method: 'POST',
+                    target: '_blank',
+                    style: 'display:none;'
+                });
+
+                form.append($('<input>', {type: 'hidden', name: '_token', value: '{{ csrf_token() }}'}));
+                form.append($('<input>', {type: 'hidden', name: 'numero', value: inputValue}));
+
+                selectedIds.forEach(id => {
+                    form.append($('<input>', {type: 'hidden', name: 'guia_ids[]', value: id}));
+                });
+
+                $('body').append(form);
+                form.submit();
+                setTimeout(() => form.remove(), 1000);
+                setTimeout(() => {
+                    swal({
+                        title: "¡Enviado!",
+                        text: `Se han enviado ${selectedIds.length} guía(s) de ingreso por WhatsApp`,
+                        type: "success",
+                        timer: 3000,
+                        showConfirmButton: true
+                    });
+                }, 500);
+            });
+        });
 
         // ==============================================
         // FUNCIONES AUXILIARES GLOBALES
