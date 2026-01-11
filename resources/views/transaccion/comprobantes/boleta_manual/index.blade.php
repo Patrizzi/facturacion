@@ -288,7 +288,7 @@
                                                 style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
                                             <input type="text" name="mensaje" hidden />
                                             <input type="hidden" name="url" value="{{ route('boleta_manual.pdf', '') }}/${boletaId}?archivo=" />
-                                            <input type="hidden" name="name_sin_cambio" value="BoletaM_${codigoBoleta}" />
+                                            <input type="hidden" name="name_sin_cambio" value="Boleta_${codigoBoleta}" />
                                             <button type="submit" class="btn btn-success"
                                                 style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
                                                 <i class="fa fa-send fa-lg"></i>
@@ -619,7 +619,7 @@ $(document).ready(function() {
         if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
-                text: "Por favor, selecciona al menos una boleta manual para imprimir.",
+                text: "Por favor, selecciona al menos una boleta para imprimir.",
                 type: "warning",
                 confirmButtonText: "Entendido"
             });
@@ -629,7 +629,7 @@ $(document).ready(function() {
         // Confirmar acción
         swal({
             title: "Confirmar impresión",
-            text: `¿Deseas imprimir ${allSelectedIds.length} boleta(s) manual(es) seleccionada(s)?`,
+            text: `¿Deseas imprimir ${allSelectedIds.length} boleta(s) seleccionada(s)?`,
             type: "info",
             showCancelButton: true,
             confirmButtonText: "Sí, imprimir",
@@ -661,7 +661,7 @@ $(document).ready(function() {
                 // Mostrar mensaje de éxito
                 swal({
                     title: "Procesando",
-                    text: "Las boletas manuales se están imprimiendo...",
+                    text: "Las boletas se están imprimiendo...",
                     type: "success",
                     timer: 2000,
                     showConfirmButton: false
@@ -805,7 +805,7 @@ $(document).ready(function() {
         if (allSelectedIds.length === 0) {
             return swal({
                 title: "Sin selección",
-                text: "Por favor, selecciona al menos una boleta manual para enviar por WhatsApp.",
+                text: "Por favor, selecciona al menos una boleta para enviar por WhatsApp.",
                 type: "warning",
                 confirmButtonText: "Entendido"
             });
