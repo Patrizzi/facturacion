@@ -8,10 +8,10 @@
 @section('content')
     @include('layout_comunicado')
     <div class="wrapper wrapper-content animated fadeInRight">
-        @if ($msg_ticket ==  0)
+        @if ($msg_ticket == 0)
             <div class="alert alert-danger">
                 <b>Por favor, ponerse en contacto con el soporte para ver el tema de Envio Guias de Remision a SUNAT</b>
-            </div>    
+            </div>
         @endif
         <div class="row">
             <div class="col-lg-12">
@@ -61,17 +61,11 @@
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="dateranger_remision"
                                                     id="dateranger_remision"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    value="{{ date('m/01/Y') }} - {{ date('t/m/Y') }}" readonly />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select()">
                                                         <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select()">
-                                                        <i class="fa fa-eraser"></i>
                                                     </button>
                                                 </span>
                                             </div>
@@ -85,31 +79,32 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-primary  btn-block">Buscar</button>
+                                            <button class="btn btn-primary btn-block"
+                                                id="sercha_remision_lsitado">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="panel-body">
-                                    <table class="table table-striped table-hover dataTables-example3">
+                                    <table class="table table-striped table-bordered dataTables-example3">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-remision_env_all" name="input[]">
                                                 </th>
                                                 <th>ID</th>
-                                                <th>Código de Guia</th>
+                                                <th>Guia Remisión</th>
                                                 <th>RUC | DNI</th>
                                                 <th>Cliente</th>
                                                 <th>Fecha emision</th>
                                                 <th>Fecha entrega</th>
                                                 <th>Tipo Transporte</th>
-                                                <th>Estado</th>
                                                 <th>XML</th>
                                                 <th>CDR</th>
-                                                <th>Nª de Ticket</th>
+                                                {{-- <th>Estado</th> --}}
+                                                <th>Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -141,6 +136,10 @@
         .td_ticket {
             font-style: italic;
         }
+
+        .table {
+            width: 100% !important;
+        }
     </style>
 
     <!-- scripts -->
@@ -171,104 +170,6 @@
             $('.i-checks-remision_env_all').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
-            });
-
-            // {{-- Datatable Facturas Enviadas  --}}
-            var table_remision_env = $('.dataTables-example3').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('guias_electronicas.list_remision_env') }}",
-                    method: "get",
-                    data: function(d) {
-                        // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                        d.daterange = $('#dateranger_remision')
-                            .val(); // Supongamos que tienes un select para el tipo de cotización
-                        d.value = $('#inputBuscar').val();
-                    },
-                    dataSrc: function(json) {
-                        return json.data;
-                    }
-                },
-                "columnDefs": [{
-                        'width': '1vmax',
-                        'targets': [0], // Aplica a la primera columna (index 0)
-                        'orderable': false, // Deshabilitar ordenación en esta columna
-                        'render': function(data, type, full, meta) {
-                            // Renderizar el checkbox en la primera columna
-                            return '<input type="checkbox" name="select_row" value="' + full[2] +
-                                '" class="i-checks-remision_env">';
-                        }
-                    },
-                    {
-                        'width': '30%',
-                        'targets': [4]
-                    },
-                    {
-                        'targets': [8], // Estado
-                        'orderable': false,
-                        'className': 'td_status',
-                        'render': function(data, type, full, meta) {
-                            var end = ``;
-                            if (full[8] == 1) {
-                                end +=
-                                    `<button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button> `;
-                            }
-                            if (full[8] == 2) {
-                                end +=
-                                    `<button type="button" class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button> `;
-                            }
-                            return end;
-                        }
-                    },
-                    {
-                        'targets': [9], // Descargar XML
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.xml`;
-                            return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
-                        }
-                    },
-                    {
-                        'targets': [10],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            if (`${full[12]}` != null || `${full[12]}` == 1) {
-                                var url =
-                                    `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
-
-                                var finish_all =
-                                    `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
-                            } else {
-                                var url =
-                                    `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
-
-                                var finish_all = `
-                                <div id="div_btn_app_man">
-                                    <button type="button" class="btn" id="guia_remi_ind_man" value="${full[2]}" onclick="valid_cdr_normal(this)"><img src="{{ asset('cdr.png') }}" width="25px"></button>
-                                </div>
-                                <div style="display: none;" id="div_dw_non_man">
-                                    <a id="download_cdr_post" href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></a>   
-                                </div>  `;
-                            };
-                            return finish_all;
-                        }
-                    },
-                    {
-                        'targets': [11],
-                        'orderable': false,
-                        'className': 'td_ticket',
-                        'render': function(data, type, full, meta) {
-                            return `${full[11]}`;
-                        }
-                    }
-                ],
-                drawCallback: function() {
-                    $('.i-checks-remision_env').iCheck({
-                        checkboxClass: 'icheckbox_square-green',
-                        radioClass: 'iradio_square-green',
-                    });
-                }
             });
 
             $('input[name="dateranger_remision"]').daterangepicker({
@@ -322,14 +223,114 @@
 
             }, 1300);
         });
+        // {{-- Datatable Facturas Enviadas  --}}
+        var table_remision_env = $('.dataTables-example3').DataTable({
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('guias_electronicas.list_remision_env') }}",
+                method: "get",
+                data: function(d) {
+                    d.daterange = $('#dateranger_remision').val();
+                    d.value = $('#inputBuscar').val();
+                },
+                dataSrc: function(json) {
+                    return json.data;
+                }
+            },
+            "columnDefs": [{
+                    'width': '1vmax',
+                    'targets': [0], // Aplica a la primera columna (index 0)
+                    'orderable': false, // Deshabilitar ordenación en esta columna
+                    'render': function(data, type, full, meta) {
+                        // Renderizar el checkbox en la primera columna
+                        return '<input type="checkbox" name="select_row" value="' + full[2] +
+                            '" class="i-checks-remision_env">';
+                    }
+                },
+                {
+                    'width': '30%',
+                    'targets': [4]
+                },
+                {
+                    'targets': [8], // Descargar XML
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        var url =
+                            `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.xml`;
+                        return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                    }
+                },
+                {
+                    'targets': [9],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        if (`${full[12]}` != null || `${full[12]}` == 1) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
 
-        // GUIAS Enviadas
-        function limpiar_select() {
-            table_remision_env.column(5).search("").draw();
-        }
+                            var finish_all =
+                                `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                        } else {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
+
+                            var finish_all = `
+                                <div id="div_btn_app_man">
+                                    <button type="button" class="btn" id="guia_remi_ind_man" value="${full[2]}" onclick="valid_cdr_normal(this)"><img src="{{ asset('cdr.png') }}" width="25px"></button>
+                                </div>
+                                <div style="display: none;" id="div_dw_non_man">
+                                    <a id="download_cdr_post" href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></a>   
+                                </div>  `;
+                        };
+                        return finish_all;
+                    }
+                },
+                {
+                    'targets': [10], // Estado
+                    'orderable': false,
+                    'className': 'td_status',
+                    'render': function(data, type, full, meta) {
+                        // Estado
+                        var end = ``;
+                        if (full[10] == 1) {
+                            end +=
+                                `<button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button> `;
+                        }
+                        if (full[10] == 2) {
+                            end +=
+                                `<button type="button" class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button> `;
+                        }
+                        // N de Ticket
+                        end += `<div class="tooltip-demo"><button type="button" class="btn btn-primary"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
+                                Popover on left
+                            </button></div>`;
+
+                        
+                        return end;
+                    }
+                },
+                // {
+                //     'targets': [11],
+                //     'orderable': false,
+                //     'className': 'td_ticket',
+                //     'render': function(data, type, full, meta) {
+                //         return `${full[11]}`;
+                //     }
+                // }
+            ],
+            drawCallback: function() {
+                $('.i-checks-remision_env').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            }
+        });
+        $('#sercha_remision_lsitado').on('click', function() {
+            table_remision_env.ajax.reload();
+        });
 
         function revert_select() {
-            table_remision_env.column(5).search(`{{ date('m-Y') }}`).draw();
+            $('#dateranger_remision').val(`{{ date('m/01/Y') }} - {{ date('t/m/Y') }}`)
         }
         // CHECKS GUIAS
         $('thead input[class="i-checks-remision_env_all"]').on('ifChecked ifUnchecked', function(event) {
