@@ -853,55 +853,56 @@ class FacturacionController extends Controller
 
                     //empieza la busqueda total
 
+                    //! YA NO EXISTE LA REDUCCION DE STOCK POR FACTURA O BOLETA , SOLO POR GUIA DE REMISION
                     //en caso haya guia de remision esto ya no se efectua
-                    if ($facturacion->guia_remision == "0") {
-                        $almacen = $facturacion->almacen_id;
+                    // if ($facturacion->guia_remision == "0") {
+                    //     $almacen = $facturacion->almacen_id;
 
-                        $nueva = Kardex_entrada_registro::where('producto_id', $facturacion_registro->producto_id)->where('almacen_id', $almacen)->where('estado', 1)->get();
+                    //     $nueva = Kardex_entrada_registro::where('producto_id', $facturacion_registro->producto_id)->where('almacen_id', $almacen)->where('estado', 1)->get();
 
-                        $comparacion = $nueva;
-                        //buble para la cantidad
-                        $cantidad = 0;
-                        foreach ($comparacion as $comparaciones) {
-                            $cantidad = $comparaciones->cantidad + $cantidad;
-                        }
+                    //     $comparacion = $nueva;
+                    //     //buble para la cantidad
+                    //     $cantidad = 0;
+                    //     foreach ($comparacion as $comparaciones) {
+                    //         $cantidad = $comparaciones->cantidad + $cantidad;
+                    //     }
 
-                        if (isset($comparacion)) {
-                            $var_cantidad_entrada = $facturacion_registro->cantidad;
-                            $contador = 0;
-                            foreach ($comparacion as $p) {
-                                if ($p->cantidad > $var_cantidad_entrada) {
-                                    $cantidad_mayor = $p->cantidad;
-                                    $cantidad_final = $cantidad_mayor - $var_cantidad_entrada;
-                                    $p->cantidad = $cantidad_final;
-                                    if ($cantidad_final == 0) {
-                                        $p->estado = 0;
-                                        $p->save();
-                                        break;
-                                    } else {
-                                        $p->save();
-                                        break;
-                                    }
-                                } elseif ($p->cantidad == $var_cantidad_entrada) {
-                                    $p->cantidad = 0;
-                                    $p->estado = 0;
-                                    $p->save();
-                                    break;
-                                } else {
-                                    $var_cantidad_entrada = $var_cantidad_entrada - $p->cantidad;
-                                    $p->cantidad = 0;
-                                    $p->estado = 0;
-                                    $p->save();
-                                }
-                            }
-                        }
-                        //Resta en la tabla stock almacen
-                        Stock_almacen::egreso($facturacion->almacen_id, $producto->id, $facturacion_registro->cantidad);
-                        //resta de cantidades de productos para la tabla stock productos
-                        $stock_productos = Stock_producto::where('producto_id', $producto->id)->first();
-                        $stock_productos->stock = $stock_productos->stock - $facturacion_registro->cantidad;
-                        $stock_productos->save();
-                    }
+                    //     if (isset($comparacion)) {
+                    //         $var_cantidad_entrada = $facturacion_registro->cantidad;
+                    //         $contador = 0;
+                    //         foreach ($comparacion as $p) {
+                    //             if ($p->cantidad > $var_cantidad_entrada) {
+                    //                 $cantidad_mayor = $p->cantidad;
+                    //                 $cantidad_final = $cantidad_mayor - $var_cantidad_entrada;
+                    //                 $p->cantidad = $cantidad_final;
+                    //                 if ($cantidad_final == 0) {
+                    //                     $p->estado = 0;
+                    //                     $p->save();
+                    //                     break;
+                    //                 } else {
+                    //                     $p->save();
+                    //                     break;
+                    //                 }
+                    //             } elseif ($p->cantidad == $var_cantidad_entrada) {
+                    //                 $p->cantidad = 0;
+                    //                 $p->estado = 0;
+                    //                 $p->save();
+                    //                 break;
+                    //             } else {
+                    //                 $var_cantidad_entrada = $var_cantidad_entrada - $p->cantidad;
+                    //                 $p->cantidad = 0;
+                    //                 $p->estado = 0;
+                    //                 $p->save();
+                    //             }
+                    //         }
+                    //     }
+                    //     //Resta en la tabla stock almacen
+                    //     Stock_almacen::egreso($facturacion->almacen_id, $producto->id, $facturacion_registro->cantidad);
+                    //     //resta de cantidades de productos para la tabla stock productos
+                    //     $stock_productos = Stock_producto::where('producto_id', $producto->id)->first();
+                    //     $stock_productos->stock = $stock_productos->stock - $facturacion_registro->cantidad;
+                    //     $stock_productos->save();
+                    // }
                 } else {
                     $servicio = Servicios::where('codigo_servicio', $producto_id[$i])->where('estado_anular', 0)->first();
                     // return   $servicio;
@@ -978,7 +979,7 @@ class FacturacionController extends Controller
                     $facturacion_registro->save();
                 }
             }
-            Kardex_entrada_registro::stock_producto_precio();
+            // Kardex_entrada_registro::stock_producto_precio();
             if($facturacion->forma_pago_id == 2){
                 Facturacion::revision_cuotas($facturacion->id);
             }

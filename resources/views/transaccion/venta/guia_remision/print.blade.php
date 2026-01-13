@@ -168,6 +168,27 @@
             margin-top: 2px;
         }
 
+        #watermark {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+
+        #watermark p {
+            position: absolute;
+            color: rgba(120, 120, 120, 0.31);
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+            font-weight: bolder;
+            font-size: 95px !important;
+            pointer-events: none;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            top: 35%;
+            right: 35%;
+            z-index: 0;
+        }
+
         /* ========== PRINT ========== */
         @media print {
             @page {
@@ -214,7 +235,11 @@
                 <div class="serie">{{ $guia_remision->cod_guia }}</div>
             </div>
         </div>
-
+        @if ($guia_remision->f_electronica == 2 || $guia_remision->nota_credito == 1)
+            <div id="watermark">
+                <p>Anulado</p>
+            </div>
+        @endif
         {{-- Partida / Llegada --}}
         <div class="grid-2">
             <div class="box">

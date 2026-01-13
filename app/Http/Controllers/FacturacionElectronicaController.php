@@ -1833,7 +1833,7 @@ class FacturacionElectronicaController extends Controller
         });
         // Bucle de llamada para el llenado del datatable
         foreach ($remision as $remi) {
-            $json['data'][] = [
+            $json['data'][] = [ 
                 $remi->id,
                 $remi->id,
                 $remi->cod_guia,

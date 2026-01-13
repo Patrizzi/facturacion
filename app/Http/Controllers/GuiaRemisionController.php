@@ -520,13 +520,50 @@ class GuiaRemisionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
+        try {
+            if (!$request->filled('id_guia')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID de guía no recibido'
+                ], 400);
+            }
 
-        $guia_remision = Guia_remision::find($id);
-        $guia_remision->estado_anulado = '1';
-        $guia_remision->save();
-        return redirect()->route('guia_remision.index');
+            $guia_remision = Guia_remision::find($request->id_guia);
+            if (!$guia_remision) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Guía de remisión no encontrada'
+                ], 404);
+            }
+
+            $guia_remision->estado_anulado = 1;
+            $guia_remision->g_electronica = 2;
+
+            if (!$guia_remision->save()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo anular la guía'
+                ], 500);
+            }
+            
+            Guia_remision::devolucion_guia_remision($guia_remision->id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Guía anulada correctamente',
+                'guia_remision' => $guia_remision
+            ]);
+
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error interno del servidor',
+                'error' => $e->getMessage()
+            ], 500);
+    }
     }
 
     public function seleccionar()

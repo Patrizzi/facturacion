@@ -48,9 +48,9 @@
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
                             <div role="tabpanel" id="tab-7" class="tab-pane active show">
-                                <div class="panel-body">
+                                <div style="margin:0px 15px 10px 15px">
                                     <div class="row">
-                                        <div class="col-lg-12" id="alert_guia">
+                                        <div class="col-lg-12" id="alert_guia" style="min-height: 15px">
 
                                         </div>
                                     </div>
@@ -84,7 +84,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <br>
+                                <div class="table-responsive">
                                     <table class="table table-striped table-bordered dataTables-example3">
                                         <thead>
                                             <tr>
@@ -115,7 +116,13 @@
             </div>
         </div>
     </div>
-
+    <div id="ticket-panel" class="ticket-panel">
+        {{-- <div class="ticket-panel-header">
+            Ticket
+            <span class="ticket-close">×</span>
+        </div> --}}
+        <div class="ticket-panel-body"></div>
+    </div>
     <style>
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
@@ -140,6 +147,53 @@
         .table {
             width: 100% !important;
         }
+
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .ticket-panel {
+            position: absolute;
+            width: 320px;
+            background: #ffffff;
+            border: 1px solid #e7eaec;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            display: none;
+            font-size: 12px;
+        }
+
+        .ticket-panel-header {
+            background: #1ab394;
+            color: #fff;
+            padding: 8px 10px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-close {
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .ticket-panel-body {
+            padding: 10px;
+            color: #333;
+            white-space: pre-wrap;
+            /* respeta saltos */
+            user-select: text;
+            /* CLAVE */
+            cursor: text;
+        }
     </style>
 
     <!-- scripts -->
@@ -160,6 +214,8 @@
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
+    {{-- alertas SWEET --}}
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <!-- Seleccionar todos los check -->
     <script>
@@ -237,6 +293,16 @@
                     return json.data;
                 }
             },
+            drawCallback: function() {
+                $('.tooltip-demo [data-toggle="tooltip"]').tooltip({
+                    container: 'body'
+                });
+
+                $('.tooltip-demo [data-toggle="popover"]').popover({
+                    container: 'body',
+                    trigger: 'hover'
+                });
+            },
             "columnDefs": [{
                     'width': '1vmax',
                     'targets': [0], // Aplica a la primera columna (index 0)
@@ -264,7 +330,7 @@
                     'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        if (`${full[12]}` != null || `${full[12]}` == 1) {
+                        if (`${full[9]}` != null || `${full[9]}` == 1) {
                             var url =
                                 `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
 
@@ -289,6 +355,7 @@
                     'targets': [10], // Estado
                     'orderable': false,
                     'className': 'td_status',
+                    'width': '10%',
                     'render': function(data, type, full, meta) {
                         // Estado
                         var end = ``;
@@ -301,11 +368,28 @@
                                 `<button type="button" class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button> `;
                         }
                         // N de Ticket
-                        end += `<div class="tooltip-demo"><button type="button" class="btn btn-primary"  data-toggle="popover" data-placement="left" data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-                                Popover on left
-                            </button></div>`;
+                        end += `
+                              <button class="btn btn-primary btn-sm ticket-btn"
+                                    data-ticket="Ticket N°  ${full[11]}">
+                                <i class="fa fa-exclamation"></i>
+                            </button>
+                        `;
+                        // Botón Anular
+                        if (full[10] == 2) { //Si está anulado
+                            end += `
+                              <button class="btn btn-danger btn-sm" disabled>
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        `;
+                        } else { //Si se puede anular
+                            end += `
+                              <button class="btn btn-danger btn-sm boton-anular"  data-id="${full[0]}" data-codigo="${full[2]}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        `;
+                        }
 
-                        
+
                         return end;
                     }
                 },
@@ -404,8 +488,7 @@
 
 
         }
-    </script>
-    <script>
+
         // PDF
         function download_pdf_select() {
             var checks = $('input[class=i-checks-remision_env]:checkbox:checked');
@@ -415,5 +498,86 @@
                 console.log(codigo);
             });
         }
+
+
+        $(document).on('click', '.ticket-btn', function(e) {
+            e.stopPropagation();
+
+            const panel = $('#ticket-panel');
+            const text = $(this).data('ticket');
+
+            panel.find('.ticket-panel-body').text(text);
+
+            const btnOffset = $(this).offset();
+            const panelWidth = panel.outerWidth();
+            const panelHeight = panel.outerHeight();
+            const btnWidth = $(this).outerWidth();
+
+            panel.css({
+                top: btnOffset.top - panelHeight - 8,
+                left: btnOffset.left - panelWidth + btnWidth
+            }).fadeIn(150);
+        });
+
+
+        /* Cerrar */
+        $(document).on('click', '.ticket-close, body', function() {
+            $('#ticket-panel').fadeOut(100);
+        });
+
+        /* Evita cerrar al seleccionar texto */
+        $('#ticket-panel').on('click', function(e) {
+            e.stopPropagation();
+        });
+        
+
+        $(document).on('click', '.boton-anular', function() {
+
+            const id = $(this).data('id');
+            const codigo = $(this).data('codigo');
+
+            swal({
+                    title: "¿Estás seguro?",
+                    text: "Vas a anular la Guia: " + codigo + " y se efectuará el re-stock de los Productos. Esto no anulará la Guia en Sunat, eso debe realizarse desde el mismo portal SOL",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "No, cancelar",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        // Aquí usas la variable
+                        console.log('Eliminar ID:', id);
+                        $.ajax({
+                            type: "post",
+                            url: "{{ route('guia_remision.anular') }}",
+                            data: {
+                                '_token': $('input[name=_token]').val(),
+                                'id_guia': id,
+                            },
+                            success: function(response) {
+                               if (response.success) {
+                                    // swal("Anulado", resp.message, "success");
+                                    table_remision_env.ajax.reload();
+                                } else {
+                                    // swal("Error", resp.message, "error");
+                                }
+                            },
+                            error: function (xhr) {
+                                const msg = xhr.responseJSON?.message || 'Error inesperado';
+                                swal("Error", msg, "error");
+                            }
+                        });
+
+                        swal("Eliminado", "El ticket fue eliminado correctamente.", "success");
+                    } else {
+                        swal("Cancelado", "La operación fue cancelada.", "error");
+                    }
+                }
+            );
+        });
     </script>
 @endsection

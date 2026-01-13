@@ -98,7 +98,6 @@
                         <div id="watermark">
                             <p>Anulado</p>
                         </div>
-                    @else
                     @endif
                     <div class="col-sm-6" align="center">
                         <div class="form-control">
