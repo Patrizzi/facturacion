@@ -3111,50 +3111,51 @@ foreach ($cotizacion_registros as $index0=> $cotizacion_registro) {
             $boleta_2->save();
             $boleta_registros->save();
 
-            $nueva=Kardex_entrada_registro::where('producto_id',$boleta_registros->producto_id)->where('almacen_id',$almacen)->where('estado',1)->get();
-                // return $nueva;
-                // return $nueva;
-            $comparacion=$nueva;
-                //buble para la cantidad
-            $cantidad=0;
-            foreach($comparacion as $comparaciones){
-                $cantidad=$comparaciones->cantidad+$cantidad;
-            }
-            if(isset($comparacion)){
-                $var_cantidad_entrada=$boleta_registros->cantidad;
-                $contador=0;
-                foreach ($comparacion as $p_com) {
-                    if($p_com->cantidad>$var_cantidad_entrada){
-                        $cantidad_mayor=$p_com->cantidad;
-                        $cantidad_final=$cantidad_mayor-$var_cantidad_entrada;
-                        $p_com->cantidad=$cantidad_final;
-                        if($cantidad_final==0){
-                            $p_com->estado=0;
-                            $p_com->save();
-                            break;
-                        }else{
-                            $p_com->save();
-                            break;
-                        }
-                    }elseif($p_com->cantidad==$var_cantidad_entrada){
-                        $p_com->cantidad=0;
-                        $p_com->estado=0;
-                        $p_com->save();
-                        break;
-                    }
-                    else{
-                        $var_cantidad_entrada=$var_cantidad_entrada-$p_com->cantidad;
-                        $p_com->cantidad=0;
-                        $p_com->estado=0;
-                        $p_com->save();
-                    }
-                }
-            }
-            $stock_productos=Stock_producto::where('producto_id',$producto->id)->first();
-            $stock_productos->stock=$stock_productos->stock-$boleta_registros->cantidad;
-            $stock_productos->save();
-                //Resta en la tabla stock almacen
-            Stock_almacen::egreso($cotizacion->almacen_id,$producto->id,$boleta_registros->cantidad);
+            //! YA NO EXISTE LA REDUCCION DE STOCK POR FACTURA O BOLETA , SOLO POR GUIA DE REMISION
+        //     $nueva=Kardex_entrada_registro::where('producto_id',$boleta_registros->producto_id)->where('almacen_id',$almacen)->where('estado',1)->get();
+        //         // return $nueva;
+        //         // return $nueva;
+        //     $comparacion=$nueva;
+        //         //buble para la cantidad
+        //     $cantidad=0;
+        //     foreach($comparacion as $comparaciones){
+        //         $cantidad=$comparaciones->cantidad+$cantidad;
+        //     }
+        //     if(isset($comparacion)){
+        //         $var_cantidad_entrada=$boleta_registros->cantidad;
+        //         $contador=0;
+        //         foreach ($comparacion as $p_com) {
+        //             if($p_com->cantidad>$var_cantidad_entrada){
+        //                 $cantidad_mayor=$p_com->cantidad;
+        //                 $cantidad_final=$cantidad_mayor-$var_cantidad_entrada;
+        //                 $p_com->cantidad=$cantidad_final;
+        //                 if($cantidad_final==0){
+        //                     $p_com->estado=0;
+        //                     $p_com->save();
+        //                     break;
+        //                 }else{
+        //                     $p_com->save();
+        //                     break;
+        //                 }
+        //             }elseif($p_com->cantidad==$var_cantidad_entrada){
+        //                 $p_com->cantidad=0;
+        //                 $p_com->estado=0;
+        //                 $p_com->save();
+        //                 break;
+        //             }
+        //             else{
+        //                 $var_cantidad_entrada=$var_cantidad_entrada-$p_com->cantidad;
+        //                 $p_com->cantidad=0;
+        //                 $p_com->estado=0;
+        //                 $p_com->save();
+        //             }
+        //         }
+        //     }
+        //     $stock_productos=Stock_producto::where('producto_id',$producto->id)->first();
+        //     $stock_productos->stock=$stock_productos->stock-$boleta_registros->cantidad;
+        //     $stock_productos->save();
+        //         //Resta en la tabla stock almacen
+        //     Stock_almacen::egreso($cotizacion->almacen_id,$producto->id,$boleta_registros->cantidad);
         }
 
     }else{
