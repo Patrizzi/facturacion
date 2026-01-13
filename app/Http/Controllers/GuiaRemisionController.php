@@ -563,7 +563,7 @@ class GuiaRemisionController extends Controller
                 'message' => 'Error interno del servidor',
                 'error' => $e->getMessage()
             ], 500);
-    }
+        }
     }
 
     public function seleccionar()

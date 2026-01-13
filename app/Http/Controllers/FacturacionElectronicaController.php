@@ -1934,11 +1934,12 @@ class FacturacionElectronicaController extends Controller
                 $remi->fecha_emision,
                 $remi->fecha_entrega,
                 $remi->transporte,
+                $remi->id,
+                $remi->id,
                 $remi->g_electronica,
-                $remi->id,
-                $remi->id,
                 $remi->ticket_guia_remision_sunat,
-                $remi->estado_ticket_guia
+                $remi->estado_ticket_guia,
+                $remi->id
             ];
         }
         return response()->json($json);

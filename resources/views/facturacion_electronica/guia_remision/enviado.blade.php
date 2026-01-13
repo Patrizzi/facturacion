@@ -92,7 +92,7 @@
                                                 <th><input type="checkbox" class="i-checks-remision_env_all" name="input[]">
                                                 </th>
                                                 <th>ID</th>
-                                                <th>Guia Remisión</th>
+                                                <th>Código</th>
                                                 <th>RUC | DNI</th>
                                                 <th>Cliente</th>
                                                 <th>Fecha emision</th>
@@ -388,8 +388,6 @@
                             </button>
                         `;
                         }
-
-
                         return end;
                     }
                 },

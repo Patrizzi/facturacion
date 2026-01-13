@@ -359,9 +359,48 @@ class GuiaRemisionManualController extends Controller
      * @param  \App\GuiaRemisionManual  $guiaRemisionManual
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+         try {
+            if (!$request->filled('id_guia')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID de guía no recibido'
+                ], 400);
+            }
+
+            $guia_remision = GuiaRemisionManual::find($request->id_guia);
+            if (!$guia_remision) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Guía de remisión no encontrada'
+                ], 404);
+            }
+
+            $guia_remision->estado_anulado = 1;
+            $guia_remision->g_electronica = 2;
+
+            if (!$guia_remision->save()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se pudo anular la guía'
+                ], 500);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Guía anulada correctamente',
+                'guia_remision_m' => $guia_remision
+            ]);
+
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error interno del servidor',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function registers(Request $request)
