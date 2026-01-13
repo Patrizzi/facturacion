@@ -539,6 +539,7 @@ class GuiaRemisionController extends Controller
             }
 
             $guia_remision->estado_anulado = 1;
+            $guia_remision->motivo_anulacion = $request->motivo;
             $guia_remision->g_electronica = 2;
 
             if (!$guia_remision->save()) {

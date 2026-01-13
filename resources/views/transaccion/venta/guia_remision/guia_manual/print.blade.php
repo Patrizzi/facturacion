@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
     <title>Guía de Remisión Manual</title>
 
     <style>
-        html, body {
+        html,
+        body {
             font-family: Arial, Helvetica, sans-serif;
             color: #000;
         }
@@ -53,9 +55,11 @@
             text-align: center;
             min-width: 210px;
         }
-        .title{
+
+        .title {
             margin: 3px 0px;
         }
+
         .ruc-box .title,
         .ruc-box .serie {
             font-weight: 700;
@@ -79,7 +83,8 @@
             table-layout: fixed;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #111;
             padding: 4px 5px;
             vertical-align: top;
@@ -156,6 +161,27 @@
             margin-top: 2px;
         }
 
+        #watermark {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+
+        #watermark p {
+            position: absolute;
+            color: rgba(120, 120, 120, 0.31);
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+            font-weight: bolder;
+            font-size: 95px !important;
+            pointer-events: none;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            top: 25%;
+            right: 25%;
+            z-index: 0;
+        }
+
         @media print {
             @page {
                 size: auto;
@@ -171,21 +197,29 @@
 
     <script>
         // Imprime automáticamente al abrir y cierra la ventana al terminar (si fue popup)
-        window.addEventListener('load', function () {
-            setTimeout(function () { window.focus(); window.print(); }, 150);
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.focus();
+                window.print();
+            }, 150);
         });
-        window.addEventListener('afterprint', function () {
-            if (window.opener) { try { window.close(); } catch(e) {} }
+        window.addEventListener('afterprint', function() {
+            if (window.opener) {
+                try {
+                    window.close();
+                } catch (e) {}
+            }
         });
     </script>
 </head>
+
 <body>
     <div class="sheet">
         {{-- Encabezado --}}
         <div class="row" style="align-items:flex-start; margin-bottom:8px;">
             <div class="col">
                 <div class="row" style="align-items:center !important; gap:10px;">
-                    @if(!empty($empresa->foto))
+                    @if (!empty($empresa->foto))
                         <img class="logo" src="{{ asset('img/logos/' . $empresa->foto) }}" alt="logo">
                     @else
                         <div style="font-size:14px; font-weight:700;">{{ $empresa->nombre ?? 'EMPRESA' }}</div>
@@ -201,7 +235,11 @@
                 <div class="serie">{{ $guia_remision_m->cod_guia }}</div>
             </div>
         </div>
-
+        @if ($guia_remision->g_electronica == 2 || $guia_remision->estado_anulado == 1)
+            <div id="watermark">
+                <p>Anulado</p>
+            </div>
+        @endif
         {{-- Partida / Llegada --}}
         <div class="grid-2">
             <div class="box">
@@ -213,21 +251,21 @@
             <div class="box">
                 <div class="box-title">DOMICILIO DE LLEGADA</div>
                 <div><b>Dirección:</b>
-                    @if(isset($guia_remision_m->sucursal_cliente))
+                    @if (isset($guia_remision_m->sucursal_cliente))
                         {{ $guia_remision_m->sucursal_cliente }}
                     @else
                         {{ $guia_remision_m->cliente->direccion ?? '' }}
                     @endif
                 </div>
                 <div><b>Ubigeo:</b>
-                    @if(isset($guia_remision_m->cod_postal_cliente))
+                    @if (isset($guia_remision_m->cod_postal_cliente))
                         {{ $guia_remision_m->cod_postal_cliente }}
                     @else
                         {{ $guia_remision_m->cliente->cod_postal ?? '' }}
                     @endif
                 </div>
                 <div><b>Código:</b>
-                    @if(isset($guia_remision_m->cod_postal_cliente))
+                    @if (isset($guia_remision_m->cod_postal_cliente))
                         {{ $guia_remision_m->cod_postal_cliente }}
                     @else
                         {{ $guia_remision_m->cliente->cod_postal ?? '' }}
@@ -243,7 +281,7 @@
                 <div><b>Señor(es):</b> {{ $guia_remision_m->cliente->nombre ?? '' }}</div>
                 <div><b>N° Identificación:</b> {{ $guia_remision_m->cliente->numero_documento ?? '' }}</div>
                 <div><b>Dirección:</b>
-                    @if(isset($guia_remision_m->sucursal_cliente))
+                    @if (isset($guia_remision_m->sucursal_cliente))
                         {{ $guia_remision_m->sucursal_cliente }}
                     @else
                         {{ $guia_remision_m->cliente->direccion ?? '' }}
@@ -254,7 +292,7 @@
             <div class="grid-2">
                 <div class="box">
                     <div class="box-title">UNIDAD DE TRANSPORTE/CONDUCTOR</div>
-                    @if(isset($guia_remision_m->vehiculo_id))
+                    @if (isset($guia_remision_m->vehiculo_id))
                         <div><b>Placa del Vehículo:</b> {{ $guia_remision_m->vehiculo->placa ?? '' }}</div>
                         <div><b>Marca del Vehículo:</b> {{ $guia_remision_m->vehiculo->marca ?? '' }}</div>
                         <div><b>Conductor:</b> {{ $guia_remision_m->personal->nombres ?? '' }}</div>
@@ -268,7 +306,7 @@
                         <div><b>Placa del Vehículo:</b> No Hay Vehículo</div>
                         <div><b>Marca del Vehículo:</b> No Hay Vehículo</div>
                         <div><b>Conductor:</b>
-                            @if(isset($guia_remision_m->conductor_id))
+                            @if (isset($guia_remision_m->conductor_id))
                                 {{ $guia_remision_m->personal->nombres ?? '' }}
                             @else
                                 No Hay Conductor
@@ -283,8 +321,8 @@
                     <div><b>Motivo de traslado:</b> {{ $guia_remision_m->motivo_traslado ?? '' }}</div>
                     @php
                         $pesoTotal = 0;
-                        foreach($guia_remision_m_reg as $reg) {
-                            $pesoTotal += ($reg->cantidad * $reg->peso);
+                        foreach ($guia_remision_m_reg as $reg) {
+                            $pesoTotal += $reg->cantidad * $reg->peso;
                         }
                     @endphp
                     <div><b>Peso bruto total carga:</b> {{ number_format($pesoTotal, 2) }} kg</div>
@@ -300,39 +338,41 @@
             <div class="box-title">BIENES A TRASLADAR</div>
             <table>
                 <thead>
-                <tr>
-                    <th style="width:28px" class="tac">N°</th>
-                    <th style="width:110px" class="tac">CÓDIGO</th>
-                    <th style="width:80px" class="tac">CÓDIGO SUNAT</th>
-                    <th>DESCRIPCIÓN</th>
-                    <th style="width:60px" class="tac">UNIDAD</th>
-                    <th style="width:60px" class="tac">CANTIDAD</th>
-                </tr>
+                    <tr>
+                        <th style="width:28px" class="tac">N°</th>
+                        <th style="width:110px" class="tac">CÓDIGO</th>
+                        <th style="width:80px" class="tac">CÓDIGO SUNAT</th>
+                        <th>DESCRIPCIÓN</th>
+                        <th style="width:60px" class="tac">UNIDAD</th>
+                        <th style="width:60px" class="tac">CANTIDAD</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @php($i = 1)
-                @foreach($guia_remision_m_reg as $guia_registros)
-                    <tr>
-                        <td class="tac">{{ $i++ }}</td>
-                        <td class="tac">{{ $guia_registros->producto->codigo_producto ?? '-' }}</td>
-                        <td class="tac">{{ $guia_registros->producto->codigo_sunat ?? '-' }}</td>
-                        <td>
-                            {{ $guia_registros->producto->nombre ?? '' }}
-                            @if(!empty($guia_registros->numero_serie) || !empty($guia_registros->descripcion))
-                                <div class="desc-small">
-                                    {{ $guia_registros->numero_serie }}
-                                    @if(!empty($guia_registros->descripcion)) — {{ $guia_registros->descripcion }} @endif
-                                </div>
-                            @endif
-                        </td>
-                        <td class="tac">{{ $guia_registros->producto->unidad_i_producto->medida ?? 'NIU' }}</td>
-                        <td class="tac">{{ $guia_registros->cantidad }}</td>
-                        {{--<td class="tac">{{ $guia_registros->peso }}</td>
+                    @php($i = 1)
+                    @foreach ($guia_remision_m_reg as $guia_registros)
+                        <tr>
+                            <td class="tac">{{ $i++ }}</td>
+                            <td class="tac">{{ $guia_registros->producto->codigo_producto ?? '-' }}</td>
+                            <td class="tac">{{ $guia_registros->producto->codigo_sunat ?? '-' }}</td>
+                            <td>
+                                {{ $guia_registros->producto->nombre ?? '' }}
+                                @if (!empty($guia_registros->numero_serie) || !empty($guia_registros->descripcion))
+                                    <div class="desc-small">
+                                        {{ $guia_registros->numero_serie }}
+                                        @if (!empty($guia_registros->descripcion))
+                                            — {{ $guia_registros->descripcion }}
+                                        @endif
+                                    </div>
+                                @endif
+                            </td>
+                            <td class="tac">{{ $guia_registros->producto->unidad_i_producto->medida ?? 'NIU' }}</td>
+                            <td class="tac">{{ $guia_registros->cantidad }}</td>
+                            {{-- <td class="tac">{{ $guia_registros->peso }}</td>
                         <td class="tac">{{ number_format($pesoItem, 2) }} kg</td>
                         --}}
-                    </tr>
-                @endforeach
-                {{--<tr>
+                        </tr>
+                    @endforeach
+                    {{-- <tr>
                     <td colspan="7" class="tar"><b>Peso Total:</b></td>
                     <td class="tac"><b>{{ number_format($totalPeso, 2) }} kg</b></td>
                 </tr>
@@ -348,14 +388,14 @@
                         REPRESENTACIÓN IMPRESA DE GUÍA DE REMISIÓN ELECTRÓNICA.
                         LA MERCADERÍA VIAJA POR RIESGO Y CUENTA DEL CLIENTE.
                     </div>
-                    @if(!empty($guia_remision_m->observacion))
+                    @if (!empty($guia_remision_m->observacion))
                         <div class="desc-small" style="margin-top:6px;">
                             <b>Observación:</b> {{ $guia_remision_m->observacion }}
                         </div>
                     @endif
                 </div>
                 <div class="qr">
-                    @if(!empty($qrCode))
+                    @if (!empty($qrCode))
                         <img src="{{ $qrCode }}" alt="Código QR">
                     @else
                         <span class="qr-placeholder">QR</span>
@@ -369,4 +409,5 @@
         </div>
     </div>
 </body>
+
 </html>

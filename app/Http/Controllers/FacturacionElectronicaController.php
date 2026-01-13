@@ -1847,7 +1847,8 @@ class FacturacionElectronicaController extends Controller
                 $remi->g_electronica,
                 $remi->ticket_guia_remision_sunat,
                 $remi->estado_ticket_guia,
-                $remi->id
+                $remi->id,
+                $remi->motivo_anulacion
             ];
         }
         return response()->json($json);
@@ -1939,7 +1940,8 @@ class FacturacionElectronicaController extends Controller
                 $remi->g_electronica,
                 $remi->ticket_guia_remision_sunat,
                 $remi->estado_ticket_guia,
-                $remi->id
+                $remi->id,
+                $remi->motivo_anulacion
             ];
         }
         return response()->json($json);

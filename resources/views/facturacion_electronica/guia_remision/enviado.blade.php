@@ -194,6 +194,14 @@
             /* CLAVE */
             cursor: text;
         }
+        .sweet-alert input {
+            display: block !important;
+            margin: auto ;
+            width: 90% !important;
+        }
+        .showSweetAlert > fieldset > input{
+            display: none !important;
+        }
     </style>
 
     <!-- scripts -->
@@ -354,8 +362,8 @@
                 {
                     'targets': [10], // Estado
                     'orderable': false,
-                    'className': 'td_status',
-                    'width': '10%',
+                    'className': '',
+                    'width': '12%',
                     'render': function(data, type, full, meta) {
                         // Estado
                         var end = ``;
@@ -527,7 +535,6 @@
         $('#ticket-panel').on('click', function(e) {
             e.stopPropagation();
         });
-        
 
         $(document).on('click', '.boton-anular', function() {
 
@@ -536,8 +543,13 @@
 
             swal({
                     title: "¿Estás seguro?",
-                    text: "Vas a anular la Guia: " + codigo + " y se efectuará el re-stock de los Productos. Esto no anulará la Guia en Sunat, eso debe realizarse desde el mismo portal SOL",
+                    text: "Vas a anular la Guía: <b>" + codigo + "</b><br><br>" +
+                        "Se efectuará el re-stock de los productos.<br>" +
+                        "Esto no anulará la Guía en SUNAT.<br><br>" +
+                        "<input id='swal-motivo' class='form-control form-control-sm mi-clase-defecto' " +
+                        "placeholder='Motivo de anulación'>",
                     type: "warning",
+                    html: true,
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Sí, eliminar",
@@ -555,16 +567,17 @@
                             data: {
                                 '_token': $('input[name=_token]').val(),
                                 'id_guia': id,
+                                'motivo': $('#swal-motivo').val()
                             },
                             success: function(response) {
-                               if (response.success) {
+                                if (response.success) {
                                     // swal("Anulado", resp.message, "success");
                                     table_remision_env.ajax.reload();
                                 } else {
                                     // swal("Error", resp.message, "error");
                                 }
                             },
-                            error: function (xhr) {
+                            error: function(xhr) {
                                 const msg = xhr.responseJSON?.message || 'Error inesperado';
                                 swal("Error", msg, "error");
                             }

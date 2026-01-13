@@ -184,8 +184,8 @@
             pointer-events: none;
             -webkit-transform: rotate(-45deg);
             -moz-transform: rotate(-45deg);
-            top: 35%;
-            right: 35%;
+            top: 25%;
+            right: 25%;
             z-index: 0;
         }
 
@@ -235,7 +235,7 @@
                 <div class="serie">{{ $guia_remision->cod_guia }}</div>
             </div>
         </div>
-        @if ($guia_remision->f_electronica == 2 || $guia_remision->nota_credito == 1)
+        @if ($guia_remision->g_electronica == 2 || $guia_remision->estado_anulado == 1)
             <div id="watermark">
                 <p>Anulado</p>
             </div>

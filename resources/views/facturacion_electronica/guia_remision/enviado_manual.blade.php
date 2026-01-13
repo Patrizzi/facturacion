@@ -190,6 +190,14 @@
             /* CLAVE */
             cursor: text;
         }
+        .sweet-alert input {
+            display: block !important;
+            margin: auto ;
+            width: 90% !important;
+        }
+        .showSweetAlert > fieldset > input{
+            display: none !important;
+        }
     </style>
 
     <!-- scripts -->
@@ -520,8 +528,11 @@
 
             swal({
                     title: "¿Estás seguro?",
-                    text: "Vas a anular la Guia M: " + codigo +
-                        " y se efectuará el re-stock de los Productos. Esto no anulará la Guia en Sunat, eso debe realizarse desde el mismo portal SOL",
+                    text: "Vas a anular la Guía: <b>" + codigo + "</b><br><br>" +
+                        "Se efectuará el re-stock de los productos.<br>" +
+                        "Esto no anulará la Guía en SUNAT.<br><br>" +
+                        "<input id='swal-motivo' class='form-control form-control-sm mi-clase-defecto' " +
+                        "placeholder='Motivo de anulación'>",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
@@ -540,6 +551,7 @@
                             data: {
                                 '_token': $('input[name=_token]').val(),
                                 'id_guia': id,
+                                'motivo': $('#swal-motivo').val()
                             },
                             success: function(response) {
                                 if (response.success) {
