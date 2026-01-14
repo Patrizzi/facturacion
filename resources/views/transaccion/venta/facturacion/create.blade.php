@@ -223,7 +223,7 @@
                                 <label class="col-form-label col-md-1"><strong>Observación:</strong></label>
                                 <div class="col-md-11">
                                     <textarea class="form-control" name="observacion" id="observacion" autocomplete="off" placeholder="Observación"
-                                        rows="1">Emitimos la siguiente Boleta a vuestra solicitud</textarea>
+                                        rows="1">Emitimos la siguiente Factura a vuestra solicitud</textarea>
                                 </div>
                             </div>
                         </div>

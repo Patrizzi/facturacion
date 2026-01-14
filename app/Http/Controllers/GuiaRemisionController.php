@@ -1017,4 +1017,27 @@ class GuiaRemisionController extends Controller
             return null;
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $guiaIds = $request->guia_ids;
+
+        $mensaje = "";
+
+        foreach ($guiaIds as $id) {
+            $guia_r = Guia_remision::find($id);
+            if ($guia_r) {
+                $codigo_g_r = $guia_r->cod_guia;
+                $pdfUrl = route('pdf_guia', $id) . "?archivo=GuíaRemisión_{$codigo_g_r}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }

@@ -309,7 +309,7 @@
                             <div><b>Placa del Vehículo:</b> {{ $guia_remision->vehiculo->placa ?? '' }}</div>
                             <div><b>Marca del Vehículo:</b> {{ $guia_remision->vehiculo->marca ?? '' }}</div>
                             <div><b>Conductor:</b> {{ $guia_remision->personal->nombres ?? '' }}</div>
-                            <div><b>N° Licencia:</b> -</div>
+                            <div><b>N° Licencia:</b> {{ $guia_remision->personal->licencia ?? '-' }}</div>
                         @elseif(isset($guia_remision->vehiculo_publico))
                             <div><b>Empresa:</b> {{ $guia_remision->vehiculo_publicos->nombre ?? '' }}</div>
                             <div><b>RUC:</b> {{ $guia_remision->vehiculo_publicos->ruc ?? '' }}</div>

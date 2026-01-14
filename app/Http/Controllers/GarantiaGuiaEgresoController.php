@@ -555,4 +555,26 @@ class GarantiaGuiaEgresoController extends Controller
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $garantiaEgresoIds = $request->guia_ids;
+
+        $mensaje = "";
+
+        foreach ($garantiaEgresoIds as $id) {
+            $garantia_guia_egreso = GarantiaGuiaEgreso::find($id);
+            if ($garantia_guia_egreso) {
+                $pdfUrl = route('pdf_egreso', $id) . "?archivo=GarantiaGuiaEngreso";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }

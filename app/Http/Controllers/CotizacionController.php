@@ -4289,4 +4289,27 @@ if($validacion==1){
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $cotizacionIds = $request->cotizacion_ids;
+
+        $mensaje = "";
+
+        foreach ($cotizacionIds as $id) {
+            $cotizacion = Cotizacion::find($id);
+            if ($cotizacion) {
+                $codigoCotizacion = $cotizacion->cod_cotizacion;
+                $pdfUrl = route('pdf_cotizacion', $id) . "?archivo=Cotización_{$codigoCotizacion}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }

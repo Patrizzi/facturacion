@@ -848,4 +848,27 @@ class GarantiaGuiaIngresoController extends Controller
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $garantiaIngresoIds = $request->guia_ids;
+
+        $mensaje = "";
+
+        foreach ($garantiaIngresoIds as $id) {
+            $garantia_guia_ingreso = GarantiaGuiaIngreso::find($id);
+            if ($garantia_guia_ingreso) {
+                $codigoGarantiaGuiaI = $garantia_guia_ingreso->codigo_interno;
+                $pdfUrl = route('pdf_ingreso', $id) . "?archivo=GarantiaGuiaIngreso_{$codigoGarantiaGuiaI}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }

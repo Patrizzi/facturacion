@@ -2314,4 +2314,27 @@ public function update(Request $request, $id)
             return back()->with('error', 'Error al descargar el PDF: ' . $e->getMessage());
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $cotizacionMIds = $request->cotizacion_ids;
+
+        $mensaje = "";
+
+        foreach ($cotizacionMIds as $id) {
+            $cotizacionM = CotizacionManual::find($id);
+            if ($cotizacionM) {
+                $codigoCotizacionM = $cotizacionM->cod_cotizacion;
+                $pdfUrl = route('cotizacion_manual_pdf', $id) . "?archivo=Cotización_{$codigoCotizacionM}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }

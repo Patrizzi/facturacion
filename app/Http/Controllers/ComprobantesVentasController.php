@@ -143,6 +143,8 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado_proceso,
                 $boleta->estado_nota_credito,
                 $boleta->estado_nota_debito,
+                $boleta->cliente->celular ?? '',
+                $boleta->cliente->email ?? '',
             ];
         }
         // Llamado para la suma total
@@ -271,6 +273,8 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado_proceso,
                 $boleta->estado_nota_credito,
                 $boleta->estado_nota_debito,
+                $boleta->cliente->celular ?? '',
+                $boleta->cliente->email ?? '',
             ];
         }
         // Llamado para la suma total
@@ -403,6 +407,8 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_proceso,
                 $factura->estado_nota_credito,
                 $factura->estado_nota_debito,
+                $factura->cliente->celular ?? '',
+                $factura->cliente->email ?? '',
             ];
         }
         // Llamado para la suma total
@@ -536,6 +542,9 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_proceso,
                 $factura->estado_nota_credito,
                 $factura->estado_nota_debito,
+                $factura->cliente->celular ?? '',
+                $factura->cliente->email ?? '',
+
             ];
         }
         // Llamado para la suma total
@@ -699,6 +708,17 @@ class ComprobantesVentasController extends Controller
         // Bucle de llamada para el llenado del datatable
         foreach ($notas_credito as $n_credito) {
             $total_columna += $n_credito->total_conv;
+
+            // Obtener cliente según el tipo de documento (solo una relación estará llena)
+            $cliente = $n_credito->nota_i_facturacion->cliente
+                    ?? $n_credito->nota_i_fac_manual->cliente
+                    ?? $n_credito->nota_i_boleta->cliente
+                    ?? $n_credito->nota_i_boleta_manual->cliente
+                    ?? null;
+
+            $celular = $cliente->celular ?? '';
+            $email = $cliente->email ?? '';
+
             $json['data'][] = [
                 $n_credito->id,
                 $n_credito->id,
@@ -710,7 +730,9 @@ class ComprobantesVentasController extends Controller
                 $n_credito->forma_pago,
                 // $n_credito->total,
                 $n_credito->id,
-                $n_credito->estado_proceso
+                $n_credito->estado_proceso,
+                $celular,
+                $email,
             ];
         }
         return response()->json($json);
@@ -870,6 +892,18 @@ class ComprobantesVentasController extends Controller
         // Bucle de llamada para el llenado del datatable
         foreach ($notas_debitos as $n_debito) {
             $total_columna += $n_debito->total_conv;
+
+
+            // Obtener cliente según el tipo de documento (solo una relación estará llena)
+            $cliente = $n_debito->nota_i_facturacion->cliente
+                    ?? $n_debito->nota_i_fac_manual->cliente
+                    ?? $n_debito->nota_i_boleta->cliente
+                    ?? $n_debito->nota_i_boleta_manual->cliente
+                    ?? null;
+
+            $celular = $cliente->celular ?? '';
+            $email = $cliente->email ?? '';
+
             $json['data'][] = [
                 $n_debito->id,
                 $n_debito->id,
@@ -881,7 +915,9 @@ class ComprobantesVentasController extends Controller
                 $n_debito->forma_pago,
                 // $n_debito->total,
                 $n_debito->id,
-                $n_debito->estado_proceso
+                $n_debito->estado_proceso,
+                $celular,
+                $email,
             ];
         }
         return response()->json($json);
@@ -1034,6 +1070,8 @@ class ComprobantesVentasController extends Controller
                 $guia_r->fecha_entrega_formatted,     // 6 - Entrega
                 $guia_r->id,                          // 7 - Ver (para link)
                 $guia_r->estado_proceso,              // 8 - Estado
+                $guia_r->cliente->celular ?? '',
+                $guia_r->cliente->email ?? '',
             ];
         }
 
@@ -1048,7 +1086,7 @@ class ComprobantesVentasController extends Controller
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
         return view('transaccion.comprobantes.guia_remision_manual.index', compact('count_month_comprobantes', 'count_all_comprobantes'));
     }
-    
+
     public function guiaRemisionM_registers(Request $request)
     {
         // DataTables: request base
@@ -1205,6 +1243,8 @@ class ComprobantesVentasController extends Controller
                 $row->fecha_entrega_formatted,         // 6 - Entrega
                 $row->id,                              // 7 - Ver (para link)
                 $row->estado_proceso,                  // 8 - Estado SUNAT (0/1/2)
+                $row->cliente->celular ?? '',
+                $row->cliente->email ?? '',
             ];
         }
 

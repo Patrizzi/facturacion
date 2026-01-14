@@ -1782,4 +1782,27 @@ class FacturacionController extends Controller
             return null;
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $facturaIds = $request->factura_ids;
+
+        $mensaje = "";
+
+        foreach ($facturaIds as $id) {
+            $factura = Facturacion::find($id);
+            if ($factura) {
+                $codigoFactura = $factura->codigo_fac;
+                $pdfUrl = route('pdf_fac', $id) . "?archivo=Factura_{$codigoFactura}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }
