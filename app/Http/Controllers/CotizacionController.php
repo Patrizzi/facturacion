@@ -4297,8 +4297,9 @@ if($validacion==1){
         foreach ($cotizacionIds as $id) {
             $cotizacion = Cotizacion::find($id);
             if ($cotizacion) {
-                $codigoCotizacion = $cotizacion->cod_cotizacion;
-                $pdfUrl = route('pdf_cotizacion', $id) . "?archivo=Cotización_{$codigoCotizacion}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'cotizacion'), 0, 22);
+
+                $pdfUrl = url("cotizacion/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -4308,5 +4309,18 @@ if($validacion==1){
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $cotizaciones = Cotizacion::all();
+
+        foreach ($cotizaciones as $cot) {
+            if (substr(md5($cot->id . env('APP_KEY') . 'cotizacion'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_cotizacion', $cot->id);
+            }
+        }
+
+        abort(404);
     }
 }

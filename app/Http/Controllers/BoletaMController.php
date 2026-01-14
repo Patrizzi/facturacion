@@ -1051,8 +1051,9 @@ class BoletaMController extends Controller
         foreach ($boletaIds as $id) {
             $boleta = Boleta_m::find($id);
             if ($boleta) {
-                $codigoBoleta = $boleta->codigo_boleta;
-                $pdfUrl = route('boleta_manual.pdf', $id) . "?archivo=BoletaM_{$codigoBoleta}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'boleta_manual'), 0, 22);
+
+                $pdfUrl = url("boleta_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1062,5 +1063,18 @@ class BoletaMController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $boletas = Boleta_m::all();
+
+        foreach ($boletas as $bol) {
+            if (substr(md5($bol->id . env('APP_KEY') . 'boleta_manual'), 0, 22) === $codigo) {
+                return redirect()->route('boleta_manual.pdf', $bol->id);
+            }
+        }
+
+        abort(404);
     }
 }

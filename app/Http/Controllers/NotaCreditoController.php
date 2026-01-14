@@ -1512,8 +1512,9 @@ private function downloadSinglePDF($id)
         foreach ($notaCreditoIds as $id) {
             $notaCredito = Nota_Credito::find($id);
             if ($notaCredito) {
-                $codigoNotaCredito = $notaCredito->codigo_n_c;
-                $pdfUrl = route('nota_credito.pdf', $id) . "?archivo=NotaCrédito_{$codigoNotaCredito}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'nota_credito'), 0, 22);
+
+                $pdfUrl = url("nota_credito/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1523,6 +1524,19 @@ private function downloadSinglePDF($id)
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $notas = Nota_Credito::all();
+
+        foreach ($notas as $not) {
+            if (substr(md5($not->id . env('APP_KEY') . 'nota_credito'), 0, 22) === $codigo) {
+                return redirect()->route('nota_credito.pdf', $not->id);
+            }
+        }
+
+        abort(404);
     }
 }
 

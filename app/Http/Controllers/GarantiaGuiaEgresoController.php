@@ -566,7 +566,9 @@ class GarantiaGuiaEgresoController extends Controller
         foreach ($garantiaEgresoIds as $id) {
             $garantia_guia_egreso = GarantiaGuiaEgreso::find($id);
             if ($garantia_guia_egreso) {
-                $pdfUrl = route('pdf_egreso', $id) . "?archivo=GarantiaGuiaEngreso";
+                $codigo = substr(md5($id . env('APP_KEY') . 'garantia_guia_egreso'), 0, 22);
+
+                $pdfUrl = url("garantia_guia_egreso/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -576,5 +578,18 @@ class GarantiaGuiaEgresoController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $garantias = GarantiaGuiaEgreso::all();
+
+        foreach ($garantias as $gar) {
+            if (substr(md5($gar->id . env('APP_KEY') . 'garantia_guia_egreso'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_egreso', $gar->id);
+            }
+        }
+
+        abort(404);
     }
 }

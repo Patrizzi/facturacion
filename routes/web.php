@@ -1348,46 +1348,74 @@ Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class,
 
 
 // Mandar multiples pdf por wsp en comprobantes
+Route::get('boleta/share/{codigo}', [BoletaController::class, 'descargarPorCodigo'])
+    ->name('boleta_codificada');
 Route::post('/comprobantes/boleta/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boleta.multiple');
 
+Route::get('boleta_manual/share/{codigo}', [BoletaMController::class, 'descargarPorCodigo'])
+    ->name('boleta_manual_codificada');
 Route::post('/comprobantes/boleta_manual/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boletaM.multiple');
 
+Route::get('factura/share/{codigo}', [FacturacionController::class, 'descargarPorCodigo'])
+    ->name('factura_codificada');
 Route::post('/comprobantes/factura/whatsapp/send-multiple', [FacturacionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.factura.multiple');
 
+Route::get('factura_manual/share/{codigo}', [FacturacionMController::class, 'descargarPorCodigo'])
+    ->name('factura_manual_codificada');
 Route::post('/comprobantes/factura_manual/whatsapp/send-multiple', [FacturacionMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.facturaM.multiple');
 
+Route::get('nota_credito/share/{codigo}', [NotaCreditoController::class, 'descargarPorCodigo'])
+    ->name('nota_credito_codificada');
 Route::post('/comprobantes/nota_credito/whatsapp/send-multiple', [NotaCreditoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaCredito.multiple');
 
+Route::get('nota_debito/share/{codigo}', [NotaDebitoController::class, 'descargarPorCodigo'])
+    ->name('nota_debito_codificada');
 Route::post('/comprobantes/nota_debito/whatsapp/send-multiple', [NotaDebitoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaDebito.multiple');
 
+Route::get('guia_remision/share/{codigo}', [GuiaRemisionController::class, 'descargarPorCodigo'])
+    ->name('guia_remision_codificada');
 Route::post('/comprobantes/guia_remision/whatsapp/send-multiple', [GuiaRemisionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaRemision.multiple');
 
+Route::get('guia_remision_manual/share/{codigo}', [GuiaRemisionManualController::class, 'descargarPorCodigo'])
+    ->name('guia_remision_manual_codificada');
 Route::post('/comprobantes/guia_remision_manual/whatsapp/send-multiple', [GuiaRemisionManualController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaRemisionM.multiple');
 
-// Mandar multiples pdf por wsp en comprobantes
+// Mandar multiples pdf por wsp en ventas
+Route::get('cotizacion/share/{codigo}', [CotizacionController::class, 'descargarPorCodigo'])
+    ->name('cotizacion_codificada');
 Route::post('/ventas/cotizacion/whatsapp/send-multiple', [CotizacionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.cotizacion.multiple');
 
+Route::get('cotizacion_manual/share/{codigo}', [CotizacionManualController::class, 'descargarPorCodigo'])
+    ->name('cotizacion_manual_codificada');
 Route::post('/ventas/cotizacion_manual/whatsapp/send-multiple', [CotizacionManualController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.cotizacionM.multiple');
 
+Route::get('nota_venta/share/{codigo}', [NotaVentaController::class, 'descargarPorCodigo'])
+    ->name('nota_venta_codificada');
 Route::post('/ventas/nota_venta/whatsapp/send-multiple', [NotaVentaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaVenta.multiple');
 
-// Mandar multiples pdf por wsp en comprobantes
+// Mandar multiples pdf por wsp en garantias
+Route::get('garantia_guia_ingreso/share/{codigo}', [GarantiaGuiaIngresoController::class, 'descargarPorCodigo'])
+    ->name('garantia_guia_ingreso_codificada');
 Route::post('/garantias/guia_ingreso/whatsapp/send-multiple', [GarantiaGuiaIngresoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaIngreso.multiple');
 
+Route::get('garantia_guia_egreso/share/{codigo}', [GarantiaGuiaEgresoController::class, 'descargarPorCodigo'])
+    ->name('garantia_guia_egreso_codificada');
 Route::post('/garantias/guia_egreso/whatsapp/send-multiple', [GarantiaGuiaEgresoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaEgreso.multiple');
 
+Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoController::class, 'descargarPorCodigo'])
+    ->name('garantia_informe_tecnico_codificada');
 Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.informeTecnico.multiple');

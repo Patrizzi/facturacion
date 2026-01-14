@@ -1573,8 +1573,9 @@ return redirect()->route('boleta.show',$boleta->id);
         foreach ($boletaIds as $id) {
             $boleta = Boleta::find($id);
             if ($boleta) {
-                $codigoBoleta = $boleta->codigo_boleta;
-                $pdfUrl = route('pdf_bol', $id) . "?archivo=Boleta_{$codigoBoleta}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'boleta'), 0, 22);
+
+                $pdfUrl = url("boleta/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1584,5 +1585,18 @@ return redirect()->route('boleta.show',$boleta->id);
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $boletas = Boleta::all();
+
+        foreach ($boletas as $bol) {
+            if (substr(md5($bol->id . env('APP_KEY') . 'boleta'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_bol', $bol->id);
+            }
+        }
+
+        abort(404);
     }
 }

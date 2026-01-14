@@ -793,8 +793,9 @@ class NotaVentaController extends Controller
         foreach ($notaVentaIds as $id) {
             $nota_venta = NotaVenta::find($id);
             if ($nota_venta) {
-                $codigoNotaVenta = $nota_venta->cod_nota_venta;
-                $pdfUrl = route('nota_venta_pdf', $id) . "?archivo=Cotización_{$codigoNotaVenta}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'nota_venta'), 0, 22);
+
+                $pdfUrl = url("nota_venta/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -805,8 +806,20 @@ class NotaVentaController extends Controller
 
         return redirect()->away($whatsappUrl);
     }
-}
 
+    public function descargarPorCodigo($codigo)
+    {
+        $notaVentas = NotaVenta::all();
+
+        foreach ($notaVentas as $not) {
+            if (substr(md5($not->id . env('APP_KEY') . 'nota_venta'), 0, 22) === $codigo) {
+                return redirect()->route('nota_venta_pdf', $not->id);
+            }
+        }
+
+        abort(404);
+    }
+}
             /*foreach($nota_venta_reg as $nota_venta_regs){
                 $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
              }

@@ -2325,8 +2325,9 @@ public function update(Request $request, $id)
         foreach ($cotizacionMIds as $id) {
             $cotizacionM = CotizacionManual::find($id);
             if ($cotizacionM) {
-                $codigoCotizacionM = $cotizacionM->cod_cotizacion;
-                $pdfUrl = route('cotizacion_manual_pdf', $id) . "?archivo=Cotización_{$codigoCotizacionM}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'cotizacion_manual'), 0,22);
+
+                $pdfUrl = url("cotizacion_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -2336,5 +2337,18 @@ public function update(Request $request, $id)
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $cotizaciones = CotizacionManual::all();
+
+        foreach ($cotizaciones as $cot) {
+            if (substr(md5($cot->id . env('APP_KEY') . 'cotizacion_manual'), 0, 22) === $codigo) {
+                return redirect()->route('cotizacion_manual_pdf', $cot->id);
+            }
+        }
+
+        abort(404);
     }
 }

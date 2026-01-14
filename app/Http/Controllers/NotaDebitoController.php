@@ -1182,8 +1182,9 @@ private function downloadSinglePDF($id)
         foreach ($notaDebitoIds as $id) {
             $notaDebito = Nota_Debito::find($id);
             if ($notaDebito) {
-                $codigoNotaDebito= $notaDebito->codigo_n_d;
-                $pdfUrl = route('nota_debito.pdf', $id) . "?archivo=NotaDébito_{$codigoNotaDebito}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'nota_debito'), 0, 22);
+
+                $pdfUrl = url("nota_debito/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1193,5 +1194,18 @@ private function downloadSinglePDF($id)
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $notas = Nota_Debito::all();
+
+        foreach ($notas as $not) {
+            if (substr(md5($not->id . env('APP_KEY') . 'nota_debito'), 0, 22) === $codigo) {
+                return redirect()->route('nota_debito.pdf', $not->id);
+            }
+        }
+
+        abort(404);
     }
 }

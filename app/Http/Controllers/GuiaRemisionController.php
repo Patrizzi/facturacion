@@ -990,8 +990,9 @@ class GuiaRemisionController extends Controller
         foreach ($guiaIds as $id) {
             $guia_r = Guia_remision::find($id);
             if ($guia_r) {
-                $codigo_g_r = $guia_r->cod_guia;
-                $pdfUrl = route('pdf_guia', $id) . "?archivo=GuíaRemisión_{$codigo_g_r}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'guia_remision'), 0, 22);
+
+                $pdfUrl = url("guia_remision/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1001,5 +1002,18 @@ class GuiaRemisionController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $guias_r = Guia_remision::all();
+
+        foreach ($guias_r as $guia) {
+            if (substr(md5($guia->id . env('APP_KEY') . 'guia_remision'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_guia', $guia->id);
+            }
+        }
+
+        abort(404);
     }
 }

@@ -607,7 +607,9 @@ class GarantiaInformeTecnicoController extends Controller
         foreach ($informeTecnicoIds as $id) {
             $garantia_informe_tecnico = GarantiaInformeTecnico::find($id);
             if ($garantia_informe_tecnico) {
-                $pdfUrl = route('pdf_informe', $id) . "?archivo=GarantiaInformeTécnico";
+                $codigo = substr(md5($id . env('APP_KEY') . 'garantia_informe_tecnico'), 0, 22);
+
+                $pdfUrl = url("garantia_informe_tecnico/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -617,5 +619,18 @@ class GarantiaInformeTecnicoController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $garantiasI = GarantiaInformeTecnico::all();
+
+        foreach ($garantiasI as $gar) {
+            if (substr(md5($gar->id . env('APP_KEY') . 'garantia_informe_tecnico'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_informe', $gar->id);
+            }
+        }
+
+        abort(404);
     }
 }

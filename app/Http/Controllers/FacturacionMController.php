@@ -1192,8 +1192,9 @@ class FacturacionMController extends Controller
         foreach ($facturaIds as $id) {
             $factura = Facturacion_m::find($id);
             if ($factura) {
-                $codigoFactura = $factura->codigo_fac;
-                $pdfUrl = route('pdf_fac', $id) . "?archivo=Factura_{$codigoFactura}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'factura_manual'), 0, 22);
+
+                $pdfUrl = url("factura_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1203,5 +1204,18 @@ class FacturacionMController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $facturas = Facturacion_m::all();
+
+        foreach ($facturas as $fac) {
+            if (substr(md5($fac->id . env('APP_KEY') . 'factura_manual'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_fac_m', $fac->id);
+            }
+        }
+
+        abort(404);
     }
 }
