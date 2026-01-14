@@ -596,4 +596,26 @@ class GarantiaInformeTecnicoController extends Controller
             return back()->with('error', 'Error al generar el PDF: '.$e->getMessage());
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $informeTecnicoIds = $request->guia_ids;
+
+        $mensaje = "";
+
+        foreach ($informeTecnicoIds as $id) {
+            $garantia_informe_tecnico = GarantiaInformeTecnico::find($id);
+            if ($garantia_informe_tecnico) {
+                $pdfUrl = route('pdf_informe', $id) . "?archivo=GarantiaInformeTécnico";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }

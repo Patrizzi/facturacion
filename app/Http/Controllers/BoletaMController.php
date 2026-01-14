@@ -20,6 +20,7 @@ use App\Tipo_operacion_f;
 use App\Boleta_registros_m;
 use App\Cuotas_credito;
 use App\Banco;
+use App\Boleta_m as AppBoleta_m;
 use App\Nota_Credito;
 use App\Nota_Debito;
 use PDF;
@@ -1038,5 +1039,28 @@ class BoletaMController extends Controller
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $boletaIds = $request->boleta_ids;
+
+        $mensaje = "";
+
+        foreach ($boletaIds as $id) {
+            $boleta = Boleta_m::find($id);
+            if ($boleta) {
+                $codigoBoleta = $boleta->codigo_boleta;
+                $pdfUrl = route('boleta_manual.pdf', $id) . "?archivo=BoletaM_{$codigoBoleta}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
     }
 }

@@ -782,6 +782,29 @@ class NotaVentaController extends Controller
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $notaVentaIds = $request->nota_venta_ids;
+
+        $mensaje = "";
+
+        foreach ($notaVentaIds as $id) {
+            $nota_venta = NotaVenta::find($id);
+            if ($nota_venta) {
+                $codigoNotaVenta = $nota_venta->cod_nota_venta;
+                $pdfUrl = route('nota_venta_pdf', $id) . "?archivo=Cotización_{$codigoNotaVenta}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }
 
             /*foreach($nota_venta_reg as $nota_venta_regs){

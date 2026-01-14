@@ -1562,4 +1562,27 @@ return redirect()->route('boleta.show',$boleta->id);
             return null;
         }
     }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $boletaIds = $request->boleta_ids;
+
+        $mensaje = "";
+
+        foreach ($boletaIds as $id) {
+            $boleta = Boleta::find($id);
+            if ($boleta) {
+                $codigoBoleta = $boleta->codigo_boleta;
+                $pdfUrl = route('pdf_bol', $id) . "?archivo=Boleta_{$codigoBoleta}";
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
 }
