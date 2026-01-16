@@ -47,6 +47,10 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use App\EmailConfiguraciones;
+use App\EmailBandejaEnviosArchivos;
+use App\EmailBandejaEnvios;
 
 class BoletaController extends Controller
 {
@@ -1598,5 +1602,304 @@ return redirect()->route('boleta.show',$boleta->id);
         }
 
         abort(404);
+    }
+
+    public function enviarCorreoDirecto(Request $request, $id)
+    {
+        try {
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $boleta = Boleta::find($id);
+            $boleta_registro = Boleta_registro::where('boleta_id', $id)->get();
+            $igv = Igv::first();
+            $banco = Banco::all();
+            $banco_count = Banco::where('estado', '0')->count();
+            $empresa = Empresa::first();
+
+            $sub_total = 0;
+            $i = 1;
+
+            // Generar PDF
+            $archivo = 'PDF-DOC-' . $boleta->codigo_boleta . '-' . $empresa->ruc . ".pdf";
+            $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i'));
+            $content = $pdf->download();
+            $especif = $date . $archivo;
+            Storage::disk('mailbox')->put($especif, $content);
+
+            // XML si aplica
+            $xml_file = null;
+            if ($boleta->b_electronica == 1) {
+                $xml_file = $empresa->ruc . '-03-' . $boleta->codigo_boleta . '.xml';
+            }
+
+            // Preparar correos
+            $emails = $request->get('emails', []);
+            $emails = array_filter($emails); // Eliminar vacíos
+
+            if (empty($emails)) {
+                Storage::disk('mailbox')->delete($especif);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Debes ingresar al menos un correo.'
+                ], 400);
+            }
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Boleta Electrónica - " . $boleta->codigo_boleta;
+            $mensaje_html = "Estimado cliente, adjuntamos la boleta electrónica " . $boleta->codigo_boleta;
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            // Agregar email backup si existe
+            $correos_envios = array_merge($emails, [$config_email->email_backup]);
+            $mails_array = array_filter($correos_envios);
+
+            // Preparar archivos
+            $pdfile = public_path() . '/archivos/' . $especif;
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            // Adjuntar PDF
+            $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+            // Adjuntar XML si existe
+            if ($xml_file && file_exists(public_path() . '/facturas_electronicas/' . $xml_file)) {
+                $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
+                $message->attach(\Swift_Attachment::fromPath($xml_path));
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                // Guardar en bandeja de envíos
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = implode(', ', $emails);
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // Guardar PDF en archivos
+                $archivo_pdf = new EmailBandejaEnviosArchivos;
+                $archivo_pdf->id_bandeja_envios = $mail->id;
+                $archivo_pdf->archivo = $archivo;
+                $archivo_pdf->fecha_hora = $date;
+                $archivo_pdf->save();
+
+                // Guardar XML en archivos si existe
+                if ($xml_file) {
+                    $guardar_email_archivo = new EmailBandejaEnviosArchivos;
+                    $guardar_email_archivo->id_bandeja_envios = $mail->id;
+                    $guardar_email_archivo->archivo = $xml_file;
+                    $guardar_email_archivo->fecha_hora = $date;
+                    $guardar_email_archivo->save();
+                }
+
+                // Limpiar archivo temporal
+                Storage::disk('mailbox')->delete($especif);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Correo enviado exitosamente a: ' . implode(', ', $emails)
+                ]);
+            }
+
+            // Si falla el envío
+            Storage::disk('mailbox')->delete($especif);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function enviarCorreoMultiple(Request $request)
+    {
+        try {
+            $email = $request->get('email');
+            $boleta_ids = $request->get('boleta_ids', []);
+
+            if (empty($boleta_ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron boletas para enviar.'
+                ], 400);
+            }
+
+            if (empty($email)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El correo electrónico es requerido.'
+                ], 400);
+            }
+
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+            $banco = Banco::all();
+            $banco_count = Banco::where('estado', '0')->count();
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Boletas Electrónicas - " . count($boleta_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las boletas electrónicas solicitadas.";
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            // Agregar email backup si existe
+            $correos_envios = [$email, $config_email->email_backup];
+            $mails_array = array_filter($correos_envios);
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            // Array para guardar archivos temporales
+            $archivos_temporales = [];
+
+            // Generar y adjuntar cada PDF
+            foreach ($boleta_ids as $boleta_id) {
+                $boleta = Boleta::find($boleta_id);
+                if (!$boleta) continue;
+
+                $boleta_registro = Boleta_registro::where('boleta_id', $boleta_id)->get();
+                $sub_total = 0;
+                $i = 1;
+
+                // Generar PDF
+                $archivo = 'PDF-DOC-' . $boleta->codigo_boleta . '-' . $empresa->ruc . ".pdf";
+                $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i'));
+                $content = $pdf->download();
+                $especif = $date . $archivo;
+                Storage::disk('mailbox')->put($especif, $content);
+
+                $pdfile = public_path() . '/archivos/' . $especif;
+                $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+                $archivos_temporales[] = $especif;
+
+                // Adjuntar XML si existe
+                if ($boleta->b_electronica == 1) {
+                    $xml_file = $empresa->ruc . '-03-' . $boleta->codigo_boleta . '.xml';
+                    $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
+                    if (file_exists($xml_path)) {
+                        $message->attach(\Swift_Attachment::fromPath($xml_path));
+                    }
+                }
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                // Guardar en bandeja de envíos
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = $email;
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // Guardar archivos en bandeja
+                foreach ($archivos_temporales as $archivo_temp) {
+                    $archivo_pdf = new EmailBandejaEnviosArchivos;
+                    $archivo_pdf->id_bandeja_envios = $mail->id;
+                    $archivo_pdf->archivo = basename($archivo_temp);
+                    $archivo_pdf->fecha_hora = $date;
+                    $archivo_pdf->save();
+                }
+
+                // Limpiar archivos temporales
+                foreach ($archivos_temporales as $archivo_temp) {
+                    Storage::disk('mailbox')->delete($archivo_temp);
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Se enviaron ' . count($boleta_ids) . ' boleta(s) exitosamente a: ' . $email
+                ]);
+            }
+
+            // Si falla el envío, limpiar archivos
+            foreach ($archivos_temporales as $archivo_temp) {
+                Storage::disk('mailbox')->delete($archivo_temp);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -1419,3 +1419,11 @@ Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoCon
     ->name('garantia_informe_tecnico_codificada');
 Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.informeTecnico.multiple');
+
+// Rutas para mandar por correo directamente desde el index de comprobantes
+Route::post('/boleta/enviar-correo-directo/{id}', [BoletaController::class, 'enviarCorreoDirecto'])
+    ->name('boleta.enviar-correo-directo');
+
+// Rutas para envio multiple de correo para comprobantes
+Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.boleta.multiple');
