@@ -1427,6 +1427,24 @@ Route::post('/boleta/enviar-correo-directo/{id}', [BoletaController::class, 'env
 Route::post('/boleta_manual/enviar-correo-directo/{id}', [BoletaMController::class, 'enviarCorreoDirecto'])
     ->name('boletaM.enviar-correo-directo');
 
+Route::post('/factura/enviar-correo-directo/{id}', [FacturacionController::class, 'enviarCorreoDirecto'])
+    ->name('factura.enviar-correo-directo');
+
+Route::post('/factura_manual/enviar-correo-directo/{id}', [FacturacionMController::class, 'enviarCorreoDirecto'])
+    ->name('facturaM.enviar-correo-directo');
+
+Route::post('/nota_credito/enviar-correo-directo/{id}', [NotaCreditoController::class, 'enviarCorreoDirecto'])
+    ->name('notaCredito.enviar-correo-directo');
+
+Route::post('/nota_debito/enviar-correo-directo/{id}', [NotaDebitoController::class, 'enviarCorreoDirecto'])
+    ->name('notaDebito.enviar-correo-directo');
+
+Route::post('/guia_remision/enviar-correo-directo/{id}', [GuiaRemisionController::class, 'enviarCorreoDirecto'])
+    ->name('guiaRemision.enviar-correo-directo');
+
+Route::post('/guia_remision_manual/enviar-correo-directo/{id}', [GuiaRemisionManualController::class, 'enviarCorreoDirecto'])
+    ->name('guiaRemisionM.enviar-correo-directo');
+
 // Rutas para envio multiple de correo para comprobantes
 Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.boleta.multiple');
@@ -1434,3 +1452,8 @@ Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarC
 Route::post('/boleta_manual/enviar-correo-multiple', [BoletaMController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.boletaM.multiple');
 
+Route::post('/factura/enviar-correo-multiple', [FacturacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.factura.multiple');
+
+Route::post('/factura_manual/enviar-correo-multiple', [FacturacionMController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.facturaM.multiple');
