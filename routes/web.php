@@ -1424,6 +1424,10 @@ Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInform
 Route::post('/boleta/enviar-correo-directo/{id}', [BoletaController::class, 'enviarCorreoDirecto'])
     ->name('boleta.enviar-correo-directo');
 
+Route::post('/boleta_manual/enviar-correo-directo/{id}', [BoletaMController::class, 'enviarCorreoDirecto'])
+    ->name('boletaM.enviar-correo-directo');
+
 // Rutas para envio multiple de correo para comprobantes
 Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.boleta.multiple');
+

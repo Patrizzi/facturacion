@@ -159,7 +159,7 @@
                                                     <th>Importe T.</th>
                                                     <th>Ver</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
-                                                    <th>Compartir</th>
+                                                    <th>Compartir R.</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -298,7 +298,7 @@
                     }
                 },
                 {
-                    'targets': [10], // Columna de Compartir (Boton de correo sin funcionamiento por ahora)
+                    'targets': [10], // Columna de Compartir
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         const boletaId = full[0];
@@ -337,7 +337,6 @@
                                         </form>
                                     </div>
                                 </div>
-
                                 <!-- Contenedor WhatsApp -->
                                 <div class="wsp-container" data-id="${boletaId}"
                                     style="display: inline-block; position: relative; vertical-align: top;">
@@ -688,7 +687,7 @@
                 button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
 
                 // Mostrar toast de carga
-                toastr.info('<i class="fa fa-spinner fa-spin"></i> Enviando correo...', 'Procesando', {
+                toastr.info('<i class="fa fa-spinner fa-spin"></i> Enviando correo, no cierre esta pestaña...', 'Procesando', {
                     timeOut: 0,
                     extendedTimeOut: 0,
                     closeButton: false,
@@ -699,7 +698,7 @@
                 const formData = new FormData(form[0]);
 
                 $.ajax({
-                    url: `/boleta/enviar-correo-directo/${boletaId}`,
+                    url: "{{ route('boleta.enviar-correo-directo', '') }}/" + boletaId,
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -996,7 +995,8 @@
                         title: "Sin selección",
                         text: "Por favor, selecciona al menos una boleta para enviar por correo.",
                         type: "warning",
-                        confirmButtonText: "Entendido"
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#2641F8"
                     });
                 }
 
@@ -1008,7 +1008,8 @@
                     closeOnConfirm: false,
                     confirmButtonText: "Enviar",
                     cancelButtonText: "Cancelar",
-                    inputPlaceholder: "ejemplo@correo.com"
+                    inputPlaceholder: "ejemplo@correo.com",
+                    confirmButtonColor: "#2641F8"
                 }, function(inputValue) {
                     if (inputValue === false) return false;
                     if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
@@ -1044,14 +1045,16 @@
                                     text: response.message || `Se han enviado ${allSelectedIds.length} boleta(s) por correo`,
                                     type: "success",
                                     timer: 3000,
-                                    showConfirmButton: true
+                                    showConfirmButton: true,
+                                    confirmButtonColor: "#2641F8"
                                 });
                             } else {
                                 swal({
                                     title: "Error",
                                     text: response.message || "Hubo un error al enviar los correos",
                                     type: "error",
-                                    confirmButtonText: "Entendido"
+                                    confirmButtonText: "Entendido",
+                                    confirmButtonColor: "#2641F8"
                                 });
                             }
                         },
@@ -1064,7 +1067,8 @@
                                 title: "Error",
                                 text: errorMsg,
                                 type: "error",
-                                confirmButtonText: "Entendido"
+                                confirmButtonText: "Entendido",
+                                confirmButtonColor: "#2641F8"
                             });
                         }
                     });

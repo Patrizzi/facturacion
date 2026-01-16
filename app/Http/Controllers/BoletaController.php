@@ -1743,6 +1743,11 @@ return redirect()->route('boleta.show',$boleta->id);
             ], 500);
 
         } catch (\Exception $e) {
+
+            if (isset($especif)) {
+                Storage::disk('mailbox')->delete($especif);
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
@@ -1896,6 +1901,11 @@ return redirect()->route('boleta.show',$boleta->id);
             ], 500);
 
         } catch (\Exception $e) {
+            if (isset($archivos_temporales) && !empty($archivos_temporales)) {
+                foreach ($archivos_temporales as $archivo_temp) {
+                    Storage::disk('mailbox')->delete($archivo_temp);
+                }
+            }
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
