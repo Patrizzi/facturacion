@@ -366,15 +366,21 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="button" id="boton" name="boton" class="btn btn-primary button-lada">
+                                {{-- <button type="button" id="boton" name="boton" class="btn btn-primary button-lada">
                                     <strong>Guardar</strong>
                                 </button>
-                                {{-- <button class="btnn float-right" id="finalizar_button" type="button"
+                                <button class="btnn float-right" id="finalizar_button" type="button"
                                     style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
                                     <strong>Guardar y finalizar</strong>
                                 </button> --}}
+                                 <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
+                                    type="button">Guardar</button>
+                                <button class="btn btn-primary float-right button-lada" style="margin-left: 10px;"
+                                    type="button" id="finalizar">Guardar y Finalizar</button>
+                                {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
+                                    data-style="zoom-out"></button> --}}
                                 {{-- <button class="ladda-button btn btn-primary float-right" type="button" id="boton" name="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp; --}}
-                                <button type="submit" id="button_submit" hidden ></button>
+                                <button type="submit" id="button_submit" hidden name="button_submit" value="0" ></button>
 
                             </div>
                         </div>
@@ -1729,7 +1735,9 @@
     </script>
 
     <script>
-       $("#boton").on("click", function(buton) {
+        // Boton para Solamente Guardar
+        $("#boton").on("click", function(buton) {
+            $('#button_submit').val('0');
             var l = Ladda.create(document.querySelector('.button-lada'));
             // $('#modal_detraccion').modal('show');
             // DETRACCIONES?
@@ -1808,6 +1816,88 @@
             }
 
         });
+        // Boton para Finalizar
+        $("#finalizar").on("click", function(buton) {
+            $('#button_submit').val('1');
+            var l = Ladda.create(document.querySelector('.button-lada'));
+            // $('#modal_detraccion').modal('show');
+            // DETRACCIONES?
+            var seletc_det = $('.select2_tipo_op').val();
+            var split_id = seletc_det.split(' ');
+            if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                var tipo_detra = $('#select_tipo_pago').val();
+                var ipt_medio = $('.select2_mediopago').val();
+                var porce_detra = $('#porcentaje_detc').val();
+                var tot_det = $('#tota_detra').val();
+
+                if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                    $('#modal_detraccion').modal('show');
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+
+                    inputs.forEach(function(input) {
+                        input.style.display = 'block';
+                    });
+                    return;
+                }
+
+            }
+            // return;
+
+            var forma_pago = $("#forma_pago option:selected").val();
+            if (forma_pago == 2) {
+                var monto_c = document.getElementsByClassName('monto_pago');
+                var monto_fc = document.getElementsByClassName('fecha_pago');
+                var inp_mont = document.getElementsByClassName('monto_pago').length;
+                // correcion, se esta usando el total real, y no el dinamico
+                var total = parseFloat(document.getElementById('total_final').value) || 0;
+                var fin = 0.00;
+                var comp = 0;
+                for (var i = 0; i < inp_mont; i++) {
+                    fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+                }
+                var fin_r = Math.round(fin * 100) / 100;
+                var total_r = Math.round(total * 100) / 100;  // Redondea el total también para comparación precisa
+                // console.log(total);
+                for (var i = 0; i < inp_mont; i++) {
+                    var fecha = monto_fc[i].id;
+                    var monto = monto_c[i].id;
+
+                    var input_text = document.getElementById(`${monto}`).value;
+                    var date_text = document.getElementById(`${fecha}`).value;
+                    if (input_text.length == 0 || date_text.length == 0) {
+                        $('#cuotas_modal').modal('show');
+                        document.getElementById('alert_campos').style.display = "flex";
+                        setTimeout(mostrarMensaje, 3000);
+                        return;
+                    }
+                }
+                if (fin_r != total_r) {  // Compara las versiones redondeadas
+                    $('#cuotas_modal').modal('show');
+                    document.getElementById('suma_campos').style.display = "flex";
+                    setTimeout(mostrarMensaje, 3000);
+                } else {
+                    var form = document.getElementById('form_store');
+                    if (!form.checkValidity()) {
+                        form.reportValidity(); // muestra mensajes nativos de HTML5
+                        return;
+                    }
+                    l.start();
+                    document.getElementById('button_submit').click();
+                }
+                // buton.preventDefault();
+
+            } else {
+                var form = document.getElementById('form_store');
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // muestra mensajes nativos de HTML5
+                    return;
+                }
+                document.getElementById('button_submit').click();
+                l.start();
+            }
+
+        });
+        
         $('#guia_remi_input').on('change', function() {
             var valor = this.value;
             var conversion = valor.replace(/ /g, "|");

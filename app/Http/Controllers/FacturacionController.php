@@ -20,6 +20,7 @@ use App\Forma_pago;
 use App\Cuotas_credito;
 use App\Detracciones;
 use App\Guia_remision;
+use App\GuiaRemisionManual;
 use App\Igv;
 use App\Marcas;
 use App\Moneda;
@@ -546,7 +547,8 @@ class FacturacionController extends Controller
             // $comisionista_buscador=Personal_venta::where('id',$id_personal)->first();
             //Comision segun comisionista
             // $personal_venta=Personal_venta::where('id_personal',$comisionista_buscador->id)->first();
-            $comi=$comisionista_buscador->comision;
+            // $comi=$comisionista_buscador->comision;
+            $comi=$comisionista_buscador->id;
             $comision_id = $comisionista_buscador->id;
 
         }
@@ -681,7 +683,11 @@ class FacturacionController extends Controller
         $facturacion->observacion = $request->get('observacion');
         $facturacion->comisionista = $comi;
         $facturacion->user_id = auth()->user()->id;
-        $facturacion->estado = '0';
+        if($request->button_submit == 0){
+            $facturacion->estado = '0'; //!
+        }else{
+            $facturacion->estado = '1'; //!
+        }
         $facturacion->tipo = 'producto';
         $facturacion->tipo_operacion_id = $busca_ope->id;
         $facturacion->tipo_documento_id = 2;
@@ -999,8 +1005,6 @@ class FacturacionController extends Controller
     public function show($id)
     {
         // REDIRECCION PARA MOSTRAR EL inventario_inicial
-        $existe_id = kardex_entrada::where('estado', 2)->first();
-        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $existe_id = Facturacion::where('id', $id)->first();
@@ -1022,13 +1026,30 @@ class FacturacionController extends Controller
         }else{
             $detraccion = 'not';
         }
-        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion'));
+        // CAMPOS PARA EL EDITAR
+        $forma_pagos = Forma_pago::get();
+        $remisiones = Guia_remision::select('id', 'cod_guia')
+            ->where('cliente_id', $facturacion->cliente_id)
+            ->where('g_electronica', 0)
+            ->union(
+                GuiaRemisionManual::select('id', 'cod_guia')
+                    ->where('cliente_id', $facturacion->cliente_id)
+                    ->where('g_electronica', 0)
+            )
+            ->get();
+        $tipo_operacion = Tipo_operacion_f::all();
+        $moneda = Moneda::where('principal', '1')->first();
+        
+        // $forma_pago_id = Forma_pago::all();
+        // return $remisiones;
 
-        if ($facturacion->id_cotizador_servicio == NULL) {
-            return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));
-        } else {
-            return view('transaccion.venta.facturacion.show_servicio', compact('facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));
-        }
+        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion','forma_pagos','remisiones','tipo_operacion','moneda'));
+
+        // if ($facturacion->id_cotizador_servicio == NULL) {
+        //     return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));
+        // } else {
+        //     return view('transaccion.venta.facturacion.show_servicio', compact('facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));
+        // }
     }
 
     public function print($id)

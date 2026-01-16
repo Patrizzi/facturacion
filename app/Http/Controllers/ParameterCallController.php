@@ -42,7 +42,7 @@ class ParameterCallController extends Controller
         // return $money_id;
         //Obtención del articulo
         $article = $request->get('articulo');
-        $id = explode(" ", $article); //separador del articulo por espacio
+        $id = explode(" | ", $article); //separador del articulo por espacio
 
         //Obtención del almacén
         $store = $request->get('almacen');
@@ -52,11 +52,11 @@ class ParameterCallController extends Controller
         if ($article == NULL) {
             return response()->json(['error' => 'No existe ningún artículo'], 400);
         }
-
+        // return $id;
         //Obtención de los datos del articulo (producto-servicio)
-        $product = Producto::where('id', $id[0])->where('codigo_producto', $id[2])->where('codigo_original', $id[4])->first();
-        $service = Servicios::where('id', $id[0])->where('codigo_servicio', $id[2])->where('codigo_original', $id[4])->first();
-        // return $service;
+        $product = Producto::where('id', $id[0])->where('codigo_producto', $id[1])->where('codigo_original', $id[2])->first();
+        $service = Servicios::where('id', $id[0])->where('codigo_servicio', $id[1])->where('codigo_original', $id[2])->first();
+        // return $product;
         // OPCIONE PARA BUSCAR SIN ERRORES, CODIGO[2] ES UNICO PRODUCTO TIENE 8 CEROS Y SERVICIO 6 CEROS
         // $product=Producto::where('codigo_producto',$id[2])->first();
         // $service=Servicios::where('codigo_servicio',$id[2])->first();

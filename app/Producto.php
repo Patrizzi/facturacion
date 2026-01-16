@@ -91,6 +91,9 @@ class Producto extends Model
     {
         return $this->hasOne(Stock_producto::class, 'producto_id', 'id');
     }
+    public function stock_almacen(){
+        return $this->hasMany(Stock_almacen::class, 'producto_id', 'id');
+    }
 
     public static function porcentaje_productos()
     {
@@ -234,5 +237,10 @@ class Producto extends Model
     public function getFechaCreacionAttribute(){
         $fecha = Carbon::parse($this->created_at)->format('d-m-Y');
         return $fecha; 
+    }
+
+    public function stockAlmacenProducto($almacen_id){
+        $stock_almacen = Stock_almacen::where('producto_id', $this->id)->where('almacen_id', $almacen_id)->first();
+        return $stock_almacen;
     }
 }
