@@ -1431,3 +1431,6 @@ Route::post('/boleta_manual/enviar-correo-directo/{id}', [BoletaMController::cla
 Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.boleta.multiple');
 
+Route::post('/boleta_manual/enviar-correo-multiple', [BoletaMController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.boletaM.multiple');
+

@@ -1001,6 +1001,95 @@ $(document).ready(function() {
         });
     });
 
+    // Función para enviar boletas por Correo múltiple
+    $('#btn-correo-filtrado').on('click', function(e) {
+        e.preventDefault();
+
+        if (allSelectedIds.length === 0) {
+            return swal({
+                title: "Sin selección",
+                text: "Por favor, selecciona al menos una boleta manual para enviar por correo.",
+                type: "warning",
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#2641F8"
+            });
+        }
+
+        swal({
+            title: "Enviar por Correo",
+            text: `Ingresa el correo electrónico para enviar ${allSelectedIds.length} boleta(s):`,
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            confirmButtonText: "Enviar",
+            cancelButtonText: "Cancelar",
+            inputPlaceholder: "ejemplo@correo.com",
+            confirmButtonColor: "#2641F8"
+        }, function(inputValue) {
+            if (inputValue === false) return false;
+            if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
+
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(inputValue)) {
+                return swal.showInputError("Por favor ingresa un correo electrónico válido");
+            }
+
+            // Mostrar mensaje de procesando
+            swal({
+                title: "Enviando...",
+                text: `Procesando ${allSelectedIds.length} boleta(s). Por favor espera...`,
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+
+            // Enviar por AJAX
+            $.ajax({
+                url: '{{ route('envioCorreo.boletaM.multiple') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    email: inputValue,
+                    boleta_ids: allSelectedIds
+                },
+                success: function(response) {
+                    if (response.success) {
+                        swal({
+                            title: "¡Enviado!",
+                            text: response.message || `Se han enviado ${allSelectedIds.length} boleta(s) por correo`,
+                            type: "success",
+                            timer: 3000,
+                            showConfirmButton: true,
+                            confirmButtonColor: "#2641F8"
+                        });
+                    } else {
+                        swal({
+                            title: "Error",
+                            text: response.message || "Hubo un error al enviar los correos",
+                            type: "error",
+                            confirmButtonText: "Entendido",
+                            confirmButtonColor: "#2641F8"
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    let errorMsg = 'Error al enviar los correos';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMsg = xhr.responseJSON.message;
+                    }
+                    swal({
+                        title: "Error",
+                        text: errorMsg,
+                        type: "error",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#2641F8"
+                    });
+                }
+            });
+        });
+    });
+
     // Función para enviar boletas por WhatsApp multiple
     $('#btn-whatsapp-filtrado').on('click', function(e) {
         e.preventDefault();
