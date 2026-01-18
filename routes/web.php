@@ -1445,6 +1445,16 @@ Route::post('/guia_remision/enviar-correo-directo/{id}', [GuiaRemisionController
 Route::post('/guia_remision_manual/enviar-correo-directo/{id}', [GuiaRemisionManualController::class, 'enviarCorreoDirecto'])
     ->name('guiaRemisionM.enviar-correo-directo');
 
+// Rutas para mandar por correo directamente desde el index de ventas
+Route::post('/cotizacion/enviar-correo-directo/{id}', [CotizacionController::class, 'enviarCorreoDirecto'])
+    ->name('cotizacion.enviar-correo-directo');
+
+Route::post('/cotizacion_manual/enviar-correo-directo/{id}', [CotizacionManualController::class, 'enviarCorreoDirecto'])
+    ->name('cotizacionM.enviar-correo-directo');
+
+Route::post('/nota_venta/enviar-correo-directo/{id}', [NotaVentaController::class, 'enviarCorreoDirecto'])
+    ->name('notaVenta.enviar-correo-directo');
+
 // Rutas para envio multiple de correo para comprobantes
 Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.boleta.multiple');
@@ -1457,3 +1467,35 @@ Route::post('/factura/enviar-correo-multiple', [FacturacionController::class, 'e
 
 Route::post('/factura_manual/enviar-correo-multiple', [FacturacionMController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.facturaM.multiple');
+
+Route::post('/nota_credito/enviar-correo-multiple', [NotaCreditoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.notaCredito.multiple');
+
+Route::post('/nota_debito/enviar-correo-multiple', [NotaDebitoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.notaDebito.multiple');
+
+Route::post('/guia_remision/enviar-correo-multiple', [GuiaRemisionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.guia_remision.multiple');
+
+Route::post('/guia_remision_manual/enviar-correo-multiple', [GuiaRemisionManualController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.guia_remisionM.multiple');
+
+// Rutas para envio multiple de correo para ventas
+Route::post('/cotizacion/enviar-correo-multiple', [CotizacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.cotizacion.multiple');
+
+Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionMController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.cotizacionM.multiple');
+
+Route::post('/nota_venta/enviar-correo-multiple', [NotaVentaController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.nota_venta.multiple');
+
+// Rutas para envio multiple de correo para garantias
+Route::post('/garantia_guia_ingreso/enviar-correo-multiple', [GarantiaGuiaIngresoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_guia_ingreso.multiple');
+
+Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_guia_egreso.multiple');
+
+Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_informe_tecnico.multiple');
