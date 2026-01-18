@@ -69,9 +69,9 @@
                                                     <i class="fa fa-file-pdf-o"></i> PDF
                                                 </button>
 
-                                                {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                     <i class="fa fa-envelope"></i> Correo
-                                                </button>--}}
+                                                </button>
 
                                                 <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                     <i class="fa fa-whatsapp"></i> Whatsapp
@@ -651,7 +651,8 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos una nota de crédito para imprimir.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
                 return;
             }
@@ -662,7 +663,8 @@
                 type: "info",
                 showCancelButton: true,
                 confirmButtonText: "Sí, imprimir",
-                cancelButtonText: "Cancelar"
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#2641F8"
             }, function(isConfirm) {
                 if (isConfirm) {
                     var url = '{{ route("notaCredito.print.multiple") }}';
@@ -708,7 +710,8 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos una nota de crédito para exportar.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
                 return;
             }
@@ -720,7 +723,8 @@
                 type: "info",
                 showCancelButton: true,
                 confirmButtonText: "Sí, exportar",
-                cancelButtonText: "Cancelar"
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#2641F8"
             }, function(isConfirm) {
                 if (isConfirm) {
                     // Construir URL con los IDs seleccionados
@@ -776,7 +780,8 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos una nota para descargar.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
                 return;
             }
@@ -793,7 +798,8 @@
                 type: "info",
                 showCancelButton: true,
                 confirmButtonText: "Sí, descargar",
-                cancelButtonText: "Cancelar"
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#2641F8"
             }, function(isConfirm) {
                 if (isConfirm) {
                     // Construir URL con parámetros
@@ -832,7 +838,8 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos una nota de crédito para enviar por WhatsApp.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
             }
 
@@ -844,7 +851,8 @@
                 closeOnConfirm: false,
                 confirmButtonText: "Enviar",
                 cancelButtonText: "Cancelar",
-                inputPlaceholder: "Ejemplo: 999999999"
+                inputPlaceholder: "Ejemplo: 999999999",
+                confirmButtonColor: "#2641F8"
             }, function(inputValue) {
                 if (inputValue === false) return false;
                 if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");

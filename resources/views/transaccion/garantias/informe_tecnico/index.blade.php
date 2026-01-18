@@ -45,19 +45,19 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right">
                                             <button type="button" id="bnt-imprimir" class="dropdown-item">
-                                                <i class="fa fa-print"></i> Imprimir
+                                                <i class="fa fa-print text-dark"></i> Imprimir
                                             </button>
                                             <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
-                                                <i class="fa fa-file-excel-o"></i> Excel
+                                                <i class="fa fa-file-excel-o text-dark"></i> Excel
                                             </button>
                                             <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
-                                                <i class="fa fa-file-pdf-o"></i> PDF
+                                                <i class="fa fa-file-pdf-o text-dark"></i> PDF
                                             </button>
-                                            {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
-                                                <i class="fa fa-envelope"></i> Correo
-                                            </button>--}}
+                                            <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                <i class="fa fa-envelope text-dark"></i> Correo
+                                            </button>
                                             <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
-                                                <i class="fa fa-whatsapp"></i> Whatsapp
+                                                <i class="fa fa-whatsapp text-dark"></i> Whatsapp
                                             </button>
                                         </div>
                                     </div>
@@ -490,7 +490,8 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos un informe técnico para imprimir.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
                 return;
             }
@@ -502,7 +503,8 @@
                 type: "info",
                 showCancelButton: true,
                 confirmButtonText: "Sí, imprimir",
-                cancelButtonText: "Cancelar"
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#2641F8"
             }, function(isConfirm) {
                 if (isConfirm) {
                     // Construir URL con parámetros GET
@@ -544,7 +546,8 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos un informe técnico para exportar.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
                 return;
             }
@@ -556,7 +559,8 @@
                 type: "info",
                 showCancelButton: true,
                 confirmButtonText: "Sí, exportar",
-                cancelButtonText: "Cancelar"
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#2641F8"
             }, function(isConfirm) {
                 if (isConfirm) {
                     // Construir URL con los IDs seleccionados
@@ -604,7 +608,8 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos un informe técnico para descargar.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
                 return;
             }
@@ -619,7 +624,8 @@
                 type: "info",
                 showCancelButton: true,
                 confirmButtonText: "Sí, descargar",
-                cancelButtonText: "Cancelar"
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#2641F8"
             }, function(isConfirm) {
                 if (!isConfirm) return;
 
@@ -662,6 +668,104 @@
             });
         });
 
+        // Función para enviar informes tecnico por Correo múltiple
+        $('#btn-correo-filtrado').on('click', function(e) {
+            e.preventDefault();
+
+            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                return selectedRows[tableId][id] === true &&
+                    id !== '' &&
+                    id !== 'undefined' &&
+                    !isNaN(parseInt(id));
+            });
+
+            console.log('IDs seleccionados para Correo:', selectedIds);
+
+            if (selectedIds.length === 0) {
+                return swal({
+                    title: "Sin selección",
+                    text: "Por favor, selecciona al menos un informe técnico para enviar por correo.",
+                    type: "warning",
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
+                });
+            }
+
+            swal({
+                title: "Enviar por Correo",
+                text: `Ingresa el correo electrónico para enviar ${selectedIds.length} informe(s) técnico(s):`,
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Enviar",
+                cancelButtonText: "Cancelar",
+                inputPlaceholder: "ejemplo@correo.com",
+                confirmButtonColor: "#2641F8"
+            }, function(inputValue) {
+                if (inputValue === false) return false;
+                if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
+
+                // Validar formato de email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(inputValue)) {
+                    return swal.showInputError("Por favor ingresa un correo electrónico válido");
+                }
+
+                // Mostrar mensaje de procesando
+                swal({
+                    title: "Enviando...",
+                    text: `Procesando ${selectedIds.length} informes(s) técnico(s). Por favor espera...`,
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+
+                // Enviar por AJAX
+                $.ajax({
+                    url: '{{ route('envioCorreo.garantia_informe_tecnico.multiple') }}',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        email: inputValue,
+                        guia_ids: selectedIds
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            swal({
+                                title: "¡Enviado!",
+                                text: response.message || `Se han enviado ${selectedIds.length} informes(s) técnico(s) por correo`,
+                                type: "success",
+                                timer: 3000,
+                                showConfirmButton: true,
+                                confirmButtonColor: "#2641F8"
+                            });
+                        } else {
+                            swal({
+                                title: "Error",
+                                text: response.message || "Hubo un error al enviar los correos",
+                                type: "error",
+                                confirmButtonText: "Entendido",
+                                confirmButtonColor: "#2641F8"
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'Error al enviar los correos';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                        swal({
+                            title: "Error",
+                            text: errorMsg,
+                            type: "error",
+                            confirmButtonText: "Entendido",
+                            confirmButtonColor: "#2641F8"
+                        });
+                    }
+                });
+            });
+        });
+
         // Función para enviar guías por WhatsApp múltiple
         $('#btn-whatsapp-filtrado').on('click', function(e) {
             e.preventDefault();
@@ -681,7 +785,8 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos un informe técnico para enviar por WhatsApp.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
             }
 
@@ -693,7 +798,8 @@
                 closeOnConfirm: false,
                 confirmButtonText: "Enviar",
                 cancelButtonText: "Cancelar",
-                inputPlaceholder: "Ejemplo: 999999999"
+                inputPlaceholder: "Ejemplo: 999999999",
+                confirmButtonColor: "#2641F8"
             }, function(inputValue) {
                 if (inputValue === false) return false;
                 if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");

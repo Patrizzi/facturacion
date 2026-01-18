@@ -64,9 +64,9 @@
                                                 <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
                                                     <i class="fa fa-file-pdf-o"></i> PDF
                                                 </button>
-                                                {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                     <i class="fa fa-envelope"></i> Correo
-                                                </button>--}}
+                                                </button>
                                                 <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                     <i class="fa fa-whatsapp"></i> Whatsapp
                                                 </button>
@@ -640,7 +640,8 @@ $(document).ready(function() {
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una cotización manual para imprimir.",
                 type: "warning",
-                confirmButtonText: "Entendido"
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#2641F8"
             });
             return;
         }
@@ -651,7 +652,8 @@ $(document).ready(function() {
             type: "info",
             showCancelButton: true,
             confirmButtonText: "Sí, imprimir",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#2641F8"
         }, function(isConfirm) {
             if (isConfirm) {
                 var url = '{{ route("cotizacionM.print.multiple") }}';
@@ -697,7 +699,8 @@ $(document).ready(function() {
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una cotización para exportar.",
                 type: "warning",
-                confirmButtonText: "Entendido"
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#2641F8"
             });
             return;
         }
@@ -709,7 +712,8 @@ $(document).ready(function() {
             type: "info",
             showCancelButton: true,
             confirmButtonText: "Sí, exportar",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#2641F8"
         }, function(isConfirm) {
             if (isConfirm) {
                 // Construir URL con los IDs seleccionados
@@ -749,7 +753,8 @@ $(document).ready(function() {
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una cotizacion manual para descargar.",
                 type: "warning",
-                confirmButtonText: "Entendido"
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#2641F8"
             });
             return;
         }
@@ -766,7 +771,8 @@ $(document).ready(function() {
             type: "info",
             showCancelButton: true,
             confirmButtonText: "Sí, descargar",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#2641F8"
         }, function(isConfirm) {
             if (isConfirm) {
                 // Construir URL con parámetros
@@ -805,7 +811,8 @@ $(document).ready(function() {
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una cotización para enviar por WhatsApp.",
                 type: "warning",
-                confirmButtonText: "Entendido"
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#2641F8"
             });
         }
 
@@ -817,7 +824,8 @@ $(document).ready(function() {
             closeOnConfirm: false,
             confirmButtonText: "Enviar",
             cancelButtonText: "Cancelar",
-            inputPlaceholder: "Ejemplo: 999999999"
+            inputPlaceholder: "Ejemplo: 999999999",
+            confirmButtonColor: "#2641F8"
         }, function(inputValue) {
             if (inputValue === false) return false;
             if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");

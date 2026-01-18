@@ -1484,7 +1484,7 @@ Route::post('/guia_remision_manual/enviar-correo-multiple', [GuiaRemisionManualC
 Route::post('/cotizacion/enviar-correo-multiple', [CotizacionController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.cotizacion.multiple');
 
-Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionMController::class, 'enviarCorreoMultiple'])
+Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.cotizacionM.multiple');
 
 Route::post('/nota_venta/enviar-correo-multiple', [NotaVentaController::class, 'enviarCorreoMultiple'])
