@@ -78,9 +78,11 @@
                 <div class="col-md-10">
                     @if ($facturacion->comisionista == 0)
                         </span><input type="text" class="form-control" readonly value="Sin Comisión - 0 %">
+                        <input type="hidden" name="" id="comisionista" value="0">
                     @else
                         <input type="text" class="form-control" readonly
-                            value="{{ $facturacion->select_comisionista->cod_vendedor }} - {{ $facturacion->select_comisionista->personal->personal_l->nombres }} -{{ $facturacion->select_comisionista->comision }} %">
+                            value="{{ $facturacion->select_comisionista->cod_vendedor }} - {{ $facturacion->select_comisionista->personal->personal_l->nombres }} - {{ $facturacion->select_comisionista->comision }} %">
+                        <input type="hidden" name="" id="comisionista" value="{{ $facturacion->select_comisionista->comision }}">
                     @endif
                 </div>
             </div>
@@ -208,13 +210,14 @@
         </div>
     </div>
     <hr>
+    <input type="hidden" name="" id="count_articles" value="{{ count($facturacion->registros) - 1 }}">
     <div class="table-responsive">
         <table class="table tables">
             <thead>
                 <tr>
                     <th style="vertical-align: middle;width: 50px;">
                         <div>
-                            <button type="button" class='addmore btn btn-sm btn-info' style="display: none"><i
+                            <button type="button" class='addmore btn btn-sm btn-info' style="display: block"><i
                                     class="fa fa-plus-square" aria-hidden="true"></i></button>
                         </div>
                         <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
@@ -233,7 +236,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($facturacion->registros as $registros)
+                @foreach ($facturacion->registros as $i_edit => $registros)
                     <tr>
                         <td>
                             {{-- <input type="hidden" name="elem_delete[]" value="{{$cotizacion_registros->id}}">
@@ -242,8 +245,8 @@
                                     class="fa fa-trash" aria-hidden="true"></i> </button>
                         </td>
                         <td class="td_selected">
-                            <select class="monto0 select2_demo_3 select_change" required="" id="articulo"
-                                onchange="ajax(0)" autocomplete="off">
+                            <select class="monto{{$i_edit}} select2_demo_3 select_change" required="" id="articulo"
+                                onchange="ajax({{$i_edit}})" autocomplete="off">
                                 @if ($registros->producto->id)
                                     <option
                                         value="{{ $registros->producto->id }} | {{ $registros->producto->codigo_producto }} | {{ $registros->producto->codigo_original }} | {{ $registros->producto->nombre }}">
@@ -266,80 +269,80 @@
                                     @endphp
                                 @endif
                             </select>
-                            <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item"
+                            <textarea type='text' id='descripcion{{$i_edit}}' name='descripcion_item[]' placeholder="Descripción de Item"
                                 class="form-control" autocomplete="off" style="margin-top: 5px;">{{ $registros->descripcion_item }}</textarea>
-                            <textarea type='text' id='numero_serie0' name='numero_serie[]' class="form-control" autocomplete="off"
+                            <textarea type='text' id='numero_serie{{$i_edit}}' name='numero_serie[]' class="form-control" autocomplete="off"
                                 style="margin-top: 5px;" placeholder="N° de Serie">{{ $registros->numero_serie }}</textarea>
-                            <input style="width: 76px" hidden="" type='text' id='tipo_afec0'
-                                name='tipo_afec[]' readonly="readonly" class="monto0 form-control"
-                                onkeyup="multi(0)" required autocomplete="off" />
+                            <input style="width: 76px" hidden="" type='text' id='tipo_afec{{$i_edit}}'
+                                name='tipo_afec[]' readonly="readonly" class="monto{{$i_edit}} form-control"
+                                onkeyup="multi({{$i_edit}})" required autocomplete="off" />
                             {{-- <input hidden="hidden" class="celda" name="articulo[]"
                                                     id="input_prod1"> --}}
                             <input hidden="hidden" class="celda input-articulo" name="articulo[]">
                         </td>
                         <td>
-                            <input style="min-width: 80px;margin: 0px" type='text' id='stock0'
+                            <input style="min-width: 80px;margin: 0px" type='text' id='stock{{$i_edit}}'
                                 readonly="readonly" name='stock[]' class="form-control" required autocomplete="off"
                                 value="{{ $stock_actual }}" />
                         </td>
                         <td>
                             <input style="min-width: 80px" type='number' value="{{ $registros->cantidad }}"
-                                id='cantidad0' name='cantidad[]' max="" min="1"
-                                class="monto0 form-control" onkeyup="multi(0)" required autocomplete="off" />
+                                id='cantidad{{$i_edit}}' name='cantidad[]' max="" min="1"
+                                class="monto{{$i_edit}} form-control" onkeyup="multi({{$i_edit}})" required autocomplete="off" />
                         </td>
                         <td>
-                            <input style="min-width: 85px" type='text' id='precio0' name='precio[]'
-                                readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" required
+                            <input style="min-width: 85px" type='text' id='precio{{$i_edit}}' name='precio[]'
+                                readonly="readonly" class="monto{{$i_edit}} form-control" onkeyup="multi({{$i_edit}})" required
                                 autocomplete="off" value="{{ $registros->precio }}" />
                         </td>
                         <td>
                             <div style="position: relative;">
-                                <input class="text_des" type='text' id='descuento0' name='descuento[]'
+                                <input class="text_des" type='text' id='descuento{{$i_edit}}' name='descuento[]'
                                     readonly="readonly" class="" required autocomplete="off"
                                     value="{{ $registros->descuento }}" />
                             </div>
                             <div class="div_check">
                                 @if ($registros->descuento == 0)
                                     {{-- Si no tiene descuento --}}
-                                    <input class="check" type='checkbox' id='check0' name='check[]'
-                                        onclick="multi(0)" style="" autocomplete="off" />
-                                    <input type='hidden' id='check_descuento0' name='check_descuento[]'
+                                    <input class="check" type='checkbox' id='check{{$i_edit}}' name='check[]'
+                                        onclick="multi({{$i_edit}})" style="" autocomplete="off" />
+                                    <input type='hidden' id='check_descuento{{$i_edit}}' name='check_descuento[]'
                                         class="form-control" required>
-                                    <input type='hidden' id='promedio_original0' name='promedio_original[]'
+                                    <input type='hidden' id='promedio_original{{$i_edit}}' name='promedio_original[]'
                                         class="form-control" required>
                                 @else
-                                    <input class="check" type='checkbox' id='check0' name='check[]'
-                                        onclick="multi(0)" style="" autocomplete="off" />
-                                    <input type='hidden' id='check_descuento0' name='check_descuento[]'
+                                    <input class="check" type='checkbox' id='check{{$i_edit}}' name='check[]'
+                                        onclick="multi({{$i_edit}})" style="" autocomplete="off" />
+                                    <input type='hidden' id='check_descuento{{$i_edit}}' name='check_descuento[]'
                                         class="form-control" required>
-                                    <input type='hidden' id='promedio_original0' name='promedio_original[]'
+                                    <input type='hidden' id='promedio_original{{$i_edit}}' name='promedio_original[]'
                                         class="form-control" required>
                                 @endif
                             </div>
-                            <input type='hidden' id='check_descuento0' name='check_descuento[]'
+                            <input type='hidden' id='check_descuento{{$i_edit}}' name='check_descuento[]'
                                 class="form-control" required value="{{ $registros->descuentos }}">
-                            <input type='hidden' id='promedio_original0' name='promedio_original[]'
+                            <input type='hidden' id='promedio_original{{$i_edit}}' name='promedio_original[]'
                                 class="form-control" required value="{{ $registros->promedio_original }}">
                         </td>
                         <td>
-                            <input style="min-width: 85px" type='text' id='precio_unitario_descuento0'
+                            <input style="min-width: 85px" type='text' id='precio_unitario_descuento{{$i_edit}}'
                                 name='precio_unitario_descuento[]' readonly="readonly"
-                                class="precio_unitario_descuento0 form-control" required autocomplete="off"
+                                class="precio_unitario_descuento{{$i_edit}} form-control" required autocomplete="off"
                                 value="{{ $registros->precio_unitario_desc }}" />
                         </td>
-                        <input type='hidden' name="comision[]" id='comision0' readonly="readonly"
-                            class="form-control comision_input" required autocomplete="off" onchange="multi(0)"
+                        <input type='hidden' name="comision[]" id='comision{{$i_edit}}' readonly="readonly"
+                            class="form-control comision_input" required autocomplete="off" onchange="multi({{$i_edit}})"
                             @if ($facturacion->comisionista == 0) value="0" @else value="{{ $facturacion->select_comisionista->comision }}" @endif />
                         <td>
-                            <input style="min-width: 85px" type='text' id='precio_unitario_comision0'
+                            <input style="min-width: 85px" type='text' id='precio_unitario_comision{{$i_edit}}'
                                 name='precio_unitario_comision[]' readonly="readonly" class="form-control" required
                                 autocomplete="off" value="{{ $registros->precio_unitario_comi * $registros->cantidad }}" />
                         </td>
                         <td>
-                            <input style="min-width: 85px" type='text' id='total0' name='total'
+                            <input style="min-width: 85px" type='text' id='total{{$i_edit}}' name='total'
                                 disabled="disabled" class="total form-control" required autocomplete="off"
                                 value="{{ $registros->precio_unitario_comi * $registros->cantidad }}" />
-                            <input type='text' id='afectacion0' name='afectacion' disabled="disabled"
+                            <input type='text' id='afectacion{{$i_edit}}' name='afectacion' disabled="disabled"
                                 class="afectacion form-control" hidden="" required autocomplete="off"
                                 value="{{ $registros->precio_unitario_comi * $registros->cantidad }}" />
                         </td>
@@ -385,5 +388,5 @@
         </div>
     </div>
     @include('transaccion.venta.facturacion._shared.modal_cuota_edit')
-
+    @include('transaccion.venta.facturacion._shared.modal_add_product')
 </div>

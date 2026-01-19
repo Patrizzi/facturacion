@@ -96,6 +96,9 @@
      #DataTables_Table_0_wrapper {
          padding-bottom: 0px;
      }
+     .column-actions {
+        /* display: inline-flex; */
+     }
  </style>
  <!-- Mainly scripts -->
  <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

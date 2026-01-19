@@ -25,7 +25,7 @@
         }
     </style>
     <div class="wrapper wrapper-content animated fadeInRight">
-        <h1>{{ $facturacion->estado }}</h1>
+        {{-- <h1>{{ $facturacion->estado }}</h1> --}}
         <div class="ibox-title">
             <h4>Factura {{ $facturacion->codigo_fac }}</h4>
             <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
@@ -614,8 +614,11 @@
             vertical-align: middle;
             padding: 0.375rem 0.75rem;
         }
-    </style>
-    <style>
+        @media (min-width: 992px) {
+            #add_product_data>.modal-lg {
+                max-width: 1200px;
+            }
+        }
         /* .form-control {
             margin-top: 5px;
             border-radius: 5px
