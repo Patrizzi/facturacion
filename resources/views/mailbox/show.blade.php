@@ -7,7 +7,7 @@
 @section('atributo_1', 'hidden')
 @section('atributo_actu', 'hidden')
 @section('content')
- 
+
 <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="row">
 		<div class="col-lg-12">
@@ -52,7 +52,7 @@
                                             <span class="font-normal">Para: </span>
                                             @if(substr($mail->remitente, -1) == ']')
                                                 @foreach (json_decode($mail->remitente) as $key => $value)
-                                                    {{ $value }},    
+                                                    {{ $value }},
                                                 @endforeach
                                             @else
                                                 {{$mail->remitente}}
@@ -67,15 +67,25 @@
                                         {!!$mail->mensaje!!}
                                     <p>
                                 </div>
+                                {{-- Reemplaza desde la línea 48 hasta la línea 66 --}}
                                 @if (count($archivos) > 0)
-                                    <div class="mail-attachment" style="display: flow-root"> 
+                                    <div class="mail-attachment" style="display: flow-root">
                                         <div class="file-box">
                                             @foreach ($archivos as $archivo)
                                                 <div class="file archivo_flex ">
                                                     @if(substr($archivo->archivo, -3) == 'xml')
+                                                        {{-- XML siempre en facturas_electronicas --}}
                                                         <a href="{{asset('/facturas_electronicas/'.$archivo->archivo)}}" download="{{$archivo->archivo}}">
-                                                    @else   
-                                                        <a href="{{asset('/archivos/'.$archivo->fecha_hora.$archivo->archivo)}}" download="{{$archivo->archivo}}">
+                                                    @else
+                                                        {{-- PDF: verificar si ya tiene fecha al inicio --}}
+                                                        @php
+                                                            // Si el nombre ya empieza con fecha (YYYY-MM-DD_HH-MM-SS), no concatenar
+                                                            $tieneFecha = preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $archivo->archivo);
+                                                            $rutaArchivo = $tieneFecha
+                                                                ? asset('/archivos/'.$archivo->archivo)
+                                                                : asset('/archivos/'.$archivo->fecha_hora.$archivo->archivo);
+                                                        @endphp
+                                                        <a href="{{$rutaArchivo}}" download="{{$archivo->archivo}}">
                                                     @endif
                                                     <div class="icon">
                                                         <span class="corner"></span>
@@ -90,10 +100,9 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                        {{-- <div class="clearfix"></div> --}}
                                     </div>
                                 @endif
-                                    
+
                                 <div class="mail-body text-right tooltip-demo">
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reenviar"><i class="fa fa-reply"></i> Reenviar</button>
                                     <form action="{{route('email.delete')}}" method="post" style="display: inline-flex">
@@ -206,7 +215,7 @@
                                         <i class="fa fa-pencil"></i> Borrador
                                     </button>
                                 </div>
-                                <div class="col-sm-6" align="right"> 
+                                <div class="col-sm-6" align="right">
                                     <button type="submit" class="btn  btn-primary ladda-button" name="boton_send" value="boton_send">
                                         <i class="fa fa-reply"></i> Enviar
                                     </button>
@@ -226,7 +235,7 @@
         overflow: visible;
     }
     .icon:hover{
-        box-shadow: none;   
+        box-shadow: none;
     }
     .mail-body{
         display: flow-root;
@@ -237,7 +246,7 @@
         width: auto;
     }
     .archivo_flex{
-        flex: 0 0 calc(  (100% - 5em ) / 4);   
+        flex: 0 0 calc(  (100% - 5em ) / 4);
         margin: 0.5em;
     }
     .close{
@@ -256,7 +265,7 @@
         width: auto;
     }
     .archivo_flex.reenvio-flex{
-        flex: 0 0 calc(  (100% - 3em ) / 3);   
+        flex: 0 0 calc(  (100% - 3em ) / 3);
         margin: 0.5em;
     }
 </style>

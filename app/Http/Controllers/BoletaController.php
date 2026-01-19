@@ -1646,7 +1646,7 @@ return redirect()->route('boleta.show',$boleta->id);
 
             // Preparar correos
             $emails = $request->get('emails', []);
-            $emails = array_filter($emails); // Eliminar vacíos
+            $emails = array_filter($emails);
 
             if (empty($emails)) {
                 Storage::disk('mailbox')->delete($especif);
@@ -1726,8 +1726,8 @@ return redirect()->route('boleta.show',$boleta->id);
                     $guardar_email_archivo->save();
                 }
 
-                // Limpiar archivo temporal
-                Storage::disk('mailbox')->delete($especif);
+                // ⭐ LIMPIAR ARCHIVOS VIEJOS (más de 5 minutos)
+                $this->limpiarArchivosViejos(5);
 
                 return response()->json([
                     'success' => true,
@@ -1743,7 +1743,6 @@ return redirect()->route('boleta.show',$boleta->id);
             ], 500);
 
         } catch (\Exception $e) {
-
             if (isset($especif)) {
                 Storage::disk('mailbox')->delete($especif);
             }
@@ -1822,6 +1821,7 @@ return redirect()->route('boleta.show',$boleta->id);
 
             // Array para guardar archivos temporales
             $archivos_temporales = [];
+            $archivos_xml = [];
 
             // Generar y adjuntar cada PDF
             foreach ($boleta_ids as $boleta_id) {
@@ -1850,6 +1850,7 @@ return redirect()->route('boleta.show',$boleta->id);
                     $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
                     if (file_exists($xml_path)) {
                         $message->attach(\Swift_Attachment::fromPath($xml_path));
+                        $archivos_xml[] = $xml_file;
                     }
                 }
             }
@@ -1870,19 +1871,25 @@ return redirect()->route('boleta.show',$boleta->id);
                 $mail->fecha_hora = Carbon::now();
                 $mail->save();
 
-                // Guardar archivos en bandeja
+                // Guardar archivos PDF en bandeja (CON LA FECHA para que coincida con el archivo físico)
                 foreach ($archivos_temporales as $archivo_temp) {
                     $archivo_pdf = new EmailBandejaEnviosArchivos;
                     $archivo_pdf->id_bandeja_envios = $mail->id;
-                    $archivo_pdf->archivo = basename($archivo_temp);
+                    $archivo_pdf->archivo = $archivo_temp;
                     $archivo_pdf->fecha_hora = $date;
                     $archivo_pdf->save();
                 }
 
-                // Limpiar archivos temporales
-                foreach ($archivos_temporales as $archivo_temp) {
-                    Storage::disk('mailbox')->delete($archivo_temp);
+                // Guardar archivos XML en bandeja
+                foreach ($archivos_xml as $xml_file) {
+                    $archivo_xml = new EmailBandejaEnviosArchivos;
+                    $archivo_xml->id_bandeja_envios = $mail->id;
+                    $archivo_xml->archivo = $xml_file;
+                    $archivo_xml->fecha_hora = $date;
+                    $archivo_xml->save();
                 }
+
+                $this->limpiarArchivosViejos(7200);
 
                 return response()->json([
                     'success' => true,
@@ -1910,6 +1917,29 @@ return redirect()->route('boleta.show',$boleta->id);
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 7200)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                // Solo procesar archivos con formato de fecha al inicio
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    // Si el archivo tiene más de X minutos, eliminarlo
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
         }
     }
 }
