@@ -1257,7 +1257,11 @@ private function downloadSinglePDF($id)
             // Generar PDF
             $archivo = 'PDF-DOC-' . $nota_debito->codigo_n_d . '-' . $empresa->ruc . ".pdf";
             $u = 1;
-            $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact('nota_debito', 'nota_debito_reg', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u'));
+
+            $textoQR = $this->generarTextoQRNotaDebito($nota_debito, $document, $empresa, $igv, $estado);
+            $qrCode = $this->generarImagenQR($textoQR);
+
+            $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact('nota_debito', 'nota_debito_reg', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u','textoQR','qrCode'));
             $content = $pdf->download();
             $especif = $date . $archivo;
             Storage::disk('mailbox')->put($especif, $content);
@@ -1460,10 +1464,13 @@ private function downloadSinglePDF($id)
                     $estado = 2;
                 }
 
+                $textoQR = $this->generarTextoQRNotaDebito($nota_debito, $document, $empresa, $igv, $estado);
+                $qrCode = $this->generarImagenQR($textoQR);
+
                 // Generar PDF
                 $archivo = 'PDF-DOC-' . $nota_debito->codigo_n_d . '-' . $empresa->ruc . ".pdf";
                 $u = 1;
-                $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact('nota_debito', 'nota_debito_reg', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u'));
+                $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact('nota_debito', 'nota_debito_reg', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u','textoQR','qrCode'));
                 $content = $pdf->download();
                 $especif = $date . $archivo;
                 Storage::disk('mailbox')->put($especif, $content);
