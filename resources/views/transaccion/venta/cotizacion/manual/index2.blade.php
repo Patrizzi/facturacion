@@ -270,7 +270,7 @@
                                         overflow: hidden; transition: height .4s; background: white;
                                         box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
                                         z-index: 9999; white-space: nowrap; min-width: 250px;">
-                                        <form class="form-enviar-email" data-boleta-id="${cotizacionId}" style="padding: 10px;">
+                                        <form class="form-enviar-email" data-cotizacion-id="${cotizacionId}" style="padding: 10px;">
                                             @csrf
                                             <div style="margin-bottom: 5px;">
                                                 <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
@@ -1029,7 +1029,7 @@ $(document).ready(function() {
                 data: {
                     _token: '{{ csrf_token() }}',
                     email: inputValue,
-                    boleta_ids: allSelectedIds
+                    cotizacion_ids: allSelectedIds
                 },
                 success: function(response) {
                     if (response.success) {

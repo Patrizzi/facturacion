@@ -4386,7 +4386,7 @@ if($validacion==1){
 
             $titulo = "Cotización - " . $cotizacion->cod_cotizacion;
             $mensaje_html = "Estimado cliente, adjuntamos la cotización " . $cotizacion->cod_cotizacion;
-            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma_email', 'alto', 'ancho'));
+            $mensaje = view('email_html.email_send_layout', compact('empresa',  'mensaje_html', 'firma_email', 'alto', 'ancho','firma'));
 
             // Agregar email backup si existe
             $correos_envios = array_merge($emails, [$config_email->email_backup]);

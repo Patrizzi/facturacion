@@ -273,7 +273,7 @@
                                         overflow: hidden; transition: height .4s; background: white;
                                         box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
                                         z-index: 9999; white-space: nowrap; min-width: 250px;">
-                                        <form class="form-enviar-email" data-boleta-id="${notaDebitoId}" style="padding: 10px;">
+                                        <form class="form-enviar-email" data-nota-id="${notaDebitoId}" style="padding: 10px;">
                                             @csrf
                                             <div style="margin-bottom: 5px;">
                                                 <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
@@ -635,7 +635,7 @@
             e.preventDefault();
 
             const form = $(this);
-            const notaDebitoId = form.data('notaDebito-id');
+            const notaDebitoId = form.data('nota-id');
             const button = form.find('button[type="submit"]');
             const originalHtml = button.html();
             const emailFormContainer = $(`.email-form[data-id="${notaDebitoId}"]`);
@@ -995,7 +995,7 @@
                     data: {
                         _token: '{{ csrf_token() }}',
                         email: inputValue,
-                        boleta_ids: allSelectedIds
+                        nota_ids: allSelectedIds
                     },
                     success: function(response) {
                         if (response.success) {

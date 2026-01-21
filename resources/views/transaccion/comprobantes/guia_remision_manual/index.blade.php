@@ -239,7 +239,7 @@
                                         overflow: hidden; transition: height .4s; background: white;
                                         box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
                                         z-index: 9999; white-space: nowrap; min-width: 250px;">
-                                        <form class="form-enviar-email" data-boleta-id="${guiaId}" style="padding: 10px;">
+                                        <form class="form-enviar-email" data-guia-id="${guiaId}" style="padding: 10px;">
                                             @csrf
                                             <div style="margin-bottom: 5px;">
                                                 <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
@@ -965,7 +965,7 @@ $('#btn-correo-filtrado').on('click', function(e) {
             data: {
                 _token: '{{ csrf_token() }}',
                 email: inputValue,
-                boleta_ids: allSelectedIds
+                guia_ids: allSelectedIds
             },
             success: function(response) {
                 if (response.success) {
