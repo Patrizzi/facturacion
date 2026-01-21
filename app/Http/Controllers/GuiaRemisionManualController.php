@@ -20,6 +20,10 @@ use PDF;
 use ZipArchive;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use App\EmailBandejaEnvios;
+use App\EmailBandejaEnviosArchivos;
+use App\EmailConfiguraciones;
 
 use Illuminate\Http\Request;
 
@@ -938,8 +942,9 @@ class GuiaRemisionManualController extends Controller
         foreach ($guiaIds as $id) {
             $guia_r_m = GuiaRemisionManual::find($id);
             if ($guia_r_m) {
-                $codigo_g_r = $guia_r_m->cod_guia;
-                $pdfUrl = route('remision_m.pdf', $id) . "?archivo=GuíaRemisión_{$codigo_g_r}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'guia_remision_manual'), 0, 22);
+
+                $pdfUrl = url("guia_remision_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -949,5 +954,332 @@ class GuiaRemisionManualController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $guias_r = GuiaRemisionManual::all();
+
+        foreach ($guias_r as $guia) {
+            if (substr(md5($guia->id . env('APP_KEY') . 'guia_remision_manual'), 0, 22) === $codigo) {
+                return redirect()->route('remision_m.pdf', $guia->id);
+            }
+        }
+
+        abort(404);
+    }
+
+    public function enviarCorreoDirecto(Request $request, $id)
+    {
+        try {
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $guia_remision_m = GuiaRemisionManual::find($id);
+            $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $id)->get();
+            $empresa = Empresa::first();
+            $i = 1;
+
+            // Generar PDF
+            $archivo = 'PDF-DOC-' . $guia_remision_m->cod_guia . '-' . $empresa->ruc . ".pdf";
+            $pdf = PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf', compact('guia_remision_m', 'guia_remision_m_reg', 'empresa', 'i'));
+            $content = $pdf->download();
+            $especif = $date . $archivo;
+            Storage::disk('mailbox')->put($especif, $content);
+
+            // XML si aplica
+            $xml_file = null;
+            if ($guia_remision_m->g_electronica == 1) {
+                $xml_file = $empresa->ruc . '-09-' . $guia_remision_m->cod_guia . '.xml';
+            }
+
+            $emails = $request->get('emails', []);
+            $emails = array_filter($emails);
+
+            if (empty($emails)) {
+                Storage::disk('mailbox')->delete($especif);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Debes ingresar al menos un correo.'
+                ], 400);
+            }
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Guía de Remisión Manual - " . $guia_remision_m->cod_guia;
+            $mensaje_html = "Estimado cliente, adjuntamos la guía de remisión manual " . $guia_remision_m->cod_guia;
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            $correos_envios = array_merge($emails, [$config_email->email_backup]);
+            $mails_array = array_filter($correos_envios);
+
+            $pdfile = public_path() . '/archivos/' . $especif;
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+            if ($xml_file && file_exists(public_path() . '/facturas_electronicas/' . $xml_file)) {
+                $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
+                $message->attach(\Swift_Attachment::fromPath($xml_path));
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = implode(', ', $emails);
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // Guardar PDF en archivos
+                $archivo_pdf = new EmailBandejaEnviosArchivos;
+                $archivo_pdf->id_bandeja_envios = $mail->id;
+                $archivo_pdf->archivo = $archivo;
+                $archivo_pdf->fecha_hora = $date;
+                $archivo_pdf->save();
+
+                // Guardar XML en archivos si existe
+                if ($xml_file) {
+                    $guardar_email_archivo = new EmailBandejaEnviosArchivos;
+                    $guardar_email_archivo->id_bandeja_envios = $mail->id;
+                    $guardar_email_archivo->archivo = $xml_file;
+                    $guardar_email_archivo->fecha_hora = $date;
+                    $guardar_email_archivo->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Correo enviado exitosamente a: ' . implode(', ', $emails)
+                ]);
+            }
+
+            // Si falla el envío
+            Storage::disk('mailbox')->delete($especif);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($especif)) {
+                Storage::disk('mailbox')->delete($especif);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function enviarCorreoMultiple(Request $request)
+    {
+        try {
+            $email = $request->get('email');
+            $guia_remision_manual_ids = $request->get('guia_ids', []);
+
+            if (empty($guia_remision_manual_ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron guías de remisión manuales para enviar.'
+                ], 400);
+            }
+
+            if (empty($email)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El correo electrónico es requerido.'
+                ], 400);
+            }
+
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $empresa = Empresa::first();
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Guías de Remisión Manuales - " . count($guia_remision_manual_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las guías de remisión manuales solicitadas.";
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            $correos_envios = [$email, $config_email->email_backup];
+            $mails_array = array_filter($correos_envios);
+
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            $archivos_temporales = [];
+            $archivos_xml = [];
+
+            // Generar y adjuntar cada PDF
+            foreach ($guia_remision_manual_ids as $guia_remision_manual_id) {
+                $guia_remision_m = GuiaRemisionManual::find($guia_remision_manual_id);
+                if (!$guia_remision_m) continue;
+
+                $guia_remision_m_reg = GuiaRemisionMRegistros::where('guia_remision_m_id', $guia_remision_manual_id)->get();
+                $i = 1;
+
+                // Generar PDF
+                $archivo = 'PDF-DOC-' . $guia_remision_m->cod_guia . '-' . $empresa->ruc . ".pdf";
+                $pdf = PDF::loadView('transaccion.venta.guia_remision.guia_manual.pdf', compact('guia_remision_m', 'guia_remision_m_reg', 'empresa', 'i'));
+                $content = $pdf->download();
+                $especif = $date . $archivo;
+                Storage::disk('mailbox')->put($especif, $content);
+
+                $pdfile = public_path() . '/archivos/' . $especif;
+                $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+                $archivos_temporales[] = $especif;
+
+                // Adjuntar XML si existe
+                if ($guia_remision_m->g_electronica == 1) {
+                    $xml_file = $empresa->ruc . '-09-' . $guia_remision_m->cod_guia . '.xml';
+                    $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
+                    if (file_exists($xml_path)) {
+                        $message->attach(\Swift_Attachment::fromPath($xml_path));
+                        $archivos_xml[] = $xml_file;
+                    }
+                }
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = $email;
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                foreach ($archivos_temporales as $archivo_temp) {
+                    $archivo_pdf = new EmailBandejaEnviosArchivos;
+                    $archivo_pdf->id_bandeja_envios = $mail->id;
+                    $archivo_pdf->archivo = $archivo_temp;
+                    $archivo_pdf->fecha_hora = $date;
+                    $archivo_pdf->save();
+                }
+
+                foreach ($archivos_xml as $xml_file) {
+                    $archivo_xml = new EmailBandejaEnviosArchivos;
+                    $archivo_xml->id_bandeja_envios = $mail->id;
+                    $archivo_xml->archivo = $xml_file;
+                    $archivo_xml->fecha_hora = $date;
+                    $archivo_xml->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Se enviaron ' . count($guia_remision_manual_ids) . ' guía(s) de remisión manual(es) exitosamente a: ' . $email
+                ]);
+            }
+
+            foreach ($archivos_temporales as $archivo_temp) {
+                Storage::disk('mailbox')->delete($archivo_temp);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($archivos_temporales) && !empty($archivos_temporales)) {
+                foreach ($archivos_temporales as $archivo_temp) {
+                    Storage::disk('mailbox')->delete($archivo_temp);
+                }
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
+        }
     }
 }

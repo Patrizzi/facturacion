@@ -25,6 +25,10 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Illuminate\Support\Facades\Storage;
+use App\EmailConfiguraciones;
+use App\EmailBandejaEnviosArchivos;
+use App\EmailBandejaEnvios;
 
 class GarantiaInformeTecnicoController extends Controller
 {
@@ -607,7 +611,9 @@ class GarantiaInformeTecnicoController extends Controller
         foreach ($informeTecnicoIds as $id) {
             $garantia_informe_tecnico = GarantiaInformeTecnico::find($id);
             if ($garantia_informe_tecnico) {
-                $pdfUrl = route('pdf_informe', $id) . "?archivo=GarantiaInformeTécnico";
+                $codigo = substr(md5($id . env('APP_KEY') . 'garantia_informe_tecnico'), 0, 22);
+
+                $pdfUrl = url("garantia_informe_tecnico/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -617,5 +623,180 @@ class GarantiaInformeTecnicoController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $garantiasI = GarantiaInformeTecnico::all();
+
+        foreach ($garantiasI as $gar) {
+            if (substr(md5($gar->id . env('APP_KEY') . 'garantia_informe_tecnico'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_informe', $gar->id);
+            }
+        }
+
+        abort(404);
+    }
+
+    public function enviarCorreoMultiple(Request $request)
+    {
+        try {
+            $email = $request->get('email');
+            $informe_ids = $request->get('informe_ids', []);
+
+            if (empty($informe_ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron informes técnicos para enviar.'
+                ], 400);
+            }
+
+            if (empty($email)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El correo electrónico es requerido.'
+                ], 400);
+            }
+
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $mi_empresa = Empresa::first();
+            $contacto = Contacto::all();
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Informes Técnicos - " . count($informe_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos los informes técnicos solicitados.";
+            $mensaje = view('email_html.email_send_layout', compact('mi_empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            $correos_envios = [$email, $config_email->email_backup];
+            $mails_array = array_filter($correos_envios);
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            $archivos_temporales = [];
+
+            // Generar y adjuntar cada PDF
+            foreach ($informe_ids as $informe_id) {
+                $garantias_informe_tecnico = GarantiaInformeTecnico::find($informe_id);
+                if (!$garantias_informe_tecnico) continue;
+
+                $archivo_informe_tecnico = GarantiaInformeTecnicoArchivos::where('id_informe_tecnico', $garantias_informe_tecnico->id)->get();
+
+                $name = 'PDF-DOC-' . $garantias_informe_tecnico->orden_servicio . '-' . $mi_empresa->ruc;
+                $archivo = $name . ".pdf";
+
+                $pdf = PDF::loadView('transaccion.garantias.informe_tecnico.show_pdf', compact('garantias_informe_tecnico', 'mi_empresa', 'contacto', 'archivo_informe_tecnico'));
+                $content = $pdf->download();
+                $especif = $date . $archivo;
+                Storage::disk('mailbox')->put($especif, $content);
+
+                $pdfile = public_path() . '/archivos/' . $especif;
+                $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+                $archivos_temporales[] = $especif;
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = $email;
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // ⭐ Guardar archivos CON LA FECHA COMPLETA (no usar basename)
+                foreach ($archivos_temporales as $archivo_temp) {
+                    $archivo_pdf = new EmailBandejaEnviosArchivos;
+                    $archivo_pdf->id_bandeja_envios = $mail->id;
+                    $archivo_pdf->archivo = $archivo_temp;
+                    $archivo_pdf->fecha_hora = $date;
+                    $archivo_pdf->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Se enviaron ' . count($informe_ids) . ' informe(s) técnico(s) exitosamente a: ' . $email
+                ]);
+            }
+
+            // Si falla el envío, limpiar archivos
+            foreach ($archivos_temporales as $archivo_temp) {
+                Storage::disk('mailbox')->delete($archivo_temp);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($archivos_temporales) && !empty($archivos_temporales)) {
+                foreach ($archivos_temporales as $archivo_temp) {
+                    Storage::disk('mailbox')->delete($archivo_temp);
+                }
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
+        }
     }
 }
