@@ -1230,42 +1230,42 @@ private function downloadSinglePDF($id)
             $data_g = str_replace(' ', '_', $fecha);
             $date = str_replace(':', '-', $data_g);
 
-            $notas_debito = Nota_Debito::where('id', $id)->first();
-            $notas_debito_registros = Nota_Debito_registro::where('nota_debito_id', $id)->get();
+            $nota_debito = Nota_Debito::where('id', $id)->first();
+            $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $id)->get();
             $empresa = Empresa::first();
             $igv = Igv::first();
 
             // Determinar tipo de documento origen
-            if ($notas_debito->facturacion_id != NULL) {
-                $document = Facturacion::where('id', $notas_debito->facturacion_id)->first();
+            if ($nota_debito->facturacion_id != NULL) {
+                $document = Facturacion::where('id', $nota_debito->facturacion_id)->first();
                 $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
                 $estado = 0;
-            } elseif ($notas_debito->boleta_id != NULL) {
-                $document = Boleta::where('id', $notas_debito->boleta_id)->first();
+            } elseif ($nota_debito->boleta_id != NULL) {
+                $document = Boleta::where('id', $nota_debito->boleta_id)->first();
                 $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
                 $estado = 1;
-            } elseif ($notas_debito->boleta_m_id != NULL) {
-                $document = Boleta_m::where('id', $notas_debito->boleta_m_id)->first();
+            } elseif ($nota_debito->boleta_m_id != NULL) {
+                $document = Boleta_m::where('id', $nota_debito->boleta_m_id)->first();
                 $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
                 $estado = 3;
             } else {
-                $document = Facturacion_m::where('id', $notas_debito->facturacion_m_id)->first();
+                $document = Facturacion_m::where('id', $nota_debito->facturacion_m_id)->first();
                 $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
                 $estado = 2;
             }
 
             // Generar PDF
-            $archivo = 'PDF-DOC-' . $notas_debito->codigo_n_d . '-' . $empresa->ruc . ".pdf";
+            $archivo = 'PDF-DOC-' . $nota_debito->codigo_n_d . '-' . $empresa->ruc . ".pdf";
             $u = 1;
-            $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact('notas_debito', 'notas_debito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u'));
+            $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact('nota_debito', 'nota_debito_reg', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u'));
             $content = $pdf->download();
             $especif = $date . $archivo;
             Storage::disk('mailbox')->put($especif, $content);
 
             // XML si aplica
             $xml_file = null;
-            if ($notas_debito->n_electronica == 1) {
-                $xml_file = $empresa->ruc . '-08-' . $notas_debito->codigo_n_d . '.xml';
+            if ($nota_debito->n_electronica == 1) {
+                $xml_file = $empresa->ruc . '-08-' . $nota_debito->codigo_n_d . '.xml';
             }
 
             $emails = $request->get('emails', []);
@@ -1284,8 +1284,8 @@ private function downloadSinglePDF($id)
             $alto = $config_email->alto_firma;
             $ancho = $config_email->ancho_firma;
 
-            $titulo = "Nota de Débito - " . $notas_debito->codigo_n_d;
-            $mensaje_html = "Estimado cliente, adjuntamos la nota de débito " . $notas_debito->codigo_n_d;
+            $titulo = "Nota de Débito - " . $nota_debito->codigo_n_d;
+            $mensaje_html = "Estimado cliente, adjuntamos la nota de débito " . $nota_debito->codigo_n_d;
             $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
 
             // Agregar email backup si existe
@@ -1412,7 +1412,7 @@ private function downloadSinglePDF($id)
             $alto = $config_email->alto_firma;
             $ancho = $config_email->ancho_firma;
 
-            $titulo = "Notas de Débito - " . count($nota_debito_ids) . " documento(s)";
+            $titulo = "Notas de Débito - " . count($nota_ids) . " documento(s)";
             $mensaje_html = "Estimado cliente, adjuntamos las notas de débito solicitadas.";
             $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
 
@@ -1435,35 +1435,35 @@ private function downloadSinglePDF($id)
             $archivos_xml = [];
 
             // Generar y adjuntar cada PDF
-            foreach ($nota_debito_ids as $nota_debito_id) {
-                $notas_debito = Nota_Debito::where('id', $nota_debito_id)->first();
-                if (!$notas_debito) continue;
+            foreach ($nota_ids as $nota_debito_id) {
+                $nota_debito = Nota_Debito::where('id', $nota_debito_id)->first();
+                if (!$nota_debito) continue;
 
-                $notas_debito_registros = Nota_Debito_registro::where('nota_debito_id', $nota_debito_id)->get();
+                $nota_debito_reg = Nota_Debito_registro::where('nota_debito_id', $nota_debito_id)->get();
 
                 // Determinar tipo de documento origen
-                if ($notas_debito->facturacion_id != NULL) {
-                    $document = Facturacion::where('id', $notas_debito->facturacion_id)->first();
+                if ($nota_debito->facturacion_id != NULL) {
+                    $document = Facturacion::where('id', $nota_debito->facturacion_id)->first();
                     $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
                     $estado = 0;
-                } elseif ($notas_debito->boleta_id != NULL) {
-                    $document = Boleta::where('id', $notas_debito->boleta_id)->first();
+                } elseif ($nota_debito->boleta_id != NULL) {
+                    $document = Boleta::where('id', $nota_debito->boleta_id)->first();
                     $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
                     $estado = 1;
-                } elseif ($notas_debito->boleta_m_id != NULL) {
-                    $document = Boleta_m::where('id', $notas_debito->boleta_m_id)->first();
+                } elseif ($nota_debito->boleta_m_id != NULL) {
+                    $document = Boleta_m::where('id', $nota_debito->boleta_m_id)->first();
                     $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
                     $estado = 3;
                 } else {
-                    $document = Facturacion_m::where('id', $notas_debito->facturacion_m_id)->first();
+                    $document = Facturacion_m::where('id', $nota_debito->facturacion_m_id)->first();
                     $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
                     $estado = 2;
                 }
 
                 // Generar PDF
-                $archivo = 'PDF-DOC-' . $notas_debito->codigo_n_d . '-' . $empresa->ruc . ".pdf";
+                $archivo = 'PDF-DOC-' . $nota_debito->codigo_n_d . '-' . $empresa->ruc . ".pdf";
                 $u = 1;
-                $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact('notas_debito', 'notas_debito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u'));
+                $pdf = PDF::loadView('transaccion.venta.nota_debito.pdf', compact('nota_debito', 'nota_debito_reg', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u'));
                 $content = $pdf->download();
                 $especif = $date . $archivo;
                 Storage::disk('mailbox')->put($especif, $content);
@@ -1474,8 +1474,8 @@ private function downloadSinglePDF($id)
                 $archivos_temporales[] = $especif;
 
                 // Adjuntar XML si existe
-                if ($notas_debito->n_electronica == 1) {
-                    $xml_file = $empresa->ruc . '-08-' . $notas_debito->codigo_n_d . '.xml';
+                if ($nota_debito->n_electronica == 1) {
+                    $xml_file = $empresa->ruc . '-08-' . $nota_debito->codigo_n_d . '.xml';
                     $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
                     if (file_exists($xml_path)) {
                         $message->attach(\Swift_Attachment::fromPath($xml_path));
@@ -1521,7 +1521,7 @@ private function downloadSinglePDF($id)
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Se enviaron ' . count($nota_debito_ids) . ' nota(s) de débito exitosamente a: ' . $email
+                    'message' => 'Se enviaron ' . count($nota_ids) . ' nota(s) de débito exitosamente a: ' . $email
                 ]);
             }
 

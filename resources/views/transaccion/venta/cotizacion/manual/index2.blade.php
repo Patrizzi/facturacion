@@ -249,7 +249,7 @@
                     }
                 },
                 {
-                    'targets': [9], // Columna de Compartir (Boton de correo sin funcionamiento por ahora)
+                    'targets': [9], // Columna de Compartir
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         const cotizacionMId = full[0];
@@ -260,25 +260,25 @@
                         return `
                             <div style="display: inline-block; white-space: nowrap;">
                                 <!-- Contenedor Correo -->
-                                <div class="email-container" data-id="${cotizacionId}"
+                                <div class="email-container" data-id="${cotizacionMId}"
                                     style="display: inline-block; position: relative; vertical-align: top; margin-right: 5px;">
                                     <button type="button" class="btn btn-secondary" style="cursor: pointer;">
                                         <i class="fa fa-envelope fa-lg"></i>
                                     </button>
-                                    <div class="email-form" data-id="${cotizacionId}"
+                                    <div class="email-form" data-id="${cotizacionMId}"
                                         style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
                                         overflow: hidden; transition: height .4s; background: white;
                                         box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
                                         z-index: 9999; white-space: nowrap; min-width: 250px;">
-                                        <form class="form-enviar-email" data-cotizacion-id="${cotizacionId}" style="padding: 10px;">
+                                        <form class="form-enviar-email" data-cotizacion-id="${cotizacionMId}" style="padding: 10px;">
                                             @csrf
                                             <div style="margin-bottom: 5px;">
                                                 <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
                                                     value="${emailCliente}"
                                                     style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
                                             </div>
-                                            <div class="emails-adicionales-${cotizacionId}"></div>
-                                            <button type="button" class="btn-agregar-email btn btn-info btn-xs" data-id="${cotizacionId}"
+                                            <div class="emails-adicionales-${cotizacionMId}"></div>
+                                            <button type="button" class="btn-agregar-email btn btn-info btn-xs" data-id="${cotizacionMId}"
                                                     style="padding: 3px 8px; margin-bottom: 5px; font-size: 11px;">
                                                 <i class="fa fa-plus"></i> Agregar correo
                                             </button>
