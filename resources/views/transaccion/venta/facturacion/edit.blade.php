@@ -174,6 +174,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {{-- <input type="text" value="{{$f acturacion->cambio}}" name="tipo_cambio" id="tipo_cambio"> --}}
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-4"><strong>F. Venc.:</strong></label>
@@ -228,6 +229,7 @@
                     </div>
                 </div>
                 <hr>
+                <input type="hidden" name="comparador_edicion" id="comparador_edicion" value="0">
                 <input type="hidden" name="" id="count_articles"
                     value="{{ count($facturacion->registros) - 1 }}">
                 <div class="table-responsive">

@@ -287,6 +287,8 @@
 
     // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
     function ajax(a) {
+        $('#comparador_edicion').val('1');
+        var cont_origi = Number("{{ count($facturacion->registros) }}");
         if (a == 0) {
             var articulo = document.getElementById(`articulo`).value;
             document.getElementById(`input_prod1`).value = articulo;
@@ -310,7 +312,13 @@
                 console.log(msg);
                 $(`#tipo_afec${a}`).val(msg.afectacion);
                 $(`#precio${a}`).val(msg.price);
-                $(`#cantidad${a}`).val(1);
+                const $input = $(`#cantidad${a}`);
+                if ($input.length && a >= 1 && a <= total) {
+                    $input.val($input.val());
+                } else if ($input.length) {
+                    $input.val(1);
+                }
+
                 $(`#precio_unitario_descuento${a}`).val(msg.price);
                 $(`#promedio_original${a}`).val(msg.average);
                 $(`#stock${a}`).val(msg.amount);
@@ -414,6 +422,8 @@
             console.log("la comision procentaje es:" + comision_porcentaje);
             console.log("la promedio_original2 procentaje es:" + promedio_original2);
             console.log("la end es:" + end);
+            console.log("la total es:" + final_decimal);
+            console.log("la afectacion es:" + final_decimal);
 
             document.getElementById(`check_descuento${a}`).value = 0;
 
@@ -584,7 +594,8 @@
                 '_token': $('input[name=_token]').val(),
                 'articulo': busqueda,
                 'almacen': "{{ $facturacion->almacen_id }}",
-                'moneda': $('#moneda_id').val()
+                'moneda': $('#moneda_id').val(),
+                'fecha_tipo_cambio': "{{ $facturacion->fecha_emision }}",
             },
             success: function(msg) {
                 // console.log(data.mone)

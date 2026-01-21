@@ -23,6 +23,7 @@ use App\helpers;
 use App\Tipo_operacion_f;
 use App\TipoDetraccion;
 use App\User;
+use Carbon\Carbon;
 use CifrasEnLetras;
 use Swift_SmtpTransport;
 use Swift_Mailer;
@@ -459,7 +460,15 @@ class ParameterCallController extends Controller
 
         $search = $request->articulo;
         //Obtención del tipo de cambio
-        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        if($request->has('fecha_tipo_cambio') != null){
+            $fecha = Carbon::createFromFormat('d-m-Y', $request->get('fecha_tipo_cambio'))
+              ->format('Y-m-d');
+
+            $tipo_cambio = TipoCambio::where('fecha', $fecha)->first();
+        }else{
+            $tipo_cambio = TipoCambio::latest('created_at')->first();
+        }
+        // dd($tipo_cambio);
         // OBTENCION DE LOS ARTICULOS A BUSCAR
         $orderProduct = $search == '' ? 'desc' : 'asc';
         $orderService = 'asc';
