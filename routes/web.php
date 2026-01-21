@@ -1419,3 +1419,7 @@ Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoCon
     ->name('garantia_informe_tecnico_codificada');
 Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.informeTecnico.multiple');
+
+    // Ruta para generar el PDF de ficha técnica de un producto
+    Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
+    ->name('productos.ftPdf');

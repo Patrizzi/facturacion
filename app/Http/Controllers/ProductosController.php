@@ -31,6 +31,7 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Barryvdh\DomPDF\Facade\Pdf;
 class ProductosController extends Controller
 {
     /**
@@ -1495,6 +1496,40 @@ class ProductosController extends Controller
             return redirect()->route('productos.index')->with('error', 'Error. Inténtelo más tarde');
 
         }
+    }
+
+    // Generar PDF de Ficha Técnica
+    public function ftPdf($id)
+    {
+        $producto = Producto::with([
+            'familia_i_producto',
+            'subfamilia_i_producto',
+            'marcas_i_producto',
+            'unidad_i_producto',
+            'tipo_afec_i_producto',
+            'stock_producto',
+        ])->findOrFail($id);
+
+        $stock = optional($producto->stock_producto)->stock ?? 0;
+
+        // Imagen: se lee del disco (si existe) pero NO se guarda nada nuevo
+        $fotoPath = public_path('archivos/imagenes/productos/' . ($producto->foto ?? 'producto.svg'));
+        $fotoBase64 = null;
+
+        if (file_exists($fotoPath)) {
+            $mime = mime_content_type($fotoPath);
+            $fotoBase64 = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($fotoPath));
+        }
+
+        $pdf = Pdf::loadView('producto_servicios.productos.ft_pdf', [
+            'producto' => $producto,
+            'stock' => $stock,
+            'fotoBase64' => $fotoBase64,
+            'fecha' => now('America/Lima')->format('d/m/Y H:i'),
+        ])->setPaper('a4', 'portrait');
+
+        // Inline en el iframe (NO se guarda)
+        return $pdf->stream('FT_' . $producto->codigo_original . '.pdf');
     }
 
 }

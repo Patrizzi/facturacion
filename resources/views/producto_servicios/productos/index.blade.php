@@ -174,6 +174,7 @@
                                                         <span class="precio-indicator" id="precio-indicator" style="font-size: 0.8em; color: #6c757d; margin-left: 5px;">(1/4)</span>
                                                     </th>
                                                     <th>Stock <i class="fa fa-search"></i></th>
+                                                    <th>Ficha Técnica</th>
                                                     <th>
 
                                                         <div class="dropdown">
@@ -1047,8 +1048,23 @@
                         }
                     },
                     { 'targets': [7] }, // stock
+                    { 'targets': [8], // ficha técnica
+                        'orderable': false,
+                        'searchable': false,
+                        'render': function (data, type, row) {
+                            const producto = row[8];
+                            return `
+                            <button type="button"
+                                    class="btn btn-sm btn-danger btn-ft"
+                                    data-id="${producto.id}"
+                                    data-nombre="${producto.nombre}">
+                                <i class="fa fa-file-pdf-o"></i>
+                            </button>
+                            `;
+                        }
+                    },
                     {
-                        'targets': [8],
+                        'targets': [9], // acciones
                         'orderable': false,
                         'render': function (data, type, full, meta) {
                             let producto = full[8];
@@ -1119,6 +1135,24 @@
                 ]
         });
 
+        // Ficha Técnica Modal
+        $(document).on('click', '.btn-ft', function () {
+            const id = $(this).data('id');
+            const nombre = $(this).data('nombre');
+
+            $('#exampleModalLabel').text('Ficha Técnica - ' + nombre);
+
+            const url = `/productos/${id}/ft-pdf?ts=` + Date.now();
+            $('#pdf_ficha_tecnica').attr('src', url);
+
+            $('#fichatecnica_modal').modal('show');
+        });
+
+        $('#fichatecnica_modal').on('hidden.bs.modal', function () {
+            $('#pdf_ficha_tecnica').attr('src', '');
+        });
+
+        // Inicializar el date range picker con configuración en español
         $('input[name="daterange"]').daterangepicker({
             "locale": {
                 "separator": " | ",
@@ -1857,6 +1891,8 @@
     @include('producto_servicios.productos.create')
 
     @include('producto_servicios.productos.shared.pie')
+
+    @include('producto_servicios.productos.shared.ficha_tecnica')
 
 @endsection
 

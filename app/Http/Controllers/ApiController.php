@@ -812,7 +812,8 @@ class ApiController extends Controller
                 $value->estado,          // => 5 - estado
                 $value->precios,     // => 6 - precio
                 $value->stock ?? 0,      // => 7 - stock
-                $value              // => 8 - botones
+                $value,   // => 8 - ficha técnica
+                $value              // => 9 - botones
             ];
         }
 
@@ -1958,13 +1959,13 @@ class ApiController extends Controller
             5 => 'fecha_vencimiento',
             6 => 'id'
         ];
-            
+
         $nota_venta = NotaVenta::find($request->id_documento);
         $query = NotaVenta::where('id', $request->id_documento);
         $moneda_comprobante = $nota_venta->moneda;
         // dd($nota_venta);
         $fecha_tipo = TipoCambio::where('fecha', $nota_venta->fecha_emision)->first();
-        $tipo_cambio = $fecha_tipo->paralelo ?? 0.00; 
+        $tipo_cambio = $fecha_tipo->paralelo ?? 0.00;
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])
