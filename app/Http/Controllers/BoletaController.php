@@ -1727,7 +1727,7 @@ return redirect()->route('boleta.show',$boleta->id);
                 }
 
                 // ⭐ LIMPIAR ARCHIVOS VIEJOS (más de 5 minutos)
-                $this->limpiarArchivosViejos(5);
+                $this->limpiarArchivosViejos(2880);
 
                 return response()->json([
                     'success' => true,
@@ -1889,7 +1889,7 @@ return redirect()->route('boleta.show',$boleta->id);
                     $archivo_xml->save();
                 }
 
-                $this->limpiarArchivosViejos(7200);
+                $this->limpiarArchivosViejos(2880);
 
                 return response()->json([
                     'success' => true,
@@ -1920,19 +1920,17 @@ return redirect()->route('boleta.show',$boleta->id);
         }
     }
 
-    private function limpiarArchivosViejos($minutos = 7200)
+    private function limpiarArchivosViejos($minutos = 2880)
     {
         try {
             $disk = Storage::disk('mailbox');
             $archivos = $disk->allFiles();
 
             foreach ($archivos as $file) {
-                // Solo procesar archivos con formato de fecha al inicio
                 if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
                     $lastModified = $disk->lastModified($file);
                     $tiempoTranscurrido = now()->timestamp - $lastModified;
 
-                    // Si el archivo tiene más de X minutos, eliminarlo
                     if ($tiempoTranscurrido > ($minutos * 60)) {
                         $disk->delete($file);
                     }

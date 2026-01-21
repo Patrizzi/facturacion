@@ -989,19 +989,16 @@ class GarantiaGuiaIngresoController extends Controller
                 $mail->fecha_hora = Carbon::now();
                 $mail->save();
 
-                // Guardar archivos en bandeja
+                // ⭐ Guardar archivos CON LA FECHA COMPLETA (no usar basename)
                 foreach ($archivos_temporales as $archivo_temp) {
                     $archivo_pdf = new EmailBandejaEnviosArchivos;
                     $archivo_pdf->id_bandeja_envios = $mail->id;
-                    $archivo_pdf->archivo = basename($archivo_temp);
+                    $archivo_pdf->archivo = $archivo_temp; // ⭐ Guardamos con fecha completa
                     $archivo_pdf->fecha_hora = $date;
                     $archivo_pdf->save();
                 }
 
-                // Limpiar archivos temporales
-                foreach ($archivos_temporales as $archivo_temp) {
-                    Storage::disk('mailbox')->delete($archivo_temp);
-                }
+                $this->limpiarArchivosViejos(2880);
 
                 return response()->json([
                     'success' => true,
@@ -1020,7 +1017,6 @@ class GarantiaGuiaIngresoController extends Controller
             ], 500);
 
         } catch (\Exception $e) {
-            // Borrar archivos temporales si existen
             if (isset($archivos_temporales) && !empty($archivos_temporales)) {
                 foreach ($archivos_temporales as $archivo_temp) {
                     Storage::disk('mailbox')->delete($archivo_temp);
@@ -1031,6 +1027,27 @@ class GarantiaGuiaIngresoController extends Controller
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
         }
     }
 }

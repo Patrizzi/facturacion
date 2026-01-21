@@ -1082,7 +1082,8 @@ class BoletaMController extends Controller
         abort(404);
     }
 
-    public function enviarCorreoDirecto(Request $request, $id) {
+    public function enviarCorreoDirecto(Request $request, $id)
+    {
         try {
             $id_usuario = auth()->user()->id;
             $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
@@ -1104,22 +1105,23 @@ class BoletaMController extends Controller
             $sum = 0;
             $igv = Igv::first();
             $sub_total = 0;
-            $banco = Banco::where('estado', '0')->count();
+            $banco = Banco::where('estado', 0)->get();
             $j = 1;
 
-            // Generar el PDF
-            $archivo = 'PDF-DOC-'. $boleta->codigo_boleta . '-' . $empresa->ruc . ".pdf";
-            $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
+            // Generar PDF
+            $archivo = 'PDF-DOC-' . $boleta->codigo_boleta . '-' . $empresa->ruc . ".pdf";
+            $pdf = PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
             $content = $pdf->download();
             $especif = $date . $archivo;
             Storage::disk('mailbox')->put($especif, $content);
 
-            // XML
+            // XML si aplica
             $xml_file = null;
             if ($boleta->b_electronica == 1) {
                 $xml_file = $empresa->ruc . '-03-' . $boleta->codigo_boleta . '.xml';
             }
 
+            // Preparar correos
             $emails = $request->get('emails', []);
             $emails = array_filter($emails);
 
@@ -1137,8 +1139,8 @@ class BoletaMController extends Controller
             $alto = $config_email->alto_firma;
             $ancho = $config_email->ancho_firma;
 
-            $titulo = "Boleta Electrónica - " . $boleta->codigo_boleta;
-            $mensaje_html = "Estimado cliente, adjuntamos la boleta electrónica " . $boleta->codigo_boleta;
+            $titulo = "Boleta Manual - " . $boleta->codigo_boleta;
+            $mensaje_html = "Estimado cliente, adjuntamos la boleta " . $boleta->codigo_boleta;
             $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
 
             // Agregar email backup si existe
@@ -1201,8 +1203,7 @@ class BoletaMController extends Controller
                     $guardar_email_archivo->save();
                 }
 
-                // Limpiar archivo temporal
-                Storage::disk('mailbox')->delete($especif);
+                $this->limpiarArchivosViejos(2880);
 
                 return response()->json([
                     'success' => true,
@@ -1217,7 +1218,6 @@ class BoletaMController extends Controller
                 'message' => 'Error al enviar el correo. Verifica tu configuración.'
             ], 500);
 
-
         } catch (\Exception $e) {
             if (isset($especif)) {
                 Storage::disk('mailbox')->delete($especif);
@@ -1226,11 +1226,12 @@ class BoletaMController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
-            ], 500);;
+            ], 500);
         }
     }
 
-    public function enviarCorreoMultiple(Request $request) {
+    public function enviarCorreoMultiple(Request $request)
+    {
         try {
             $email = $request->get('email');
             $boleta_ids = $request->get('boleta_ids', []);
@@ -1264,9 +1265,8 @@ class BoletaMController extends Controller
             $date = str_replace(':', '-', $data_g);
 
             $empresa = Empresa::first();
-            $sum = 0;
             $igv = Igv::first();
-            $banco = Banco::where('estado', '0')->count();
+            $banco = Banco::where('estado', 0)->get();
 
             // Configuración de email
             $yourEmail = $config_email->email;
@@ -1274,8 +1274,8 @@ class BoletaMController extends Controller
             $alto = $config_email->alto_firma;
             $ancho = $config_email->ancho_firma;
 
-            $titulo = "Boletas Electrónicas - " . count($boleta_ids) . " documento(s)";
-            $mensaje_html = "Estimado cliente, adjuntamos las boletas electrónicas solicitadas.";
+            $titulo = "Boletas Manuales - " . count($boleta_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las boletas solicitadas.";
             $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
 
             // Agregar email backup si existe
@@ -1294,14 +1294,16 @@ class BoletaMController extends Controller
                 ->setTo($mails_array)
                 ->setBody($mensaje, 'text/html');
 
-            // Array para guardar archivos temporales
-            $archivos_temporales = []; 
+            $archivos_temporales = [];
+            $archivos_xml = [];
 
+            // Generar y adjuntar cada PDF
             foreach ($boleta_ids as $boleta_id) {
                 $boleta = Boleta_m::find($boleta_id);
                 if (!$boleta) continue;
 
                 $boleta_registro = Boleta_registros_m::where('boleta_m_id', $boleta_id)->get();
+                $sum = 0;
                 $sub_total = 0;
                 $j = 1;
 
@@ -1323,6 +1325,7 @@ class BoletaMController extends Controller
                     $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
                     if (file_exists($xml_path)) {
                         $message->attach(\Swift_Attachment::fromPath($xml_path));
+                        $archivos_xml[] = $xml_file;
                     }
                 }
             }
@@ -1343,19 +1346,24 @@ class BoletaMController extends Controller
                 $mail->fecha_hora = Carbon::now();
                 $mail->save();
 
-                // Guardar archivos en bandeja
                 foreach ($archivos_temporales as $archivo_temp) {
                     $archivo_pdf = new EmailBandejaEnviosArchivos;
                     $archivo_pdf->id_bandeja_envios = $mail->id;
-                    $archivo_pdf->archivo = basename($archivo_temp);
+                    $archivo_pdf->archivo = $archivo_temp;
                     $archivo_pdf->fecha_hora = $date;
                     $archivo_pdf->save();
                 }
 
-                // Limpiar archivos temporales
-                foreach ($archivos_temporales as $archivo_temp) {
-                    Storage::disk('mailbox')->delete($archivo_temp);
+                // Guardar archivos XML en bandeja
+                foreach ($archivos_xml as $xml_file) {
+                    $archivo_xml = new EmailBandejaEnviosArchivos;
+                    $archivo_xml->id_bandeja_envios = $mail->id;
+                    $archivo_xml->archivo = $xml_file;
+                    $archivo_xml->fecha_hora = $date;
+                    $archivo_xml->save();
                 }
+
+                $this->limpiarArchivosViejos(2880);
 
                 return response()->json([
                     'success' => true,
@@ -1383,6 +1391,27 @@ class BoletaMController extends Controller
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
         }
     }
 }
