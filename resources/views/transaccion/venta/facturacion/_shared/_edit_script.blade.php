@@ -32,28 +32,7 @@
 <script>
     $(".select2_tipo_op").select2();
     // Boton acceder a la edicion
-    function click_editar() {
-        // MOSTRAR LOS INPUTS
-        $('.div-editar').removeClass('no_mostrar');
-        $('.div-editar').addClass('mostrar');
-        // OCULTAR TABLA
-        $('.table-no').addClass('no_mostrar');
-        // BOTONES
-        $('.btn-no-editar').removeClass('no_mostrar');
-        $('.btn-editar').addClass('no_mostrar');
-    }
 
-    function click_cancelar_editar() {
-        // OCULTAR INPUTS
-        $('.div-editar').removeClass('mostrar');
-        $('.div-editar').addClass('no_mostrar');
-        // MOSTRAR TABLA
-        $('.table-no').removeClass('no_mostrar');
-        $('.table-no').addClass('mostrar');
-
-        $('.btn-editar').removeClass('no_mostrar');
-        $('.btn-no-editar').addClass('no_mostrar');
-    }
 
     function seleccionado_fp() {
         var opt = $('#forma_pago').val();
@@ -134,7 +113,18 @@
             $('#guia_remi_input').click();
         }
     });
+    $('#guia_remi_input').on('keydown', function (e) {
+        if (e.keyCode === 13) {
+            e.preventDefault();
 
+            let focusable = $('input, select, textarea, button')
+                .filter(':visible:not([disabled])');
+            let index = focusable.index(this);
+            if (index > -1 && index + 1 < focusable.length) {
+                focusable.eq(index + 1).focus();
+            }
+        }
+    });
     function agregarElemento() {
 
         const input = document.getElementById("guia_remi_input");
@@ -170,7 +160,8 @@
     // Para los productos 
 
     // Agregar producto
-    var i = "{{ count($facturacion->registros) - 1 }}";
+    var i = "{{ count($facturacion->registros) + 1 }}";
+    console.log(i);
     $(".addmore").on('click', function() {
         var data = `[
         <tr>
@@ -305,7 +296,7 @@
         }
 
         var almacen = "{{ $facturacion->almacen_id }}";
-        var moneda = "{{ $facturacion->moneda_id }}";
+        var moneda = $('#moneda_id').val();
         $.ajax({
             type: "post",
             url: "{{ route('pa.description') }}",
@@ -343,6 +334,7 @@
                 }
                 multi(a);
                 $(`.addmore`).prop("disabled", false);
+                onFinish();
             },
             error: function(eject) {
                 if (eject.status === 400) {
@@ -484,7 +476,7 @@
         var end = igv_decimal + parseFloat(subtotal);
 
         var end2 = Math.round(end * multiplier2) / multiplier2;
-
+        console.log(end2);
         document.getElementById("igv").value = igv_decimal;
         document.getElementById("total_final").value = end2;
         // var total = document.getElementById("total_final").value;
@@ -509,6 +501,36 @@
             actualizarSaldoRestante();
         });
     }
+
+    function multi_detraccion() {
+
+        var moneda = $('#moneda_id').val();
+
+        if (moneda == 1) { //soles
+            var total = $('#total_final').val();
+            var porc_det = $('#porcentaje_detc').val();
+            var op_det = total * (porc_det / 100);
+            var sub_zero = Math.round(op_det * 100) / 100;
+            console.log(sub_zero);
+            $('#tota_detra').val(sub_zero);
+        } else { //dolares
+            var total_dol = $('#total_final').val();
+
+            var tipo_cam = $('#tipo_paralelo').val();
+            var total = total_dol * tipo_cam;
+
+            var porc_det = $('#porcentaje_detc').val();
+            var op_det = total * (porc_det / 100);
+            var sub_zero = Math.round(op_det * 100) / 100;
+
+            $('#tota_detra').val(sub_zero);
+        }
+    }
+
+    $('#porcentaje_detc').on('keyup', function() {
+        multi_detraccion();
+    });
+
     // funcion dinamica de actualizar el total a cuotas
     function actualizarSaldoRestante() {
         var total = parseFloat(document.getElementById('total_final').value) || 0;
@@ -562,7 +584,7 @@
                 '_token': $('input[name=_token]').val(),
                 'articulo': busqueda,
                 'almacen': "{{ $facturacion->almacen_id }}",
-                'moneda': "{{ $facturacion->moneda_id }}"
+                'moneda': $('#moneda_id').val()
             },
             success: function(msg) {
                 // console.log(data.mone)
@@ -690,7 +712,7 @@
             debounceTimer = setTimeout(() => {
                 $(`#cantidad0`).val(cantidad);
                 console.log("se cambio de cantidad");
-                // resetModalCuotas()
+                resetModalCuotas()
             }, 1500);
             //
         } else {
@@ -704,7 +726,7 @@
             debounceTimer = setTimeout(() => {
                 $(`#cantidad${count_artc}`).val(cantidad);
                 console.log("se cambio de cantidad")
-                // resetModalCuotas()
+                resetModalCuotas()
             }, 1500);
             //
         }
@@ -712,6 +734,111 @@
             '', {
                 timeOut: 3000
             });
+    });
+    var total = document.getElementById('total_final').value;
+    var x = 1;
+    $(".add_pago").on('click', function() {
+        var simb = $('#basic-addon3').html();
+        var fecha_min = "$facturacion->fecha_emision }}";
+        var total = document.getElementById('total_final').value;
+        var data = `
+                <div class="delete_modal${x} row">
+                <div class="col-sm-1"><label>Fecha:</label></div>
+                <div class="col-sm-4">
+                <input type="date" min="` + fecha_min + `" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control" >
+                </div>
+                <div class="col-sm-1"><label>Monto:</label></div>
+                <div class="col-sm-4">
+                <div class="input-group mb-3" style="padding-right:15px">
+                <div class="input-group-prepend">
+                <span class="input-group-text span_simbolo_credido" id="basic-addon4">` + simb + `</span>
+                </div>
+                <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}" onkeypress="return filterFloat(event,this);"  >
+                </div>
+                </div>
+                <div class="col-sm-2">
+                <label ><button type="button"  class="xd btn btn-danger" onclick="eliminar(${x})"><i class="fa fa-trash-o fa-lg" > </i></button></label>
+                </div>
+                </div>`;
+        $('.row_number').append(data);
+
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+
+        // document.getElementById(`monto_pago${x}`).value = (total/inp_mont);
+
+        x++;
+        if (inp_mont > 6) {
+            $('.add_pago').attr('disabled');
+        }
+        var multiplier2 = 100;
+        var monto_c = document.getElementsByClassName('monto_pago');
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        for (var i = 0; i < inp_mont; i++) {
+            var monto = monto_c[i].id;
+            var fin = (total / inp_mont)
+            document.getElementById("monto_pago0").value = '';
+            // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
+        }
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        if (inp_mont > 5) {
+            document.getElementById('add_pago').setAttribute('disabled', "true");
+        } else {
+            document.getElementById('add_pago').removeAttribute('disabled');
+        }
+        actualizarSaldoRestante();
+    });
+    $(document).on('input', '.monto_pago', function() {
+        actualizarSaldoRestante();
+    });
+
+    function resetModalCuotas() {
+        x = 1;
+        $('.row_number .delete_modal1, .row_number .delete_modal2, .row_number .delete_modal3, .row_number .delete_modal4, .row_number .delete_modal5, .row_number .delete_modal6')
+            .remove();
+
+        // $('#fecha_pago0').val('');
+        // $('#monto_pago0').val('');
+
+        $(".monto_pago").each(function() {
+            $(this).val('');
+        });
+        $(".fecha_pago").each(function() {
+            $(this).val('');
+        });
+
+        $('.add_pago').prop('disabled', false);
+        $('#add_pago').prop('disabled', false);
+
+        $('#cuotas_footer').html('0.00').css('color', 'green');
+        $('#cuotas_footer').parent().find('strong').html('Total Restante: &nbsp;');
+
+        actualizarSaldoRestante();
+    }
+
+    function eliminar(x) {
+        $(`.delete_modal${x}`).remove();
+        var monto_c = document.getElementsByClassName('monto_pago');
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        var total = document.getElementById('total_final').value;
+        var multiplier2 = 100;
+        for (var i = 0; i < inp_mont; i++) {
+            var monto = monto_c[i].id;
+
+            var fin = (total / inp_mont)
+            document.getElementById("monto_pago0").value = '';
+            // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
+        }
+        if (inp_mont > 5) {
+            document.getElementById('add_pago').setAttribute('disabled', "true");
+        } else if (inp_mont == 1) {
+            document.getElementById("monto_pago0").value = total;
+        } else {
+            document.getElementById('add_pago').removeAttribute('disabled');
+        }
+        actualizarSaldoRestante();
+    };
+    $(document).on('input', '.monto_pago', function() {
+        actualizarSaldoRestante();
     });
 
     function validarJson(data) {
@@ -721,5 +848,415 @@
         } catch (e) {
             return false; // no es JSON
         }
+    }
+
+    //Función de borrado de fila de articulos (Producto-Servicio)
+    $(document).on('click', '.borrar', function(event) {
+        event.preventDefault();
+        var e = document.getElementsByClassName("e").length;
+        var fila = $(this).parents("tr");
+        var input_text_opt = fila.find('input[class="celda"]').val();
+        $('option[value="' + input_text_opt + '"]').prop("disabled", false);
+        $(".addmore").prop("disabled", false);
+        $(".select2_demo_3").select2({
+            placeholder: "Seleccionar Producto",
+        });
+        // ELIMINAR TR
+        if (e > 1) {
+            fila.closest('tr').remove();
+            $(".borrar").prop("disabled", false);
+            $(".addmore").prop("disabled", false);
+        } else {
+            $(".borrar").prop("disabled", true);
+            $(".addmore").prop("disabled", false);
+        }
+        var multiplier = 100;
+        var totalInp = $('[name="afectacion"]');
+        var total_t = 0;
+
+        totalInp.each(function() {
+            total_t += parseFloat($(this).val());
+        });
+
+        $('#subtotal_gravado').val(total_t);
+        //GRAVADO
+        var totalInpG = $('[name="total"]');
+        var total_tt = 0;
+
+        totalInpG.each(function() {
+            total_tt += parseFloat($(this).val());
+        });
+        $('#sub_total').val(total_tt);
+
+        var igv_valor = ({{ $igv->renta }});
+        var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+        var subtotal = document.querySelector(`#sub_total`).value;
+        var igv_val = parseFloat(subtotal_gravado) * igv_valor / 100;
+        var igv = Math.round(igv_val * multiplier) / multiplier;
+        var end_2 = parseFloat(igv) + parseFloat(subtotal);
+        var end = Math.round(end_2 * multiplier) / multiplier;
+
+        document.getElementById("igv").value = igv;
+        document.getElementById("total_final").value = end;
+        articlesSelect2();
+    })
+
+    // Boton para Solamente Guardar
+    $("#boton").on("click", function(buton) {
+        $('#button_submit').val('0');
+        var l = Ladda.create(document.querySelector('.button-lada'));
+        // $('#modal_detraccion').modal('show');
+        // DETRACCIONES?
+        var seletc_det = $('.select2_tipo_op').val();
+        var split_id = seletc_det.split(' ');
+        if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+            var tipo_detra = $('#select_tipo_pago').val();
+            var ipt_medio = $('.select2_mediopago').val();
+            var porce_detra = $('#porcentaje_detc').val();
+            var tot_det = $('#tota_detra').val();
+
+            if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.detracc_campo_required');
+
+                inputs.forEach(function(input) {
+                    input.style.display = 'block';
+                });
+                return;
+            }
+
+        }
+        // return;
+
+        var forma_pago = $("#forma_pago option:selected").val();
+        if (forma_pago == 2) {
+            var monto_c = document.getElementsByClassName('monto_pago');
+            var monto_fc = document.getElementsByClassName('fecha_pago');
+            var inp_mont = document.getElementsByClassName('monto_pago').length;
+            // correcion, se esta usando el total real, y no el dinamico
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var fin = 0.00;
+            var comp = 0;
+            for (var i = 0; i < inp_mont; i++) {
+                fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+            }
+            var fin_r = Math.round(fin * 100) / 100;
+            var total_r = Math.round(total * 100) / 100; // Redondea el total también para comparación precisa
+            // console.log(total);
+            for (var i = 0; i < inp_mont; i++) {
+                var fecha = monto_fc[i].id;
+                var monto = monto_c[i].id;
+
+                var input_text = document.getElementById(`${monto}`).value;
+                var date_text = document.getElementById(`${fecha}`).value;
+                if (input_text.length == 0 || date_text.length == 0) {
+                    $('#cuotas_modal').modal('show');
+                    document.getElementById('alert_campos').style.display = "flex";
+                    setTimeout(mostrarMensaje, 3000);
+                    return;
+                }
+            }
+            if (fin_r != total_r) { // Compara las versiones redondeadas
+                $('#cuotas_modal').modal('show');
+                document.getElementById('suma_campos').style.display = "flex";
+                setTimeout(mostrarMensaje, 3000);
+            } else {
+                var form = document.getElementById('form_update');
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // muestra mensajes nativos de HTML5
+                    return;
+                }
+                l.start();
+                document.getElementById('button_submit').click();
+            }
+            // buton.preventDefault();
+
+        } else {
+            var form = document.getElementById('form_update');
+            if (!form.checkValidity()) {
+                form.reportValidity(); // muestra mensajes nativos de HTML5
+                return;
+            }
+            document.getElementById('button_submit').click();
+            l.start();
+        }
+
+    });
+    // Boton para Finalizar
+    $("#finalizar").on("click", function(buton) {
+        $('#button_submit').val('1');
+        var l = Ladda.create(document.querySelector('.button-lada'));
+        // $('#modal_detraccion').modal('show');
+        // DETRACCIONES?
+        var seletc_det = $('.select2_tipo_op').val();
+        var split_id = seletc_det.split(' ');
+        if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+            var tipo_detra = $('#select_tipo_pago').val();
+            var ipt_medio = $('.select2_mediopago').val();
+            var porce_detra = $('#porcentaje_detc').val();
+            var tot_det = $('#tota_detra').val();
+
+            if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.detracc_campo_required');
+
+                inputs.forEach(function(input) {
+                    input.style.display = 'block';
+                });
+                return;
+            }
+
+        }
+        // return;
+
+        var forma_pago = $("#forma_pago option:selected").val();
+        if (forma_pago == 2) {
+            var monto_c = document.getElementsByClassName('monto_pago');
+            var monto_fc = document.getElementsByClassName('fecha_pago');
+            var inp_mont = document.getElementsByClassName('monto_pago').length;
+            // correcion, se esta usando el total real, y no el dinamico
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var fin = 0.00;
+            var comp = 0;
+            for (var i = 0; i < inp_mont; i++) {
+                fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+            }
+            var fin_r = Math.round(fin * 100) / 100;
+            var total_r = Math.round(total * 100) / 100; // Redondea el total también para comparación precisa
+            // console.log(total);
+            for (var i = 0; i < inp_mont; i++) {
+                var fecha = monto_fc[i].id;
+                var monto = monto_c[i].id;
+
+                var input_text = document.getElementById(`${monto}`).value;
+                var date_text = document.getElementById(`${fecha}`).value;
+                if (input_text.length == 0 || date_text.length == 0) {
+                    $('#cuotas_modal').modal('show');
+                    document.getElementById('alert_campos').style.display = "flex";
+                    setTimeout(mostrarMensaje, 3000);
+                    return;
+                }
+            }
+            if (fin_r != total_r) { // Compara las versiones redondeadas
+                $('#cuotas_modal').modal('show');
+                document.getElementById('suma_campos').style.display = "flex";
+                setTimeout(mostrarMensaje, 3000);
+            } else {
+                var form = document.getElementById('form_update');
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // muestra mensajes nativos de HTML5
+                    return;
+                }
+                l.start();
+                document.getElementById('button_submit').click();
+            }
+            // buton.preventDefault();
+
+        } else {
+            var form = document.getElementById('form_update');
+            if (!form.checkValidity()) {
+                form.reportValidity(); // muestra mensajes nativos de HTML5
+                return;
+            }
+            document.getElementById('button_submit').click();
+            l.start();
+        }
+
+    });
+    $(document).on('click', '#button_cuotas_save', function(event) {
+
+        var monto_c = document.getElementsByClassName('monto_pago');
+        var monto_fc = document.getElementsByClassName('fecha_pago');
+        console.log(monto_c)
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        // se usa el total real, mas no el dinamico
+        var total = parseFloat(document.getElementById('total_final').value) || 0;
+        var fin = 0;
+        var comp = 0;
+        for (var i = 0; i < inp_mont; i++) {
+            fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+        }
+        var fin_r = Math.round(fin * 100) / 100;
+        var total_r = Math.round(total * 100) / 100;
+
+        for (var i = 0; i < inp_mont; i++) {
+            var fecha = monto_fc[i].id;
+            var monto = monto_c[i].id;
+
+            var input_text = document.getElementById(`${monto}`).value;
+            var date_text = document.getElementById(`${fecha}`).value;
+            console.log(date_text);
+            if (input_text.length == 0 || date_text.length == 0) {
+                console.log("a");
+                document.getElementById('alert_campos').style.display = "flex";
+                mostrarMensaje();
+                return;
+            }
+            var end_date = document.getElementById(`${fecha}`).value;
+        }
+
+        if (fin_r != total_r) {
+            document.getElementById('suma_campos').style.display = "flex";
+        } else {
+            console.log('e')
+            var [year, month, day] = end_date.split("-");
+            var formattedDate = `${year}-${month}-${day}`;
+            $('#fecha_vencimiento').val(formattedDate)
+            $('#cuotas_modal').modal('hide')
+        }
+        mostrarMensaje();
+
+    });
+
+    function mostrarMensaje() {
+        // $("#alert_campos").show(200);
+        $("#alert_campos").hide(3000);
+        $("#suma_campos").hide(3000);
+    }
+
+    function mostrarMensaje() {
+        // $("#alert_campos").show(200);
+        $("#alert_campos").hide(3000);
+        $("#suma_campos").hide(3000);
+    }
+
+    function cerrar_but_rc() {
+        document.getElementById('alert_campos').style.display = "none";
+    }
+
+    function cerrar_but_mt() {
+        document.getElementById('suma_campos').style.display = "none";
+    }
+
+    function filterFloat(evt, input) {
+        var key = window.Event ? evt.which : evt.keyCode;
+        var chark = String.fromCharCode(key);
+        var tempValue = input.value + chark;
+
+        if (key >= 48 && key <= 57) {
+            if (filter(tempValue) === false) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (key == 8 || key == 13 || key == 0) {
+                return true;
+            } else if (key == 46) {
+                if (filter(tempValue) === false) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+
+    function filter(__val__) {
+        var preg = /^([0-9]+\.?[0-9]{0,2})$/;
+        if (preg.test(__val__) === true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    let status = 0;
+    let total_val = 0;
+    let completed = 0;
+
+    function onFinish() {
+        completed++;
+        if (completed === total_val) {
+            toastr.clear();
+            toastr.success(
+                'Todos los precios se actualizaron correctamente',
+                'Proceso finalizado'
+            );
+            disabled_money();
+        }
+    }
+
+    function changeMoney() {
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.money') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'status': status,
+            },
+            beforeSend: function() {
+                toastr.info(
+                    '<i class="fa fa-spinner fa-spin"></i> Cambiando el precio, espere un momento...',
+                    'Procesando', {
+                        timeOut: 0,
+                        extendedTimeOut: 0,
+                        closeButton: false,
+                        tapToDismiss: false
+                    });
+            },
+            success: function(msg) {
+                //Cambio de moneda
+                $(`#moneda_id`).val(msg.id);
+                $(`#moneda`).val(msg.nombre);
+                $(`#button_changeMoney`).html(msg.other);
+                $(`#basic-addon3`).html(msg.simbolo);
+                $(`.span_simbolo_credido`).html(msg.simbolo);
+
+                $(`#simb_fot`).html(msg.simbolo);
+
+                resetModalCuotas()
+                if (status == 1) {
+                    status = 0;
+                } else {
+                    status = 1;
+                }
+                let articles_selected = document.getElementsByClassName("select2_demo_3");
+                let articles_selected_count = articles_selected.length;
+                // Para finalizar el toastr de carga
+                total_val = articles_selected.length;
+                completed = 0;  
+
+                if (total_val === 0) {
+                    toastr.clear();
+                    toastr.success(
+                        'Moneda actualizada correctamente',
+                        'Proceso finalizado'
+                    );
+                    disabled_money();
+                    return;
+                }
+
+                for (let z = 0; z < articles_selected_count; z++) {
+                    let selected = document.getElementsByClassName("select2_demo_3 select_change")[z]
+                        .getAttribute('id');
+                    if (selected == 'articulo') {
+                        ajax(0);
+                    } else {
+                        ajax(selected.substring(8));
+                    }
+                }
+
+                // disabled_money();
+            },
+        });
+    }
+
+    // TOAST PARA LA CARGA
+    // toastr.clear();
+    // toastr.success("Cambio de moneda exitoso",
+    //     'success', {
+    //         timeOut: 3000
+    //     });
+
+    function disabled_money() {
+        $(`.money_change`).prop('disabled', true);
+        $(`.button_money`).addClass('not-active');
+
+        setTimeout(function() {
+            $(`.money_change`).prop('disabled', false);
+            $(`.button_money`).removeClass('not-active');
+        }, 10000);
     }
 </script>

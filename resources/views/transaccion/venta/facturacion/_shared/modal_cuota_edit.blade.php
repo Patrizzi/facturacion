@@ -23,11 +23,11 @@
                     </button>
                 </div>
                 <div class="row_number">
-                    @foreach ($facturacion->cuotas_credito as $cuotas)
+                    @foreach ($facturacion->cuotas_credito as $i_cuota => $cuotas)
                         <div class="pago_modal row">
                             <div class="col-sm-1"><label>Fecha:</label></div>
                             <div class="col-sm-4">
-                                <input type="date" name="fecha_pago[]" id="fecha_pago0"
+                                <input type="date" name="fecha_pago[]" id="fecha_pago{{$i_cuota}}"
                                     class="fecha_pago form-control" min="{{ $facturacion->fecha_emision_edit }}" value="{{$cuotas->fecha_pago}}">
                             </div>
                             <div class="col-sm-1"><label>Monto:</label></div>
@@ -36,14 +36,20 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon3">{{ $facturacion->moneda->simbolo }}</span>
                                     </div>
-                                    <input type="text" name="monto_pago[]" id="monto_pago0"
+                                    <input type="text" name="monto_pago[]" id="monto_pago{{$i_cuota}}"
                                         class="monto_pago form-control" onkeypress="return filterFloat(event,this);" value="{{ $cuotas->monto }}">
                                 </div>
                             </div>
                             <div class="col-sm-2">
-                                <label><button type="button" aria-hidden="true" id="add_pago"
+                                @if ($i_cuota == 0)
+                                    <label><button type="button" aria-hidden="true" id="add_pago"
                                         class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg">
                                         </i></button></label>
+                                @else
+                                    <label>
+                                        <button type="button"  class="xd btn btn-danger" onclick="eliminar({{ $i_cuota}})"><i class="fa fa-trash-o fa-lg" > </i>
+                                    </label>
+                                @endif
                             </div>
                         </div>
                     @endforeach

@@ -1172,7 +1172,113 @@ class FacturacionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $request;
+        $factura = Facturacion::find($id);
+        $create_cuotas = 0;
+        if($factura->forma_pago_id == 1){ //Si es contado
+            if($request->get('forma_pago') == $factura->forma_pago_id){
+                $fecha_vencimiento = $request->get('fecha_vencimiento');
+                $create_cuotas = 0;
+            }else{
+                // Si cambia a credito
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $val = $fecha_pago_forma[$c];
+                }
+                $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
+                $create_cuotas = 1;
+            }
+            
+        }else{ // Si el editado es credito
+            if($request->get('forma_pago') == $factura->forma_pago_id){ //Si sigue siendo credito
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $val = $fecha_pago_forma[$c];
+                }
+                $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
+                $create_cuotas = 1;
+            }else{ // Si cambia a contado
+                // Eliminar cuotas anteriores
+                $eliminar_cuotas = Cuotas_credito::where('facturacion_id', $id)->delete();
+                $fecha_vencimiento = $request->get('fecha_vencimiento');
+                $create_cuotas = 0;
+            }
+        }
+        // Tipo de Operacion
+        $operacion = $request->get('tipo_operacion');
+        $nombre = strstr($operacion, '-', true);
+        $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
+        // Actualizar los cabezera 
+        // Almacen NO es EDITABLE
+        $factura->orden_compra = $request->get('ord_compra');
+        $factura->guia_remision = $request->get('guia_r');
+        $factura->cliente_id = $request->get('cliente_id');
+        $factura->moneda_id = $request->get('moneda_id');
+        $factura->forma_pago_id = $request->get('forma_pago');
+        // Fecha de Emision NO es EDITABLE
+        $factura->fecha_vencimiento = $fecha_vencimiento;
+        // Tipo de cambio NO es EDITABLE
+        $factura->observacion = $request->get('observacion');
+        // Comisionista no es editable
+        // User no es editable
+        if($request->button_submit == 0){
+            $factura->estado = '0'; //! Si se puede seguir editando
+        }else{
+            $factura->estado = '1'; //! Si ya no se puede editar
+        }
+        $factura->tipo_operacion_id = $busca_ope->id;
+        $factura->save();
+        //! Crear o Editar cuotas dependiendo de la logica anterior
+        if($create_cuotas == 1){
+            $count_cuotas = Cuotas_credito::where('facturacion_id', $id)->count();
+            $new_count = count($request->get('fecha_pago'));
+            if($count_cuotas == $new_count){
+                // Se editan las cuotas existentes
+                foreach($factura->cuotas_credito as $index => $cuota){
+                    $cuota->fecha_pago = $request->get('fecha_pago')[$index];
+                    $cuota->monto = $request->get('monto_pago')[$index];
+                    $cuota->save();
+                }
+            }else{
+                // Eliminar cuotas anteriores
+                $eliminar_cuotas = Cuotas_credito::where('facturacion_id', $id)->delete();
+                // Crear nuevas cuotas
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                $monto_pago = $request->input('monto_pago');
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $cuota_cred = new Cuotas_credito;
+                    $cuota_cred->facturacion_id = $id;
+                    $cuota_cred->numero_cuota = $c + 1;
+                    $cuota_cred->monto = $monto_pago[$c];
+                    $cuota_cred->fecha_pago = $fecha_pago_forma[$c];
+                    $cuota_cred->save();
+                }
+            }
+        }
+        // Esicion de Registros
+        $registros_count = count($factura->registros);
+        $count_art = $request->get('articulo');
+        // OBTENCION DE PRODUCTOS O SERVICIOS
+
+        for ($i = 0; $i < $count_art; $i++) {
+            $articulos[$i] = $request->input('articulo')[$i];
+            $producto_id_name[$i] = strstr($articulos[$i], '|');
+            $producto_id_2[$i] = strstr($producto_id_name[$i], ' ');
+            $producto_id_3[$i] = substr(strstr($producto_id_2[$i], ' '), 1);
+            $producto_id[$i] = strstr($producto_id_3[$i], ' ', true);
+        }
+        
+        if($registros_count == $count_art){
+            // Editar los existentes
+            foreach ($factura->registros as $index_reg => $edit_reg) {
+                $producto_servicio = Producto::where('codigo_producto', $producto_id[$i])->first();
+
+            } 
+        }
+
     }
 
     /**

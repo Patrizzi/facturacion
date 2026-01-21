@@ -425,6 +425,7 @@ Route::group(
         Route::resource('/facturacion', 'FacturacionController')->except(['store', 'create']);
         Route::post('/facturacion/create', 'FacturacionController@create')->name('facturacion.create');
         Route::put('/facturacion/store/{id_moneda}', 'FacturacionController@store')->name('facturacion.store');
+        Route::post('/facturacion/update/{id}', 'FacturacionController@update')->name('facturacion.update');
         Route::post('/facturacion/anular', 'FacturacionController@anulacion')->name('facturacion.anulacion');
         Route::post('/facturacion/ajax_remision', 'FacturacionController@ajax_remision')->name('facturacion.ajx_remision');
         //DESCARGA DE FACTURA EN EXCEL
