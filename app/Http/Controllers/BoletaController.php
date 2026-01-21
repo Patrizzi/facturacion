@@ -1628,12 +1628,15 @@ return redirect()->route('boleta.show',$boleta->id);
             $banco_count = Banco::where('estado', '0')->count();
             $empresa = Empresa::first();
 
+            $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+            $qrCode  = $this->generarImagenQR($textoQR);
+
             $sub_total = 0;
             $i = 1;
 
             // Generar PDF
             $archivo = 'PDF-DOC-' . $boleta->codigo_boleta . '-' . $empresa->ruc . ".pdf";
-            $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i'));
+            $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i','textoQR','qrCode'));
             $content = $pdf->download();
             $especif = $date . $archivo;
             Storage::disk('mailbox')->put($especif, $content);
@@ -1832,9 +1835,12 @@ return redirect()->route('boleta.show',$boleta->id);
                 $sub_total = 0;
                 $i = 1;
 
+                $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+                $qrCode  = $this->generarImagenQR($textoQR);
+
                 // Generar PDF
                 $archivo = 'PDF-DOC-' . $boleta->codigo_boleta . '-' . $empresa->ruc . ".pdf";
-                $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i'));
+                $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i','textoQR','qrCode'));
                 $content = $pdf->download();
                 $especif = $date . $archivo;
                 Storage::disk('mailbox')->put($especif, $content);

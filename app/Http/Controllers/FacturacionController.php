@@ -1850,9 +1850,12 @@ class FacturacionController extends Controller
             $banco_count = Banco::where('estado', '0')->count();
             $i = 1;
 
+            $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+            $qrCode = $this->generarImagenQR($textoQR);
+
             // Generar PDF
             $archivo = 'PDF-DOC-' . $facturacion->codigo_fac . '-' . $empresa->ruc . ".pdf";
-            $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+            $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i','textoQR','qrCode'));
             $content = $pdf->download();
             $especif = $date . $archivo;
             Storage::disk('mailbox')->put($especif, $content);
@@ -2050,9 +2053,12 @@ class FacturacionController extends Controller
                 $sub_total = 0;
                 $i = 1;
 
+                $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+                $qrCode = $this->generarImagenQR($textoQR);
+
                 // Generar PDF
                 $archivo = 'PDF-DOC-' . $facturacion->codigo_fac . '-' . $empresa->ruc . ".pdf";
-                $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+                $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i','textoQR','qrCode'));
                 $content = $pdf->download();
                 $especif = $date . $archivo;
                 Storage::disk('mailbox')->put($especif, $content);

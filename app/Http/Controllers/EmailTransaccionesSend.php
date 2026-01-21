@@ -373,6 +373,10 @@ class EmailTransaccionesSend extends Controller
         $banco=Banco::where('estado',0)->get();
         $banco_count=Banco::where('estado','0')->count();
         $i = 1;
+
+        $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+        $qrCode = $this->generarImagenQR($textoQR);
+
         if($facturacion->f_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-01-'.$facturacion->codigo_fac.'.xml';
         }else{
@@ -381,7 +385,7 @@ class EmailTransaccionesSend extends Controller
         // $archivo=$facturacion->codigo_fac.".pdf";
         $archivo='PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
 
-        $pdf=PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+        $pdf=PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i','textoQR','qrCode'));
         $content = $pdf->download();
         $especif = $date.$archivo;
 
@@ -392,7 +396,6 @@ class EmailTransaccionesSend extends Controller
     //*
     public function factura_manual(Request $request, $id)
     {
-        // return $request;
         $id_usuario = auth()->user()->id;
         $config_email = EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
         $redic = "facturacion_manual";
@@ -400,28 +403,50 @@ class EmailTransaccionesSend extends Controller
         $data_g = str_replace(' ', '_',$fecha);
         $date = str_replace(':','-',$data_g);
         
-        $empresa=Empresa::first();
-        $facturacion=Facturacion_m::find($id);
-        $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
+        $empresa = Empresa::first();
+        $facturacion = Facturacion_m::find($id);
+        $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id',$id)->get();
         $id = $facturacion->id;
         $ruta_retorno = 'facturacion_manual.show';
-        $clientes = $facturacion->cliente->email;  
-        $sum=0;
-        $igv=Igv::first();
-        $sub_total=0;
-        $banco=Banco::where('estado',0)->get();
-        $banco_count=Banco::where('estado','0')->count();
+        $clientes = $facturacion->cliente->email;
+        
+        // Agregar lógica de detracción y cuotas
+        if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || 
+        $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
+            $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
+            if ($facturacion->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
+            } else {
+                $cuotas = "not";
+            }
+        } else {
+            $detraccion = "not";
+            $cuotas = "not";
+        }
+        
+        $sum = 0;
+        $igv = Igv::first();
+        $sub_total = 0;
+        $banco = Banco::where('estado',0)->get();
+        $banco_count = Banco::where('estado','0')->count();
         $i = 1;
+        
+        // Generar QR
+        $textoQR = $this->generarTextoQRFacturaM($facturacion, $empresa, $igv);
+        $qrCode = $this->generarImagenQR($textoQR);
 
         if($facturacion->f_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-01-'.$facturacion->codigo_fac.'.xml';
-        }else{
+        } else {
             $xml_file = null;
         }
-        // $archivo=$facturacion->codigo_fac.".pdf";
-        $archivo='PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
         
-        $pdf = PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+        $archivo = 'PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
+        
+        // Generar PDF con todas las variables
+        $pdf = PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',
+            compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total',
+                    'banco','banco_count','i','detraccion','cuotas','textoQR','qrCode'));
         $content = $pdf->download();
         $especif = $date.$archivo;
 
@@ -451,6 +476,9 @@ class EmailTransaccionesSend extends Controller
         $clientes = $boleta->cliente->email;  
         
         $sub_total=0;
+
+        $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
         
         $i = 1;
         //* XML
@@ -462,7 +490,7 @@ class EmailTransaccionesSend extends Controller
         // $archivo=$boleta->codigo_boleta.".pdf";
         $archivo='PDF-DOC-'.$boleta->codigo_boleta.'-'.$empresa->ruc.".pdf";
 
-        $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
+        $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i','textoQR','qrCode'));
         $content = $pdf->download();
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
@@ -490,7 +518,10 @@ class EmailTransaccionesSend extends Controller
         $j = 1;
         $id = $boleta->id;
         $ruta_retorno = 'boleta_manual.show';
-        $clientes = $boleta->cliente->email;  
+        $clientes = $boleta->cliente->email;
+
+        $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
 
         if($boleta->b_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-03-'.$boleta->codigo_boleta.'.xml'; 
@@ -499,7 +530,7 @@ class EmailTransaccionesSend extends Controller
         }
         $archivo='PDF-DOC-'.$boleta->codigo_boleta.'-'.$empresa->ruc.".pdf";
 
-        $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
+        $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','textoQR','qrCode'));
         $content = $pdf->download();
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
@@ -592,7 +623,9 @@ class EmailTransaccionesSend extends Controller
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
 
-        return view('mailbox.create',compact('archivo','clientes','redic','date','config_email','ruta_retorno','id','xml_file'));
+        $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+        $qrCode = $this->generarImagenQR($textoQR);     
+        return view('mailbox.create',compact('archivo','clientes','redic','date','config_email','ruta_retorno','id','xml_file','textoQR','qrCode'));
     }
     //*
     public function guia_ingreso(Request $request, $id)

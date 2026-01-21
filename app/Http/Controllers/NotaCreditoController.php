@@ -1584,10 +1584,13 @@ private function downloadSinglePDF($id)
                 $estado = 2;
             }
 
+            $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+            $qrCode = $this->generarImagenQR($textoQR);
+
             // Generar PDF
             $archivo = 'PDF-DOC-' . $notas_credito->codigo_n_c . '-' . $empresa->ruc . ".pdf";
             $u = 1;
-            $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact('notas_credito', 'notas_credito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u'));
+            $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact('notas_credito', 'notas_credito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u','textoQR','qrCode'));
             $content = $pdf->download();
             $especif = $date . $archivo;
             Storage::disk('mailbox')->put($especif, $content);
@@ -1793,7 +1796,11 @@ private function downloadSinglePDF($id)
                 // Generar PDF
                 $archivo = 'PDF-DOC-' . $notas_credito->codigo_n_c . '-' . $empresa->ruc . ".pdf";
                 $u = 1;
-                $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact('notas_credito', 'notas_credito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u'));
+
+                $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+                $qrCode = $this->generarImagenQR($textoQR);
+
+                $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact('notas_credito', 'notas_credito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u','textoQR','qrCode'));
                 $content = $pdf->download();
                 $especif = $date . $archivo;
                 Storage::disk('mailbox')->put($especif, $content);
