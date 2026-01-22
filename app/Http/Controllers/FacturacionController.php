@@ -530,7 +530,8 @@ class FacturacionController extends Controller
 
         $comisionista = $request->get('comisionista');
         if($comisionista == "" || $comisionista == "Sin Comisión - 0 %"){
-           $comi = 0;
+            $comi = 0;
+            $comi_valor = 0;
         }else{
 
             // $numero = $request->get('comisionista');
@@ -549,10 +550,11 @@ class FacturacionController extends Controller
             // $personal_venta=Personal_venta::where('id_personal',$comisionista_buscador->id)->first();
             // $comi=$comisionista_buscador->comision;
             $comi=$comisionista_buscador->id;
+            $comi_valor=$comisionista_buscador->comision;
             $comision_id = $comisionista_buscador->id;
 
         }
-
+        // return $comi_valor;
         //Convertir nombre del cliente a id
         $cliente_nombre = $request->get('cliente');
         // $nombre = strstr($cliente_nombre, '-',true);
@@ -828,7 +830,7 @@ class FacturacionController extends Controller
                     }
                     $facturacion_registro->cantidad = $request->get('cantidad')[$i];
                     $facturacion_registro->descuento = $request->get('check_descuento')[$i];
-                    $facturacion_registro->comision = $comi;
+                    $facturacion_registro->comision = $comi_valor;
                     //precio unitario descuento ----------------------------------------
                     $desc_comprobacion = $request->get('check_descuento')[$i];
                     if ($desc_comprobacion <> 0) {
@@ -839,9 +841,9 @@ class FacturacionController extends Controller
                     //precio unitario comision ----------------------------------------
                     if ($desc_comprobacion <> 0) {
                         $factura_desc = round($array - ($array2 * $desc_comprobacion / 100), 2);
-                        $facturacion_registro->precio_unitario_comi = round($factura_desc + ($factura_desc * $comi / 100), 2);
+                        $facturacion_registro->precio_unitario_comi = round($factura_desc + ($factura_desc * $comi_valor / 100), 2);
                     } else {
-                        $facturacion_registro->precio_unitario_comi = round($array + ($array * $comi / 100), 2);
+                        $facturacion_registro->precio_unitario_comi = round($array + ($array * $comi_valor / 100), 2);
                     }
                     $facturacion_2 = Facturacion::find($facturacion->id);
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
@@ -948,7 +950,7 @@ class FacturacionController extends Controller
 
                     $facturacion_registro->precio = $array;
                     $facturacion_registro->cantidad = $request->get('cantidad')[$i];
-                    $facturacion_registro->comision = $comi;
+                    $facturacion_registro->comision = $comi_valor;
                     $descuento_verificacion = $request->get('check_descuento')[$i];
                     $facturacion_registro->descuento = $descuento_verificacion;
                     if ($request->get('descripcion_item')[$i] == null) {
@@ -964,9 +966,9 @@ class FacturacionController extends Controller
                     //precio unitario comision ----------------------------------------
                     if ($descuento_verificacion <> 0) {
                         $prec_uni_des = $array - ($precio_prom * $descuento_verificacion / 100);
-                        $facturacion_registro->precio_unitario_comi = ($prec_uni_des + ($prec_uni_des * $comi / 100));
+                        $facturacion_registro->precio_unitario_comi = ($prec_uni_des + ($prec_uni_des * $comi_valor / 100));
                     } else {
-                        $facturacion_registro->precio_unitario_comi = $array + ($array * $comi / 100);
+                        $facturacion_registro->precio_unitario_comi = $array + ($array * $comi_valor / 100);
                     }
 
                     $facturacion_2 = Facturacion::find($facturacion->id);
@@ -1039,11 +1041,11 @@ class FacturacionController extends Controller
             ->get();
         $tipo_operacion = Tipo_operacion_f::all();
         $moneda = Moneda::where('principal', '1')->first();
-        
+        $monedas_get = Moneda::all();
         // $forma_pago_id = Forma_pago::all();
         // return $remisiones;
 
-        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion','forma_pagos','remisiones','tipo_operacion','moneda'));
+        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion','forma_pagos','remisiones','tipo_operacion','moneda','monedas_get'));
 
         // if ($facturacion->id_cotizador_servicio == NULL) {
         //     return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));
@@ -1273,14 +1275,22 @@ class FacturacionController extends Controller
             }
         }
         // Comision
-        if($factura->comisionista_id != null) {
+        // return $factura;
+        if($factura->comisionista != null || $factura->comisionista != 0){
             $comi = $factura->select_comisionista->comision;
         } else {
             $comi = 0;
         }
+        // CAMBIO EN EL VALOR DE LA FACTURA PARA LAS VENTAS REGISTROS
+        $venta_reg = Ventas_registro::where('id_fac', $id)->first();
+        $venta_reg->tipo_moneda = $factura->moneda_id;
+        $venta_reg->monto_final_fac_bol = $request->get('precio_final_igv');
+        $porcentaje = 100 + $comi;
+        $venta_reg->monto_comision = (100 * $request->get('sub_total_sin_igv') / $porcentaje) * $comi / 100;
+        $venta_reg->save();
         // Esicion de Registros
         $registros_count = count($factura->registros);
-        $count_art = count($request->get('articulo'));
+        $count_art = count($request->get('cantidad'));
         // OBTENCION DE PRODUCTOS O SERVICIOS
         // return $count_art;
         for ($i = 0; $i < $count_art; $i++) {
@@ -1290,7 +1300,7 @@ class FacturacionController extends Controller
             $producto_id_3[$i] = substr(strstr($producto_id_2[$i], ' '), 1);
             $producto_id[$i] = strstr($producto_id_3[$i], ' ', true);
         }
-
+        // return $producto_id;
         $facturacion = Facturacion::find($id);
         // Si es igual la cantidad de registros, solo se editan sobre los existentes
         if($registros_count == $count_art){

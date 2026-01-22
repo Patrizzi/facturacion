@@ -148,13 +148,13 @@
                                     <div class="col-md-8">
                                         <select name="" id="" class="form-control"
                                             onchange="changeMoney()">
-                                            <option value="nacional"
-                                                {{ $facturacion->moneda->tipo == 'nacional' ? 'selected' : '' }}>
-                                                Soles
-                                            </option>
-                                            <option value="extranjera"
-                                                {{ $facturacion->moneda->tipo == 'extranjera' ? 'selected' : '' }}>
-                                                Dólares</option>
+                                                @foreach ($monedas_get as $moneda_item)
+                                                    {{-- @if ($moneda_item->principal != 1) --}}
+                                                        <option value="{{ $moneda_item->id }}"
+                                                            {{ $facturacion->moneda_id == $moneda_item->id ? 'selected' : '' }}>
+                                                            {{ ucwords($moneda_item->nombre) }}</option>
+                                                    {{-- @endif --}}
+                                                @endforeach
                                         </select>
                                         <input type="hidden" name="moneda" id="moneda" class="form-control "
                                             value="{{ ucwords($facturacion->moneda->nombre) }}" readonly="readonly">
@@ -309,8 +309,8 @@
                                             onkeyup="multi({{ $i_edit }})" required autocomplete="off" value="{{$afect}}" />
                                         {{-- <input hidden="hidden" class="celda" name="articulo[]"
                                                     id="input_prod1"> --}}
-                                        <input hidden="hidden" class="celda input-articulo" name="articulo[]"
-                                            id="input_prod{{ $i_edit + 1 }}" value="{{ $input_prod }}">
+                                        <input  type="hidden" class="celda input-articulo" name="articulo[]"
+                                            id="input_prod{{$i_edit}}" value="{{ $input_prod }}">
                                     </td>
                                     <td>
                                         <input style="min-width: 80px;margin: 0px" type='text'

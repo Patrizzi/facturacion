@@ -160,7 +160,7 @@
     // Para los productos 
 
     // Agregar producto
-    var i = "{{ count($facturacion->registros) + 1 }}";
+    var i = "{{ count($facturacion->registros) }}";
     console.log(i);
     $(".addmore").on('click', function() {
         var data = `[
@@ -287,13 +287,16 @@
 
     // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
     function ajax(a) {
-        $('#comparador_edicion').val('1');
-        var cont_origi = Number("{{ count($facturacion->registros) }}");
+        // $('#comparador_edicion').val('1');
+        // var cont_origi = Number("{{ count($facturacion->registros) }}");
+        console.log('value of a: ' + a);
         if (a == 0) {
             var articulo = document.getElementById(`articulo`).value;
-            document.getElementById(`input_prod1`).value = articulo;
+            console.log('arituclo 0: ' + articulo);
+            document.getElementById(`input_prod0`).value = articulo;
         } else {
             var articulo = document.getElementById(`articulo${a}`).value;
+            console.log('articulo: ' + articulo);
             document.getElementById(`input_prod${a}`).value = articulo;
         }
 
@@ -313,7 +316,7 @@
                 $(`#tipo_afec${a}`).val(msg.afectacion);
                 $(`#precio${a}`).val(msg.price);
                 const $input = $(`#cantidad${a}`);
-                if ($input.length && a >= 1 && a <= total) {
+                if ($input.val() > 1) {
                     $input.val($input.val());
                 } else if ($input.length) {
                     $input.val(1);
@@ -325,7 +328,7 @@
                 $(`#descuento${a}`).val(msg.discount);
                 $(`#check_descuento${a}`).val(0);
                 $(`#cantidad${a}`).attr('max', msg.amount);
-                $(`#cantidad`).attr('max', msg.amount);
+                // $(`#cantidad`).attr('max', msg.amount);
                 var separador = " ";
                 var comision = document.querySelector(`#comisionista`).value;
                 // //revirtiendo la cadena
@@ -370,6 +373,7 @@
         // Get the checkbox
         var checkBox = document.getElementById(`check${a}`);
         var cantidad = document.querySelector(`#cantidad${a}`).value;
+        console.log("cantidad:  "  + cantidad);
         var promedio_origina_descuento1 = document.querySelector(`#precio_unitario_descuento${a}`).value;
         var promedio_original2 = document.querySelector(`#promedio_original${a}`).value;
         var descuento = document.querySelector(`#descuento${a}`).value;
@@ -413,17 +417,17 @@
             var comision_porcentaje = document.querySelector(`#comision${a}`).value;
             var final = cantidad * precio;
             var end9 = parseFloat(precio) + (parseFloat(precio) * parseInt(comision_porcentaje) / 100);
-
+            console.log("precio:  " + 0);    
             var end = Math.round(end9 * multiplier) / multiplier;
             var final2 = cantidad * end;
             var final_decimal = Math.round(final2 * multiplier) / multiplier;
 
-            console.log("la promedio_origina_descuento1 es:" + promedio_origina_descuento1);
-            console.log("la comision procentaje es:" + comision_porcentaje);
-            console.log("la promedio_original2 procentaje es:" + promedio_original2);
-            console.log("la end es:" + end);
-            console.log("la total es:" + final_decimal);
-            console.log("la afectacion es:" + final_decimal);
+            // console.log("la promedio_origina_descuento1 es:" + promedio_origina_descuento1);
+            // console.log("la comision procentaje es:" + comision_porcentaje);
+            // console.log("la promedio_original2 procentaje es:" + promedio_original2);
+            // console.log("la end es:" + end);
+            // console.log("la cantidad es:" + cantidad);
+            // console.log("la afectacion es:" + final_decimal);
 
             document.getElementById(`check_descuento${a}`).value = 0;
 
@@ -1173,7 +1177,7 @@
             return false;
         }
     }
-    let status = 0;
+    let status = "@if($facturacion->moneda->principal == 1) 0 @else 1 @endif";
     let total_val = 0;
     let completed = 0;
 
@@ -1224,6 +1228,7 @@
                     status = 1;
                 }
                 let articles_selected = document.getElementsByClassName("select2_demo_3");
+                console.log("cantidad de articulos seleccionados: " + articles_selected.length);
                 let articles_selected_count = articles_selected.length;
                 // Para finalizar el toastr de carga
                 total_val = articles_selected.length;
