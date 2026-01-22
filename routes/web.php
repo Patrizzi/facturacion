@@ -1034,7 +1034,7 @@ Route::group(
         Route::get('/comprobantes/boleta/exportar', [BoletaController::class, 'exportarBoletas'])->name('boletas.exportar');
         Route::get('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
         Route::get('/comprobantes/boleta_manual/exportar', [BoletaMController::class, 'exportarBoletasM'])->name('boletasM.exportar');
-        Route::get('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
+        Route::post('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
     }
 );
 

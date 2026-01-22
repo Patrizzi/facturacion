@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Storage;
 use App\EmailBandejaEnvios;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailConfiguraciones;
+use App\Exports\FacturasMExport;
 
 class FacturacionMController extends Controller
 {
@@ -646,195 +647,29 @@ class FacturacionMController extends Controller
 
     //FUNCION PARA COMPROBANTES
     public function exportarFacturasM(Request $request){
-        if (ob_get_contents()) {
-            ob_end_clean();
-        }
+         $ids = $request->json('factura_ids');
 
-        if ($request->has('factura_ids') && !empty($request->input('factura_ids'))) {
-            $facturaIds = $request->input('factura_ids');
-
-            $facturasM = Facturacion_m::with([
-                'cotizacionM',
-                'almacen',
-                'cliente',
-                'moneda',
-                'forma_pago',
-                'user.personal',
-                'tipo_operacion',
-                'tipo_documento'
-            ])
-            ->whereIn('id', $facturaIds)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if (!empty($ids)) {
+            $export = new FacturasMExport($ids);
         } else {
-            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-            $filter = $request->get('value');
-            $tipo = $request->get('tipo_coti');
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
 
-            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+            [$start, $end] = explode(' - ', $request->daterange);
 
-            $query = Facturacion_m::with([
-                'cotizacionM',
-                'almacen',
-                'cliente',
-                'moneda',
-                'forma_pago',
-                'user.personal',
-                'tipo_operacion',
-                'tipo_documento'
-            ])
-
-            ->whereBetween('created_at', [$starDate, $endDate])
-            ->orderBy('created_at', 'desc');
-
-            if (!empty($filter)) {
-                $query->where(function ($q) use ($filter) {
-                    $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                    $q->orWhereHas('cliente', function ($q) use ($filter) {
-                        $q->where('nombre', 'like', '%' . $filter . '%')
-                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-                    });
-                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                        $q->where('nombre', 'like', '%' . $filter . '%');
-                    });
-                });
-            }
-
-            if ($tipo !== null) {
-                $query->where('tipo' , $tipo);
-            }
-
-            $facturasM = $query->get();
+            $export = new FacturasMExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+            ]);
         }
 
-        // Definir encabezados
-        $headers = [
-            'Código Factura Manual',
-            'Cotizacion',
-            'Almacén',
-            'Orden de compra',
-            'Guia de Remision',
-            'Cliente',
-            'Moneda',
-            'Forma de pago',
-            'Fecha de emision',
-            'Fecha de vencimiento',
-            'Cambio',
-            'Observacion',
-            'Personal',
-            'Estado',
-            'SUNAT',
-            'Estado de pago',
-            'Operacion gravada',
-            'Operacion inafecta',
-            'Operacion Exonerada',
-            'Operacion gratuita',
-            'Nota Credito',
-            'Nota Debito',
-            'Tipo de Operacion',
-            'Tipo de Documento',
-            'Subtotal',
-            'IGV',
-            'Importe Total'
-
-        ];
-
-        // Iniciar array con los encabezados
-        $rows = [$headers];
-
-        // Agregar los datos de cada factura
-        foreach ($facturasM as $facturaM) {
-            // Obtener el nombre del almacén o 'N/A' si no existe
-            $codigoCotizadorM =optional($facturaM->cotizacionM)->cod_cotizacion;
-            $nombreAlmacen = optional($facturaM->almacen)->nombre;
-            $nombreCliente= optional($facturaM->cliente)->nombre;
-            $nombreMoneda= optional($facturaM->moneda)->nombre;
-            $nombreFormaPago= optional($facturaM->forma_pago)->nombre;
-            $nombreApellidoPersonal= '';
-
-            if ($facturaM->user && $facturaM->user->personal) {
-                $nombreApellidoPersonal = trim($facturaM->user->personal->nombres . ' ' . $facturaM->user->personal->apellidos);
-            }
-
-            $estado = $facturaM->estado ? 'Activo' : 'Inactivo';
-            $sunat = $facturaM->f_electronica ? 'Emitido' : 'Pendiente';
-            $estadoPago = $facturaM->estado_pago == 0 ? 'Sin pagar' : ($facturaM->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
-            $infoOperacion = optional($facturaM->tipo_operacion)->informacion;
-            $infoDocumento = optional($facturaM->tipo_documento)->informacion;
-            $subtotal = ($facturaM->op_gravada ?? 0) + ($facturaM->op_inafecta ?? 0) + ($facturaM->op_exonerada ?? 0);
-            $subtotalGravado = ($facturaM->op_gravada);
-            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
-            $importeTotal = round($subtotal + $igv_p ,2);
-
-            $row = [
-                $facturaM->codigo_fac,
-                $codigoCotizadorM,
-                $nombreAlmacen,
-                $facturaM->orden_compra,
-                $facturaM->guia_remision,
-                $nombreCliente,
-                $nombreMoneda,
-                $nombreFormaPago,
-                $facturaM->fecha_emision,
-                $facturaM->fecha_vencimiento,
-                $facturaM->cambio,
-                $facturaM->observacion,
-                $nombreApellidoPersonal,
-                $estado,
-                $sunat,
-                $estadoPago,
-                $facturaM->op_gravada,
-                $facturaM->op_inafecta,
-                $facturaM->op_exonerada,
-                $facturaM->op_gratuita,
-                $facturaM->nota_credito,
-                $facturaM->nota_debito,
-                $infoOperacion,
-                $infoDocumento,
-                $subtotal,
-                $igv_p,
-                $importeTotal
-
-            ];
-
-            $rows[] = $row;
-        }
-
-        // Crear la clase de exportación usando la misma estructura que tienes
-        $export = new class($rows) implements FromArray, WithEvents {
-            private $rows;
-
-            public function __construct($rows) {
-                $this->rows = $rows;
-            }
-
-            public function array(): array {
-                return $this->rows;
-            }
-
-            public function registerEvents(): array {
-                return [
-                    AfterSheet::class => function(AfterSheet $event) {
-                        // Ajustar ancho automático para todas las columnas
-                        foreach(range('A','Z') as $column) {
-                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                        }
-                        // Para columnas dobles (AA, AB, etc.)
-                        foreach(range('A','Z') as $letter1) {
-                            foreach(range('A','Z') as $letter2) {
-                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                            }
-                        }
-                    },
-                ];
-            }
-        };
-
-        // Generar el archivo con fecha actual
-        $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Facturas Manuales ' . $fecha . '.xlsx');
+        return Excel::download(
+            $export,
+            'facturas_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );
     }
 
     public function printMultiple(Request $request) {
