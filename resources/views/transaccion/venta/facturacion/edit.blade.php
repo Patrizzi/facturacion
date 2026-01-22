@@ -149,15 +149,15 @@
                                         <select name="" id="" class="form-control"
                                             onchange="changeMoney()">
                                             <option value="nacional"
-                                                {{ $moneda->tipo == 'nacional' ? 'selected' : '' }}>
+                                                {{ $facturacion->moneda->tipo == 'nacional' ? 'selected' : '' }}>
                                                 Soles
                                             </option>
                                             <option value="extranjera"
-                                                {{ $moneda->tipo == 'extranjera' ? 'selected' : '' }}>
+                                                {{ $facturacion->moneda->tipo == 'extranjera' ? 'selected' : '' }}>
                                                 Dólares</option>
                                         </select>
                                         <input type="hidden" name="moneda" id="moneda" class="form-control "
-                                            value="{{ ucwords($moneda->nombre) }}" readonly="readonly">
+                                            value="{{ ucwords($facturacion->moneda->nombre) }}" readonly="readonly">
                                         <input type="hidden" id="moneda_id" class="form-control" name="moneda_id"
                                             value="{{ $facturacion->moneda_id }}">
                                     </div>
