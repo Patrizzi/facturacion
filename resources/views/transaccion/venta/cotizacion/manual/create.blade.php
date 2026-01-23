@@ -501,7 +501,7 @@
         }
     </style>
 
-    //Estilos para el check de activar renovacion
+    {{-- //Estilos para el check de activar renovacion --}}
     <style>
     .renovacion {
         padding: 0;

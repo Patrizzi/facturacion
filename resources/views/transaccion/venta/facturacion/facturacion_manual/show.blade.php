@@ -20,7 +20,7 @@
             content: "Ver";
         }
     </style>
-
+    <h3>{{$facturacion->estado}}</h3>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox-title" style="padding-right: 3.1%">
             <div class="row tooltip-demo">

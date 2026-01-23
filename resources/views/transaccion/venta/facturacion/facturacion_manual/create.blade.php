@@ -352,12 +352,21 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="button" name="name" value="pd"
+                                {{-- <button type="button" name="name" value="pd"
                                     class="btn btn-primary button-ladda" id="boton"
                                     style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
                                     <strong>Guardar</strong>
                                 </button>
-                                <button id="button_submit" hidden type="submit">Button DB</button>
+                                <button id="button_submit" hidden type="submit">Button DB</button> --}}
+
+                                <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
+                                    type="button">Guardar</button>
+                                <button class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
+                                    type="button" id="finalizar">Guardar y Finalizar</button>
+                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
+                                    data-style="zoom-out">
+                                </button>
+                                <button type="submit" id="button_submit" hidden name="button_submit" value="0" ></button>
                             </div>
                         </div>
                     </div>
@@ -1483,6 +1492,61 @@
         });
 
         $("#boton").on("click", function(buton) {
+            $('#button_submit').val('0');
+            var l = Ladda.create(document.querySelector('.button-ladda'));
+            var forma_pago = $("#forma_pago option:selected").val();
+            if (forma_pago == 2) {
+                var monto_c = document.getElementsByClassName('monto_pago');
+                var monto_fc = document.getElementsByClassName('fecha_pago');
+                var inp_mont = document.getElementsByClassName('monto_pago').length;
+                var total = parseFloat(document.getElementById('total_final').value) || 0;
+                var fin = 0.00;
+                var comp = 0;
+                for (var i = 0; i < inp_mont; i++) {
+                    fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+                }
+                var fin_r = Math.round(fin * 100) / 100;
+                // console.log(total);
+                for (var i = 0; i < inp_mont; i++) {
+                    var fecha = monto_fc[i].id;
+                    var monto = monto_c[i].id;
+
+                    var input_text = document.getElementById(`${monto}`).value;
+                    var date_text = document.getElementById(`${fecha}`).value;
+                    if (input_text.length == 0 || date_text.length == 0) {
+                        $('#cuotas_modal').modal('show');
+                        document.getElementById('alert_campos').style.display = "flex";
+                        setTimeout(mostrarMensaje, 3000);
+                        return;
+                    }
+                }
+                if (fin_r != total) {
+                    $('#cuotas_modal').modal('show');
+                    document.getElementById('suma_campos').style.display = "flex";
+                    setTimeout(mostrarMensaje, 3000);
+                } else {
+                    // console.log('e')
+                    var form = document.getElementById('form_store');
+                    if (!form.checkValidity()) {
+                        form.reportValidity(); // muestra mensajes nativos de HTML5
+                        return;
+                    }
+                    l.start();
+                    document.getElementById('button_submit').click();
+                }
+                // buton.preventDefault();
+            } else {
+                var form = document.getElementById('form_store');
+                if (!form.checkValidity()) {
+                    form.reportValidity(); // muestra mensajes nativos de HTML5
+                    return;
+                }
+                l.start();
+                document.getElementById('button_submit').click();
+            }
+        });
+        $("#finalizar").on("click", function(buton) {
+            $('#button_submit').val('0');
             var l = Ladda.create(document.querySelector('.button-ladda'));
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {

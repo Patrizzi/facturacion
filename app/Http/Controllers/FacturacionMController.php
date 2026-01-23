@@ -342,7 +342,11 @@ class FacturacionMController extends Controller
         $facturacion->cambio=$cambio->paralelo;
         $facturacion->observacion=$request->get('observacion');
         $facturacion->user_id =auth()->user()->id;
-        $facturacion->estado='0';
+        if($request->button_submit == 0){
+            $facturacion->estado = '0'; //! Si se puede seguir editando
+        }else{
+            $facturacion->estado = '1'; //! Si ya no se puede editar
+        }
         $facturacion->tipo_operacion_id= $busca_ope->id;
         $facturacion->tipo_documento_id = 2;
 
