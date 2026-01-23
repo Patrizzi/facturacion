@@ -1423,3 +1423,8 @@ Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInform
     // Ruta para generar el PDF de ficha técnica de un producto
     Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
     ->name('productos.ftPdf');
+
+    // Ruta para generar el PDF de ficha técnica de un servicio
+    Route::get('/servicios/{id}/ft-pdf', [ServiciosController::class, 'ftPdf'])
+    ->name('servicios.ft_pdf');
+

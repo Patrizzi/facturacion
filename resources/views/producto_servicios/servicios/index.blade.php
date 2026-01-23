@@ -116,6 +116,7 @@
                                                         )
                                                     </th>
                                                     <th class="icon-estado"></th>
+                                                    <th>Ficha Técnica</th>
                                                     <th><i class="fa fa-sliders" style="cursor: pointer;"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false"></th>
@@ -128,7 +129,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -273,7 +273,7 @@
                 method: "get",
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
-                    d.estado_anular = $('#estado_anular').val();;
+                    d.estado_anular = $('#estado_anular').val();
                     d.value = $('#search_all_column').val();
                 }
             },
@@ -305,6 +305,22 @@
                 },
                 {
                     'targets': [8],
+                    'orderable': false,
+                    'searchable': false,
+                    'render': function(data, type, full, meta) {
+                        const servicio = full[9];
+                        return `
+                        <button type="button"
+                                class="btn btn-sm btn-danger btn-ft"
+                                data-id="${servicio.id}"
+                                data-nombre="${servicio.nombre}">
+                            <i class="fa fa-file-pdf-o"></i>
+                        </button>
+                        `;
+                    }
+                },
+                {
+                    'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var data = "";
@@ -350,6 +366,23 @@
                     }
                 }
             ]
+        });
+
+        // ficha tecnica modal
+        $(document).on('click', '.btn-ft', function() {
+            var servicioId = $(this).data('id');
+            var servicioNombre = $(this).data('nombre');
+
+            $('#exampleModalLabel').text('Ficha Técnica - ' + servicioNombre);
+
+            const url = `/servicios/${servicioId}/ft-pdf?ts=` + Date.now();
+            $('#pdf_ficha_tecnica').attr('src', url);
+
+            $('#ftservicio_modal').modal('show');
+        });
+
+        $('#ftservicio_modal').on('hidden.bs.modal', function() {
+            $('#pdf_ficha_tecnica').attr('src', '');
         });
 
         $('input[name="daterange"]').daterangepicker({
@@ -445,12 +478,11 @@
                 }
             });
 
-
-
         }
     </script>
 
     @include('producto_servicios.servicios.create2')
     @include('producto_servicios.servicios.edit')
     @include('producto_servicios.servicios.shared.pie')
+    @include('producto_servicios.servicios.shared.ficha_tecnica')
 @endsection

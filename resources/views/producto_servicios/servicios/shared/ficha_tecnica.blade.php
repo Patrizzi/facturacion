@@ -1,5 +1,4 @@
-<div class="modal fade" id="ftproducto_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="ftservicio_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="margin-top: 5%;">
         <div class="modal-content" style="border-radius: 20px; overflow:hidden;">
             <div class="modal-header">

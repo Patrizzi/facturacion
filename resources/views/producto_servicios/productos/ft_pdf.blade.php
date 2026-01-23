@@ -4,162 +4,151 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body {
-            font-family: DejaVu Sans, sans-serif;
-            font-size: 12px;
-        }
-
-        .header {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-
-        .title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .sub {
-            color: #555;
-            margin: 3px 0 0;
-        }
-
-        .grid {
+        /* Diseño tipo ficha (como la imagen) */
+        .ft {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            font-size: 11px;
         }
 
-        .grid td {
-            padding: 6px 8px;
-            border: 1px solid #eee;
+        .ft td,
+        .ft th {
+            border: 1px solid #000;
+            padding: 5px 6px;
             vertical-align: top;
         }
 
-        .label {
-            width: 28%;
+        .ft .title {
+            text-align: center;
             font-weight: bold;
-            background: #fafafa;
+            font-size: 13px;
         }
 
-        .img-box {
-            width: 120px;
-            height: 120px;
-            border: 1px solid #eee;
+        .ft .section {
+            text-align: center;
+            font-weight: bold;
+            background: #f2f2f2;
+        }
+
+        .ft .label {
+            font-weight: bold;
+            white-space: nowrap;
+            width: 22%;
+        }
+
+        .ft .value {
+            width: 28%;
+        }
+
+        .ft .img-cell {
+            text-align: center;
+            vertical-align: middle;
+            width: 34%;
+        }
+
+        .ft .img-box {
+            width: 100%;
+            height: 190px;
+            border: 1px solid #000;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .img-box img {
-            max-width: 120px;
-            max-height: 120px;
+        .ft .img-box img {
+            max-width: 100%;
+            max-height: 190px;
         }
 
-        .section-title {
-            margin-top: 14px;
-            font-weight: bold;
-            font-size: 13px;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            font-size: 10px;
-            color: #777;
-            border-top: 1px solid #eee;
-            padding-top: 6px;
-        }
     </style>
-</head>
 
-<body>
-
-    <div class="header">
-        <p class="title">FICHA TÉCNICA DEL PRODUCTO</p>
-        <p class="sub">Generado: {{ $fecha }}</p>
-    </div>
-
-    <table style="width:100%;">
+    <table class="ft">
         <tr>
-            <td style="width:75%;">
-                <table class="grid ">
-                    <tr>
-                        <td class="label">Código Producto</td>
-                        <td>{{ $producto->codigo_producto }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Código Original</td>
-                        <td>{{ $producto->codigo_original }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Nombre</td>
-                        <td>{{ $producto->nombre }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Marca</td>
-                        <td>{{ $producto->marcas_i_producto->nombre ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Unidad</td>
-                        <td>{{ $producto->unidad_i_producto->medida ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Familia</td>
-                        <td>{{ $producto->familia_i_producto->descripcion ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Subfamilia</td>
-                        <td>{{ $producto->subfamilia_i_producto->descripcion ?? 'N/A' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Tipo Afectación</td>
-                        <td>{{ $producto->tipo_afec_i_producto->informacion ?? 'N/A' }}</td>
-                    </tr>
-                </table>
-            </td>
+            <th colspan="6" class="title">FICHA TÉCNICA DEL PRODUCTO</th>
+        </tr>
 
-            <td style="width:25%; text-align:center;">
+        <!-- FILA 1: Códigos + Imagen -->
+        <tr>
+            <td class="label">CÓDIGO PRODUCTO</td>
+            <td class="value">{{ $producto->codigo_producto }}</td>
+
+            <td class="label">CÓDIGO ORIGINAL</td>
+            <td class="value">{{ $producto->codigo_original }}</td>
+
+            <td class="img-cell" colspan="2" rowspan="6">
                 <div class="img-box">
                     @if ($fotoBase64)
-                        <img src="{{ $fotoBase64 }}" alt="Foto">
+                    <img src="{{ $fotoBase64 }}" alt="Foto">
                     @else
-                        <span>Sin imagen</span>
+                    <span>Sin imagen</span>
                     @endif
                 </div>
             </td>
         </tr>
-    </table>
 
-    <div class="section-title">Detalles</div>
-    <table class="grid">
+        <!-- FILA 2 -->
         <tr>
-            <td class="label">Origen</td>
-            <td>{{ $producto->origen ?? 'N/A' }}</td>
+            <td class="label">NOMBRE</td>
+            <td class="value" colspan="3">{{ $producto->nombre }}</td>
         </tr>
+
+        <!-- FILA 3 -->
         <tr>
-            <td class="label">Garantía</td>
-            <td>{{ $producto->garantia ?? 'N/A' }}</td>
+            <td class="label">MARCA</td>
+            <td class="value">{{ $producto->marcas_i_producto->nombre ?? 'N/A' }}</td>
+
+            <td class="label">UNIDAD</td>
+            <td class="value">{{ $producto->unidad_i_producto->medida ?? 'N/A' }}</td>
         </tr>
+
+        <!-- FILA 4 -->
         <tr>
-            <td class="label">Peso</td>
-            <td>{{ $producto->peso ?? 'N/A' }}</td>
+            <td class="label">FAMILIA</td>
+            <td class="value">{{ $producto->familia_i_producto->descripcion ?? 'N/A' }}</td>
+
+            <td class="label">SUBFAMILIA</td>
+            <td class="value">{{ $producto->subfamilia_i_producto->descripcion ?? 'N/A' }}</td>
         </tr>
+
+        <!-- FILA 5 -->
         <tr>
-            <td class="label">Stock</td>
-            <td>{{ $stock }}</td>
+            <td class="label">TIPO AFECTACIÓN</td>
+            <td class="value" colspan="3">{{ $producto->tipo_afec_i_producto->informacion ?? 'N/A' }}</td>
         </tr>
+
+        <!-- FILA 6 -->
         <tr>
-            <td class="label">Descripción</td>
-            <td>{{ $producto->descripcion ?? '' }}</td>
+            <td class="label">GENERADO</td>
+            <td class="value" colspan="3">{{ $fecha }}</td>
         </tr>
+
+        <!-- SECCIÓN DETALLES -->
         <tr>
-            <td class="label">Detalle</td>
-            <td>{{ $producto->detalle ?? '' }}</td>
+            <th colspan="6" class="section">DETALLES</th>
+        </tr>
+
+        <tr>
+            <td class="label">ORIGEN</td>
+            <td class="value">{{ $producto->origen ?? 'N/A' }}</td>
+
+            <td class="label">GARANTÍA</td>
+            <td class="value">{{ $producto->garantia ?? 'N/A' }}</td>
+
+            <td class="label">PESO</td>
+            <td class="value">{{ $producto->peso ?? 'N/A' }}</td>
+        </tr>
+
+        <tr>
+            <td class="label">STOCK</td>
+            <td class="value">{{ $stock }}</td>
+
+            <td class="label">DESCRIPCIÓN</td>
+            <td class="value" colspan="3">{{ $producto->descripcion ?? '' }}</td>
+        </tr>
+
+        <tr>
+            <td class="label">DETALLE</td>
+            <td class="value" colspan="5">{{ $producto->detalle ?? '' }}</td>
         </tr>
     </table>
 
@@ -167,6 +156,6 @@
         FT - {{ $producto->codigo_original }} | Página: {PAGE_NUM} / {PAGE_COUNT}
     </div>
 
-</body>
+    </body>
 
 </html>

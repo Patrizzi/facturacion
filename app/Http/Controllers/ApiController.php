@@ -714,16 +714,16 @@ class ApiController extends Controller
 
         foreach ($servicios as $value) {
             $json['data'][] = [
-                $value->id,
-                $value->codigo_servicio,
-                $value->codigo_original,
-                $value->nombre,
-                $value->familia,
-                $value->precio_nacional,
-                $value->precio_extranjero,
-                $value->estado_anular,
-                $value->id,
-                $value,
+                $value->id,                 // 0 - id servicio
+                $value->codigo_servicio,    // 1 - codigo servicio
+                $value->codigo_original,    // 2 - codigo original
+                $value->nombre,             // 3 - nombre
+                $value->familia,            // 4 - familia
+                $value->precio_nacional,    // 5 - precio nacional
+                $value->precio_extranjero,  // 6 - precio extranjero
+                $value->estado_anular,      // 7 - estado
+                $value->id,                 // 8 - acciones
+                $value                      // 9 - ficha técnica y editar
             ];
         }
         return response()->json($json);

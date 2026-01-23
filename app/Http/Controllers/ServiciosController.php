@@ -13,6 +13,7 @@ use App\Tipo_afectacion;
 use Exception;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Calculation\Web\Service;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ServiciosController extends Controller
 {
@@ -344,6 +345,63 @@ class ServiciosController extends Controller
         ]);
         // $
     }
+
+    public function ftPdf($id)
+    {
+        // 1) Buscar servicio o lanzar 404 si no existe (evita null)
+        $servicio = Servicios::with([
+            'marca',
+            'familia',
+            'subfamilia',
+            'moneda',
+            'tipo_afectacion',
+        ])->findOrFail($id);
+
+        // 2) Preparar imagen en Base64 (prioriza foto real, si no existe usa svg/placeholder)
+        $fotoBase64 = null;
+
+        // Si tu "foto" guarda solo el nombre del archivo (ej: "abc.jpg")
+        // y está en public/archivos/imagenes/servicios/
+        $fotoNombre = $servicio->foto ?: 'servicio.svg';
+        $fotoPath = public_path('archivos/imagenes/servicios/' . $fotoNombre);
+
+        // Si no existe, intenta un fallback seguro
+        if (!file_exists($fotoPath)) {
+            $fotoPath = public_path('archivos/imagenes/servicios/servicio.svg');
+        }
+
+        // Convertir a base64 si existe
+        if (file_exists($fotoPath)) {
+            $ext = strtolower(pathinfo($fotoPath, PATHINFO_EXTENSION));
+
+            // Dompdf suele llevarse mejor con png/jpg/jpeg. Si es svg, igual lo intentamos.
+            $mime = match ($ext) {
+                'jpg', 'jpeg' => 'image/jpeg',
+                'png' => 'image/png',
+                'gif' => 'image/gif',
+                'svg' => 'image/svg+xml',
+                default => 'application/octet-stream',
+            };
+
+            $fotoData = file_get_contents($fotoPath);
+            if ($fotoData !== false) {
+                $fotoBase64 = 'data:' . $mime . ';base64,' . base64_encode($fotoData);
+            }
+        }
+
+        // 3) Generar PDF
+        $pdf = \PDF::loadView('producto_servicios.servicios.ft_pdf', [
+            'servicio'   => $servicio,
+            'fotoBase64' => $fotoBase64,
+        ])->setPaper('A4', 'portrait');
+
+        // 4) Nombre del archivo (limpia por si hay espacios o caracteres raros)
+        $codigo = $servicio->codigo_servicio ?? ('SERV_' . $servicio->id);
+        $fileName = 'FT_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', $codigo) . '.pdf';
+
+        return $pdf->stream($fileName);
+    }
+
 
     // public function generar_codigo_servicio(Request $request)
     // {

@@ -151,7 +151,6 @@
                                                     </th>
                                                     <th>Código <i class="fa fa-search"></i></th>
                                                     <th>
-
                                                         <span id="nombre-label">Nombre <i
                                                                 class="fa fa-search"></i></span>
                                                         <input type="text" id="filtrarNombre"
@@ -1145,10 +1144,10 @@
             const url = `/productos/${id}/ft-pdf?ts=` + Date.now();
             $('#pdf_ficha_tecnica').attr('src', url);
 
-            $('#fichatecnica_modal').modal('show');
+            $('#ftproducto_modal').modal('show');
         });
 
-        $('#fichatecnica_modal').on('hidden.bs.modal', function () {
+        $('#ftproducto_modal').on('hidden.bs.modal', function () {
             $('#pdf_ficha_tecnica').attr('src', '');
         });
 
