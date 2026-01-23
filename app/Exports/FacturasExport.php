@@ -1,7 +1,7 @@
 <?php
 namespace App\Exports;
 
-use App\Facturacion_m;
+use App\Facturacion;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\{
     FromQuery,
@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\{
 };
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
+class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
 {
     protected ?array $ids;
     protected array $filters;
@@ -27,9 +27,10 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
      */
     public function query()
     {
-        $query = Facturacion_m::with([
-            'cotizacionM',
+        $query = Facturacion::with([
             'almacen',
+            'cotizacion',
+            'cotizacion_servicio',
             'cliente',
             'moneda',
             'forma_pago',
@@ -76,33 +77,35 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
     public function headings(): array
     {
         return [
-            'Código Factura Manual',
-            'Cotización',
+            'Código Factura',
             'Almacén',
             'Orden de compra',
-            'Guía de remisión',
+            'Guia de Remision',
+            'Cotizacion',
             'Cliente',
             'Moneda',
             'Forma de pago',
-            'Fecha de emisión',
+            'Fecha de emision',
             'Fecha de vencimiento',
-            'Tipo de cambio',
-            'Observación',
+            'Cambio',
+            'Observacion',
+            'Comisionista',
             'Personal',
             'Estado',
             'SUNAT',
             'Estado de pago',
-            'Operación gravada',
-            'Operación inafecta',
-            'Operación exonerada',
-            'Operación gratuita',
-            'Nota crédito',
-            'Nota débito',
-            'Tipo de operación',
-            'Tipo de documento',
+            'Tipo',
+            'Operacion gravada',
+            'Operacion inafecta',
+            'Operacion Exonerada',
+            'Operacion gratuita',
+            'Nota Credito',
+            'Nota Debito',
+            'Tipo de Operacion',
+            'Tipo de Documento',
             'Subtotal',
             'IGV',
-            'Importe total'
+            'Importe Total'
         ];
     }
 
@@ -119,10 +122,10 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
 
         return [
             $f->codigo_fac,
-            optional($f->cotizacionM)->cod_cotizacion,
             optional($f->almacen)->nombre,
             $f->orden_compra,
             $f->guia_remision,
+            optional($f->cotizacion)->cod_cotizacion,
             optional($f->cliente)->nombre,
             optional($f->moneda)->nombre,
             optional($f->forma_pago)->nombre,
@@ -130,10 +133,12 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
             $f->fecha_vencimiento,
             $f->cambio,
             $f->observacion,
+            $f->comisionista,
             optional($f->user->personal)->nombres.' '.optional($f->user->personal)->apellidos,
             $f->estado ? 'Activo' : 'Inactivo',
             $f->f_electronica ? 'Emitido' : 'Pendiente',
             $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
+            $f->tipo,
             $f->op_gravada,
             $f->op_inafecta,
             $f->op_exonerada,

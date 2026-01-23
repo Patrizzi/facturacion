@@ -835,7 +835,8 @@
                 swal({
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos una factura para exportar.",
-                    type: "warning"
+                    type: "warning",
+                    confirmButtonColor: "#2641F8"
                 });
                 return;
             }
@@ -844,7 +845,9 @@
                 title: "Confirmar exportación",
                 text: `¿Deseas exportar ${allSelectedIds.length} factura(s) seleccionada(s) a Excel?`,
                 type: "info",
-                showCancelButton: true
+                showCancelButton: true,
+                cancelButtonText: "Cancelar",
+                confirmButtonColor: "#2641F8"
             }, function(isConfirm) {
                 if (!isConfirm) return;
 
@@ -862,7 +865,7 @@
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = `facturas_${new Date().toISOString().slice(0,10)}.xlsx`;
+                        a.download = `Facturas_${new Date().toISOString().slice(0,10)}.xlsx`;
                         document.body.appendChild(a);
                         a.click();
                         a.remove();
