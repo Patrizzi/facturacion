@@ -1508,6 +1508,7 @@ class ProductosController extends Controller
             'unidad_i_producto',
             'tipo_afec_i_producto',
             'stock_producto',
+            'categoria_i_producto',
         ])->findOrFail($id);
 
         $stock = optional($producto->stock_producto)->stock ?? 0;

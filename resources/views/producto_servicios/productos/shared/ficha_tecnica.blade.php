@@ -9,7 +9,7 @@
                 </button>
             </div>
 
-            <div class="modal-body p-0" style="height:75vh; border-radius: 0 0 20px 20px; overflow:hidden;">
+            <div class="modal-body p-0" style="height:75vh; border-radius: 0 0 20px 20px; overflow:hidden; border: 10px solid white;">
                 <iframe id="pdf_ficha_tecnica" src="" style="width:100%; height:100%; border:none;">
                 </iframe>
             </div>

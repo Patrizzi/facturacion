@@ -1,4 +1,3 @@
-{{-- resources/views/producto_servicios/servicios/ft_pdf.blade.php --}}
 <!DOCTYPE html>
 <html lang="es">
 <head>
