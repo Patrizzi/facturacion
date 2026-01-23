@@ -1,7 +1,7 @@
 <?php
 namespace App\Exports;
 
-use App\Facturacion;
+use App\Boleta;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\{
     FromQuery,
@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\{
 };
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
+class BoletasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
 {
     protected ?array $ids;
     protected array $filters;
@@ -27,7 +27,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
      */
     public function query()
     {
-        $query = Facturacion::with([
+        $query = Boleta::with([
             'almacen',
             'cotizacion',
             'cliente',
@@ -54,7 +54,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
         if (!empty($this->filters['filter'])) {
             $filter = $this->filters['filter'];
             $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', "%$filter%")
+                $q->where('codigo_boleta', 'like', "%$filter%")
                   ->orWhereHas('cliente', fn ($c) =>
                       $c->where('nombre', 'like', "%$filter%")
                         ->orWhere('numero_documento', 'like', "%$filter%")
@@ -76,7 +76,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
     public function headings(): array
     {
         return [
-            'Código Factura',
+            'Código Boleta',
             'Almacén',
             'Orden de compra',
             'Guia de Remision',
@@ -111,41 +111,41 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
     /**
      * MAPEO DE CADA FILA
      */
-    public function map($f): array
+    public function map($b): array
     {
-        $subtotal = ($f->op_gravada ?? 0)
-                  + ($f->op_inafecta ?? 0)
-                  + ($f->op_exonerada ?? 0);
+        $subtotal = ($b->op_gravada ?? 0)
+                  + ($b->op_inafecta ?? 0)
+                  + ($b->op_exonerada ?? 0);
 
-        $igv = round(($f->op_gravada ?? 0) * 0.18, 2);
+        $igv = round(($b->op_gravada ?? 0) * 0.18, 2);
 
         return [
-            $f->codigo_fac,
-            optional($f->almacen)->nombre,
-            $f->orden_compra,
-            $f->guia_remision,
-            optional($f->cotizacion)->cod_cotizacion,
-            optional($f->cliente)->nombre,
-            optional($f->moneda)->nombre,
-            optional($f->forma_pago)->nombre,
-            $f->fecha_emision,
-            $f->fecha_vencimiento,
-            $f->cambio,
-            $f->observacion,
-            $f->comisionista,
-            optional($f->user->personal)->nombres.' '.optional($f->user->personal)->apellidos,
-            $f->estado ? 'Activo' : 'Inactivo',
-            $f->f_electronica ? 'Emitido' : 'Pendiente',
-            $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
-            $f->tipo,
-            $f->op_gravada,
-            $f->op_inafecta,
-            $f->op_exonerada,
-            $f->op_gratuita,
-            $f->nota_credito,
-            $f->nota_debito,
-            optional($f->tipo_operacion)->informacion,
-            optional($f->tipo_documento)->informacion,
+            $b->codigo_boleta,
+            optional($b->almacen)->nombre,
+            $b->orden_compra,
+            $b->guia_remision,
+            optional($b->cotizacion)->cod_cotizacion,
+            optional($b->cliente)->nombre,
+            optional($b->moneda)->nombre,
+            optional($b->forma_pago)->nombre,
+            $b->fecha_emision,
+            $b->fecha_vencimiento,
+            $b->cambio,
+            $b->observacion,
+            $b->comisionista,
+            optional($b->user->personal)->nombres.' '.optional($b->user->personal)->apellidos,
+            $b->estado ? 'Activo' : 'Inactivo',
+            $b->f_electronica ? 'Emitido' : 'Pendiente',
+            $b->estado_pago == 0 ? 'Sin pagar' : ($b->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
+            $b->tipo,
+            $b->op_gravada,
+            $b->op_inafecta,
+            $b->op_exonerada,
+            $b->op_gratuita,
+            $b->nota_credito,
+            $b->nota_debito,
+            optional($b->tipo_operacion)->informacion,
+            optional($b->tipo_documento)->informacion,
             $subtotal,
             $igv,
             round($subtotal + $igv, 2),

@@ -376,52 +376,6 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            // Manejar click del botón de exportar
-            $(document).on('click', '#btn-exportar-filtrado', function(e) {
-                e.preventDefault();
-
-                // Verificar si hay datos en la tabla
-                var table = coti_table; // Asegúrate que esta variable coincida con tu tabla de boletasM
-                var info = table.page.info();
-
-                if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
-                    swal({
-                        title: "No hay registros",
-                        text: "No hay registros para exportar con los filtros aplicados.",
-                        type: "warning",
-                        confirmButtonText: "Entendido"
-                    });
-                    return;
-                }
-
-                // Si hay registros, proceder con la exportación
-                // Obtener los valores actuales de los filtros (exactamente como en tu DataTable)
-                var daterange = $('#data_range_filter').val();
-                var value = $('#search_all_column').val(); // Cambiado de 'search' a 'value'
-                var tipo_coti = $('#select_tipo_coti').val();
-
-                // Construir la URL con parámetros
-                var exportUrl = "{{ route('boletasM.exportar') }}";
-                var params = new URLSearchParams();
-
-                if (daterange) {
-                    params.append('daterange', daterange);
-                }
-                if (value) {
-                    params.append('value', value);
-                }
-                if (tipo_coti) {
-                    params.append('tipo_coti', tipo_coti);
-                }
-
-                // Redirigir para descargar
-                window.location.href = exportUrl + '?' + params.toString();
-            });
-        });
-    </script>
-
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
@@ -877,9 +831,8 @@ $(document).ready(function() {
 
     // Manejar click del botón de exportar
     $('#btn-exportar-filtrado').on('click', function(e) {
+        
         e.preventDefault();
-
-        console.log('IDs seleccionados para exportar:', allSelectedIds);
 
         // Validar que hay boletas seleccionadas
         if (allSelectedIds.length === 0) {
@@ -887,7 +840,6 @@ $(document).ready(function() {
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una boleta para exportar.",
                 type: "warning",
-                confirmButtonText: "Entendido",
                 confirmButtonColor: "#2641F8"
             });
             return;
@@ -899,34 +851,32 @@ $(document).ready(function() {
             text: `¿Deseas exportar ${allSelectedIds.length} boleta(s) seleccionada(s) a Excel?`,
             type: "info",
             showCancelButton: true,
-            confirmButtonText: "Sí, exportar",
             cancelButtonText: "Cancelar",
             confirmButtonColor: "#2641F8"
         }, function(isConfirm) {
-            if (isConfirm) {
-                // Construir URL con los IDs seleccionados
-                var exportUrl = "{{ route('boletasM.exportar') }}";
-                var params = new URLSearchParams();
+            if (!isConfirm) return;
+            
+            $('#btn-exportar-filtrado').prop('disabled', true);
 
-                // Agregar los IDs seleccionados como parámetro boleta_ids[]
-                allSelectedIds.forEach(function(id) {
-                    params.append('boleta_ids[]', id);
-                });
-
-                console.log('URL de exportación:', exportUrl + '?' + params.toString());
-
-                // Redirigir para exportar
-                window.location.href = exportUrl + '?' + params.toString();
-
-                // Mensaje de éxito
-                swal({
-                    title: "Procesando",
-                    text: "Las boletas se están exportando a Excel...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
+            $.ajax({
+                url: "{{ route('boletasM.exportar') }}",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ boleta_ids: allSelectedIds }),
+                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                xhrFields: { responseType: 'blob' },
+                complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
+                success: function(blob) {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Boletas_${new Date().toISOString().slice(0,10)}.xlsx`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            });
         });
     });
 
