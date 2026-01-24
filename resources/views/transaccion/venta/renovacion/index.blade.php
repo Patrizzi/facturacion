@@ -20,7 +20,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                           @include('transaccion\venta\_shared\statistics')
+                           @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                         <div class="tabs-scroll-bottom">
                             {{-- TABS --}}
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
-                                @include('transaccion\venta\_shared\tabs')
+                                @include('transaccion.venta._shared.tabs')
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                     <div class="btn-group">

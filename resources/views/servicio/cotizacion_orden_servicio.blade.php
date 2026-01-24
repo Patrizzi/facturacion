@@ -12,7 +12,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            @include('transaccion\venta\_shared\statistics')
+                            @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                     <div class="ibox-content">
                         <div class="tabs-container">
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('transaccion\venta\_shared\tabs')
+                                @include('transaccion.venta._shared.tabs')
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
