@@ -1163,27 +1163,23 @@ Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.ind
 
 
 // NOTAS DE CRÉDITO Y DEBITO
-Route::get('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
-Route::get('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
+Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
+Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
 
 
 // GARANTIA INFORME TECNICO
 Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController::class, 'exportGarantiaInformeTecnico'])->name('export.garantia_informe_tecnico');
 
 // EXPORTACION DE GUIA REMISION
-Route::get('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
+Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
 // Route::get(
 //     '/comprobantes/guias-manual/registers',
 //     [GuiaRemisionManualController::class, 'registers']
 // )->name('comprobantes.guiaRemisionM_registers');
 
-Route::get(
-    '/comprobantes/guias-manual/exportar',
-    [GuiaRemisionManualController::class, 'exportarGuiasManual']
-)->name('guias.manual.exportar');
 
 // Route::get('/comprobantes/guias-manual/registers', [GuiaRemisionManualController::class, 'registers'])->name('comprobantes.guiaRemisionM_registers');
-Route::get('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
+Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
 Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
 
 //RUTAS PARA IMPRIMIR EN CONJUNTO
@@ -1211,9 +1207,7 @@ Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoC
 
 // DESCARGAR PDF DE GUIA DE REMISION
 Route::get('comprobantes/guia-remision/print-multiple', [GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
-Route::get('comprobantes/guia-remision/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
 Route::get('comprobantes/guia-remision-manual/print-multiple', [GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
-Route::get('comprobantes/guia-remision-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
 Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
 
 

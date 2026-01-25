@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Storage;
 use App\EmailBandejaEnvios;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailConfiguraciones;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\GuiaRemisionMExport;
 
 use Illuminate\Http\Request;
 
@@ -487,120 +489,29 @@ class GuiaRemisionManualController extends Controller
 
     public function exportarGuiasManual(Request $request)
     {
-        if (ob_get_contents()) { ob_end_clean(); }
+        $ids = $request->json('guia_ids');
 
-        if ($request->has('guia_ids') && !empty($request->input('guia_ids'))) {
-            $guiaIds = $request->input('guia_ids');
-
-            $guias = \App\GuiaRemisionManual::with(['cliente', 'vehiculo', 'personal'])
-                ->whereIn('id', $guiaIds)
-                ->orderBy('created_at', 'desc')
-                ->get();
+        if (!empty($ids)) {
+            $export = new GuiaRemisionMExport($ids);
         } else {
-            $daterange = $request->get('daterange', date('01/m/Y').' - '.date('t/m/Y'));
-            $filter    = $request->get('value');
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
 
-            if (strpos($daterange, '|') !== false) {
-                [$startStr, $endStr] = array_map('trim', explode('|', $daterange));
-            } else {
-                [$startStr, $endStr] = array_map('trim', explode('-', $daterange));
-            }
+            [$start, $end] = explode(' - ', $request->daterange);
 
-            try {
-                $startDate = \Carbon\Carbon::createFromFormat('d/m/Y', $startStr)->startOfDay();
-                $endDate   = \Carbon\Carbon::createFromFormat('d/m/Y', $endStr)->endOfDay();
-            } catch (\Throwable $e) {
-                $startDate = now()->startOfMonth();
-                $endDate   = now()->endOfMonth();
-            }
-
-            $query = \App\GuiaRemisionManual::with(['cliente', 'vehiculo', 'personal'])
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->orderBy('created_at', 'desc');
-
-            if (!empty($filter)) {
-                $query->where(function ($q) use ($filter) {
-                    $q->where('cod_guia', 'like', "%{$filter}%")
-                    ->orWhere('fecha_emision', 'like', "%{$filter}%")
-                    ->orWhereHas('cliente', function ($c) use ($filter) {
-                        $c->where('nombre', 'like', "%{$filter}%")
-                            ->orWhere('numero_documento', 'like', "%{$filter}%");
-                    });
-                });
-            }
-
-            $guias = $query->get();
+            $export = new GuiaRemisionMExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+            ]);
         }
 
-        $headers = [
-            'Código','Cliente','Documento','Sucursal cliente','Cód. postal',
-            'Fecha emisión','Fecha entrega','Tipo transporte','Vehículo público',
-            'Vehículo (placa)','Conductor','Motivo traslado','Observación',
-            'SUNAT','Estado','Ticket',
-        ];
-
-        $rows = [$headers];
-
-        foreach ($guias as $gr) {
-            $cliente       = optional($gr->cliente);
-            $vehiculoPlaca = optional($gr->vehiculo)->placa;
-
-            $conductorNombre = trim((optional($gr->personal)->nombres ?? '').' '.(optional($gr->personal)->apellidos ?? ''));
-            $conductorNombre = $conductorNombre !== '' ? $conductorNombre : null;
-
-            $tipoTransporte = [
-                0 => 'Sin transporte',
-                1 => 'Transporte público',
-                2 => 'Transporte privado',
-            ][$gr->tipo_transporte] ?? $gr->tipo_transporte;
-
-            $sunat  = $gr->g_electronica ? 'Enviado' : 'Sin enviar';
-            $estado = $gr->estado_anulado ? 'Anulado' : 'Activo';
-
-            $rows[] = [
-                $gr->cod_guia,
-                $cliente->nombre,
-                $cliente->numero_documento,
-                $gr->sucursal_cliente,
-                $gr->cod_postal_cliente,
-                $gr->fecha_emision,
-                $gr->fecha_entrega,
-                $tipoTransporte,
-                $gr->vehiculo_publico,
-                $vehiculoPlaca,
-                $conductorNombre,
-                $gr->motivo_traslado,
-                $gr->observacion,
-                $sunat,
-                $estado,
-                $gr->ticket_guia_remision_sunat
-                    ?? $gr->ticket_guia_remi_m_sunat
-                    ?? null,
-            ];
-        }
-
-        $export = new class($rows) implements \Maatwebsite\Excel\Concerns\FromArray, \Maatwebsite\Excel\Concerns\WithEvents {
-            private $rows;
-            public function __construct($rows) { $this->rows = $rows; }
-            public function array(): array { return $this->rows; }
-            public function registerEvents(): array {
-                return [
-                    \Maatwebsite\Excel\Events\AfterSheet::class => function ($event) {
-                        foreach (range('A', 'Z') as $col) {
-                            $event->sheet->getColumnDimension($col)->setAutoSize(true);
-                        }
-                        foreach (range('A', 'Z') as $a) {
-                            foreach (range('A', 'Z') as $b) {
-                                $event->sheet->getColumnDimension($a.$b)->setAutoSize(true);
-                            }
-                        }
-                    },
-                ];
-            }
-        };
-
-        $fecha = now('America/Lima')->format('d-m-Y');
-        return \Maatwebsite\Excel\Facades\Excel::download($export, 'Guias de Remision Manual '.$fecha.'.xlsx');
+        return Excel::download(
+            $export,
+            'Guías de Remisión_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );
     }
 
     public function printMultiple(Request $request)

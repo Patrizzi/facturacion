@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Storage;
 use App\EmailBandejaEnvios;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailConfiguraciones;
+use App\Exports\NotaDebitoExport;
 
 class NotaDebitoController extends Controller
 {
@@ -641,145 +642,29 @@ class NotaDebitoController extends Controller
 
 public function exportNotasDebito(Request $request)
 {
-    if (ob_get_contents()) {
-            ob_end_clean();
-        }
-    if ($request->has('nota_ids') && !empty($request->input('nota_ids'))) {
-        $notaIds = $request->input('nota_ids');
+    $ids = $request->json('nota_ids');
 
-        $notas = Nota_Debito::with([
-            'nota_i_facturacion',
-            'nota_i_boleta',
-            'nota_i_fac_manual',
-            'nota_i_boleta_manual',
-            'nota_i_almacen'
-        ])
-        ->whereIn('id', $notaIds)
-        ->orderBy('created_at', 'desc')
-        ->get();
+    if (!empty($ids)) {
+        $export = new NotaDebitoExport($ids);
     } else {
-        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-        $filter = $request->get('value');
-        $tipo = $request->get('tipo_coti');
+        $request->validate([
+            'daterange' => 'required|string'
+        ]);
 
-        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+        [$start, $end] = explode(' - ', $request->daterange);
 
-        $query = Nota_Debito::with(['nota_i_facturacion', 'nota_i_boleta', 'nota_i_fac_manual', 'nota_i_boleta_manual', 'nota_i_almacen'])
-        ->whereBetween('created_at', [$starDate, $endDate])
-        ->orderBy('created_at', 'desc');
-
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-                });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
-
-        if ($tipo !== null) {
-            $query->where('tipo' , $tipo);
-        }
-
-        $notas = $query->get();
+        $export = new NotaDebitoExport(null, [
+            'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+            'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+            'filter' => $request->input('value'),
+            'tipo'   => $request->input('tipo_coti'),
+        ]);
     }
 
-    $igvConfig = Igv::first();
-
-
-    $headers = [
-        'Código Nota Débito',
-        'Facturación',
-        'Boleta',
-        'Facturación Manual',
-        'Boleta Manual',
-        'Fecha Emisión',
-        'Estado',
-        'SUNAT',
-        'Tipo',
-        'Almacén',
-        'Operación Gravada',
-        'Operación Inafecta',
-        'Operación Exonerada',
-        'Operación Gratuita',
-        'Motivo',
-        'IGV',
-        'Subtotal',
-        'Importe Total',
-    ];
-
-    $rows = [$headers];
-
-    foreach ($notas as $nota) {
-        $Factura = optional($nota->nota_i_facturacion)->codigo_fac ?? '';
-        $Boleta = optional($nota->nota_i_boleta)->codigo_boleta ?? '';
-        $FacturaManual = optional($nota->nota_i_fac_manual)->codigo_fac ?? '';
-        $BoletaManual = optional($nota->nota_i_boleta_manual)->codigo_boleta ?? '';
-        $almacen = optional($nota->nota_i_almacen)->nombre ?? '';
-
-        $subtotal = $nota->op_gravada + $nota->op_inafecta + $nota->op_exonerada;
-        $igvCalculado = round($nota->op_gravada * $igvConfig->igv_total / 100, 2);
-        $total = round($subtotal + $igvCalculado, 2);
-
-        $estado = $nota->estado == 1 ? 'Activo' : 'Inactivo';
-        $sunat = $nota->n_electronica == 1 ? 'Emitida' : 'Pendiente';
-
-        $rows[] = [
-            $nota->codigo_n_d,
-            $Factura,
-            $FacturaManual,
-            $Boleta,
-            $BoletaManual,
-            $nota->fecha_emision,
-            $estado,
-            $sunat,
-            $nota->tipo,
-            $almacen,
-            $nota->op_gravada,
-            $nota->op_inafecta,
-            $nota->op_exonerada,
-            $nota->op_gratuita,
-            $nota->motivo,
-            $igvCalculado,
-            $subtotal,
-            $total,
-        ];
-    }
-
-    $export = new class($rows) implements FromArray, WithEvents {
-        private $rows;
-
-        public function __construct($rows) {
-            $this->rows = $rows;
-        }
-
-        public function array(): array {
-            return $this->rows;
-        }
-
-        public function registerEvents(): array {
-            return [
-                AfterSheet::class => function(AfterSheet $event) {
-                    foreach(range('A','Z') as $column) {
-                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                    }
-                    foreach(range('A','Z') as $letter1) {
-                        foreach(range('A','Z') as $letter2) {
-                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                        }
-                    }
-                },
-            ];
-        }
-    };
-
-    return Excel::download($export, 'notas_debito.xlsx');
+    return Excel::download(
+        $export,
+        'Notas de Débito_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+    );
 }
 
 public function printMultiple(Request $request)
