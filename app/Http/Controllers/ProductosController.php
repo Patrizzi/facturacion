@@ -1513,7 +1513,6 @@ class ProductosController extends Controller
 
         $stock = optional($producto->stock_producto)->stock ?? 0;
 
-        // Imagen: se lee del disco (si existe) pero NO se guarda nada nuevo
         $fotoPath = public_path('archivos/imagenes/productos/' . ($producto->foto ?? 'producto.svg'));
         $fotoBase64 = null;
 
@@ -1522,15 +1521,27 @@ class ProductosController extends Controller
             $fotoBase64 = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($fotoPath));
         }
 
-        $pdf = Pdf::loadView('producto_servicios.productos.ft_pdf', [
-            'producto' => $producto,
-            'stock' => $stock,
+        $data = [
+            'producto'   => $producto,
+            'stock'      => $stock,
             'fotoBase64' => $fotoBase64,
-            'fecha' => now('America/Lima')->format('d/m/Y H:i'),
-        ])->setPaper('a4', 'portrait');
+            'fecha'      => now('America/Lima')->format('d/m/Y H:i'),
+        ];
 
-        // Inline en el iframe (NO se guarda)
+        // 1) Render
+        $html = view('producto_servicios.productos.ft_pdf', $data)->render();
+
+        // 2) Fuerza encoding correcto para dompdf
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
+        $pdf = Pdf::loadHTML($html)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'defaultFont' => 'DejaVu Sans',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
         return $pdf->stream('FT_' . $producto->codigo_original . '.pdf');
     }
-
 }

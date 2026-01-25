@@ -343,7 +343,6 @@ class ServiciosController extends Controller
             'message' => 'Servicio anulado correctamente',
             'servicio' => $servicio
         ]);
-        // $
     }
 
     public function ftPdf($id)
