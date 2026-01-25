@@ -255,7 +255,7 @@
                             @if(!empty($fotoBase64))
                             <img src="{{ $fotoBase64 }}" alt="Imagen del Servicio">
                             @else
-                            <span class="muted">Sin imagen</span>
+                            <span class="muted"> </span>
                             @endif
                         </div>
                     </td>

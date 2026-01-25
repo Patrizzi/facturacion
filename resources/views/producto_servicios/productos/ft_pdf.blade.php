@@ -223,7 +223,7 @@
                             @if ($fotoBase64)
                             <img src="{{ $fotoBase64 }}" alt="Foto">
                             @else
-                            <span class="muted">Sin imagen</span>
+                            <span class="muted"> </span>
                             @endif
                         </div>
                     </td>
