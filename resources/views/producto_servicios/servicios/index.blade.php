@@ -115,8 +115,8 @@
                                                         <strong>{{ $moneda->where('tipo', 'extranjera')->pluck('simbolo')->first() }}</strong>
                                                         )
                                                     </th>
-                                                    <th class="icon-estado"></th>
                                                     <th>Ficha Técnica</th>
+                                                    <th class="icon-estado"></th>
                                                     <th><i class="fa fa-sliders" style="cursor: pointer;"
                                                             data-toggle="dropdown" aria-haspopup="true"
                                                             aria-expanded="false"></th>
@@ -290,22 +290,6 @@
                 {
                     'targets': [7],
                     'orderable': false,
-                    'className': "icon-estado",
-                    'render': function(data, type, full, meta) {
-                        if (full[7] == 0) {
-                            return `<button class="btn btn-sm btn-success btn-circle" title="Servicio ">
-                                    <i class="fa fa-check"></i>
-                                </button> `;
-                        } else {
-                            return `<button class="btn btn-sm btn-danger btn-circle" title="Servicio ">
-                                    <i class="fa fa-times"></i>
-                                </button> `;
-                        }
-                    }
-                },
-                {
-                    'targets': [8],
-                    'orderable': false,
                     'searchable': false,
                     'render': function(data, type, full, meta) {
                         const servicio = full[9];
@@ -317,6 +301,22 @@
                             <i class="fa fa-file-pdf-o"></i>
                         </button>
                         `;
+                    }
+                },
+                {
+                    'targets': [8],
+                    'orderable': false,
+                    'className': "icon-estado",
+                    'render': function(data, type, full, meta) {
+                        if (full[7] == 0) {
+                            return `<button class="btn btn-sm btn-success btn-circle" title="Servicio ">
+                                    <i class="fa fa-check"></i>
+                                </button> `;
+                        } else {
+                            return `<button class="btn btn-sm btn-danger btn-circle" title="Servicio ">
+                                    <i class="fa fa-times"></i>
+                                </button> `;
+                        }
                     }
                 },
                 {
