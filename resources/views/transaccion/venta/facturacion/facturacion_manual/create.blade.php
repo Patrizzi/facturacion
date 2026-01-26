@@ -363,8 +363,8 @@
                                     type="button">Guardar</button>
                                 <button class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
-                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
-                                    data-style="zoom-out">
+                                {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
+                                    data-style="zoom-out"> --}}
                                 </button>
                                 <button type="submit" id="button_submit" hidden name="button_submit" value="0" ></button>
                             </div>
@@ -1546,7 +1546,7 @@
             }
         });
         $("#finalizar").on("click", function(buton) {
-            $('#button_submit').val('0');
+            $('#button_submit').val('1');
             var l = Ladda.create(document.querySelector('.button-ladda'));
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
