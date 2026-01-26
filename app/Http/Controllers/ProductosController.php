@@ -31,6 +31,7 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Barryvdh\DomPDF\Facade\Pdf;
 class ProductosController extends Controller
 {
     /**
@@ -1497,4 +1498,50 @@ class ProductosController extends Controller
         }
     }
 
+    // Generar PDF de Ficha Técnica
+    public function ftPdf($id)
+    {
+        $producto = Producto::with([
+            'familia_i_producto',
+            'subfamilia_i_producto',
+            'marcas_i_producto',
+            'unidad_i_producto',
+            'tipo_afec_i_producto',
+            'stock_producto',
+            'categoria_i_producto',
+        ])->findOrFail($id);
+
+        $stock = optional($producto->stock_producto)->stock ?? 0;
+
+        $fotoPath = public_path('archivos/imagenes/productos/' . ($producto->foto ?? 'producto.svg'));
+        $fotoBase64 = null;
+
+        if (file_exists($fotoPath)) {
+            $mime = mime_content_type($fotoPath);
+            $fotoBase64 = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($fotoPath));
+        }
+
+        $data = [
+            'producto'   => $producto,
+            'stock'      => $stock,
+            'fotoBase64' => $fotoBase64,
+            'fecha'      => now('America/Lima')->format('d/m/Y H:i'),
+        ];
+
+        // 1) Render
+        $html = view('producto_servicios.productos.ft_pdf', $data)->render();
+
+        // 2) Fuerza encoding correcto para dompdf
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+
+        $pdf = Pdf::loadHTML($html)
+            ->setPaper('a4', 'portrait')
+            ->setOptions([
+                'defaultFont' => 'DejaVu Sans',
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+            ]);
+
+        return $pdf->stream('FT_' . $producto->codigo_original . '.pdf');
+    }
 }

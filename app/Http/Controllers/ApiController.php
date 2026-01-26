@@ -714,16 +714,16 @@ class ApiController extends Controller
 
         foreach ($servicios as $value) {
             $json['data'][] = [
-                $value->id,
-                $value->codigo_servicio,
-                $value->codigo_original,
-                $value->nombre,
-                $value->familia,
-                $value->precio_nacional,
-                $value->precio_extranjero,
-                $value->estado_anular,
-                $value->id,
-                $value,
+                $value->id,                 // 0 - id servicio
+                $value->codigo_servicio,    // 1 - codigo servicio
+                $value->codigo_original,    // 2 - codigo original
+                $value->nombre,             // 3 - nombre
+                $value->familia,            // 4 - familia
+                $value->precio_nacional,    // 5 - precio nacional
+                $value->precio_extranjero,  // 6 - precio extranjero
+                $value->estado_anular,      // 7 - estado
+                $value->id,                 // 8 - acciones
+                $value                      // 9 - ficha técnica y editar
             ];
         }
         return response()->json($json);
@@ -812,7 +812,8 @@ class ApiController extends Controller
                 $value->estado,          // => 5 - estado
                 $value->precios,     // => 6 - precio
                 $value->stock ?? 0,      // => 7 - stock
-                $value              // => 8 - botones
+                $value,   // => 8 - ficha técnica
+                $value              // => 9 - botones
             ];
         }
 
@@ -1958,13 +1959,13 @@ class ApiController extends Controller
             5 => 'fecha_vencimiento',
             6 => 'id'
         ];
-            
+
         $nota_venta = NotaVenta::find($request->id_documento);
         $query = NotaVenta::where('id', $request->id_documento);
         $moneda_comprobante = $nota_venta->moneda;
         // dd($nota_venta);
         $fecha_tipo = TipoCambio::where('fecha', $nota_venta->fecha_emision)->first();
-        $tipo_cambio = $fecha_tipo->paralelo ?? 0.00; 
+        $tipo_cambio = $fecha_tipo->paralelo ?? 0.00;
         $recordsTotal = $query->count();
         $sortColumnName = $sortColumns[$order[0]['column']];
         $query->orderBy($sortColumnName, $order[0]['dir'])

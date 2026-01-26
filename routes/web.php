@@ -1493,3 +1493,11 @@ Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoC
 
 Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.garantia_informe_tecnico.multiple');
+
+// Ruta para generar el PDF de ficha técnica de un producto
+ Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
+    ->name('productos.ftPdf');
+
+// Ruta para generar el PDF de ficha técnica de un servicio
+Route::get('/servicios/{id}/ft-pdf', [ServiciosController::class, 'ftPdf'])
+    ->name('servicios.ft_pdf');
