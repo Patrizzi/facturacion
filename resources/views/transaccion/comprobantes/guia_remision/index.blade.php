@@ -18,7 +18,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            @include('transaccion\comprobantes\_shared\statistics')
+                            @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                             <div class="tabs-scroll-top-comprobantes"></div>
                             <div class="tabs-scroll-bottom">
                                 <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
-                                    @include('transaccion\comprobantes\_shared\tabs')
+                                    @include('transaccion.comprobantes._shared.tabs')
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
@@ -173,7 +173,7 @@
         target="_blank" style="display:none;">
         @csrf
     </form>
-    @include('transaccion\comprobantes\_shared\js_shared')
+    @include('transaccion.comprobantes._shared.js_shared')
     <script>
         $(document).ready(function() {
             // "ACTIVA EL TAB DE COTIZACION"

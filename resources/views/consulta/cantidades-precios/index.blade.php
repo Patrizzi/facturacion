@@ -9,7 +9,7 @@
 @section('content')
 
     <!-- Inico código Gaby -->
-    @include('consulta\cantidades-precios\_shared\statistics')
+    @include('consulta.cantidades-precios._shared.statistics')
 
 
     <div class="wrapper wrapper-content animated fadeInRight pt-0">
@@ -19,7 +19,7 @@
                     <div class="ibox-content">
                         <div class="tabs-container">
                             <ul class="nav nav-tabs" role="tablist">
-                                @include('consulta\cantidades-precios\_shared\tabs')
+                                @include('consulta.cantidades-precios._shared.tabs')
                             </ul>
 
                             <!-- Tablas y su contenido -->

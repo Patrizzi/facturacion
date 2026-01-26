@@ -19,7 +19,7 @@
                         <div class="tabs-container">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <ul class="nav nav-tabs" role="tablist">
-                                @include('mailbox\nuevo\tabs')
+                                @include('mailbox.nuevo.tabs')
                                 </ul>
                                 <a href="#crear" data-toggle="modal">
                                     <button class="btn btn-success mr-2" style="background-color: blue; border-color:blue;">
@@ -139,7 +139,7 @@
 </div>
 
 <!-- Fin -->
-@include('mailbox\nuevo\crear')
+@include('mailbox.nuevo.crear')
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

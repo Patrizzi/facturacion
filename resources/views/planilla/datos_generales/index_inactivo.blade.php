@@ -17,7 +17,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            @include('transaccion\comprobantes\_shared\statistics')
+                            @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                     <div class="ibox-content">
                         <div class="tabs-container">
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
-                                @include('planilla\_shared\tabs')
+                                @include('planilla._shared.tabs')
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" id="tab-5" class="tab-pane active show">

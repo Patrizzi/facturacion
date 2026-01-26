@@ -12,7 +12,7 @@
                         <div class="ibox-content">
                             <div class="tabs-container">
                                 <ul class="nav nav-tabs" role="tablist">
-                                    @include('inventario\tabs1')
+                                    @include('inventario.tabs1')
                                 </ul>
                                 <div class="tab-content">
                                     <!-- Contenido de Tab 1 -->
@@ -21,7 +21,7 @@
                                             <!-- ANIDAMOS MÁS TABS AQUÍ -->
                                             <div class="tabs-container">
                                                 <ul class="nav nav-tabs" role="tablist">
-                                                    @include('inventario\tabs2')
+                                                    @include('inventario.tabs2')
                                                 </ul>
 
                                                 <div class="tab-content">
