@@ -309,7 +309,9 @@
             </div>
         </div>
         <div class="no_mostrar" id="edicion_factura">
-            @include('transaccion.venta.facturacion.facturacion_manual.edit')
+            @if ($facturacion->estado == 0)
+                @include('transaccion.venta.facturacion.facturacion_manual.edit')
+            @endif
         </div>
     </div>
 
@@ -412,17 +414,110 @@
             </div>
         </div>
     </div>
+    <style>
+        .input-group>.select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
+        }
 
-    <style type="text/css">
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .row_form {
+            align-items: center;
+            margin-bottom: 0px;
+        }
+
+        .edit_form {
+            margin: 0px !important;
+            padding-bottom: 0px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            font-size: 12px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none;
+        }
+
+        span.select2.select2-container.select2-container--default {
+            width: 100% !important;
+            background-color: #FFFFFF;
+            background-image: none;
+            border-radius: 1px;
+            display: block;
+            padding: 3px 12px;
+            border: 1px solid #e5e6e7;
+        }
+
+        @media only screen and (max-width: 1497px) {
+            .td_selected>span.select2.select2-container.select2-container--default {
+                min-width: 376px !important;
+            }
+        }
+
+        @media (min-width: 992px) {
+            #add_product_data>.modal-lg {
+                max-width: 1200px;
+            }
+        }
+
+        .item_guia {
+            font-size: 11px;
+            margin: 0px 7px;
+            cursor: hand;
+        }
+
+        a.item_guia::after {
+            content: "x";
+            font-size: 9px;
+            color: red;
+            vertical-align: top;
+        }
+
+        .detracc_campo_required {
+            display: none;
+            /* font-size: 9px; */
+            color: red;
+        }
+
+        .td_selected>span.select2.select2-container.select2-container--default {
+            max-width: 700px !important;
+            width: 30vw !important;
+        }
+
+        .input-cantidad,
+        .total_s_igv,
+        .total_c_igv {
+            max-width: 100px;
+        }
+
+        .mostrar {
+            display: ;
+        }
+
+        .no_mostrar {
+            display: none;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+
         .ruc {
             border-radius: 10px;
             height: 150px;
         }
 
-        .form-control {
-            border-radius: 10px;
-        }
-
+        /* .form-control {
+                border-radius: 10px;
+            } */
         .a {
             height: 30px;
             margin: 0;
@@ -439,10 +534,6 @@
             /*margin-bottom: 10px;*/
             box-shadow: 0px 0px 1px #000;
             display: inline-block;
-        }
-
-        #auto:hover {
-            opacity: .8;
         }
 
         #div-mostrar {
@@ -464,13 +555,11 @@
         #auto:hover+#div-mostrar {
             height: 50px;
         }
-    </style>
 
-    <style>
-        .form-control {
-            margin-top: 5px;
-            border-radius: 5px
-        }
+        /* .form-control {
+                margin-top: 5px;
+                border-radius: 5px
+            } */
 
         p#texto {
             text-align: center;
@@ -509,10 +598,29 @@
             z-index: 0;
         }
 
-        .form-control {
-            background-color: transparent !important;
-        }
+        /* .form-control {
+                background-color: transparent !important;
+            } */
     </style>
+
+    <!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- Jquery Validate -->
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <!-- Steps -->
+    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
+    
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <script type="text/javascript">
         function mostrarPassword() {
@@ -527,7 +635,7 @@
         }
     </script>
     <script type="text/javascript">
-        {{-- Fotooos --}}
+        // {{-- Fotooos --}}
 
         function validarExt() {
             var archivoInput = document.getElementById('archivoInput');
@@ -563,19 +671,41 @@
             }
         }
     </script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <!-- Mainly scripts -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script>
+        var clic = 1;
 
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <!-- Custom and plugin javascript -->
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+        function divAuto() {
+            if (clic == 1) {
+                document.getElementById("div-mostrar").style.height = "50px";
+                clic = clic + 1;
+            } else {
+                document.getElementById("div-mostrar").style.height = "0px";
+                clic = 1;
+            }
+        }
 
+        function click_editar() {
+            // MOSTRAR LOS INPUTS
+            $('#edicion_factura').removeClass('no_mostrar');
+            $('#edicion_factura').addClass('mostrar');
+            // OCULTAR TABLA
+            $('#show_factura').addClass('no_mostrar');
+            // BOTONES
+            $('.btn-no-editar').removeClass('no_mostrar');
+            $('.btn-editar').addClass('no_mostrar');
+        }
 
+        function click_cancelar_editar() {
+            // OCULTAR INPUTS
+            $('#edicion_factura').removeClass('mostrar');
+            $('#edicion_factura').addClass('no_mostrar');
+            // MOSTRAR TABLA
+            $('#show_factura').removeClass('no_mostrar');
+            $('#show_factura').addClass('mostrar');
+
+            $('.btn-editar').removeClass('no_mostrar');
+            $('.btn-no-editar').addClass('no_mostrar');
+        }
+    </script>
+    @include('transaccion.venta.facturacion.facturacion_manual._shared._edit_script')
 @endsection

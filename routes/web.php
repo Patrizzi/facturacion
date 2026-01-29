@@ -448,6 +448,7 @@ Route::group(
 
         Route::post('/facturacion_manual/codigo', 'FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
         Route::resource('facturacion_manual', 'FacturacionMController');
+        Route::post('/facturacion_manual/update/{id}', 'FacturacionMController@update')->name('facturacion_manual.update');
         Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
 
         //boleta manual manual

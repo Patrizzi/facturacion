@@ -188,7 +188,42 @@ class Producto extends Model
             'precio_extranjero_igv' => $moneda_extranjera->simbolo.' '.round($precio_extranjero + ($precio_extranjero * ($igv->igv_total / 100)),2 ),
         ];
     }
+        public function calcularPreciosSugerido()
+    {
+        $moneda = Moneda::where('principal', 1)->first();
+        $moneda_nacional = Moneda::where('tipo', 'nacional')->first();
+        $moneda_extranjera = Moneda::where('tipo', 'extranjera')->first();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        $igv = Igv::first();
+        $esNacional = $moneda->tipo === 'nacional';
 
+        $utilidad = $this->utilidad - $this->descuento1;
+        // Determina el campo base según la moneda
+        $campoPrecioBase = $esNacional ? 'precio_nacional' : 'precio_extranjero';
+
+        // Obtener promedio del precio base
+        $precioBase = Stock_producto::where('producto_id', $this->id)->avg($campoPrecioBase);
+
+        // Calcular utilidad
+        $utilidadPrecio = $precioBase * ($utilidad / 100);
+
+        // Precio nacional
+        $precio_nacional = round($precioBase + $utilidadPrecio, 2);
+
+        // Precio extranjero
+        if ($esNacional) {
+            $precio_extranjero = round(($precioBase + $utilidadPrecio) / $tipo_cambio->paralelo, 2);
+        } else {
+            $precio_extranjero = round(($precioBase + $utilidadPrecio) * $tipo_cambio->paralelo, 2);
+        }
+
+        return [
+            'precio_nacional' => $precio_nacional,
+            'precio_nacional_igv' => round($precio_nacional + ($precio_nacional * ($igv->igv_total / 100)),2),
+            'precio_extranjero' => $precio_extranjero,
+            'precio_extranjero_igv' => round($precio_extranjero + ($precio_extranjero * ($igv->igv_total / 100)),2 ),
+        ];
+    }
     public function calcularPrecioNacional()
     {
         $moneda_tipo = Moneda::where('principal', 1)->first();

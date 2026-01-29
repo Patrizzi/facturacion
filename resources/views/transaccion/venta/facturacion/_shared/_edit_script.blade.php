@@ -113,7 +113,7 @@
             $('#guia_remi_input').click();
         }
     });
-    $('#guia_remi_input').on('keydown', function (e) {
+    $('#guia_remi_input').on('keydown', function(e) {
         if (e.keyCode === 13) {
             e.preventDefault();
 
@@ -125,6 +125,7 @@
             }
         }
     });
+
     function agregarElemento() {
 
         const input = document.getElementById("guia_remi_input");
@@ -161,7 +162,7 @@
 
     // Agregar producto
     var i = "{{ count($facturacion->registros) }}";
-    console.log(i);
+    // console.log(i);
     $(".addmore").on('click', function() {
         var data = `[
         <tr>
@@ -373,7 +374,7 @@
         // Get the checkbox
         var checkBox = document.getElementById(`check${a}`);
         var cantidad = document.querySelector(`#cantidad${a}`).value;
-        console.log("cantidad:  "  + cantidad);
+        console.log("cantidad:  " + cantidad);
         var promedio_origina_descuento1 = document.querySelector(`#precio_unitario_descuento${a}`).value;
         var promedio_original2 = document.querySelector(`#promedio_original${a}`).value;
         var descuento = document.querySelector(`#descuento${a}`).value;
@@ -417,7 +418,7 @@
             var comision_porcentaje = document.querySelector(`#comision${a}`).value;
             var final = cantidad * precio;
             var end9 = parseFloat(precio) + (parseFloat(precio) * parseInt(comision_porcentaje) / 100);
-            console.log("precio:  " + 0);    
+            console.log("precio:  " + 0);
             var end = Math.round(end9 * multiplier) / multiplier;
             var final2 = cantidad * end;
             var final_decimal = Math.round(final2 * multiplier) / multiplier;
@@ -490,6 +491,22 @@
         var end = igv_decimal + parseFloat(subtotal);
 
         var end2 = Math.round(end * multiplier2) / multiplier2;
+        
+        if (parseFloat(end2) > 700) {
+            console.log('mayor a 700');
+            $('#detraccion').attr('disabled', false);
+            $('#button_detracc').attr('data-target', '#modal_detraccion');
+        } else {
+            var select_det = $('.select2_tipo_op').val();
+            var split_id = select_det.split(' ');
+            if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                // Se activa la opcion de detraccion
+            } else {
+                $('#detraccion').attr('disabled', true);
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+            }
+        }
+
         console.log(end2);
         document.getElementById("igv").value = igv_decimal;
         document.getElementById("total_final").value = end2;
@@ -514,6 +531,34 @@
         $(document).on('input', '.monto_pago', function() {
             actualizarSaldoRestante();
         });
+    }
+
+    function save_detraccion() {
+        var seletc_det = $('.select2_tipo_op').val();
+        var split_id = seletc_det.split(' ');
+        console.log(split_id[0]);
+        if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
+            var tipo_detra = $('#select_tipo_pago').val();
+            var ipt_medio = $('.select2_mediopago').val();
+            var porce_detra = $('#porcentaje_detc').val();
+            var tot_det = $('#tota_detra').val();
+
+            if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.detracc_campo_required');
+                inputs.forEach(function(input) {
+                    input.style.display = 'block';
+                });
+                return;
+            } else {
+                var inputs = document.querySelectorAll('.detracc_campo_required');
+                inputs.forEach(function(input) {
+                    input.style.display = 'none';
+                });
+                $('#modal_detraccion').modal('hide');
+            }
+
+        }
     }
 
     function multi_detraccion() {
@@ -750,9 +795,11 @@
                 timeOut: 3000
             });
     });
+    // Para las cuotas
     var total = document.getElementById('total_final').value;
     var x = 1;
     $(".add_pago").on('click', function() {
+        console.log(x);
         var simb = $('#basic-addon3').html();
         var fecha_min = "$facturacion->fecha_emision }}";
         var total = document.getElementById('total_final').value;
@@ -1177,7 +1224,8 @@
             return false;
         }
     }
-    let status = "@if($facturacion->moneda->principal == 1) 0 @else 1 @endif";
+    let status =
+        "@if ($facturacion->moneda->principal == 1) 0 @else 1 @endif";
     let total_val = 0;
     let completed = 0;
 
@@ -1232,7 +1280,7 @@
                 let articles_selected_count = articles_selected.length;
                 // Para finalizar el toastr de carga
                 total_val = articles_selected.length;
-                completed = 0;  
+                completed = 0;
 
                 if (total_val === 0) {
                     toastr.clear();

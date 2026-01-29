@@ -104,7 +104,7 @@ class FacturacionElectronicaController extends Controller
         $empresa=Empresa::first();
         $fecha_hoy = Carbon::now();
 
-        $facturas_manual=Facturacion_m::where('f_electronica', 0)->get();
+        $facturas_manual=Facturacion_m::where('f_electronica', 0)->where('estado', 1)->get();
         foreach ($facturas_manual as $factura) {
             $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
         }

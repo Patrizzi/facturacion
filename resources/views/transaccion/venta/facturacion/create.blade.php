@@ -134,7 +134,7 @@
                                 <div class="col-md-10">
                                     <select class="select2_tipo_op" name="tipo_operacion">
                                         @foreach ($tipo_operacion as $t_op)
-                                            <option id="{{ $t_op->id }}">{{ $t_op->codigo }} - {{ $t_op->informacion }}
+                                            <option value="{{ $t_op->id }}">{{ $t_op->codigo }} - {{ $t_op->informacion }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -205,16 +205,16 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label"><strong>Detracción:</strong></label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" id="detraccion" name="detraccion_value">
+                                    <select class="form-control" id="detraccion" name="detraccion_value" disabled>
                                         <option value="0">Desactiva</option>
                                         <option value="1">Activa</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-2" style="display: flex">
+                                <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
                                     <a href="" id="button_detracc" data-toggle="modal"
-                                        data-target="#modal_detraccion" style="margin: auto"><i
+                                        style="margin: auto"><i
                                             class="fa fa-question-circle"
-                                            style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                            style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999;pointer-events: none"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -455,103 +455,8 @@
                             </div>
                         </div>
                     </div>
-                    {{--  --}}
-                    <!-- Modal DETRACCIONES DENTRO DEL FORM, EN EL CONTROLLER CONDICIONAL PARA TOMAR O NO DETRACCION-->
-                    <div class="modal fade" id="modal_detraccion" role="dialog"
-                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Configuración de
-                                        Detracciones</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="detraccion_valores">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <h3 class="text-center text-bold">Por indicaciones de Sunat la
-                                                    detracción se envía en Soles.</h3>
-                                                <div class="row">
-                                                    <div class="col-sm-8">
-                                                        <label for=""><strong>Tipo de
-                                                                Detracción</strong></label>
-                                                        <select class="select2_tipodetrac ipt_detrac"
-                                                            name="tipo_detraccion" id="select_tipo_pago">
-                                                            <option value="">Seleccionar Tipo</option>
-                                                            @foreach ($detraccion as $detra)
-                                                                <option value="{{ $detra->id }}">
-                                                                    {{ $detra->codigo }} -
-                                                                    {{ $detra->descripcion }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <div class="detracc_campo_required">
-                                                            <small>Selecciona un campo</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <label for=""><strong>Porcentaje de
-                                                                Detraccion</strong></label>
-                                                        <input type="text" class="form-control ipt_detrac"
-                                                            name="porcentaje_detraccion" id="porcentaje_detc">
-                                                        <div class="detracc_campo_required">
-                                                            <small>Rellena este campo</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <hr style="margin-top: 5px; margin-bottom: 5px">
-                                                <div class="row">
-                                                    <div class="col-sm-8">
-                                                        <label for=""><strong>Medio de
-                                                                Pago</strong></label>
-                                                        <select class="select2_mediopago ipt_detrac"
-                                                            name="medio_pago_detraccion" id="">
-                                                            <option value="">Seleccionar Medio de Pago
-                                                            </option>
-                                                            @foreach ($medio_pago as $m_pago)
-                                                                <option value="{{ $m_pago->id }}">
-                                                                    {{ $m_pago->codigo }} -
-                                                                    {{ $m_pago->descripcion }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <div class="detracc_campo_required">
-                                                            <small>Selecciona un campo</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <label for=""><strong>Total de
-                                                                Detracción</strong></label>
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-addon">S/.</span>
-                                                            </div>
-                                                            <input type="text" class="form-control ipt_detrac"
-                                                                name="total_detraccion" id="tota_detra"
-                                                                placeholder="0.00" readonly>
-                                                        </div>
-
-                                                        <div class="detracc_campo_required">
-                                                            <small>Rellena este campo</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {{-- <div class="col-sm-6">
-
-                                                </div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="save_detraccion()">Verificar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {{-- Detraccion --}}
+                    @include('transaccion.venta.facturacion._shared.modal_detraccion')
 
                 </form>
             </div>
@@ -761,11 +666,13 @@
                 inputs.forEach(function(input) {
                     // input.setAttribute('required', 'required');
                 });
+                $('.select2_tipo_op').val('12').trigger('change.select2');
             } else {
                 var inputs = document.querySelectorAll('.ipt_detrac');
                 inputs.forEach(function(input) {
                     // input.removeAttribute('required');
                 });
+                $('.select2_tipo_op').val('1').trigger('change.select2');
             }
         });
         $(".select2_demo_comisionista").select2({
@@ -814,13 +721,14 @@
             } else { //dolares
                 var total_dol = $('#total_final').val();
 
-                var tipo_cam = $('#tipo_paralelo').val();
+                var tipo_cam = $('#tc_paralelo').html();
+                console.log(tipo_cam);
                 var total = total_dol * tipo_cam;
-
+                console.log(total);
                 var porc_det = $('#porcentaje_detc').val();
                 var op_det = total * (porc_det / 100);
                 var sub_zero = Math.round(op_det * 100) / 100;
-
+                console.log(sub_zero);
                 $('#tota_detra').val(sub_zero);
             }
         }
@@ -830,21 +738,13 @@
         });
 
         $('.select2_tipo_op').on('select2:select', function(e) {
-
             var id = e.params.data.id;
             var split_id = id.split(' ');
             if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
                 console.log('a');
-                $('#button_detracc').attr('disabled', false);
-                switchery_2.enable();
-                $('.js-switch').trigger('click');
-            } else {
-                console.log('b');
-                $('#button_detracc').attr('disabled', true);
-                switchery_2.disable();
-                $('.js-switch').trigger('click');
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+                $('#detraccion').attr('disabled', false);
             }
-            // console.log(id.split(' '));
         });
         $(".select2_demo_client").select2({
             theme: "bootstrap",
@@ -1307,6 +1207,21 @@
 
             document.getElementById("igv").value = igv_decimal;
             document.getElementById("total_final").value = end2;
+            if(parseFloat(end2) > 700){
+                console.log('mayor a 700');
+                $('#detraccion').attr('disabled', false);
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+            }else{
+                var select_det = $('.select2_tipo_op').val();
+                var split_id = select_det.split(' ');
+                if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                    // Se activa la opcion de detraccion
+                }else{
+                    $('#detraccion').attr('disabled', true);
+                    $('#button_detracc').attr('data-target', '#modal_detraccion');
+                }
+            }
+
             // var total = document.getElementById("total_final").value;
             // $(`#monto_pago0`).attr('max', end2);
             // document.getElementById("monto_pago0").value = end2;
@@ -1924,12 +1839,14 @@
         function save_detraccion() {
             var seletc_det = $('.select2_tipo_op').val();
             var split_id = seletc_det.split(' ');
-            if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+            // Detracciones validas
+            if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
+                
                 var tipo_detra = $('#select_tipo_pago').val();
                 var ipt_medio = $('.select2_mediopago').val();
                 var porce_detra = $('#porcentaje_detc').val();
                 var tot_det = $('#tota_detra').val();
-
+                console.log(tipo_detra, ipt_medio, porce_detra, tot_det);
                 if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
                     $('#modal_detraccion').modal('show');
                     var inputs = document.querySelectorAll('.detracc_campo_required');
@@ -1944,7 +1861,6 @@
                     });
                     $('#modal_detraccion').modal('hide');
                 }
-
             }
         }
 

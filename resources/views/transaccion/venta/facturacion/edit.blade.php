@@ -195,27 +195,19 @@
                         </div>
                         <div class="form-group row" style="justify-content: start !important">
                             <label class="col-form-label col-md-2"> <strong>Detracción:</strong> </label>
-                            @if ($detraccion == 'not')
-                                {{-- Si NO tiene detracción --}}
-                                <div class="col-md-6">
-                                    <input type="text" readonly class="form-control" value="Desactivado"
-                                        name="" id="">
-                                </div>
-                            @else
-                                <div class="col-md-6">
-                                    <input type="text" readonly class="form-control" value="Activado"
-                                        name="" id="">
-                                </div>
-                                <div class="col-md-2">
-                                    <a href="" id="button_detracc" data-toggle="modal"
-                                        data-target="#modal_detraccion" style="margin: auto">
-                                        <i class="fa fa-question-circle"
-                                            style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999">\
-                                        </i>
-                                    </a>
-                                </div>
-                                {{-- Modal para la detraccion no editable --}}
-                            @endif
+                            <div class="col-sm-8">
+                                <select class="form-control" id="detraccion" name="detraccion_value" @if(isset($facturacion->detracciones)) disabled @endif>
+                                    <option value="0" @if($facturacion->detracciones == 0) selected @endif>Desactiva</option>
+                                    <option value="1" @if($facturacion->detracciones == 1) selected @endif>Activa</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2" style="display: flex">
+                                <a href="" id="button_detracc" data-toggle="modal"
+                                    @if ( isset($facturacion->detracciones) ) data-target="modal_detracciones"  @else data-target="#" @endif style="margin: auto"><i
+                                        class="fa fa-question-circle"
+                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -435,6 +427,8 @@
                 </div>
                 {{-- Modal dentro del Form para que se envien los datos --}}
                 @include('transaccion.venta.facturacion._shared.modal_cuota_edit')
+                {{-- Modal dentro del Form para que se envien los datos de DETRACCION --}}
+                @include('transaccion.venta.facturacion._shared._edit_modal_detraccion')
             </form>
         </div>
     </div>

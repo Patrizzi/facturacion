@@ -77,7 +77,19 @@ class Facturacion_m extends Model
 
     public function detracciones()
     {
-        return $this->hasMany(Detracciones::class, 'factura_m_id');
+        return $this->hasOne(Detracciones::class, 'factura_m_id');
+    }
+    
+    public function getFechaEmisionEditAttribute()
+    {
+        $edit_emision = Carbon::parse($this->attributes['fecha_emision'])->format('yyyy-mm-dd');
+        return $edit_emision;
+    }
+    
+    public function getFechaVencimientoEditAttribute()
+    {
+        $edit_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('Y-m-d');
+        return $edit_vencimiento;
     }
 
     public static function revision_cuotas($id)
@@ -357,6 +369,24 @@ class Facturacion_m extends Model
                 break;
         }
         return $estado_sunat;
+    }
+
+    public function getSubTotalPrecioSinFormaAttribute()
+    {
+        // $boleta = Boleta::find($this->attributes['id']);
+        $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        // $total_igv = $subtotaltotal;
+        return $subtotal;
+    }
+
+    public function getIgvSinFormaAttribute(){
+        $igv = Igv::first()->renta;
+        $sub_igv = ($this->attributes['op_gravada'] * $igv) / 100;
+
+        return round($sub_igv, 2);
     }
 
     public function getTotalPrecioSinFormaAttribute()

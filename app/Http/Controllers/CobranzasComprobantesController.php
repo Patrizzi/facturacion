@@ -49,9 +49,9 @@ class CobranzasComprobantesController extends Controller
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[1])->endOfDay();
 
-            $query = Facturacion::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+            $query = Facturacion::where('estado', 1)->whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {
-            $query = Facturacion::orderBy('id', 'desc');
+            $query = Facturacion::where('estado', 1)->orderBy('id', 'desc');
         }
         if($cliente != null){
             $query->where('cliente_id', $cliente);
@@ -243,9 +243,9 @@ class CobranzasComprobantesController extends Controller
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[1])->endOfDay();
 
-            $query = Facturacion_m::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+            $query = Facturacion_m::where('estado', 1)->whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {
-            $query = Facturacion_m::orderBy('id', 'desc');
+            $query = Facturacion_m::where('estado', 1)->orderBy('id', 'desc');
         }
         if($cliente != null){
             $query->where('cliente_id', $cliente);

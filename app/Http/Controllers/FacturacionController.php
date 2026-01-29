@@ -508,7 +508,7 @@ class FacturacionController extends Controller
      */
     public function store(Request $request, $id_moneda)
     {
-        // return $request;
+        return $request;
         $articulo = $request->input('articulo');
 
         // return $articulo;
@@ -691,7 +691,7 @@ class FacturacionController extends Controller
             $facturacion->estado = '1'; //!
         }
         $facturacion->tipo = 'producto';
-        $facturacion->tipo_operacion_id = $busca_ope->id;
+        $facturacion->tipo_operacion_id = $request->get('tipo_operacion');
         $facturacion->tipo_documento_id = 2;
         $facturacion->save();
 
@@ -738,11 +738,9 @@ class FacturacionController extends Controller
         }
         // return $request;
         // Detracciones
-        $tipo_op = $request->get('tipo_operacion');
-        $tipo_ex = explode(' ', $tipo_op);
-        if($tipo_ex[0] == '1001' || $tipo_ex[0] == '1002' || $tipo_ex[0] == '1003' ||$tipo_ex[0] == '1004'){
-            //
-            // $detracciones = Tipo_operacion_f::where('codigo', $tipo_ex[0])->first();
+        // $tipo_op = $request->get('tipo_operacion');
+        // $tipo_ex = explode(' ', $tipo_op);
+        if($request->get('tipo_operacion') == '12' || $request->get('tipo_operacion') == '13' || $request->get('tipo_operacion') == '14' ||$request->get('tipo_operacion') == '15'){
             $fact_detra = new Detracciones();
             $fact_detra->factura_id = $facturacion->id;
             $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
@@ -1044,8 +1042,10 @@ class FacturacionController extends Controller
         $monedas_get = Moneda::all();
         // $forma_pago_id = Forma_pago::all();
         // return $remisiones;
+        $tipo_detraccion = TipoDetraccion::all();
+        $medio_pago_detraccion = MedioPagoDetraccion::all();
 
-        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion','forma_pagos','remisiones','tipo_operacion','moneda','monedas_get'));
+        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion','forma_pagos','remisiones','tipo_operacion','moneda','monedas_get','tipo_detraccion','medio_pago_detraccion'));
 
         // if ($facturacion->id_cotizador_servicio == NULL) {
         //     return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));
@@ -1237,7 +1237,7 @@ class FacturacionController extends Controller
         }else{
             $factura->estado = '1'; //! Si ya no se puede editar
         }
-        $factura->tipo_operacion_id = $busca_ope->id;
+        $factura->tipo_operacion_id = $request->get('tipo_operacion');
         $factura->op_gravada = 0;
         $factura->op_inafecta = 0;
         $factura->op_exonerada = 0;
@@ -1274,6 +1274,30 @@ class FacturacionController extends Controller
                 }
             }
         }
+        // Tipo de Operacion para Detracciones
+        $search_det = Detracciones::where('factura_id', $id)->first();
+        if(isset($search_det)){
+            // Editar
+            $search_det->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+            $search_det->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+            $search_det->monto_total_factura = $request->get('precio_final_igv');
+            $search_det->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+            $search_det->monto_detraccion = $request->get('total_detraccion');
+            $search_det->estado = 1;
+            $search_det->save();
+        }else{
+            // Crear
+            $fact_detra = new Detracciones();
+            $fact_detra->factura_m_id = $factura->id;
+            $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+            $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+            $fact_detra->monto_total_factura = $request->get('precio_final_igv');
+            $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+            $fact_detra->monto_detraccion = $request->get('total_detraccion');
+            $fact_detra->estado = 1;
+            $fact_detra->save();
+        }
+
         // Comision
         // return $factura;
         if($factura->comisionista != null || $factura->comisionista != 0){
