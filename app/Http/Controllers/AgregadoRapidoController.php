@@ -44,6 +44,8 @@ class AgregadoRapidoController extends Controller
         $cliente->aniversario=$request->get('aniversario');
         $cliente->cod_postal=$request->get('cod_postal');
         $cliente->fecha_registro=$request->get('fecha_registro');
+        $cliente->vendedor_id=$request->get('vendedor_id') ?? null;
+        $cliente->forma_pago_id=$request->get('forma_pago_id') ?? null;
         $cliente->save();
 
         $idCliente=$cliente->id;
@@ -101,6 +103,8 @@ class AgregadoRapidoController extends Controller
          $cliente->aniversario=$request->get('aniversario');
          $cliente->cod_postal=$request->get('cod_postal');
          $cliente->fecha_registro=$request->get('fecha_registro');
+         $cliente->vendedor_id=$request->get('v endedor_id') ?? null;
+         $cliente->forma_pago_id=$request->get('forma_pago_id') ?? null;
          $cliente->save();
 
          $contacto=new Contacto;

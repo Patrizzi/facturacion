@@ -1730,6 +1730,7 @@ class FacturacionController extends Controller
             return $guias_cod;
         }
     }
+    // public function ajax_tipo_
     public function index3(){
         return view("transaccion.venta.facturacion.index3");
     }

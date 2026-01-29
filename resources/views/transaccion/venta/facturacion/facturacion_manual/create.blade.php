@@ -861,6 +861,7 @@
                             return {
                                 id: item.id,
                                 text: item.nombre + ' | ' + item.numero_documento,
+                                tipo_pago: item.tipo_pago_id
                             };
                         })
                     };
@@ -878,6 +879,11 @@
                 s.children[0].remove()
             }
             var data = e.params.data;
+            
+            // Si el tipo de pago es desde cliente cambiar
+            $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
+            seleccionado_fp();
+
             $.ajax({
                 type: "post",
                 url: "{{ route('facturacion_manual.ajx_remision') }}",

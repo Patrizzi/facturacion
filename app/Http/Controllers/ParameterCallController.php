@@ -17,9 +17,11 @@ use App\Stock_almacen;
 use App\Cliente;
 use App\ComprobantesVentas;
 use App\Empresa;
+use App\Forma_pago;
 use App\TipoCambio;
 use App\Kardex_entrada;
 use App\helpers;
+use App\Personal_venta;
 use App\Tipo_operacion_f;
 use App\TipoDetraccion;
 use App\User;
@@ -190,9 +192,9 @@ class ParameterCallController extends Controller
 
         if ($tipo == '1') { //Factura
             if ($search == '') {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion')->where('documento_identificacion', 'RUC')->limit(5)->get();
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('documento_identificacion', 'RUC')->limit(5)->get();
             } else {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion')->where('documento_identificacion', 'RUC')->where(function ($query) use ($search) {
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('documento_identificacion', 'RUC')->where(function ($query) use ($search) {
                     $query->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%');
                 })->limit(5)->get();
             }
@@ -201,7 +203,7 @@ class ParameterCallController extends Controller
                 // $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->where('documento_identificacion', '!=', 'RUC')->limit(5)->get();
                 $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->limit(5)->get();
             } else {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion')->where('documento_identificacion', 'DNI')->where(function ($query) use ($search) {
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('documento_identificacion', 'DNI')->where(function ($query) use ($search) {
                     $query->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%');
                 })->limit(5)->get();
             }
@@ -209,7 +211,7 @@ class ParameterCallController extends Controller
             if ($search == '') {
                 $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->limit(5)->get();
             } else {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion')->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%')->limit(5)->get();
             }
         }
         // return $tipo;
@@ -219,14 +221,16 @@ class ParameterCallController extends Controller
             $response[] = array(
                 "id" => $default_cli->id,
                 "nombre" => $default_cli->nombre,
-                "numero_documento" => $default_cli->numero_documento
+                "numero_documento" => $default_cli->numero_documento,
+                "tipo_pago_id" => $default_cli->forma_pago_id
             );
         }
         foreach ($employees as $employee) {
             $response[] = array(
                 "id" => $employee->id,
                 "nombre" => $employee->nombre,
-                "numero_documento" => $employee->numero_documento
+                "numero_documento" => $employee->numero_documento,
+                "tipo_pago_id" => $employee->forma_pago_id
             );
         }
         return response()->json($response);
@@ -868,4 +872,16 @@ class ParameterCallController extends Controller
         }
         return response()->json($respuesta);
     }
+
+    public function getPersonalVendedor(){
+        $personal = Personal_venta::with('personal.personal_l')->where('estado', 0)->get();
+        return response()->json($personal);
+    }
+
+    public function getFormaPago(){
+        $forma_pago = Forma_pago::get();
+        return response()->json($forma_pago);
+    }
+
+
 }

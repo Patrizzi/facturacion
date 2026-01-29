@@ -32,6 +32,7 @@
                 </div>
                 <form enctype="multipart/form-data" id="form_cliente_modal">
                     {{ csrf_field() }}
+                    @csrf
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -104,18 +105,6 @@
                                             id="distrito_cli" required="required" aria-required="true">
                                     </div>
                                 </div>
-                                <div class="modal-footer" style="padding: 10px">
-                                    <button type="button" id="ant-step-1" class="btn btn-sm btn-secondary"
-                                        disabled>Ant.</button>
-                                    <button type="button" id="sig-step-1"
-                                        class="btn btn-sm btn-primary">Sig.</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-                            <br>
-                            <!-- MODAL -->
-                            <div class="col-md-12">
                                 <div class="row mb-3">
                                     <!-- TELEFONO -->
                                     <div class="col-md-6">
@@ -130,6 +119,18 @@
                                         <input value="0000000" type="number" class="fast_add valid" name="celular">
                                     </div>
                                 </div>
+                                <div class="modal-footer" style="padding: 10px">
+                                    <button type="button" id="ant-step-1" class="btn btn-sm btn-secondary"
+                                        disabled>Ant.</button>
+                                    <button type="button" id="sig-step-1"
+                                        class="btn btn-sm btn-primary">Sig.</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                            <br>
+                            <!-- MODAL -->
+                            <div class="col-md-12">
                                 <div class="row mb-3">
                                     <!-- CODIGO UBIGEO -->
                                     <div class="col-md-6">
@@ -174,7 +175,7 @@
                                     <div class="col-md-6">
                                         <label for="aniversario" class="form-label"> <b>Fecha Registro:</b></label>
                                         <input value="2025-02-15" type="date" class="fast_add valid"
-                                            name="aniversario">
+                                            name="fecha_registro">
                                     </div>
                                     <!-- TIPO CLIENTE -->
                                     <div class="col-md-6">
@@ -184,6 +185,25 @@
                                             <option value="1">Cliente Frecuente</option>
                                             <option value="2">Cliente Revendedor</option>
                                             <option value="3">Cliente Vip</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <!-- Vendedor Asignado Por Defecto -->
+                                    <div class="col-md-6">
+                                        <label for="vendedor" class="form-label"><b>Vendedor Asignado</b></label>
+                                        <select name="vendedor_id" class="fast_add select2-vendedor"
+                                            autocomplete="off" required="required" style="margin-bottom: 0px;">
+                                            <option value="">Sin Vendedor fijo</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Forma Pago Defecto -->
+                                    <div class="col-md-6">
+                                        <label for="direccion" class="form-label"><b>Forma Pago Aut.</b></label>
+                                        <select name="forma_pago_id" class="fast_add select2-forma_pago"
+                                            autocomplete="off" required="required" style="margin-bottom: 0px;">
+                                            <option value="">Sin forma de pago fija</option>
                                         </select>
                                     </div>
                                 </div>
@@ -234,7 +254,8 @@
                                     <div class="col-md-12">
                                         <label for="correo" class="form-label"> <b>Correo del Contacto:</b></label>
                                         <input value="sincorreo@gmail.com" input type="text" class="fast_add"
-                                            placeholder="" name="email_contacto" autocomplete="off" required="required">
+                                            placeholder="" name="email_contacto" autocomplete="off"
+                                            required="required">
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="padding: 10px">
@@ -277,7 +298,20 @@
         border-radius: 20px;
         cursor: pointer;
     }
+
+    .select2-container--default .select2-selection--single,
+    .select2-container.select2-container--default {
+        width: 100% !important;
+    }
+
+    .select2-container.select2-container--default.select2-container--open {
+        width: 100% !important;
+        z-index: 9999;
+    }
 </style>
+
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
 <script>
     $('#add_cliente').on('click', function(e) {
         e.preventDefault();
@@ -479,4 +513,57 @@
             // $('#consulta_s').show();
         }
     }
+
+    // Busqueda de Vendedores
+
+    $.ajax({
+        url: "{{ route('pa.getPersonalVendedor') }}",
+        type: "POST",
+        dataType: "json",
+        data: {
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(data) {
+            var $select = $('.select2-vendedor');
+
+            // Limpiar opciones excepto la primera
+            $select.find('option:not(:first)').remove();
+
+            $.each(data, function(index, item) {
+                var nombreCompleto = item.personal.personal_l.nombres + ' ' +
+                    item.personal.personal_l.apellidos;
+
+                $select.append(
+                    $('<option>', {
+                        value: item.id,
+                        text: nombreCompleto
+                    })
+                );
+            });
+        }
+    });
+
+    $.ajax({
+        url: "{{ route('pa.getFormaPago') }}",
+        type: "POST",
+        dataType: "json",
+        data: {
+            _token: "{{ csrf_token() }}"
+        },
+        success: function(data) {
+            var $select = $('.select2-forma_pago');
+
+            // Limpiar opciones excepto la primera
+            $select.find('option:not(:first)').remove();
+
+            $.each(data, function(index, item) {
+                $select.append(
+                    $('<option>', {
+                        value: item.id,
+                        text: item.nombre
+                    })
+                );
+            });
+        }
+    });
 </script>

@@ -69,4 +69,22 @@ class Cliente extends Model
         $clientes  = Cliente::whereYear('created_at', $year)->whereMonth('created_at', $month)->count();
         return $clientes;
     }
+
+    public function getTipoClienteSearchAttribute(){
+        $tipo = $this->attributes['tipo_cliente'];
+        switch ($tipo) {
+            case '1':
+                return "Cliente Frecuente";
+                break;
+            case '2':
+                return "Cliente Revendedor";
+                break;
+            case '3':
+                return "Cliente Vip";
+                break;
+            default:
+                return $tipo;
+                break;
+        }
+    }
 }
