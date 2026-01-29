@@ -2330,7 +2330,7 @@ public function update(Request $request, $id)
             if ($cotizacionM) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'cotizacion_manual'), 0,22);
 
-                $pdfUrl = url("cotizacion_manual/share/{$codigo}");
+                $pdfUrl = url("cotizacion/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }

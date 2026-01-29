@@ -818,7 +818,7 @@
                     text: "Por favor, selecciona al menos una guía para imprimir.",
                     type: "warning",
                     confirmButtonText: "Entendido",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 });
                 return;
             }
@@ -830,7 +830,7 @@
                 showCancelButton: true,
                 confirmButtonText: "Sí, imprimir",
                 cancelButtonText: "Cancelar",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             }, function(isConfirm) {
                 if (isConfirm) {
                     var url = '{{ route("guia_remision.print.multiple") }}';
@@ -874,7 +874,7 @@
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos una guía de remisión para exportar.",
                     type: "warning",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 });
                 return;
             }
@@ -886,7 +886,7 @@
                 type: "info",
                 showCancelButton: true,
                 cancelButtonText: "Cancelar",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             }, function(isConfirm) {
                 if (!isConfirm) return;
 
@@ -927,7 +927,7 @@
                     text: "Por favor, selecciona al menos una guía para descargar.",
                     type: "warning",
                     confirmButtonText: "Entendido",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 });
                 return;
             }
@@ -945,7 +945,7 @@
                 showCancelButton: true,
                 confirmButtonText: "Sí, descargar",
                 cancelButtonText: "Cancelar",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             }, function(isConfirm) {
                 if (!isConfirm) return;
 
@@ -999,7 +999,7 @@
                     text: "Por favor, selecciona al menos una guía de remisión para enviar por correo.",
                     type: "warning",
                     confirmButtonText: "Entendido",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 });
             }
 
@@ -1012,7 +1012,7 @@
                 confirmButtonText: "Enviar",
                 cancelButtonText: "Cancelar",
                 inputPlaceholder: "ejemplo@correo.com",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             }, function(inputValue) {
                 if (inputValue === false) return false;
                 if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
@@ -1049,7 +1049,7 @@
                                 type: "success",
                                 timer: 3000,
                                 showConfirmButton: true,
-                                confirmButtonColor: "#2641F8"
+                                confirmButtonColor: "#1a3bb3"
                             });
                         } else {
                             swal({
@@ -1057,7 +1057,7 @@
                                 text: response.message || "Hubo un error al enviar los correos",
                                 type: "error",
                                 confirmButtonText: "Entendido",
-                                confirmButtonColor: "#2641F8"
+                                confirmButtonColor: "#1a3bb3"
                             });
                         }
                     },
@@ -1071,7 +1071,7 @@
                             text: errorMsg,
                             type: "error",
                             confirmButtonText: "Entendido",
-                            confirmButtonColor: "#2641F8"
+                            confirmButtonColor: "#1a3bb3"
                         });
                     }
                 });
@@ -1088,7 +1088,7 @@
                     text: "Por favor, selecciona al menos una guía de remisión para enviar por WhatsApp.",
                     type: "warning",
                     confirmButtonText: "Entendido",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 });
             }
 
@@ -1101,7 +1101,7 @@
                 confirmButtonText: "Enviar",
                 cancelButtonText: "Cancelar",
                 inputPlaceholder: "Ejemplo: 999999999",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             }, function(inputValue) {
                 if (inputValue === false) return false;
                 if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");

@@ -173,9 +173,6 @@ public function send_whatsapp(Request $request){
         'cotizacion' => '/cotizacion\/pdf\/(\d+)/',
         'cotizacion_manual' => '/cotizacion_manual\/pdf\/(\d+)/',
         'nota_venta' => '/nota_venta\/pdf\/(\d+)/',
-        /*'garantia_guia_ingreso' => '/garantia_guia_ingreso\/pdf\/(\d+)/',
-        'garantia_guia_egreso' => '/garantia_guia_egreso\/pdf\/(\d+)/',
-        'garantia_informe_tecnico' => '/garantia_informe_tecnico\/pdf\/(\d+)/',*/
         'boleta' => '/boleta\/pdf\/(\d+)/',
         'boleta_manual' => '/boleta_manual\/pdf\/(\d+)/',
         'factura' => '/facturacion\/pdf\/(\d+)/',
@@ -193,7 +190,11 @@ public function send_whatsapp(Request $request){
         if (preg_match($patron, $url1, $matches)) {
             $documentoId = $matches[1];
             $codigo = substr(md5($documentoId . env('APP_KEY') . $tipo), 0, 22);
-            $pdfUrl = url("{$tipo}/share/{$codigo}");
+
+            // Eliminar '_manual' del tipo para la URL
+            $tipoLimpio = str_replace('_manual', '', $tipo);
+
+            $pdfUrl = url("{$tipoLimpio}/share/{$codigo}");
             break;
         }
     }

@@ -855,7 +855,7 @@ class GuiaRemisionManualController extends Controller
             if ($guia_r_m) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'guia_remision_manual'), 0, 22);
 
-                $pdfUrl = url("guia_remision_manual/share/{$codigo}");
+                $pdfUrl = url("guia_remision/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }

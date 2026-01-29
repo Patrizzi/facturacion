@@ -558,7 +558,7 @@ class BoletaMController extends Controller
         return Excel::download(
             $export,
             'Boletas_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
-        );    
+        );
     }
 
     public function printMultiple(Request $request) {
@@ -893,7 +893,7 @@ class BoletaMController extends Controller
             if ($boleta) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'boleta_manual'), 0, 22);
 
-                $pdfUrl = url("boleta_manual/share/{$codigo}");
+                $pdfUrl = url("boleta/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }

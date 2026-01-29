@@ -779,7 +779,7 @@ $(document).ready(function() {
                 text: "Por favor, selecciona al menos una boleta para imprimir.",
                 type: "warning",
                 confirmButtonText: "Entendido",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             });
             return;
         }
@@ -792,7 +792,7 @@ $(document).ready(function() {
             showCancelButton: true,
             confirmButtonText: "Sí, imprimir",
             cancelButtonText: "Cancelar",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         }, function(isConfirm) {
             if (isConfirm) {
                 // Construir URL con parámetros GET
@@ -831,7 +831,7 @@ $(document).ready(function() {
 
     // Manejar click del botón de exportar
     $('#btn-exportar-filtrado').on('click', function(e) {
-        
+
         e.preventDefault();
 
         // Validar que hay boletas seleccionadas
@@ -840,7 +840,7 @@ $(document).ready(function() {
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una boleta para exportar.",
                 type: "warning",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             });
             return;
         }
@@ -852,10 +852,10 @@ $(document).ready(function() {
             type: "info",
             showCancelButton: true,
             cancelButtonText: "Cancelar",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         }, function(isConfirm) {
             if (!isConfirm) return;
-            
+
             $('#btn-exportar-filtrado').prop('disabled', true);
 
             $.ajax({
@@ -909,7 +909,7 @@ $(document).ready(function() {
                 text: "Por favor, selecciona al menos una boleta manual para descargar.",
                 type: "warning",
                 confirmButtonText: "Entendido",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             });
             return;
         }
@@ -927,7 +927,7 @@ $(document).ready(function() {
             showCancelButton: true,
             confirmButtonText: "Sí, descargar",
             cancelButtonText: "Cancelar",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         }, function(isConfirm) {
             if (isConfirm) {
                 // Construir URL con parámetros
@@ -967,7 +967,7 @@ $(document).ready(function() {
                 text: "Por favor, selecciona al menos una boleta manual para enviar por correo.",
                 type: "warning",
                 confirmButtonText: "Entendido",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             });
         }
 
@@ -980,7 +980,7 @@ $(document).ready(function() {
             confirmButtonText: "Enviar",
             cancelButtonText: "Cancelar",
             inputPlaceholder: "ejemplo@correo.com",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         }, function(inputValue) {
             if (inputValue === false) return false;
             if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
@@ -1017,7 +1017,7 @@ $(document).ready(function() {
                             type: "success",
                             timer: 3000,
                             showConfirmButton: true,
-                            confirmButtonColor: "#2641F8"
+                            confirmButtonColor: "#1a3bb3"
                         });
                     } else {
                         swal({
@@ -1025,7 +1025,7 @@ $(document).ready(function() {
                             text: response.message || "Hubo un error al enviar los correos",
                             type: "error",
                             confirmButtonText: "Entendido",
-                            confirmButtonColor: "#2641F8"
+                            confirmButtonColor: "#1a3bb3"
                         });
                     }
                 },
@@ -1039,7 +1039,7 @@ $(document).ready(function() {
                         text: errorMsg,
                         type: "error",
                         confirmButtonText: "Entendido",
-                        confirmButtonColor: "#2641F8"
+                        confirmButtonColor: "#1a3bb3"
                     });
                 }
             });
@@ -1056,7 +1056,7 @@ $(document).ready(function() {
                 text: "Por favor, selecciona al menos una boleta para enviar por WhatsApp.",
                 type: "warning",
                 confirmButtonText: "Entendido",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             });
         }
 
@@ -1069,7 +1069,7 @@ $(document).ready(function() {
             confirmButtonText: "Enviar",
             cancelButtonText: "Cancelar",
             inputPlaceholder: "Ejemplo: 999999999",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         }, function(inputValue) {
             if (inputValue === false) return false;
             if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");

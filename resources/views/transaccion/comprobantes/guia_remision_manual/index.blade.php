@@ -318,7 +318,7 @@
 
     /* =========================
      *  Exportar Excel
-     * ========================= 
+     * =========================
     $(document).on('click', '#btn-exportar-grm', function(e) {
         e.preventDefault();
         var info = coti_table.page.info();
@@ -760,7 +760,7 @@ coti_table.on('draw', function() {
                     text: "Por favor, selecciona al menos una guía para imprimir.",
                     type: "warning",
                     confirmButtonText: "Entendido",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 });
             } else {
                 alert("Por favor, selecciona al menos una guía para imprimir.");
@@ -812,7 +812,7 @@ coti_table.on('draw', function() {
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una guía de remisión para exportar.",
                 type: "warning",
-                confirmButtonColor: "#2641F8"
+                confirmButtonColor: "#1a3bb3"
             });
             return;
         }
@@ -824,10 +824,10 @@ coti_table.on('draw', function() {
             type: "info",
             showCancelButton: true,
             cancelButtonText: "Cancelar",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         }, function(isConfirm) {
             if (!isConfirm) return;
-            
+
             $('#btn-exportar-grm').prop('disabled', true);
 
             $.ajax({
@@ -865,7 +865,7 @@ coti_table.on('draw', function() {
             text: "Selecciona al menos una guía para descargar.",
             type: "warning",
             confirmButtonText: "Entendido",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         });
         return;
     }
@@ -881,7 +881,7 @@ coti_table.on('draw', function() {
         showCancelButton: true,
         confirmButtonText: "Sí, descargar",
         cancelButtonText: "Cancelar",
-        confirmButtonColor: "#2641F8"
+        confirmButtonColor: "#1a3bb3"
     }, function(isConfirm) {
         if (isConfirm) {
             var url = "{{ route('guia_remision_manual.download.multiple') }}";
@@ -921,7 +921,7 @@ $('#btn-correo-filtrado').on('click', function(e) {
             text: "Por favor, selecciona al menos una guía de remisión manual para enviar por correo.",
             type: "warning",
             confirmButtonText: "Entendido",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         });
     }
 
@@ -934,7 +934,7 @@ $('#btn-correo-filtrado').on('click', function(e) {
         confirmButtonText: "Enviar",
         cancelButtonText: "Cancelar",
         inputPlaceholder: "ejemplo@correo.com",
-        confirmButtonColor: "#2641F8"
+        confirmButtonColor: "#1a3bb3"
     }, function(inputValue) {
         if (inputValue === false) return false;
         if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
@@ -971,7 +971,7 @@ $('#btn-correo-filtrado').on('click', function(e) {
                         type: "success",
                         timer: 3000,
                         showConfirmButton: true,
-                        confirmButtonColor: "#2641F8"
+                        confirmButtonColor: "#1a3bb3"
                     });
                 } else {
                     swal({
@@ -979,7 +979,7 @@ $('#btn-correo-filtrado').on('click', function(e) {
                         text: response.message || "Hubo un error al enviar los correos",
                         type: "error",
                         confirmButtonText: "Entendido",
-                        confirmButtonColor: "#2641F8"
+                        confirmButtonColor: "#1a3bb3"
                     });
                 }
             },
@@ -993,7 +993,7 @@ $('#btn-correo-filtrado').on('click', function(e) {
                     text: errorMsg,
                     type: "error",
                     confirmButtonText: "Entendido",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 });
             }
         });
@@ -1010,7 +1010,7 @@ $('#btn-whatsapp-filtrado').on('click', function(e) {
             text: "Por favor, selecciona al menos una guía de remisión para enviar por WhatsApp.",
             type: "warning",
             confirmButtonText: "Entendido",
-            confirmButtonColor: "#2641F8"
+            confirmButtonColor: "#1a3bb3"
         });
     }
 
@@ -1023,7 +1023,7 @@ $('#btn-whatsapp-filtrado').on('click', function(e) {
         confirmButtonText: "Enviar",
         cancelButtonText: "Cancelar",
         inputPlaceholder: "Ejemplo: 999999999",
-        confirmButtonColor: "#2641F8"
+        confirmButtonColor: "#1a3bb3"
     }, function(inputValue) {
         if (inputValue === false) return false;
         if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");

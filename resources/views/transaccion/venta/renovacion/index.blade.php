@@ -494,7 +494,7 @@
                         text: "Por favor, selecciona al menos una renovación para imprimir.",
                         type: "warning",
                         confirmButtonText: "Entendido",
-                        confirmButtonColor: "#2641F8"
+                        confirmButtonColor: "#1a3bb3"
                     });
                     return;
                 }
@@ -506,7 +506,7 @@
                     showCancelButton: true,
                     confirmButtonText: "Sí, imprimir",
                     cancelButtonText: "Cancelar",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 }, function(isConfirm) {
                     if (isConfirm) {
                         // **CAMBIO AQUÍ: usar una ruta diferente para renovaciones**
@@ -551,7 +551,7 @@
                         text: "Por favor, selecciona al menos una renovación para exportar.",
                         type: "warning",
                         confirmButtonText: "Entendido",
-                        confirmButtonColor: "#2641F8"
+                        confirmButtonColor: "#1a3bb3"
                     });
                     return;
                 }
@@ -564,7 +564,7 @@
                     showCancelButton: true,
                     confirmButtonText: "Sí, exportar",
                     cancelButtonText: "Cancelar",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 }, function(isConfirm) {
                     if (isConfirm) {
                         // Construir URL con los IDs seleccionados
@@ -605,7 +605,7 @@
                         text: "Por favor, selecciona al menos una renovación para descargar.",
                         type: "warning",
                         confirmButtonText: "Entendido",
-                        confirmButtonColor: "#2641F8"
+                        confirmButtonColor: "#1a3bb3"
                     });
                     return;
                 }
@@ -621,7 +621,7 @@
                     showCancelButton: true,
                     confirmButtonText: "Sí, descargar",
                     cancelButtonText: "Cancelar",
-                    confirmButtonColor: "#2641F8"
+                    confirmButtonColor: "#1a3bb3"
                 }, function(isConfirm) {
                     if (isConfirm) {
                         var url = '{{route("renovaciones.download.multiple")}}';
