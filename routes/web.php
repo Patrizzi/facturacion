@@ -1347,9 +1347,9 @@ Route::get('boleta/share/{codigo}', [BoletaController::class, 'descargarPorCodig
 Route::post('/comprobantes/boleta/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boleta.multiple');
 
-Route::get('boleta_manual/share/{codigo}', [BoletaMController::class, 'descargarPorCodigo'])
+Route::get('boleta/share/{codigo}', [BoletaMController::class, 'descargarPorCodigo'])
     ->name('boleta_manual_codificada');
-Route::post('/comprobantes/boleta/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
+Route::post('/comprobantes/boleta_manual/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boletaM.multiple');
 
 Route::get('factura/share/{codigo}', [FacturacionController::class, 'descargarPorCodigo'])
@@ -1357,9 +1357,9 @@ Route::get('factura/share/{codigo}', [FacturacionController::class, 'descargarPo
 Route::post('/comprobantes/factura/whatsapp/send-multiple', [FacturacionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.factura.multiple');
 
-Route::get('factura_manual/share/{codigo}', [FacturacionMController::class, 'descargarPorCodigo'])
+Route::get('factura/share/{codigo}', [FacturacionMController::class, 'descargarPorCodigo'])
     ->name('factura_manual_codificada');
-Route::post('/comprobantes/factura/whatsapp/send-multiple', [FacturacionMController::class, 'whatsappSendMultiple'])
+Route::post('/comprobantes/factura_manual/whatsapp/send-multiple', [FacturacionMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.facturaM.multiple');
 
 Route::get('nota_credito/share/{codigo}', [NotaCreditoController::class, 'descargarPorCodigo'])
@@ -1377,9 +1377,9 @@ Route::get('guia_remision/share/{codigo}', [GuiaRemisionController::class, 'desc
 Route::post('/comprobantes/guia_remision/whatsapp/send-multiple', [GuiaRemisionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaRemision.multiple');
 
-Route::get('guia_remision_manual/share/{codigo}', [GuiaRemisionManualController::class, 'descargarPorCodigo'])
+Route::get('guia_remision/share/{codigo}', [GuiaRemisionManualController::class, 'descargarPorCodigo'])
     ->name('guia_remision_manual_codificada');
-Route::post('/comprobantes/guia_remision/whatsapp/send-multiple', [GuiaRemisionManualController::class, 'whatsappSendMultiple'])
+Route::post('/comprobantes/guia_remision_manual/whatsapp/send-multiple', [GuiaRemisionManualController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaRemisionM.multiple');
 
 // Mandar multiples pdf por wsp en ventas
