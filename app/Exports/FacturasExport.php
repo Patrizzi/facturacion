@@ -89,7 +89,8 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             'Cambio',
             'Observacion',
             'Comisionista',
-            'Personal',
+            'Emisor',
+            'Vendedor Asignado',
             'Estado',
             'SUNAT',
             'Estado de pago',
@@ -113,12 +114,15 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
      */
     public function map($f): array
     {
+        $pl = $f->cliente?->vendedor_asignado?->personal?->personal_l;
+        $vendedor = $pl ? $pl->nombres . ' ' . $pl->apellidos: '';
+        $comi = $f->select_comisionista?->personal?->personal_l;
+        $comisionista = $comi ? $comi->nombres . ' ' . $comi->apellidos : '';
         $subtotal = ($f->op_gravada ?? 0)
                   + ($f->op_inafecta ?? 0)
                   + ($f->op_exonerada ?? 0);
 
         $igv = round(($f->op_gravada ?? 0) * 0.18, 2);
-
         return [
             $f->codigo_fac,
             optional($f->almacen)->nombre,
@@ -132,10 +136,11 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             $f->fecha_vencimiento,
             $f->cambio,
             $f->observacion,
-            $f->comisionista,
+            $comisionista,
             optional($f->user->personal)->nombres.' '.optional($f->user->personal)->apellidos,
-            $f->estado ? 'Activo' : 'Inactivo',
-            $f->f_electronica ? 'Emitido' : 'Pendiente',
+            $vendedor,
+            $f->estado == 0 ? 'Guardado' : ($f->estado == 1 ? 'Finalizado' : 'Anulado'),
+            $f->f_electronica == 0 ? 'Emitido' : ($f->f_electronica == 1 ? 'Enviado' : 'Rechazado' ),
             $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
             $f->tipo,
             $f->op_gravada,

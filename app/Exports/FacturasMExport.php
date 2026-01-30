@@ -88,7 +88,8 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
             'Fecha de vencimiento',
             'Tipo de cambio',
             'Observación',
-            'Personal',
+            'Emisor',
+            'Vendedor Asignado',
             'Estado',
             'SUNAT',
             'Estado de pago',
@@ -111,6 +112,9 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
      */
     public function map($f): array
     {
+        $pl = $f->cliente?->vendedor_asignado?->personal?->personal_l;
+        $vendedor = $pl ? $pl->nombres . ' ' . $pl->apellidos: '';
+
         $subtotal = ($f->op_gravada ?? 0)
                   + ($f->op_inafecta ?? 0)
                   + ($f->op_exonerada ?? 0);
@@ -131,6 +135,7 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
             $f->cambio,
             $f->observacion,
             optional($f->user->personal)->nombres.' '.optional($f->user->personal)->apellidos,
+            $vendedor,
             $f->estado ? 'Activo' : 'Inactivo',
             $f->f_electronica ? 'Emitido' : 'Pendiente',
             $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),

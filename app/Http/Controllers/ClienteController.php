@@ -8,6 +8,8 @@ use App\ClienteRetenedores;
 use App\Cliente_sucursal;
 use App\ComprobantesVentas;
 use App\Contacto;
+use App\Forma_pago;
+use App\Personal_venta;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -97,6 +99,8 @@ class ClienteController extends Controller
      /*Nota: el cod postal es código de UBIGEO, cuando se registra el cliente por el agre. rapido es Ubigeo, para envio a sunat es UBIGEO */
      $cliente->cod_postal=$request->get('cod_postal');
      $cliente->fecha_registro=$request->get('fecha_registro');
+     $cliente->vendedor_id=$request->get('vendedor_id') ?? null;
+     $cliente->forma_pago_id=$request->get('forma_pago_id') ?? null;
      $cliente->save();
 
      $contacto=new Contacto;
@@ -136,7 +140,9 @@ class ClienteController extends Controller
       $contacto_cantidad=Contacto::where('clientes_id',$id)->count();
       $contacto_cantidad_estado=Contacto::where('clientes_id',$id)->where('estado',0)->count();
       Cliente::revision_contacto($id);
-      return view('auxiliar.cliente.show',compact('cliente_show','contacto_show','contacto_cantidad','contacto_cantidad_estado','cliente_rete','cliente_sucursal'));
+      $vendedores = $personal = Personal_venta::with('personal.personal_l')->where('estado', 0)->get();
+      $forma_pago = Forma_pago::get();
+      return view('auxiliar.cliente.show',compact('cliente_show','contacto_show','contacto_cantidad','contacto_cantidad_estado','cliente_rete','cliente_sucursal','vendedores','forma_pago'));
     }
 
     /**
@@ -160,6 +166,7 @@ class ClienteController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // return $request;
       $cliente= Cliente::find($id);
       $cliente->nombre=$request->get('nombre');
       $cliente->direccion=$request->get('direccion');
@@ -177,6 +184,8 @@ class ClienteController extends Controller
       $cliente->cod_postal=$request->get('ubigeo');
       $cliente->aniversario=$request->get('aniversario');
       $cliente->fecha_registro=$request->get('fecha_registro');
+      $cliente->vendedor_id=$request->get('vendedor_id') ?? null;
+      $cliente->forma_pago_id=$request->get('forma_pago_id') ?? null;
 
       $cliente->save();
       return redirect()->route('cliente.show',$cliente->id);

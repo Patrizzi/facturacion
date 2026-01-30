@@ -187,6 +187,26 @@
                 page-break-before: avoid !important;
             }
         }
+        #watermark {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+
+        #watermark p {
+            position: absolute;
+            color: rgba(120, 120, 120, 0.31);
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+            font-weight: bolder;
+            font-size: 95px !important;
+            pointer-events: none;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            top: 25%;
+            right: 25%;
+            z-index: 0;
+        }
     </style>
 </head>
 
@@ -275,7 +295,11 @@
                 </td>
             </tr>
         </table>
-
+        @if ($guia_remision->g_electronica == 2 || $guia_remision->estado_anulado == 1)
+            <div id="watermark">
+                <p>Anulado</p>
+            </div>
+        @endif
         <table style="width: 100%;border-collapse:separate;margin-bottom: 5px;border-color: white;page-break-inside: avoid;">
             <tr style="margin: 0px;padding: 0px">
                 <td style="width: 50%;border-color: white;margin: 0px;padding: 0px;padding-right: 4px">

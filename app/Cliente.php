@@ -21,6 +21,11 @@ class Cliente extends Model
 
     protected $guarded = [];
 
+    public function vendedor_asignado(){
+        return $this->belongsTo(Personal_venta::class, 'vendedor_id');
+    }
+
+
     public static function cliente_update($id_cliente)
     {
         $cliente = Cliente::where('id', $id_cliente)->first();
@@ -68,5 +73,23 @@ class Cliente extends Model
         $month = date('m', strtotime($fecha_conv)); // Obtiene el mes de la fecha
         $clientes  = Cliente::whereYear('created_at', $year)->whereMonth('created_at', $month)->count();
         return $clientes;
+    }
+
+    public function getTipoClienteSearchAttribute(){
+        $tipo = $this->attributes['tipo_cliente'];
+        switch ($tipo) {
+            case '1':
+                return "Cliente Frecuente";
+                break;
+            case '2':
+                return "Cliente Revendedor";
+                break;
+            case '3':
+                return "Cliente Vip";
+                break;
+            default:
+                return $tipo;
+                break;
+        }
     }
 }

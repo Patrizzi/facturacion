@@ -207,6 +207,25 @@
                 page-break-inside: avoid;
             }
         }
+            #watermark {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 0;
+            }
+            #watermark p {
+                position: absolute;
+                color: rgba(120, 120, 120, 0.31);
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+                font-weight: bolder;
+                font-size: 95px !important;
+                pointer-events: none;
+                -webkit-transform: rotate(-45deg);
+                -moz-transform: rotate(-45deg);
+                top: 30%;
+                right: 35%;
+                z-index: 0;
+            }
     </style>
 
     <script>
@@ -271,12 +290,16 @@
 
             <div class="ruc-box">
                 <div style="font-weight:700;">R.U.C. N° {{ $empresaRuc }}</div>
-                <div class="title">GUÍA DE REMISIÓN REMITENTE</div>
-                <div class="title">(MANUAL)</div>
+                <div class="title">GUÍA DE REMISIÓN <br> REMITENTE</div>
+                {{-- <div class="title">(MANUAL)</div> --}}
                 <div class="serie">N°: {{ $g->cod_guia }}</div>
             </div>
         </div>
-
+        @if ($g->g_electronica == 2 || $g->estado_anulado == 1)
+            <div id="watermark">
+                <p>Anulado</p>
+            </div>
+        @endif
         <div class="grid-2">
             <div class="box">
                 <div class="box-title">PUNTO DE PARTIDA</div>

@@ -629,7 +629,7 @@
                                                 <div class="col-sm-4">
                                                     <div style="color: black" class="text-center">
                                                         <strong>Paralelo:</strong>
-                                                        <div><span>{{ $tipo_cambio->paralelo }}</span></div>
+                                                        <div><span id="tc_paralelo">{{ $tipo_cambio->paralelo }}</span></div>
                                                     </div>
                                                 </div>
                                             @endif

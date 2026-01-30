@@ -11,7 +11,7 @@ class Facturacion extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['estado_pago_text','total_precio','total_precio_sin_forma'];
+    protected $appends = ['estado_pago_text', 'total_precio', 'total_precio_sin_forma'];
 
     protected $with = ['producto', 'cliente'];
 
@@ -65,8 +65,32 @@ class Facturacion extends Model
         return $this->belongsTo(Tipo_documento_sunat::class, 'tipo_documento_id');
     }
 
-    public function registros(){
+    public function registros()
+    {
         return $this->hasMany(Facturacion_registro::class, 'facturacion_id');
+    }
+
+
+    public function detracciones()
+    {
+        return $this->hasOne(Detracciones::class, 'factura_id');
+    }
+
+
+
+    public function getSelectComisionistaAttribute()
+    {
+        $raw = trim((string) $this->getAttribute('comisionista'));
+
+        if ($raw === '' || $raw === '0') {
+            return null;
+        }
+
+        if (!ctype_digit($raw)) {
+            return null;
+        }
+
+        return Personal_venta::with('personal.personal_l')->find((int) $raw);
     }
 
     public function getFechaEmisionAttribute()
@@ -78,6 +102,16 @@ class Facturacion extends Model
     {
         $new_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('d-m-Y');
         return $new_vencimiento;
+    }
+    public function getFechaEmisionEditAttribute()
+    {
+        $edit_emision = Carbon::parse($this->attributes['fecha_emision'])->format('yyyy-mm-dd');
+        return $edit_emision;
+    }
+    public function getFechaVencimientoEditAttribute()
+    {
+        $edit_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('Y-m-d');
+        return $edit_vencimiento;
     }
 
     public static function revision_cuotas($id)
@@ -356,9 +390,10 @@ class Facturacion extends Model
         return $total_table;
     }
 
-    public function getTotalPrecioAttribute(){
+    public function getTotalPrecioAttribute()
+    {
         // $boleta = Boleta::find($this->attributes['id']);
-         $igv = Igv::first()->renta;
+        $igv = Igv::first()->renta;
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
@@ -367,8 +402,22 @@ class Facturacion extends Model
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
-        $total_igv = $this->moneda->simbolo.' '.number_format($total, 2);
+        $total_igv = $this->moneda->simbolo . ' ' . number_format($total, 2);
         return $total_igv;
+    }
+
+    public function getSubTotalSinFormaAttribute()
+    {
+        $subtotal = ($this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada']);
+        return round($subtotal, 2);
+    }
+
+    public function getIgvSinFormaAttribute()
+    {
+        $igv = Igv::first()->renta;
+        $sub_igv = ($this->attributes['op_gravada'] * $igv) / 100;
+
+        return round($sub_igv, 2);
     }
 
     public function getTotalPrecioSinFormaAttribute()
@@ -435,5 +484,14 @@ class Facturacion extends Model
         return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
     }
 
-    
+    public static function cambio_estado_facturas()
+    {
+        return Facturacion::where('estado', 0)
+            ->whereDate('created_at', Carbon::today())
+            // ->limit(5)
+            ->update([
+                'estado' => 1,
+                // 'updated_at' => now(),
+            ]);
+    }
 }

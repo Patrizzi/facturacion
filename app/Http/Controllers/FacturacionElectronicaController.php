@@ -85,7 +85,7 @@ class FacturacionElectronicaController extends Controller
         $empresa=Empresa::first();
         $fecha_hoy = Carbon::now();
 
-        $facturacion=Facturacion::where('f_electronica',0)->get();
+        $facturacion=Facturacion::where('f_electronica',0)->where('estado', 1)->get();
         foreach ($facturacion as $factura) {
             $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
         }
@@ -104,7 +104,7 @@ class FacturacionElectronicaController extends Controller
         $empresa=Empresa::first();
         $fecha_hoy = Carbon::now();
 
-        $facturas_manual=Facturacion_m::where('f_electronica', 0)->get();
+        $facturas_manual=Facturacion_m::where('f_electronica', 0)->where('estado', 1)->get();
         foreach ($facturas_manual as $factura) {
             $factura->diff_day =  intval(date_diff($factura->created_at, $fecha_hoy)->format('%R%a'));
         }
@@ -1786,7 +1786,12 @@ class FacturacionElectronicaController extends Controller
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
-        $query = Guia_remision::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        if($request->daterange != ""){
+            $query = Guia_remision::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        }else{
+            $query = Guia_remision::with((['cliente']))->where('g_electronica','!=', 0)->orderBy('created_at', 'desc');
+        }
+        
 
         if(empty($filter)){
             $query->where(function($q) use ($filter){
@@ -1819,7 +1824,7 @@ class FacturacionElectronicaController extends Controller
             }else{
                 $remision->transporte = 'Transporte Publico';
             }
-            $remision->fecha_emision = Carbon::parse($remision->fecha_emision)->format('d-m-Y');
+            // $remision->fecha_emision = Carbon::parse($remision->fecha_emision)->format('d-m-Y');
             $remision->fecha_entrega = Carbon::parse($remision->fecha_entrega)->format('d-m-Y');
             if($remision->ticket_guia_remision_sunat == null){
                 $remision->ticket_guia_remision_sunat = 'Sin Ticket | Enviado con la version antigua de las Guia de Remision';
@@ -1828,7 +1833,7 @@ class FacturacionElectronicaController extends Controller
         });
         // Bucle de llamada para el llenado del datatable
         foreach ($remision as $remi) {
-            $json['data'][] = [
+            $json['data'][] = [ 
                 $remi->id,
                 $remi->id,
                 $remi->cod_guia,
@@ -1837,11 +1842,13 @@ class FacturacionElectronicaController extends Controller
                 $remi->fecha_emision,
                 $remi->fecha_entrega,
                 $remi->transporte,
+                $remi->id,
+                $remi->id,
                 $remi->g_electronica,
-                $remi->id,
-                $remi->id,
                 $remi->ticket_guia_remision_sunat,
-                $remi->estado_ticket_guia
+                $remi->estado_ticket_guia,
+                $remi->id,
+                $remi->motivo_anulacion
             ];
         }
         return response()->json($json);
@@ -1873,7 +1880,11 @@ class FacturacionElectronicaController extends Controller
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
 
-        $query = GuiaRemisionManual::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        if($request->daterange == ""){
+            $query = GuiaRemisionManual::with((['cliente']))->where('g_electronica','!=', 0)->orderBy('created_at', 'desc');
+        }else{
+            $query = GuiaRemisionManual::with((['cliente']))->where('g_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        }
 
         if(empty($filter)){
             $query->where(function($q) use ($filter){
@@ -1924,11 +1935,13 @@ class FacturacionElectronicaController extends Controller
                 $remi->fecha_emision,
                 $remi->fecha_entrega,
                 $remi->transporte,
+                $remi->id,
+                $remi->id,
                 $remi->g_electronica,
-                $remi->id,
-                $remi->id,
                 $remi->ticket_guia_remision_sunat,
-                $remi->estado_ticket_guia
+                $remi->estado_ticket_guia,
+                $remi->id,
+                $remi->motivo_anulacion
             ];
         }
         return response()->json($json);

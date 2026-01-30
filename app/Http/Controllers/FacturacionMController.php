@@ -25,6 +25,7 @@ use App\Cuotas_credito;
 use App\Codigo_guia_almacen;
 use App\Detracciones;
 use App\Facturacion_registro;
+use App\Guia_remision;
 use App\GuiaRemisionManual;
 use App\MedioPagoDetraccion;
 use App\Nota_Credito;
@@ -325,10 +326,6 @@ class FacturacionMController extends Controller
             return "error por no hacer el cambio diario";
         }
 
-        // obtención de Tipo de operación
-        $operacion=$request->get('tipo_operacion');
-        $nombre = strstr($operacion, '-',true);
-        $busca_ope=Tipo_operacion_f::where('codigo',$nombre)->first();
 
         //obtención de moneda
         $moneda_get=Moneda::where('nombre',$request->moneda)->first();
@@ -347,8 +344,12 @@ class FacturacionMController extends Controller
         $facturacion->cambio=$cambio->paralelo;
         $facturacion->observacion=$request->get('observacion');
         $facturacion->user_id =auth()->user()->id;
-        $facturacion->estado='0';
-        $facturacion->tipo_operacion_id= $busca_ope->id;
+        if($request->button_submit == 0){
+            $facturacion->estado = '0'; //! Si se puede seguir editando
+        }else{
+            $facturacion->estado = '1'; //! Si ya no se puede editar
+        }
+        $facturacion->tipo_operacion_id= $request->get('tipo_operacion');
         $facturacion->tipo_documento_id = 2;
 
         $facturacion->save();
@@ -377,9 +378,9 @@ class FacturacionMController extends Controller
             }
         }
 
-        $tipo_op = $request->get('tipo_operacion');
-        $tipo_ex = explode(' ', $tipo_op);
-        if($tipo_ex[0] == '1001' || $tipo_ex[0] == '1002' || $tipo_ex[0] == '1003' ||$tipo_ex[0] == '1004'){
+        // $tipo_op = $request->get('tipo_operacion');
+        // $tipo_ex = explode(' ', $tipo_op);
+        if($request->get('tipo_operacion') == '12' || $request->get('tipo_operacion') == '13' || $request->get('tipo_operacion') == '14' ||$request->get('tipo_operacion') == '15'){
             //
             // $detracciones = Tipo_operacion_f::where('codigo', $tipo_ex[0])->first();
             $fact_detra = new Detracciones();
@@ -514,7 +515,26 @@ class FacturacionMController extends Controller
         $banco=Banco::where('estado',0)->get();
         $j = 1;
 
-        return view('transaccion.venta.facturacion.facturacion_manual.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','detraccion'));
+        // Datos para el update 
+        // Tipo de operación
+        $forma_pagos = Forma_pago::get();
+        $remisiones = Guia_remision::select('id', 'cod_guia')
+            ->where('cliente_id', $facturacion->cliente_id)
+            ->where('g_electronica', 0)
+            ->union(
+                GuiaRemisionManual::select('id', 'cod_guia')
+                    ->where('cliente_id', $facturacion->cliente_id)
+                    ->where('g_electronica', 0)
+            )
+            ->get();
+        $tipo_operacion = Tipo_operacion_f::all();
+        $moneda = Moneda::where('principal', '1')->first();
+        $monedas_get = Moneda::all();
+        $almacen = Almacen::where('estado', 0)->get();
+        $tipo_detraccion = TipoDetraccion::all();
+        $medio_pago_detraccion = MedioPagoDetraccion::all();
+
+        return view('transaccion.venta.facturacion.facturacion_manual.show', compact('j','facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','detraccion','tipo_operacion','remisiones','moneda','monedas_get','forma_pagos','almacen','tipo_detraccion','medio_pago_detraccion'));
 
     }
 
@@ -631,7 +651,271 @@ class FacturacionMController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // return $request;
+        // Forma de Pago
+        // $cantidad_p = $request->input('cantidad');
+        // $count_cantidad_p=count($cantidad_p);
+
+        // for($i=0 ; $i<$count_cantidad_p;$i++){
+        //     $articulos[$i]= $request->input('articulo')[$i];
+        //     $producto_id_name[$i]=strstr($articulos[$i], '|');
+        //     $producto_id_2[$i]=strstr($producto_id_name[$i], ' ');
+        //     $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),1);
+        //     $producto_id[$i]=strstr($producto_id_3[$i], ' ', true);
+
+        // }
+
+
+        $factura = Facturacion_m::find($id);
+        $forma_pago_id=$request->get('forma_pago');
+        $create_cuotas = 0;
+        if($factura->forma_pago_id == 1){ //Si es contado
+            if($request->get('forma_pago') == $factura->forma_pago_id){
+                $fecha_vencimiento = $request->get('fecha_vencimiento');
+                $create_cuotas = 0;
+            }else{
+                // Si cambia a credito
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $val = $fecha_pago_forma[$c];
+                }
+                $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
+                $create_cuotas = 1;
+            }
+            
+        }else{ // Si el editado es credito
+            if($request->get('forma_pago') == $factura->forma_pago_id){ //Si sigue siendo credito
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $val = $fecha_pago_forma[$c];
+                }
+                $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
+                $create_cuotas = 1;
+            }else{ // Si cambia a contado
+                // Eliminar cuotas anteriores
+                $eliminar_cuotas = Cuotas_credito::where('facturacion_id', $id)->delete();
+                $fecha_vencimiento = $request->get('fecha_vencimiento');
+                $create_cuotas = 0;
+            }
+        }
+        // Tipo de operación
+        // $operacion = $request->get('tipo_operacion');
+        // $nombre = strstr($operacion, '-', true);
+        // $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
+
+        
+        $factura->cliente_id = $request->get('cliente_id');
+        $factura->almacen_id = $request->get('almacen');
+        $factura->orden_compra = $request->get('ord_compra');
+        $factura->guia_remision = $request->get('guia_r') ?? 0;
+        $factura->moneda_id = $request->get('moneda_id');
+        $factura->forma_pago_id = $request->get('forma_pago');
+        // Emision no se edita
+        $factura->fecha_vencimiento = $fecha_vencimiento;
+        // Cambio no se cambia
+        $factura->observacion = $request->get('observacion');
+        if($request->button_submit == 0){
+            $factura->estado = '0'; //! Si se puede seguir editando
+        }else{
+            $factura->estado = '1'; //! Si ya no se puede editar
+        }
+        $factura->tipo_operacion_id = $request->get('tipo_operacion');
+        $factura->op_gravada = 0;
+        $factura->op_inafecta = 0;
+        $factura->op_exonerada = 0;
+        $factura->op_gratuita = 0;
+        $factura->save();
+
+        $moneda = Moneda::where('principal', 1)->first();
+        //! Crear o Editar cuotas dependiendo de la logica anterior
+        if($create_cuotas == 1){
+            $count_cuotas = Cuotas_credito::where('facturacion_id', $id)->count();
+            $new_count = count($request->get('fecha_pago'));
+            if($count_cuotas == $new_count){
+                // Se editan las cuotas existentes
+                foreach($factura->cuotas_credito as $index => $cuota){
+                    $cuota->fecha_pago = $request->get('fecha_pago')[$index];
+                    $cuota->monto = $request->get('monto_pago')[$index];
+                    $cuota->save();
+                }
+            }else{
+                // Eliminar cuotas anteriores
+                $eliminar_cuotas = Cuotas_credito::where('facturacion_id', $id)->delete();
+                // Crear nuevas cuotas
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                $monto_pago = $request->input('monto_pago');
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $cuota_cred = new Cuotas_credito;
+                    $cuota_cred->facturacion_m_id = $id;
+                    $cuota_cred->numero_cuota = $c + 1;
+                    $cuota_cred->monto = $monto_pago[$c];
+                    $cuota_cred->fecha_pago = $fecha_pago_forma[$c];
+                    $cuota_cred->save();
+                }
+            }
+        }
+        // Detraccion en caso se active o exista
+        // return $request;
+        // $tipo_ex = explode(' ', $tipo_op);
+        if($request->get('tipo_operacion') == '12' || $request->get('tipo_operacion') == '13' || $request->get('tipo_operacion') == '14' ||$request->get('tipo_operacion') == '15'){
+            $search_det = Detracciones::where('factura_m_id', $id)->first();
+            if(isset($search_det)){
+                // Editar
+                $search_det->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+                $search_det->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+                $search_det->monto_total_factura = $request->get('costo_total');
+                $search_det->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+                $search_det->monto_detraccion = $request->get('total_detraccion');
+                $search_det->estado = 1;
+                $search_det->save();
+            }else{
+                $eliminar_detraccion = Detracciones::where('factura_m_id', $id)->delete();
+                // Crear
+                $fact_detra = new Detracciones();
+                $fact_detra->factura_m_id = $factura->id;
+                $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+                $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+                $fact_detra->monto_total_factura = $request->get('costo_total');
+                $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+                $fact_detra->monto_detraccion = $request->get('total_detraccion');
+                $fact_detra->estado = 1;
+                $fact_detra->save();
+            }
+        }
+        
+        //  $registros_count = count($factura->registros);
+        $count_art = count($request->get('cantidad'));
+        // OBTENCION DE PRODUCTOS O SERVICIOS
+        // return $count_art;
+        for ($i = 0; $i < $count_art; $i++) {
+            $articulos[$i] = $request->input('articulo')[$i];
+            $producto_id_name[$i] = strstr($articulos[$i], '|');
+            $producto_id_2[$i] = strstr($producto_id_name[$i], ' ');
+            $producto_id_3[$i] = substr(strstr($producto_id_2[$i], ' '), 1);
+            $producto_id[$i] = strstr($producto_id_3[$i], ' ', true);
+        }
+
+        $facturacion = Facturacion_m::find($id);
+        // Registros
+        $registros_count = count($factura->registros_m);
+        $count_art = count($request->get('cantidad'));
+        if($registros_count == $count_art){ //Si son iguales se editan
+            // Registro de artículos
+            foreach ($facturacion->registros_m as $key => $edit_reg) {
+                // Llamado de producto y servicio para su diferenciación y registro propio
+                $producto = Producto::where('codigo_producto', $producto_id[$key])->first();
+                if(isset($producto)){
+                    $edit_reg->producto_id = $producto->id;
+                    $edit_reg->numero_serie = $request->get('numero_serie')[$key];
+                    if($request->get('descripcion_item')[$key] == null){
+                        $edit_reg->descripcion_item = null;
+                    }else{
+                        $edit_reg->descripcion_item = $request->get('descripcion_item')[$key];
+                    }
+                    $edit_reg->precio = $request->get('precio')[$key];
+                    $edit_reg->cantidad = $request->get('cantidad')[$key];
+                    $edit_reg->save();
+
+                    // Modificacion para los tipos de afectación al producto y guardado a facturación
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
+                        $facturacion->op_gravada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
+                        $facturacion->op_exonerada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
+                        $facturacion->op_inafecta += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    $facturacion->save();
+                    $edit_reg->save();
+                }else{
+                    $servicio = Servicios::where('codigo_servicio', $producto_id[$key])->where('estado_anular', 0)->first();
+                    $edit_reg->producto_id = $servicio->id;
+                    $edit_reg->numero_serie = $request->get('numero_serie')[$key];
+                    if($request->get('descripcion_item')[$key] == null){
+                        $edit_reg->descripcion_item = null;
+                    }else{
+                        $edit_reg->descripcion_item = $request->get('descripcion_item')[$key];
+                    }
+                    $edit_reg->precio = $request->get('precio')[$key];
+                    $edit_reg->cantidad = $request->get('cantidad')[$key];
+                    $edit_reg->save();
+
+                    // Modificacion para los tipos de afectación al producto y guardado a facturación
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
+                        $facturacion->op_gravada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
+                        $facturacion->op_exonerada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
+                        $facturacion->op_inafecta += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    $facturacion->save();
+                    $edit_reg->save();
+                }
+            }
+        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear 
+            // Eliminar registros anteriores
+            $eliminar_registros = Facturacion_registro_m::where('facturacion_m_id', $id)->delete();
+            for ($i = 0; $i < $count_art ; $i++) { 
+                $producto = Producto::where('codigo_producto', $producto_id[$i])->first();
+                if(isset($producto)){
+                    $new_reg = new Facturacion_registro_m();
+                    $new_reg->facturacion_m_id = $factura->id;
+                    $new_reg->producto_id = $producto->id;
+                    $new_reg->numero_serie = $request->get('numero_serie')[$i];
+                    if ($request->get('descripcion_item')[$i] == null) {
+                        $new_reg->descripcion_item = null;
+                    } else {
+                        $new_reg->descripcion_item = $request->get('descripcion_item')[$i];
+                    }
+                    $new_reg->precio = $request->get('precio')[$i];
+                    $new_reg->cantidad = $request->get('cantidad')[$i];
+                    $new_reg->save();
+                    // Modificacion para los tipos de afectación al producto y guardado a facturación
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
+                        $facturacion->op_gravada += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
+                        $facturacion->op_exonerada += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
+                        $facturacion->op_inafecta += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    $facturacion->save();
+                }else{
+                    $servicio = Servicios::where('codigo_servicio', $producto_id[$i])->where('estado_anular', 0)->first();
+                    $new_reg = new Facturacion_registro_m();
+                    $new_reg->facturacion_m_id = $factura->id;
+                    $new_reg->servicio_id = $servicio->id;
+                    $new_reg->numero_serie = $request->get('numero_serie')[$i];
+                    if ($request->get('descripcion_item')[$i] == null) {
+                        $new_reg->descripcion_item = null;
+                    } else {
+                        $new_reg->descripcion_item = $request->get('descripcion_item')[$i];
+                    }
+                    $new_reg->precio = $request->get('precio')[$i];
+                    $new_reg->cantidad = $request->get('cantidad')[$i];
+                    $new_reg->save();
+                    // Modificacion para los tipos de afectación al producto y guardado a facturación
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
+                        $facturacion->op_gravada += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
+                        $facturacion->op_exonerada += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
+                        $facturacion->op_inafecta += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    $facturacion->save();
+                }
+            }
+        }
+        return redirect()->route('facturacion_manual.show', $factura->id);
     }
 
     /**

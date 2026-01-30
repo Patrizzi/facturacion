@@ -17,12 +17,15 @@ use App\Stock_almacen;
 use App\Cliente;
 use App\ComprobantesVentas;
 use App\Empresa;
+use App\Forma_pago;
 use App\TipoCambio;
 use App\Kardex_entrada;
 use App\helpers;
+use App\Personal_venta;
 use App\Tipo_operacion_f;
 use App\TipoDetraccion;
 use App\User;
+use Carbon\Carbon;
 use CifrasEnLetras;
 use Swift_SmtpTransport;
 use Swift_Mailer;
@@ -42,7 +45,7 @@ class ParameterCallController extends Controller
         // return $money_id;
         //Obtención del articulo
         $article = $request->get('articulo');
-        $id = explode(" ", $article); //separador del articulo por espacio
+        $id = explode(" | ", $article); //separador del articulo por espacio
 
         //Obtención del almacén
         $store = $request->get('almacen');
@@ -52,11 +55,11 @@ class ParameterCallController extends Controller
         if ($article == NULL) {
             return response()->json(['error' => 'No existe ningún artículo'], 400);
         }
-
+        // return $id;
         //Obtención de los datos del articulo (producto-servicio)
-        $product = Producto::where('id', $id[0])->where('codigo_producto', $id[2])->where('codigo_original', $id[4])->first();
-        $service = Servicios::where('id', $id[0])->where('codigo_servicio', $id[2])->where('codigo_original', $id[4])->first();
-        // return $service;
+        $product = Producto::where('id', $id[0])->where('codigo_producto', $id[1])->where('codigo_original', $id[2])->first();
+        $service = Servicios::where('id', $id[0])->where('codigo_servicio', $id[1])->where('codigo_original', $id[2])->first();
+        // return $product;
         // OPCIONE PARA BUSCAR SIN ERRORES, CODIGO[2] ES UNICO PRODUCTO TIENE 8 CEROS Y SERVICIO 6 CEROS
         // $product=Producto::where('codigo_producto',$id[2])->first();
         // $service=Servicios::where('codigo_servicio',$id[2])->first();
@@ -189,9 +192,9 @@ class ParameterCallController extends Controller
 
         if ($tipo == '1') { //Factura
             if ($search == '') {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion')->where('documento_identificacion', 'RUC')->limit(5)->get();
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('documento_identificacion', 'RUC')->limit(5)->get();
             } else {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion')->where('documento_identificacion', 'RUC')->where(function ($query) use ($search) {
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('documento_identificacion', 'RUC')->where(function ($query) use ($search) {
                     $query->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%');
                 })->limit(5)->get();
             }
@@ -200,7 +203,7 @@ class ParameterCallController extends Controller
                 // $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->where('documento_identificacion', '!=', 'RUC')->limit(5)->get();
                 $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->limit(5)->get();
             } else {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion')->where('documento_identificacion', 'DNI')->where(function ($query) use ($search) {
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('documento_identificacion', 'DNI')->where(function ($query) use ($search) {
                     $query->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%');
                 })->limit(5)->get();
             }
@@ -208,7 +211,7 @@ class ParameterCallController extends Controller
             if ($search == '') {
                 $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->limit(5)->get();
             } else {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion')->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%')->limit(5)->get();
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%')->limit(5)->get();
             }
         }
         // return $tipo;
@@ -218,14 +221,16 @@ class ParameterCallController extends Controller
             $response[] = array(
                 "id" => $default_cli->id,
                 "nombre" => $default_cli->nombre,
-                "numero_documento" => $default_cli->numero_documento
+                "numero_documento" => $default_cli->numero_documento,
+                "tipo_pago_id" => $default_cli->forma_pago_id
             );
         }
         foreach ($employees as $employee) {
             $response[] = array(
                 "id" => $employee->id,
                 "nombre" => $employee->nombre,
-                "numero_documento" => $employee->numero_documento
+                "numero_documento" => $employee->numero_documento,
+                "tipo_pago_id" => $employee->forma_pago_id
             );
         }
         return response()->json($response);
@@ -459,7 +464,15 @@ class ParameterCallController extends Controller
 
         $search = $request->articulo;
         //Obtención del tipo de cambio
-        $tipo_cambio = TipoCambio::latest('created_at')->first();
+        if($request->has('fecha_tipo_cambio') != null){
+            $fecha = Carbon::createFromFormat('d-m-Y', $request->get('fecha_tipo_cambio'))
+              ->format('Y-m-d');
+
+            $tipo_cambio = TipoCambio::where('fecha', $fecha)->first();
+        }else{
+            $tipo_cambio = TipoCambio::latest('created_at')->first();
+        }
+        // dd($tipo_cambio);
         // OBTENCION DE LOS ARTICULOS A BUSCAR
         $orderProduct = $search == '' ? 'desc' : 'asc';
         $orderService = 'asc';
@@ -859,4 +872,16 @@ class ParameterCallController extends Controller
         }
         return response()->json($respuesta);
     }
+
+    public function getPersonalVendedor(){
+        $personal = Personal_venta::with('personal.personal_l')->where('estado', 0)->get();
+        return response()->json($personal);
+    }
+
+    public function getFormaPago(){
+        $forma_pago = Forma_pago::get();
+        return response()->json($forma_pago);
+    }
+
+
 }

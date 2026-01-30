@@ -724,6 +724,7 @@
                             return {
                                 id: item.id,
                                 text: item.nombre + ' | ' + item.numero_documento,
+                                tipo_pago: item.tipo_pago_id
                             };
                         })
                     };

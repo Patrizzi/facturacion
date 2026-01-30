@@ -8,6 +8,7 @@ use App\Boleta_m;
 use App\ComprobantesVentas;
 use App\Facturacion;
 use App\Facturacion_m;
+use App\Forma_pago;
 use App\Guia_remision;
 use App\GuiaRemisionManual;
 use App\Igv;
@@ -294,7 +295,7 @@ class ComprobantesVentasController extends Controller
         $almacen = Almacen::where('estado', 0)->get();
         $almacen_primero = Almacen::where('estado', 0)->first();
         $igv = Igv::first();
-
+        // Facturacion::cambio_estado_facturas();
         return view('transaccion.comprobantes.factura.index', compact('count_all_comprobantes', 'count_month_comprobantes', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv'));
     }
 
@@ -409,6 +410,7 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_nota_debito,
                 $factura->cliente->celular ?? '',
                 $factura->cliente->email ?? '',
+                $factura->estado
             ];
         }
         // Llamado para la suma total
@@ -544,6 +546,7 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_nota_debito,
                 $factura->cliente->celular ?? '',
                 $factura->cliente->email ?? '',
+                $factura->estado
 
             ];
         }

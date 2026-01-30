@@ -187,7 +187,7 @@
                         <div class="row marketing">
                           <div class="col-lg-6">
                             <h4>Porcentaje:</h4>
-                            <div class="input-group m-b">
+                            <div class="input-gro-b">
                               <div class="input-group-prepend">
                                 <span class="input-group-addon">%</span>
                               </div>
@@ -351,7 +351,7 @@
     <div class="ibox-content">
       <div class="tab-content">
         <div id="contact-1" class="tab-pane active">
-          <div class="row m-b-lg">
+          <div class="r-b-lg">
             <div class="col-lg-4 text-center">
               <h3>{{$cliente_show->nombre}}</h3>
             </div>
@@ -427,11 +427,11 @@
                 <tbody>
                   <tr>
                     <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ruc.svg')}}"> </td>
-                    <td colspan="2"><input type="text" name="nombre" class="form-control" placeholder="Nombre" value="{{$cliente_show->nombre}}"></td>
+                    <td colspan="2"> <span><strong>@if($cliente_show->documento_identificacion == "RUC") Nombres y Apelidos @else Razon Social @endif</strong></span> <input type="text" name="nombre" class="form-control" placeholder="Nombre" value="{{$cliente_show->nombre}}"></td>
                   </tr>
                   <tr>
                     <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ruc.svg')}}"> </td>
-                    <td><select class="form-control m-b" name="documento_identificacion" >
+                    <td> <span><strong>Tipo de Doc.</strong></span> <select class="form-control" name="documento_identificacion" >
                       <option value="{{$cliente_show->documento_identificacion}}">{{$cliente_show->documento_identificacion}}</option>
                       <option disabled="">----------------</option>
                       <option value="RUC">RUC</option>
@@ -439,49 +439,68 @@
                       <option value="pasaporte">Pasaporte</option>
                     </select>
                   </td>
-                  <td><input type="text"  name="numero_documento" placeholder="Numero Documento" value="{{$cliente_show->numero_documento}}" class="form-control"></td>
+                  <td> <span><strong>N° de Doc.</strong></span> <input type="text"  name="numero_documento" placeholder="Numero Documento" value="{{$cliente_show->numero_documento}}" class="form-control"></td>
                 </tr>
                 <tr>
                   <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/direccion.svg')}}"> </td>
-                  <td colspan="2"><textarea  name="direccion" placeholder="Direccion" class="form-control">{{$cliente_show->direccion}} </textarea></td>
+                  <td colspan="2"> <span><strong>Direccion</strong></span> <textarea  name="direccion" placeholder="Direccion" class="form-control">{{$cliente_show->direccion}} </textarea></td>
                 </tr>
                 <tr>
                   <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/correo.svg')}}"> </td>
-                  <td colspan="2"><input type="text"  name="email" placeholder="Correo" value="{{$cliente_show->email}}" class="form-control"></td>
+                  <td colspan="2"> <span><strong>Email</strong></span> <input type="text"  name="email" placeholder="Correo" value="{{$cliente_show->email}}" class="form-control"></td>
                 </tr>
                 <tr>
                   <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ubicacion.svg')}}"> </td>
-                  <td><input type="text"  name="pais" placeholder="Pais" value="{{$cliente_show->pais}} " class="form-control">
-                  </td><td><input type="text" name="departamento" placeholder="Departamento" value="{{$cliente_show->departamento}}"  class="form-control">
+                  <td><span><strong>Pais</strong></span> <input type="text"  name="pais" placeholder="Pais" value="{{$cliente_show->pais}} " class="form-control">
+                  </td>
+                  <td> <span><strong>Departamento</strong></span> <input type="text" name="departamento" placeholder="Departamento" value="{{$cliente_show->departamento}}"  class="form-control">
                   </td>
                 </tr>
                 <tr>
                   <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ubicacion.svg')}}"> </td>
-                  <td><input type="text" placeholder="Ciudad" name="ciudad" value="{{$cliente_show->ciudad}}" class="form-control">
-                    <td><input type="number" placeholder="Codigo Ubigeo" placeholder="Codigo Ubigeo" name="ubigeo" value="{{$cliente_show->cod_postal}}" class="form-control"></td>
+                  <td><span><strong>Ciudad</strong></span><input type="text" placeholder="Ciudad" name="ciudad" value="{{$cliente_show->ciudad}}" class="form-control">
+                  <td><span><strong>Cod. Ubigeo</strong></span><input type="number" placeholder="Codigo Ubigeo" placeholder="Codigo Ubigeo" name="ubigeo" value="{{$cliente_show->cod_postal}}" class="form-control"></td>
                   </tr>
                   <tr>
                     <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/telefono.svg')}}"> </td>
-                    <td><input type="text" placeholder="Telefono"  name="telefono" value="{{$cliente_show->telefono}}" class="form-control"></td>
-                    <td><input type="text"  placeholder="Celular" name="celular" value="{{$cliente_show->celular}}" class="form-control"></td>
+                    <td><span><strong>Telefono</strong></span><input type="text" placeholder="Telefono"  name="telefono" value="{{$cliente_show->telefono}}" class="form-control"></td>
+                    <td><span><strong>Celular</strong></span><input type="text"  placeholder="Celular" name="celular" value="{{$cliente_show->celular}}" class="form-control"></td>
                   </tr>
                   <tr>
                     <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/aniversario.svg')}}"> </td>
-                    <td><input type="date" name="aniversario" value="{{$cliente_show->aniversario}}" class="form-control" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Fecha de Aniversario"></td>
-                    <td><input type="date" placeholder="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Fecha de Registro" name="fecha_registro" value="{{$cliente_show->fecha_registro}}" class="form-control"></td>
-
+                    <td><span><strong>Fecha Aniv.</strong></span><input type="date" name="aniversario" value="{{$cliente_show->aniversario}}" class="form-control" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Fecha de Aniversario"></td>
+                    <td><span><strong>Fecha Reg.</strong></span><input type="date" placeholder="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Fecha de Registro" name="fecha_registro" value="{{$cliente_show->fecha_registro}}" class="form-control"></td>
+                  </tr>
+                  <tr>
+                    <td class="client-avatar"> <img src="{{ asset('/archivos/imagenes/clientes_svg/ruc.svg')}}"> </td>
+                    <td><span><strong>Vendedor Asignado</strong></span> 
+                      <select name="vendedor_id" id="vendedor_id" class="form-control">
+                        <option value="">Sin Vendedor fijo</option>
+                        @foreach ($vendedores as $vend)
+                          <option value="{{$vend->id}}" @if($cliente_show->vendedor_id == $vend->id) selected @endif  >{{$vend->personal->personal_l->nombres}} {{$vend->personal->personal_l->apellidos}}</option>
+                        @endforeach
+                      </select>
+                    </td>
+                    <td><span><strong>Forma Pago Aut.</strong></span> 
+                      <select name="forma_pago_id" id="forma_pago_id" class="form-control">
+                          <option value="">Sin forma de pago fija</option>
+                          @foreach ($forma_pago as $forma)
+                            <option value="{{$forma->id}}" @if($cliente_show->forma_pago_id == $forma->id) selected @endif  >{{$forma->nombre}}</option>
+                          @endforeach
+                      </select>
+                    </td>
                   </tr>
                   <tr>
                     <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ruc.svg')}}"> </td>
-                    <td> <select class="form-control" name="tipo_cliente">
-                      <option value="{{$cliente_show->tipo_cliente}}">{{$cliente_show->tipo_cliente}}</option>
+                    <td><span><strong>Tipo Cliente</strong></span> <select class="form-control" name="tipo_cliente">
+                      <option value="{{$cliente_show->tipo_cliente}}" selected>{{$cliente_show->tipo_cliente_search}}</option>
                       <option disabled="">--------------------</option>
                       <option value="Cliente Frecuente">Cliente Frecuente</option>
                       <option value="Cliente Revendedor">Cliente Revendedor</option>
                       <option value="Cliente VIP">Cliente VIP</option>
                     </select>
                   </td>
-                  <td colspan="3" align="center"><button class="btn btn-primary" type="submit"> Guardar</button></td>
+                  <td colspan="3" align="center" style="vertical-align: bottom"><button class="btn btn-primary" type="submit"> Guardar</button></td>
                 </tr>
               </tbody>
             </table>

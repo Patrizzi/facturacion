@@ -425,6 +425,7 @@ Route::group(
         Route::resource('/facturacion', 'FacturacionController')->except(['store', 'create']);
         Route::post('/facturacion/create', 'FacturacionController@create')->name('facturacion.create');
         Route::put('/facturacion/store/{id_moneda}', 'FacturacionController@store')->name('facturacion.store');
+        Route::post('/facturacion/update/{id}', 'FacturacionController@update')->name('facturacion.update');
         Route::post('/facturacion/anular', 'FacturacionController@anulacion')->name('facturacion.anulacion');
         Route::post('/facturacion/ajax_remision', 'FacturacionController@ajax_remision')->name('facturacion.ajx_remision');
         //DESCARGA DE FACTURA EN EXCEL
@@ -447,6 +448,7 @@ Route::group(
 
         Route::post('/facturacion_manual/codigo', 'FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
         Route::resource('facturacion_manual', 'FacturacionMController');
+        Route::post('/facturacion_manual/update/{id}', 'FacturacionMController@update')->name('facturacion_manual.update');
         Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
 
         //boleta manual manual
@@ -478,23 +480,23 @@ Route::group(
         Route::post('/boleta/create', 'BoletaController@create')->name('boleta.create');
         Route::put('/boleta/store/{id_moneda}', 'BoletaController@store')->name('boleta.store');
         Route::get('/boleta/ticket/{id}', 'BoletaController@ticket')->name('boleta.ticket');
-        /*Guia Remision*/
+        //* Guia Remision *//
         //para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria
-        Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
-
+    
         Route::resource('/guia_remision', 'GuiaRemisionController')->except(['create']);
         Route::post('/guia_remision/sucursal', 'GuiaRemisionController@ajax_sucursal')->name('guia_remision.ajax_sucursal');
         Route::post('/guia_remision/create', 'GuiaRemisionController@create')->name('guia_remision.create');
         // Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
         Route::post('/guia_remision/peso_stock', 'GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
+        Route::post('/guia_remision/anular','GuiaRemisionController@destroy')->name('guia_remision.anular');
+        Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
+
         /* REMISION MANUAL */
         Route::resource('/guia_remision_manual', 'GuiaRemisionManualController');
         // Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
         Route::post('/guia_remision_manual/peso', 'GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
         Route::post('/guia_remision_manual/almacen_guia', 'GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
-
-        Route::get('/guia_remision_manual/print/{id}', 'GuiaRemisionManualController@print')->name('remision_m.print');
-
+        Route::post('/guia_remision_manual/anular','GuiaRemisionManualController@destroy')->name('remision_m.anular');
         Route::get('/guia_remision_manual/print/{id}', 'GuiaRemisionManualController@print')->name('remision_m.print');
 
 
@@ -523,6 +525,8 @@ Route::group(
         Route::post('parameter_call/getNFactura', 'ParameterCallController@getNFactura')->name('pa.nfactura');
         Route::post('parameter_call/getNumberLetter', 'ParameterCallController@getNumberLetter')->name('pa.numberletters');
         Route::post('parameter_call/ajax_remision', 'ParameterCallController@ajax_remision')->name('pa.ajax_remision');
+        Route::post('parameter_call/getPersonalVendedor', 'ParameterCallController@getPersonalVendedor')->name('pa.getPersonalVendedor'); 
+        Route::post('parameter_call/getFormaPago', 'ParameterCallController@getFormaPago')->name('pa.getFormaPago'); 
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
