@@ -756,7 +756,7 @@ $(document).ready(function() {
 
 
     $(document).on('click', '.wsp-container .btn-success', function(e) {
-        if (hasAnySelection()) { // ✅
+        if (hasAnySelection()) {
             e.preventDefault();
             e.stopPropagation();
             closeWhatsappPanels();
@@ -767,10 +767,9 @@ $(document).ready(function() {
         $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
     });
 
-
     // Fijar también cuando se hace clic en el input o en cualquier parte del formulario
     $(document).on('click', '.wsp-form', function(e) {
-        if (hasAnySelection()) { // ✅
+        if (hasAnySelection()) {
             e.preventDefault();
             e.stopPropagation();
             closeWhatsappPanels();
