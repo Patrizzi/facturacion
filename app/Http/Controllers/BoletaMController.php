@@ -33,6 +33,11 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use App\EmailConfiguraciones;
+use App\EmailBandejaEnviosArchivos;
+use App\EmailBandejaEnvios;
+use App\Exports\BoletasMExport;
 
 class BoletaMController extends Controller
 {
@@ -529,196 +534,31 @@ class BoletaMController extends Controller
     }
 
     //FUNCION PARA COMPROBANTES
-    public function exportarBoletasM(Request $request){
-        if (ob_get_contents()) {
-            ob_end_clean();
-        }
+    public function exportarBoletasM(Request $request)
+    {
+        $ids = $request->json('boleta_ids');
 
-        if ($request->has('boleta_ids') && !empty($request->input('boleta_ids'))) {
-            $boletaIds = $request->input('boleta_ids');
-
-            $boletasM = Boleta_m::with([
-                'almacen',
-                'cotizacionM',
-                'cliente',
-                'moneda',
-                'forma_pago',
-                'user.personal',
-                'tipo_operacion',
-                'tipo_documento'
-            ])
-            ->whereIn('id', $boletaIds)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if (!empty($ids)) {
+            $export = new BoletasMExport($ids);
         } else {
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
 
-            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-            $filter = $request->get('value');
-            $tipo = $request->get('tipo_coti');
+            [$start, $end] = explode(' - ', $request->daterange);
 
-            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
-
-            $query = Boleta_m::with([
-                'cotizacionM',
-                'almacen',
-                'cliente',
-                'moneda',
-                'forma_pago',
-                'user.personal',
-                'tipo_operacion',
-                'tipo_documento'
-            ])
-
-            ->whereBetween('created_at', [$starDate, $endDate])
-            ->orderBy('created_at', 'desc');
-
-            if (!empty($filter)) {
-                $query->where(function ($q) use ($filter) {
-                    $q->where('codigo_boleta', 'like', '%' . $filter . '%');
-                    $q->orWhereHas('cliente', function ($q) use ($filter) {
-                        $q->where('nombre', 'like', '%' . $filter . '%')
-                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-                    });
-                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                        $q->where('nombre', 'like', '%' . $filter . '%');
-                    });
-                });
-            }
-
-            if ($tipo !== null) {
-                $query->where('tipo' , $tipo);
-            }
-
-            $boletasM = $query->get();
+            $export = new BoletasMExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+            ]);
         }
 
-        // Definir encabezados
-        $headers = [
-            'Código Boleta Manual',
-            'Cotizacion',
-            'Almacén',
-            'Orden de compra',
-            'Guia de Remision',
-            'Cliente',
-            'Moneda',
-            'Forma de pago',
-            'Fecha de emision',
-            'Fecha de vencimiento',
-            'Cambio',
-            'Observacion',
-            'Personal',
-            'Estado',
-            'SUNAT',
-            'Estado de pago',
-            'Operacion gravada',
-            'Operacion inafecta',
-            'Operacion Exonerada',
-            'Operacion gratuita',
-            'Nota Credito',
-            'Nota Debito',
-            'Tipo de Operacion',
-            'Tipo de Documento',
-            'Subtotal',
-            'IGV',
-            'Importe Total'
-
-        ];
-
-        // Iniciar array con los encabezados
-        $rows = [$headers];
-
-        // Agregar los datos de cada factura
-        foreach ($boletasM as $boletaM) {
-            $codigoCotizadorM =optional($boletaM->cotizacionM)->cod_cotizacion;
-            $nombreAlmacen = optional($boletaM->almacen)->nombre;
-            $nombreCliente= optional($boletaM->cliente)->nombre;
-            $nombreMoneda= optional($boletaM->moneda)->nombre;
-            $nombreFormaPago= optional($boletaM->forma_pago)->nombre;
-            $nombreApellidoPersonal= '';
-
-            if ($boletaM->user && $boletaM->user->personal) {
-                $nombreApellidoPersonal = trim($boletaM->user->personal->nombres . ' ' . $boletaM->user->personal->apellidos);
-            }
-
-            $estado = $boletaM->estado ? 'Activo' : 'Inactivo';
-            $sunat = $boletaM->b_electronica ? 'Emitido' : 'Pendiente';
-            $estadoPago = $boletaM->estado_pago == 0 ? 'Sin pagar' : ($boletaM->estado_pago == 1 ? 'Pagado por adelantado' : 'Pagado');
-            $infoOperacion = optional($boletaM->tipo_operacion)->informacion;
-            $infoDocumento = "Boleta de Venta";
-            $subtotal = ($boletaM->op_gravada ?? 0) + ($boletaM->op_inafecta ?? 0) + ($boletaM->op_exonerada ?? 0);
-            $subtotalGravado = ($boletaM->op_gravada);
-            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
-            $importeTotal = round($subtotal + $igv_p ,2);
-
-            $row = [
-                $boletaM->codigo_boleta,
-                $codigoCotizadorM,
-                $nombreAlmacen,
-                $boletaM->orden_compra,
-                $boletaM->guia_remision,
-                $nombreCliente,
-                $nombreMoneda,
-                $nombreFormaPago,
-                $boletaM->fecha_emision,
-                $boletaM->fecha_vencimiento,
-                $boletaM->cambio,
-                $boletaM->observacion,
-                $nombreApellidoPersonal,
-                $estado,
-                $sunat,
-                $estadoPago,
-                $boletaM->op_gravada,
-                $boletaM->op_inafecta,
-                $boletaM->op_exonerada,
-                $boletaM->op_gratuita,
-                $boletaM->nota_credito,
-                $boletaM->nota_debito,
-                $infoOperacion,
-                $infoDocumento,
-                $subtotal,
-                $igv_p,
-                $importeTotal
-
-            ];
-
-            $rows[] = $row;
-        }
-
-        // Crear la clase de exportación usando la misma estructura que tienes
-        $export = new class($rows) implements FromArray, WithEvents {
-            private $rows;
-
-            public function __construct($rows) {
-                $this->rows = $rows;
-            }
-
-            public function array(): array {
-                return $this->rows;
-            }
-
-            public function registerEvents(): array {
-                return [
-                    AfterSheet::class => function(AfterSheet $event) {
-                        // Ajustar ancho automático para todas las columnas
-                        foreach(range('A','Z') as $column) {
-                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                        }
-                        // Para columnas dobles (AA, AB, etc.)
-                        foreach(range('A','Z') as $letter1) {
-                            foreach(range('A','Z') as $letter2) {
-                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                            }
-                        }
-                    },
-                ];
-            }
-        };
-
-        // Generar el archivo con fecha actual
-        $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Boletas Manuales ' . $fecha . '.xlsx');
+        return Excel::download(
+            $export,
+            'Boletas_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );    
     }
 
     public function printMultiple(Request $request) {
@@ -1051,8 +891,9 @@ class BoletaMController extends Controller
         foreach ($boletaIds as $id) {
             $boleta = Boleta_m::find($id);
             if ($boleta) {
-                $codigoBoleta = $boleta->codigo_boleta;
-                $pdfUrl = route('boleta_manual.pdf', $id) . "?archivo=BoletaM_{$codigoBoleta}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'boleta_manual'), 0, 22);
+
+                $pdfUrl = url("boleta_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1062,5 +903,357 @@ class BoletaMController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $boletas = Boleta_m::all();
+
+        foreach ($boletas as $bol) {
+            if (substr(md5($bol->id . env('APP_KEY') . 'boleta_manual'), 0, 22) === $codigo) {
+                return redirect()->route('boleta_manual.pdf', $bol->id);
+            }
+        }
+
+        abort(404);
+    }
+
+    public function enviarCorreoDirecto(Request $request, $id)
+    {
+        try {
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $empresa = Empresa::first();
+            $boleta = Boleta_m::find($id);
+            $boleta_registro = Boleta_registros_m::where('boleta_m_id', $id)->get();
+            $sum = 0;
+            $igv = Igv::first();
+            $sub_total = 0;
+            $banco = Banco::where('estado', 0)->get();
+            $j = 1;
+
+            $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+            $qrCode  = $this->generarImagenQR($textoQR);
+
+            // Generar PDF
+            $archivo = 'PDF-DOC-' . $boleta->codigo_boleta . '-' . $empresa->ruc . ".pdf";
+            $pdf = PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','textoQR','qrCode'));
+            $content = $pdf->download();
+            $especif = $date . $archivo;
+            Storage::disk('mailbox')->put($especif, $content);
+
+            // XML si aplica
+            $xml_file = null;
+            if ($boleta->b_electronica == 1) {
+                $xml_file = $empresa->ruc . '-03-' . $boleta->codigo_boleta . '.xml';
+            }
+
+            // Preparar correos
+            $emails = $request->get('emails', []);
+            $emails = array_filter($emails);
+
+            if (empty($emails)) {
+                Storage::disk('mailbox')->delete($especif);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Debes ingresar al menos un correo.'
+                ], 400);
+            }
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Boleta Manual - " . $boleta->codigo_boleta;
+            $mensaje_html = "Estimado cliente, adjuntamos la boleta " . $boleta->codigo_boleta;
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            // Agregar email backup si existe
+            $correos_envios = array_merge($emails, [$config_email->email_backup]);
+            $mails_array = array_filter($correos_envios);
+
+            // Preparar archivos
+            $pdfile = public_path() . '/archivos/' . $especif;
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            // Adjuntar PDF
+            $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+            // Adjuntar XML si existe
+            if ($xml_file && file_exists(public_path() . '/facturas_electronicas/' . $xml_file)) {
+                $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
+                $message->attach(\Swift_Attachment::fromPath($xml_path));
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                // Guardar en bandeja de envíos
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = implode(', ', $emails);
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // Guardar PDF en archivos
+                $archivo_pdf = new EmailBandejaEnviosArchivos;
+                $archivo_pdf->id_bandeja_envios = $mail->id;
+                $archivo_pdf->archivo = $archivo;
+                $archivo_pdf->fecha_hora = $date;
+                $archivo_pdf->save();
+
+                // Guardar XML en archivos si existe
+                if ($xml_file) {
+                    $guardar_email_archivo = new EmailBandejaEnviosArchivos;
+                    $guardar_email_archivo->id_bandeja_envios = $mail->id;
+                    $guardar_email_archivo->archivo = $xml_file;
+                    $guardar_email_archivo->fecha_hora = $date;
+                    $guardar_email_archivo->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Correo enviado exitosamente a: ' . implode(', ', $emails)
+                ]);
+            }
+
+            // Si falla el envío
+            Storage::disk('mailbox')->delete($especif);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($especif)) {
+                Storage::disk('mailbox')->delete($especif);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function enviarCorreoMultiple(Request $request)
+    {
+        try {
+            $email = $request->get('email');
+            $boleta_ids = $request->get('boleta_ids', []);
+
+            if (empty($boleta_ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron boletas para enviar.'
+                ], 400);
+            }
+
+            if (empty($email)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El correo electrónico es requerido.'
+                ], 400);
+            }
+
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+            $banco = Banco::where('estado', 0)->get();
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Boletas Manuales - " . count($boleta_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las boletas solicitadas.";
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            // Agregar email backup si existe
+            $correos_envios = [$email, $config_email->email_backup];
+            $mails_array = array_filter($correos_envios);
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            $archivos_temporales = [];
+            $archivos_xml = [];
+
+            // Generar y adjuntar cada PDF
+            foreach ($boleta_ids as $boleta_id) {
+                $boleta = Boleta_m::find($boleta_id);
+                if (!$boleta) continue;
+
+                $boleta_registro = Boleta_registros_m::where('boleta_m_id', $boleta_id)->get();
+                $sum = 0;
+                $sub_total = 0;
+                $j = 1;
+
+                $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+                $qrCode  = $this->generarImagenQR($textoQR);
+
+                // Generar PDF
+                $archivo = 'PDF-DOC-' . $boleta->codigo_boleta . '-' . $empresa->ruc . ".pdf";
+                $pdf = PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','textoQR','qrCode'));
+                $content = $pdf->download();
+                $especif = $date . $archivo;
+                Storage::disk('mailbox')->put($especif, $content);
+
+                $pdfile = public_path() . '/archivos/' . $especif;
+                $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+                $archivos_temporales[] = $especif;
+
+                // Adjuntar XML si existe
+                if ($boleta->b_electronica == 1) {
+                    $xml_file = $empresa->ruc . '-03-' . $boleta->codigo_boleta . '.xml';
+                    $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
+                    if (file_exists($xml_path)) {
+                        $message->attach(\Swift_Attachment::fromPath($xml_path));
+                        $archivos_xml[] = $xml_file;
+                    }
+                }
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                // Guardar en bandeja de envíos
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = $email;
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                foreach ($archivos_temporales as $archivo_temp) {
+                    $archivo_pdf = new EmailBandejaEnviosArchivos;
+                    $archivo_pdf->id_bandeja_envios = $mail->id;
+                    $archivo_pdf->archivo = $archivo_temp;
+                    $archivo_pdf->fecha_hora = $date;
+                    $archivo_pdf->save();
+                }
+
+                // Guardar archivos XML en bandeja
+                foreach ($archivos_xml as $xml_file) {
+                    $archivo_xml = new EmailBandejaEnviosArchivos;
+                    $archivo_xml->id_bandeja_envios = $mail->id;
+                    $archivo_xml->archivo = $xml_file;
+                    $archivo_xml->fecha_hora = $date;
+                    $archivo_xml->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Se enviaron ' . count($boleta_ids) . ' boleta(s) exitosamente a: ' . $email
+                ]);
+            }
+
+            // Si falla el envío, limpiar archivos
+            foreach ($archivos_temporales as $archivo_temp) {
+                Storage::disk('mailbox')->delete($archivo_temp);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($archivos_temporales) && !empty($archivos_temporales)) {
+                foreach ($archivos_temporales as $archivo_temp) {
+                    Storage::disk('mailbox')->delete($archivo_temp);
+                }
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
+        }
     }
 }

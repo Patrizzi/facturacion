@@ -38,7 +38,7 @@ use App\Igv;
 use App\NotaVenta;
 use App\Nota_Credito;
 use App\Nota_Credito_registro;
-
+use App\RenovacionVentas;
 use App\NotaVentaRegistro;
 use App\GarantiaInformeTecnicoArchivos;
 use App\User;
@@ -87,20 +87,86 @@ class EmailTransaccionesSend extends Controller
         $i=1;
         $regla=$cotizacion->tipo;
 
+        // VERIFICAR SI EXISTE RENOVACIÓN
+        $renovacion = RenovacionVentas::where('cotizacion_id', $id)
+            ->where('estado', 1)
+            ->with('cotizacion')
+            ->first();
+
+        $fecha_vencimiento = null;
+        $dias_restantes_texto = null;
+        $dias_restantes_numero = null;
+
+        if ($renovacion && $renovacion->cotizacion) {
+            $fecha_actual = Carbon::now()->startOfDay();
+            $fecha_emision = Carbon::parse($renovacion->cotizacion->fecha_emision)->startOfDay();
+
+            if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
+                $dia_renovacion = (int) $renovacion->dia_mensual;
+
+                $fecha_vencimiento = Carbon::create(
+                    $fecha_emision->year,
+                    $fecha_emision->month,
+                    min($dia_renovacion, $fecha_emision->daysInMonth)
+                )->startOfDay();
+
+                if ($fecha_vencimiento->lt($fecha_emision)) {
+                    $fecha_vencimiento->addMonth();
+                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
+                }
+
+                while ($fecha_vencimiento->lte($fecha_actual)) {
+                    $fecha_vencimiento->addMonth();
+                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
+                }
+            }
+            elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
+                $dia_vencimiento = (int) $renovacion->dia_anual;
+                $mes_vencimiento = (int) $renovacion->mes_anual;
+                $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
+
+                try {
+                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
+                } catch (\Exception $e) {
+                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
+                        ->endOfMonth()
+                        ->startOfDay();
+                }
+
+                while ($fecha_vencimiento->lte($fecha_actual)) {
+                    $fecha_vencimiento->addYear();
+                }
+            }
+
+            if ($fecha_vencimiento) {
+                $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                $dias_restantes_numero = $dias_diferencia;
+
+                if ($dias_diferencia < 0) {
+                    $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
+                } elseif ($dias_diferencia == 0) {
+                    $dias_restantes_texto = 'Vence hoy';
+                } elseif ($dias_diferencia == 1) {
+                    $dias_restantes_texto = '1 día';
+                } else {
+                    $dias_restantes_texto = $dias_diferencia . ' días';
+                }
+            }
+        }
+
         //* Generacioon de archivos PDF
         $archivo='PDF-DOC-'.$cotizacion->cod_cotizacion.'-'.$empresa->ruc.".pdf";
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'));
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2','renovacion','fecha_vencimiento','dias_restantes_texto','dias_restantes_numero'));
         $content = $pdf->download();
 
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
-      
+    
         return view('mailbox.create',compact('archivo','clientes','redic','date','config_email','ruta_retorno','id'));
     }
     //*
-    public function cotizacion_manual(Request $request,$id)
+    public function cotizacion_manual(Request $request, $id)
     {
-        
         $id_usuario = auth()->user()->id;
         $config_email = EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
         $redic = "cotizacion_manual";
@@ -112,33 +178,100 @@ class EmailTransaccionesSend extends Controller
         $banco_count=Banco::where('estado','0')->count();
         $empresa=Empresa::first();
 
-        $cotizacion_m=CotizacionManual::find($id);
+        $cotizacion=CotizacionManual::find($id);
         $cotizacion_m_reg=CotizacionManual_registros::where('cotizacion_m_id',$id)->get();
         $sum=0;
         $igv=Igv::first();
         $sub_total=0;
         $j = 1;
 
-        $id = $cotizacion_m->id;
+        $id = $cotizacion->id;
         $ruta_retorno = 'cotizacion_manual.show';
-        $clientes = $cotizacion_m->cliente->email;  
+        $clientes = $cotizacion->cliente->email;  
 
         //SUBTOTAL
-        $sub_total = $cotizacion_m->op_gravada + $cotizacion_m->op_inafecta + $cotizacion_m->op_exonerada;
+        $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
         //IGV
-        $igv = round( $cotizacion_m->op_gravada ,2) * $igv->igv_total/100;
+        $igv = round($cotizacion->op_gravada, 2) * $igv->igv_total/100;
         //TOTAL 
-        $end = round($sub_total, 2) + round($igv,2);
-        $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
+        $end = round($sub_total, 2) + round($igv, 2);
+        $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+
+        // VERIFICAR SI EXISTE RENOVACIÓN
+        $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
+            ->where('estado', 1)
+            ->with('cotizacionManual')
+            ->first();
+
+        $fecha_vencimiento = null;
+        $dias_restantes_texto = null;
+        $dias_restantes_numero = null;
+
+        if ($renovacion && $renovacion->cotizacionManual) {
+            $fecha_actual = Carbon::now()->startOfDay();
+            $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay();
+
+            if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
+                $dia_renovacion = (int) $renovacion->dia_mensual;
+
+                $fecha_vencimiento = Carbon::create(
+                    $fecha_emision->year,
+                    $fecha_emision->month,
+                    min($dia_renovacion, $fecha_emision->daysInMonth)
+                )->startOfDay();
+
+                if ($fecha_vencimiento->lt($fecha_emision)) {
+                    $fecha_vencimiento->addMonth();
+                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
+                }
+
+                while ($fecha_vencimiento->lte($fecha_actual)) {
+                    $fecha_vencimiento->addMonth();
+                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
+                }
+            }
+            elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
+                $dia_vencimiento = (int) $renovacion->dia_anual;
+                $mes_vencimiento = (int) $renovacion->mes_anual;
+                $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
+
+                try {
+                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
+                } catch (\Exception $e) {
+                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
+                        ->endOfMonth()
+                        ->startOfDay();
+                }
+
+                while ($fecha_vencimiento->lte($fecha_actual)) {
+                    $fecha_vencimiento->addYear();
+                }
+            }
+
+            if ($fecha_vencimiento) {
+                $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                $dias_restantes_numero = $dias_diferencia;
+
+                if ($dias_diferencia < 0) {
+                    $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
+                } elseif ($dias_diferencia == 0) {
+                    $dias_restantes_texto = 'Vence hoy';
+                } elseif ($dias_diferencia == 1) {
+                    $dias_restantes_texto = '1 día';
+                } else {
+                    $dias_restantes_texto = $dias_diferencia . ' días';
+                }
+            }
+        }
         
-        $archivo='PDF-DOC-'.$cotizacion_m->cod_cotizacion.'-'.$empresa->ruc.".pdf";
+        $archivo='PDF-DOC-'.$cotizacion->cod_cotizacion.'-'.$empresa->ruc.".pdf";
         
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2'));
-        $content  =  $pdf->download();
+        $pdf=PDF::loadView('transaccion.venta.cotizacion.manual.pdf', compact('j','cotizacion','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','end','end2','renovacion','fecha_vencimiento','dias_restantes_texto','dias_restantes_numero'));
+        $content = $pdf->download();
 
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
-      
+    
         return view('mailbox.create',compact('archivo','clientes','redic','date','config_email','ruta_retorno','id'));
     }
     //*
@@ -240,6 +373,10 @@ class EmailTransaccionesSend extends Controller
         $banco=Banco::where('estado',0)->get();
         $banco_count=Banco::where('estado','0')->count();
         $i = 1;
+
+        $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+        $qrCode = $this->generarImagenQR($textoQR);
+
         if($facturacion->f_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-01-'.$facturacion->codigo_fac.'.xml';
         }else{
@@ -248,7 +385,7 @@ class EmailTransaccionesSend extends Controller
         // $archivo=$facturacion->codigo_fac.".pdf";
         $archivo='PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
 
-        $pdf=PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+        $pdf=PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i','textoQR','qrCode'));
         $content = $pdf->download();
         $especif = $date.$archivo;
 
@@ -259,7 +396,6 @@ class EmailTransaccionesSend extends Controller
     //*
     public function factura_manual(Request $request, $id)
     {
-        // return $request;
         $id_usuario = auth()->user()->id;
         $config_email = EmailConfiguraciones::where('id_usuario',$id_usuario)->first();
         $redic = "facturacion_manual";
@@ -267,28 +403,50 @@ class EmailTransaccionesSend extends Controller
         $data_g = str_replace(' ', '_',$fecha);
         $date = str_replace(':','-',$data_g);
         
-        $empresa=Empresa::first();
-        $facturacion=Facturacion_m::find($id);
-        $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
+        $empresa = Empresa::first();
+        $facturacion = Facturacion_m::find($id);
+        $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id',$id)->get();
         $id = $facturacion->id;
         $ruta_retorno = 'facturacion_manual.show';
-        $clientes = $facturacion->cliente->email;  
-        $sum=0;
-        $igv=Igv::first();
-        $sub_total=0;
-        $banco=Banco::where('estado',0)->get();
-        $banco_count=Banco::where('estado','0')->count();
+        $clientes = $facturacion->cliente->email;
+        
+        // Agregar lógica de detracción y cuotas
+        if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || 
+        $facturacion->tipo_operacion_id == 14 || $facturacion->tipo_operacion_id == 15) {
+            $detraccion = Detracciones::where('factura_m_id', $facturacion->id)->first();
+            if ($facturacion->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $facturacion->id)->get();
+            } else {
+                $cuotas = "not";
+            }
+        } else {
+            $detraccion = "not";
+            $cuotas = "not";
+        }
+        
+        $sum = 0;
+        $igv = Igv::first();
+        $sub_total = 0;
+        $banco = Banco::where('estado',0)->get();
+        $banco_count = Banco::where('estado','0')->count();
         $i = 1;
+        
+        // Generar QR
+        $textoQR = $this->generarTextoQRFacturaM($facturacion, $empresa, $igv);
+        $qrCode = $this->generarImagenQR($textoQR);
 
         if($facturacion->f_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-01-'.$facturacion->codigo_fac.'.xml';
-        }else{
+        } else {
             $xml_file = null;
         }
-        // $archivo=$facturacion->codigo_fac.".pdf";
-        $archivo='PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
         
-        $pdf = PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
+        $archivo = 'PDF-DOC-'.$facturacion->codigo_fac.'-'.$empresa->ruc.".pdf";
+        
+        // Generar PDF con todas las variables
+        $pdf = PDF::loadView('transaccion.venta.facturacion.facturacion_manual.pdf',
+            compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total',
+                    'banco','banco_count','i','detraccion','cuotas','textoQR','qrCode'));
         $content = $pdf->download();
         $especif = $date.$archivo;
 
@@ -318,6 +476,9 @@ class EmailTransaccionesSend extends Controller
         $clientes = $boleta->cliente->email;  
         
         $sub_total=0;
+
+        $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
         
         $i = 1;
         //* XML
@@ -329,7 +490,7 @@ class EmailTransaccionesSend extends Controller
         // $archivo=$boleta->codigo_boleta.".pdf";
         $archivo='PDF-DOC-'.$boleta->codigo_boleta.'-'.$empresa->ruc.".pdf";
 
-        $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i'));
+        $pdf=PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','banco_count','i','textoQR','qrCode'));
         $content = $pdf->download();
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
@@ -357,7 +518,10 @@ class EmailTransaccionesSend extends Controller
         $j = 1;
         $id = $boleta->id;
         $ruta_retorno = 'boleta_manual.show';
-        $clientes = $boleta->cliente->email;  
+        $clientes = $boleta->cliente->email;
+
+        $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
 
         if($boleta->b_electronica == 1){
             $xml_file = ''.$empresa->ruc.'-03-'.$boleta->codigo_boleta.'.xml'; 
@@ -366,7 +530,7 @@ class EmailTransaccionesSend extends Controller
         }
         $archivo='PDF-DOC-'.$boleta->codigo_boleta.'-'.$empresa->ruc.".pdf";
 
-        $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
+        $pdf=PDF::loadView('transaccion.venta.boleta.boleta_manual.pdf', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','textoQR','qrCode'));
         $content = $pdf->download();
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
@@ -459,7 +623,9 @@ class EmailTransaccionesSend extends Controller
         $especif = $date.$archivo;
         Storage::disk('mailbox')->put($especif,$content);
 
-        return view('mailbox.create',compact('archivo','clientes','redic','date','config_email','ruta_retorno','id','xml_file'));
+        $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+        $qrCode = $this->generarImagenQR($textoQR);     
+        return view('mailbox.create',compact('archivo','clientes','redic','date','config_email','ruta_retorno','id','xml_file','textoQR','qrCode'));
     }
     //*
     public function guia_ingreso(Request $request, $id)

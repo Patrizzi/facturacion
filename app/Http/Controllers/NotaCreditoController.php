@@ -24,7 +24,11 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
-
+use Illuminate\Support\Facades\Storage;
+use App\EmailBandejaEnvios;
+use App\EmailBandejaEnviosArchivos;
+use App\EmailConfiguraciones;
+use App\Exports\NotaCreditoExport;
 
 use DateTime;
 
@@ -958,150 +962,30 @@ class NotaCreditoController extends Controller
     }
 
 
-public function exportNotasCredito(Request $request) {
+public function exportNotasCredito(Request $request)
+{ $ids = $request->json('nota_ids');
 
-    if (ob_get_contents()) {
-            ob_end_clean();
-    }
-
-    if ($request->has('nota_ids') && !empty($request->input('nota_ids'))) {
-        $notaIds = $request->input('nota_ids');
-
-        $notas = Nota_Credito::with([
-            'nota_i_facturacion',
-            'nota_i_boleta',
-            'nota_i_fac_manual',
-            'nota_i_boleta_manual',
-            'nota_i_almacen'
-        ])
-        ->whereIn('id', $notaIds)
-        ->orderBy('created_at', 'desc')
-        ->get();
+    if (!empty($ids)) {
+        $export = new NotaCreditoExport($ids);
     } else {
-        $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-        $filter = $request->get('value');
-        $tipo = $request->get('tipo_coti');
+        $request->validate([
+            'daterange' => 'required|string'
+        ]);
 
-        $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
+        [$start, $end] = explode(' - ', $request->daterange);
 
-        $query = Nota_Credito::with(['nota_i_facturacion', 'nota_i_boleta', 'nota_i_fac_manual', 'nota_i_boleta_manual', 'nota_i_almacen'])
-        ->whereBetween('created_at', [$starDate, $endDate])
-        ->orderBy('created_at', 'desc');
-
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%')
-                        ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-                });
-                $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                    $q->where('nombre', 'like', '%' . $filter . '%');
-                });
-            });
-        }
-
-        if ($tipo !== null) {
-            $query->where('tipo' , $tipo);
-        }
-
-        $notas = $query->get();
+        $export = new NotaCreditoExport(null, [
+            'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+            'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+            'filter' => $request->input('value'),
+            'tipo'   => $request->input('tipo_coti'),
+        ]);
     }
 
-    if (ob_get_contents()) {
-        ob_end_clean();
-    }
-    $igvConfig = Igv::first();
-
-    $headers = [
-        'Código Nota Crédito',
-        'Facturación',
-        'Boleta',
-        'Facturación Manual',
-        'Boleta Manual',
-        'Fecha Emisión',
-        'Estado',
-        'SUNAT',
-        'Tipo',
-        'Almacén',
-        'Operación Gravada',
-        'Operación Inafecta',
-        'Operación Exonerada',
-        'Operación Gratuita',
-        'Motivo',
-        'IGV',
-        'Subtotal',
-        'Importe Total',
-    ];
-
-    $rows = [$headers];
-
-    foreach ($notas as $nota) {
-
-        $Factura = optional($nota->nota_i_facturacion)->codigo_fac ?? '';
-        $Boleta = optional($nota->nota_i_boleta)->codigo_boleta ?? '';
-        $FacturaManual = optional($nota->nota_i_fac_manual)->codigo_fac ?? '';
-        $BoletaManual = optional($nota->nota_i_boleta_manual)->codigo_boleta ?? '';
-        $Almacen = optional($nota->nota_i_almacen)->nombre ?? '';
-
-        $subtotal = $nota->op_gravada + $nota->op_inafecta + $nota->op_exonerada;
-        $igvCalculado = round($nota->op_gravada * $igvConfig->igv_total / 100, 2);
-        $total = round($subtotal + $igvCalculado, 2);
-        $estado = $nota->estado == 1 ? 'Activo' : 'Inactivo';
-        $sunat = $nota->n_electronica == 1 ? 'Emitido' : 'Pendiente';
-
-        $rows[] = [
-            $nota->codigo_n_c,
-            $Factura,
-            $Boleta,
-            $FacturaManual,
-            $BoletaManual,
-            $nota->fecha_emision,
-            $estado,
-            $sunat,
-            $nota->tipo,
-            $Almacen,
-            $nota->op_gravada,
-            $nota->op_inafecta,
-            $nota->op_exonerada,
-            $nota->op_gratuita,
-            $nota->motivo,
-            $igvCalculado,
-            $subtotal,
-            $total,
-        ];
-    }
-
-    $export = new class($rows) implements FromArray, WithEvents {
-        private $rows;
-
-        public function __construct($rows) {
-            $this->rows = $rows;
-        }
-
-        public function array(): array {
-            return $this->rows;
-        }
-
-        public function registerEvents(): array {
-            return [
-                AfterSheet::class => function(AfterSheet $event) {
-                    foreach(range('A','Z') as $column) {
-                        $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                    }
-                    foreach(range('A','Z') as $letter1) {
-                        foreach(range('A','Z') as $letter2) {
-                            $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                        }
-                    }
-                },
-            ];
-        }
-    };
-
-    return Excel::download($export, 'notas_credito.xlsx');
+    return Excel::download(
+        $export,
+        'Notas de Crédito_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+    );
 }
 
 public function printMultiple(Request $request)
@@ -1512,8 +1396,9 @@ private function downloadSinglePDF($id)
         foreach ($notaCreditoIds as $id) {
             $notaCredito = Nota_Credito::find($id);
             if ($notaCredito) {
-                $codigoNotaCredito = $notaCredito->codigo_n_c;
-                $pdfUrl = route('nota_credito.pdf', $id) . "?archivo=NotaCrédito_{$codigoNotaCredito}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'nota_credito'), 0, 22);
+
+                $pdfUrl = url("nota_credito/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1523,6 +1408,382 @@ private function downloadSinglePDF($id)
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $notas = Nota_Credito::all();
+
+        foreach ($notas as $not) {
+            if (substr(md5($not->id . env('APP_KEY') . 'nota_credito'), 0, 22) === $codigo) {
+                return redirect()->route('nota_credito.pdf', $not->id);
+            }
+        }
+
+        abort(404);
+    }
+
+    public function enviarCorreoDirecto(Request $request, $id)
+    {
+        try {
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $notas_credito = Nota_Credito::where('id', $id)->first();
+            $notas_credito_registros = Nota_Credito_registro::where('nota_credito_id', $id)->get();
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+
+            // Determinar tipo de documento origen
+            if ($notas_credito->facturacion_id != NULL) {
+                $document = Facturacion::where('id', $notas_credito->facturacion_id)->first();
+                $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
+                $estado = 0;
+            } elseif ($notas_credito->boleta_id != NULL) {
+                $document = Boleta::where('id', $notas_credito->boleta_id)->first();
+                $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
+                $estado = 1;
+            } elseif ($notas_credito->boleta_m_id != NULL) {
+                $document = Boleta_m::where('id', $notas_credito->boleta_m_id)->first();
+                $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
+                $estado = 3;
+            } else {
+                $document = Facturacion_m::where('id', $notas_credito->facturacion_m_id)->first();
+                $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
+                $estado = 2;
+            }
+
+            $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+            $qrCode = $this->generarImagenQR($textoQR);
+
+            // Generar PDF
+            $archivo = 'PDF-DOC-' . $notas_credito->codigo_n_c . '-' . $empresa->ruc . ".pdf";
+            $u = 1;
+            $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact('notas_credito', 'notas_credito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u','textoQR','qrCode'));
+            $content = $pdf->download();
+            $especif = $date . $archivo;
+            Storage::disk('mailbox')->put($especif, $content);
+
+            // XML si aplica
+            $xml_file = null;
+            if ($notas_credito->n_electronica == 1) {
+                $xml_file = $empresa->ruc . '-07-' . $notas_credito->codigo_n_c . '.xml';
+            }
+
+            // Preparar correos
+            $emails = $request->get('emails', []);
+            $emails = array_filter($emails);
+
+            if (empty($emails)) {
+                Storage::disk('mailbox')->delete($especif);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Debes ingresar al menos un correo.'
+                ], 400);
+            }
+
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Nota de Crédito - " . $notas_credito->codigo_n_c;
+            $mensaje_html = "Estimado cliente, adjuntamos la nota de crédito " . $notas_credito->codigo_n_c;
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            $correos_envios = array_merge($emails, [$config_email->email_backup]);
+            $mails_array = array_filter($correos_envios);
+
+            $pdfile = public_path() . '/archivos/' . $especif;
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            // Adjuntar PDF
+            $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+            if ($xml_file && file_exists(public_path() . '/facturas_electronicas/' . $xml_file)) {
+                $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
+                $message->attach(\Swift_Attachment::fromPath($xml_path));
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = implode(', ', $emails);
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // Guardar PDF en archivos
+                $archivo_pdf = new EmailBandejaEnviosArchivos;
+                $archivo_pdf->id_bandeja_envios = $mail->id;
+                $archivo_pdf->archivo = $archivo;
+                $archivo_pdf->fecha_hora = $date;
+                $archivo_pdf->save();
+
+                if ($xml_file) {
+                    $guardar_email_archivo = new EmailBandejaEnviosArchivos;
+                    $guardar_email_archivo->id_bandeja_envios = $mail->id;
+                    $guardar_email_archivo->archivo = $xml_file;
+                    $guardar_email_archivo->fecha_hora = $date;
+                    $guardar_email_archivo->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Correo enviado exitosamente a: ' . implode(', ', $emails)
+                ]);
+            }
+
+            // Si falla el envío
+            Storage::disk('mailbox')->delete($especif);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($especif)) {
+                Storage::disk('mailbox')->delete($especif);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function enviarCorreoMultiple(Request $request)
+    {
+        try {
+            $email = $request->get('email');
+            $nota_credito_ids = $request->get('nota_ids', []);
+
+            if (empty($nota_credito_ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron notas de crédito para enviar.'
+                ], 400);
+            }
+
+            if (empty($email)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El correo electrónico es requerido.'
+                ], 400);
+            }
+
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Notas de Crédito - " . count($nota_credito_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las notas de crédito solicitadas.";
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            $correos_envios = [$email, $config_email->email_backup];
+            $mails_array = array_filter($correos_envios);
+
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            $archivos_temporales = [];
+            $archivos_xml = [];
+
+            foreach ($nota_credito_ids as $nota_credito_id) {
+                $notas_credito = Nota_Credito::where('id', $nota_credito_id)->first();
+                if (!$notas_credito) continue;
+
+                $notas_credito_registros = Nota_Credito_registro::where('nota_credito_id', $nota_credito_id)->get();
+
+                // Determinar tipo de documento origen
+                if ($notas_credito->facturacion_id != NULL) {
+                    $document = Facturacion::where('id', $notas_credito->facturacion_id)->first();
+                    $doc_reg = Facturacion_registro::where('facturacion_id', $document->id)->get();
+                    $estado = 0;
+                } elseif ($notas_credito->boleta_id != NULL) {
+                    $document = Boleta::where('id', $notas_credito->boleta_id)->first();
+                    $doc_reg = Boleta_registro::where('boleta_id', $document->id)->get();
+                    $estado = 1;
+                } elseif ($notas_credito->boleta_m_id != NULL) {
+                    $document = Boleta_m::where('id', $notas_credito->boleta_m_id)->first();
+                    $doc_reg = Boleta_registros_m::where('boleta_m_id', $document->id)->get();
+                    $estado = 3;
+                } else {
+                    $document = Facturacion_m::where('id', $notas_credito->facturacion_m_id)->first();
+                    $doc_reg = Facturacion_registro_m::where('facturacion_m_id', $document->id)->get();
+                    $estado = 2;
+                }
+
+                // Generar PDF
+                $archivo = 'PDF-DOC-' . $notas_credito->codigo_n_c . '-' . $empresa->ruc . ".pdf";
+                $u = 1;
+
+                $textoQR = $this->generarTextoQRNotaCredito($notas_credito, $document, $empresa, $igv, $estado);
+                $qrCode = $this->generarImagenQR($textoQR);
+
+                $pdf = PDF::loadView('transaccion.venta.nota_credito.pdf', compact('notas_credito', 'notas_credito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg', 'u','textoQR','qrCode'));
+                $content = $pdf->download();
+                $especif = $date . $archivo;
+                Storage::disk('mailbox')->put($especif, $content);
+
+                $pdfile = public_path() . '/archivos/' . $especif;
+                $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+                $archivos_temporales[] = $especif;
+
+                // Adjuntar XML si existe
+                if ($notas_credito->n_electronica == 1) {
+                    $xml_file = $empresa->ruc . '-07-' . $notas_credito->codigo_n_c . '.xml';
+                    $xml_path = public_path() . '/facturas_electronicas/' . $xml_file;
+                    if (file_exists($xml_path)) {
+                        $message->attach(\Swift_Attachment::fromPath($xml_path));
+                        $archivos_xml[] = $xml_file;
+                    }
+                }
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                // Guardar en bandeja de envíos
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = $email;
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // Guardar archivos PDF en bandeja
+                foreach ($archivos_temporales as $archivo_temp) {
+                    $archivo_pdf = new EmailBandejaEnviosArchivos;
+                    $archivo_pdf->id_bandeja_envios = $mail->id;
+                    $archivo_pdf->archivo = $archivo_temp;
+                    $archivo_pdf->fecha_hora = $date;
+                    $archivo_pdf->save();
+                }
+
+                // Guardar archivos XML en bandeja
+                foreach ($archivos_xml as $xml_file) {
+                    $archivo_xml = new EmailBandejaEnviosArchivos;
+                    $archivo_xml->id_bandeja_envios = $mail->id;
+                    $archivo_xml->archivo = $xml_file;
+                    $archivo_xml->fecha_hora = $date;
+                    $archivo_xml->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Se enviaron ' . count($nota_credito_ids) . ' nota(s) de crédito exitosamente a: ' . $email
+                ]);
+            }
+
+            foreach ($archivos_temporales as $archivo_temp) {
+                Storage::disk('mailbox')->delete($archivo_temp);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($archivos_temporales) && !empty($archivos_temporales)) {
+                foreach ($archivos_temporales as $archivo_temp) {
+                    Storage::disk('mailbox')->delete($archivo_temp);
+                }
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
+        }
     }
 }
 

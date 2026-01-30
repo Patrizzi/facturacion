@@ -1,7 +1,13 @@
 .iconos {
-    width: 24px;
+    height: 22px;
+    width: 20px;
+    min-width: 20px;
     border-radius: 0px;
-    margin-right: 10px
+    margin-right: 10px;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
 }
 
 .pace {
@@ -138,6 +144,15 @@ body.mini-navbar #side-menu > li > a > i {
 }
 
 body.mini-navbar .navbar-static-side:hover #side-menu > li > a > i {
+    margin-right: 10px;
+}
+
+/* Iconos de imagen en modo mini */
+body.mini-navbar #side-menu > li > a > .iconos {
+    margin-right: 0;
+}
+
+body.mini-navbar .navbar-static-side:hover #side-menu > li > a > .iconos {
     margin-right: 10px;
 }
 

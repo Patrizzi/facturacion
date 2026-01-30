@@ -18,7 +18,7 @@ class AgregadoRapidoController extends Controller
     public function cliente_store(Request $request){
         // return $request;
         // return "1";
-    
+
         $this->validate($request,[
             'numero_documento' => ['required','unique:clientes,numero_documento'],
         ],[
@@ -166,7 +166,53 @@ public function personal_store(Request $request){
     $personal->save();
     return back();
 }
+
 public function send_whatsapp(Request $request){
+    $numero = $request->get('numero');
+    $url1 = $request->get('url');
+    $mensaje = $request->get('mensaje');
+
+    // Patrones para detectar cada tipo de documento
+    $patrones = [
+        'cotizacion' => '/cotizacion\/pdf\/(\d+)/',
+        'cotizacion_manual' => '/cotizacion_manual\/pdf\/(\d+)/',
+        'nota_venta' => '/nota_venta\/pdf\/(\d+)/',
+        /*'garantia_guia_ingreso' => '/garantia_guia_ingreso\/pdf\/(\d+)/',
+        'garantia_guia_egreso' => '/garantia_guia_egreso\/pdf\/(\d+)/',
+        'garantia_informe_tecnico' => '/garantia_informe_tecnico\/pdf\/(\d+)/',*/
+        'boleta' => '/boleta\/pdf\/(\d+)/',
+        'boleta_manual' => '/boleta_manual\/pdf\/(\d+)/',
+        'factura' => '/facturacion\/pdf\/(\d+)/',
+        'factura_manual' => '/facturacion_manual\/pdf\/(\d+)/',
+        'nota_credito' => '/nota-credito\/pdf\/(\d+)/',
+        'nota_debito' => '/nota-debito\/pdf\/(\d+)/',
+        'guia_remision' => '/guia_remision\/pdf\/(\d+)/',
+        'guia_remision_manual' => '/guia_remision_manual\/pdf\/(\d+)/',
+    ];
+
+    // Buscar tipo de documento y generar URL compartible
+    $pdfUrl = $url1; // Por defecto usa la URL original
+
+    foreach ($patrones as $tipo => $patron) {
+        if (preg_match($patron, $url1, $matches)) {
+            $documentoId = $matches[1];
+            $codigo = substr(md5($documentoId . env('APP_KEY') . $tipo), 0, 22);
+            $pdfUrl = url("{$tipo}/share/{$codigo}");
+            break;
+        }
+    }
+
+    // Construir texto completo
+    $textoCompleto = $pdfUrl . (!empty($mensaje) ? "\n" . $mensaje : '');
+
+    // Formatear número y generar link de WhatsApp
+    $numeroFormateado = substr($numero, -11, 3) . substr($numero, -6, 3) . substr($numero, -3);
+    $whatsappUrl = "https://wa.me/51{$numeroFormateado}?text=" . urlencode($textoCompleto);
+
+    return redirect()->away($whatsappUrl);
+}
+
+/*public function send_whatsapp(Request $request){
     $url1 = $request->get('url');
         //$url2 = $request->get('mensaje');
 
@@ -184,5 +230,5 @@ public function send_whatsapp(Request $request){
     $send = "https://wa.me/51".$num3.$num2.$num1."?text=".$url1.$url2;
     return  Redirect::to($send);
         //return $mensaje;
-}
+}*/
 }

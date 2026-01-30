@@ -25,7 +25,7 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="tabs-container">
-            @include('estadisticas\_shared\tabs')
+            @include('estadisticas._shared.tabs')
             <div class="tab-content">
                 <div role="tabpanel" id="tab-1" class="tab-pane active">
                     <div class="panel-body">

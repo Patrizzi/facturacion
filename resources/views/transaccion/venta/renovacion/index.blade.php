@@ -20,7 +20,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                           @include('transaccion\venta\_shared\statistics')
+                           @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                         <div class="tabs-scroll-bottom">
                             {{-- TABS --}}
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
-                                @include('transaccion\venta\_shared\tabs')
+                                @include('transaccion.venta._shared.tabs')
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                     <div class="btn-group">
@@ -493,7 +493,8 @@
                         title: "Sin selección",
                         text: "Por favor, selecciona al menos una renovación para imprimir.",
                         type: "warning",
-                        confirmButtonText: "Entendido"
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#2641F8"
                     });
                     return;
                 }
@@ -504,7 +505,8 @@
                     type: "info",
                     showCancelButton: true,
                     confirmButtonText: "Sí, imprimir",
-                    cancelButtonText: "Cancelar"
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#2641F8"
                 }, function(isConfirm) {
                     if (isConfirm) {
                         // **CAMBIO AQUÍ: usar una ruta diferente para renovaciones**
@@ -548,7 +550,8 @@
                         title: "Sin selección",
                         text: "Por favor, selecciona al menos una renovación para exportar.",
                         type: "warning",
-                        confirmButtonText: "Entendido"
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#2641F8"
                     });
                     return;
                 }
@@ -560,7 +563,8 @@
                     type: "info",
                     showCancelButton: true,
                     confirmButtonText: "Sí, exportar",
-                    cancelButtonText: "Cancelar"
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#2641F8"
                 }, function(isConfirm) {
                     if (isConfirm) {
                         // Construir URL con los IDs seleccionados
@@ -600,7 +604,8 @@
                         title: "Sin selección",
                         text: "Por favor, selecciona al menos una renovación para descargar.",
                         type: "warning",
-                        confirmButtonText: "Entendido"
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#2641F8"
                     });
                     return;
                 }
@@ -615,7 +620,8 @@
                     type: "info",
                     showCancelButton: true,
                     confirmButtonText: "Sí, descargar",
-                    cancelButtonText: "Cancelar"
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#2641F8"
                 }, function(isConfirm) {
                     if (isConfirm) {
                         var url = '{{route("renovaciones.download.multiple")}}';

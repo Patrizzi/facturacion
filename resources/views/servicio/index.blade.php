@@ -21,7 +21,7 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="tabs-container">
-            @include('servicio\_shared\tabs')
+            @include('servicio._shared.tabs')
             <div class="tab-content">
                 <div role="tabpanel" id="tab-1" class="tab-pane active">
                     <div class="row">

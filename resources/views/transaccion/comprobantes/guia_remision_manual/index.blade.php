@@ -17,7 +17,7 @@
                 </div>
                 <div class="ibox-content">
                     <div class="row">
-                        @include('transaccion\comprobantes\_shared\statistics')
+                        @include('transaccion.comprobantes._shared.statistics')
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                         <div class="tabs-scroll-top-comprobantes"></div>
                         <div class="tabs-scroll-bottom">
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
-                                @include('transaccion\comprobantes\_shared\tabs')
+                                @include('transaccion.comprobantes._shared.tabs')
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                     {{-- ALMACEN --}}
@@ -53,9 +53,9 @@
                                                 <i class="fa fa-file-pdf-o"></i> PDF
                                             </button>
 
-                                            {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                            <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                 <i class="fa fa-envelope"></i> Correo
-                                            </button>--}}
+                                            </button>
 
                                             <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                 <i class="fa fa-whatsapp"></i> Whatsapp
@@ -114,7 +114,7 @@
                                                 <th>Entrega</th>
                                                 <th>Ver</th>
                                                 <th style="width: 0.5vmax !important">Acciones</th>
-                                                <th>Compartir</th>
+                                                <th>Compartir R.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -130,7 +130,7 @@
         </div>
     </div>
 </div>
-@include('transaccion\comprobantes\_shared\js_shared')
+@include('transaccion.comprobantes._shared.js_shared')
 <script>
     /* =========================
      *  Navegación / pestañas
@@ -228,7 +228,35 @@
 
                         return `
                             <div style="display: inline-block; white-space: nowrap;">
-                                <!-- Aqui ira lo del correo -->
+                                <!-- Contenedor Correo -->
+                                <div class="email-container" data-id="${guiaId}"
+                                    style="display: inline-block; position: relative; vertical-align: top; margin-right: 5px;">
+                                    <button type="button" class="btn btn-secondary" style="cursor: pointer;">
+                                        <i class="fa fa-envelope fa-lg"></i>
+                                    </button>
+                                    <div class="email-form" data-id="${guiaId}"
+                                        style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                        overflow: hidden; transition: height .4s; background: white;
+                                        box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                        z-index: 9999; white-space: nowrap; min-width: 250px;">
+                                        <form class="form-enviar-email" data-guia-id="${guiaId}" style="padding: 10px;">
+                                            @csrf
+                                            <div style="margin-bottom: 5px;">
+                                                <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
+                                                    value="${emailCliente}"
+                                                    style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                            </div>
+                                            <div class="emails-adicionales-${guiaId}"></div>
+                                            <button type="button" class="btn-agregar-email btn btn-info btn-xs" data-id="${guiaId}"
+                                                    style="padding: 3px 8px; margin-bottom: 5px; font-size: 11px;">
+                                                <i class="fa fa-plus"></i> Agregar correo
+                                            </button>
+                                            <button type="submit" class="btn btn-secondary" style="padding: 5px 10px; float: right;">
+                                                <i class="fa fa-send fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                                 <!-- Contenedor WhatsApp -->
                                 <div class="wsp-container" data-id="${guiaId}"
                                     style="display: inline-block; position: relative; vertical-align: top;">
@@ -290,7 +318,7 @@
 
     /* =========================
      *  Exportar Excel
-     * ========================= */
+     * ========================= 
     $(document).on('click', '#btn-exportar-grm', function(e) {
         e.preventDefault();
         var info = coti_table.page.info();
@@ -313,7 +341,7 @@
         if (daterange) params.append('daterange', daterange);
         if (value) params.append('value', value);
         window.location.href = "{{ route('guias.manual.exportar') }}?" + params.toString();
-    });
+    });*/
 
     /* =========================
      *  Utilidad: obtener TODOS los IDs filtrados
@@ -523,6 +551,155 @@ coti_table.on('draw', function() {
         if (confirm(message)) onYes();
     }
 
+    // ============CORREO ============
+    $(document).on('mouseenter', '.email-container', function() {
+        const form = $(this).find('.email-form');
+        form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+    });
+
+    $(document).on('mouseenter', '.email-form', function() {
+        $(this).css('height', ($(this).find('form').outerHeight() + 20) + 'px');
+    });
+
+    // Fijar cuando se hace clic en el botón de correo
+    $(document).on('click', '.email-container .btn-secondary', function(e) {
+        e.stopPropagation();
+        const form = $(this).siblings('.email-form');
+        form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
+    });
+
+    // Fijar también cuando se hace clic en el formulario o inputs
+    $(document).on('click', '.email-form', function(e) {
+        e.stopPropagation();
+        $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
+    });
+
+    $(document).on('mouseleave', '.email-container, .email-form', function() {
+        const isContainer = $(this).hasClass('email-container');
+        const target = isContainer ? $(this).find('.email-form') : $(this);
+        const checkElement = isContainer ? target : $(this).closest('.email-container');
+
+        // No cerrar si está fijado
+        if (target.hasClass('email-fixed')) return;
+
+        setTimeout(() => {
+            if (!target.is(':hover') && !checkElement.is(':hover')) {
+                target.css('height', '0px');
+            }
+        }, 200);
+    });
+
+    $(document).on('click', '.btn-agregar-email', function() {
+        const guiaId = $(this).data('id');
+        const container = $(`.emails-adicionales-${guiaId}`);
+
+        container.append(`
+            <div style="margin-bottom: 5px; position: relative;">
+                <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
+                    style="width: calc(100% - 30px); padding: 5px; border: 1px solid #ccc; border-radius: 3px;" />
+                <button type="button" class="btn-eliminar-email btn btn-danger btn-xs"
+                    style="padding: 3px 6px; position: absolute; right: 0; top: 0; height: 100%;">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        `);
+
+        const form = $(`.email-form[data-id="${guiaId}"]`);
+        form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+    });
+
+    $(document).on('click', '.btn-eliminar-email', function() {
+        const form = $(this).closest('.email-form');
+        $(this).closest('div').remove();
+        form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+    });
+
+    // ============ ENVÍO DE CORREO AJAX ============
+    $(document).on('submit', '.form-enviar-email', function(e) {
+        e.preventDefault();
+
+        const form = $(this);
+        const guiaId = form.data('guia-id');
+        const button = form.find('button[type="submit"]');
+        const originalHtml = button.html();
+        const emailFormContainer = $(`.email-form[data-id="${guiaId}"]`);
+
+        // Validar que haya al menos un email
+        const emails = form.find('input[type="email"]').map(function() {
+            return $(this).val();
+        }).get().filter(email => email.trim() !== '');
+
+        if (emails.length === 0) {
+            toastr.warning('Debes ingresar al menos un correo electrónico', 'Atención');
+            return;
+        }
+
+        // Deshabilitar botón y mostrar loading
+        button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+
+        // Mostrar toast de carga
+        toastr.info('<i class="fa fa-spinner fa-spin"></i> Enviando correo, no cierre esta pestaña...', 'Procesando', {
+            timeOut: 0,
+            extendedTimeOut: 0,
+            closeButton: false,
+            tapToDismiss: false
+        });
+
+        // Preparar datos
+        const formData = new FormData(form[0]);
+
+        $.ajax({
+            url: "{{ route('guiaRemisionM.enviar-correo-directo', '') }}/" + guiaId,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                // Limpiar todos los toasts
+                toastr.clear();
+
+                if (response.success) {
+                    // Cerrar formulario
+                    emailFormContainer.removeClass('email-fixed').css('height', '0px');
+
+                    // Resetear formulario
+                    form[0].reset();
+                    $(`.emails-adicionales-${guiaId}`).empty();
+
+                    // Mostrar mensaje de éxito con Toast
+                    toastr.success(response.message, '¡Enviado!');
+                } else {
+                    toastr.error(response.message, 'Error');
+                }
+            },
+            error: function(xhr) {
+                // Limpiar todos los toasts
+                toastr.clear();
+
+                let errorMsg = 'Error al enviar el correo';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+
+                toastr.error(errorMsg, 'Error');
+            },
+            complete: function() {
+                // Rehabilitar botón
+                button.prop('disabled', false).html(originalHtml);
+            }
+        });
+    });
+
+    // Cerrar al hacer clic fuera
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.email-container, .email-form').length) {
+            $('.email-form').removeClass('email-fixed').css('height', '0px');
+        }
+    });
+
     // ============ WHATSAPP ============
     $(document).on('mouseenter', '.wsp-container', function() {
         $(this).find('.wsp-form').css('height', '50px');
@@ -582,7 +759,8 @@ coti_table.on('draw', function() {
                     title: "Sin selección",
                     text: "Por favor, selecciona al menos una guía para imprimir.",
                     type: "warning",
-                    confirmButtonText: "Entendido"
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
                 });
             } else {
                 alert("Por favor, selecciona al menos una guía para imprimir.");
@@ -628,15 +806,13 @@ coti_table.on('draw', function() {
     $('#btn-exportar-grm').on('click', function(e) {
         e.preventDefault();
 
-        console.log('IDs seleccionados para exportar:', allSelectedIds);
-
         // Validar que hay boletas seleccionadas
         if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una guía de remisión para exportar.",
                 type: "warning",
-                confirmButtonText: "Entendido"
+                confirmButtonColor: "#2641F8"
             });
             return;
         }
@@ -647,33 +823,33 @@ coti_table.on('draw', function() {
             text: `¿Deseas exportar ${allSelectedIds.length} guias(s) seleccionada(s) a Excel?`,
             type: "info",
             showCancelButton: true,
-            confirmButtonText: "Sí, exportar",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#2641F8"
         }, function(isConfirm) {
-            if (isConfirm) {
-                // Construir URL con los IDs seleccionados
-                var exportUrl = "{{ route('guias.manual.exportar') }}";
-                var params = new URLSearchParams();
+            if (!isConfirm) return;
+            
+            $('#btn-exportar-grm').prop('disabled', true);
 
-                // Agregar los IDs seleccionados como parámetro boleta_ids[]
-                allSelectedIds.forEach(function(id) {
-                    params.append('guia_ids[]', id);
-                });
+            $.ajax({
+                url: "{{ route('guias.manual.exportar') }}",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ guia_ids: allSelectedIds }),
+                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                xhrFields: { responseType: 'blob' },
+                complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
+                success: function(blob) {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Guías de Remisión_${new Date().toISOString().slice(0,10)}.xlsx`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            });
 
-                console.log('URL de exportación:', exportUrl + '?' + params.toString());
-
-                // Redirigir para exportar
-                window.location.href = exportUrl + '?' + params.toString();
-
-                // Mensaje de éxito
-                swal({
-                    title: "Procesando",
-                    text: "Las guías se están exportando a Excel...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
         });
     });
 
@@ -688,7 +864,8 @@ coti_table.on('draw', function() {
             title: "Sin selección",
             text: "Selecciona al menos una guía para descargar.",
             type: "warning",
-            confirmButtonText: "Entendido"
+            confirmButtonText: "Entendido",
+            confirmButtonColor: "#2641F8"
         });
         return;
     }
@@ -703,7 +880,8 @@ coti_table.on('draw', function() {
         type: "info",
         showCancelButton: true,
         confirmButtonText: "Sí, descargar",
-        cancelButtonText: "Cancelar"
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: "#2641F8"
     }, function(isConfirm) {
         if (isConfirm) {
             var url = "{{ route('guia_remision_manual.download.multiple') }}";
@@ -733,6 +911,95 @@ coti_table.on('draw', function() {
     });
 });
 
+// Función para enviar boletas por Correo múltiple
+$('#btn-correo-filtrado').on('click', function(e) {
+    e.preventDefault();
+
+    if (allSelectedIds.length === 0) {
+        return swal({
+            title: "Sin selección",
+            text: "Por favor, selecciona al menos una guía de remisión manual para enviar por correo.",
+            type: "warning",
+            confirmButtonText: "Entendido",
+            confirmButtonColor: "#2641F8"
+        });
+    }
+
+    swal({
+        title: "Enviar por Correo",
+        text: `Ingresa el correo electrónico para enviar ${allSelectedIds.length} guía(s) de remisión:`,
+        type: "input",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        confirmButtonText: "Enviar",
+        cancelButtonText: "Cancelar",
+        inputPlaceholder: "ejemplo@correo.com",
+        confirmButtonColor: "#2641F8"
+    }, function(inputValue) {
+        if (inputValue === false) return false;
+        if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
+
+        // Validar formato de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(inputValue)) {
+            return swal.showInputError("Por favor ingresa un correo electrónico válido");
+        }
+
+        // Mostrar mensaje de procesando
+        swal({
+            title: "Enviando...",
+            text: `Procesando ${allSelectedIds.length} guía(s) de remisión. Por favor espera...`,
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        });
+
+        // Enviar por AJAX
+        $.ajax({
+            url: '{{ route('envioCorreo.guia_remisionM.multiple') }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                email: inputValue,
+                guia_ids: allSelectedIds
+            },
+            success: function(response) {
+                if (response.success) {
+                    swal({
+                        title: "¡Enviado!",
+                        text: response.message || `Se han enviado ${allSelectedIds.length} guía(s) de remisión por correo`,
+                        type: "success",
+                        timer: 3000,
+                        showConfirmButton: true,
+                        confirmButtonColor: "#2641F8"
+                    });
+                } else {
+                    swal({
+                        title: "Error",
+                        text: response.message || "Hubo un error al enviar los correos",
+                        type: "error",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#2641F8"
+                    });
+                }
+            },
+            error: function(xhr) {
+                let errorMsg = 'Error al enviar los correos';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+                swal({
+                    title: "Error",
+                    text: errorMsg,
+                    type: "error",
+                    confirmButtonText: "Entendido",
+                    confirmButtonColor: "#2641F8"
+                });
+            }
+        });
+    });
+});
+
 // Función para enviar guias por WhatsApp multiple
 $('#btn-whatsapp-filtrado').on('click', function(e) {
     e.preventDefault();
@@ -742,7 +1009,8 @@ $('#btn-whatsapp-filtrado').on('click', function(e) {
             title: "Sin selección",
             text: "Por favor, selecciona al menos una guía de remisión para enviar por WhatsApp.",
             type: "warning",
-            confirmButtonText: "Entendido"
+            confirmButtonText: "Entendido",
+            confirmButtonColor: "#2641F8"
         });
     }
 
@@ -754,7 +1022,8 @@ $('#btn-whatsapp-filtrado').on('click', function(e) {
         closeOnConfirm: false,
         confirmButtonText: "Enviar",
         cancelButtonText: "Cancelar",
-        inputPlaceholder: "Ejemplo: 999999999"
+        inputPlaceholder: "Ejemplo: 999999999",
+        confirmButtonColor: "#2641F8"
     }, function(inputValue) {
         if (inputValue === false) return false;
         if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");

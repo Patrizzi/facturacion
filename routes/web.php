@@ -1035,10 +1035,10 @@ Route::group(
         Route::get('/boleta2/create', 'BoletaController@create2')->name("boleta2.create");
 
 
-        Route::get('/comprobantes/boleta/exportar', [BoletaController::class, 'exportarBoletas'])->name('boletas.exportar');
-        Route::get('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
-        Route::get('/comprobantes/boleta_manual/exportar', [BoletaMController::class, 'exportarBoletasM'])->name('boletasM.exportar');
-        Route::get('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
+        Route::post('/comprobantes/boleta/exportar', [BoletaController::class, 'exportarBoletas'])->name('boletas.exportar');
+        Route::post('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
+        Route::post('/comprobantes/boleta_manual/exportar', [BoletaMController::class, 'exportarBoletasM'])->name('boletasM.exportar');
+        Route::post('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
     }
 );
 
@@ -1167,27 +1167,23 @@ Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.ind
 
 
 // NOTAS DE CRÉDITO Y DEBITO
-Route::get('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
-Route::get('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
+Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
+Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
 
 
 // GARANTIA INFORME TECNICO
 Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController::class, 'exportGarantiaInformeTecnico'])->name('export.garantia_informe_tecnico');
 
 // EXPORTACION DE GUIA REMISION
-Route::get('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
+Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
 // Route::get(
 //     '/comprobantes/guias-manual/registers',
 //     [GuiaRemisionManualController::class, 'registers']
 // )->name('comprobantes.guiaRemisionM_registers');
 
-Route::get(
-    '/comprobantes/guias-manual/exportar',
-    [GuiaRemisionManualController::class, 'exportarGuiasManual']
-)->name('guias.manual.exportar');
 
 // Route::get('/comprobantes/guias-manual/registers', [GuiaRemisionManualController::class, 'registers'])->name('comprobantes.guiaRemisionM_registers');
-Route::get('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
+Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
 Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
 
 //RUTAS PARA IMPRIMIR EN CONJUNTO
@@ -1215,9 +1211,7 @@ Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoC
 
 // DESCARGAR PDF DE GUIA DE REMISION
 Route::get('comprobantes/guia-remision/print-multiple', [GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
-Route::get('comprobantes/guia-remision/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
 Route::get('comprobantes/guia-remision-manual/print-multiple', [GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
-Route::get('comprobantes/guia-remision-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
 Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
 
 
@@ -1352,46 +1346,162 @@ Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class,
 
 
 // Mandar multiples pdf por wsp en comprobantes
+Route::get('boleta/share/{codigo}', [BoletaController::class, 'descargarPorCodigo'])
+    ->name('boleta_codificada');
 Route::post('/comprobantes/boleta/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boleta.multiple');
 
+Route::get('boleta_manual/share/{codigo}', [BoletaMController::class, 'descargarPorCodigo'])
+    ->name('boleta_manual_codificada');
 Route::post('/comprobantes/boleta_manual/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boletaM.multiple');
 
+Route::get('factura/share/{codigo}', [FacturacionController::class, 'descargarPorCodigo'])
+    ->name('factura_codificada');
 Route::post('/comprobantes/factura/whatsapp/send-multiple', [FacturacionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.factura.multiple');
 
+Route::get('factura_manual/share/{codigo}', [FacturacionMController::class, 'descargarPorCodigo'])
+    ->name('factura_manual_codificada');
 Route::post('/comprobantes/factura_manual/whatsapp/send-multiple', [FacturacionMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.facturaM.multiple');
 
+Route::get('nota_credito/share/{codigo}', [NotaCreditoController::class, 'descargarPorCodigo'])
+    ->name('nota_credito_codificada');
 Route::post('/comprobantes/nota_credito/whatsapp/send-multiple', [NotaCreditoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaCredito.multiple');
 
+Route::get('nota_debito/share/{codigo}', [NotaDebitoController::class, 'descargarPorCodigo'])
+    ->name('nota_debito_codificada');
 Route::post('/comprobantes/nota_debito/whatsapp/send-multiple', [NotaDebitoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaDebito.multiple');
 
+Route::get('guia_remision/share/{codigo}', [GuiaRemisionController::class, 'descargarPorCodigo'])
+    ->name('guia_remision_codificada');
 Route::post('/comprobantes/guia_remision/whatsapp/send-multiple', [GuiaRemisionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaRemision.multiple');
 
+Route::get('guia_remision_manual/share/{codigo}', [GuiaRemisionManualController::class, 'descargarPorCodigo'])
+    ->name('guia_remision_manual_codificada');
 Route::post('/comprobantes/guia_remision_manual/whatsapp/send-multiple', [GuiaRemisionManualController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaRemisionM.multiple');
 
-// Mandar multiples pdf por wsp en comprobantes
+// Mandar multiples pdf por wsp en ventas
+Route::get('cotizacion/share/{codigo}', [CotizacionController::class, 'descargarPorCodigo'])
+    ->name('cotizacion_codificada');
 Route::post('/ventas/cotizacion/whatsapp/send-multiple', [CotizacionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.cotizacion.multiple');
 
+Route::get('cotizacion_manual/share/{codigo}', [CotizacionManualController::class, 'descargarPorCodigo'])
+    ->name('cotizacion_manual_codificada');
 Route::post('/ventas/cotizacion_manual/whatsapp/send-multiple', [CotizacionManualController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.cotizacionM.multiple');
 
+Route::get('nota_venta/share/{codigo}', [NotaVentaController::class, 'descargarPorCodigo'])
+    ->name('nota_venta_codificada');
 Route::post('/ventas/nota_venta/whatsapp/send-multiple', [NotaVentaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaVenta.multiple');
 
-// Mandar multiples pdf por wsp en comprobantes
+// Mandar multiples pdf por wsp en garantias
+Route::get('garantia_guia_ingreso/share/{codigo}', [GarantiaGuiaIngresoController::class, 'descargarPorCodigo'])
+    ->name('garantia_guia_ingreso_codificada');
 Route::post('/garantias/guia_ingreso/whatsapp/send-multiple', [GarantiaGuiaIngresoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaIngreso.multiple');
 
+Route::get('garantia_guia_egreso/share/{codigo}', [GarantiaGuiaEgresoController::class, 'descargarPorCodigo'])
+    ->name('garantia_guia_egreso_codificada');
 Route::post('/garantias/guia_egreso/whatsapp/send-multiple', [GarantiaGuiaEgresoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaEgreso.multiple');
 
+Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoController::class, 'descargarPorCodigo'])
+    ->name('garantia_informe_tecnico_codificada');
 Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.informeTecnico.multiple');
+
+// Rutas para mandar por correo directamente desde el index de comprobantes
+Route::post('/boleta/enviar-correo-directo/{id}', [BoletaController::class, 'enviarCorreoDirecto'])
+    ->name('boleta.enviar-correo-directo');
+
+Route::post('/boleta_manual/enviar-correo-directo/{id}', [BoletaMController::class, 'enviarCorreoDirecto'])
+    ->name('boletaM.enviar-correo-directo');
+
+Route::post('/factura/enviar-correo-directo/{id}', [FacturacionController::class, 'enviarCorreoDirecto'])
+    ->name('factura.enviar-correo-directo');
+
+Route::post('/factura_manual/enviar-correo-directo/{id}', [FacturacionMController::class, 'enviarCorreoDirecto'])
+    ->name('facturaM.enviar-correo-directo');
+
+Route::post('/nota_credito/enviar-correo-directo/{id}', [NotaCreditoController::class, 'enviarCorreoDirecto'])
+    ->name('notaCredito.enviar-correo-directo');
+
+Route::post('/nota_debito/enviar-correo-directo/{id}', [NotaDebitoController::class, 'enviarCorreoDirecto'])
+    ->name('notaDebito.enviar-correo-directo');
+
+Route::post('/guia_remision/enviar-correo-directo/{id}', [GuiaRemisionController::class, 'enviarCorreoDirecto'])
+    ->name('guiaRemision.enviar-correo-directo');
+
+Route::post('/guia_remision_manual/enviar-correo-directo/{id}', [GuiaRemisionManualController::class, 'enviarCorreoDirecto'])
+    ->name('guiaRemisionM.enviar-correo-directo');
+
+// Rutas para mandar por correo directamente desde el index de ventas
+Route::post('/cotizacion/enviar-correo-directo/{id}', [CotizacionController::class, 'enviarCorreoDirecto'])
+    ->name('cotizacion.enviar-correo-directo');
+
+Route::post('/cotizacion_manual/enviar-correo-directo/{id}', [CotizacionManualController::class, 'enviarCorreoDirecto'])
+    ->name('cotizacionM.enviar-correo-directo');
+
+Route::post('/nota_venta/enviar-correo-directo/{id}', [NotaVentaController::class, 'enviarCorreoDirecto'])
+    ->name('notaVenta.enviar-correo-directo');
+
+// Rutas para envio multiple de correo para comprobantes
+Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.boleta.multiple');
+
+Route::post('/boleta_manual/enviar-correo-multiple', [BoletaMController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.boletaM.multiple');
+
+Route::post('/factura/enviar-correo-multiple', [FacturacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.factura.multiple');
+
+Route::post('/factura_manual/enviar-correo-multiple', [FacturacionMController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.facturaM.multiple');
+
+Route::post('/nota_credito/enviar-correo-multiple', [NotaCreditoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.notaCredito.multiple');
+
+Route::post('/nota_debito/enviar-correo-multiple', [NotaDebitoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.notaDebito.multiple');
+
+Route::post('/guia_remision/enviar-correo-multiple', [GuiaRemisionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.guia_remision.multiple');
+
+Route::post('/guia_remision_manual/enviar-correo-multiple', [GuiaRemisionManualController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.guia_remisionM.multiple');
+
+// Rutas para envio multiple de correo para ventas
+Route::post('/cotizacion/enviar-correo-multiple', [CotizacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.cotizacion.multiple');
+
+Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.cotizacionM.multiple');
+
+Route::post('/nota_venta/enviar-correo-multiple', [NotaVentaController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.nota_venta.multiple');
+
+// Rutas para envio multiple de correo para garantias
+Route::post('/garantia_guia_ingreso/enviar-correo-multiple', [GarantiaGuiaIngresoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_guia_ingreso.multiple');
+
+Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_guia_egreso.multiple');
+
+Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_informe_tecnico.multiple');
+
+// Ruta para generar el PDF de ficha técnica de un producto
+ Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
+    ->name('productos.ftPdf');
+
+// Ruta para generar el PDF de ficha técnica de un servicio
+Route::get('/servicios/{id}/ft-pdf', [ServiciosController::class, 'ftPdf'])
+    ->name('servicios.ft_pdf');

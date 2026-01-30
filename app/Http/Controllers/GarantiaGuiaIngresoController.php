@@ -43,6 +43,9 @@ use ZipArchive;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Auth;
 use COM;
+use App\EmailConfiguraciones;
+use App\EmailBandejaEnviosArchivos;
+use App\EmailBandejaEnvios;
 
 class GarantiaGuiaIngresoController extends Controller
 {
@@ -859,8 +862,9 @@ class GarantiaGuiaIngresoController extends Controller
         foreach ($garantiaIngresoIds as $id) {
             $garantia_guia_ingreso = GarantiaGuiaIngreso::find($id);
             if ($garantia_guia_ingreso) {
-                $codigoGarantiaGuiaI = $garantia_guia_ingreso->codigo_interno;
-                $pdfUrl = route('pdf_ingreso', $id) . "?archivo=GarantiaGuiaIngreso_{$codigoGarantiaGuiaI}";
+                $codigo = substr(md5($id . env('APP_KEY') . 'garantia_guia_ingreso'), 0, 22);
+
+                $pdfUrl = url("garantia_guia_ingreso/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -870,5 +874,180 @@ class GarantiaGuiaIngresoController extends Controller
         $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
 
         return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $garantias = GarantiaGuiaIngreso::all();
+
+        foreach ($garantias as $gar) {
+            if (substr(md5($gar->id . env('APP_KEY') . 'garantia_guia_ingreso'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_ingreso', $gar->id);
+            }
+        }
+
+        abort(404);
+    }
+
+    public function enviarCorreoMultiple(Request $request)
+    {
+        try {
+            $email = $request->get('email');
+            $guia_ids = $request->get('guia_ids', []);
+
+            if (empty($guia_ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron guías de ingreso para enviar.'
+                ], 400);
+            }
+
+            if (empty($email)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El correo electrónico es requerido.'
+                ], 400);
+            }
+
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $mi_empresa = Empresa::first();
+            $contacto = Contacto::all();
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Guías de Ingreso - " . count($guia_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las guías de ingreso solicitadas.";
+            $mensaje = view('email_html.email_send_layout', compact('mi_empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            // Agregar email backup si existe
+            $correos_envios = [$email, $config_email->email_backup];
+            $mails_array = array_filter($correos_envios);
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            $archivos_temporales = [];
+
+            // Generar y adjuntar cada PDF
+            foreach ($guia_ids as $guia_id) {
+                $garantia_guia_ingreso = GarantiaGuiaIngreso::find($guia_id);
+                if (!$garantia_guia_ingreso) continue;
+
+                $name = 'PDF-DOC-' . $garantia_guia_ingreso->orden_servicio . '-' . $mi_empresa->ruc;
+                $archivo = $name . ".pdf";
+
+                $pdf = PDF::loadView('transaccion.garantias.guia_ingreso.show_pdf', compact('garantia_guia_ingreso', 'mi_empresa', 'contacto'));
+                $content = $pdf->download();
+                $especif = $date . $archivo;
+                Storage::disk('mailbox')->put($especif, $content);
+
+                $pdfile = public_path() . '/archivos/' . $especif;
+                $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+                $archivos_temporales[] = $especif;
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                // Guardar en bandeja de envíos
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = $email;
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // ⭐ Guardar archivos CON LA FECHA COMPLETA (no usar basename)
+                foreach ($archivos_temporales as $archivo_temp) {
+                    $archivo_pdf = new EmailBandejaEnviosArchivos;
+                    $archivo_pdf->id_bandeja_envios = $mail->id;
+                    $archivo_pdf->archivo = $archivo_temp; // ⭐ Guardamos con fecha completa
+                    $archivo_pdf->fecha_hora = $date;
+                    $archivo_pdf->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Se enviaron ' . count($guia_ids) . ' guía(s) de ingreso exitosamente a: ' . $email
+                ]);
+            }
+
+            // Si falla el envío, limpiar archivos
+            foreach ($archivos_temporales as $archivo_temp) {
+                Storage::disk('mailbox')->delete($archivo_temp);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($archivos_temporales) && !empty($archivos_temporales)) {
+                foreach ($archivos_temporales as $archivo_temp) {
+                    Storage::disk('mailbox')->delete($archivo_temp);
+                }
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
+        }
     }
 }

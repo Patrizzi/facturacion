@@ -13,6 +13,7 @@ use App\Tipo_afectacion;
 use Exception;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Calculation\Web\Service;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ServiciosController extends Controller
 {
@@ -342,8 +343,54 @@ class ServiciosController extends Controller
             'message' => 'Servicio anulado correctamente',
             'servicio' => $servicio
         ]);
-        // $
     }
+
+    public function ftPdf($id)
+    {
+        $servicio = Servicios::with([
+            'marca',
+            'familia',
+            'subfamilia_i_serv',
+            'moneda',
+            'tipo_afec_i_serv',
+        ])->findOrFail($id);
+
+        $fotoBase64 = null;
+
+        $fotoNombre = $servicio->foto ?: 'servicio.svg';
+        $fotoPath = public_path('archivos/imagenes/servicios/' . $fotoNombre);
+
+        if (!file_exists($fotoPath)) {
+            $fotoPath = public_path('archivos/imagenes/servicios/servicio.svg');
+        }
+
+        if (file_exists($fotoPath)) {
+            $ext = strtolower(pathinfo($fotoPath, PATHINFO_EXTENSION));
+            $mime = match ($ext) {
+                'jpg', 'jpeg' => 'image/jpeg',
+                'png' => 'image/png',
+                'gif' => 'image/gif',
+                'svg' => 'image/svg+xml',
+                default => 'application/octet-stream',
+            };
+
+            $fotoData = file_get_contents($fotoPath);
+            if ($fotoData !== false) {
+                $fotoBase64 = 'data:' . $mime . ';base64,' . base64_encode($fotoData);
+            }
+        }
+
+        $pdf = \PDF::loadView('producto_servicios.servicios.ft_pdf', [
+            'servicio'   => $servicio,
+            'fotoBase64' => $fotoBase64,
+        ])->setPaper('A4', 'portrait');
+
+        $codigo = $servicio->codigo_servicio ?? ('SERV_' . $servicio->id);
+        $fileName = 'FT_' . preg_replace('/[^A-Za-z0-9_\-]/', '_', $codigo) . '.pdf';
+
+        return $pdf->stream($fileName);
+    }
+
 
     // public function generar_codigo_servicio(Request $request)
     // {
