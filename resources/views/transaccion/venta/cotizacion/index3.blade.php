@@ -454,6 +454,9 @@ $(document).ready(function() {
         $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
     }
 
+    function closeEmailPanels() {
+        $('.email-form').removeClass('email-fixed').css('height', '0px');
+    }
 
     // Función para obtener TODOS los IDs mediante AJAX
     function getAllIds(callback) {
@@ -510,6 +513,7 @@ $(document).ready(function() {
         if (isUpdatingCheckboxes) return;
 
         closeWhatsappPanels();
+        closeEmailPanels();
 
         if (event.type === 'ifChecked') {
             masterChecked = true;
@@ -533,6 +537,7 @@ $(document).ready(function() {
         if (isUpdatingCheckboxes) return;
 
         closeWhatsappPanels();
+        closeEmailPanels();
 
         var checkboxValue = $(this).val();
 
@@ -565,6 +570,7 @@ $(document).ready(function() {
     // Cuando se redibuje la tabla
     coti_table.on('draw', function() {
         closeWhatsappPanels();
+        closeEmailPanels();
         $('.dataTables-example-cotizacion tbody input[type="checkbox"]').iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green',
@@ -595,16 +601,25 @@ $(document).ready(function() {
 
     // ============CORREO ============
     $(document).on('mouseenter', '.email-container', function() {
+        if (hasAnySelection()) { closeEmailPanels(); return; }
         const form = $(this).find('.email-form');
         form.css('height', (form.find('form').outerHeight() + 20) + 'px');
     });
 
     $(document).on('mouseenter', '.email-form', function() {
+        if (hasAnySelection()) { closeEmailPanels(); return; }
         $(this).css('height', ($(this).find('form').outerHeight() + 20) + 'px');
     });
 
     // Fijar cuando se hace clic en el botón de correo
     $(document).on('click', '.email-container .btn-secondary', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeEmailPanels();
+            return;
+        }
+
         e.stopPropagation();
         const form = $(this).siblings('.email-form');
         form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
@@ -612,6 +627,13 @@ $(document).ready(function() {
 
     // Fijar también cuando se hace clic en el formulario o inputs
     $(document).on('click', '.email-form', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeEmailPanels();
+            return;
+        }
+        
         e.stopPropagation();
         $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
     });
