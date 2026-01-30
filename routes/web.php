@@ -134,8 +134,8 @@ Route::group(
 
 
         //COTIZACION Y COTIZACION MANUAL EXPORTAR
-        Route::post('/ventas/cotizacion/exportar', [CotizacionController::class, 'exportar_cotizaciones'])->name('exportarCotizacion');
-        Route::post('/ventas/cotizacion_manual/exportar', [CotizacionManualController::class, 'exportar_cotizacionesM'])->name('exportarCotizacionM');
+        Route::get('/ventas/cotizacion/exportar', [CotizacionController::class, 'exportar_cotizaciones'])->name('exportarCotizacion');
+        Route::get('/ventas/cotizacion_manual/exportar', [CotizacionManualController::class, 'exportar_cotizacionesM'])->name('exportarCotizacionM');
 
         Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
         Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');
@@ -1184,7 +1184,7 @@ Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exp
 
 // Route::get('/comprobantes/guias-manual/registers', [GuiaRemisionManualController::class, 'registers'])->name('comprobantes.guiaRemisionM_registers');
 Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
-Route::post('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
+Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
 
 //RUTAS PARA IMPRIMIR EN CONJUNTO
 Route::get('comprobantes/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
@@ -1351,7 +1351,7 @@ Route::get('boleta/share/{codigo}', [BoletaController::class, 'descargarPorCodig
 Route::post('/comprobantes/boleta/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boleta.multiple');
 
-Route::get('boleta/share/{codigo}', [BoletaMController::class, 'descargarPorCodigo'])
+Route::get('boleta_manual/share/{codigo}', [BoletaMController::class, 'descargarPorCodigo'])
     ->name('boleta_manual_codificada');
 Route::post('/comprobantes/boleta_manual/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.boletaM.multiple');
@@ -1361,7 +1361,7 @@ Route::get('factura/share/{codigo}', [FacturacionController::class, 'descargarPo
 Route::post('/comprobantes/factura/whatsapp/send-multiple', [FacturacionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.factura.multiple');
 
-Route::get('factura/share/{codigo}', [FacturacionMController::class, 'descargarPorCodigo'])
+Route::get('factura_manual/share/{codigo}', [FacturacionMController::class, 'descargarPorCodigo'])
     ->name('factura_manual_codificada');
 Route::post('/comprobantes/factura_manual/whatsapp/send-multiple', [FacturacionMController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.facturaM.multiple');
@@ -1381,7 +1381,7 @@ Route::get('guia_remision/share/{codigo}', [GuiaRemisionController::class, 'desc
 Route::post('/comprobantes/guia_remision/whatsapp/send-multiple', [GuiaRemisionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaRemision.multiple');
 
-Route::get('guia_remision/share/{codigo}', [GuiaRemisionManualController::class, 'descargarPorCodigo'])
+Route::get('guia_remision_manual/share/{codigo}', [GuiaRemisionManualController::class, 'descargarPorCodigo'])
     ->name('guia_remision_manual_codificada');
 Route::post('/comprobantes/guia_remision_manual/whatsapp/send-multiple', [GuiaRemisionManualController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.guiaRemisionM.multiple');
@@ -1392,7 +1392,7 @@ Route::get('cotizacion/share/{codigo}', [CotizacionController::class, 'descargar
 Route::post('/ventas/cotizacion/whatsapp/send-multiple', [CotizacionController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.cotizacion.multiple');
 
-Route::get('cotizacion/share/{codigo}', [CotizacionManualController::class, 'descargarPorCodigo'])
+Route::get('cotizacion_manual/share/{codigo}', [CotizacionManualController::class, 'descargarPorCodigo'])
     ->name('cotizacion_manual_codificada');
 Route::post('/ventas/cotizacion_manual/whatsapp/send-multiple', [CotizacionManualController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.cotizacionM.multiple');

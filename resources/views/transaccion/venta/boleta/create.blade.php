@@ -372,10 +372,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="button" id="boton" name="boton" class="btn btn-primary button-ladda"
-                                    style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
-                                    <strong>Guardar</strong>
-                                </button>
+                                <button type="button" id="boton" name="boton" class="btn btn-primary button-ladda">Guardar</button>
                                 {{-- <button class="btn btn-primary float-right button-lada"  id="boton" type="submit"><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp;
                                 <button class="ladda-button btn btn-primary float-right" type="button" id="boton" name="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp; --}}
                                 <button type="submit" id="button_submit" hidden ></button>
