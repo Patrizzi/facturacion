@@ -871,14 +871,11 @@
     $('#btn_exportar-filtrado').on('click', function(e) {
         e.preventDefault();
 
-        console.log('IDs seleccionados para exportar:', allSelectedIds);
-
         if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una nota de venta para exportar.",
                 type: "warning",
-                confirmButtonText: "Entendido",
                 confirmButtonColor: "#1a3bb3"
             });
             return;
@@ -890,33 +887,32 @@
             text: `¿Deseas exportar ${allSelectedIds.length} nota(s) seleccionada(s) a Excel?`,
             type: "info",
             showCancelButton: true,
-            confirmButtonText: "Sí, exportar",
             cancelButtonText: "Cancelar",
             confirmButtonColor: "#1a3bb3"
         }, function(isConfirm) {
-            if (isConfirm) {
-                // Construir URL con los IDs seleccionados
-                var exportUrl = "{{ route('export.nota_venta') }}";
-                var params = new URLSearchParams();
-
-                allSelectedIds.forEach(function(id) {
-                    params.append('nota_ids[]', id);
-                });
-
-                console.log('URL de exportación:', exportUrl + '?' + params.toString());
-
-                // Redirigir para exportar
-                window.location.href = exportUrl + '?' + params.toString();
-
-                // Mensaje de éxito
-                swal({
-                    title: "Procesando",
-                    text: "Las notas de venta se están exportando a Excel...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
+            if (!isConfirm) return;
+            
+            $('#btn_exportar-filtrado').prop('disabled', true);
+            
+            $.ajax({
+                url: "{{ route('export.nota_venta') }}",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ nota_ids: allSelectedIds }),
+                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                xhrFields: { responseType: 'blob' },
+                complete: () => $('##btn_exportar-filtrado').prop('disabled', false),
+                success: function(blob) {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Notas de Venta_${new Date().toISOString().slice(0,10)}.xlsx`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            });
         });
     });
 

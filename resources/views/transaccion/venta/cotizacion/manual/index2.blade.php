@@ -868,15 +868,12 @@ $(document).ready(function() {
     $('#btn_export_cotizacionM').on('click', function(e) {
         e.preventDefault();
 
-        console.log('IDs seleccionados para exportar:', allSelectedIds);
-
         // Validar que hay boletas seleccionadas
         if (allSelectedIds.length === 0) {
             swal({
                 title: "Sin selección",
                 text: "Por favor, selecciona al menos una cotización para exportar.",
                 type: "warning",
-                confirmButtonText: "Entendido",
                 confirmButtonColor: "#1a3bb3"
             });
             return;
@@ -888,33 +885,32 @@ $(document).ready(function() {
             text: `¿Deseas exportar ${allSelectedIds.length} cotizacion(es) seleccionada(s) a Excel?`,
             type: "info",
             showCancelButton: true,
-            confirmButtonText: "Sí, exportar",
             cancelButtonText: "Cancelar",
             confirmButtonColor: "#1a3bb3"
         }, function(isConfirm) {
-            if (isConfirm) {
-                // Construir URL con los IDs seleccionados
-                var exportUrl = "{{ route('exportarCotizacionM') }}";
-                var params = new URLSearchParams();
-
-                allSelectedIds.forEach(function(id) {
-                    params.append('cotizacion_ids[]', id);
-                });
-
-                console.log('URL de exportación:', exportUrl + '?' + params.toString());
-
-                // Redirigir para exportar
-                window.location.href = exportUrl + '?' + params.toString();
-
-                // Mensaje de éxito
-                swal({
-                    title: "Procesando",
-                    text: "Las cotizaciones se están exportando a Excel...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
+            if (!isConfirm) return;
+            
+            $('#btn_export_cotizacionM').prop('disabled', true);
+            
+            $.ajax({
+                url: "{{ route('exportarCotizacionM') }}",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ cotizacion_ids: allSelectedIds }),
+                headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                xhrFields: { responseType: 'blob' },
+                complete: () => $('#btn_export_cotizacionM').prop('disabled', false),
+                success: function(blob) {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Cotizaciones_${new Date().toISOString().slice(0,10)}.xlsx`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }
+            });
         });
     });
 
