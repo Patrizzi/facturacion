@@ -901,7 +901,7 @@
                 data: JSON.stringify({ nota_ids: allSelectedIds }),
                 headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
                 xhrFields: { responseType: 'blob' },
-                complete: () => $('##btn_exportar-filtrado').prop('disabled', false),
+                complete: () => $('#btn_exportar-filtrado').prop('disabled', false),
                 success: function(blob) {
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
