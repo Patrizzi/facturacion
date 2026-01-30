@@ -508,7 +508,7 @@ class FacturacionController extends Controller
      */
     public function store(Request $request, $id_moneda)
     {
-        return $request;
+        // return $request;
         $articulo = $request->input('articulo');
 
         // return $articulo;

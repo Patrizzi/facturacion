@@ -22,7 +22,7 @@ class CobranzasComprobantesController extends Controller
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
 
-        dd($request);
+        // dd($request);
         $draw = $request->query('draw', 0);
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
