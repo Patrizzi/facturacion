@@ -6,21 +6,221 @@
 
 @section('content')
 
+@section('content')
+
+<style>
+    /* Estilos globales para asegurar el comportamiento */
+    .card-hover {
+        transition: all 0.3s ease-in-out;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #eee !important;
+    }
+
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        cursor: pointer;
+    }
+
+    .img-container {
+        width: 100%;
+        height: 160px; /* Altura fija para que todas sean iguales */
+        overflow: hidden;
+        background-color: #f9f9f9;
+    }
+
+    .img-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
+        transition: transform 0.5s ease;
+    }
+
+    .card-hover:hover .img-container img {
+        transform: scale(1.1); /* Zoom suave al pasar el mouse */
+    }
+
+    .card-title-custom {
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+        margin: 0;
+        text-transform: capitalize;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row">
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://www.scmlogistica.es/wp-content/uploads/como-poner-en-marcha-un-pequeno-almacen.jpg" alt="Almacen">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Almacen</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://media.licdn.com/dms/image/v2/D5612AQGKDWIO4YzmRg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1682372299828?e=2147483647&v=beta&t=zZAY6NV-54j_-V1HjZkwK2DaNII-EQJ5Lk51LF6Ob6A" alt="Apariencia">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Apariencia</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://www.partoo.co/wp-content/uploads/2022/08/categories-google-my-business-1.jpg" alt="Categoria">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Categoria</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://clubfranquicia.pe/public/imagen/noticias/club-franquicia-peru-05-03-25-tcl-1742563486.png" alt="Familias">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Familias</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://img.freepik.com/psd-premium/sello-dorado-calidad-garantizada_400948-265.jpg?semt=ais_hybrid&w=740&q=80" alt="Garantia">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Garantia</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://s3.amazonaws.com/arc-wordpress-client-uploads/infobae-wp/wp-content/uploads/2016/12/28180625/iStock-477404752.jpg" alt="Marcas">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Marcas</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://aacclarebeliondeltalento.com/wp-content/uploads/2018/08/encajar.jpg" alt="Motivos">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Motivos</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://cambio-seguro.s3.amazonaws.com/articles/como-se-determina-el-tipo-de-cambio.jpg" alt="Tipo de cambio">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Tipo de cambio</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://img.freepik.com/foto-gratis/bodegon-herramientas-medicion-vista-superior_23-2150440961.jpg?semt=ais_hybrid&w=740&q=80" alt="Tipo de cambio">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">U. de medida</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://www.auladiv.com/assets/imgs/usuarios.png" alt="Tipo de cambio">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Usuarios</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7595/7595571.png" alt="Tipo de cambio">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Validez</h6>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <div class="img-container">
+                    <img src="https://cdn-icons-png.freepik.com/512/5190/5190104.png" alt="Tipo de cambio">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Alarma</h6>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@endsection
+
+
+<!--
       <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
+        <div class="col">
+            <div class="col-lg-4">
                 <div class="ibox">
-                    <div class="ibox-content d-flex justify-content-center">
-                        <div class="row d-flex justify-content-between p-4">
-                            <!-- Elementos de la fila -->
-                            <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                <button class="btn btn-success dim tam pt-4" type="button">
+                    <div class="">
+                        <div class="">
+                             Elementos de la fila -->
+                            <!-- <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                               <button class="btn btn-success dim tam pt-4" type="button">
                                     <a href="{{ route('almacen.index') }}">
                                         <img class="rounded bg-white p-2" src="{{ asset('img/logos/almacen.svg') }}"
                                             width="50px" alt="">
                                         <p class="pt-md-3 display-6 fs-4 text-white">ALMACÉN</p>
                                     </a>
-                                </button>
+                                </button>-->
+
+
+
+     <!--
+                                <a href="{{ route('almacen.index') }}">
+                                <div class="card" style="width: 18rem;">
+                                    <img  src="https://www.scmlogistica.es/wp-content/uploads/como-poner-en-marcha-un-pequeno-almacen.jpg" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h1 class="card-title">Almacen</h1>
+
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-lg-3 col-md-6 d-flex     justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button">
@@ -42,7 +242,7 @@
                                </button>
                            </div>
 
-                             <!--<div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button"> </a>
                                      <a data-toggle="modal" href="#modal-forms5">
                                         <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
@@ -50,7 +250,7 @@
                                         <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
                                     </a>
                                 </button>
-                            </div>-->
+                            </div>
                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button" id="familia_button">
                                     <a data-toggle="modal" href="">
@@ -99,9 +299,10 @@
                                 </button>
                             </div>
                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                <button class="btn btn-success dim tam pt-4" type="button" id="medida_button">
-                                    <!--                                                                                                                                                        </a>-->
-                                    <a data-toggle="modal" href="">
+                                <button class="btn btn-success dim tam pt-4" type="button" id="medida_button">-->
+                                                                                                                                                                                    </a>-->
+
+                                    <!--                                                                                                                                                <a data-toggle="modal" href="">
                                         <img class="rounded bg-white p-2"
                                             src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px"
                                             alt="">
@@ -135,9 +336,9 @@
                                        <p class="pt-md-3 display-6 fs-4 text-white">ALARMA</p>
                                    </a>
                                </button>
-                           </div>
+                           </div></a>
                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                <!-- ELEMENTO FANTASMA - RELLENO -->
+                                <!-- ELEMENTO FANTASMA - RELLENO
                             </div>
                         </div>
                     </div>
@@ -145,6 +346,7 @@
             </div>
         </div>
     </div>
+-->
 
     @include('configuracion_general.tipo_cambio.modal_create')
 
@@ -169,6 +371,56 @@
     </div>
     <!-- fin código Gaby-->
     <style>
+
+
+    /* 1. Contenedor de la imagen: Define la altura fija */
+
+
+    /* 2. La imagen en sí: Se ajusta para cubrir el hueco */
+    /* 1. Definir un tamaño fijo para el contenedor de la imagen */
+.img-wrap {
+    height: 200px; /* Ajusta este valor según qué tan altas quieras las fotos */
+    overflow: hidden; /* Corta lo que sobresalga */
+    background-color: #f8f9fa; /* Color de fondo por si la imagen tarda en cargar */
+}
+
+.img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Mantiene la proporción recortando los bordes */
+    object-position: center;
+    transition: transform 0.5s ease;
+}
+
+/* 2. La tarjeta completa */
+.card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    overflow: hidden; /* Evita que la imagen se salga de las esquinas redondeadas */
+}
+
+.card-hover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    z-index: 10;
+    cursor: pointer;
+}
+
+.card-body {
+    text-align: center;
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.1rem; /* Usar rem es mejor para diseño responsivo */
+    margin: 0;
+    font-weight: 400;
+    text-transform: capitalize; /* Opcional: Primera letra en mayúscula */
+}
+
+
+
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
         div.dataTables_length {
