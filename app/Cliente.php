@@ -21,6 +21,11 @@ class Cliente extends Model
 
     protected $guarded = [];
 
+    public function vendedor_asignado(){
+        return $this->belongsTo(Personal_venta::class, 'vendedor_id');
+    }
+
+
     public static function cliente_update($id_cliente)
     {
         $cliente = Cliente::where('id', $id_cliente)->first();

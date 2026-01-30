@@ -772,6 +772,7 @@ class FacturacionMController extends Controller
                 $search_det->estado = 1;
                 $search_det->save();
             }else{
+                $eliminar_detraccion = Detracciones::where('factura_m_id', $id)->delete();
                 // Crear
                 $fact_detra = new Detracciones();
                 $fact_detra->factura_m_id = $factura->id;

@@ -111,7 +111,7 @@
                             <div class="col-md-10">
                                 <select class="select2_tipo_op" name="tipo_operacion">
                                     @foreach ($tipo_operacion as $t_op)
-                                        <option id="{{ $t_op->id }}"@if ($facturacion->tipo_operacion_id == $t_op->id)  @endif>
+                                        <option value="{{ $t_op->id }}"@if ($facturacion->tipo_operacion_id == $t_op->id) selected  @endif>
                                             {{ $t_op->codigo }} - {{ $t_op->informacion }}
                                         </option>
                                     @endforeach
@@ -196,14 +196,14 @@
                         <div class="form-group row" style="justify-content: start !important">
                             <label class="col-form-label col-md-2"> <strong>Detracción:</strong> </label>
                             <div class="col-sm-8">
-                                <select class="form-control" id="detraccion" name="detraccion_value" @if(isset($facturacion->detracciones)) disabled @endif>
-                                    <option value="0" @if($facturacion->detracciones == 0) selected @endif>Desactiva</option>
-                                    <option value="1" @if($facturacion->detracciones == 1) selected @endif>Activa</option>
+                                <select class="form-control" id="detraccion" name="detraccion_value" @if($facturacion->detracciones == null) disabled @endif>
+                                    <option value="0" @if($facturacion->detracciones == null) selected @endif>Desactiva</option>
+                                    <option value="1" @if($facturacion->detracciones != null) selected @endif>Activa</option>
                                 </select>
                             </div>
                             <div class="col-sm-2" style="display: flex">
                                 <a href="" id="button_detracc" data-toggle="modal"
-                                    @if ( isset($facturacion->detracciones) ) data-target="modal_detracciones"  @else data-target="#" @endif style="margin: auto"><i
+                                    @if ( $facturacion->detracciones != null ) data-target="#modal_detraccion"  @else data-target="#" @endif style="margin: auto"><i
                                         class="fa fa-question-circle"
                                         style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
                                 </a>

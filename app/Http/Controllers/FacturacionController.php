@@ -1280,27 +1280,35 @@ class FacturacionController extends Controller
             }
         }
         // Tipo de Operacion para Detracciones
-        $search_det = Detracciones::where('factura_id', $id)->first();
-        if(isset($search_det)){
+        
+        if($request->get('detraccion_value') == 1){ //Si  Activamos Detraccion
             // Editar
-            $search_det->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
-            $search_det->id_cod_medio_pago = $request->get('medio_pago_detraccion');
-            $search_det->monto_total_factura = $request->get('precio_final_igv');
-            $search_det->porcentaje_detraccion = $request->get('porcentaje_detraccion');
-            $search_det->monto_detraccion = $request->get('total_detraccion');
-            $search_det->estado = 1;
-            $search_det->save();
+            $search_det = Detracciones::where('factura_id', $id)->first();   
+            if(isset($search_det)){
+                $search_det->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+                $search_det->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+                $search_det->monto_total_factura = $request->get('precio_final_igv');
+                $search_det->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+                $search_det->monto_detraccion = $request->get('total_detraccion');
+                $search_det->estado = 1;
+                $search_det->save();
+            }else{
+                $fact_detra = new Detracciones();
+                $fact_detra->factura_id = $factura->id;
+                $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+                $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+                $fact_detra->monto_total_factura = $request->get('precio_final_igv');
+                $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+                $fact_detra->monto_detraccion = $request->get('total_detraccion');
+                $fact_detra->estado = 1;
+                $fact_detra->save();
+            }
         }else{
-            // Crear
-            $fact_detra = new Detracciones();
-            $fact_detra->factura_m_id = $factura->id;
-            $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
-            $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
-            $fact_detra->monto_total_factura = $request->get('precio_final_igv');
-            $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
-            $fact_detra->monto_detraccion = $request->get('total_detraccion');
-            $fact_detra->estado = 1;
-            $fact_detra->save();
+            $search_det = Detracciones::where('factura_id', $id)->first();   
+            // Eliminar
+            if(isset($search_det)){
+                $eliminar_detraccion = Detracciones::where('factura_id', $id)->delete();
+            }
         }
 
         // Comision

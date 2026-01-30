@@ -28,9 +28,18 @@
     .check:checked {
         background: #0375bd6b;
     }
+    span.select2-container.select2-container--default.select2-container--open {
+        z-index: 2126 !important;
+    }
 </style>
 <script>
     $(".select2_tipo_op").select2();
+    // Almacen
+    // $('.select2_tipo_almacen').select2();
+    // Medio de Pago
+    $('.select2_mediopago').select2();
+    // Detraccion
+    $('.select2_tipodetrac').select2();
     // Boton acceder a la edicion
 
 
@@ -588,6 +597,60 @@
 
     $('#porcentaje_detc').on('keyup', function() {
         multi_detraccion();
+    });
+
+    $('.select2_tipodetrac').on('select2:select', function(e) {
+
+        var data = e.params.data;
+        var id_data = data.id;
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.tipo_op_search') }}",
+            data: {
+                '_token': '{{ csrf_token() }}',
+                'id_tipo_detra': data.id,
+            },
+            success: function(msg) {
+                // console.log(msg.tasa)
+                $('#porcentaje_detc').val(msg.tasa);
+                multi_detraccion();
+            },
+            error: function(eject) {
+                if (eject.status === 400) {
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache: true
+        });
+    });
+
+    $('.select2_tipo_op').on('select2:select', function(e) {
+        var id = e.params.data.id;
+        var split_id = id.split(' ');
+        if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+            console.log('a');
+            $('#button_detracc').attr('data-target', '#modal_detraccion');
+            $('#detraccion').attr('disabled', false);
+        }
+    });
+
+    $('#detraccion').on('change', function() {
+        var selected = this.value;
+        console.log(selected);
+        if (selected == "1") {
+            $('#modal_detraccion').modal('show');
+            var inputs = document.querySelectorAll('.ipt_detrac');
+            inputs.forEach(function(input) {
+                // input.setAttribute('required', 'required');
+            });
+            $('.select2_tipo_op').val('12').trigger('change.select2');
+        } else {
+            var inputs = document.querySelectorAll('.ipt_detrac');
+            inputs.forEach(function(input) {
+                // input.removeAttribute('required');
+            });
+            $('.select2_tipo_op').val('1').trigger('change.select2');
+        }
     });
 
     // funcion dinamica de actualizar el total a cuotas

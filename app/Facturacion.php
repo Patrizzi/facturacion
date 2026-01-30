@@ -71,12 +71,26 @@ class Facturacion extends Model
     }
 
 
-    public function getSelectComisionistaAttribute(){
-        if($this->attributes['comisionista'] != 0){
-            $comisionista = Personal_venta::find($this->attributes['comisionista']);
-            return $comisionista;
+    public function detracciones()
+    {
+        return $this->hasOne(Detracciones::class, 'factura_id');
+    }
+
+
+
+    public function getSelectComisionistaAttribute()
+    {
+        $raw = trim((string) $this->getAttribute('comisionista'));
+
+        if ($raw === '' || $raw === '0') {
+            return null;
         }
-        return null;
+
+        if (!ctype_digit($raw)) {
+            return null;
+        }
+
+        return Personal_venta::with('personal.personal_l')->find((int) $raw);
     }
 
     public function getFechaEmisionAttribute()
@@ -392,12 +406,14 @@ class Facturacion extends Model
         return $total_igv;
     }
 
-    public function getSubTotalSinFormaAttribute(){
+    public function getSubTotalSinFormaAttribute()
+    {
         $subtotal = ($this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada']);
         return round($subtotal, 2);
     }
-    
-    public function getIgvSinFormaAttribute(){
+
+    public function getIgvSinFormaAttribute()
+    {
         $igv = Igv::first()->renta;
         $sub_igv = ($this->attributes['op_gravada'] * $igv) / 100;
 

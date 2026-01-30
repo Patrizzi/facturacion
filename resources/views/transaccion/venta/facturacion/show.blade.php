@@ -291,6 +291,7 @@
                             </div>
                         </div>
                         <br>
+                        {{-- {{$detraccion}} --}}
                         <div class="row">
                             @if ($detraccion == 'not')
                                 <div class="col-sm-12 form-control" style="height:  100px">
