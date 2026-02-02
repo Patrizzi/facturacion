@@ -386,6 +386,8 @@
             }
         ],
         drawCallback: function() {
+            closeWhatsappPanels();
+            closeEmailPanels();
             $('[data-toggle="tooltip"]').tooltip();
 
             // Inicializar iCheck para los nuevos elementos
@@ -430,6 +432,18 @@
         checkboxClass: 'icheckbox_square-green',
         radioClass: 'iradio_square-green',
     });
+
+    function hasAnySelection() {
+        return Array.isArray(allSelectedIds) && allSelectedIds.length > 0;
+    }
+
+    function closeWhatsappPanels() {
+        $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+    }
+
+    function closeEmailPanels() {
+        $('.email-form').removeClass('email-fixed').css('height', '0px');
+    }
 
     // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
     function getAllIds(callback) {
@@ -491,6 +505,9 @@
     $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
         if (isUpdatingCheckboxes) return; // Evitar loops infinitos
 
+        closeWhatsappPanels();
+        closeEmailPanels();
+
         if (event.type === 'ifChecked') {
             masterChecked = true;
             console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
@@ -519,6 +536,9 @@
     // CORRECCIÓN: Checkboxes individuales
     $(document).on('ifChecked ifUnchecked', '.dataTables-example-nota_venta tbody input[type="checkbox"]', function(event) {
         if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
+
+        closeWhatsappPanels();
+        closeEmailPanels();
 
         var checkboxValue = $(this).val();
 
@@ -615,16 +635,25 @@
 
     // ============CORREO ============
     $(document).on('mouseenter', '.email-container', function() {
+        if (hasAnySelection()) { closeEmailPanels(); return; }
         const form = $(this).find('.email-form');
         form.css('height', (form.find('form').outerHeight() + 20) + 'px');
     });
 
     $(document).on('mouseenter', '.email-form', function() {
+        if (hasAnySelection()) { closeEmailPanels(); return; }
         $(this).css('height', ($(this).find('form').outerHeight() + 20) + 'px');
     });
 
     // Fijar cuando se hace clic en el botón de correo
     $(document).on('click', '.email-container .btn-secondary', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeEmailPanels();
+            return;
+        }
+
         e.stopPropagation();
         const form = $(this).siblings('.email-form');
         form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
@@ -632,6 +661,13 @@
 
     // Fijar también cuando se hace clic en el formulario o inputs
     $(document).on('click', '.email-form', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeEmailPanels();
+            return;
+        }
+
         e.stopPropagation();
         $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
     });
@@ -764,20 +800,36 @@
 
     // ============ WHATSAPP ============
     $(document).on('mouseenter', '.wsp-container', function() {
+        if (hasAnySelection()) { closeWhatsappPanels(); return; }
         $(this).find('.wsp-form').css('height', '50px');
     });
 
     $(document).on('mouseenter', '.wsp-form', function() {
+        if (hasAnySelection()) { closeWhatsappPanels(); return; }
         $(this).css('height', '50px');
     });
 
     $(document).on('click', '.wsp-container .btn-success', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeWhatsappPanels();
+            return;
+        }
+
         e.stopPropagation();
         $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
     });
 
     // Fijar también cuando se hace clic en el input o en cualquier parte del formulario
     $(document).on('click', '.wsp-form', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeWhatsappPanels();
+            return;
+        }
+
         e.stopPropagation();
         $(this).addClass('wsp-fixed').css('height', '50px');
     });
