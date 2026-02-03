@@ -255,7 +255,7 @@
                                             required=""
                                             @if ($i_edit == 0) id="articulo" @else id="articulo{{ $i_edit }}" @endif
                                             onchange="ajax({{ $i_edit }})" autocomplete="off">
-                                            @if ($registros->producto->id)
+                                            @if ($registros->producto?->id)
                                                 <option
                                                     value="{{ $registros->producto->id }} | {{ $registros->producto->codigo_producto }} | {{ $registros->producto->codigo_original }} | {{ $registros->producto->nombre }}"
                                                     selected>
