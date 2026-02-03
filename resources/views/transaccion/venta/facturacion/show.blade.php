@@ -30,7 +30,7 @@
         <div class="ibox-title">
             <h4>Factura {{ $facturacion->codigo_fac }}</h4>
             <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
-                <a class="" href="{{ route('ventas.cotizacion') }}">
+                <a class="" href="{{ route('comprobantes.index_factura') }}">
                     <i class="fa fa-times"></i>
                 </a>
             </div>

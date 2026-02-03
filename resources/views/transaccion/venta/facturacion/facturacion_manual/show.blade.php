@@ -20,8 +20,15 @@
             content: "Ver";
         }
     </style>
-    <h3>{{ $facturacion->estado }}</h3>
     <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox-title">
+            <h4>Factura {{ $facturacion->codigo_fac }}</h4>
+            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                <a class="" href="{{ route('comprobantes.index_factura_manual') }}">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
         <div class="ibox-title" style="padding-right: 3.1%">
             <div class="row tooltip-demo">
                 <div class="col-sm-6">
