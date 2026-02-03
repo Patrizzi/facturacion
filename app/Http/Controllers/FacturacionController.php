@@ -1345,6 +1345,7 @@ class FacturacionController extends Controller
         // return $producto_id;
         $facturacion = Facturacion::find($id);
         // Si es igual la cantidad de registros, solo se editan sobre los existentes
+
         if($registros_count == $count_art){
             // Editar los existentes
             foreach ($factura->registros as $index_reg => $edit_reg) {
@@ -1463,35 +1464,38 @@ class FacturacionController extends Controller
                             $array = round(($servicio->precio_nacional + $utilidad) / $facturacion->cambio, 2);
                             // return $array;
                         }
-                        $edit_reg->precio = $array;
-                        $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
-                        $edit_reg->comision = $comi;
-                        $descuento_verificacion = $request->get('check_descuento')[$index_reg];
-                        $edit_reg->descuento = $descuento_verificacion;
-                        if ($descuento_verificacion <> 0) {
-                            $edit_reg->precio_unitario_desc = $array - ($precio_prom * $descuento_verificacion / 100);
-                        } else {
-                            $edit_reg->precio_unitario_desc = $array;
-                        }
-                        //precio unitario comision ----------------------------------------
-                        if ($descuento_verificacion <> 0) {
-                            $prec_uni_des = $array - ($precio_prom * $descuento_verificacion / 100);
-                            $edit_reg->precio_unitario_comi = ($prec_uni_des + ($prec_uni_des * $comi / 100));
-                        } else {
-                            $edit_reg->precio_unitario_comi = $array + ($array * $comi / 100);
-                        }
+                    }
+                    
+                    $edit_reg->precio = $array;
+                    $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
+                    $edit_reg->comision = $comi;
+                    $descuento_verificacion = $request->get('check_descuento')[$index_reg];
+                    $edit_reg->descuento = $descuento_verificacion;
+                    if ($descuento_verificacion <> 0) {
+                        $edit_reg->precio_unitario_desc = $array - ($precio_prom * $descuento_verificacion / 100);
+                    } else {
+                        $edit_reg->precio_unitario_desc = $array;
+                    }
+                    //precio unitario comision ----------------------------------------
+                    if ($descuento_verificacion <> 0) {
+                        $prec_uni_des = $array - ($precio_prom * $descuento_verificacion / 100);
+                        $edit_reg->precio_unitario_comi = ($prec_uni_des + ($prec_uni_des * $comi / 100));
+                    } else {
+                        $edit_reg->precio_unitario_comi = $array + ($array * $comi / 100);
+                    }
 
-                        if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
-                            $facturacion->op_gravada += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
-                        }
-                        if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
-                            $facturacion->op_exonerada += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
-                        }
-                        if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
-                            $facturacion->op_inafecta += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
-                        }
-                        $edit_reg->save();
-                    }   
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
+                        $facturacion->op_gravada += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
+                        $facturacion->op_exonerada += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
+                        $facturacion->op_inafecta += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    $facturacion->save();
+                    $edit_reg->save();
+                    
                 }
             } 
         }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear 
@@ -1659,7 +1663,6 @@ class FacturacionController extends Controller
                     }
                     // return $cotizacion_registro->precio_unitario_comi;
                     $facturacion->save();
-
                     $facturacion_registro->save();
                 }
             }
