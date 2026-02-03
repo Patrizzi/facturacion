@@ -77,7 +77,6 @@ class Facturacion extends Model
     }
 
 
-
     public function getSelectComisionistaAttribute()
     {
         $raw = trim((string) $this->getAttribute('comisionista'));

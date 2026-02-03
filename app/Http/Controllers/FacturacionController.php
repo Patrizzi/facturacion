@@ -1312,19 +1312,24 @@ class FacturacionController extends Controller
         }
 
         // Comision
-        // return $factura;
-        if($factura->comisionista != null || $factura->comisionista != 0){
-            $comi = $factura->select_comisionista->comision;
+        // return $factura->comisionista;
+        if($factura->comisionista == null || $factura->comisionista !=  "0"){
+            $comi = $factura->select_comisionista;
+            // return $factura->select_comisionista;
+            // CAMBIO EN EL VALOR DE LA FACTURA PARA LAS VENTAS REGISTROS
+            $venta_reg = Ventas_registro::where('id_fac', $id)->first();
+            $venta_reg->tipo_moneda = $factura->moneda_id;
+            $venta_reg->monto_final_fac_bol = $request->get('precio_final_igv');
+            $porcentaje = 100 + $comi;
+            $venta_reg->monto_comision = (100 * $request->get('sub_total_sin_igv') / $porcentaje) * $comi / 100;
+            $venta_reg->save();
+
+
         } else {
             $comi = 0;
         }
-        // CAMBIO EN EL VALOR DE LA FACTURA PARA LAS VENTAS REGISTROS
-        $venta_reg = Ventas_registro::where('id_fac', $id)->first();
-        $venta_reg->tipo_moneda = $factura->moneda_id;
-        $venta_reg->monto_final_fac_bol = $request->get('precio_final_igv');
-        $porcentaje = 100 + $comi;
-        $venta_reg->monto_comision = (100 * $request->get('sub_total_sin_igv') / $porcentaje) * $comi / 100;
-        $venta_reg->save();
+        // return $comi;
+
         // Esicion de Registros
         $registros_count = count($factura->registros);
         $count_art = count($request->get('cantidad'));
