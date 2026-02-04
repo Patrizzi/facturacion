@@ -267,7 +267,7 @@
                         'orderable': false,
                         'render': function(data, type, full, meta) {
                             var url =
-                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.xml`;
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-09-${full[2]}.xml`;
                             return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
                         }
                     },

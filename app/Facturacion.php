@@ -486,7 +486,7 @@ class Facturacion extends Model
     public static function cambio_estado_facturas()
     {
         return Facturacion::where('estado', 0)
-            ->whereDate('created_at', Carbon::today())
+            // ->whereDate('created_at', Carbon::today())
             // ->limit(5)
             ->update([
                 'estado' => 1,
