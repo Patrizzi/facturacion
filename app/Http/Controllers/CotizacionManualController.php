@@ -1233,7 +1233,7 @@ public function update(Request $request, $id)
         $facturacion->cambio=$cambio->paralelo;
         $facturacion->observacion=$request->get('observacion');
         $facturacion->user_id =auth()->user()->id;
-        $facturacion->estado='0';
+        $facturacion->estado='1';
         $facturacion->tipo_operacion_id= $cotizacion->tipo_operacion_id;
         $facturacion->tipo_documento_id = $cotizacion->tipo_documento_id;
         $facturacion->save();

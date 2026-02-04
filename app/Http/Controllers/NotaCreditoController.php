@@ -55,8 +55,8 @@ class NotaCreditoController extends Controller
     public function create()
     {
         //cambiar de 0 a 1 en f_electronica
-        $facturas=Facturacion::where('f_electronica',1)->where('estado',0)->where('nota_credito',0)->get();
-        $facturas_manuales=Facturacion_m::where('f_electronica',1)->where('estado',0)->where('nota_credito',0)->get();
+        $facturas=Facturacion::where('f_electronica',1)->where('estado',1)->where('nota_credito',0)->get();
+        $facturas_manuales=Facturacion_m::where('f_electronica',1)->where('estado',1)->where('nota_credito',0)->get();
         $igv=Igv::first();
         return view('transaccion.venta.nota_credito.lista_facturacion',compact('facturas','facturas_manuales','igv'));
     }
@@ -109,10 +109,10 @@ class NotaCreditoController extends Controller
         }
         $tipo = $request->get('tipo');
         if($tipo == "factura_origi"){
-            $facturacion=Facturacion::where('codigo_fac',$request->factura_id)->first();
+            $facturacion=Facturacion::where('estado', 1)->where('codigo_fac',$request->factura_id)->first();
             $facturacion_registro=Facturacion_registro::where('facturacion_id',$facturacion->id)->get();
         }else{
-            $facturacion=Facturacion_m::where('codigo_fac',$request->factura_id)->first();
+            $facturacion=Facturacion_m::where('estado', 1)->where('codigo_fac',$request->factura_id)->first();
             $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$facturacion->id)->get();
         }
 
