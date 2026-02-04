@@ -671,13 +671,13 @@
                                                         <input type="text" id="edit_correlativo_factura_m" name="cod_factura_m" class="form-control write_button" max="8" placeholder="000" value="{{$codigo_sunat->cod_factura_m}}" autocomplete="off">
                                                     @else
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-addon">{{$codigo_sunat->search_last_factura_m($almacen->id)['serie']}}</span>
+                                                            <span class="input-group-addon">{{$codigo_sunat->search_last_factura_m($almacen->id)['serie'] ?? '0'}}</span>
                                                         </div>
                                                         <div class="input-group-prepend height-control">
                                                             <span class="input-group-addon">&nbsp;-&nbsp;</span>
                                                         </div>
                                                         <div class="input-group-prepend">
-                                                            <span class="input-group-addon">{{$codigo_sunat->search_last_factura_m($almacen->id)['correlativo']}}</span>
+                                                            <span class="input-group-addon">{{$codigo_sunat->search_last_factura_m($almacen->id)['correlativo'] ?? '0'}}</span>
                                                         </div>
                                                     @endif
                                                 </div>

@@ -6,8 +6,6 @@
 
 @section('content')
 
-@section('content')
-
 <style>
     /* Estilos globales para asegurar el comportamiento */
     .card-hover {
@@ -54,97 +52,120 @@
     <div class="row">
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            
             <div class="card h-100 card-hover shadow-sm">
-                <div class="img-container">
-                    <img src="https://www.scmlogistica.es/wp-content/uploads/como-poner-en-marcha-un-pequeno-almacen.jpg" alt="Almacen">
+                    <a href=" {{ route('almacen.index') }} ">
+                    <div class="img-container">
+                        <img src="https://www.scmlogistica.es/wp-content/uploads/como-poner-en-marcha-un-pequeno-almacen.jpg" alt="Almacen">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Almacen</h6>
+                    </div>
+                </a>
                 </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Almacen</h6>
-                </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('apariencia.index') }}">
+                    <div class="img-container">
+                        <img src="https://media.licdn.com/dms/image/v2/D5612AQGKDWIO4YzmRg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1682372299828?e=2147483647&v=beta&t=zZAY6NV-54j_-V1HjZkwK2DaNII-EQJ5Lk51LF6Ob6A" alt="Apariencia">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        
+                        <h6 class="card-title-custom">Apariencia</h6>
+                    </div>
+                </a>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <div class="img-container">
-                    <img src="https://media.licdn.com/dms/image/v2/D5612AQGKDWIO4YzmRg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1682372299828?e=2147483647&v=beta&t=zZAY6NV-54j_-V1HjZkwK2DaNII-EQJ5Lk51LF6Ob6A" alt="Apariencia">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Apariencia</h6>
-                </div>
+                <a href="{{ route('categoria.index') }}">
+
+                    <div class="img-container">
+                        <img src="https://www.partoo.co/wp-content/uploads/2022/08/categories-google-my-business-1.jpg" alt="Categoria">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Categoria</h6>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('familia.index') }}">
+                    <div class="img-container">
+                        
+                        <img src="https://clubfranquicia.pe/public/imagen/noticias/club-franquicia-peru-05-03-25-tcl-1742563486.png" alt="Familias">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Familias</h6>
+                    </div>
+                </a>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <div class="img-container">
-                    <img src="https://www.partoo.co/wp-content/uploads/2022/08/categories-google-my-business-1.jpg" alt="Categoria">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Categoria</h6>
-                </div>
+                <a href="{{ route('garantia.index') }}">
+
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/psd-premium/sello-dorado-calidad-garantizada_400948-265.jpg?semt=ais_hybrid&w=740&q=80" alt="Garantia">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Garantia</h6>
+                    </div>
+                </a>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <div class="img-container">
-                    <img src="https://clubfranquicia.pe/public/imagen/noticias/club-franquicia-peru-05-03-25-tcl-1742563486.png" alt="Familias">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Familias</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
-                <div class="img-container">
-                    <img src="https://img.freepik.com/psd-premium/sello-dorado-calidad-garantizada_400948-265.jpg?semt=ais_hybrid&w=740&q=80" alt="Garantia">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Garantia</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('marca.index') }}">
                 <div class="img-container">
                     <img src="https://s3.amazonaws.com/arc-wordpress-client-uploads/infobae-wp/wp-content/uploads/2016/12/28180625/iStock-477404752.jpg" alt="Marcas">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">Marcas</h6>
                 </div>
+                </a>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <div class="img-container">
-                    <img src="https://aacclarebeliondeltalento.com/wp-content/uploads/2018/08/encajar.jpg" alt="Motivos">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Motivos</h6>
-                </div>
+                <a href="{{ route('motivo.index') }}">
+
+                    <div class="img-container">
+                        <img src="https://aacclarebeliondeltalento.com/wp-content/uploads/2018/08/encajar.jpg" alt="Motivos">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Motivos</h6>
+                    </div>
+                </a>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('tipo_cambio.index') }}">
                 <div class="img-container">
                     <img src="https://cambio-seguro.s3.amazonaws.com/articles/como-se-determina-el-tipo-de-cambio.jpg" alt="Tipo de cambio">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">Tipo de cambio</h6>
                 </div>
+                </a>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
+            <div class="card h-100 card-hover shadow-sm" id="medida_button" style="cursor: pointer;">
                 <div class="img-container">
-                    <img src="https://img.freepik.com/foto-gratis/bodegon-herramientas-medicion-vista-superior_23-2150440961.jpg?semt=ais_hybrid&w=740&q=80" alt="Tipo de cambio">
+                    <img src="https://img.freepik.com/foto-gratis/bodegon-herramientas-medicion-vista-superior_23-2150440961.jpg?semt=ais_hybrid&w=740&q=80" alt="U. de medida">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">U. de medida</h6>
@@ -154,19 +175,21 @@
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <div class="img-container">
-                    <img src="https://www.auladiv.com/assets/imgs/usuarios.png" alt="Tipo de cambio">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Usuarios</h6>
-                </div>
+                <a href="{{ route('usuarios.index') }}">
+                    <div class="img-container">
+                        <img src="https://www.auladiv.com/assets/imgs/usuarios.png" alt="Usuarios">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Usuarios</h6>
+                    </div>
+                </a>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
+            <div class="card h-100 card-hover shadow-sm" id="validez_button" style="cursor: pointer;">
                 <div class="img-container">
-                    <img src="https://cdn-icons-png.flaticon.com/512/7595/7595571.png" alt="Tipo de cambio">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7595/7595571.png" alt="Validez">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">Validez</h6>
@@ -176,9 +199,9 @@
 
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
+            <div class="card h-100 card-hover shadow-sm" id="alarma_button" style="cursor: pointer;">
                 <div class="img-container">
-                    <img src="https://cdn-icons-png.freepik.com/512/5190/5190104.png" alt="Tipo de cambio">
+                    <img src="https://cdn-icons-png.freepik.com/512/5190/5190104.png" alt="Alarma">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">Alarma</h6>
@@ -188,8 +211,6 @@
 
     </div>
 </div>
-
-@endsection
 
 
 <!--
