@@ -295,7 +295,7 @@ class ComprobantesVentasController extends Controller
         $almacen = Almacen::where('estado', 0)->get();
         $almacen_primero = Almacen::where('estado', 0)->first();
         $igv = Igv::first();
-        // Facturacion::cambio_estado_facturas();
+        Facturacion::cambio_estado_facturas();
         return view('transaccion.comprobantes.factura.index', compact('count_all_comprobantes', 'count_month_comprobantes', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv'));
     }
 
@@ -430,7 +430,7 @@ class ComprobantesVentasController extends Controller
         $almacen = Almacen::where('estado', 0)->get();
         $almacen_primero = Almacen::where('estado', 0)->first();
         $igv = Igv::first();
-        // Facturacion_m::cambio_estado_facturasM();
+        Facturacion_m::cambio_estado_facturasM();
         return view('transaccion.comprobantes.factura_manual.index', compact('count_all_comprobantes', 'count_month_comprobantes', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv'));
     }
 
