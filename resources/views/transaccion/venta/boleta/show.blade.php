@@ -15,6 +15,13 @@
      </form>
      <div class="wrapper wrapper-content animated fadeInRight">
          <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="row">
+                <div class="col-sm-12 text-right" style="padding-bottom: 10px;">
+                    <a class="" href="{{ route('comprobantes.index_boleta') }}">
+                        <i class="fa fa-times text-muted"></i>
+                    </a>
+                </div>
+            </div>
              <div class="row tooltip-demo">
                  <div class="col-sm-6">
                     <?php use Carbon\Carbon; use App\Boleta; ?>
