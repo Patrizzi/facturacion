@@ -210,8 +210,10 @@ class Codigo_guia_almacen extends Model
 
   public static function search_last_factura_m($id_almacen)
   {
+   
     $factura_m = Facturacion_m::where('almacen_id', $id_almacen)->latest()->first();
     $factura_m_num_string_porcion = explode("-", $factura_m->codigo_fac);
+
     $last_factura_m = [
        "serie" => mb_substr($factura_m_num_string_porcion[0], 2),
        "correlativo" => $factura_m_num_string_porcion[1]

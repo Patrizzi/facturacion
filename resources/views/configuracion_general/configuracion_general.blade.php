@@ -6,21 +6,264 @@
 
 @section('content')
 
+<style>
+    /* Estilos globales para asegurar el comportamiento */
+    .card-hover {
+        transition: all 0.3s ease-in-out;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #eee !important;
+    }
+
+    .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        cursor: pointer;
+    }
+
+    .img-container {
+        width: 100%;
+        height: 160px; /* Altura fija para que todas sean iguales */
+        overflow: hidden;
+        background-color: #f9f9f9;
+        position: relative;
+    }
+
+    .img-container .img-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
+        transition: transform 0.5s ease;
+    }
+
+    .img-container .img-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        
+        z-index: 2;
+    }
+
+    .card-hover:hover .img-container .img-bg {
+        transform: scale(1.1); /* Zoom suave al pasar el mouse */
+    }
+
+    .card-title-custom {
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+        margin: 0;
+        text-transform: capitalize;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row">
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            
+            <div class="card h-100 card-hover shadow-sm">
+                    <a href=" {{ route('almacen.index') }} ">
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Almacen" class="img-bg">
+                        <img src="https://png.pngtree.com/png-vector/20240314/ourmid/pngtree-warehouse-flat-composition-png-image_11961969.png" alt="Icono Almacen" class="img-overlay">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Almacen</h6>
+                    </div>
+                </a>
+                </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('apariencia.index') }}">
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Apariencia" class="img-bg">
+                        <img src="https://www.gsmarketing.com/hubfs/New%20Website%20Images/illustrations%20/digital%20solutions-display.png"  alt="Icono Apariencia" class="img-overlay">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        
+                        <h6 class="card-title-custom">Apariencia</h6>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('categoria.index') }}">
+
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Categoria" class="img-bg">
+                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/jerarquia-4721274-3927987.png" alt="Icono Categoria" class="img-overlay">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Categoria</h6>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('familia.index') }}">
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Familias" class="img-bg">
+                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/producto-10808619-8687861.png" alt="Icono Familias" class="img-overlay">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Familias</h6>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('garantia.index') }}">
+
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Garantia" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/047/649/375/original/3d-golden-shield-icon-isolated-on-transparent-background-png.png" alt="Icono Garantia" class="img-overlay">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Garantia</h6>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('marca.index') }}">
+                <div class="img-container">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Marcas" class="img-bg">
+                    <img src="https://static.vecteezy.com/system/resources/previews/015/329/405/original/brand-3d-illustration-icon-png.png" alt="Icono Marcas" class="img-overlay">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Marcas</h6>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('motivo.index') }}">
+
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Motivos" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/028/272/877/original/puzzle-3d-rendering-isometric-icon-png.png" alt="Icono Motivos" class="img-overlay">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Motivos</h6>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('tipo_cambio.index') }}">
+                <div class="img-container">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Tipo de cambio" class="img-bg">
+                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tipo-de-cambio-8578991-6805151.png" alt="Icono Tipo de cambio" class="img-overlay">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Tipo de cambio</h6>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm" id="medida_button" style="cursor: pointer;">
+                <div class="img-container">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="U. de medida" class="img-bg">
+                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/measuring-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rulerbow-compass-navigation-office-pack-tools-equipment-icons-10967888.png" alt="Icono U. de medida" class="img-overlay">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">U. de medida</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm">
+                <a href="{{ route('usuarios.index') }}">
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Usuarios" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/060/498/831/non_2x/fascinating-acclaimed-facial-recognition-software-icon-with-transparent-background-free-png.png" alt="Icono Usuarios" class="img-overlay">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Usuarios</h6>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm" id="validez_button" style="cursor: pointer;">
+                <div class="img-container">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Validez" class="img-bg">
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/048/721/469/small_2x/a-green-check-mark-the-check-mark-is-a-symbol-of-approval-or-satisfaction-png.png" alt="Icono Validez" class="img-overlay">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Validez</h6>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card h-100 card-hover shadow-sm" id="alarma_button" style="cursor: pointer;">
+                <div class="img-container">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Alarma" class="img-bg">
+                    <img src="https://static.vecteezy.com/system/resources/previews/049/886/531/non_2x/distinctive-3d-bell-icon-with-fine-rendering-and-transparent-background-tailored-for-high-end-digital-design-projects-free-png.png" alt="Icono Alarma" class="img-overlay">
+                </div>
+                <div class="card-body text-center p-3">
+                    <h6 class="card-title-custom">Alarma</h6>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--
       <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
+        <div class="col">
+            <div class="col-lg-4">
                 <div class="ibox">
-                    <div class="ibox-content d-flex justify-content-center">
-                        <div class="row d-flex justify-content-between p-4">
-                            <!-- Elementos de la fila -->
-                            <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                <button class="btn btn-success dim tam pt-4" type="button">
+                    <div class="">
+                        <div class="">
+                             Elementos de la fila -->
+                            <!-- <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                               <button class="btn btn-success dim tam pt-4" type="button">
                                     <a href="{{ route('almacen.index') }}">
                                         <img class="rounded bg-white p-2" src="{{ asset('img/logos/almacen.svg') }}"
                                             width="50px" alt="">
                                         <p class="pt-md-3 display-6 fs-4 text-white">ALMACÉN</p>
                                     </a>
-                                </button>
+                                </button>-->
+
+
+
+     <!--
+                                <a href="{{ route('almacen.index') }}">
+                                <div class="card" style="width: 18rem;">
+                                    <img  src="https://www.scmlogistica.es/wp-content/uploads/como-poner-en-marcha-un-pequeno-almacen.jpg" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h1 class="card-title">Almacen</h1>
+
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-lg-3 col-md-6 d-flex     justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button">
@@ -42,7 +285,7 @@
                                </button>
                            </div>
 
-                             <!--<div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button"> </a>
                                      <a data-toggle="modal" href="#modal-forms5">
                                         <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
@@ -50,7 +293,7 @@
                                         <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
                                     </a>
                                 </button>
-                            </div>-->
+                            </div>
                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button" id="familia_button">
                                     <a data-toggle="modal" href="">
@@ -99,9 +342,10 @@
                                 </button>
                             </div>
                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                <button class="btn btn-success dim tam pt-4" type="button" id="medida_button">
-                                    <!--                                                                                                                                                        </a>-->
-                                    <a data-toggle="modal" href="">
+                                <button class="btn btn-success dim tam pt-4" type="button" id="medida_button">-->
+                                                                                                                                                                                    </a>-->
+
+                                    <!--                                                                                                                                                <a data-toggle="modal" href="">
                                         <img class="rounded bg-white p-2"
                                             src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px"
                                             alt="">
@@ -135,9 +379,9 @@
                                        <p class="pt-md-3 display-6 fs-4 text-white">ALARMA</p>
                                    </a>
                                </button>
-                           </div>
+                           </div></a>
                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                <!-- ELEMENTO FANTASMA - RELLENO -->
+                                <!-- ELEMENTO FANTASMA - RELLENO
                             </div>
                         </div>
                     </div>
@@ -145,6 +389,7 @@
             </div>
         </div>
     </div>
+-->
 
     @include('configuracion_general.tipo_cambio.modal_create')
 
@@ -169,6 +414,56 @@
     </div>
     <!-- fin código Gaby-->
     <style>
+
+
+    /* 1. Contenedor de la imagen: Define la altura fija */
+
+
+    /* 2. La imagen en sí: Se ajusta para cubrir el hueco */
+    /* 1. Definir un tamaño fijo para el contenedor de la imagen */
+.img-wrap {
+    height: 200px; /* Ajusta este valor según qué tan altas quieras las fotos */
+    overflow: hidden; /* Corta lo que sobresalga */
+    background-color: #f8f9fa; /* Color de fondo por si la imagen tarda en cargar */
+}
+
+.img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Mantiene la proporción recortando los bordes */
+    object-position: center;
+    transition: transform 0.5s ease;
+}
+
+/* 2. La tarjeta completa */
+.card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    overflow: hidden; /* Evita que la imagen se salga de las esquinas redondeadas */
+}
+
+.card-hover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    z-index: 10;
+    cursor: pointer;
+}
+
+.card-body {
+    text-align: center;
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1.1rem; /* Usar rem es mejor para diseño responsivo */
+    margin: 0;
+    font-weight: 400;
+    text-transform: capitalize; /* Opcional: Primera letra en mayúscula */
+}
+
+
+
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
         div.dataTables_length {
