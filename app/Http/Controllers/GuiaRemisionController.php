@@ -72,10 +72,9 @@ class GuiaRemisionController extends Controller
         $almacen = Almacen::where('estado', 0)->get();
         $almacen_primero = Almacen::where('estado', 0)->first();
         $conteo_almacen = Almacen::where('estado', 0)->count();
-
-
         $personal_conductor = Personal::where('id','!=', 1)->where('licencia', '!=', null)->get();
 
+        
         return view('transaccion.venta.guia_remision.index', compact('guia_remision', 'almacen', 'conteo_almacen', 'almacen_primero', 'user_login','valor_error','message','personal_conductor'));
     }
 
@@ -318,6 +317,11 @@ class GuiaRemisionController extends Controller
         //2= transporte privado
 
         $guia_remision->motivo_traslado = $request->get('motivo_traslado');
+        if($request->get('button_submit') == 0){
+            $guia_remision->estado = 0;
+        }else{
+            $guia_remision->estado = 1;
+        }
         $guia_remision->observacion = $request->get('observacion');
         $guia_remision->estado_anulado = '0';
         $guia_remision->estado_registrado = '0';
@@ -493,7 +497,13 @@ class GuiaRemisionController extends Controller
         $banco = Banco::where('estado', '0')->get();
         $empresa = Empresa::first();
 
-        return view('transaccion.venta.guia_remision.show', compact('empresa', 'banco', 'guia_remision', 'guia_registro', 'banco_count', 'user_login', 'almacen', 'almacen_primero', 'conteo_almacen'));
+        // Datos para editar
+        $motivo_traslado =  MotivoTraslado::all();
+        $personal = Personal::where('id', '!=', 1)->where('licencia','!=', null)->get();
+        $vehiculo = Vehiculo::where('estado_activo', 0)->get();
+        $transporte_publico = TransportePublico::where('estado', 0)->get();
+
+        return view('transaccion.venta.guia_remision.show', compact('empresa', 'banco', 'guia_remision', 'guia_registro', 'banco_count', 'user_login', 'almacen', 'almacen_primero', 'conteo_almacen','motivo_traslado','personal','vehiculo','transporte_publico'));
     }
 
     /**
