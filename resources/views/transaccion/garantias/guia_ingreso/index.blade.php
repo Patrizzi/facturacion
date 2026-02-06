@@ -623,29 +623,37 @@ $('#modal-form').on('hidden.bs.modal', function () {
                 cancelButtonText: "Cancelar",
                 confirmButtonColor: "#1a3bb3"
             }, function(isConfirm) {
-                if (isConfirm) {
-                    // Construir URL con los IDs seleccionados
-                    var exportUrl = "{{ route('garantiasI.exportar') }}";
-                    var params = new URLSearchParams();
+                if (!isConfirm) return;
 
-                    selectedIds.forEach(function(id) {
-                        params.append('guia_ids[]', id);
-                    });
+                $('#btn-exportar-filtrado').prop('disabled', true);
 
-                    console.log('URL de exportación:', exportUrl + '?' + params.toString());
-
-                    // Redirigir para exportar
-                    window.location.href = exportUrl + '?' + params.toString();
-
-                    // Mensaje de éxito
-                    swal({
-                        title: "Procesando",
-                        text: "Las guías de ingreso se están exportando a Excel...",
-                        type: "success",
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                }
+                $.ajax({
+                    url: "{{ route('garantiasI.exportar') }}",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ guia_ids: selectedIds }),
+                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                    xhrFields: { responseType: 'blob' },
+                    complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
+                    success: function(blob) {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `Garantia_Guias_Ingresos_${new Date().toISOString().slice(0,10)}.xlsx`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    },
+                    error: function() {
+                        swal({
+                            title: "Error",
+                            text: "No se pudo exportar. Intenta nuevamente.",
+                            type: "error",
+                            confirmButtonColor: "#1a3bb3"
+                        });
+                    }
+                });
             });
         });
 

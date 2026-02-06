@@ -23,6 +23,7 @@ use App\Servicios;
 use App\Subfamilia;
 use App\Tipo_afectacion;
 use App\Unidad_medida;
+use App\Exports\GarantiaGIngresoExport;
 use PDF;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
@@ -495,132 +496,29 @@ class GarantiaGuiaIngresoController extends Controller
 
     public function exportar_garantia_ingreso(Request $request)
     {
-        if (ob_get_contents()) {
-            ob_end_clean();
-        }
+        if (ob_get_contents()) { ob_end_clean(); }
 
-        if ($request->has('guia_ids') && !empty($request->input('guia_ids'))) {
-            $guiaIds = $request->input('guia_ids');
+        $guiaIds = $request->json('guia_ids') ?? $request->input('guia_ids');
 
-            $garantia_ingresos = GarantiaGuiaIngreso::with([
-                'marcas_i',
-                'personal_laborales',
-                'clientes_i',
-                'contactos'
-            ])
-            ->whereIn('id', $guiaIds)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if (!empty($guiaIds)) {
+            $export = new GarantiaGIngresoExport($guiaIds);
         } else {
+            $request->validate(['daterange' => 'required|string']);
 
-            $marca = $request->marca;
-            $daterange = $request->daterange;
-            $filter = $request->get('value');
+            [$start, $end] = explode(' - ', $request->daterange);
 
-            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
-
-            $query = GarantiaGuiaIngreso::with([
-                'marcas_i',
-                'personal_laborales',
-                'clientes_i',
-                'contactos'
-            ])->whereBetween('created_at', [$startDate, $endDate])
-            ->orderBy('created_at', 'desc');
-
-            if (!empty($filter)) {
-                $query->where(function ($q) use ($filter) {
-                    $q->where('orden_servicio', 'like', '%' . $filter . '%');
-                    $q->orWhere('motivo', 'like', '%' . $filter . '%');
-                    $q->orWhereHas('clientes_i', function ($q) use ($filter) {
-                        $q->where('nombre', 'like', '%' . $filter . '%');
-                    });
-                    $q->orWhereHas('marcas_i', function ($q) use ($filter) {
-                        $q->where('nombre', 'like', '%' . $filter . '%');
-                    });
-                });
-            }
-
-            if ($marca !== null && $marca !== '') {
-                $query->where('marca_id', $marca);
-            }
-
-            $garantia_ingresos = $query->get();
+            $export = new GarantiaGIngresoExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'marca'  => $request->input('marca'),
+            ]);
         }
 
-        $headers = [
-            'Motivo', 'Fecha', 'Orden de Servicio', 'Estado', 'Egresado', 'Asunto',
-            'Nombre del equipo', 'Numero de serie', 'Codigo interno', 'Fecha de compra',
-            'Descripcion del problema', 'Revision del diagnostico', 'Estetica',
-            'Marca', 'Personal laboral', 'Cliente', 'Contacto del cliente'
-        ];
-
-        $rows = [$headers];
-
-        foreach ($garantia_ingresos as $garantia_ingreso) {
-            $estado = $garantia_ingreso->estado == 0 ? 'Anulado' : 'No anulado';
-            $egresado = $garantia_ingreso->egresado ? 'Si' : 'No';
-            $marca = optional($garantia_ingreso->marcas_i)->nombre;
-            $personalLab = '';
-
-            if ($garantia_ingreso->personal_laborales) {
-                $personalLab = trim($garantia_ingreso->personal_laborales->nombres . ' ' . $garantia_ingreso->personal_laborales->apellidos);
-            }
-            $cliente = optional($garantia_ingreso->clientes_i)->nombre;
-            $contacto = optional($garantia_ingreso->contactos)->nombre;
-
-            $row = [
-                $garantia_ingreso->motivo,
-                $garantia_ingreso->fecha,
-                $garantia_ingreso->orden_servicio,
-                $estado,
-                $egresado,
-                $garantia_ingreso->asunto,
-                $garantia_ingreso->nombre_equipo,
-                $garantia_ingreso->numero_serie,
-                $garantia_ingreso->codigo_interno,
-                $garantia_ingreso->fecha_compra,
-                $garantia_ingreso->descripcion_problema,
-                $garantia_ingreso->revision_diagnostico,
-                $garantia_ingreso->estetica,
-                $marca,
-                $personalLab,
-                $cliente,
-                $contacto
-            ];
-
-            $rows[] = $row;
-        }
-
-        $export = new class($rows) implements FromArray, WithEvents {
-            private $rows;
-
-            public function __construct($rows) {
-                $this->rows = $rows;
-            }
-
-            public function array(): array {
-                return $this->rows;
-            }
-
-            public function registerEvents(): array {
-                return [
-                    AfterSheet::class => function(AfterSheet $event) {
-                        foreach(range('A','Z') as $column) {
-                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                        }
-                        foreach(range('A','Z') as $letter1) {
-                            foreach(range('A','Z') as $letter2) {
-                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                            }
-                        }
-                    },
-                ];
-            }
-        };
-
-        $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Garantia Guias Ingresos ' . $fecha . '.xlsx');
+        return Excel::download(
+            $export,
+            'Garantia Guias Ingresos ' . now('America/Lima')->format('d-m-Y') . '.xlsx'
+        );
     }
 
     // ============================================
