@@ -26,16 +26,27 @@
         height: 160px; /* Altura fija para que todas sean iguales */
         overflow: hidden;
         background-color: #f9f9f9;
+        position: relative;
     }
 
-    .img-container img {
+    .img-container .img-bg {
         width: 100%;
         height: 100%;
         object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
         transition: transform 0.5s ease;
     }
 
-    .card-hover:hover .img-container img {
+    .img-container .img-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        
+        z-index: 2;
+    }
+
+    .card-hover:hover .img-container .img-bg {
         transform: scale(1.1); /* Zoom suave al pasar el mouse */
     }
 
@@ -56,7 +67,8 @@
             <div class="card h-100 card-hover shadow-sm">
                     <a href=" {{ route('almacen.index') }} ">
                     <div class="img-container">
-                        <img src="https://www.scmlogistica.es/wp-content/uploads/como-poner-en-marcha-un-pequeno-almacen.jpg" alt="Almacen">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Almacen" class="img-bg">
+                        <img src="https://png.pngtree.com/png-vector/20240314/ourmid/pngtree-warehouse-flat-composition-png-image_11961969.png" alt="Icono Almacen" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Almacen</h6>
@@ -69,7 +81,8 @@
             <div class="card h-100 card-hover shadow-sm">
                 <a href="{{ route('apariencia.index') }}">
                     <div class="img-container">
-                        <img src="https://media.licdn.com/dms/image/v2/D5612AQGKDWIO4YzmRg/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1682372299828?e=2147483647&v=beta&t=zZAY6NV-54j_-V1HjZkwK2DaNII-EQJ5Lk51LF6Ob6A" alt="Apariencia">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Apariencia" class="img-bg">
+                        <img src="https://www.gsmarketing.com/hubfs/New%20Website%20Images/illustrations%20/digital%20solutions-display.png"  alt="Icono Apariencia" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
                         
@@ -84,7 +97,8 @@
                 <a href="{{ route('categoria.index') }}">
 
                     <div class="img-container">
-                        <img src="https://www.partoo.co/wp-content/uploads/2022/08/categories-google-my-business-1.jpg" alt="Categoria">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Categoria" class="img-bg">
+                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/jerarquia-4721274-3927987.png" alt="Icono Categoria" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Categoria</h6>
@@ -98,8 +112,8 @@
             <div class="card h-100 card-hover shadow-sm">
                 <a href="{{ route('familia.index') }}">
                     <div class="img-container">
-                        
-                        <img src="https://clubfranquicia.pe/public/imagen/noticias/club-franquicia-peru-05-03-25-tcl-1742563486.png" alt="Familias">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Familias" class="img-bg">
+                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/producto-10808619-8687861.png" alt="Icono Familias" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Familias</h6>
@@ -113,7 +127,8 @@
                 <a href="{{ route('garantia.index') }}">
 
                     <div class="img-container">
-                        <img src="https://img.freepik.com/psd-premium/sello-dorado-calidad-garantizada_400948-265.jpg?semt=ais_hybrid&w=740&q=80" alt="Garantia">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Garantia" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/047/649/375/original/3d-golden-shield-icon-isolated-on-transparent-background-png.png" alt="Icono Garantia" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Garantia</h6>
@@ -126,7 +141,8 @@
             <div class="card h-100 card-hover shadow-sm">
                 <a href="{{ route('marca.index') }}">
                 <div class="img-container">
-                    <img src="https://s3.amazonaws.com/arc-wordpress-client-uploads/infobae-wp/wp-content/uploads/2016/12/28180625/iStock-477404752.jpg" alt="Marcas">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Marcas" class="img-bg">
+                    <img src="https://static.vecteezy.com/system/resources/previews/015/329/405/original/brand-3d-illustration-icon-png.png" alt="Icono Marcas" class="img-overlay">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">Marcas</h6>
@@ -140,7 +156,8 @@
                 <a href="{{ route('motivo.index') }}">
 
                     <div class="img-container">
-                        <img src="https://aacclarebeliondeltalento.com/wp-content/uploads/2018/08/encajar.jpg" alt="Motivos">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Motivos" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/028/272/877/original/puzzle-3d-rendering-isometric-icon-png.png" alt="Icono Motivos" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Motivos</h6>
@@ -153,7 +170,8 @@
             <div class="card h-100 card-hover shadow-sm">
                 <a href="{{ route('tipo_cambio.index') }}">
                 <div class="img-container">
-                    <img src="https://cambio-seguro.s3.amazonaws.com/articles/como-se-determina-el-tipo-de-cambio.jpg" alt="Tipo de cambio">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Tipo de cambio" class="img-bg">
+                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tipo-de-cambio-8578991-6805151.png" alt="Icono Tipo de cambio" class="img-overlay">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">Tipo de cambio</h6>
@@ -165,7 +183,8 @@
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm" id="medida_button" style="cursor: pointer;">
                 <div class="img-container">
-                    <img src="https://img.freepik.com/foto-gratis/bodegon-herramientas-medicion-vista-superior_23-2150440961.jpg?semt=ais_hybrid&w=740&q=80" alt="U. de medida">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="U. de medida" class="img-bg">
+                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/measuring-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rulerbow-compass-navigation-office-pack-tools-equipment-icons-10967888.png" alt="Icono U. de medida" class="img-overlay">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">U. de medida</h6>
@@ -177,7 +196,8 @@
             <div class="card h-100 card-hover shadow-sm">
                 <a href="{{ route('usuarios.index') }}">
                     <div class="img-container">
-                        <img src="https://www.auladiv.com/assets/imgs/usuarios.png" alt="Usuarios">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Usuarios" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/060/498/831/non_2x/fascinating-acclaimed-facial-recognition-software-icon-with-transparent-background-free-png.png" alt="Icono Usuarios" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Usuarios</h6>
@@ -189,7 +209,8 @@
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm" id="validez_button" style="cursor: pointer;">
                 <div class="img-container">
-                    <img src="https://cdn-icons-png.flaticon.com/512/7595/7595571.png" alt="Validez">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Validez" class="img-bg">
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/048/721/469/small_2x/a-green-check-mark-the-check-mark-is-a-symbol-of-approval-or-satisfaction-png.png" alt="Icono Validez" class="img-overlay">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">Validez</h6>
@@ -201,7 +222,8 @@
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm" id="alarma_button" style="cursor: pointer;">
                 <div class="img-container">
-                    <img src="https://cdn-icons-png.freepik.com/512/5190/5190104.png" alt="Alarma">
+                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Alarma" class="img-bg">
+                    <img src="https://static.vecteezy.com/system/resources/previews/049/886/531/non_2x/distinctive-3d-bell-icon-with-fine-rendering-and-transparent-background-tailored-for-high-end-digital-design-projects-free-png.png" alt="Icono Alarma" class="img-overlay">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="card-title-custom">Alarma</h6>
