@@ -343,6 +343,18 @@
         window.location.href = "{{ route('guias.manual.exportar') }}?" + params.toString();
     });*/
 
+    function hasAnySelection() {
+        return Array.isArray(allSelectedIds) && allSelectedIds.length > 0;
+    }
+
+    function closeWhatsappPanels() {
+        $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+    }
+
+    function closeEmailPanels() {
+        $('.email-form').removeClass('email-fixed').css('height', '0px');
+    }
+
     /* =========================
      *  Utilidad: obtener TODOS los IDs filtrados
      * ========================= */
@@ -414,7 +426,8 @@
      * ========================= */
         $(document).on('ifChecked ifUnchecked change', '.dataTables-example-guia-remision thead input[type="checkbox"]', function(event) {
         if (isUpdatingCheckboxes) return;
-
+        closeWhatsappPanels();
+        closeEmailPanels();
         var checked = (event.type === 'ifChecked') || $(this).prop('checked');
 
         if (checked) {
@@ -451,7 +464,8 @@
      * ========================= */
     $(document).on('ifChecked ifUnchecked change', '.i-checks-grm', function(event) {
         if (isUpdatingCheckboxes) return;
-
+        closeWhatsappPanels();
+        closeEmailPanels();
         var row = $(this).closest('tr');
 
         var data = coti_table.row(row).data();
@@ -494,6 +508,8 @@
  *  En cada draw: re-inicializa iCheck, reaplica selección y sincroniza header
  * ========================= */
 coti_table.on('draw', function() {
+    closeWhatsappPanels();
+    closeEmailPanels();
     $('[data-toggle="tooltip"]').tooltip();
 
     $('.i-checks-grm').iCheck({
@@ -552,17 +568,15 @@ coti_table.on('draw', function() {
     }
 
     // ============CORREO ============
-    $(document).on('mouseenter', '.email-container', function() {
-        const form = $(this).find('.email-form');
-        form.css('height', (form.find('form').outerHeight() + 20) + 'px');
-    });
-
-    $(document).on('mouseenter', '.email-form', function() {
-        $(this).css('height', ($(this).find('form').outerHeight() + 20) + 'px');
-    });
-
     // Fijar cuando se hace clic en el botón de correo
     $(document).on('click', '.email-container .btn-secondary', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeEmailPanels();
+            return;
+        }
+
         e.stopPropagation();
         const form = $(this).siblings('.email-form');
         form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
@@ -570,23 +584,15 @@ coti_table.on('draw', function() {
 
     // Fijar también cuando se hace clic en el formulario o inputs
     $(document).on('click', '.email-form', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeEmailPanels();
+            return;
+        }
+
         e.stopPropagation();
         $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
-    });
-
-    $(document).on('mouseleave', '.email-container, .email-form', function() {
-        const isContainer = $(this).hasClass('email-container');
-        const target = isContainer ? $(this).find('.email-form') : $(this);
-        const checkElement = isContainer ? target : $(this).closest('.email-container');
-
-        // No cerrar si está fijado
-        if (target.hasClass('email-fixed')) return;
-
-        setTimeout(() => {
-            if (!target.is(':hover') && !checkElement.is(':hover')) {
-                target.css('height', '0px');
-            }
-        }, 200);
     });
 
     $(document).on('click', '.btn-agregar-email', function() {
@@ -701,38 +707,29 @@ coti_table.on('draw', function() {
     });
 
     // ============ WHATSAPP ============
-    $(document).on('mouseenter', '.wsp-container', function() {
-        $(this).find('.wsp-form').css('height', '50px');
-    });
-
-    $(document).on('mouseenter', '.wsp-form', function() {
-        $(this).css('height', '50px');
-    });
-
     $(document).on('click', '.wsp-container .btn-success', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeWhatsappPanels();
+            return;
+        }
+
         e.stopPropagation();
         $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
     });
 
     // Fijar también cuando se hace clic en el input o en cualquier parte del formulario
     $(document).on('click', '.wsp-form', function(e) {
+        if (hasAnySelection()) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeWhatsappPanels();
+            return;
+        }
+        
         e.stopPropagation();
         $(this).addClass('wsp-fixed').css('height', '50px');
-    });
-
-    $(document).on('mouseleave', '.wsp-container, .wsp-form', function() {
-        const isContainer = $(this).hasClass('wsp-container');
-        const target = isContainer ? $(this).find('.wsp-form') : $(this);
-        const checkElement = isContainer ? target : $(this).closest('.wsp-container');
-
-        // No cerrar si está fijado
-        if (target.hasClass('wsp-fixed')) return;
-
-        setTimeout(() => {
-            if (!target.is(':hover') && !checkElement.is(':hover')) {
-                target.css('height', '0px');
-            }
-        }, 200);
     });
 
     $(document).on('submit', '.wsp-form form', function() {
