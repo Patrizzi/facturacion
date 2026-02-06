@@ -604,7 +604,7 @@ class GuiaRemisionManualController extends Controller
             ];
         });
 
-        return view('transaccion.comprobantes.guia_remision_manual.print_multiple',
+        return view('transaccion.venta.guia_remision.guia_manual.print_multiple',
             compact('guiasData','empresa')
         );
     }

@@ -761,7 +761,7 @@ public function printMultiple(Request $request)
             ];
         }
 
-        return view('transaccion.comprobantes.nota_debito.print_multiple', compact(
+        return view('transaccion.venta.nota_debito.print_multiple', compact(
             'notasData',
             'empresa',
             'igvModel'

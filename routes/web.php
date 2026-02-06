@@ -1183,19 +1183,19 @@ Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController
 Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
 
 //RUTAS PARA IMPRIMIR EN CONJUNTO
-Route::get('comprobantes/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
-Route::get('comprobantes/factura/print-multiple', [FacturacionController::class, 'printMultiple'])->name('factura.print.multiple');
-Route::get('comprobantes/boleta_manual/print-multiple', [BoletaMController::class, 'printMultiple'])->name('boletaM.print.multiple');
-Route::get('comprobantes/factura_manual/print-multiple', [FacturacionMController::class, 'printMultiple'])->name('facturaM.print.multiple');
+Route::get('venta/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
+Route::get('venta/boleta/boleta_manual/print-multiple', [BoletaMController::class, 'printMultiple'])->name('boletaM.print.multiple');
 
-
-Route::get('comprobantes/nota-debito/print-multiple', [NotaDebitoController::class, 'printMultiple'])->name('notaDebito.print.multiple');
-
+Route::get('venta/facturacion/print-multiple', [FacturacionController::class, 'printMultiple'])->name('factura.print.multiple');
+Route::get('venta/facturacion/facturacion_manual/print-multiple', [FacturacionMController::class, 'printMultiple'])->name('facturaM.print.multiple');
 
 // Ruta para impresión múltiple de notas de crédito
+Route::get('/venta/nota_credito/print-multiple', [NotaCreditoController::class, 'printMultiple'])->name('notaCredito.print.multiple');
+Route::get('venta/nota_debito/print-multiple', [NotaDebitoController::class, 'printMultiple'])->name('notaDebito.print.multiple');
 
 
-Route::get('/comprobantes/nota_credito/print-multiple', [NotaCreditoController::class, 'printMultiple'])->name('notaCredito.print.multiple');
+
+
 
 
 Route::get('/ventas/cotizacion/print-multipler', [CotizacionController::class, 'printMultiple'])->name('cotizacion.print.multiple');
@@ -1206,8 +1206,8 @@ Route::get('/garantias/guia_egreso/print-multiple', [GarantiaGuiaEgresoControlle
 Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoController::class, 'printMultiple'])->name('informeTecnico.print.multiple');
 
 // DESCARGAR PDF DE GUIA DE REMISION
-Route::get('comprobantes/guia-remision/print-multiple', [GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
-Route::get('comprobantes/guia-remision-manual/print-multiple', [GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
+Route::get('venta/guia_remision/print-multiple', [GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
+Route::get('venta/guia_remision/guia_manual/print_multiple', [GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
 Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
 
 
