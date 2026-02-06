@@ -24,15 +24,14 @@
     </div>
 @endif
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox-title">
-        <h4>Cotizacion {{$cotizacion->cod_cotizacion}}</h4>
-        <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
-            <a class="" href="{{ route('ventas.cotizacion') }}">
-                <i class="fa fa-times"></i>
-            </a>
-        </div>
-    </div>
     <div class="ibox-title" style="padding-right: 3.1%;padding-left:  3.1%">
+        <div class="row">
+            <div class="col-sm-12 text-right" style="padding-bottom: 10px;">
+                <a class="" href="{{ route('ventas.cotizacion') }}">
+                    <i class="fa fa-times text-muted"></i>
+                </a>
+            </div>
+        </div>
         <div class="row tooltip-demo">
             <div class="col-sm-6" >
                 @if($cotizacion->estado == '1')
