@@ -1075,6 +1075,7 @@ class ComprobantesVentasController extends Controller
                 $guia_r->estado_proceso,              // 8 - Estado
                 $guia_r->cliente->celular ?? '',
                 $guia_r->cliente->email ?? '',
+                $guia_r->estado,
             ];
         }
 

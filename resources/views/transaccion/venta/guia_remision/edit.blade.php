@@ -1,7 +1,8 @@
 <div class="row">
     <div class="col-lg-12" style="margin-top: -5px">
         <div class="ibox-content p-xl" style="margin-bottom: 20px; padding-bottom: 50px">
-            <form action="">
+            <form action="{{route('guia_remision.update', $guia_remision->id)}}" method="POST" enctype="multipart/form-data" id="forma_update">
+                @method('POST')
                 @csrf
                 <div class="row">
                     <div class="col-sm-4 text-left" align="left">
@@ -153,10 +154,10 @@
                                         <select class="form-control" name="vehiculo" autocomplete="off"
                                             id="vehiculo_privado">
                                             <option value="">Ningún Vehículo</option>
-                                            {{-- @foreach ($vehiculo as $vehiculos)
-                                                <option value="{{ $vehiculos->id }}">{{ $vehiculos->placa }}
+                                            @foreach ($vehiculo as $vehiculos)
+                                                <option value="{{ $vehiculos->id }}" @if($guia_remision->vehiculo_id == $vehiculos->id) selected @endif>{{ $vehiculos->placa }}
                                                     /{{ $vehiculos->marca }}</option>
-                                            @endforeach --}}
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -170,7 +171,7 @@
                                             <option value="">Ningún Conductor</option>
                                             @foreach ($personal as $ersonals)
                                                 <option disabled="disabled">------------------------------</option>
-                                                <option value="{{ $ersonals->id }}">{{ $ersonals->nombres }}
+                                                <option value="{{ $ersonals->id }}" @if($guia_remision->conductor_id == $ersonals->id) selected @endif>{{ $ersonals->nombres }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -192,7 +193,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table>
+                            <table class="table " id="table-edit-remision">
                                 <thead>
                                     <tr>
                                         <th style="width: 10px">
@@ -209,7 +210,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($guia_registro as $index => $registros)
+                                    @foreach ($guia_registro as $index => $registros_g)
                                         <tr>
                                             <td>
                                                 {{-- <input type='checkbox' class="case"> --}}
@@ -218,34 +219,38 @@
                                             </td>
                                             <td class="td_selected">
                                                 <select class="select2_demo_productos" name="articulo[]"
-                                                    id="articulo" style="width: 100%;" onchange="ajax(0);"
+                                                    @if ($index == 0) id="articulo" @else id="articulo{{ $index }}" @endif
+                                                    style="width: 100%;" onchange="ajax({{ $index }});"
                                                     required>
-                                                    <option value="{{$registros->producto->id}}">{{$registros->producto->id." | ".$registos->producto->cod_prod." | ".$registros->producto->cod_origi. }}</option>
+                                                    <option value="{{ $registros_g->producto->id }}">{{ $registros_g->producto->id . ' | ' . $registros_g->producto->codigo_producto . ' | ' . $registros_g->producto->codigo_original . ' | ' . $registros_g->producto->nombre }}</option>
                                                 </select>
                                                 <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id=""
-                                                    rows="1" style="margin-top: 5px"></textarea>
+                                                    rows="1" style="margin-top: 5px">{{ $registros_g->descripcion }}</textarea>
                                             </td>
                                             <td>
-                                                <input style="min-width: 100px" type='text' id='stock0'
-                                                    readonly="readonly" name='stock[]' class="form-control" required
-                                                    autocomplete="off" />
+                                                <input style="min-width: 100px" type='text'
+                                                    id='stock{{ $index }}' readonly="readonly" name='stock[]'
+                                                    class="form-control" required autocomplete="off"
+                                                    value="{{ $registros_g->producto->stockAlmacenProducto($guia_remision->almacen->id)->stock }}" />
                                             </td>
                                             <td class="tooltip-demo">
-                                                <input style="min-width: 100px" type='text' id='cantidad0'
-                                                    name='cantidad[]' max="" class="monto0 form-control"
+                                                <input style="min-width: 100px" type='text'
+                                                    id='cantidad{{ $index }}' name='cantidad[]'
+                                                    max="" class="monto{{ $index }} form-control"
                                                     required autocomplete="off" data-placement="top"
                                                     title="No se puede procesar productos con stock '0'"
-                                                    onchange="peso_cantidad(0)" value="{{$registros->cantidad}}" />
+                                                    onchange="peso_cantidad({{ $index }})"
+                                                    value="{{ $registros_g->cantidad }}" />
                                             </td>
                                             <td>
-                                                <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control prod_text"
-                                                    placeholder="escanear N/S">{{$registros->numero_serie}}</textarea>
+                                                <textarea style="min-width: 250px" name="series[]" id="series{{ $index }}" class="form-control prod_text"
+                                                    placeholder="escanear N/S">{{ $registros_g->numero_serie }}</textarea>
                                             </td>
                                             <td>
-                                                <input style="min-width: 100px" id='peso0' name='peso[]'
-                                                    type="text" class="form-control" value="{{$registros->peso}}"
-                                                    readonly="readonly">
-                                                <input type="hidden" id="peso_base0">
+                                                <input style="min-width: 100px" id='peso{{ $index }}'
+                                                    name='peso[]' type="text" class="form-control"
+                                                    value="{{ $registros_g->peso }}" readonly="readonly">
+                                                <input type="hidden" id="peso_base{{ $index }}" value="{{explode(' ',$registros_g->producto->peso)[0]}}">
                                             </td>
 
                                             <span id="spTotal"></span>
@@ -253,6 +258,17 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button data-style="zoom-out" id="guardar" name="boton"
+                                class="guardar button-lada-guardar btn btn-primary btn-outline"
+                                type="button">Guardar</button>
+                            <button class="btn btn-primary float-right button-lada-finalizar"
+                                style="margin-left: 10px;" type="button" id="finalizar">Guardar y
+                                Finalizar</button>
+
+                            <button type="submit" id="button_submit" hidden name="button_submit"
+                                value="0"></button>
                         </div>
                     </div>
                 </div>

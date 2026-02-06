@@ -479,6 +479,8 @@
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+
 
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>

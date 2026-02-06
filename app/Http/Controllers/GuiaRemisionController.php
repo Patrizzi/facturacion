@@ -371,49 +371,52 @@ class GuiaRemisionController extends Controller
                 $guia_remision_registro->peso = $request->get('peso')[$i];
                 $guia_remision_registro->save();
 
-                $nueva = Kardex_entrada_registro::where('producto_id', $producto_id[$i])->where('almacen_id', $guia_remision->almacen_id)->where('estado', 1)->get();
+                // SOLO EL FINALIZAR HACE EL DESCUENTO DE STOCK
+                if($request->get('button_submit') == 1){
+                    $nueva = Kardex_entrada_registro::where('producto_id', $producto_id[$i])->where('almacen_id', $guia_remision->almacen_id)->where('estado', 1)->get();
 
-                $comparacion = $nueva;
-                //buble para la cantidad
-                $cantidad = 0;
-                foreach ($comparacion as $comparaciones) {
-                    $cantidad = $comparaciones->cantidad + $cantidad;
-                }
-                if (isset($comparacion)) {
-                    $var_cantidad_entrada = $guia_remision_registro->cantidad;
-                    $contador = 0;
-                    foreach ($comparacion as $p) {
-                        if ($p->cantidad > $var_cantidad_entrada) {
-                            $cantidad_mayor = $p->cantidad;
-                            $cantidad_final = $cantidad_mayor - $var_cantidad_entrada;
-                            $p->cantidad = $cantidad_final;
-                            if ($cantidad_final == 0) {
+                    $comparacion = $nueva;
+                    //buble para la cantidad
+                    $cantidad = 0;
+                    foreach ($comparacion as $comparaciones) {
+                        $cantidad = $comparaciones->cantidad + $cantidad;
+                    }
+                    if (isset($comparacion)) {
+                        $var_cantidad_entrada = $guia_remision_registro->cantidad;
+                        $contador = 0;
+                        foreach ($comparacion as $p) {
+                            if ($p->cantidad > $var_cantidad_entrada) {
+                                $cantidad_mayor = $p->cantidad;
+                                $cantidad_final = $cantidad_mayor - $var_cantidad_entrada;
+                                $p->cantidad = $cantidad_final;
+                                if ($cantidad_final == 0) {
+                                    $p->estado = 0;
+                                    $p->save();
+                                    break;
+                                } else {
+                                    $p->save();
+                                    break;
+                                }
+                            } elseif ($p->cantidad == $var_cantidad_entrada) {
+                                $p->cantidad = 0;
                                 $p->estado = 0;
                                 $p->save();
                                 break;
                             } else {
+                                $var_cantidad_entrada = $var_cantidad_entrada - $p->cantidad;
+                                $p->cantidad = 0;
+                                $p->estado = 0;
                                 $p->save();
-                                break;
                             }
-                        } elseif ($p->cantidad == $var_cantidad_entrada) {
-                            $p->cantidad = 0;
-                            $p->estado = 0;
-                            $p->save();
-                            break;
-                        } else {
-                            $var_cantidad_entrada = $var_cantidad_entrada - $p->cantidad;
-                            $p->cantidad = 0;
-                            $p->estado = 0;
-                            $p->save();
                         }
                     }
-                }
-                //Resta en la tabla stock almacen
-                Stock_almacen::egreso($guia_remision->almacen_id, $producto_id[$i], $guia_remision_registro->cantidad);
-                //resta de cantidades de productos para la tabla stock productos
-                $stock_productos = Stock_producto::where('producto_id', $producto_id[$i])->first();
-                $stock_productos->stock = $stock_productos->stock - $guia_remision_registro->cantidad;
-                $stock_productos->save();
+                    //Resta en la tabla stock almacen
+                    Stock_almacen::egreso($guia_remision->almacen_id, $producto_id[$i], $guia_remision_registro->cantidad);
+                    //resta de cantidades de productos para la tabla stock productos
+                    $stock_productos = Stock_producto::where('producto_id', $producto_id[$i])->first();
+                    $stock_productos->stock = $stock_productos->stock - $guia_remision_registro->cantidad;
+                    $stock_productos->save();
+               }
             }
         } else {
             return "campos no completados";
@@ -527,6 +530,7 @@ class GuiaRemisionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        return $request;
     }
 
     /**

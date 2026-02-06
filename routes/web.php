@@ -484,6 +484,7 @@ Route::group(
         //para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria
     
         Route::resource('/guia_remision', 'GuiaRemisionController')->except(['create']);
+        Route::post('/guia_remision/update/{id}', 'GuiaRemisionController@update')->name('guia_remision.update');
         Route::post('/guia_remision/sucursal', 'GuiaRemisionController@ajax_sucursal')->name('guia_remision.ajax_sucursal');
         Route::post('/guia_remision/create', 'GuiaRemisionController@create')->name('guia_remision.create');
         // Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
