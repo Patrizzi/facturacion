@@ -21,86 +21,90 @@
         }
     </style>
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox-title">
-            <h4>Factura {{ $facturacion->codigo_fac }}</h4>
-            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
-                <a class="" href="{{ route('comprobantes.index_factura_manual') }}">
-                    <i class="fa fa-times"></i>
-                </a>
-            </div>
-        </div>
-        <div class="ibox-title" style="padding-right: 3.1%">
-            <div class="row tooltip-demo">
-                <div class="col-sm-6">
-                    <?php use Carbon\Carbon;
-                    use App\Facturacion_m; ?>
-                    @if ($facturacion->nota_credito != 0)
-                        <span data-toggle="tooltip" data-placement="bottom" title=""
-                            data-original-title="Motivo: {{ Facturacion_m::search_motivo_nc($facturacion->id) }}">
-                            <a class="btn btn-primary"
-                                href="{{ route('nota-credito.show', Facturacion_m::nota_credito_id($facturacion->id)) }}">Ver
-                                nota de Credito</a>
-                        </span>
-                    @endif
+        <div class="ibox">
+            <div class="ibox-title" style="padding-right: 3.1%">
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="" href="{{ route('comprobantes.index_factura_manual') }}">
+                        <i class="fa fa-times"></i>
+                    </a>
                 </div>
-                <div class="col-sm-6" align="right">
-                    <form class="btn" style="text-align: none;padding: 0 0 0 0"
-                        action="{{ route('pdf_fac_m', $facturacion->id) }}">
-                        <input type="text" name="name" maxlength="50" hidden=""
-                            value="{{ $facturacion->codigo_fac }}">
-                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
-                            title="" data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i>
-                        </button>
-                    </form>
-                    <a href="{{ route('facturacion_manual.ticket', $facturacion->id) }}" class="btn btn-info"
-                        target="_blank"><i class="fa fa-ticket fa-lg"></i></a>
-                    <input type="text" value="{{ $facturacion->id }}" name="id" id="id" hidden="">
-                    <a class="btn btn-success" href="{{ route('facturacion_manual.print', $facturacion->id) }}"
-                        target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
-                        data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
-                    @if (Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.factura_manual', $facturacion->id) }}" method="post"
-                            style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
-                            @csrf
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
-                                title="" formtarget="_blank" data-original-title="Enviar por correo">
-                                <i class="fa fa-envelope fa-lg"></i>
+            </div>
+            <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+                <div class="row tooltip-demo">
+                    <div class="col-sm-6">
+                        <?php use Carbon\Carbon;
+                        use App\Facturacion_m; ?>
+                        @if ($facturacion->nota_credito != 0)
+                            <span data-toggle="tooltip" data-placement="bottom" title=""
+                                data-original-title="Motivo: {{ Facturacion_m::search_motivo_nc($facturacion->id) }}">
+                                <a class="btn btn-primary"
+                                    href="{{ route('nota-credito.show', Facturacion_m::nota_credito_id($facturacion->id)) }}">Ver
+                                    nota de Credito</a>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <form class="btn" style="text-align: none;padding: 0 0 0 0"
+                            action="{{ route('pdf_fac_m', $facturacion->id) }}">
+                            <input type="text" name="name" maxlength="50" hidden=""
+                                value="{{ $facturacion->codigo_fac }}">
+                            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
+                                title="" data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i>
                             </button>
                         </form>
-                    @endif
-                    <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
-                            data-placement="bottom" title="" data-original-title="Enviar a">
-                            <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
-                        </a>
-                    </div>
-                    @if ($facturacion->estado == 0)
-                        <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i
-                                class="fa fa-pencil"></i></button>
-                        <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
-                                class="fa fa-times"></i></button>
-                    @endif
-                    <div id="div-mostrar">
-                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
-                            style="text-align: none;padding-right: 0;padding-left: 0;">
-                            @csrf
-                            <input type="tel" name="numero" value="{{ $facturacion->cliente->celular }}" />
-                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                            <input type="text" hidden="" name="url"
-                                value="{{ route('pdf_fac', $facturacion->id) }}?archivo=">
-                            <input type="text" name="name_sin_cambio" hidden=""
-                                value="Facturacion_{{ $facturacion->codigo_fac }}" />
-                            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
-                                formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
-                                data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
-                        </form>
+                        <a href="{{ route('facturacion_manual.ticket', $facturacion->id) }}" class="btn btn-info"
+                            target="_blank"><i class="fa fa-ticket fa-lg"></i></a>
+                        <input type="text" value="{{ $facturacion->id }}" name="id" id="id" hidden="">
+                        <a class="btn btn-success" href="{{ route('facturacion_manual.print', $facturacion->id) }}"
+                            target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
+                            data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
+                        @if (Auth::user()->email_creado == 1)
+                            <form action="{{ route('email.factura_manual', $facturacion->id) }}" method="post"
+                                style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                                @csrf
+                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
+                                    title="" formtarget="_blank" data-original-title="Enviar por correo">
+                                    <i class="fa fa-envelope fa-lg"></i>
+                                </button>
+                            </form>
+                        @endif
+                        <div id="auto" onclick="divAuto()">
+                            <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
+                                data-placement="bottom" title="" data-original-title="Enviar a">
+                                <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                            </a>
+                        </div>
+                        @if ($facturacion->estado == 0)
+                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i
+                                    class="fa fa-pencil"></i></button>
+                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
+                                    class="fa fa-times"></i></button>
+                        @endif
+                        <div id="div-mostrar" style="height: 0px; overflow: hidden;">
+                            <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                                style="text-align: none;padding-right: 0;padding-left: 0;">
+                                @csrf
+                                <input type="tel" name="numero" value="{{ $facturacion->cliente->celular }}" />
+                                <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                                <input type="text" hidden="" name="url"
+                                    value="{{ route('pdf_fac', $facturacion->id) }}?archivo=">
+                                <input type="text" name="name_sin_cambio" hidden=""
+                                    value="Facturacion_{{ $facturacion->codigo_fac }}" />
+                                <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
+                                    formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
+                                    data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="mostrar" id="show_factura">
             <div class="row">
-                <div class="col-lg-12" style="margin-top: -5px;">
+                <div class="col-lg-12" style="margin-top: -26px;">
                     @if ($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
                         <div id="watermark">
                             <p>Anulado</p>
