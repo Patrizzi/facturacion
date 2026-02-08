@@ -1120,7 +1120,7 @@ return redirect()->route('boleta.show',$boleta->id);
             $banco = Banco::where('estado', 0)->get();
 
 
-            return view('transaccion.comprobantes.boleta.print_multiple', compact(
+            return view('transaccion.venta.boleta.print_multiple', compact(
                 'boletasData',
                 'empresa',
                 'banco',

@@ -1082,7 +1082,7 @@ public function printMultiple(Request $request)
             ];
         }
 
-        return view('transaccion.comprobantes.nota_credito.print_multiple', compact(
+        return view('transaccion.venta.nota_credito.print_multiple', compact(
             'notasData',
             'empresa',
             'igvModel'

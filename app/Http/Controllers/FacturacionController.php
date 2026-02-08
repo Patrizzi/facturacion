@@ -1841,7 +1841,7 @@ class FacturacionController extends Controller
 
             $banco = Banco::where('estado', 0)->get();
 
-            return view('transaccion.comprobantes.factura.print_multiple', compact(
+            return view('transaccion.venta.facturacion.print_multiple', compact(
                 'facturasData',
                 'empresa',
                 'banco',

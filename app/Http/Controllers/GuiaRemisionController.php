@@ -721,7 +721,7 @@ class GuiaRemisionController extends Controller
             $banco   = Banco::where('estado','0')->get();
             $igv     = Igv::first();
 
-            return view('transaccion.comprobantes.guia_remision.print_multiple', compact(
+            return view('transaccion.venta.guia_remision.print_multiple', compact(
                 'guiasData','empresa','banco','igv'
             ));
 

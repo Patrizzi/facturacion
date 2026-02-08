@@ -607,7 +607,7 @@ class BoletaMController extends Controller
 
             $banco = Banco::where('estado', 0)->get();
 
-            return view('transaccion.comprobantes.boleta_manual.print_multiple', compact(
+            return view('transaccion.venta.boleta.boleta_manual.print_multiple', compact(
                 'boletasData',
                 'empresa',
                 'banco',

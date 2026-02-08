@@ -1012,7 +1012,7 @@ class FacturacionMController extends Controller
 
             $banco = Banco::where('estado', 0)->get();
 
-            return view('transaccion.comprobantes.factura_manual.print_multiple', compact(
+            return view('transaccion.venta.facturacion.facturacion_manual.print_multiple', compact(
                 'facturasData',
                 'empresa',
                 'banco',
