@@ -12,52 +12,66 @@
 @section('content')
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row ibox-title" style="padding-right: 3.1%;margin: 0;" >
-        <div class="col-sm-6">
-         <a href="#punto" onclick="Formulario_edit()"  id="click" class="btn btn-info"><i class="fa fa-edit"></i></a>
-     </div>
-     <div class="col-sm-6">
-         <div class="tooltip-demo" align="right">
-            <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_informe' ,$garantias_informe_tecnico->id)}}">
-                <input type="text" name="archivo" maxlength="50" value="{{$garantias_informe_tecnico->orden_servicio}}" oninput="actualizatext()" id="texto2">
-                <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
-            </form>
-            @if(Auth::user()->email_creado ==1)
-                {{-- <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
-                    @csrf
-                    <input type="text" hidden="hidden" name="tipo" value="App\GarantiaInformeTecnico"/>
-                    <input type="text" hidden="hidden" name="id" value="{{$garantias_informe_tecnico->id}}"/>
-                    <input type="text" hidden="hidden" name="redict" value="garantias_informe_tecnico">
-                    <input type="text" hidden="hidden" name="cliente" value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->email}}">
-                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-                </form> --}}
-                <form action="{{ route('email.informe_tecnico', $garantias_informe_tecnico->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
-                    @csrf
-                    <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                        <i class="fa fa-envelope fa-lg" ></i>
-                    </button>
-                </form>
-            @endif
-            <a href="{{route('impresiones_informe' ,$garantias_informe_tecnico->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
-            <div id="auto" onclick="divAuto()">
-                <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
+    <div class="ibox">
+        <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up text-muted"></i>
+                </a>
+                <a class="" href="{{ route('garantia_informe_tecnico.index') }}">
+                    <i class="fa fa-times text-muted"></i>
+                </a>
             </div>
-            <div id="div-mostrar">
-                {{-- <br style="width: -1px"> --}}
-                <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                    @csrf
-                    <input type="tel" name="numero"  value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->celular}}"  />
-                    <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                    <input type="text" hidden="" name="url" value="{{route('pdf_informe' ,$garantias_informe_tecnico->id)}}?archivo=">
-                    <input type="text" name="name_sin_cambio" hidden="" value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->orden_servicio}}" />
-                    <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-                </form>
+        </div>
+        <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+            <div class="row tooltip-demo">
+                <div class="col-sm-6">
+                    <a href="#punto" onclick="Formulario_edit()"  id="click" class="btn btn-info"><i class="fa fa-edit"></i></a>
+                </div>
+            <div class="col-sm-6">
+                <div class="tooltip-demo" align="right">
+                    <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_informe' ,$garantias_informe_tecnico->id)}}">
+                        <input type="text" name="archivo" maxlength="50" value="{{$garantias_informe_tecnico->orden_servicio}}" oninput="actualizatext()" id="texto2">
+                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+                    </form>
+                    @if(Auth::user()->email_creado ==1)
+                        {{-- <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                            @csrf
+                            <input type="text" hidden="hidden" name="tipo" value="App\GarantiaInformeTecnico"/>
+                            <input type="text" hidden="hidden" name="id" value="{{$garantias_informe_tecnico->id}}"/>
+                            <input type="text" hidden="hidden" name="redict" value="garantias_informe_tecnico">
+                            <input type="text" hidden="hidden" name="cliente" value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->email}}">
+                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
+                        </form> --}}
+                        <form action="{{ route('email.informe_tecnico', $garantias_informe_tecnico->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                            @csrf
+                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                                <i class="fa fa-envelope fa-lg" ></i>
+                            </button>
+                        </form>
+                    @endif
+                    <a href="{{route('impresiones_informe' ,$garantias_informe_tecnico->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
+                    <div id="auto" onclick="divAuto()">
+                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
+                    </div>
+                    <div id="div-mostrar" style="height: 0px; overflow: hidden;">
+                        {{-- <br style="width: -1px"> --}}
+                        <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
+                            @csrf
+                            <input type="tel" name="numero"  value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->celular}}"  />
+                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                            <input type="text" hidden="" name="url" value="{{route('pdf_informe' ,$garantias_informe_tecnico->id)}}?archivo=">
+                            <input type="text" name="name_sin_cambio" hidden="" value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->orden_servicio}}" />
+                            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-12" style="margin-top: -2px">
+    <div class="col-lg-12" style="margin-top: -26px">
         <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
             <div class="row" style="height: auto;">
                 <div class="col-sm-4 text-left" align="left">

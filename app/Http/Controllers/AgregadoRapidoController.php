@@ -185,6 +185,9 @@ public function send_whatsapp(Request $request){
         'nota_debito' => '/nota-debito\/pdf\/(\d+)/',
         'guia_remision' => '/guia_remision\/pdf\/(\d+)/',
         'guia_remision_manual' => '/guia_remision_manual\/pdf\/(\d+)/',
+        'garantia_guia_ingreso' => '/garantia_guia_ingreso\/pdf\/(\d+)/',
+        'garantia_guia_egreso' => '/garantia_guia_egreso\/pdf\/(\d+)/',
+        'garantia_informe_tecnico' => '/garantia_informe_tecnico\/pdf\/(\d+)/',
     ];
 
     // Buscar tipo de documento y generar URL compartible

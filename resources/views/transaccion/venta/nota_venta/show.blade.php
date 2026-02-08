@@ -16,68 +16,81 @@
     </form>
 
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row ibox-title" style="padding-right: 3.1%;margin: 0; padding-bottom: 1px">
-            <div class="col-sm-6">
-                @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null  )
-                    <button class="btn-editar btn btn-warning" onclick="click_editar()"><i
-                            class="fa fa-pencil"></i></button>
-                    <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
-                            class="fa fa-times"></i></button>
-                {{-- @elseif($nota_venta->cotizacion_id == null || $nota_venta->cotizacion_m_id == null)
-                @else --}}
-                @endif
-                {{-- <a href="" id="btn-editar" class="btn-editar btn btn-warning">Editar</a> --}}
-            </div>
-            <div class="col-sm-6 tooltip-demo "align="right">
-                <!-- PDF -->
-                <a href="{{ route('nota_venta_pdf', $nota_venta->id) }}"class="btn btn-success" data-toggle="tooltip"
-                    data-placement="bottom" title="" data-original-title="Descargar PDF"><i
-                        class="fa fa-file-pdf-o fa-lg"></i></a>
-                <!-- Ticket -->
-                <a href="{{ route('nota_venta.ticket', $nota_venta->id) }}" class="btn btn-info" target="_blank"><i
-                        class="fa fa-ticket fa-lg"></i></a>
-                <!-- Impresion -->
-                <a class="btn btn-success" href="{{ route('nota_venta.print', $nota_venta->id) }}" target="_blank"
-                    class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
-                    data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
-                <!-- Email -->
-                @if (Auth::user()->email_creado == 1)
-                    <form action="{{ route('email.nota_venta', $nota_venta->id) }}" method="post"
-                        style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
-                        @csrf
-                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
-                            title="" formtarget="_blank" data-original-title="Enviar por correo">
-                            <i class="fa fa-envelope fa-lg"></i>
-                        </button>
-                    </form>
-                @endif
-
-                <!-- Whatsapp -->
-                <div id="auto" onclick="divAuto()">
-                    <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
-                        data-placement="bottom" title="" data-original-title="Enviar a"><i
-                            class="fa fa-whatsapp fa-lg" style="color: white"></i> </a>
+        <div class="ibox">
+            <div class="ibox-title" style="padding-right: 3.1%">
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up text-muted"></i>
+                    </a>
+                    <a class="" href="{{ route('ventas.nota_venta') }}">
+                        <i class="fa fa-times text-muted"></i>
+                    </a>
                 </div>
-                <div id="div-mostrar">
-                    <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
-                        style="text-align: none;padding-right: 0;padding-left: 0;">
-                        @csrf
-                        <input type="tel" name="numero" value="{{ $nota_venta->cliente->celular }}" />
-                        <input type="text" name="mensaje" hidden="" value="" />
-                        <input type="text" hidden="" name="url"
-                            value="{{ route('nota_venta_pdf', $nota_venta->id) }}">
-                        <input type="text" name="name_sin_cambio" hidden=""
-                            value="PDF-DOC-{{ $nota_venta->cod_nota_venta }}-{{ $empresa->ruc }}" />
-                        <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
-                            formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
-                            data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
-                    </form>
+            </div>
+            <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+                <div class="row tooltip-demo">
+                    <div class="col-sm-6">
+                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null  )
+                            <button class="btn-editar btn btn-warning" onclick="click_editar()"><i
+                                    class="fa fa-pencil"></i></button>
+                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
+                                    class="fa fa-times"></i></button>
+                        {{-- @elseif($nota_venta->cotizacion_id == null || $nota_venta->cotizacion_m_id == null)
+                        @else --}}
+                        @endif
+                        {{-- <a href="" id="btn-editar" class="btn-editar btn btn-warning">Editar</a> --}}
+                    </div>
+                    <div class="col-sm-6 tooltip-demo "align="right">
+                        <!-- PDF -->
+                        <a href="{{ route('nota_venta_pdf', $nota_venta->id) }}"class="btn btn-success" data-toggle="tooltip"
+                            data-placement="bottom" title="" data-original-title="Descargar PDF"><i
+                                class="fa fa-file-pdf-o fa-lg"></i></a>
+                        <!-- Ticket -->
+                        <a href="{{ route('nota_venta.ticket', $nota_venta->id) }}" class="btn btn-info" target="_blank"><i
+                                class="fa fa-ticket fa-lg"></i></a>
+                        <!-- Impresion -->
+                        <a class="btn btn-success" href="{{ route('nota_venta.print', $nota_venta->id) }}" target="_blank"
+                            class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
+                            data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
+                        <!-- Email -->
+                        @if (Auth::user()->email_creado == 1)
+                            <form action="{{ route('email.nota_venta', $nota_venta->id) }}" method="post"
+                                style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                                @csrf
+                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
+                                    title="" formtarget="_blank" data-original-title="Enviar por correo">
+                                    <i class="fa fa-envelope fa-lg"></i>
+                                </button>
+                            </form>
+                        @endif
+
+                        <!-- Whatsapp -->
+                        <div id="auto" onclick="divAuto()">
+                            <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
+                                data-placement="bottom" title="" data-original-title="Enviar a"><i
+                                    class="fa fa-whatsapp fa-lg" style="color: white"></i> </a>
+                        </div>
+                        <div id="div-mostrar" style="height: 0px; overflow: hidden;">
+                            <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                                style="text-align: none;padding-right: 0;padding-left: 0;">
+                                @csrf
+                                <input type="tel" name="numero" value="{{ $nota_venta->cliente->celular }}" />
+                                <input type="text" name="mensaje" hidden="" value="" />
+                                <input type="text" hidden="" name="url"
+                                    value="{{ route('nota_venta_pdf', $nota_venta->id) }}">
+                                <input type="text" name="name_sin_cambio" hidden=""
+                                    value="PDF-DOC-{{ $nota_venta->cod_nota_venta }}-{{ $empresa->ruc }}" />
+                                <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
+                                    formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
+                                    data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12" style="margin-top: -26px;">
                 <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                     <div class="row" style="align-items: center; justify-content: center">
                         @include('layout_cabecera_ventas')
@@ -526,16 +539,16 @@
                     data: function (params) {
                         return {
                             _token: "{{ csrf_token() }}",
-                            search: params.term, // search term 
+                            search: params.term, // search term
                             almacen: 0,
-                            tipo_doc: 'manual' 
+                            tipo_doc: 'manual'
                         };
                     },
                     processResults: function (data) {
                         //validador de articulos multiples
                         let data_length = data.length;
                         let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
-                        let articles_selected_count_ajax = articles_selected_ajax.length; 
+                        let articles_selected_count_ajax = articles_selected_ajax.length;
                         // for(var z=0;z<articles_selected_count_ajax;z++){
                         //     var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
                         //     for(var y=0;y<data_length;y++){
@@ -564,7 +577,7 @@
             });
         }
         function ajax (a){
-  
+
                 var articulo = document.getElementById(`article_text${a}`).value;
 
             var almacen = $('[id="almacen_id"]').val();
@@ -577,7 +590,7 @@
                     '_token': $('input[name=_token]').val(),
                     'articulo': articulo,
                     'almacen': almacen,
-                    'moneda': moneda	
+                    'moneda': moneda
                 },
                 success: function (msg) {
                     if(msg.price == 0 && msg.amount == 0){
@@ -608,7 +621,7 @@
             </td>";
             <td>
                 <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
-                
+
                 <select name="articulo[]" class="monto0 select2_demo_3 select_change" id='article_text${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                 </select>
                 <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo"></textarea>
@@ -624,7 +637,7 @@
             </td>
             <td>
                 <input type='text' id='total${i}'    name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
-            </td>   
+            </td>
         </tr>`;
             $('.tables').append(data);
             articlesSelect2();
@@ -777,7 +790,7 @@
             var contador = `{{ $count_reg }}`;
             for (var index = 0; index < contador; index++) {
                 var options = document.getElementById(`article_text${index}`).value;
-                
+
                 console.log(options);
                 ajax_p_sugerido(options, index);
 

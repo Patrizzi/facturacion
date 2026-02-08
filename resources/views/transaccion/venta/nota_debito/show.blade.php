@@ -8,30 +8,43 @@
 
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12" style="margin-top: -5px;">
-            <div class="ibox-title">
-                <div class="row tooltip-demo">
-                    <div class="col-sm-6">
-                        
-                    </div>
-                    <div class="col-sm-6" align="right"> 
-                        <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('nota_debito.pdf' ,$notas_debito->id)}}">
-                            <input type="text" name="name" maxlength="50" hidden="" value="{{$notas_debito->codigo_n_c}}"  >
-                            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+    <div class="ibox">
+        <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up text-muted"></i>
+                </a>
+                <a class="" href="{{ route('comprobantes.index_nota_debito') }}">
+                    <i class="fa fa-times text-muted"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+            <div class="row tooltip-demo">
+                <div class="col-sm-6">
+
+                </div>
+                <div class="col-sm-6" align="right">
+                    <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('nota_debito.pdf' ,$notas_debito->id)}}">
+                        <input type="text" name="name" maxlength="50" hidden="" value="{{$notas_debito->codigo_n_c}}"  >
+                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+                    </form>
+                    <a class="btn btn-success" href="{{route('nota_debito.print',$notas_debito->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+                    {{-- @if(Auth::user()->email_creado == 1)
+                        <form action="{{ route('email.nota_credito', $notas_debito->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                            @csrf
+                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                                <i class="fa fa-envelope fa-lg" ></i>
+                            </button>
                         </form>
-                        <a class="btn btn-success" href="{{route('nota_debito.print',$notas_debito->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
-                        {{-- @if(Auth::user()->email_creado == 1)
-                            <form action="{{ route('email.nota_credito', $notas_debito->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
-                                @csrf
-                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                                    <i class="fa fa-envelope fa-lg" ></i> 
-                                </button>
-                            </form>
-                        @endif --}}
-                    </div>
+                    @endif --}}
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12" style="margin-top: -26px;">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
                     <div class="col-sm-4 text-left" align="left">
@@ -234,7 +247,7 @@
                                                 {{$sub_total=($notas_debito_registro->nota_id->op_gravada)+($notas_debito_registro->nota_id->op_inafecta)+($notas_debito_registro->nota_id->op_exonerada)}}
                                                 {{$sub_total_gravado=($notas_debito_registro->nota_id->op_gravada)}}
                                                 {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
-                                                {{$end= round($sub_total, 2)+round($igv_p, 2)}} 
+                                                {{$end= round($sub_total, 2)+round($igv_p, 2)}}
                                                 {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
                                             </td>
                                         </tr>
@@ -259,8 +272,8 @@
                     <div class="col-sm-4 form-control">
                         {{-- <div class="col-sm-4 form-control" > --}}
                             <span style="display: block;float: left"> Subtotal:</span>
-                            <span style="display: block;float: right;"> 
-                                    {{$simbologia=$document->moneda->simbolo}}. 
+                            <span style="display: block;float: right;">
+                                    {{$simbologia=$document->moneda->simbolo}}.
                                     {{number_format($sub_total, 2)}}</span>
                             <br>
                             <span style="display: block;float: left"> Op. Gravada: </span>
@@ -273,7 +286,7 @@
                             <span style="display: block;float: right">{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
                             <span style="display: block;float: left"> Importe Total: </span>
                             <span style="display: block;float: right">{{$simbologia}} {{number_format(round($end, 2),2)}}</span>
-        
+
                         </div>
                     </div>
                 <br><br><br><br>

@@ -9,22 +9,22 @@
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
-        <div class="ibox-title" style="padding-right: 3.1%"">
-            <div class="ibox-tools"  style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+        <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                 <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
+                    <i class="fa fa-chevron-up text-muted"></i>
                 </a>
-                <a class="" href="{{ route('comprobantes.index_factura_manual') }}">
-                    <i class="fa fa-times"></i>
+                <a class="" href="{{ route('comprobantes.index_nota_credito') }}">
+                    <i class="fa fa-times text-muted"></i>
                 </a>
             </div>
         </div>
         <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
             <div class="row tooltip-demo">
                 <div class="col-sm-6">
-                        
+
                 </div>
-                <div class="col-sm-6" align="right"> 
+                <div class="col-sm-6" align="right">
                     <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('nota_credito.pdf' ,$notas_credito->id)}}">
                         <input type="text" name="name" maxlength="50" hidden="" value="{{$notas_credito->codigo_n_c}}"  >
                         <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
@@ -34,7 +34,7 @@
                         <form action="{{ route('email.nota_credito', $notas_credito->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
                             @csrf
                             <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                                <i class="fa fa-envelope fa-lg" ></i> 
+                                <i class="fa fa-envelope fa-lg" ></i>
                             </button>
                         </form>
                     @endif
@@ -47,7 +47,7 @@
             @if($notas_credito->n_electronica == 2)
                 <div id="watermark">
                     <p>Anulado</p>
-                </div>    
+                </div>
             @endif
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row">
@@ -227,7 +227,7 @@
                                         @break
                                     @endswitch
                                     <strong>Tipo de sustento:</strong>
-                                    {{$notas_credito->tipo}}<br> 
+                                    {{$notas_credito->tipo}}<br>
                                 @else
                                     <strong>Documento:</strong>
                                     {{$notas_credito->nota_i_fac_manual->codigo_fac}}<br>
@@ -291,15 +291,15 @@
                                             @else
                                                 <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
                                             @endif
-                                            
+
 
                                             <td>
                                                 {{-- @if(isset($notas_credito_registro->producto_id))
-                                                    {{$notas_credito_registro->producto->nombre}} 
+                                                    {{$notas_credito_registro->producto->nombre}}
                                                 @else
-                                                    {{$notas_credito_registro->servicio->nombre}} 
+                                                    {{$notas_credito_registro->servicio->nombre}}
                                                 @endif --}}
-                                                {{$notas_credito_registro->descripcion}} 
+                                                {{$notas_credito_registro->descripcion}}
                                                 {{$doc_reg[$e]->descripcion_item}}
                                                 {{-- {{$doc_reg[$e]->descripcion_item}} --}}
                                                 {{-- <br><strong>N/S:</strong>
@@ -309,20 +309,20 @@
                                             <td>{{$notas_credito_registro->precio}}</td>
                                             <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
                                             <td style="display: none">
-                                                
+
                                                 {{$sub_total=($notas_credito_registro->nota_credito_ids->op_gravada)+($notas_credito_registro->nota_credito_ids->op_inafecta)+($notas_credito_registro->nota_credito_ids->op_exonerada)}}
                                                 {{$sub_total_gravado=($notas_credito_registro->nota_credito_ids->op_gravada)}}
                                                 {{$igv_p=round($sub_total_gravado, 2)*($igv->igv_total/100)}}
-                                                {{$end=round($sub_total, 2)+round($igv_p, 2)}} 
+                                                {{$end=round($sub_total, 2)+round($igv_p, 2)}}
                                                 {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
-                                                
+
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tr>
 
                                <tr>
-                                
+
                                 </td>
                             </tr>
                         </tbody>
@@ -354,16 +354,16 @@
                 <div class="col-sm-4 form-control">
                     {{-- <div class="col-sm-4 form-control" > --}}
                         <span style="display: block;float: left"> Subtotal:</span>
-                        <span style="display: block;float: right;"> 
+                        <span style="display: block;float: right;">
                             @if(isset($notas_credito->facturacion_id))
-                                {{$simbologia=$notas_credito->nota_i_facturacion->moneda->simbolo}} 
+                                {{$simbologia=$notas_credito->nota_i_facturacion->moneda->simbolo}}
                             @elseif(isset($notas_credito->boleta_id))
-                                {{$simbologia=$notas_credito->nota_i_boleta->moneda->simbolo}} 
+                                {{$simbologia=$notas_credito->nota_i_boleta->moneda->simbolo}}
                             @elseif(isset($notas_credito->boleta_m_id))
                                 {{$simbologia=$notas_credito->nota_i_boleta_manual->moneda->simbolo}}
                             @else
-                                {{$simbologia=$notas_credito->nota_i_fac_manual->moneda->simbolo}} 
-                            @endif 
+                                {{$simbologia=$notas_credito->nota_i_fac_manual->moneda->simbolo}}
+                            @endif
                                 {{number_format($sub_total, 2)}}</span>
                         <br>
                         <span style="display: block;float: left"> Op. Gravada: </span>
@@ -376,7 +376,7 @@
                         <span style="display: block;float: right">{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
                         <span style="display: block;float: left"> Importe Total: </span>
                         <span style="display: block;float: right">{{$simbologia}} {{number_format(round($end, 2),2)}}</span>
-    
+
                     </div>
                 </div>
                 <br>

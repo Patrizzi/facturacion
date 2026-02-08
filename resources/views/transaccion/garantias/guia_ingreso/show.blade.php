@@ -47,8 +47,8 @@
 </div>
 {{-- Modal Agregar --}}
 <div class="wrapper wrapper-content animated fadeInRight">
-   @if($errors->any())
-   <div style="padding-top: 20px;">
+@if($errors->any())
+<div style="padding-top: 20px;">
     <div class="alert alert-danger">
         <a class="alert-link" href="#">
             @foreach ($errors->all() as $error)
@@ -58,51 +58,65 @@
     </div>
 </div>
 @endif
-<div class="row ibox-title" style="padding-right: 3.1%;margin: 0" >
-    <div class="col-sm-6">
-        @if($garantia_guia_ingreso->estado == 1 and $garantia_guia_ingreso->egresado == 0 )
-        <a href="{{ route('garantia_guia_ingreso.edit', $garantia_guia_ingreso->id) }}"><button type="button" class="btn btn-success"><i class="fa fa-edit"></i></button></a>
-        @endif
-    </div>
-    <div class="col-sm-6 tooltip-demo "align="right"  >
-        <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_ingreso' ,$garantia_guia_ingreso->id)}}">
-            <input type="text" name="archivo" id="texto2"  maxlength="50" value="{{$garantia_guia_ingreso->orden_servicio}}" oninput="actualizatext()" />
-            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg" ></i>  </button>
-        </form>
-        {{-- TICKET --}}
-        <button id="btnImprimir" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></button>
-        <input type="text" value="{{$garantia_guia_ingreso->id}}" name="id" id="id" hidden="">
-
-        @if(Auth::user()->email_creado == 1)
-            <form action="{{ route('email.guia_ingreso', $garantia_guia_ingreso->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
-                @csrf
-                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                    <i class="fa fa-envelope fa-lg" ></i>
-                </button>
-            </form>
-        @endif
-        <a href="{{route('impresiones_ingreso' ,$garantia_guia_ingreso->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
-        <div id="auto" onclick="divAuto()">
-            <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
+<div class="ibox">
+    <div class="ibox-title" style="padding-right: 3.1%">
+        <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up text-muted"></i>
+            </a>
+            <a class="" href="{{ route('garantia_guia_egreso.index') }}">
+                <i class="fa fa-times text-muted"></i>
+            </a>
         </div>
-        <div id="div-mostrar">
-           <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-            @csrf
-            <input type="tel" name="numero"  value="{{$garantia_guia_ingreso->clientes_i->celular}}"   />
-            <input type="text" name="mensaje" id="texto_orden" hidden="" />
-            <input type="text" hidden="" name="url" value="{{route('pdf_ingreso' ,$garantia_guia_ingreso->id)}}?archivo=">
-            <input type="text" name="name_sin_cambio" hidden="" value="{{$garantia_guia_ingreso->orden_servicio}}" />
-            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-        </form>
     </div>
-</div>
+    <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+        <div class="row tooltip-demo">
+            <div class="col-sm-6">
+                @if($garantia_guia_ingreso->estado == 1 and $garantia_guia_ingreso->egresado == 0 )
+                <a href="{{ route('garantia_guia_ingreso.edit', $garantia_guia_ingreso->id) }}"><button type="button" class="btn btn-success"><i class="fa fa-edit"></i></button></a>
+                @endif
+            </div>
+            <div class="col-sm-6 tooltip-demo "align="right"  >
+                <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_ingreso' ,$garantia_guia_ingreso->id)}}">
+                    <input type="text" name="archivo" id="texto2"  maxlength="50" value="{{$garantia_guia_ingreso->orden_servicio}}" oninput="actualizatext()" />
+                    <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg" ></i>  </button>
+                </form>
+                {{-- TICKET --}}
+                <button id="btnImprimir" class="btn btn-info"><i class="fa fa-ticket fa-lg"></i></button>
+                <input type="text" value="{{$garantia_guia_ingreso->id}}" name="id" id="id" hidden="">
+
+                @if(Auth::user()->email_creado == 1)
+                    <form action="{{ route('email.guia_ingreso', $garantia_guia_ingreso->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                        @csrf
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
+                            <i class="fa fa-envelope fa-lg" ></i>
+                        </button>
+                    </form>
+                @endif
+                <a href="{{route('impresiones_ingreso' ,$garantia_guia_ingreso->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
+                <div id="auto" onclick="divAuto()">
+                    <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
+                </div>
+                <div id="div-mostrar" style="height: 0px; overflow: hidden;">
+                    <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
+                        @csrf
+                        <input type="tel" name="numero"  value="{{$garantia_guia_ingreso->clientes_i->celular}}"   />
+                        <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                        <input type="text" hidden="" name="url" value="{{route('pdf_ingreso' ,$garantia_guia_ingreso->id)}}?archivo=">
+                        <input type="text" name="name_sin_cambio" hidden="" value="{{$garantia_guia_ingreso->orden_servicio}}" />
+                        <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="row" >
-    <div class="col-lg-12" style="margin-top: -2px">
+    <div class="col-lg-12" style="margin-top: -26px">
         <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
             <div class="row" style="height: auto;">
                 <div class="col-sm-4 text-left" align="left">
-                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;"" align="left">
+                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;" align="left">
                         <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="max-width: 100%;max-height: 100px;padding: 5px;">
                     </div>
                 </div>
@@ -142,9 +156,9 @@
                     </div>
                 </div>
                 <div class="col-sm-6" align="center" style="height: 100%;">
-                 <div class="form-control" style="height: 100%;">
-                     <h3>Condiciones Generales</h3>
-                     <div align="left" style="height: 100%;">
+                <div class="form-control" style="height: 100%;">
+                    <h3>Condiciones Generales</h3>
+                    <div align="left" style="height: 100%;">
                         <strong>Técnico Asignado:</strong>&nbsp;{{$garantia_guia_ingreso->personal_laborales->nombres}} {{$garantia_guia_ingreso->personal_laborales->apellidos}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                         {{-- <strong>Motivo:</strong>&nbsp;{{$garantia_guia_ingreso->motivo}}<br> --}}
                         <strong>Marca :</strong>&nbsp;{{$garantia_guia_ingreso->marcas_i->nombre}} &nbsp;<br>
@@ -156,9 +170,9 @@
             <br>
             <div class="col-sm-12" align="center" style="padding-top: 15px;">
                 <div class="form-control" style="height: 100%">
-                 <h3>Datos del Equipo</h3>
-                 <div class="row" style="padding-bottom: 1px">
-                     <div align="left" class="col-sm-6">
+                <h3>Datos del Equipo</h3>
+                <div class="row" style="padding-bottom: 1px">
+                    <div align="left" class="col-sm-6">
                         <strong>Modelo:</strong> &nbsp;{{$garantia_guia_ingreso->nombre_equipo}}<br>
                         <strong>Número de serie:</strong> &nbsp;{{$garantia_guia_ingreso->numero_serie}}<br>
                     </div>
@@ -197,19 +211,19 @@
     </div>
     <br>
     <footer style="padding-top: 10px">
-      <br>
-      <div class="row">
-        <div class="col-sm-4">
-            <strong><p><u>Centro de Atención: </strong></u></p>
-            <strong>Dirección:</strong> {{$usuario->almacen->direccion}}<br>
-            <strong>Teléfonos: </strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
-            <strong>{{$garantia_guia_ingreso->marcas_i->nombre_empresa}}:</strong> {{$garantia_guia_ingreso->marcas_i->telefono}}<br>
-            <strong>Email:</strong> {{$usuario->email_user}}<br>
-            <strong>Web:</strong> {{$empresa->pagina_web}}<br>
-        </div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-3"></div>
-        <div class="col-sm-3"><br><br>
+        <br>
+        <div class="row">
+            <div class="col-sm-4">
+                <strong><p><u>Centro de Atención: </strong></u></p>
+                <strong>Dirección:</strong> {{$usuario->almacen->direccion}}<br>
+                <strong>Teléfonos: </strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
+                <strong>{{$garantia_guia_ingreso->marcas_i->nombre_empresa}}:</strong> {{$garantia_guia_ingreso->marcas_i->telefono}}<br>
+                <strong>Email:</strong> {{$usuario->email_user}}<br>
+                <strong>Web:</strong> {{$empresa->pagina_web}}<br>
+            </div>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3"><br><br>
                 {{-- <hr>
                 <center>adm</center> --}}
             </div>
@@ -322,10 +336,10 @@ input#archivoInput{
 <script>
     var clic = 1;
     function divAuto(){
-       if(clic==1){
-           document.getElementById("div-mostrar").style.height = "50px";
-           clic = clic + 1;
-       } else{
+    if(clic==1){
+        document.getElementById("div-mostrar").style.height = "50px";
+        clic = clic + 1;
+    } else{
         document.getElementById("div-mostrar").style.height = "0px";
         clic = 1;
     }
@@ -360,21 +374,21 @@ function printExternal(url) {
     $(document).ready(function() {
         $('#btnImprimir').click(function(){
             var id_guia =  $(`[id='id']`).val();
-           $.ajax({
-               type: "post",
+        $.ajax({
+            type: "post",
                 url: "{{ route('ticket_ajax_ingreso') }}",
-                 data: {
+                data: {
                     '_token': $('input[name=_token]').val(),
                     'id' : id_guia
                     },
-               success: function(response){
-                   if(response==1){
-                       // alert('Imprimiendo Ticket');
-                   }else{
-                       alert('Error');
-                   }
-               }
-           });
+            success: function(response){
+                if(response==1){
+                    // alert('Imprimiendo Ticket');
+                }else{
+                    alert('Error');
+                }
+            }
+        });
         });
     });
 </script>

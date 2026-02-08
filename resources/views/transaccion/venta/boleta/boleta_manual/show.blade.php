@@ -34,10 +34,10 @@
         <div class="ibox-title" style="padding-right: 3.1%">
             <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                 <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
+                    <i class="fa fa-chevron-up text-muted"></i>
                 </a>
                 <a href="{{ route('comprobantes.index_boleta_manual') }}" title="Cerrar">
-                    <i class="fa fa-times"></i>
+                    <i class="fa fa-times text-muted"></i>
                 </a>
             </div>
         </div>

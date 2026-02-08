@@ -28,13 +28,13 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         {{-- <h1>{{ $facturacion->estado }}</h1> --}}
         <div class="ibox">
-            <div class="ibox-title" style="padding-right: 3.1%"">
+            <div class="ibox-title" style="padding-right: 3.1%">
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">
-                        <i class="fa fa-chevron-up"></i>
+                        <i class="fa fa-chevron-up text-muted"></i>
                     </a>
                     <a href="{{ route('comprobantes.index_factura') }}" title="Cerrar">
-                        <i class="fa fa-times"></i>
+                        <i class="fa fa-times text-muted"></i>
                     </a>
                 </div>
             </div>
@@ -690,7 +690,7 @@
     <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
     <!-- Steps -->
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
-    
+
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
     <!-- Custom and plugin javascript -->

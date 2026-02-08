@@ -9,52 +9,66 @@
 
 
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox-title" style="padding-right: 3.1%">
-            <div class="row tooltip-demo">
-                <div class="col-sm-6"></div>
-                <div class="col-sm-6" align="right">
-                    <a href="{{ route('remision_m.pdf', $guia_remision_m->id) }}" class="btn btn-success" data-toggle="tooltip"
-                        data-placement="bottom" title="" data-original-title="Descargar PDF"><i
-                            class="fa fa-file-pdf-o fa-lg"></i>
+
+        <div class="ibox">
+            <div class="ibox-title" style="padding-right: 3.1%">
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up text-muted"></i>
                     </a>
-                    @if (Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.guia_remision_m', $guia_remision_m->id) }}" method="post"
-                            style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
-                            @csrf
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
-                                title="" formtarget="_blank" data-original-title="Enviar por correo">
-                                <i class="fa fa-envelope fa-lg"></i>
-                            </button>
-                        </form>
-                    @endif
-                    <a class="btn btn-success" href="{{ route('remision_m.print', $guia_remision_m->id) }}"target="_blank"
-                        class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
-                        data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
-                    <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style= "background: green;border-color: green;" data-toggle="tooltip"
-                            data-placement="bottom" title="" data-original-title="Enviar a"><i
-                                class="fa fa-whatsapp fa-lg" style="color: white"></i> </a>
-                    </div>
-                    <div id="div-mostrar">
-                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
-                            style="text-align: none;padding-right: 0;padding-left: 0;">
-                            @csrf
-                            <input type="tel" name="numero" value="{{ $guia_remision_m->cliente->celular }}" />
-                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                            <input type="text" hidden="" name="url"
-                                value="{{ route('remision_m.pdf', $guia_remision_m->id) }}?archivo=">
-                            <input type="text" name="name_sin_cambio" hidden=""
-                                value="{{ $guia_remision_m->cod_guia }}" />
-                            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
-                                formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
-                                data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
-                        </form>
+                    <a class="" href="{{ route('comprobantes.index_guia_remision_manual') }}">
+                        <i class="fa fa-times text-muted"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+                <div class="row tooltip-demo">
+                    <div class="col-sm-6"></div>
+                    <div class="col-sm-6" align="right">
+                        <a href="{{ route('remision_m.pdf', $guia_remision_m->id) }}" class="btn btn-success" data-toggle="tooltip"
+                            data-placement="bottom" title="" data-original-title="Descargar PDF"><i
+                                class="fa fa-file-pdf-o fa-lg"></i>
+                        </a>
+                        @if (Auth::user()->email_creado == 1)
+                            <form action="{{ route('email.guia_remision_m', $guia_remision_m->id) }}" method="post"
+                                style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                                @csrf
+                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
+                                    title="" formtarget="_blank" data-original-title="Enviar por correo">
+                                    <i class="fa fa-envelope fa-lg"></i>
+                                </button>
+                            </form>
+                        @endif
+                        <a class="btn btn-success" href="{{ route('remision_m.print', $guia_remision_m->id) }}"target="_blank"
+                            class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
+                            data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
+                        <div id="auto" onclick="divAuto()">
+                            <a class="btn  btn-success" style= "background: green;border-color: green;" data-toggle="tooltip"
+                                data-placement="bottom" title="" data-original-title="Enviar a"><i
+                                    class="fa fa-whatsapp fa-lg" style="color: white"></i> </a>
+                        </div>
+                        <div id="div-mostrar" style="height: 0px; overflow: hidden;">
+                            <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                                style="text-align: none;padding-right: 0;padding-left: 0;">
+                                @csrf
+                                <input type="tel" name="numero" value="{{ $guia_remision_m->cliente->celular }}" />
+                                <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                                <input type="text" hidden="" name="url"
+                                    value="{{ route('remision_m.pdf', $guia_remision_m->id) }}?archivo=">
+                                <input type="text" name="name_sin_cambio" hidden=""
+                                    value="{{ $guia_remision_m->cod_guia }}" />
+                                <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
+                                    formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
+                                    data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-lg-12" style="margin-top: -2px">
+            <div class="col-lg-12" style="margin-top: -26px">
                 <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                     <div class="row">
                         <div class="col-sm-4 text-left" align="left">
