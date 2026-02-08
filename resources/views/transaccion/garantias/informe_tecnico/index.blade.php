@@ -538,9 +538,6 @@
                 return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
             });
 
-            console.log('IDs seleccionados para exportar:', selectedIds);
-
-            // Validar que hay guías seleccionadas
             if (selectedIds.length === 0) {
                 swal({
                     title: "Sin selección",
@@ -552,7 +549,6 @@
                 return;
             }
 
-            // Confirmar acción
             swal({
                 title: "Confirmar exportación",
                 text: `¿Deseas exportar ${selectedIds.length} informe(es) seleccionado(s) a Excel?`,
@@ -562,29 +558,37 @@
                 cancelButtonText: "Cancelar",
                 confirmButtonColor: "#1a3bb3"
             }, function(isConfirm) {
-                if (isConfirm) {
-                    // Construir URL con los IDs seleccionados
-                    var exportUrl = "{{ route('export.garantia_informe_tecnico') }}";
-                    var params = new URLSearchParams();
+                if (!isConfirm) return;
 
-                    selectedIds.forEach(function(id) {
-                        params.append('informe_ids[]', id);
-                    });
+                $('#btn-exportar-filtrado').prop('disabled', true);
 
-                    console.log('URL de exportación:', exportUrl + '?' + params.toString());
-
-                    // Redirigir para exportar
-                    window.location.href = exportUrl + '?' + params.toString();
-
-                    // Mensaje de éxito
-                    swal({
-                        title: "Procesando",
-                        text: "Los informes técnicos se están exportando a Excel...",
-                        type: "success",
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                }
+                $.ajax({
+                    url: "{{ route('garantiasIT.exportar') }}",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ informe_ids: selectedIds }),
+                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                    xhrFields: { responseType: 'blob' },
+                    complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
+                    success: function(blob) {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `Garantia_Informe_Tecnico_${new Date().toISOString().slice(0,10)}.xlsx`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    },
+                    error: function() {
+                        swal({
+                            title: "Error",
+                            text: "No se pudo exportar. Intenta nuevamente.",
+                            type: "error",
+                            confirmButtonColor: "#1a3bb3"
+                        });
+                    }
+                });
             });
         });
 

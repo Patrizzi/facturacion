@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\GarantiaInformeTecnico;
 use App\GarantiaGuiaEgreso;
+use App\Exports\GarantiaInformeTecnicoExport;
 use PDF;
 use App\Cliente;
 use App\User;
@@ -248,125 +249,40 @@ class GarantiaInformeTecnicoController extends Controller
 
     }
 
+    // Método para exportar a Excel, con filtros por fecha, texto y marca
     public function exportGarantiaInformeTecnico(Request $request)
     {
         if (ob_get_contents()) {
             ob_end_clean();
         }
 
-        if ($request->has('informe_ids') && !empty($request->input('informe_ids'))) {
-            $informeIds = $request->input('informe_ids');
+        $ids = $request->json('informe_ids') ?? $request->input('informe_ids');
 
-            $garantias = GarantiaInformeTecnico::with([
-                'garantia_egreso_i'
-            ])
-            ->whereIn('id', $informeIds)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if (!empty($ids)) {
+            $export = new GarantiaInformeTecnicoExport($ids);
         } else {
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
 
-            $daterange = $request->get('daterange', date('01/m/Y') . ' - ' . date('t/m/Y'));
-            $filter = $request->get('value');
-            $tipo = $request->get('tipo_coti');
+            [$start, $end] = explode(' - ', $request->daterange);
 
-            $starDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
-
-            $query = GarantiaInformeTecnico::with(['garantia_egreso_i'])
-            ->whereBetween('created_at', [$starDate, $endDate])
-            ->orderBy('created_at', 'desc');
-
-            if (!empty($filter)) {
-                $query->where(function ($q) use ($filter) {
-                    $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                    $q->orWhereHas('cliente', function ($q) use ($filter) {
-                        $q->where('nombre', 'like', '%' . $filter . '%')
-                            ->orWhere('numero_documento', 'like', '%' . $filter . '%');
-                    });
-                    $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
-                    $q->orWhereHas('forma_pago', function ($q) use ($filter) {
-                        $q->where('nombre', 'like', '%' . $filter . '%');
-                    });
-                });
-            }
-
-            if ($tipo !== null) {
-                $query->where('tipo' , $tipo);
-            }
-
-            $garantias = $query->get();
+            $export = new GarantiaInformeTecnicoExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+            ]);
         }
 
-        if (ob_get_contents()) {
-            ob_end_clean();
-        }
-
-        $headers = [
-            'Orden de Servicio',
-            'Estado',
-            'Fecha',
-            'Egresado',
-            'Informe técnico',
-            'Estética',
-            'Revisión del diagnóstico',
-            'Causas del problema',
-            'Solución',
-            'Garantía de egresado'
-        ];
-
-        $rows = [$headers];
-
-        foreach ($garantias as $garantia) {
-
-            $garantiaEgresado = optional($garantia->garantia_egreso_i)->orden_servicio ?? '';
-            $estado = $garantia->estado == 1 ? 'Activo' : 'Inactivo';
-
-            $rows[] = [
-                $garantia->orden_servicio,
-                $estado,
-                $garantia->fecha,
-                $garantia->egresado,
-                $garantia->informe_tecnico,
-                $garantia->estetica,
-                $garantia->revision_diagnostico,
-                $garantia->causa_del_problema,
-                $garantia->solucion,
-                $garantiaEgresado,
-            ];
-        }
-
-        $export = new class($rows) implements FromArray, WithEvents {
-            private $rows;
-
-            public function __construct($rows) {
-                $this->rows = $rows;
-            }
-
-            public function array(): array {
-                return $this->rows;
-            }
-
-            public function registerEvents(): array {
-                return [
-                    AfterSheet::class => function(AfterSheet $event) {
-                        foreach(range('A','Z') as $column) {
-                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                        }
-                        foreach(range('A','Z') as $letter1) {
-                            foreach(range('A','Z') as $letter2) {
-                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                            }
-                        }
-                    },
-                ];
-            }
-        };
-
-        return Excel::download($export, 'garantia_informe_tecnico.xlsx');
+        return Excel::download(
+            $export,
+            'Garantia Informe Tecnico_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );
     }
 
-// Método para agregar a tu GarantiaInformeTecnicoController
 
+    // Método para agregar a tu GarantiaInformeTecnicoController
     public function printMultiple(Request $request)
     {
         try {

@@ -482,7 +482,7 @@ Route::group(
         Route::get('/boleta/ticket/{id}', 'BoletaController@ticket')->name('boleta.ticket');
         //* Guia Remision *//
         //para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria
-    
+
         Route::resource('/guia_remision', 'GuiaRemisionController')->except(['create']);
         Route::post('/guia_remision/sucursal', 'GuiaRemisionController@ajax_sucursal')->name('guia_remision.ajax_sucursal');
         Route::post('/guia_remision/create', 'GuiaRemisionController@create')->name('guia_remision.create');
@@ -525,8 +525,8 @@ Route::group(
         Route::post('parameter_call/getNFactura', 'ParameterCallController@getNFactura')->name('pa.nfactura');
         Route::post('parameter_call/getNumberLetter', 'ParameterCallController@getNumberLetter')->name('pa.numberletters');
         Route::post('parameter_call/ajax_remision', 'ParameterCallController@ajax_remision')->name('pa.ajax_remision');
-        Route::post('parameter_call/getPersonalVendedor', 'ParameterCallController@getPersonalVendedor')->name('pa.getPersonalVendedor'); 
-        Route::post('parameter_call/getFormaPago', 'ParameterCallController@getFormaPago')->name('pa.getFormaPago'); 
+        Route::post('parameter_call/getPersonalVendedor', 'ParameterCallController@getPersonalVendedor')->name('pa.getPersonalVendedor');
+        Route::post('parameter_call/getFormaPago', 'ParameterCallController@getFormaPago')->name('pa.getFormaPago');
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
@@ -653,8 +653,10 @@ Route::group(
         Route::post('/garantia_guia_ingreso/create', 'GarantiaGuiaIngresoController@create')->name('garantia_guia_ingreso.create');
 
         //EXPORTACION EN GARANTIAS
-        Route::get('/garantias/guia_ingreso/exportar', [GarantiaGuiaIngresoController::class, 'exportar_garantia_ingreso'])->name('garantiasI.exportar');
-        Route::get('/garantias/guia_egreso/exportar', [GarantiaGuiaEgresoController::class, 'exportar_garantia_egreso'])->name('garantiasE.exportar');
+        Route::post('/garantias/guia_ingreso/exportar', [GarantiaGuiaIngresoController::class, 'exportar_garantia_ingreso'])->name('garantiasI.exportar');
+        Route::post('/garantias/guia_egreso/exportar', [GarantiaGuiaEgresoController::class, 'exportar_garantia_egreso'])->name('garantiasE.exportar');
+        Route::post('/garantias/informe-tecnico/exportar', [GarantiaInformeTecnicoController::class, 'exportGarantiaInformeTecnico'])->name('garantiasIT.exportar');
+
 
         //AJAX DE TICKETS
         Route::post('ticket_ajax_ingreso', 'GarantiaGuiaIngresoController@ticket_guia_ingreso')->name('ticket_ajax_ingreso');
@@ -1170,9 +1172,6 @@ Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.ind
 Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
 Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
 
-
-// GARANTIA INFORME TECNICO
-Route::get('/export/garantia_informe_tecnico', [GarantiaInformeTecnicoController::class, 'exportGarantiaInformeTecnico'])->name('export.garantia_informe_tecnico');
 
 // EXPORTACION DE GUIA REMISION
 Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');

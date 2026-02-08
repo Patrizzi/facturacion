@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\GarantiaGuiaIngreso;
 use App\GarantiaGuiaEgreso;
+use App\Exports\GarantiaGEgresoExport;
 use PDF;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
@@ -208,118 +209,37 @@ class GarantiaGuiaEgresoController extends Controller
        return "Something went wrong :(";
    }
 
-   public function exportar_garantia_egreso(Request $request)
+    public function exportar_garantia_egreso(Request $request)
     {
         if (ob_get_contents()) {
             ob_end_clean();
         }
 
-        if ($request->has('guia_ids') && !empty($request->input('guia_ids'))) {
-            $guiaIds = $request->input('guia_ids');
+        $ids = $request->json('guia_ids') ?? $request->input('guia_ids');
 
-            $garantia_egresos = GarantiaGuiaEgreso::with([
-                'garantia_ingreso_i'
-            ])
-            ->whereIn('id', $guiaIds)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if (!empty($ids)) {
+            $export = new GarantiaGEgresoExport($ids);
         } else {
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
 
-            $marca = $request->marca;
-            $daterange = $request->daterange;
-            $filter = $request->get('value');
+            [$start, $end] = explode(' - ', $request->daterange);
 
-            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $daterange)[1])->endOfDay();
-
-            $query = GarantiaGuiaEgreso::with([
-                'garantia_ingreso_i'
-            ])->whereBetween('created_at', [$startDate, $endDate])
-            ->orderBy('created_at', 'desc');
-
-            if (!empty($filter)) {
-                $query->where(function ($q) use ($filter) {
-                    $q->orWhereHas('garantia_ingreso_i', function ($sub) use ($filter) {
-                        $sub->where('orden_servicio', 'like', '%' . $filter . '%');
-                        $sub->orWhere('motivo', 'like', '%' . $filter . '%');
-                        $sub->orWhere('asunto', 'like', '%' . $filter . '%');
-                        $sub->orWhereHas('clientes_i', function ($q2) use ($filter) {
-                            $q2->where('nombre', 'like', '%' . $filter . '%');
-                        });
-                        $sub->orWhereHas('marcas_i', function ($q3) use ($filter) {
-                            $q3->where('nombre', 'like', '%' . $filter . '%');
-                        });
-                    });
-                });
-            }
-
-            if ($marca !== null && $marca !== '') {
-                $query->whereHas('garantia_ingreso_i', function ($q) use ($marca) {
-                    $q->where('marca_id', $marca);
-                });
-            }
-
-            $garantia_egresos = $query->get();
+            $export = new GarantiaGEgresoExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'marca'  => $request->input('marca'),
+            ]);
         }
 
-        $headers = [
-            'Fecha', 'Orden de Servicio', 'Estado', 'Egresado', 'Informe técnico',
-            'Descripcion del problema', 'Solucion', 'Recomendaciones', 'Garantia Ingreso'
-        ];
-
-        $rows = [$headers];
-
-        foreach ($garantia_egresos as $garantia_egreso) {
-            $estado = $garantia_egreso->estado == 0 ? 'anulado' : 'No anulado';
-            $egresado = $garantia_egreso->egresado ? 'Si' : 'No';
-            $informeTecnico = $garantia_egreso->informe_tecnico ? 'Si' : 'No';
-            $garantiaIngreso = optional($garantia_egreso->garantia_ingreso_i)->orden_servicio;
-
-            $row = [
-                $garantia_egreso->fecha,
-                $garantia_egreso->orden_servicio,
-                $estado,
-                $egresado,
-                $informeTecnico,
-                $garantia_egreso->descripcion_problema,
-                $garantia_egreso->diagnostico_solucion,
-                $garantia_egreso->recomendaciones,
-                $garantiaIngreso
-            ];
-
-            $rows[] = $row;
-        }
-
-        $export = new class($rows) implements FromArray, WithEvents {
-            private $rows;
-
-            public function __construct($rows) {
-                $this->rows = $rows;
-            }
-
-            public function array(): array {
-                return $this->rows;
-            }
-
-            public function registerEvents(): array {
-                return [
-                    AfterSheet::class => function(AfterSheet $event) {
-                        foreach(range('A','Z') as $column) {
-                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                        }
-                        foreach(range('A','Z') as $letter1) {
-                            foreach(range('A','Z') as $letter2) {
-                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                            }
-                        }
-                    },
-                ];
-            }
-        };
-
-        $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Garantia Guias Egresos ' . $fecha . '.xlsx');
+        return Excel::download(
+            $export,
+            'Garantia Guias Egresos ' . now('America/Lima')->format('d-m-Y') . '.xlsx'
+        );
     }
+
 
     // ============================================
     // MÉTODO PRINTMULTIPLE CORREGIDO
