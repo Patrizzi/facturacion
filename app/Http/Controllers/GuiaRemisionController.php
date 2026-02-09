@@ -41,6 +41,7 @@ use App\EmailBandejaEnvios;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailConfiguraciones;
 use App\Exports\GuiaRemisionExport;
+use App\GuiaRemisionMRegistros;
 
 class GuiaRemisionController extends Controller
 {
@@ -530,7 +531,204 @@ class GuiaRemisionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $request;
+        // return $request;
+        $guia_remision = Guia_remision::find($id);
+        $id_cliente = $request->get('cliente');
+        $tipo_transporte = $request->get('tipo_transporte');
+        $articulo = $request->input('articulo');
+        $count_articulo = count($articulo);
+
+        for ($i = 0; $i < $count_articulo; $i++) {
+            $articulos_val[$i] = $request->input('articulo')[$i];
+            $producto_id_val[$i] = strstr($articulos_val[$i], ' ', true);
+        }
+
+        //* Revision de Stock Actual
+        $almacen_producto_validacion = $guia_remision->almacen_id;
+        for ($i = 0; $i < $count_articulo; $i++) {
+            $kardex_entrada_v = Kardex_entrada::where('almacen_id', $almacen_producto_validacion)->get();
+            $kardex_entrada_count_v = Kardex_entrada::where('almacen_id', $almacen_producto_validacion)->count();
+            
+            //return $kardex_entrada;
+            foreach ($kardex_entrada_v as $kardex_entradas_v) {
+                $kadex_entrada_id_v[] = $kardex_entradas_v->id;
+            }
+            // return $producto_id_val;
+            // return $producto_id_val;
+            for ($x = 0; $x < $kardex_entrada_count_v; $x++) {
+                if (Kardex_entrada_registro::where('producto_id', $producto_id_val[$i])->where('kardex_entrada_id', $kadex_entrada_id_v[$x])->first()) {
+                    $nueva_v[] = Kardex_entrada_registro::where('producto_id', $producto_id_val[$i])->where('kardex_entrada_id', $kadex_entrada_id_v[$x])->first();
+                }
+            }
+            // return $nueva_v;
+            $comparacion_v = $nueva_v;
+            //buble para la cantidad
+            $cantidad_v = 0;
+            foreach ($comparacion_v as $comparaciones_v) {
+                $cantidad_v = $comparaciones_v->cantidad + $cantidad_v;
+            }
+            // return $nueva_v;
+            $cantidad_entrada = $request->get('cantidad')[$i];
+            if ($cantidad_v < $cantidad_entrada) {
+                return redirect()->back()->with('error', 'No se puede hacer el descuento, un producto tiene cantidad mayor al stock actual');
+            }
+        }
+
+
+        
+        $guia_remision->cliente_id = $id_cliente;
+        $guia_remision->sucursal_cliente = $request->get('sucursal_cli');
+        $guia_remision->cod_postal_cliente = $request->get('postal_input');
+        $guia_remision->fecha_entrega = $request->get('fecha_entrega');
+        $guia_remision->tipo_transporte = $tipo_transporte;
+
+        if($tipo_transporte == 1){ // Si es publico
+            $guia_remision->vehiculo_publico = $request->get('vehiculo_publico');
+            // Setear Privado en null
+            $guia_remision->vehiculo_id = null;
+            $guia_remision->conductor_id = null;
+        }else{
+            $guia_remision->vehiculo_id = $request->get('vehiculo');
+            $guia_remision->conductor_id = $request->get('conductor');
+            // Setear Publico en null
+            $guia_remision->vehiculo_publico = null;
+        }
+        $guia_remision->motivo_traslado = $request->get('motivo_traslado');
+        if($request->get('button_submit') == 0){
+            $guia_remision->estado = 0;
+        }else{
+            $guia_remision->estado = 1;
+        }
+        $guia_remision->observacion = $request->get('observacion');
+        $guia_remision->save();
+        // Registros
+
+        $cantidad = $request->input('cantidad');
+        $g_registros = g_remision_registro::where('guia_remision_id', $id)->get();
+
+        for ($i = 0; $i < $count_articulo; $i++) {
+            $articulos[$i] = $request->input('articulo')[$i];
+            $producto_id[$i] = strstr($articulos[$i], ' ', true);
+        }
+
+        if($guia_remision->registros->count() == $cantidad){
+            // Si es la misma cantidad se reemplaza
+            foreach ($g_registros as $key => $reg) {
+                $g_registros->producto_id = $producto_id[$key];
+                $g_registros->cantidad = $request->get('cantidad')[$key];
+                $g_registros->numero_serie = $request->get('series')[$key];
+                $g_registros->descripcion = $request->get('descripcion')[$key];
+                $g_registros->peso = $request->get('peso');
+                $g_registros->save();
+                if($request->get('button_submit') == 1){
+                    $nueva = Kardex_entrada_registro::where('producto_id', $producto_id[$i])->where('almacen_id', $guia_remision->almacen_id)->where('estado', 1)->get();
+
+                    $comparacion = $nueva;
+                    //buble para la cantidad
+                    $cantidad = 0;
+                    foreach ($comparacion as $comparaciones) {
+                        $cantidad = $comparaciones->cantidad + $cantidad;
+                    }
+                    if (isset($comparacion)) {
+                        $var_cantidad_entrada = $g_registros->cantidad;
+                        $contador = 0;
+                        foreach ($comparacion as $p) {
+                            if ($p->cantidad > $var_cantidad_entrada) {
+                                $cantidad_mayor = $p->cantidad;
+                                $cantidad_final = $cantidad_mayor - $var_cantidad_entrada;
+                                $p->cantidad = $cantidad_final;
+                                if ($cantidad_final == 0) {
+                                    $p->estado = 0;
+                                    $p->save();
+                                    break;
+                                } else {
+                                    $p->save();
+                                    break;
+                                }
+                            } elseif ($p->cantidad == $var_cantidad_entrada) {
+                                $p->cantidad = 0;
+                                $p->estado = 0;
+                                $p->save();
+                                break;
+                            } else {
+                                $var_cantidad_entrada = $var_cantidad_entrada - $p->cantidad;
+                                $p->cantidad = 0;
+                                $p->estado = 0;
+                                $p->save();
+                            }
+                        }
+                    }
+                    //Resta en la tabla stock almacen
+                    Stock_almacen::egreso($guia_remision->almacen_id, $producto_id[$i], $g_registros->cantidad);
+                    //resta de cantidades de productos para la tabla stock productos
+                    $stock_productos = Stock_producto::where('producto_id', $producto_id[$i])->first();
+                    $stock_productos->stock = $stock_productos->stock - $g_registros->cantidad;
+                    $stock_productos->save();
+               }
+            }
+        }else{
+            // Si no , se elimna y se vuelva a crear
+            $eliminar_registros = g_remision_registro::where('guia_remision_id', $id)->delete();
+            for ($i = 0; $i < $count_articulo; $i++) {
+                $guia_remision_registro = new g_remision_registro;
+                $guia_remision_registro->producto_id = $producto_id[$i];
+                $guia_remision_registro->cantidad = $request->get('cantidad')[$i];
+                $guia_remision_registro->numero_serie = $request->get('series')[$i];
+                $guia_remision_registro->descripcion = $request->get('descripcion')[$i];
+                $guia_remision_registro->guia_remision_id = $guia_remision->id;
+                $guia_remision_registro->estado = 1;
+                $guia_remision_registro->peso = $request->get('peso')[$i];
+                $guia_remision_registro->save();
+
+                // SOLO EL FINALIZAR HACE EL DESCUENTO DE STOCK
+                if($request->get('button_submit') == 1){
+                    $nueva = Kardex_entrada_registro::where('producto_id', $producto_id[$i])->where('almacen_id', $guia_remision->almacen_id)->where('estado', 1)->get();
+
+                    $comparacion = $nueva;
+                    //buble para la cantidad
+                    $cantidad = 0;
+                    foreach ($comparacion as $comparaciones) {
+                        $cantidad = $comparaciones->cantidad + $cantidad;
+                    }
+                    if (isset($comparacion)) {
+                        $var_cantidad_entrada = $guia_remision_registro->cantidad;
+                        $contador = 0;
+                        foreach ($comparacion as $p) {
+                            if ($p->cantidad > $var_cantidad_entrada) {
+                                $cantidad_mayor = $p->cantidad;
+                                $cantidad_final = $cantidad_mayor - $var_cantidad_entrada;
+                                $p->cantidad = $cantidad_final;
+                                if ($cantidad_final == 0) {
+                                    $p->estado = 0;
+                                    $p->save();
+                                    break;
+                                } else {
+                                    $p->save();
+                                    break;
+                                }
+                            } elseif ($p->cantidad == $var_cantidad_entrada) {
+                                $p->cantidad = 0;
+                                $p->estado = 0;
+                                $p->save();
+                                break;
+                            } else {
+                                $var_cantidad_entrada = $var_cantidad_entrada - $p->cantidad;
+                                $p->cantidad = 0;
+                                $p->estado = 0;
+                                $p->save();
+                            }
+                        }
+                    }
+                    //Resta en la tabla stock almacen
+                    Stock_almacen::egreso($guia_remision->almacen_id, $producto_id[$i], $guia_remision_registro->cantidad);
+                    //resta de cantidades de productos para la tabla stock productos
+                    $stock_productos = Stock_producto::where('producto_id', $producto_id[$i])->first();
+                    $stock_productos->stock = $stock_productos->stock - $guia_remision_registro->cantidad;
+                    $stock_productos->save();
+               }
+            }
+        }
+        return redirect()->route('guia_remision.show', $guia_remision->id)->with('success', 'La Guia de Remisión se actualizó correctamente');
     }
 
     /**

@@ -168,11 +168,11 @@ class FacturacionElectronicaController extends Controller
         $empresa=Empresa::first();
         $fecha_hoy = Carbon::now();
 
-        $guia_remisiones=Guia_remision::where('g_electronica',0)->where('estado_anulado',0)->get();
+        $guia_remisiones=Guia_remision::where('estado', 1)->where('g_electronica',0)->where('estado_anulado',0)->get();
         foreach ($guia_remisiones as $remision) {
             $remision->diff_day =  intval(date_diff($remision->created_at, $fecha_hoy)->format('%R%a'));
         }
-        $guia_remision_ticket = Guia_remision::where('ticket_guia_remision_sunat','!=', null)->first();
+        $guia_remision_ticket = Guia_remision::where('estado', 1)->where('ticket_guia_remision_sunat','!=', null)->first();
         if(isset($guia_remision_ticket)){
             $msg_ticket = '1';
         }else{

@@ -268,7 +268,7 @@
                         const e0 = estados[estadoSunat];
                         
                         end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">
-                                    <i class="${e0.icono}"></i>
+                                    <img src="{{asset('sunat_blanco.png')}}" style="width:16px; height:16px;" />
                                 </button> `;
                         return end;
 

@@ -29,7 +29,7 @@
                                 <div class="input-group">
                                     <select class="select2_demo_client" name="cliente" id="cliente" required=""
                                         onchange="change_cli()">
-                                        <option value="{{ $guia_remision->id }}" selected>
+                                        <option value="{{ $guia_remision->cliente->id }}" selected>
                                             {{ $guia_remision->cliente->nombre }}</option>
                                     </select>
                                     <div class="input-group-append">
@@ -54,7 +54,7 @@
                                     <label class="col-form-label col-md-4"><strong>F. Emis.:</strong></label>
                                     <div class="col-md-8">
                                         <input type="text" style="font-size: 12px" name="fecha_emision"
-                                            class="form-control" value="{{ date('Y/m/d') }}" readonly="readonly">
+                                            class="form-control" value="{{ $guia_remision->fecha_emision }}" readonly="readonly">
                                     </div>
                                 </div>
                             </div>
@@ -62,8 +62,8 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-4">F.Entrega:</label>
                                     <div class="col-md-8">
-                                        {{-- <input type="date" name="fecha_entrega" class="form-control"
-                                            required="required" min="{{ $fecha_1 }}"> --}}
+                                        <input type="date" name="fecha_entrega" class="form-control"
+                                            required="required" value="{{ $guia_remision->fecha_entrega }}">
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
                             <div class="col-md-10">
                                 <select name="motivo_traslado" class="form-control">
                                     @foreach ($motivo_traslado as $motivo_traslad)
-                                        <option value="{{ $motivo_traslad->id }}"
+                                        <option id="{{ $motivo_traslad->nombre }}"
                                             @if ($guia_remision->motivo_traslado == $motivo_traslad->nombre) selected @endif>
                                             {{ $motivo_traslad->nombre }}
                                         </option>
@@ -222,7 +222,7 @@
                                                     @if ($index == 0) id="articulo" @else id="articulo{{ $index }}" @endif
                                                     style="width: 100%;" onchange="ajax({{ $index }});"
                                                     required>
-                                                    <option value="{{ $registros_g->producto->id }}">{{ $registros_g->producto->id . ' | ' . $registros_g->producto->codigo_producto . ' | ' . $registros_g->producto->codigo_original . ' | ' . $registros_g->producto->nombre }}</option>
+                                                    <option value="{{ $registros_g->producto->id . ' | ' . $registros_g->producto->codigo_producto . ' | ' . $registros_g->producto->codigo_original . ' | ' . $registros_g->producto->nombre }}">{{ $registros_g->producto->id . ' | ' . $registros_g->producto->codigo_producto . ' | ' . $registros_g->producto->codigo_original . ' | ' . $registros_g->producto->nombre }}</option>
                                                 </select>
                                                 <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id=""
                                                     rows="1" style="margin-top: 5px">{{ $registros_g->descripcion }}</textarea>
