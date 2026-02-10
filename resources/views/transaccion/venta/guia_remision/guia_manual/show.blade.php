@@ -25,27 +25,30 @@
                 <div class="row tooltip-demo">
                     <div class="col-sm-6"></div>
                     <div class="col-sm-6" align="right">
-                        <a href="{{ route('remision_m.pdf', $guia_remision_m->id) }}" class="btn btn-success" data-toggle="tooltip"
-                            data-placement="bottom" title="" data-original-title="Descargar PDF"><i
-                                class="fa fa-file-pdf-o fa-lg"></i>
+                        <a href="{{ route('remision_m.pdf', $guia_remision_m->id) }}" class="btn btn-success"
+                            data-toggle="tooltip" data-placement="bottom" title=""
+                            data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i>
                         </a>
                         @if (Auth::user()->email_creado == 1)
                             <form action="{{ route('email.guia_remision_m', $guia_remision_m->id) }}" method="post"
                                 style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
                                 @csrf
-                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
-                                    title="" formtarget="_blank" data-original-title="Enviar por correo">
+                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
+                                    data-placement="bottom" title="" formtarget="_blank"
+                                    data-original-title="Enviar por correo">
                                     <i class="fa fa-envelope fa-lg"></i>
                                 </button>
                             </form>
                         @endif
-                        <a class="btn btn-success" href="{{ route('remision_m.print', $guia_remision_m->id) }}"target="_blank"
+                        <a class="btn btn-success"
+                            href="{{ route('remision_m.print', $guia_remision_m->id) }}"target="_blank"
                             class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
                             data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
                         <div id="auto" onclick="divAuto()">
-                            <a class="btn  btn-success" style= "background: green;border-color: green;" data-toggle="tooltip"
-                                data-placement="bottom" title="" data-original-title="Enviar a"><i
-                                    class="fa fa-whatsapp fa-lg" style="color: white"></i> </a>
+                            <a class="btn  btn-success" style= "background: green;border-color: green;"
+                                data-toggle="tooltip" data-placement="bottom" title=""
+                                data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                            </a>
                         </div>
                         <div id="div-mostrar" style="height: 0px; overflow: hidden;">
                             <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
@@ -57,201 +60,213 @@
                                     value="{{ route('remision_m.pdf', $guia_remision_m->id) }}?archivo=">
                                 <input type="text" name="name_sin_cambio" hidden=""
                                     value="{{ $guia_remision_m->cod_guia }}" />
-                                <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
-                                    formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
-                                    data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
+                                <button type="submit" class="btn  btn-success"
+                                    style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip"
+                                    data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i
+                                        class="fa fa-send fa-lg"></i> </button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12" style="margin-top: -26px">
-                <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <div class="row">
-                        <div class="col-sm-4 text-left" align="left">
-                            <address class="col-sm-4" align="left">
-                                <img src="{{ asset('img/logos/') }}/{{ $empresa->foto }}" alt="" width="300px">
-                            </address>
-                        </div>
-                        <div class="col-sm-4">
-                        </div>
-                        <div class="col-sm-4 ">
-                            <div class="form-control" align="center" style="height: auto;">
-                                <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                <h2 style="font-size: 19px">GUÍA REMISIÓN ELECTRÓNICA</h2>
-                                <h5>{{ $guia_remision_m->cod_guia }} </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row" align="center" style="padding-bottom: 5px">
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Domicilio De Partida</h3>
-                                <div align="left" style="font-size: 13px">
-                                    <p>{{ $guia_remision_m->almacen->direccion }} -
-                                        {{ $guia_remision_m->almacen->cod_postal }}</p>
-                                    {{-- <p>{{$guia_remision_m->almacen->direccion}}</p> --}}
+            <div class="mostrar" id="show_guias">
+                <div class="row">
+                    <div class="col-lg-12" style="margin-top: -2px">
+                        <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
+                            <div class="row">
+                                <div class="col-sm-4 text-left" align="left">
+                                    <address class="col-sm-4" align="left">
+                                        <img src="{{ asset('img/logos/') }}/{{ $empresa->foto }}" alt=""
+                                            width="300px">
+                                    </address>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Domicilio De Llegada</h3>
-                                <div align="left" style="font-size: 13px">
-                                    @if (isset($guia_remision_m->sucursal_cliente))
-                                        <p>{{ $guia_remision_m->sucursal_cliente }} -
-                                            {{ $guia_remision_m->cod_postal_cliente }}</p>
-                                    @else
-                                        <p>{{ $guia_remision_m->cliente->direccion }} -
-                                            {{ $guia_remision_m->cliente->cod_postal }}</p>
-                                    @endif
+                                <div class="col-sm-4">
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    @if ($guia_remision_m->g_electronica == 2 || $guia_remision_m->estado_anulado == 1)
-                        <div id="watermark">
-                            <p>Anulado</p>
-                        </div>
-                    @endif
-                    <div class="row" align="center">
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Destinario</h3>
-                                <div align="left" style="font-size: 13px">
-                                    <p><b>Señor(es) :</b> {{ $guia_remision_m->cliente->nombre }} <br>
-                                        <b>R.U.C / DNI : </b>
-                                        {{ $guia_remision_m->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;<b>Fecha
-                                            Emisión :</b> {{ $guia_remision_m->fecha_emision }} <br><b>Fecha Traslado :</b>
-                                        {{ $guia_remision_m->fecha_entrega }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Unidad de Transporte/Conductor</h3>
-                                <div align="left" style="font-size: 13px">
-                                    @if (isset($guia_remision_m->vehiculo_id))
-                                        <p>
-                                            <b>Placa del Vehículo : </b>{{ $guia_remision_m->vehiculo->placa }}<br>
-                                            <b>Marca del Vehículo : </b>{{ $guia_remision_m->vehiculo->marca }}<br>
-                                            <b>Conductor : </b>{{ $guia_remision_m->personal->nombres }}
-                                        </p>
-                                    @elseif(isset($guia_remision_m->vehiculo_publico))
-                                        <p>
-                                            <b>Empresa:</b> {{ $guia_remision_m->vehiculo_publicos->nombre }}<br>
-                                            <b>Ruc: </b> {{ $guia_remision_m->vehiculo_publicos->ruc }}<br>
-                                            <b>Nota:</b>Esta Empresa es Pública
-
-                                        </p>
-                                    @else
-                                        <p>
-                                            <b>Placa del Vehículo : </b>No Hay Vehículo<br>
-                                            <b>Marca del Vehículo : </b>No Hay Vehículo<br>
-                                            @if (isset($guia_remision_m->conductor_id))
-                                                <b>Conductor : </b>{{ $guia_remision_m->personal->nombres }}
-                                            @else
-                                                <b>Conductor : </b> No Hay Conductor
-                                            @endif
-                                        </p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table ">
-                            <thead>
-                                <tr>
-                                    <th>ITEM</th>
-                                    <th>Código Producto </th>
-                                    <th>Marca / Producto / Descripción</th>
-                                    <th>Unid.Medida</th>
-                                    <th>Cantidad</th>
-                                    <th>Peso U.</th>
-                                    <th>Peso Total</th>
-                            </thead>
-                            <tbody>
-                                <span hidden>{{ $i = 1 }}</span>
-                                @foreach ($guia_remision_m_reg as $guia_registros)
-                                    <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <td>{{ $guia_registros->producto->codigo_producto }}</td>
-                                        <td>{{ $guia_registros->producto->marcas_i_producto->nombre }} /
-                                            {{ $guia_registros->producto->nombre }} / {{ $guia_registros->descripcion }}
-                                            <br><strong>N/S: </strong>{{ $guia_registros->numero_serie }}
-                                        </td>
-                                        <td>{{ $guia_registros->producto->unidad_i_producto->medida }}</td>
-                                        <td>{{ $guia_registros->cantidad }}</td>
-                                        <td>{{ $guia_registros->peso }}</td>
-                                        <td>{{ $tota[] = $guia_registros->cantidad * $guia_registros->peso }} KGM</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <td colspan="6" align="right">Peso Total:</td>
-                                    <td>{{ array_sum($tota) }} KGM </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <footer style="padding-top: 120px">
-                        <div class="row" align="center" style="padding-bottom: 5px">
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <h3>Observación:</h3>
-                                    <div align="left" style="font-size: 13px">
-                                        <p>{{ $guia_remision_m->observacion }}</p>
+                                <div class="col-sm-4 ">
+                                    <div class="form-control" align="center" style="height: auto;">
+                                        <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
+                                        <h2 style="font-size: 19px">GUÍA REMISIÓN ELECTRÓNICA</h2>
+                                        <h5>{{ $guia_remision_m->cod_guia }} </h5>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <h3>Motivo de Traslado</h3>
-                                    <div align="left" style="font-size: 13px">
-                                        <p>{{ $guia_remision_m->motivo_traslado }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @if ($guia_remision_m->estado_anulado == 1)
+                            <br>
                             <div class="row" align="center" style="padding-bottom: 5px">
-                                <div class="col-sm-12" align="center">
+                                <div class="col-sm-6" align="center">
                                     <div class="form-control">
-                                        <h3>Motivo de la Anulacion:</h3>
+                                        <h3>Domicilio De Partida</h3>
                                         <div align="left" style="font-size: 13px">
-                                            <p>{{ $guia_remision_m->motivo_anulacion ?? 'Sin motivo especificado' }}
-                                            </p>
+                                            <p>{{ $guia_remision_m->almacen->direccion }} -
+                                                {{ $guia_remision_m->almacen->cod_postal }}</p>
+                                            {{-- <p>{{$guia_remision_m->almacen->direccion}}</p> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" align="center">
+                                    <div class="form-control">
+                                        <h3>Domicilio De Llegada</h3>
+                                        <div align="left" style="font-size: 13px">
+                                            @if (isset($guia_remision_m->sucursal_cliente))
+                                                <p>{{ $guia_remision_m->sucursal_cliente }} -
+                                                    {{ $guia_remision_m->cod_postal_cliente }}</p>
+                                            @else
+                                                <p>{{ $guia_remision_m->cliente->direccion }} -
+                                                    {{ $guia_remision_m->cliente->cod_postal }}</p>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                    </footer>
-                    <br>
-                    {{-- @include('layout_bancos') --}}
-                    <br>
-                    @include('layout_firma_pie_hoja')
+                            <br>
+                            @if ($guia_remision_m->g_electronica == 2 || $guia_remision_m->estado_anulado == 1)
+                                <div id="watermark">
+                                    <p>Anulado</p>
+                                </div>
+                            @endif
+                            <div class="row" align="center">
+                                <div class="col-sm-6" align="center">
+                                    <div class="form-control">
+                                        <h3>Destinario</h3>
+                                        <div align="left" style="font-size: 13px">
+                                            <p><b>Señor(es) :</b> {{ $guia_remision_m->cliente->nombre }} <br>
+                                                <b>R.U.C / DNI : </b>
+                                                {{ $guia_remision_m->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;<b>Fecha
+                                                    Emisión :</b> {{ $guia_remision_m->fecha_emision }} <br><b>Fecha
+                                                    Traslado
+                                                    :</b>
+                                                {{ $guia_remision_m->fecha_entrega }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" align="center">
+                                    <div class="form-control">
+                                        <h3>Unidad de Transporte/Conductor</h3>
+                                        <div align="left" style="font-size: 13px">
+                                            @if (isset($guia_remision_m->vehiculo_id))
+                                                <p>
+                                                    <b>Placa del Vehículo : </b>{{ $guia_remision_m->vehiculo->placa }}<br>
+                                                    <b>Marca del Vehículo : </b>{{ $guia_remision_m->vehiculo->marca }}<br>
+                                                    <b>Conductor : </b>{{ $guia_remision_m->personal->nombres }}
+                                                </p>
+                                            @elseif(isset($guia_remision_m->vehiculo_publico))
+                                                <p>
+                                                    <b>Empresa:</b> {{ $guia_remision_m->vehiculo_publicos->nombre }}<br>
+                                                    <b>Ruc: </b> {{ $guia_remision_m->vehiculo_publicos->ruc }}<br>
+                                                    <b>Nota:</b>Esta Empresa es Pública
+                                                </p>
+                                            @else
+                                                <p>
+                                                    <b>Placa del Vehículo : </b>No Hay Vehículo<br>
+                                                    <b>Marca del Vehículo : </b>No Hay Vehículo<br>
+                                                    @if (isset($guia_remision_m->conductor_id))
+                                                        <b>Conductor : </b>{{ $guia_remision_m->personal->nombres }}
+                                                    @else
+                                                        <b>Conductor : </b> No Hay Conductor
+                                                    @endif
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="table-responsive">
+                                <table class="table ">
+                                    <thead>
+                                        <tr>
+                                            <th>ITEM</th>
+                                            <th>Código Producto </th>
+                                            <th>Marca / Producto / Descripción</th>
+                                            <th>Unid.Medida</th>
+                                            <th>Cantidad</th>
+                                            <th>Peso U.</th>
+                                            <th>Peso Total</th>
+                                    </thead>
+                                    <tbody>
+                                        <span hidden>{{ $i = 1 }}</span>
+                                        @foreach ($guia_remision_m_reg as $guia_registros)
+                                            <tr>
+                                                <td>{{ $i++ }}</td>
+                                                <td>{{ $guia_registros->producto->codigo_producto }}</td>
+                                                <td>{{ $guia_registros->producto->marcas_i_producto->nombre }} /
+                                                    {{ $guia_registros->producto->nombre }} /
+                                                    {{ $guia_registros->descripcion }}
+                                                    <br><strong>N/S: </strong>{{ $guia_registros->numero_serie }}
+                                                </td>
+                                                <td>{{ $guia_registros->producto->unidad_i_producto->medida }}</td>
+                                                <td>{{ $guia_registros->cantidad }}</td>
+                                                <td>{{ $guia_registros->peso }}</td>
+                                                <td>{{ $tota[] = $guia_registros->cantidad * $guia_registros->peso }} KGM
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="6" align="right">Peso Total:</td>
+                                            <td>{{ array_sum($tota) }} KGM </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <footer style="padding-top: 120px">
+                                <div class="row" align="center" style="padding-bottom: 5px">
+                                    <div class="col-sm-6" align="center">
+                                        <div class="form-control">
+                                            <h3>Observación:</h3>
+                                            <div align="left" style="font-size: 13px">
+                                                <p>{{ $guia_remision_m->observacion }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6" align="center">
+                                        <div class="form-control">
+                                            <h3>Motivo de Traslado</h3>
+                                            <div align="left" style="font-size: 13px">
+                                                <p>{{ $guia_remision_m->motivo_traslado }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if ($guia_remision_m->estado_anulado == 1)
+                                    <div class="row" align="center" style="padding-bottom: 5px">
+                                        <div class="col-sm-12" align="center">
+                                            <div class="form-control">
+                                                <h3>Motivo de la Anulacion:</h3>
+                                                <div align="left" style="font-size: 13px">
+                                                    <p>{{ $guia_remision_m->motivo_anulacion ?? 'Sin motivo especificado' }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </footer>
+                            <br>
+                            {{-- @include('layout_bancos') --}}
+                            <br>
+                            @include('layout_firma_pie_hoja')
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div class="no_mostrar" id="edicion_guias">
+                @if ($guia_remision_m->estado == 0)
+                    @include('transaccion.venta.guia_remision.guia_manual.edit')
+                @endif
             </div>
         </div>
     </div>
     <style type="text/css">
         .form-control {
-            border-radius: 10px;
+            /* border-radius: 10px; */
             height: auto;
         }
 
         .form-control {
-            margin-top: 5px;
-            border-radius: 5px
+            /* margin-top: 5px;
+                border-radius: 5px */
         }
 
         .ibox-tools a {
@@ -329,6 +344,75 @@
             right: 35%;
             z-index: 99;
         }
+
+        .mostrar {
+            display: ;
+        }
+
+        .no_mostrar {
+            display: none;
+        }
+
+        /* EDIT */
+        .input-group>.select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
+        }
+
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+
+        label.col-form-label::marker {
+            list-style: none;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            font-size: 12px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none;
+        }
+
+        span.select2.select2-container.select2-container--default {
+            width: 100% !important;
+            background-color: #FFFFFF;
+            background-image: none;
+            border-radius: 1px;
+            display: block;
+            padding: 3px 12px;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-hidden-accessible {
+            width: auto !important;
+
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        @media only screen and (max-width: 1497px) {
+            .td_selected>span.select2.select2-container.select2-container--default {
+                min-width: 376px !important;
+            }
+        }
     </style>
 
     <!-- Mainly scripts -->
@@ -340,6 +424,12 @@
 
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+
+
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -355,5 +445,56 @@
                 clic = 1;
             }
         }
+
+        function click_editar() {
+            // MOSTRAR LOS INPUTS
+            $('#edicion_guias').removeClass('no_mostrar');
+            $('#edicion_guias').addClass('mostrar');
+            // OCULTAR TABLA
+            $('#show_guias').addClass('no_mostrar');
+            // BOTONES
+            $('.btn-no-editar').removeClass('no_mostrar');
+            $('.btn-editar').addClass('no_mostrar');
+        }
+
+        function click_cancelar_editar() {
+            // OCULTAR INPUTS
+            $('#edicion_guias').removeClass('mostrar');
+            $('#edicion_guias').addClass('no_mostrar');
+            // MOSTRAR TABLA
+            $('#show_guias').removeClass('no_mostrar');
+            $('#show_guias').addClass('mostrar');
+
+            $('.btn-editar').removeClass('no_mostrar');
+            $('.btn-no-editar').addClass('no_mostrar');
+        }
     </script>
+    <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+        });
+    </script>
+    @include('transaccion.venta.guia_remision.guia_manual._shared.edit_script')
 @endsection

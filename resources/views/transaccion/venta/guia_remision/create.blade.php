@@ -26,8 +26,8 @@
                     <h5>Crear Guía Remisión</h5>
                 </div>
                 <div class="ibox-content">
-                    <form action="{{ route('guia_remision.store') }}" id="pro" enctype="multipart/form-data"
-                        method="post" onsubmit="return valida(this)">
+                    <form action="{{ route('guia_remision.store') }}" enctype="multipart/form-data"
+                        method="post" onsubmit="return valida(this)" id="form_store">
                         @method('POST')
                         @csrf
                         <div class="row word-style">
@@ -234,7 +234,8 @@
                                                         onchange="peso_cantidad(0)" />
                                                 </td>
                                                 <td>
-                                                    <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control prod_text" placeholder="escanear N/S"></textarea>
+                                                    <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control prod_text"
+                                                        placeholder="escanear N/S"></textarea>
                                                 </td>
                                                 <td>
                                                     <input style="min-width: 100px" id='peso0' name='peso[]'
@@ -250,17 +251,16 @@
 
                                     </table>
                                 </div>
-                                <div class="col-md-12">
-                                    <button type="submit" id="boton" class="btn btn-primary float-right"
-                                        style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
-                                        <strong>Guardar</strong>
-                                    </button>
-                                    {{-- <button class="btnn float-right" id="finalizar_button" type="button"
-                                        style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
-                                        <strong>Guardar y finalizar</strong>
-                                    </button> --}}
-                                    {{-- <button class="btn btn-primary float-right" type="submit" id="boton"><i
-                                            class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp; --}}
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button data-style="zoom-out" id="guardar" name="boton"
+                                        class="guardar button-lada-guardar btn btn-primary btn-outline"
+                                        type="button">Guardar</button>
+                                    <button class="btn btn-primary float-right button-lada-finalizar"
+                                        style="margin-left: 10px;" type="button" id="finalizar">Guardar y
+                                        Finalizar</button>
+
+                                    <button type="submit" id="button_submit" hidden name="button_submit"
+                                        value="0"></button>
                                 </div>
                             </div>
                         </div>
@@ -361,9 +361,9 @@
             height: 150px;
         }
 
-        .form-control {
+        /* .form-control {
             border-radius: 10px;
-        }
+        } */
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             font-size: 12px;
@@ -415,7 +415,9 @@
 
     <!-- Steps -->
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
-
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    
     <!-- Jquery Validate -->
     <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
@@ -435,7 +437,7 @@
         });
 
         function valida(f) {
-            var boton = document.getElementById("boton");
+            var boton = document.getElementById("guardar");
             var completo = true;
             var incompleto = false;
             if (f.elements[0].value == "") {
@@ -765,7 +767,31 @@
             return string.replace(/-/g, "");
         }
     </script>
+    <script>
+        $('#guardar').on('click', function() {
+            $('#button_submit').val('0');
+            var l = Ladda.create(document.querySelector('.button-lada-guardar'));
+            var form = document.getElementById('form_store');
+            if (!form.checkValidity()) {
+                form.reportValidity(); // muestra mensajes nativos de HTML5
+                return;
+            }
+            document.getElementById('button_submit').click();
+            l.start();
+        });
+        $('#finalizar').on('click', function() {
+            $('#button_submit').val('1');
+            var l = Ladda.create(document.querySelector('.button-lada-finalizar'));
+            var form = document.getElementById('form_store');
+            if (!form.checkValidity()) {
+                form.reportValidity(); // muestra mensajes nativos de HTML5
+                return;
+            }
+            document.getElementById('button_submit').click();
+            l.start();
 
+        });
+    </script>
     @include('transaccion.venta.clientes.modal_create')
 
 @endsection

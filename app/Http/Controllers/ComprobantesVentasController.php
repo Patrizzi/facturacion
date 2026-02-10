@@ -1075,6 +1075,7 @@ class ComprobantesVentasController extends Controller
                 $guia_r->estado_proceso,              // 8 - Estado
                 $guia_r->cliente->celular ?? '',
                 $guia_r->cliente->email ?? '',
+                $guia_r->estado,
             ];
         }
 
@@ -1248,6 +1249,7 @@ class ComprobantesVentasController extends Controller
                 $row->estado_proceso,                  // 8 - Estado SUNAT (0/1/2)
                 $row->cliente->celular ?? '',
                 $row->cliente->email ?? '',
+                $row->estado,
             ];
         }
 
