@@ -1249,6 +1249,7 @@ class ComprobantesVentasController extends Controller
                 $row->estado_proceso,                  // 8 - Estado SUNAT (0/1/2)
                 $row->cliente->celular ?? '',
                 $row->cliente->email ?? '',
+                $row->estado,
             ];
         }
 

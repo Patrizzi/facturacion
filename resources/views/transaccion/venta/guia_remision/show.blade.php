@@ -343,7 +343,7 @@
     <style type="text/css">
         /* SHOW */
         .form-control {
-            border-radius: 10px;
+            /* border-radius: 10px; */
             height: auto;
         }
 
@@ -433,7 +433,7 @@
     <style>
         .form-control {
             margin-top: 5px;
-            border-radius: 5px
+            /* border-radius: 5px */
         }
 
         p#texto {

@@ -618,8 +618,9 @@ class GuiaRemisionController extends Controller
                 $g_registros->cantidad = $request->get('cantidad')[$key];
                 $g_registros->numero_serie = $request->get('series')[$key];
                 $g_registros->descripcion = $request->get('descripcion')[$key];
-                $g_registros->peso = $request->get('peso');
+                $g_registros->peso = $request->get('peso')[$key];
                 $g_registros->save();
+
                 if($request->get('button_submit') == 1){
                     $nueva = Kardex_entrada_registro::where('producto_id', $producto_id[$i])->where('almacen_id', $guia_remision->almacen_id)->where('estado', 1)->get();
 

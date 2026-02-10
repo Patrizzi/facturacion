@@ -12,7 +12,7 @@
                 <h5>Crear Guía de Remisión Manual</h5>
             </div>
             <div class="ibox-content">
-                <form action="{{ route('guia_remision_manual.store') }}" id="pro" enctype="multipart/form-data" method="POST">
+                <form action="{{ route('guia_remision_manual.store') }}" id="form_store" enctype="multipart/form-data" method="POST">
                     @method('POST')
                     @csrf
                     <div class="row">
@@ -243,13 +243,24 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div class="d-flex justify-content-end mt-4">
+                                    <button data-style="zoom-out" id="guardar" name="boton"
+                                        class="guardar button-lada-guardar btn btn-primary btn-outline"
+                                        type="button">Guardar</button>
+                                    <button class="btn btn-primary float-right button-lada-finalizar"
+                                        style="margin-left: 10px;" type="button" id="finalizar">Guardar y
+                                        Finalizar</button>
+
+                                    <button type="submit" id="button_submit" hidden name="button_submit"
+                                        value="0"></button>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <button type="submit" id="boton" class="btn btn-primary float-right"
+                            {{-- <button type="submit" id="boton" class="btn btn-primary float-right"
                                 style="background: #0400c2; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px;">
                                 <strong>Guardar</strong>
-                            </button>
+                            </button> --}}
                             {{-- <button class="btnn float-right" id="finalizar_button" type="button"
                                 style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
                                 <strong>Guardar y finalizar</strong>
@@ -657,7 +668,7 @@
                             document.getElementById('input_post_array').value = msg.cod_postal;
                             document.getElementById('input_suc_array').value = msg.sucursal;
 
-                            // var option2 = document.createElement('option');
+                            // select_sucursalzr option2 = document.createElement('option');
                             // option2.value = msg.cod_postal[i];
                             // p_list.appendChild(option2);
                         }
@@ -696,6 +707,31 @@
         function delete_guion(string) { //solo letras y numeros
             return string.replace(/-/g, "");
         }
+    </script>
+     <script>
+        $('#guardar').on('click', function() {
+            $('#button_submit').val('0');
+            var l = Ladda.create(document.querySelector('.button-lada-guardar'));
+            var form = document.getElementById('form_store');
+            if (!form.checkValidity()) {
+                form.reportValidity(); // muestra mensajes nativos de HTML5
+                return;
+            }
+            document.getElementById('button_submit').click();
+            l.start();
+        });
+        $('#finalizar').on('click', function() {
+            $('#button_submit').val('1');
+            var l = Ladda.create(document.querySelector('.button-lada-finalizar'));
+            var form = document.getElementById('form_store');
+            if (!form.checkValidity()) {
+                form.reportValidity(); // muestra mensajes nativos de HTML5
+                return;
+            }
+            document.getElementById('button_submit').click();
+            l.start();
+
+        });
     </script>
     @include('transaccion.venta.clientes.modal_create')
 @endsection

@@ -252,6 +252,11 @@ class GuiaRemisionManualController extends Controller
         $guia_remision_m->estado_registrado = 0;
         $guia_remision_m->g_electronica = 0;
         $guia_remision_m->user_id = auth()->user()->id;
+         if($request->get('button_submit') == 0){
+            $guia_remision_m->estado = 0;
+        }else{
+            $guia_remision_m->estado = 1;
+        }
         $guia_remision_m->save();
         /* cambio en almacen para NN*/
         $almacen=Codigo_guia_almacen::find($almacen_serie_remision->id);
@@ -293,8 +298,13 @@ class GuiaRemisionManualController extends Controller
             'producto.unidad_i_producto',
         ])->where('guia_remision_m_id', $guia_remision_m->id)->get();
 
+        $almacen = Almacen::get();
+        $motivo_traslado = MotivoTraslado::all();
+        $vehiculo = Vehiculo::where('estado_activo',0)->get();
+        $transporte_publico = TransportePublico::where('estado',0)->get();
+        $personal = Personal::where('estado_trabajador_laboral','Activo')->where('id', '!=', 1)->where('licencia','!=', null)->get();
         return view('transaccion.venta.guia_remision.guia_manual.show',
-            compact('guia_remision_m','guia_remision_m_reg','empresa'));
+            compact('guia_remision_m','guia_remision_m_reg','empresa','almacen','motivo_traslado','vehiculo','transporte_publico','personal'));
     }
 
     public function pdf($id)
@@ -356,7 +366,74 @@ class GuiaRemisionManualController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // return $request;
+        $guia_remi_m = GuiaRemisionManual::find($id);
+        $almacen = $request->get('almacen');
+        $cliente = $request->get('cliente');
+        $motivo = $request->get('motivo_traslado');
+        $fecha_emision = $request->get('fecha_emision');
+        $fecha_entrega = $request->get('fecha_entrega');
+        $tipo_transporte = $request->get('tipo_transporte');
+        $observacion = $request->get('observacion');
+        $articulos = $request->get('articulo');
+
+        $guia_remi_m->almacen_id = $almacen;
+        $guia_remi_m->cliente_id = $cliente;
+        $guia_remi_m->sucursal_cliente = $request->get('sucursal_cli');
+        $guia_remi_m->cod_postal_cliente = $request->get('postal_input');
+        $guia_remi_m->fecha_entrega = $fecha_entrega;
+        $guia_remi_m->tipo_transporte = $tipo_transporte;
+        if ($tipo_transporte==1) { 
+            // Transporte Público
+            $guia_remi_m->vehiculo_publico=$request->get('vehiculo_publico');
+            // Transpor Privado en null
+            $guia_remi_m->vehiculo_id = null;
+            $guia_remi_m->conductor_id = null;
+        }elseif ($tipo_transporte==2) {
+            // Transporte Privado
+            $guia_remi_m->vehiculo_id=$request->get('vehiculo');
+            $guia_remi_m->conductor_id=$request->get('conductor');
+            // Transporte Público en null
+            $guia_remi_m->vehiculo_publico = null;
+        }
+        if($request->get('button_submit') == 0){
+            $guia_remi_m->estado = 0;
+        }else{
+            $guia_remi_m->estado = 1;
+        }
+        $guia_remi_m->save();
+
+        // Registros
+        foreach($articulos as $art ){
+            $sep_esc = explode(' ',$art);
+            $prod_id[] = $sep_esc[0];
+        }
+        $count_art = count($prod_id);
+        $g_registros = GuiaRemisionMRegistros::where('guia_remision_M_id', $id)->get();
+        if(count($articulos) == $g_registros->count()){
+            foreach ($g_registros as $key => $reg_edit) {
+                $reg_edit->producto_id = $prod_id[$key];
+                $reg_edit->cantidad = $request->get('cantidad')[$key];
+                $reg_edit->numero_serie = $request->get('serie')[$key];
+                $reg_edit->descripcion = $request->get('descripcion')[$key];
+                $reg_edit->peso = $request->get('peso')[$key];
+                $reg_edit->save();
+            }
+        }else{
+            $eliminar_registros = GuiaRemisionMRegistros::where('guia_remision_M_id', $id)->delete();
+            for ($i=0; $i < $count_art ; $i++) {
+                $remision_reg = new GuiaRemisionMRegistros();
+                $remision_reg->guia_remision_m_id = $guia_remi_m->id;
+                $remision_reg->producto_id = $prod_id[$i];
+                $remision_reg->cantidad = $request->get('cantidad')[$i];
+                $remision_reg->descripcion = $request->get('descripcion')[$i];
+                $remision_reg->numero_serie = $request->get('serie')[$i];
+                $remision_reg->peso = $request->get('peso')[$i];
+                $remision_reg->estado = 1;
+                $remision_reg->save();
+            }
+        }
+        return redirect()->route('guia_remision_manual.show', $guia_remi_m->id)->with('success', 'La Guia de Remisión se actualizó correctamente');
     }
 
     /**

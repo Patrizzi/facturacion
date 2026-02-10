@@ -494,6 +494,7 @@ Route::group(
 
         /* REMISION MANUAL */
         Route::resource('/guia_remision_manual', 'GuiaRemisionManualController');
+        Route::post('/guia_remision_manual/update/{id}', 'GuiaRemisionManualController@update')->name('remision_m.update');
         // Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
         Route::post('/guia_remision_manual/peso', 'GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
         Route::post('/guia_remision_manual/almacen_guia', 'GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
