@@ -742,7 +742,7 @@ class FacturacionMController extends Controller
                 }
             }else{
                 // Eliminar cuotas anteriores
-                $eliminar_cuotas = Cuotas_credito::where('facturacion_id', $id)->delete();
+                $eliminar_cuotas = Cuotas_credito::where('facturacion_m_id', $id)->delete();
                 // Crear nuevas cuotas
                 $fecha_pago_forma = $request->input('fecha_pago');
                 $contador_for_1 = count($fecha_pago_forma);
