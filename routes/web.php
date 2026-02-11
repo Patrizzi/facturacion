@@ -1045,11 +1045,6 @@ Route::group(
         Route::post('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
 
 
-        Auth::routes([
-            'register' => false, // Registration
-            'reset' => false, // Password Reset
-            'verify' => false, // Email Verification
-        ]);
 
         Route::post('sunat_cambio', 'TipoCambioController@sunat_cambio');
         Route::resource('/tipo_cambio', 'TipoCambioController')->middleware('auth');
@@ -1512,3 +1507,9 @@ Route::get('nota_venta/share/{codigo}', [NotaVentaController::class, 'descargarP
     ->name('nota_venta_codificada');
 Route::post('/ventas/nota_venta/whatsapp/send-multiple', [NotaVentaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaVenta.multiple');
+
+Auth::routes([
+    'register' => false, // Registration
+    'reset' => false, // Password Reset
+    'verify' => false, // Email Verification
+]);
