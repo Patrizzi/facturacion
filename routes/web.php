@@ -489,7 +489,7 @@ Route::group(
         Route::post('/guia_remision/create', 'GuiaRemisionController@create')->name('guia_remision.create');
         // Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
         Route::post('/guia_remision/peso_stock', 'GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
-        Route::post('/guia_remision/anular','GuiaRemisionController@destroy')->name('guia_remision.anular');
+        Route::post('/guia_remision/anular', 'GuiaRemisionController@destroy')->name('guia_remision.anular');
         Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
 
         /* REMISION MANUAL */
@@ -498,7 +498,7 @@ Route::group(
         // Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
         Route::post('/guia_remision_manual/peso', 'GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
         Route::post('/guia_remision_manual/almacen_guia', 'GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
-        Route::post('/guia_remision_manual/anular','GuiaRemisionManualController@destroy')->name('remision_m.anular');
+        Route::post('/guia_remision_manual/anular', 'GuiaRemisionManualController@destroy')->name('remision_m.anular');
         Route::get('/guia_remision_manual/print/{id}', 'GuiaRemisionManualController@print')->name('remision_m.print');
 
 
@@ -1043,21 +1043,403 @@ Route::group(
         Route::post('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
         Route::post('/comprobantes/boleta_manual/exportar', [BoletaMController::class, 'exportarBoletasM'])->name('boletasM.exportar');
         Route::post('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
+
+
+        Auth::routes([
+            'register' => false, // Registration
+            'reset' => false, // Password Reset
+            'verify' => false, // Email Verification
+        ]);
+
+        Route::post('sunat_cambio', 'TipoCambioController@sunat_cambio');
+        Route::resource('/tipo_cambio', 'TipoCambioController')->middleware('auth');
+
+
+
+
+
+        Route::post('periodo_consulta/print', 'PeriodoConsultaController@print')->name('periodo_consulta_print');
+        Route::get('/home', 'HomeController@index')->name('home');
+
+        Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
+        Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
+
+        Route::get("/boleta3", "BOLETACONTROLLER@index3")->name('boleta3');
+        //Nuevo inventario
+        //Kardex:
+        Route::get("/inventario2", "INVENTARIOINICIALCONTROLLER@index2")->name('inventario2');
+        Route::get('/inventario/distribucion', 'KardexEntradaDistribucionController@index2')->name('inventario.distribucion');
+        Route::get('/inventario/traslado', 'KardexEntradaTrasladoAlmacenController@index2')->name('inventario.traslado');
+        Route::get('/inventario/salida', 'KardexSalidaController@index2')->name('inventario.salida');
+
+        Route::get("/inventario/consultas", 'PeriodoConsultaController@index2')->name('inventario.consultas');
+        Route::get('/inventario/cierre', 'CierrePeriodoController@index2')->name('inventario.cierre');
+        Route::get('/inventario/movimiento', 'Consulta_MovimientoController@index2')->name('inventario.movimiento');
+
+        //Correo:
+        Route::get('/mailbox/nuevo/enviado', 'EmailBandejaEnviosController@index2')->name('correo.enviado');
+        Route::get('/mailbox/nuevo/configuracion', 'EmailConfiguracionesController@index2')->name('correo.configuracion');
+        Route::get('/mailbox/nuevo/borrador', 'EmailBorradoresController@index2')->name('correo.borradores');
+        Route::get('/mailbox/nuevo/papelera', 'EmailBandejaEnviosController@index3')->name('correo.papelera');
+        Route::get("/garantias", "GarantiaGuiaIngresoController@index2")->name('garantias');
+        Route::get('/facturacion3', 'facturacioncontroller@index3')->name('facturacion3');
+        Route::resource('/tipo_cambio', 'TipoCambioController');
+        Route::get('busqueda_tipo_cambio', 'TipoCambioController@busquedaTipoCambio')->name('tipo_cambio.busqueda_tipo_cambio');
+
+        // ServicioController:
+        Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+        Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+        Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+        Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+        Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+        Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+        Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+        Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+
+        Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
+        Route::get('/guia', function () {
+            return view('servicio.guia');
+        })->name('guia');
+
+
+        Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
+        Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+
+
+
+        Route::get('/clientes', [ClienteController::class, 'index']);
+        Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
+        // Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
+
+
+        Route::get('/clientes', [ServicioController::class, 'index']);
+
+
+
+
+
+        // GUIAS SERVICIO
+        // Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
+
+
+        // Crear cotizacion
+        Route::get('/cotizacion_manual_servicio', 'CotizacionManualController@indexServicio')->name('indexServicio.index');
+        Route::get('/cotizacion_manual/createCotizacionGuia/{guia_id}', [GuiaServicioController::class, 'crearCotizacion'])->name('cotizacionSGuia.create');
+        Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
+        Route::post('/productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
+
+
+        // Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
+
+        // CAJA CHICA
+        Route::get('/consulta/tesoreria/caja-chica', [CajaChicaController::class, 'index'])->name('caja_chica.index');
+        Route::post('/consulta/tesoreria/caja-chica/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
+        Route::post('/consulta/tesoreria/caja-chica/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');
+        Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::class, 'depositoStore'])->name('deposito.store');
+        Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
+        Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
+
+        // PRODUCTOS
+        Route::post('productos/generate-codigo', 'ProductosController@generateCodigoProducto')->name('productos.generateCodigoProducto');
+        Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
+        Route::put('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');
+        Route::get('/export/all-products', [ProductosController::class, 'exportTodo'])->name('export.excel');
+        Route::get('/export/selected-products', [ProductosController::class, 'exportSelectedProducts'])->name('export.selected.products');
+        Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
+
+        // REPORTES
+        Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+
+
+
+        // NOTAS DE CRÉDITO Y DEBITO
+        Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
+        Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
+
+
+        // EXPORTACION DE GUIA REMISION
+        Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
+        // Route::get(
+        //     '/comprobantes/guias-manual/registers',
+        //     [GuiaRemisionManualController::class, 'registers']
+        // )->name('comprobantes.guiaRemisionM_registers');
+
+
+        // Route::get('/comprobantes/guias-manual/registers', [GuiaRemisionManualController::class, 'registers'])->name('comprobantes.guiaRemisionM_registers');
+        Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
+        Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
+
+        //RUTAS PARA IMPRIMIR EN CONJUNTO
+        Route::get('venta/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
+        Route::get('venta/boleta/boleta_manual/print-multiple', [BoletaMController::class, 'printMultiple'])->name('boletaM.print.multiple');
+
+        Route::get('venta/facturacion/print-multiple', [FacturacionController::class, 'printMultiple'])->name('factura.print.multiple');
+        Route::get('venta/facturacion/facturacion_manual/print-multiple', [FacturacionMController::class, 'printMultiple'])->name('facturaM.print.multiple');
+
+        // Ruta para impresión múltiple de notas de crédito
+        Route::get('/venta/nota_credito/print-multiple', [NotaCreditoController::class, 'printMultiple'])->name('notaCredito.print.multiple');
+        Route::get('venta/nota_debito/print-multiple', [NotaDebitoController::class, 'printMultiple'])->name('notaDebito.print.multiple');
+
+
+
+
+
+        Route::get('/ventas/cotizacion/print-multipler', [CotizacionController::class, 'printMultiple'])->name('cotizacion.print.multiple');
+        Route::get('/ventas/cotizacion_manual/print-multiple', [CotizacionManualController::class, 'printMultiple'])->name('cotizacionM.print.multiple');
+
+        Route::get('/garantias/guia_ingreso/print-multiple', [GarantiaGuiaIngresoController::class, 'printMultiple'])->name('garantiaGuiaI.print.multiple');
+        Route::get('/garantias/guia_egreso/print-multiple', [GarantiaGuiaEgresoController::class, 'printMultiple'])->name('garantiaGuiaE.print.multiple');
+        Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoController::class, 'printMultiple'])->name('informeTecnico.print.multiple');
+
+        // DESCARGAR PDF DE GUIA DE REMISION
+        Route::get('venta/guia_remision/print-multiple', [GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
+        Route::get('venta/guia_remision/guia_manual/print_multiple', [GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
+        Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
+
+
+        // SERVICIO TECNICO ANTIGUO
+        // Route::get('/servicio-tecnico-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
+        // Route::post('/servicio-tecnico/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
+        // // Mostrar la guía con productos
+        // Route::get('/servicio-tecnico/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
+        //     // Guardar los productos de la guía
+        //     Route::post('/servicio-tecnico/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
+        //     Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
+        //     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+        //     Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida'])->name('updateGuiaSali');
+        //     Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
+        //     Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
+        // Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+        // Route::get('/servicio/orden_de_servicioinfocliente', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
+        // Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
+        // Route::get('/orden-servicio/{guia_id}', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
+        // Route::post('/detalle-servicio/update-descripcion', [OrdenServicioController::class, 'updateDescripcion'])->name('detalle.updateDescripcion');
+        // Route::patch('/orden-servicio/update', [OrdenServicioController::class, 'updateGuiaOS'])->name('OrdenServicio.OSupdate');
+        // Route::get('/servicio/pdf/{guia_id}', [GuiaServicioController::class, 'verPDF'])->name('ver.pdf');
+        // Route::get('/servicio/pdf/{guia_id}/download', [GuiaServicioController::class, 'verPDF'])->defaults('accion', 'download')->name('servicio.pdf.download');
+
+        // SERVICIO TECNICO NUEVO
+        Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
+        Route::get('/servicio-tecnico/create', [ServicioGuiaController::class, 'create'])->name('servicio-guias.create');
+        Route::post('/servicio-tecnico/store', [ServicioGuiaController::class, 'store'])->name('servicio-guias.store');
+        Route::patch('/servicio-tecnico/entregar/{servicio_g_id}', [ServicioGuiaController::class, 'entregarServicioGuia'])->name('servicio-guias.entregar');
+        Route::get('/servicio-tecnico/proceso/{servicio_g_id}', [ProcesoServicioGuiaController::class, 'redirectProcesoServicioGuia'])->name('servicio-guias.proceso');
+        Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioGuiaController::class, 'agregarEquipos'])->name('servicio-guias.agregarEquipos');
+        Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
+        Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
+        Route::put('/servicio-tecnico/servicio-egreso/reparar-equipo', [ProcesoServicioGuiaController::class, 'repararEquipo'])->name('servicio-guias.reparar-equipo');
+        Route::get('/servicio-tecnico/orden-servicio', [OrdenServicioServGuiaController::class, 'index'])->name('servicio-guias-os.index');
+        Route::patch('/servicio-tecnico/orden-servicio/crear-orden/{servicio_g_id}', [OrdenServicioServGuiaController::class, 'crearOrdenServicioGuia'])->name('servicio-guias.crear-ordenServ');
+        Route::get('/servicio-tecnico/entregados', [ServicioGuiaEntregadosController::class, 'index'])->name('servicio-guias-entregados.index');
+        Route::post('/servicio-tecnico/store/informe-tecnico', [ProcesoServicioGuiaController::class, 'storeInformeTecnico'])->name('servicio-guias.store-it');
+        Route::get('/servicio-tecnicio/cotizaciones', [CotizacionServicioGuiaController::class, 'index'])->name('servicio-guias.cotizaciones-index');
+
+        Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::class, 'guiaRemisionM_registers'])
+            ->name('guiaRemisionM.registers');
+        Route::match(
+            ['get', 'post'],
+            'comprobantes/guia-remision-manual/print-multiple',
+            [GuiaRemisionManualController::class, 'printMultiple']
+        )->name('guia_remision_manual.print.multiple');
+
+
+        Route::get('/servicio-guia/informe-tecnico/{id}', [ServicioGuiaController::class, 'showInformeTecnico'])
+            ->name('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show');
+
+        /*Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
+    [ProcesoServicioGuiaController::class, 'showman']
+)->name('servicio_tecnico.servicios.servicio-guia.showman');*/
+
+        Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambios', [ServicioGuiaInformeTecnicoController::class, 'showInformeTecnicoConCambios'])->name('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios');
+
+        // Ruta para descargar múltiples comprobantes dentro de un ZIP
+        Route::get('boletas/download-multiple', [BoletaController::class, 'downloadMultiplePDFs'])
+            ->name('boletas.download.multiple');
+
+        Route::get('comprobantes/boleta_manual/download-multiple', [BoletaMController::class, 'downloadMultiplePDFs'])
+            ->name('boletaM.download.multiple');
+
+        Route::get('facturacion-manual/download-multiple', [FacturacionMController::class, 'downloadMultiplePDFs'])
+            ->name('facturaM.download.multiple');
+
+        Route::get('comprobantes/factura/download-multiple', [FacturacionController::class, 'downloadMultiplePDFs'])
+            ->name('facturas.download.multiple');
+
+
+        Route::get('notas_credito/download-multiple', [NotaCreditoController::class, 'downloadMultiplePDFs'])
+            ->name('notaC.download.multiple');
+
+        Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+            ->name('notaD.download.multiple');
+
+        Route::get('comprobantes/guia_remision/download-multiple', [GuiaRemisionController::class, 'downloadMultiplePDFs'])
+            ->name('GuiaRemision.download.multiple');
+
+        Route::get('comprobantes/guia_remision_manual/download-multiple', [GuiaRemisionManualController::class, 'downloadMultiplePDFs'])
+            ->name('guia_remision_manual.download.multiple');
+
+        // Ruta para descargar múltiples ventas dentro de un ZIP
+        Route::get('/ventas/cotizacion/dowload-multiple', [CotizacionController::class, 'downloadMultiplePDFs'])
+            ->name('cotizacion.download.multiple');
+
+        Route::get('/ventas/cotizacion-manual/dowload-multiple', [CotizacionManualController::class, 'downloadMultiplePDFs'])
+            ->name('cotizacion-manual.download.multiple');
+
+        Route::post('/ventas/nota-venta/download-multiple', [NotaVentaController::class, 'downloadMultiplePDFs'])
+            ->name('nota-venta.download.multiple');
+
+        // Ruta para descargar múltiples garantias guias dentro de un ZIP
+        Route::post('/garantia/guia-ingreso/descargar-multiple', [GarantiaGuiaIngresoController::class, 'downloadMultiplePDFs'])
+            ->name('GarantiaI.download.multiple');
+
+        Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoController::class, 'downloadMultiplePDFs'])
+            ->name('GarantiaE.download.multiple');
+
+        Route::post('/garantia/informe-tecnico/descargar-multiple', [GarantiaInformeTecnicoController::class, 'downloadMultiplePDFs'])
+            ->name('GarantiaIT.download.multiple');
+
+        //apartado de renovaciones
+
+        Route::prefix('ventas')->name('ventas.')->group(function () {
+
+            Route::get('/renovacion', [RenovacionController::class, 'index'])
+                ->name('renovacion.index');
+        });
+
+        Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
+            ->name('ventas.renovacion_registers');
+
+        // Rutas para que el codigo QR lleve al pdf de guiaremision
+        Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLink'])
+            ->name('guia_remision.pdfLink');
+
+        Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::class, 'pdfLink'])
+            ->name('guia_remision_manual.pdfLink');
+
+        // Nueva ruta para imprimir, exportar y descargar pdf de renovaciones
+        Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
+            ->name('renovaciones.print.multiple');
+
+        Route::get('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
+            ->name('exportarRenovaciones');
+
+        Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])
+            ->name('renovaciones.download.multiple');
+
+
+
+
+        // Mandar multiples pdf por wsp en garantias
+        Route::get('garantia_guia_ingreso/share/{codigo}', [GarantiaGuiaIngresoController::class, 'descargarPorCodigo'])
+            ->name('garantia_guia_ingreso_codificada');
+        Route::post('/garantias/guia_ingreso/whatsapp/send-multiple', [GarantiaGuiaIngresoController::class, 'whatsappSendMultiple'])
+            ->name('envioWhatsapp.guiaIngreso.multiple');
+
+        Route::get('garantia_guia_egreso/share/{codigo}', [GarantiaGuiaEgresoController::class, 'descargarPorCodigo'])
+            ->name('garantia_guia_egreso_codificada');
+        Route::post('/garantias/guia_egreso/whatsapp/send-multiple', [GarantiaGuiaEgresoController::class, 'whatsappSendMultiple'])
+            ->name('envioWhatsapp.guiaEgreso.multiple');
+
+        Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoController::class, 'descargarPorCodigo'])
+            ->name('garantia_informe_tecnico_codificada');
+        Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
+            ->name('envioWhatsapp.informeTecnico.multiple');
+
+        // Rutas para mandar por correo directamente desde el index de comprobantes
+        Route::post('/boleta/enviar-correo-directo/{id}', [BoletaController::class, 'enviarCorreoDirecto'])
+            ->name('boleta.enviar-correo-directo');
+
+        Route::post('/boleta_manual/enviar-correo-directo/{id}', [BoletaMController::class, 'enviarCorreoDirecto'])
+            ->name('boletaM.enviar-correo-directo');
+
+        Route::post('/factura/enviar-correo-directo/{id}', [FacturacionController::class, 'enviarCorreoDirecto'])
+            ->name('factura.enviar-correo-directo');
+
+        Route::post('/factura_manual/enviar-correo-directo/{id}', [FacturacionMController::class, 'enviarCorreoDirecto'])
+            ->name('facturaM.enviar-correo-directo');
+
+        Route::post('/nota_credito/enviar-correo-directo/{id}', [NotaCreditoController::class, 'enviarCorreoDirecto'])
+            ->name('notaCredito.enviar-correo-directo');
+
+        Route::post('/nota_debito/enviar-correo-directo/{id}', [NotaDebitoController::class, 'enviarCorreoDirecto'])
+            ->name('notaDebito.enviar-correo-directo');
+
+        Route::post('/guia_remision/enviar-correo-directo/{id}', [GuiaRemisionController::class, 'enviarCorreoDirecto'])
+            ->name('guiaRemision.enviar-correo-directo');
+
+        Route::post('/guia_remision_manual/enviar-correo-directo/{id}', [GuiaRemisionManualController::class, 'enviarCorreoDirecto'])
+            ->name('guiaRemisionM.enviar-correo-directo');
+
+        // Rutas para mandar por correo directamente desde el index de ventas
+        Route::post('/cotizacion/enviar-correo-directo/{id}', [CotizacionController::class, 'enviarCorreoDirecto'])
+            ->name('cotizacion.enviar-correo-directo');
+
+        Route::post('/cotizacion_manual/enviar-correo-directo/{id}', [CotizacionManualController::class, 'enviarCorreoDirecto'])
+            ->name('cotizacionM.enviar-correo-directo');
+
+        Route::post('/nota_venta/enviar-correo-directo/{id}', [NotaVentaController::class, 'enviarCorreoDirecto'])
+            ->name('notaVenta.enviar-correo-directo');
+
+        // Rutas para envio multiple de correo para comprobantes
+        Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.boleta.multiple');
+
+        Route::post('/boleta_manual/enviar-correo-multiple', [BoletaMController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.boletaM.multiple');
+
+        Route::post('/factura/enviar-correo-multiple', [FacturacionController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.factura.multiple');
+
+        Route::post('/factura_manual/enviar-correo-multiple', [FacturacionMController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.facturaM.multiple');
+
+        Route::post('/nota_credito/enviar-correo-multiple', [NotaCreditoController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.notaCredito.multiple');
+
+        Route::post('/nota_debito/enviar-correo-multiple', [NotaDebitoController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.notaDebito.multiple');
+
+        Route::post('/guia_remision/enviar-correo-multiple', [GuiaRemisionController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.guia_remision.multiple');
+
+        Route::post('/guia_remision_manual/enviar-correo-multiple', [GuiaRemisionManualController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.guia_remisionM.multiple');
+
+        // Rutas para envio multiple de correo para ventas
+        Route::post('/cotizacion/enviar-correo-multiple', [CotizacionController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.cotizacion.multiple');
+
+        Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.cotizacionM.multiple');
+
+        Route::post('/nota_venta/enviar-correo-multiple', [NotaVentaController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.nota_venta.multiple');
+
+        // Rutas para envio multiple de correo para garantias
+        Route::post('/garantia_guia_ingreso/enviar-correo-multiple', [GarantiaGuiaIngresoController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.garantia_guia_ingreso.multiple');
+
+        Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.garantia_guia_egreso.multiple');
+
+        Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
+            ->name('envioCorreo.garantia_informe_tecnico.multiple');
+
+        // Ruta para generar el PDF de ficha técnica de un producto
+        Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
+            ->name('productos.ftPdf');
+
+        // Ruta para generar el PDF de ficha técnica de un servicio
+        Route::get('/servicios/{id}/ft-pdf', [ServiciosController::class, 'ftPdf'])
+            ->name('servicios.ft_pdf');
     }
 );
 
-Auth::routes([
-    'register' => false, // Registration
-    'reset' => false, // Password Reset
-    'verify' => false, // Email Verification
-]);
 
-Route::post('sunat_cambio', 'TipoCambioController@sunat_cambio');
-Route::resource('/tipo_cambio', 'TipoCambioController')->middleware('auth');
-
+//! PDFS SIN AAUTENTICACIÓN
 Route::get('garantia_guia_ingreso/pdf/{id}', 'GarantiaGuiaIngresoController@pdf')->name('pdf_ingreso');
-
-
 Route::get('garantia_guia_egreso/pdf/{id}', 'GarantiaGuiaEgresoController@pdf')->name('pdf_egreso');
 Route::get('garantia_informe_tecnico/pdf/{id}', 'GarantiaInformeTecnicoController@pdf')->name('pdf_informe');
 Route::get('cotizacion/pdf/{id}', 'CotizacionController@pdf')->name('pdf_cotizacion');
@@ -1073,278 +1455,6 @@ Route::get('/nota_venta/pdf/{id}', 'NotaVentaController@pdf')->name('nota_venta_
 Route::get('/cotizacion_manual/pdf/{id}', 'CotizacionManualController@pdf')->name('cotizacion_manual_pdf');
 Route::get('/nota-credito/pdf/{id}', 'NotaCreditoController@pdf')->name('nota_credito.pdf');
 Route::get('/guia_remision_manual/pdf/{id}', 'GuiaRemisionManualController@pdf')->name('remision_m.pdf');
-
-Route::post('periodo_consulta/print', 'PeriodoConsultaController@print')->name('periodo_consulta_print');
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
-Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
-
-Route::get("/boleta3", "BOLETACONTROLLER@index3")->name('boleta3');
-//Nuevo inventario
-//Kardex:
-Route::get("/inventario2", "INVENTARIOINICIALCONTROLLER@index2")->name('inventario2');
-Route::get('/inventario/distribucion', 'KardexEntradaDistribucionController@index2')->name('inventario.distribucion');
-Route::get('/inventario/traslado', 'KardexEntradaTrasladoAlmacenController@index2')->name('inventario.traslado');
-Route::get('/inventario/salida', 'KardexSalidaController@index2')->name('inventario.salida');
-
-Route::get("/inventario/consultas", 'PeriodoConsultaController@index2')->name('inventario.consultas');
-Route::get('/inventario/cierre', 'CierrePeriodoController@index2')->name('inventario.cierre');
-Route::get('/inventario/movimiento', 'Consulta_MovimientoController@index2')->name('inventario.movimiento');
-
-//Correo:
-Route::get('/mailbox/nuevo/enviado', 'EmailBandejaEnviosController@index2')->name('correo.enviado');
-Route::get('/mailbox/nuevo/configuracion', 'EmailConfiguracionesController@index2')->name('correo.configuracion');
-Route::get('/mailbox/nuevo/borrador', 'EmailBorradoresController@index2')->name('correo.borradores');
-Route::get('/mailbox/nuevo/papelera', 'EmailBandejaEnviosController@index3')->name('correo.papelera');
-Route::get("/garantias", "GarantiaGuiaIngresoController@index2")->name('garantias');
-Route::get('/facturacion3', 'facturacioncontroller@index3')->name('facturacion3');
-Route::resource('/tipo_cambio', 'TipoCambioController');
-Route::get('busqueda_tipo_cambio', 'TipoCambioController@busquedaTipoCambio')->name('tipo_cambio.busqueda_tipo_cambio');
-
-// ServicioController:
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
-
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
-
-
-Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
-Route::get('/guia', function () {
-    return view('servicio.guia');
-})->name('guia');
-
-
-Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
-Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
-
-
-
-Route::get('/clientes', [ClienteController::class, 'index']);
-Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
-// Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
-
-
-Route::get('/clientes', [ServicioController::class, 'index']);
-
-
-
-
-
-// GUIAS SERVICIO
-// Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
-
-
-// Crear cotizacion
-Route::get('/cotizacion_manual_servicio', 'CotizacionManualController@indexServicio')->name('indexServicio.index');
-Route::get('/cotizacion_manual/createCotizacionGuia/{guia_id}', [GuiaServicioController::class, 'crearCotizacion'])->name('cotizacionSGuia.create');
-Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
-Route::post('/productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
-
-
-// Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
-
-// CAJA CHICA
-Route::get('/consulta/tesoreria/caja-chica', [CajaChicaController::class, 'index'])->name('caja_chica.index');
-Route::post('/consulta/tesoreria/caja-chica/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
-Route::post('/consulta/tesoreria/caja-chica/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');
-Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::class, 'depositoStore'])->name('deposito.store');
-Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
-Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
-
-// PRODUCTOS
-Route::post('productos/generate-codigo', 'ProductosController@generateCodigoProducto')->name('productos.generateCodigoProducto');
-Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
-Route::put('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');
-Route::get('/export/all-products', [ProductosController::class, 'exportTodo'])->name('export.excel');
-Route::get('/export/selected-products', [ProductosController::class, 'exportSelectedProducts'])->name('export.selected.products');
-Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
-
-// REPORTES
-Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
-
-
-
-// NOTAS DE CRÉDITO Y DEBITO
-Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
-Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
-
-
-// EXPORTACION DE GUIA REMISION
-Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
-// Route::get(
-//     '/comprobantes/guias-manual/registers',
-//     [GuiaRemisionManualController::class, 'registers']
-// )->name('comprobantes.guiaRemisionM_registers');
-
-
-// Route::get('/comprobantes/guias-manual/registers', [GuiaRemisionManualController::class, 'registers'])->name('comprobantes.guiaRemisionM_registers');
-Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
-Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
-
-//RUTAS PARA IMPRIMIR EN CONJUNTO
-Route::get('venta/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
-Route::get('venta/boleta/boleta_manual/print-multiple', [BoletaMController::class, 'printMultiple'])->name('boletaM.print.multiple');
-
-Route::get('venta/facturacion/print-multiple', [FacturacionController::class, 'printMultiple'])->name('factura.print.multiple');
-Route::get('venta/facturacion/facturacion_manual/print-multiple', [FacturacionMController::class, 'printMultiple'])->name('facturaM.print.multiple');
-
-// Ruta para impresión múltiple de notas de crédito
-Route::get('/venta/nota_credito/print-multiple', [NotaCreditoController::class, 'printMultiple'])->name('notaCredito.print.multiple');
-Route::get('venta/nota_debito/print-multiple', [NotaDebitoController::class, 'printMultiple'])->name('notaDebito.print.multiple');
-
-
-
-
-
-
-Route::get('/ventas/cotizacion/print-multipler', [CotizacionController::class, 'printMultiple'])->name('cotizacion.print.multiple');
-Route::get('/ventas/cotizacion_manual/print-multiple', [CotizacionManualController::class, 'printMultiple'])->name('cotizacionM.print.multiple');
-
-Route::get('/garantias/guia_ingreso/print-multiple', [GarantiaGuiaIngresoController::class, 'printMultiple'])->name('garantiaGuiaI.print.multiple');
-Route::get('/garantias/guia_egreso/print-multiple', [GarantiaGuiaEgresoController::class, 'printMultiple'])->name('garantiaGuiaE.print.multiple');
-Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoController::class, 'printMultiple'])->name('informeTecnico.print.multiple');
-
-// DESCARGAR PDF DE GUIA DE REMISION
-Route::get('venta/guia_remision/print-multiple', [GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
-Route::get('venta/guia_remision/guia_manual/print_multiple', [GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
-Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
-
-
-// SERVICIO TECNICO ANTIGUO
-// Route::get('/servicio-tecnico-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
-// Route::post('/servicio-tecnico/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
-// // Mostrar la guía con productos
-// Route::get('/servicio-tecnico/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
-//     // Guardar los productos de la guía
-//     Route::post('/servicio-tecnico/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
-//     Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
-//     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
-//     Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida'])->name('updateGuiaSali');
-//     Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
-//     Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
-// Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
-// Route::get('/servicio/orden_de_servicioinfocliente', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
-// Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
-// Route::get('/orden-servicio/{guia_id}', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
-// Route::post('/detalle-servicio/update-descripcion', [OrdenServicioController::class, 'updateDescripcion'])->name('detalle.updateDescripcion');
-// Route::patch('/orden-servicio/update', [OrdenServicioController::class, 'updateGuiaOS'])->name('OrdenServicio.OSupdate');
-// Route::get('/servicio/pdf/{guia_id}', [GuiaServicioController::class, 'verPDF'])->name('ver.pdf');
-// Route::get('/servicio/pdf/{guia_id}/download', [GuiaServicioController::class, 'verPDF'])->defaults('accion', 'download')->name('servicio.pdf.download');
-
-// SERVICIO TECNICO NUEVO
-Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
-Route::get('/servicio-tecnico/create', [ServicioGuiaController::class, 'create'])->name('servicio-guias.create');
-Route::post('/servicio-tecnico/store', [ServicioGuiaController::class, 'store'])->name('servicio-guias.store');
-Route::patch('/servicio-tecnico/entregar/{servicio_g_id}', [ServicioGuiaController::class, 'entregarServicioGuia'])->name('servicio-guias.entregar');
-Route::get('/servicio-tecnico/proceso/{servicio_g_id}', [ProcesoServicioGuiaController::class, 'redirectProcesoServicioGuia'])->name('servicio-guias.proceso');
-Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioGuiaController::class, 'agregarEquipos'])->name('servicio-guias.agregarEquipos');
-Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
-Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
-Route::put('/servicio-tecnico/servicio-egreso/reparar-equipo', [ProcesoServicioGuiaController::class, 'repararEquipo'])->name('servicio-guias.reparar-equipo');
-Route::get('/servicio-tecnico/orden-servicio', [OrdenServicioServGuiaController::class, 'index'])->name('servicio-guias-os.index');
-Route::patch('/servicio-tecnico/orden-servicio/crear-orden/{servicio_g_id}', [OrdenServicioServGuiaController::class, 'crearOrdenServicioGuia'])->name('servicio-guias.crear-ordenServ');
-Route::get('/servicio-tecnico/entregados', [ServicioGuiaEntregadosController::class, 'index'])->name('servicio-guias-entregados.index');
-Route::post('/servicio-tecnico/store/informe-tecnico', [ProcesoServicioGuiaController::class, 'storeInformeTecnico'])->name('servicio-guias.store-it');
-Route::get('/servicio-tecnicio/cotizaciones', [CotizacionServicioGuiaController::class, 'index'])->name('servicio-guias.cotizaciones-index');
-
-Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::class, 'guiaRemisionM_registers'])
-    ->name('guiaRemisionM.registers');
-Route::match(
-    ['get', 'post'],
-    'comprobantes/guia-remision-manual/print-multiple',
-    [GuiaRemisionManualController::class, 'printMultiple']
-)->name('guia_remision_manual.print.multiple');
-
-
-Route::get('/servicio-guia/informe-tecnico/{id}', [ServicioGuiaController::class, 'showInformeTecnico'])
-    ->name('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show');
-
-/*Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
-    [ProcesoServicioGuiaController::class, 'showman']
-)->name('servicio_tecnico.servicios.servicio-guia.showman');*/
-
-Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambios', [ServicioGuiaInformeTecnicoController::class, 'showInformeTecnicoConCambios'])->name('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios');
-
-// Ruta para descargar múltiples comprobantes dentro de un ZIP
-Route::get('boletas/download-multiple', [BoletaController::class, 'downloadMultiplePDFs'])
-    ->name('boletas.download.multiple');
-
-Route::get('comprobantes/boleta_manual/download-multiple', [BoletaMController::class, 'downloadMultiplePDFs'])
-    ->name('boletaM.download.multiple');
-
-Route::get('facturacion-manual/download-multiple', [FacturacionMController::class, 'downloadMultiplePDFs'])
-    ->name('facturaM.download.multiple');
-
-Route::get('comprobantes/factura/download-multiple', [FacturacionController::class, 'downloadMultiplePDFs'])
-    ->name('facturas.download.multiple');
-
-
-Route::get('notas_credito/download-multiple', [NotaCreditoController::class, 'downloadMultiplePDFs'])
-    ->name('notaC.download.multiple');
-
-Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
-    ->name('notaD.download.multiple');
-
-Route::get('comprobantes/guia_remision/download-multiple', [GuiaRemisionController::class, 'downloadMultiplePDFs'])
-    ->name('GuiaRemision.download.multiple');
-
-Route::get('comprobantes/guia_remision_manual/download-multiple', [GuiaRemisionManualController::class, 'downloadMultiplePDFs'])
-    ->name('guia_remision_manual.download.multiple');
-
-// Ruta para descargar múltiples ventas dentro de un ZIP
-Route::get('/ventas/cotizacion/dowload-multiple', [CotizacionController::class, 'downloadMultiplePDFs'])
-    ->name('cotizacion.download.multiple');
-
-Route::get('/ventas/cotizacion-manual/dowload-multiple', [CotizacionManualController::class, 'downloadMultiplePDFs'])
-    ->name('cotizacion-manual.download.multiple');
-
-Route::post('/ventas/nota-venta/download-multiple', [NotaVentaController::class, 'downloadMultiplePDFs'])
-    ->name('nota-venta.download.multiple');
-
-// Ruta para descargar múltiples garantias guias dentro de un ZIP
-Route::post('/garantia/guia-ingreso/descargar-multiple', [GarantiaGuiaIngresoController::class, 'downloadMultiplePDFs'])
-    ->name('GarantiaI.download.multiple');
-
-Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoController::class, 'downloadMultiplePDFs'])
-    ->name('GarantiaE.download.multiple');
-
-Route::post('/garantia/informe-tecnico/descargar-multiple', [GarantiaInformeTecnicoController::class, 'downloadMultiplePDFs'])
-    ->name('GarantiaIT.download.multiple');
-
-//apartado de renovaciones
-
-Route::prefix('ventas')->name('ventas.')->group(function () {
-
-    Route::get('/renovacion', [RenovacionController::class, 'index'])
-        ->name('renovacion.index');
-});
-
-Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
-    ->name('ventas.renovacion_registers');
-
-// Rutas para que el codigo QR lleve al pdf de guiaremision
-Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLink'])
-    ->name('guia_remision.pdfLink');
-
-Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::class, 'pdfLink'])
-    ->name('guia_remision_manual.pdfLink');
-
-// Nueva ruta para imprimir, exportar y descargar pdf de renovaciones
-Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
-    ->name('renovaciones.print.multiple');
-
-Route::get('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
-    ->name('exportarRenovaciones');
-
-Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])
-    ->name('renovaciones.download.multiple');
-
 
 // Mandar multiples pdf por wsp en comprobantes
 Route::get('boleta/share/{codigo}', [BoletaController::class, 'descargarPorCodigo'])
@@ -1402,107 +1512,3 @@ Route::get('nota_venta/share/{codigo}', [NotaVentaController::class, 'descargarP
     ->name('nota_venta_codificada');
 Route::post('/ventas/nota_venta/whatsapp/send-multiple', [NotaVentaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaVenta.multiple');
-
-// Mandar multiples pdf por wsp en garantias
-Route::get('garantia_guia_ingreso/share/{codigo}', [GarantiaGuiaIngresoController::class, 'descargarPorCodigo'])
-    ->name('garantia_guia_ingreso_codificada');
-Route::post('/garantias/guia_ingreso/whatsapp/send-multiple', [GarantiaGuiaIngresoController::class, 'whatsappSendMultiple'])
-    ->name('envioWhatsapp.guiaIngreso.multiple');
-
-Route::get('garantia_guia_egreso/share/{codigo}', [GarantiaGuiaEgresoController::class, 'descargarPorCodigo'])
-    ->name('garantia_guia_egreso_codificada');
-Route::post('/garantias/guia_egreso/whatsapp/send-multiple', [GarantiaGuiaEgresoController::class, 'whatsappSendMultiple'])
-    ->name('envioWhatsapp.guiaEgreso.multiple');
-
-Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoController::class, 'descargarPorCodigo'])
-    ->name('garantia_informe_tecnico_codificada');
-Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
-    ->name('envioWhatsapp.informeTecnico.multiple');
-
-// Rutas para mandar por correo directamente desde el index de comprobantes
-Route::post('/boleta/enviar-correo-directo/{id}', [BoletaController::class, 'enviarCorreoDirecto'])
-    ->name('boleta.enviar-correo-directo');
-
-Route::post('/boleta_manual/enviar-correo-directo/{id}', [BoletaMController::class, 'enviarCorreoDirecto'])
-    ->name('boletaM.enviar-correo-directo');
-
-Route::post('/factura/enviar-correo-directo/{id}', [FacturacionController::class, 'enviarCorreoDirecto'])
-    ->name('factura.enviar-correo-directo');
-
-Route::post('/factura_manual/enviar-correo-directo/{id}', [FacturacionMController::class, 'enviarCorreoDirecto'])
-    ->name('facturaM.enviar-correo-directo');
-
-Route::post('/nota_credito/enviar-correo-directo/{id}', [NotaCreditoController::class, 'enviarCorreoDirecto'])
-    ->name('notaCredito.enviar-correo-directo');
-
-Route::post('/nota_debito/enviar-correo-directo/{id}', [NotaDebitoController::class, 'enviarCorreoDirecto'])
-    ->name('notaDebito.enviar-correo-directo');
-
-Route::post('/guia_remision/enviar-correo-directo/{id}', [GuiaRemisionController::class, 'enviarCorreoDirecto'])
-    ->name('guiaRemision.enviar-correo-directo');
-
-Route::post('/guia_remision_manual/enviar-correo-directo/{id}', [GuiaRemisionManualController::class, 'enviarCorreoDirecto'])
-    ->name('guiaRemisionM.enviar-correo-directo');
-
-// Rutas para mandar por correo directamente desde el index de ventas
-Route::post('/cotizacion/enviar-correo-directo/{id}', [CotizacionController::class, 'enviarCorreoDirecto'])
-    ->name('cotizacion.enviar-correo-directo');
-
-Route::post('/cotizacion_manual/enviar-correo-directo/{id}', [CotizacionManualController::class, 'enviarCorreoDirecto'])
-    ->name('cotizacionM.enviar-correo-directo');
-
-Route::post('/nota_venta/enviar-correo-directo/{id}', [NotaVentaController::class, 'enviarCorreoDirecto'])
-    ->name('notaVenta.enviar-correo-directo');
-
-// Rutas para envio multiple de correo para comprobantes
-Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.boleta.multiple');
-
-Route::post('/boleta_manual/enviar-correo-multiple', [BoletaMController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.boletaM.multiple');
-
-Route::post('/factura/enviar-correo-multiple', [FacturacionController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.factura.multiple');
-
-Route::post('/factura_manual/enviar-correo-multiple', [FacturacionMController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.facturaM.multiple');
-
-Route::post('/nota_credito/enviar-correo-multiple', [NotaCreditoController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.notaCredito.multiple');
-
-Route::post('/nota_debito/enviar-correo-multiple', [NotaDebitoController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.notaDebito.multiple');
-
-Route::post('/guia_remision/enviar-correo-multiple', [GuiaRemisionController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.guia_remision.multiple');
-
-Route::post('/guia_remision_manual/enviar-correo-multiple', [GuiaRemisionManualController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.guia_remisionM.multiple');
-
-// Rutas para envio multiple de correo para ventas
-Route::post('/cotizacion/enviar-correo-multiple', [CotizacionController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.cotizacion.multiple');
-
-Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.cotizacionM.multiple');
-
-Route::post('/nota_venta/enviar-correo-multiple', [NotaVentaController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.nota_venta.multiple');
-
-// Rutas para envio multiple de correo para garantias
-Route::post('/garantia_guia_ingreso/enviar-correo-multiple', [GarantiaGuiaIngresoController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.garantia_guia_ingreso.multiple');
-
-Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.garantia_guia_egreso.multiple');
-
-Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.garantia_informe_tecnico.multiple');
-
-// Ruta para generar el PDF de ficha técnica de un producto
- Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
-    ->name('productos.ftPdf');
-
-// Ruta para generar el PDF de ficha técnica de un servicio
-Route::get('/servicios/{id}/ft-pdf', [ServiciosController::class, 'ftPdf'])
-    ->name('servicios.ft_pdf');
