@@ -13,8 +13,13 @@
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
-        <div class="ibox-title" style="padding-right: 3.1%">
-            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+        <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+            <div class=" margin-left: 10px">
+                <a href="{{ route('cotizacion_manual.create') }}">
+                    <i class="fa fa-arrow-left text-muted"></i>
+                </a>    
+            </div>
+            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px; margin-right: 10px">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up text-muted"></i>
                 </a>

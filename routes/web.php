@@ -20,7 +20,7 @@ use App\Http\Controllers\CotizacionManualController;
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\FacturacionMController;
 use App\Http\Controllers\ParameterCallController;
-use App\Http\Controllers\ServicioController;
+
 use App\Http\Controllers\GuiaServicioController;
 use App\Http\Controllers\GuiaServicioClienteController;
 use App\Http\Controllers\OrdenServicioController;
@@ -500,7 +500,7 @@ Route::group(
         Route::post('/guia_remision_manual/almacen_guia', 'GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
         Route::post('/guia_remision_manual/anular','GuiaRemisionManualController@destroy')->name('remision_m.anular');
         Route::get('/guia_remision_manual/print/{id}', 'GuiaRemisionManualController@print')->name('remision_m.print');
-
+        
 
         Route::post('stock_ajax', 'KardexSalidaController@stock_ajax')->name('stock_ajax');
         Route::post('stock_ajax_distribucion', 'KardexEntradaDistribucionController@stock_ajax_distribucion')->name('stock_ajax_distribucion');
@@ -1102,26 +1102,26 @@ Route::get('/facturacion3', 'facturacioncontroller@index3')->name('facturacion3'
 Route::resource('/tipo_cambio', 'TipoCambioController');
 Route::get('busqueda_tipo_cambio', 'TipoCambioController@busquedaTipoCambio')->name('tipo_cambio.busqueda_tipo_cambio');
 
-// ServicioController:
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+// // ServicioController:
+// Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+// Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+// Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+// Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
-
-
-Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
-Route::get('/guia', function () {
-    return view('servicio.guia');
-})->name('guia');
+// Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+// Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+// Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+// Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
 
-Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
-Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+// Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
+// Route::get('/guia', function () {
+//     return view('servicio.guia');
+// })->name('guia');
+
+
+// Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
+// Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
 
@@ -1130,7 +1130,7 @@ Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
 // Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
 
 
-Route::get('/clientes', [ServicioController::class, 'index']);
+//Route::get('/clientes', [ServicioController::class, 'index']);
 
 
 
