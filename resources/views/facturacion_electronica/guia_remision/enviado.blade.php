@@ -340,16 +340,16 @@
                     'render': function(data, type, full, meta) {
                         if (`${full[12]}` == 1) {
                             var url =
-                                `1{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
 
                             var finish_all =
-                                `2<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                                `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
                         } else {
                             var url =
-                                `3{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
 
                             var finish_all = `
-                                4<div id="div_btn_app_man">
+                                <div id="div_btn_app_man">
                                     <button type="button" class="btn" id="guia_remi_ind_man" value="${full[2]}" onclick="valid_cdr_normal(this)"><img src="{{ asset('cdr.png') }}" width="25px"></button>
                                 </div>
                                 <div style="display: none;" id="div_dw_non_man">
