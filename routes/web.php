@@ -1311,12 +1311,6 @@ Route::group(
         Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
             ->name('ventas.renovacion_registers');
 
-        // Rutas para que el codigo QR lleve al pdf de guiaremision
-        Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLink'])
-            ->name('guia_remision.pdfLink');
-
-        Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::class, 'pdfLink'])
-            ->name('guia_remision_manual.pdfLink');
 
         // Nueva ruta para imprimir, exportar y descargar pdf de renovaciones
         Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
@@ -1330,22 +1324,6 @@ Route::group(
 
 
 
-
-        // Mandar multiples pdf por wsp en garantias
-        Route::get('garantia_guia_ingreso/share/{codigo}', [GarantiaGuiaIngresoController::class, 'descargarPorCodigo'])
-            ->name('garantia_guia_ingreso_codificada');
-        Route::post('/garantias/guia_ingreso/whatsapp/send-multiple', [GarantiaGuiaIngresoController::class, 'whatsappSendMultiple'])
-            ->name('envioWhatsapp.guiaIngreso.multiple');
-
-        Route::get('garantia_guia_egreso/share/{codigo}', [GarantiaGuiaEgresoController::class, 'descargarPorCodigo'])
-            ->name('garantia_guia_egreso_codificada');
-        Route::post('/garantias/guia_egreso/whatsapp/send-multiple', [GarantiaGuiaEgresoController::class, 'whatsappSendMultiple'])
-            ->name('envioWhatsapp.guiaEgreso.multiple');
-
-        Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoController::class, 'descargarPorCodigo'])
-            ->name('garantia_informe_tecnico_codificada');
-        Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
-            ->name('envioWhatsapp.informeTecnico.multiple');
 
         // Rutas para mandar por correo directamente desde el index de comprobantes
         Route::post('/boleta/enviar-correo-directo/{id}', [BoletaController::class, 'enviarCorreoDirecto'])
@@ -1512,3 +1490,26 @@ Route::get('nota_venta/share/{codigo}', [NotaVentaController::class, 'descargarP
     ->name('nota_venta_codificada');
 Route::post('/ventas/nota_venta/whatsapp/send-multiple', [NotaVentaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaVenta.multiple');
+
+// Mandar multiples pdf por wsp en garantias
+Route::get('garantia_guia_ingreso/share/{codigo}', [GarantiaGuiaIngresoController::class, 'descargarPorCodigo'])
+    ->name('garantia_guia_ingreso_codificada');
+Route::post('/garantias/guia_ingreso/whatsapp/send-multiple', [GarantiaGuiaIngresoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaIngreso.multiple');
+
+Route::get('garantia_guia_egreso/share/{codigo}', [GarantiaGuiaEgresoController::class, 'descargarPorCodigo'])
+    ->name('garantia_guia_egreso_codificada');
+Route::post('/garantias/guia_egreso/whatsapp/send-multiple', [GarantiaGuiaEgresoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaEgreso.multiple');
+
+Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoController::class, 'descargarPorCodigo'])
+    ->name('garantia_informe_tecnico_codificada');
+Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.informeTecnico.multiple');
+
+// Rutas para que el codigo QR lleve al pdf de guiaremision
+Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLink'])
+    ->name('guia_remision.pdfLink');
+
+Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::class, 'pdfLink'])
+    ->name('guia_remision_manual.pdfLink');
