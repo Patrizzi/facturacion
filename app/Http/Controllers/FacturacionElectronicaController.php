@@ -688,7 +688,7 @@ class FacturacionElectronicaController extends Controller
 
     public function valid_cdr(Request $request){
 
-        $guia_remi = Guia_remision::where('id', $request->get('codigo_remision'))->first();
+        $guia_remi = Guia_remision::where('cod_guia', $request->get('codigo_remision'))->first();
         $empresa = Empresa::first();
         // $guia=Guia_remision::where('g_electronica',0)->where('cod_guia',$remision_codigo)->first();
         $guias_registros=g_remision_registro::where('guia_remision_id',$guia_remi->id)->get();

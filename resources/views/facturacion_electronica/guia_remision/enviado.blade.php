@@ -338,7 +338,7 @@
                     'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        if (`${full[9]}` != null || `${full[9]}` == 1) {
+                        if (`${full[12]}` == 1) {
                             var url =
                                 `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
 
