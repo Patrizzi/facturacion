@@ -489,7 +489,7 @@ Route::group(
         Route::post('/guia_remision/create', 'GuiaRemisionController@create')->name('guia_remision.create');
         // Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
         Route::post('/guia_remision/peso_stock', 'GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
-        Route::post('/guia_remision/anular','GuiaRemisionController@destroy')->name('guia_remision.anular');
+        Route::post('/guia_remision/anular', 'GuiaRemisionController@destroy')->name('guia_remision.anular');
         Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
 
         /* REMISION MANUAL */
@@ -498,7 +498,7 @@ Route::group(
         // Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
         Route::post('/guia_remision_manual/peso', 'GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
         Route::post('/guia_remision_manual/almacen_guia', 'GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
-        Route::post('/guia_remision_manual/anular','GuiaRemisionManualController@destroy')->name('remision_m.anular');
+        Route::post('/guia_remision_manual/anular', 'GuiaRemisionManualController@destroy')->name('remision_m.anular');
         Route::get('/guia_remision_manual/print/{id}', 'GuiaRemisionManualController@print')->name('remision_m.print');
 
 
@@ -867,8 +867,18 @@ Route::group(
         Route::get('/productos_inactivo', 'ProductosController@index2')->name('productos.index2');
         Route::get('/productos_anulado', 'ProductosController@index3')->name('productos.index3');
         Route::post('/productos_ajax', 'ProductosController@index_ajax')->name('productos.index_ajax');
+
+        Route::post('productos/generate-codigo', 'ProductosController@generateCodigoProducto')->name('productos.generateCodigoProducto');
+        Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
+        Route::put('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');
+        Route::get('/export/all-products', [ProductosController::class, 'exportTodo'])->name('export.excel');
+        Route::get('/export/selected-products', [ProductosController::class, 'exportSelectedProducts'])->name('export.selected.products');
+        Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
+
         Route::patch('/productos/desactivar/{producto_id}', [ProductosController::class, 'desactivarProducto'])->name('productos.desactivar');
         Route::post('/producto/search_codigo', [ParameterCallController::class, 'producto_codigo_original'])->name('producto.codigo_original');
+
+
 
         Route::resource('/promedios', 'PromediosController');
 
@@ -1043,7 +1053,68 @@ Route::group(
         Route::post('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
         Route::post('/comprobantes/boleta_manual/exportar', [BoletaMController::class, 'exportarBoletasM'])->name('boletasM.exportar');
         Route::post('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
+        Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
+        Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
+        Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
+        Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
+        Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
+
+        // SERVICIO TECNICO NUEVO
+        Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
+        Route::get('/servicio-tecnico/create', [ServicioGuiaController::class, 'create'])->name('servicio-guias.create');
+        Route::post('/servicio-tecnico/store', [ServicioGuiaController::class, 'store'])->name('servicio-guias.store');
+        Route::patch('/servicio-tecnico/entregar/{servicio_g_id}', [ServicioGuiaController::class, 'entregarServicioGuia'])->name('servicio-guias.entregar');
+        Route::get('/servicio-tecnico/proceso/{servicio_g_id}', [ProcesoServicioGuiaController::class, 'redirectProcesoServicioGuia'])->name('servicio-guias.proceso');
+        Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioGuiaController::class, 'agregarEquipos'])->name('servicio-guias.agregarEquipos');
+        Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
+        Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
+        Route::put('/servicio-tecnico/servicio-egreso/reparar-equipo', [ProcesoServicioGuiaController::class, 'repararEquipo'])->name('servicio-guias.reparar-equipo');
+        Route::get('/servicio-tecnico/orden-servicio', [OrdenServicioServGuiaController::class, 'index'])->name('servicio-guias-os.index');
+        Route::patch('/servicio-tecnico/orden-servicio/crear-orden/{servicio_g_id}', [OrdenServicioServGuiaController::class, 'crearOrdenServicioGuia'])->name('servicio-guias.crear-ordenServ');
+        Route::get('/servicio-tecnico/entregados', [ServicioGuiaEntregadosController::class, 'index'])->name('servicio-guias-entregados.index');
+        Route::post('/servicio-tecnico/store/informe-tecnico', [ProcesoServicioGuiaController::class, 'storeInformeTecnico'])->name('servicio-guias.store-it');
+        Route::get('/servicio-tecnicio/cotizaciones', [CotizacionServicioGuiaController::class, 'index'])->name('servicio-guias.cotizaciones-index');
+
+        Route::get('/servicio-guia/informe-tecnico/{id}', [ServicioGuiaController::class, 'showInformeTecnico'])->name('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show');
+
+        Route::get('/cotizacion_manual/createCotizacionGuia/{guia_id}', [GuiaServicioController::class, 'crearCotizacion'])->name('cotizacionSGuia.create');
+        Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
+
+
+        // CAJA CHICA
+        Route::get('/consulta/tesoreria/caja-chica', [CajaChicaController::class, 'index'])->name('caja_chica.index');
+        Route::post('/consulta/tesoreria/caja-chica/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
+        Route::post('/consulta/tesoreria/caja-chica/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');
+        Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::class, 'depositoStore'])->name('deposito.store');
+        Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
+        Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
+
+        // REPORTES
+        Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+
+        // Importacion
+        Route::post('/productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
+
+        //apartado de renovaciones
+
+        Route::prefix('ventas')->name('ventas.')->group(function () {
+
+            Route::get('/renovacion', [RenovacionController::class, 'index'])
+                ->name('renovacion.index');
+        });
+
+        Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
+            ->name('ventas.renovacion_registers');
+
+        // Ruta para generar el PDF de ficha técnica de un producto
+        Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
+            ->name('productos.ftPdf');
+
+        // Ruta para generar el PDF de ficha técnica de un servicio
+        Route::get('/servicios/{id}/ft-pdf', [ServiciosController::class, 'ftPdf'])
+            ->name('servicios.ft_pdf');
     }
+
 );
 
 Auth::routes([
@@ -1051,13 +1122,12 @@ Auth::routes([
     'reset' => false, // Password Reset
     'verify' => false, // Email Verification
 ]);
-
-Route::post('sunat_cambio', 'TipoCambioController@sunat_cambio');
 Route::resource('/tipo_cambio', 'TipoCambioController')->middleware('auth');
 
+Route::post('sunat_cambio', 'TipoCambioController@sunat_cambio');
+
+// Routas de PDF
 Route::get('garantia_guia_ingreso/pdf/{id}', 'GarantiaGuiaIngresoController@pdf')->name('pdf_ingreso');
-
-
 Route::get('garantia_guia_egreso/pdf/{id}', 'GarantiaGuiaEgresoController@pdf')->name('pdf_egreso');
 Route::get('garantia_informe_tecnico/pdf/{id}', 'GarantiaInformeTecnicoController@pdf')->name('pdf_informe');
 Route::get('cotizacion/pdf/{id}', 'CotizacionController@pdf')->name('pdf_cotizacion');
@@ -1075,10 +1145,10 @@ Route::get('/nota-credito/pdf/{id}', 'NotaCreditoController@pdf')->name('nota_cr
 Route::get('/guia_remision_manual/pdf/{id}', 'GuiaRemisionManualController@pdf')->name('remision_m.pdf');
 
 Route::post('periodo_consulta/print', 'PeriodoConsultaController@print')->name('periodo_consulta_print');
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
-Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
+// Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
+// Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
 
 Route::get("/boleta3", "BOLETACONTROLLER@index3")->name('boleta3');
 //Nuevo inventario
@@ -1114,23 +1184,23 @@ Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->n
 Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
 
-Route::get('/servicio/vistaclientes', 'ServicioController@vistaclientes')->name('servicio.vistaclientes');
-Route::get('/guia', function () {
-    return view('servicio.guia');
-})->name('guia');
+// Route::get('/servicio/vistaclientes', 'ServiciosController@vistaclientes')->name('servicio.vistaclientes');
+// Route::get('/guia', function () {
+//     return view('servicio.guia');
+// })->name('guia');
 
 
-Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
-Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+// Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
+// Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
 
 
 
-Route::get('/clientes', [ClienteController::class, 'index']);
-Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
+// Route::get('/clientes', [ClienteController::class, 'index']);
+// Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
 // Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
 
 
-Route::get('/clientes', [ServicioController::class, 'index']);
+// Route::get('/clientes', [ServicioController::class, 'index']);
 
 
 
@@ -1140,52 +1210,17 @@ Route::get('/clientes', [ServicioController::class, 'index']);
 // Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
 
 
-// Crear cotizacion
-Route::get('/cotizacion_manual_servicio', 'CotizacionManualController@indexServicio')->name('indexServicio.index');
-Route::get('/cotizacion_manual/createCotizacionGuia/{guia_id}', [GuiaServicioController::class, 'crearCotizacion'])->name('cotizacionSGuia.create');
-Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
-Route::post('/productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
+// Guia Servicios
+
+
 
 
 // Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
 
-// CAJA CHICA
-Route::get('/consulta/tesoreria/caja-chica', [CajaChicaController::class, 'index'])->name('caja_chica.index');
-Route::post('/consulta/tesoreria/caja-chica/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
-Route::post('/consulta/tesoreria/caja-chica/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');
-Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::class, 'depositoStore'])->name('deposito.store');
-Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
-Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
-
-// PRODUCTOS
-Route::post('productos/generate-codigo', 'ProductosController@generateCodigoProducto')->name('productos.generateCodigoProducto');
-Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
-Route::put('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');
-Route::get('/export/all-products', [ProductosController::class, 'exportTodo'])->name('export.excel');
-Route::get('/export/selected-products', [ProductosController::class, 'exportSelectedProducts'])->name('export.selected.products');
-Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
-
-// REPORTES
-Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+// Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::class, 'guiaRemisionM_registers'])
+//     ->name('guiaRemisionM.registers');
 
 
-
-// NOTAS DE CRÉDITO Y DEBITO
-Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
-Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
-
-
-// EXPORTACION DE GUIA REMISION
-Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
-// Route::get(
-//     '/comprobantes/guias-manual/registers',
-//     [GuiaRemisionManualController::class, 'registers']
-// )->name('comprobantes.guiaRemisionM_registers');
-
-
-// Route::get('/comprobantes/guias-manual/registers', [GuiaRemisionManualController::class, 'registers'])->name('comprobantes.guiaRemisionM_registers');
-Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
-Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
 
 //RUTAS PARA IMPRIMIR EN CONJUNTO
 Route::get('venta/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
@@ -1216,45 +1251,8 @@ Route::get('venta/guia_remision/guia_manual/print_multiple', [GuiaRemisionManual
 Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
 
 
-// SERVICIO TECNICO ANTIGUO
-// Route::get('/servicio-tecnico-clientes', [GuiaServicioClienteController::class, 'index'])->name('sGuias.index');
-// Route::post('/servicio-tecnico/store', [GuiaServicioClienteController::class, 'store'])->name('sGuias.store');
-// // Mostrar la guía con productos
-// Route::get('/servicio-tecnico/cliente/{guia_id}', [GuiaServicioController::class, 'index'])->name('sGuia.show');
-//     // Guardar los productos de la guía
-//     Route::post('/servicio-tecnico/cliente/{guia_id}/productos', [GuiaServicioController::class, 'BloAct'])->name('servicio.guia.productos.store');
-//     Route::get('/servicio-guias/cliente/{guia_id}/guia', [ServicioController::class, 'mostrarGuia'])->name('sGuiaCliente');
-//     Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
-//     Route::post('/actualizar-guia-salida', [GuiaServicioController::class, 'actualizarGuiaSalida'])->name('updateGuiaSali');
-//     Route::post('/imagen-guia-salida/{detalleId}', [GuiaServicioController::class, 'subirImagen'])->name('imagenGuiaSalida.image');
-//     Route::get('/ver-imagen/{imagenId}', [GuiaServicioController::class, 'verImagen'])->name('imagen.ver');
-// Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
-// Route::get('/servicio/orden_de_servicioinfocliente', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
-// Route::get('/servicio-tenico/orden_de_servicio', [OrdenServicioController::class, 'index'])->name('servicio.ordenServicio');
-// Route::get('/orden-servicio/{guia_id}', [OrdenServicioController::class, 'create'])->name('servicio.OScreate');
-// Route::post('/detalle-servicio/update-descripcion', [OrdenServicioController::class, 'updateDescripcion'])->name('detalle.updateDescripcion');
-// Route::patch('/orden-servicio/update', [OrdenServicioController::class, 'updateGuiaOS'])->name('OrdenServicio.OSupdate');
-// Route::get('/servicio/pdf/{guia_id}', [GuiaServicioController::class, 'verPDF'])->name('ver.pdf');
-// Route::get('/servicio/pdf/{guia_id}/download', [GuiaServicioController::class, 'verPDF'])->defaults('accion', 'download')->name('servicio.pdf.download');
 
-// SERVICIO TECNICO NUEVO
-Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
-Route::get('/servicio-tecnico/create', [ServicioGuiaController::class, 'create'])->name('servicio-guias.create');
-Route::post('/servicio-tecnico/store', [ServicioGuiaController::class, 'store'])->name('servicio-guias.store');
-Route::patch('/servicio-tecnico/entregar/{servicio_g_id}', [ServicioGuiaController::class, 'entregarServicioGuia'])->name('servicio-guias.entregar');
-Route::get('/servicio-tecnico/proceso/{servicio_g_id}', [ProcesoServicioGuiaController::class, 'redirectProcesoServicioGuia'])->name('servicio-guias.proceso');
-Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioGuiaController::class, 'agregarEquipos'])->name('servicio-guias.agregarEquipos');
-Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
-Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
-Route::put('/servicio-tecnico/servicio-egreso/reparar-equipo', [ProcesoServicioGuiaController::class, 'repararEquipo'])->name('servicio-guias.reparar-equipo');
-Route::get('/servicio-tecnico/orden-servicio', [OrdenServicioServGuiaController::class, 'index'])->name('servicio-guias-os.index');
-Route::patch('/servicio-tecnico/orden-servicio/crear-orden/{servicio_g_id}', [OrdenServicioServGuiaController::class, 'crearOrdenServicioGuia'])->name('servicio-guias.crear-ordenServ');
-Route::get('/servicio-tecnico/entregados', [ServicioGuiaEntregadosController::class, 'index'])->name('servicio-guias-entregados.index');
-Route::post('/servicio-tecnico/store/informe-tecnico', [ProcesoServicioGuiaController::class, 'storeInformeTecnico'])->name('servicio-guias.store-it');
-Route::get('/servicio-tecnicio/cotizaciones', [CotizacionServicioGuiaController::class, 'index'])->name('servicio-guias.cotizaciones-index');
 
-Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::class, 'guiaRemisionM_registers'])
-    ->name('guiaRemisionM.registers');
 Route::match(
     ['get', 'post'],
     'comprobantes/guia-remision-manual/print-multiple',
@@ -1262,8 +1260,7 @@ Route::match(
 )->name('guia_remision_manual.print.multiple');
 
 
-Route::get('/servicio-guia/informe-tecnico/{id}', [ServicioGuiaController::class, 'showInformeTecnico'])
-    ->name('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show');
+
 
 /*Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
     [ProcesoServicioGuiaController::class, 'showman']
@@ -1317,16 +1314,7 @@ Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoContr
 Route::post('/garantia/informe-tecnico/descargar-multiple', [GarantiaInformeTecnicoController::class, 'downloadMultiplePDFs'])
     ->name('GarantiaIT.download.multiple');
 
-//apartado de renovaciones
 
-Route::prefix('ventas')->name('ventas.')->group(function () {
-
-    Route::get('/renovacion', [RenovacionController::class, 'index'])
-        ->name('renovacion.index');
-});
-
-Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
-    ->name('ventas.renovacion_registers');
 
 // Rutas para que el codigo QR lleve al pdf de guiaremision
 Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLink'])
@@ -1498,11 +1486,3 @@ Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoC
 
 Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.garantia_informe_tecnico.multiple');
-
-// Ruta para generar el PDF de ficha técnica de un producto
- Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
-    ->name('productos.ftPdf');
-
-// Ruta para generar el PDF de ficha técnica de un servicio
-Route::get('/servicios/{id}/ft-pdf', [ServiciosController::class, 'ftPdf'])
-    ->name('servicios.ft_pdf');
