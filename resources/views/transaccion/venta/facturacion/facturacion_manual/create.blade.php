@@ -361,7 +361,7 @@
 
                                 <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
                                     type="button">Guardar</button>
-                                <button class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
+                                <button data-style="zoom-out" class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
                                 {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
                                     data-style="zoom-out"> --}}
@@ -1459,7 +1459,7 @@
 
         $("#boton").on("click", function(buton) {
             $('#button_submit').val('0');
-            var l = Ladda.create(document.querySelector('.button-ladda'));
+            var l = Ladda.create(this);
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
@@ -1513,7 +1513,7 @@
         });
         $("#finalizar").on("click", function(buton) {
             $('#button_submit').val('1');
-            var l = Ladda.create(document.querySelector('.button-ladda'));
+            var l = Ladda.create(this);
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
