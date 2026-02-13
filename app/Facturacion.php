@@ -70,10 +70,13 @@ class Facturacion extends Model
         return $this->hasMany(Facturacion_registro::class, 'facturacion_id');
     }
 
-
     public function detracciones()
     {
         return $this->hasOne(Detracciones::class, 'factura_id');
+    }
+
+    public function nota_credito_register(){
+        return $this->hasOne(Nota_Credito::class , 'facturacion_id');
     }
 
 
@@ -397,7 +400,8 @@ class Facturacion extends Model
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
         $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
-
+            
+        
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
@@ -428,10 +432,23 @@ class Facturacion extends Model
 
         $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
 
+        // return $this->attributes['nota_credito'];
+        if($this->attributes['nota_credito'] == 1){
+            // Reduccion por nota de crédito
+            $montivo = Facturacion::search_motivo_nc($this->attributes['id']);
+                // dd($motivo);
+            if($montivo == "Devolucion por Item"){
+               $nota_c = Nota_Credito::where('facturacion_id', $this->attributes['id'])->first();
+            //    dd($nota_c);
+               $total = $total - $nota_c->total_precio;
+            //    return $nota_c;
+            }
+          
+        }
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
-        $total_igv = $total;
+        $total_igv = round($total, 2);
         return $total_igv;
     }
 

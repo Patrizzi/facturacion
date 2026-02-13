@@ -32,6 +32,22 @@ class Cuotas_credito extends Model
         return $this->belongsTo(Boleta_m::class, 'boleta_m_id');
     }
 
+    public function getTipoComprobanteAttribute()
+    {
+        if ($this->attributes['facturacion_id'] != null) {
+            return 1;
+        }
+        if ($this->attributes['facturacion_m_id'] != null) {
+            return 2;
+        }
+        if ($this->attributes['boleta_id'] != null) {
+            return 3;
+        }
+        if ($this->attributes['boleta_m_id'] != null) {
+            return 4;
+        }
+    }
+
     public function getMonedaComprobanteAttribute()
     {
         if ($this->facturacion_id != null) {
@@ -179,5 +195,32 @@ class Cuotas_credito extends Model
             'saldo_pendiente' => max($saldoPendiente, 0),
             'moneda'          => $monedaBase->simbolo,
         ];
+    }
+
+    public function getMontoTotalProcesadoAttribute()
+    {
+        $monto_base = $this->attributes['monto'];
+        switch ($this->tipo_comprobante) {
+            case 1: //Factura
+                $factura = Facturacion::find($this->attributes['id']);
+                $total = $factura->precio_sin_forma; //Total de Factura con reduccion incluida
+                if($this->estado == 1 || $this->estado == 2){ //Si ya está pagado o adelantado
+                    return $this->attributes['monto'];
+                }else{
+                    $cuotas_disponibles = Cuotas_credito::where('facturacion_id', $this->attributes['facturacion_id'])->where('estado', '!=', 2)->count();
+                    $total_red = $total 
+                }
+                // $precio_red = $total 
+                break;
+            case 2: //Factura M
+                # code...
+                break;
+            case 3: //Boleta 
+                # code...
+                break;
+            case 4: //Boleta M
+                # code...
+                break;
+        }
     }
 }
