@@ -32,8 +32,8 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
         <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
-            <div class=" margin-left: 10px">
-                <a href="{{ route('boleta_manual.create) }}">
+            <div class="margin-left: 10px">
+                <a href="{{ route('boleta_manual.create') }}">
                     <i class="fa fa-arrow-left text-muted"></i>
                 </a>    
             </div>
