@@ -375,7 +375,7 @@
                                 </button> --}}
                                  <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
                                     type="button">Guardar</button>
-                                <button class="btn btn-primary float-right button-lada" style="margin-left: 10px;"
+                                <button data-style="zoom-out" class="btn btn-primary float-right button-lada" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
                                 {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
                                     data-style="zoom-out"></button> --}}
@@ -1613,7 +1613,7 @@
         // Boton para Solamente Guardar
         $("#boton").on("click", function(buton) {
             $('#button_submit').val('0');
-            var l = Ladda.create(document.querySelector('.button-lada'));
+            var l = Ladda.create(this);
             // $('#modal_detraccion').modal('show');
             // DETRACCIONES?
             var seletc_det = $('.select2_tipo_op').val();
@@ -1694,7 +1694,7 @@
         // Boton para Finalizar
         $("#finalizar").on("click", function(buton) {
             $('#button_submit').val('1');
-            var l = Ladda.create(document.querySelector('.button-lada'));
+            var l = Ladda.create(this);
             // $('#modal_detraccion').modal('show');
             // DETRACCIONES?
             var seletc_det = $('.select2_tipo_op').val();
