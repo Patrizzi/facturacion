@@ -215,10 +215,13 @@ class PagadosController extends Controller
                         break;
                 }
                 // Cambio para las cuotas en contado
-                if ($factura_db->forma_pago_id == 1) {
-                    $factura_db->estado_pago = 2;
-                    $factura_db->save();
-                }
+                
+            }
+            if ($factura_db->forma_pago_id == 1) {
+                $factura_db->estado_pago = 2;
+                $factura_db->save();
+            }else{
+                Cuotas_credito::actualizarEstadoFactura($factura_db->id,$comprobantes);
             }
         }
         return redirect()->back()->with('success', "El pago se adjuntó correctamente");

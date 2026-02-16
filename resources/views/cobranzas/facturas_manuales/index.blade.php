@@ -98,6 +98,7 @@
                                                     <th>N° Cuotas</th>
                                                     <th>Saldo</th>
                                                     <th>Fecha V.</th>
+                                                    <th>Obs.</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -359,8 +360,22 @@
                     }
                 },
                 {
-                    // 'width': '55%',
                     'targets': [9],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                    //  console.log(full[10]['nota_credito']);
+                        var base_otros = '';
+                        if (full[10] == 1) {
+                            base_otros += `<span class="label label-success">NC</span> `;
+                        }else{
+                        base_otros +=``;
+                        }
+                        return base_otros;
+                    }
+                },
+                {
+                    // 'width': '55%',
+                    'targets': [10],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas_m', ':id') }}";

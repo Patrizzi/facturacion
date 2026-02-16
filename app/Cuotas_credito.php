@@ -32,6 +32,11 @@ class Cuotas_credito extends Model
         return $this->belongsTo(Boleta_m::class, 'boleta_m_id');
     }
 
+    public function comproabante_pagos_reg()
+    {
+        return $this->hasMany(ComprobantesPagosRegistros::class, 'id_cuota_credito');
+    }
+
     public function getTipoComprobanteAttribute()
     {
         if ($this->attributes['facturacion_id'] != null) {
@@ -197,30 +202,120 @@ class Cuotas_credito extends Model
         ];
     }
 
-    public function getMontoTotalProcesadoAttribute()
+    public static function actualizarEstadoFactura($id, $tipo)
     {
-        $monto_base = $this->attributes['monto'];
-        switch ($this->tipo_comprobante) {
-            case 1: //Factura
-                $factura = Facturacion::find($this->attributes['id']);
-                $total = $factura->precio_sin_forma; //Total de Factura con reduccion incluida
-                if($this->estado == 1 || $this->estado == 2){ //Si ya está pagado o adelantado
-                    return $this->attributes['monto'];
-                }else{
-                    $cuotas_disponibles = Cuotas_credito::where('facturacion_id', $this->attributes['facturacion_id'])->where('estado', '!=', 2)->count();
-                    $total_red = $total 
-                }
-                // $precio_red = $total 
-                break;
-            case 2: //Factura M
-                # code...
-                break;
-            case 3: //Boleta 
-                # code...
-                break;
-            case 4: //Boleta M
-                # code...
-                break;
+        if ($tipo === 'factura') {
+            $modelo = Facturacion::find($id);
+            $campoRelacion = 'facturacion_id';
+        } else { // factura_m
+            $modelo = Facturacion_m::find($id);
+            $campoRelacion = 'facturacion_m_id';
         }
+
+        if (!$modelo) {
+            return;
+        }
+
+        $cuotas_totales = Cuotas_credito::where($campoRelacion, $id)->count();
+        $cuotas_canceladas = Cuotas_credito::where($campoRelacion, $id)
+            ->where('estado', 2)
+            ->count();
+
+        self::setEstadoPago($modelo, $cuotas_totales, $cuotas_canceladas);
     }
+
+    public static function actualizarEstadoBoleta($id, $tipo)
+    {
+        if ($tipo === 'boleta') {
+            $modelo = Boleta::find($id);
+            $campoRelacion = 'boleta_id';
+        } else { // boleta_m
+            $modelo = Boleta_m::find($id);
+            $campoRelacion = 'boleta_m_id';
+        }
+
+        if (!$modelo) {
+            return;
+        }
+
+        $cuotas_totales = Cuotas_credito::where($campoRelacion, $id)->count();
+        $cuotas_canceladas = Cuotas_credito::where($campoRelacion, $id)
+            ->where('estado', 2)
+            ->count();
+
+        self::setEstadoPago($modelo, $cuotas_totales, $cuotas_canceladas);
+    }
+
+    private static function setEstadoPago($modelo, $totales, $canceladas)
+    {
+        if ($totales == $canceladas && $totales > 0) {
+            $modelo->estado_pago = 2; // Pagado
+        } elseif ($canceladas > 0) {
+            $modelo->estado_pago = 1; // Parcial
+        } else {
+            $modelo->estado_pago = 0; // Pendiente
+        }
+        // dd($modelo);
+        $modelo->save();
+    }
+
+
+    // public function getMontoProcesadoAttribute()
+    // {
+    //     $monto_base = $this->attributes['monto'];
+    //     switch ($this->tipo_comprobante) {
+    //         case 1: //Factura
+    //             $factura = Facturacion::find($this->attributes['facturacion_id']);
+    //             $total = $factura->total_precio_sin_forma; //Total de Factura con reduccion incluida
+    //             if($this->attributes['estado'] == 1 || $this->attributes['estado'] == 2){ //Si ya está pagado o adelantado
+    //                 return $this->attributes['monto'];
+    //             }else{
+    //                 //Busquedas de cuotas pagadas
+    //                 $cuotas_pagadas = Cuotas_credito::where('facturacion_id', $this->attributes['facturacion_id'])->where('estado', '!=', 0)->get();
+    //                 $monto_sum = 0; //Monto nuevo a pagar o "saldo"
+    //                 foreach ($cuotas_pagadas as $key => $cuotas_p) {
+    //                     if($cuotas_p->estado == 2){ //Si es pagado total
+    //                         $monto_sum = $monto_sum + $cuotas_p->monto;
+    //                     }else{ //Si es monto adelantado
+    //                         $monto_sum = $monto_sum + $cuotas_p->restante_pago_convertido_cuota($this->attributes['id'], $factura->moneda_id)['total_pagado'];
+    //                     }
+    //                 }
+    //                 // Resta para el total a pagar nuevo
+    //                 $total_final = $total - $monto_sum;
+    //                 $cuotas_sin_pagar = Cuotas_credito::where('facturacion_id', $this->attributes['facturacion_id'])->where('estado', 0)->count();
+    //                 $total_en_cuotas = $total_final / $cuotas_sin_pagar;
+    //                 return $total_en_cuotas;
+    //             }
+    //             break;
+    //         case 2: //Factura M
+    //             $factura = Facturacion_m::find($this->attributes['facturacion_m_id']);
+    //             $total = $factura->total_precio_sin_forma; //Total de Factura con reduccion incluida
+    //             if($this->attributes['estado'] == 1 || $this->attributes['estado'] == 2){ //Si ya está pagado o adelantado
+    //                 return $this->attributes['monto'];
+    //             }else{
+    //                 //Busquedas de cuotas pagadas
+    //                 $cuotas_pagadas = Cuotas_credito::where('facturacion_m_id', $this->attributes['facturacion_m_id'])->where('estado', '!=', 0)->get();
+    //                 $monto_sum = 0; //Monto nuevo a pagar o "saldo"
+    //                 foreach ($cuotas_pagadas as $key => $cuotas_p) {
+    //                     if($cuotas_p->estado == 2){ //Si es pagado total
+    //                         $monto_sum = $monto_sum + $cuotas_p->monto;
+    //                     }else{ //Si es monto adelantado
+    //                         $monto_sum = $monto_sum + $cuotas_p->restante_pago_convertido_cuota($this->attributes['id'], $factura->moneda_id)['total_pagado'];
+    //                     }
+    //                 }
+    //                 // Resta para el total a pagar nuevo
+    //                 $total_final = $total - $monto_sum;
+    //                 $cuotas_sin_pagar = Cuotas_credito::where('facturacion_m_id', $this->attributes['facturacion_m_id'])->where('estado', 0)->count();
+    //                 $total_en_cuotas = $total_final / $cuotas_sin_pagar;
+    //                 return $total_en_cuotas;
+    //             }
+    //             break;
+    //         case 3: //Boleta 
+    //             # code...
+    //             break;
+    //         case 4: //Boleta M
+    //             # code...
+    //             break;
+    //     }
+    // }
 }

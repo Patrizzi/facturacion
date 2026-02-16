@@ -353,20 +353,20 @@
                         }
                     }
                 },
-                 {
-                     'targets': [9],
-                     'orderable': false,
-                     'render': function(data, type, full, meta) {
-                        //  console.log(full[10]['nota_credito']);
-                         var base_otros = '';
-                         if (full[11] == 1) {
-                             base_otros += `<span class="label label-success">NC</span> `;
-                         }else{
-                            base_otros +=``;
-                         }
-                         return base_otros;
-                     }
-                 },
+                {
+                    'targets': [9],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                    //  console.log(full[10]['nota_credito']);
+                        var base_otros = '';
+                        if (full[11] == 1) {
+                            base_otros += `<span class="label label-success">NC</span> `;
+                        }else{
+                        base_otros +=``;
+                        }
+                        return base_otros;
+                    }
+                },
                 {
                     // 'width': '55%',
                     'targets': [10],

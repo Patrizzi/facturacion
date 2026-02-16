@@ -94,14 +94,8 @@ class CobranzasComprobantesController extends Controller
                 $factura->n_cuotas = "Pago Único";
             }
             // Documento Adicional )NC - ND)
-            
-            if($factura->nota_credito == "1"){
-                // dd($factura->nota_credito_register->n_electronica);
-                if($factura->nota_credito_register->n_electronica == 1){
-                    $factura->doc_adicional = 1;    
-                }else{
-                    $factura->doc_adicional = 0;
-                }
+            if($factura->nota_credito != "0"){
+                $factura->doc_adicional = 1;    
             }else{
                 $factura->doc_adicional = 0;
             }
@@ -317,6 +311,13 @@ class CobranzasComprobantesController extends Controller
             } else {
                 $factura_m->n_cuotas = "Pago Único";
             }
+            // Documento Adicional )NC - ND)
+            if($factura_m->nota_credito != "0"){
+                $factura_m->doc_adicional = 1;    
+
+            }else{
+                $factura_m->doc_adicional = 0;
+            }
             return $factura_m;
         });
 
@@ -333,6 +334,7 @@ class CobranzasComprobantesController extends Controller
                 $value->saldo_pendiente ?? "---",
                 $value->fecha_vencimiento,
                 $value->id,
+                $value->doc_adicional,
             ];
         }
         return response()->json($json);

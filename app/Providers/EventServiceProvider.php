@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Cuotas_credito;
 use App\Listeners\CreatePermissionsOnLogin;
+use App\Observers\CuotasCreditosObserver;
 use Illuminate\Auth\Events\Authenticated;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
@@ -36,6 +38,7 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
         // Users::observe(new UserObserver());
+        Cuotas_credito::observe(CuotasCreditosObserver::class);
 
 
     }
