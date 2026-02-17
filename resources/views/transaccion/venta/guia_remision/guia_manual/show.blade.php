@@ -55,6 +55,12 @@
                                 data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>
                             </a>
                         </div>
+                        @if ($guia_remision_m->estado == 0)
+                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i
+                                    class="fa fa-pencil"></i></button>
+                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
+                                    class="fa fa-times"></i></button>
+                        @endif
                         <div id="div-mostrar" style="height: 0px; overflow: hidden;">
                             <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                                 style="text-align: none;padding-right: 0;padding-left: 0;">
