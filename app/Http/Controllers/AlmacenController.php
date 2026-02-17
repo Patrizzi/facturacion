@@ -151,8 +151,7 @@ class AlmacenController extends Controller
             'responsable' => ['required'],
             'direccion' => ['required'],
             'descripcion' => ['required'],
-            'cod_sunat' => ['required','unique:cod_guia_almacen,cod_sunat,'.$id.',almacen_id\
-            '],
+            'cod_sunat' => ['required','unique:cod_guia_almacen,cod_sunat,'.$id.',almacen_id'],
         ]);
 
         $estado=$request->get('estado');
