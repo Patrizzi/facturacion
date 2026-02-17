@@ -92,10 +92,9 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        {{-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('categoria.index') }}">
-
+                <div class="card h-100 card-hover shadow-sm" id="categorias_button" style="cursor: pointer;">
                     <div class="img-container">
                         <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Categoria" class="img-bg">
                         <img src="https://cdn3d.iconscout.com/3d/premium/thumb/jerarquia-4721274-3927987.png" alt="Icono Categoria" class="img-overlay">
@@ -103,14 +102,13 @@
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Categoria</h6>
                     </div>
-                </a>
+                </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            
             <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('familia.index') }}">
+                <div class="card h-100 card-hover shadow-sm" id="familia_button" style="cursor: pointer;">
                     <div class="img-container">
                         <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Familias" class="img-bg">
                         <img src="https://cdn3d.iconscout.com/3d/premium/thumb/producto-10808619-8687861.png" alt="Icono Familias" class="img-overlay">
@@ -118,14 +116,13 @@
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Familias</h6>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('garantia.index') }}">
-
+                <div class="card h-100 card-hover shadow-sm" id="garantia_button" style="cursor: pointer;">
                     <div class="img-container">
                         <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Garantia" class="img-bg">
                         <img src="https://static.vecteezy.com/system/resources/previews/047/649/375/original/3d-golden-shield-icon-isolated-on-transparent-background-png.png" alt="Icono Garantia" class="img-overlay">
@@ -133,28 +130,27 @@
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Garantia</h6>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('marca.index') }}">
-                <div class="img-container">
-                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Marcas" class="img-bg">
-                    <img src="https://static.vecteezy.com/system/resources/previews/015/329/405/original/brand-3d-illustration-icon-png.png" alt="Icono Marcas" class="img-overlay">
+                <div class="card h-100 card-hover shadow-sm" id="marcas_button" style="cursor: pointer;">
+                    <div class="img-container">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Marcas" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/015/329/405/original/brand-3d-illustration-icon-png.png" alt="Icono Marcas" class="img-overlay">
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <h6 class="card-title-custom">Marcas</h6>
+                    </div>
                 </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Marcas</h6>
-                </div>
-                </a>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('motivo.index') }}">
-
+            <div class="card h-100 card-hover shadow-sm">                
+                <div class="card h-100 card-hover shadow-sm" id="motivos_button" style="cursor: pointer;">
                     <div class="img-container">
                         <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Motivos" class="img-bg">
                         <img src="https://static.vecteezy.com/system/resources/previews/028/272/877/original/puzzle-3d-rendering-isometric-icon-png.png" alt="Icono Motivos" class="img-overlay">
@@ -162,7 +158,7 @@
                     <div class="card-body text-center p-3">
                         <h6 class="card-title-custom">Motivos</h6>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
 

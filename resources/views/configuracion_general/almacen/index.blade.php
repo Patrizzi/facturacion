@@ -30,7 +30,7 @@
         <div class="modal-dialog modal-lg"> <!-- Added 'modal-lg' for a larger size -->
             <div class="modal-content">
                 <!-- Formulario de Almacén -->
-                <form action="{{route('almacen.store')}}"  enctype="multipart/form-data" method="post">
+                <form action="{{route('almacen.store')}}"  enctype="multipart/form-data" method="post" id="form_almacen_store">
                 @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="myModalLabel" style="">Agregar nuevo Almacén</h5>
@@ -65,12 +65,12 @@
                                         <!-- Nombre -->
                                         <div class="col-md-6">
                                             <label for="nombreAlmacen" class="form-label"><b>Nombre:</b></label>
-                                            <input type="text" placeholder="Almacén" class="form-control" required="required" name="nombre" autocomplete="off">
+                                            <input type="text" placeholder="Almacén" class="form-control" required="required" name="nombre" autocomplete="off" id="almacen_nombre">
                                         </div>
                                         <!-- Responsable -->
                                         <div class="col-md-6">
                                             <label for="responsable" class="form-label"><b>Responsable:</b></label>
-                                            <select name="responsable" required  class="form-control m-b select2-responsable" autocomplete="off" required="required" style="margin-bottom: 0px;">
+                                            <select name="responsable" required  class="form-control m-b select2-responsable" id="select2-responsable" autocomplete="off" required="required" style="margin-bottom: 0px;">
                                                 <option value=""></option>
                                                 @foreach($personal as $personals)
                                                     <option value="{{$personals->id}}" > {{$personals->nombres}} {{$personals->apellidos}}</option>
@@ -82,19 +82,19 @@
                                         <!-- Dirección -->
                                         <div class="col-md-6">
                                             <label for="direccion" class="form-label"><b>Dirección:</b></label>
-                                            <input type="text" class="form-control" placeholder="Av. , Calle, Ciudad" name="direccion" autocomplete="off" required="required">
+                                            <input type="text" class="form-control" placeholder="Av. , Calle, Ciudad" name="direccion" autocomplete="off" required="required" id="almacen_direccion">
                                         </div>
                                         <!-- Abreviatura -->
                                         <div class="col-md-6">
                                             <label for="abreviatura" class="form-label"><b>Abreviatura:</b></label>
-                                            <input type="text" class="form-control" name="abreviatura" autocomplete="off" required="required" placeholder="ALM.">
+                                            <input type="text" class="form-control" name="abreviatura" autocomplete="off" required="required" placeholder="ALM." id="almacen_abreviatura">
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <!-- Código Sunat -->
                                         <div class="col-md-6">
                                             <label for="codigoSunat" class="form-label"> <b>Código Sunat:</b></label>
-                                            <input  type="number" class="form-control" name="cod_sunat" autocomplete="off" required="required" placeholder="Numero de sucursal">
+                                            <input  type="number" class="form-control" name="cod_sunat" autocomplete="off" required="required" placeholder="Numero de sucursal" id="almacen_sunat">
                                         </div>
                                         <!-- Cod. Ubigeo -->
                                         <div class="col-md-6">
@@ -105,7 +105,7 @@
                                                 <b>Cod. Ubigeo:</b>
                                             </label>
                                             <div class="input-group">
-                                                <input type="text"  class="form-control" name="ubigeo" autocomplete="off" required="required" placeholder="150101" minlength="6" maxlength="6">
+                                                <input type="text"  class="form-control" name="ubigeo" autocomplete="off" required="required" placeholder="150101" minlength="6" maxlength="6" id="almacen_ubigeo">
                                             </div>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                         <!-- Descripción -->
                                         <div class="col-md-12">
                                             <label for="descripcion" class="form-label"><b>Descripción:</b></label>
-                                            <textarea class="form-control" name="descripcion" autocomplete="off" required="required" placeholder="Descripcion del Almacen"></textarea>
+                                            <textarea class="form-control" name="descripcion" autocomplete="off" required="required" placeholder="Descripcion del Almacen" id="descripcion_almacen"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -133,6 +133,7 @@
                                             Nota: Los campos siguientes son los correlativos iniciales para los comprobantes.
                                         </div>
                                     </div>
+                                    <input type="hidden" name="" id="valid_tab_1" value="" required>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="row mb-3">
@@ -330,7 +331,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" style="">Guardar</button>
+                        <button type="button" id="button_save_almacen" class="btn btn-primary" style="">Siguiente</button>
+                        <button type="button" id="button_save_sunat" class="btn btn-primary" style="display: none" >Guardar</button>
+                        <button type="submit" id="submit_sunat" class="btn btn-primary" style="display: none" >Guardar</button>
                     </div>
                 </form>
                 <!-- Fin del contenido modal -->
@@ -375,9 +378,9 @@
                                         <th>ID</th>
                                         <th>Nombre</th>
                                         <th>Abreviatura</th>
-                                        <th>Descripción</th>
-                                        <th>Responsable</th>
                                         <th>Dirección</th>
+                                        <th>Responsable</th>
+                                        <th>Descripción</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -387,9 +390,9 @@
                                         <td>{{$almacen->id}}</td>
                                         <td>{{$almacen->nombre}}</td>
                                         <td>{{$almacen->abreviatura}}</td>
-                                        <td>{{$almacen->descripcion}}</td>
-                                        <td>{{$almacen->personal->nombres}} {{$almacen->personal->apellidos}}</td>
                                         <td>{{$almacen->direccion}}</td>
+                                        <td>{{$almacen->personal->nombres}} {{$almacen->personal->apellidos}}</td>
+                                        <td>{{$almacen->descripcion}}</td>
                                         <td>
                                             @if($almacen->estado==0)
                                             <button type="submit" class="btn btn-info"><i  class=" fa fa-check"></i></button>
@@ -949,5 +952,41 @@
         });
 
     </script>
-
+    <script>
+        $('#button_save_almacen').on('click', function(){
+            var form = $('#form_almacen_store')[0];
+            if (!form.checkValidity()) {
+                return form.reportValidity();
+            }
+            $('#button_save_almacen').css('display', 'none');
+            $('#button_save_sunat').css('display', 'block');
+            $('#tab2-tab').click();
+            $('#valid_tab_1').val("1");
+        });
+        $('#button_save_sunat').on('click', function(){
+            // 
+            // submit_form
+            var form = $('#form_almacen_store')[0];
+            if (!form.checkValidity()) {
+                var nombre = $.trim($('#almacen_nombre').val());
+                var responsable = $('#select2-responsable').val();
+                var direccion = $.trim($('#almacen_direccion').val());
+                var abreviatura = $.trim($('#almacen_abreviatura').val());
+                var sunat = $.trim($('#almacen_sunat').val());
+                var ubigeo = $.trim($('#almacen_ubigeo').val());
+                var descripcion = $.trim($('#descripcion_almacen').val());
+                var responsableValido = responsable && (Array.isArray(responsable) ? responsable.length > 0 : $.trim(responsable) !== "");
+                if (responsableValido && direccion && abreviatura && sunat && ubigeo && descripcion)  {
+                    $('#valid_tab_1').val("1");
+                }else{
+                    // $('#valid_tab_1').val("")
+                    form.reportValidity();
+                    $('#tab1-tab').click();
+                }
+                return;
+            }
+            $('#submit_sunat').click();
+            console.log("a");
+        });
+    </script>
 @endsection

@@ -47,7 +47,7 @@
                                 <th style="width: 10%;">Código</th>
                                 <th style="width: 30%;">Descripción</th>
                                 <th style="width: 20%;">Ubicación</th>
-                                <th style="width: 20%;">Cantidad de SubFamilias</th>
+                                <th style="width: 20%;"># SubFamilias</th>
                                 <th style="width: 10%;">Acción</th>
                                 <th style="width: 10%;">Estado</th>
                             </tr>

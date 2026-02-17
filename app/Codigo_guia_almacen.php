@@ -100,64 +100,55 @@ class Codigo_guia_almacen extends Model
   {
     // facturas
     if ($request->cod_fac == null || $request->cod_fac == "") {
-      $last_fact = Codigo_guia_almacen::max('cod_factura');
-      $new_fact = $last_fact + 1;
+      $new_fact = 1;
     } else {
       $new_fact = $request->cod_fac;
     }
     // boletas
     if ($request->cod_bol == null || $request->cod_bol == "") {
-      $last_bol = Codigo_guia_almacen::max('cod_bol');
-      $new_bol = $last_bol + 1;
+      $new_bol = 1;
     } else {
       $new_bol = $request->cod_bol;
     }
     // remision
     if ($request->cod_guia == null || $request->cod_guia == "") {
-      $last_remi = Codigo_guia_almacen::max('cod_remision');
-      $new_remi = $last_remi + 1;
+      $new_remi = 1;
     } else {
       $new_remi = $request->cod_guia;
     }
     // facturas_manual
     if ($request->cod_factura_m == null || $request->cod_factura_m == "") {
-      $last_fact_m = Codigo_guia_almacen::max('cod_factura_m');
-      $new_fact_m = $last_fact_m + 1;
+      $new_fact_m = 1;
     } else {
       $new_fact_m = $request->cod_factura_m;
     }
     // boletas_manual
     if ($request->cod_boleta_m == null || $request->cod_boleta_m == "") {
-      $last_bol_m = Codigo_guia_almacen::max('cod_boleta_m');
-      $new_bol_m = $last_bol_m + 1;
+      $new_bol_m = 1;
     } else {
       $new_bol_m = $request->cod_boleta_m;
     }
     // remision_manual
     if ($request->cod_remision_m == null || $request->cod_remision_m == "") {
-      $last_remi_m = Codigo_guia_almacen::max('cod_remision_m');
-      $new_remi_m = $last_remi_m + 1;
+      $new_remi_m = 1;
     } else {
       $new_remi_m = $request->cod_remision_m;
     }
     // credito factura
     if ($request->cod_credito == null || $request->cod_credito == "") {
-      $last_credito = Codigo_guia_almacen::max('cod_nota_credito');
-      $new_cred_fact = $last_credito + 1;
+      $new_cred_fact = 1;
     } else {
       $new_cred_fact = $request->cod_credito;
     }
     // credito boleta
     if ($request->cod_credito_b == null || $request->cod_credito_b == "") {
-      $last_credito_b = Codigo_guia_almacen::max('cod_nota_credito_b');
-      $new_cred_bol = $last_credito_b + 1;
+      $new_cred_bol = 1;
     } else {
       $new_cred_bol = $request->cod_credito_b;
     }
     // debito
     if ($request->cod_debito == null || $request->cod_debito == "") {
-      $last_debito = Codigo_guia_almacen::max('cod_nota_debito');
-      $new_debito = $last_debito + 1;
+      $new_debito = 1;
     } else {
       $new_debito = $request->cod_debito;
     }
