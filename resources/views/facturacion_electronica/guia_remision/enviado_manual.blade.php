@@ -275,7 +275,7 @@
                         'targets': [9],
                         'orderable': false,
                         'render': function(data, type, full, meta) {
-                            if (`${full[12]}` != null || `${full[13]}` == 1) {
+                            if (`${full[12]}` == 1) {
                                 var url =
                                     `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
 
@@ -287,7 +287,7 @@
 
                                 var finish_all = `
                                 <div id="div_btn_app_man">
-                                    <button type="button" class="btn" id="guia_remi_ind_man" value="${full[2]}" onclick="valid_cdr_normal(this)"><img src="{{ asset('cdr.png') }}" width="25px"></button>
+                                    <button type="button" class="btn" id="guia_remi_ind_man" value="${full[2]}" onclick="valid_cdr_manual(this)"><img src="{{ asset('cdr.png') }}" width="25px"></button>
                                 </div>
                                 <div style="display: none;" id="div_dw_non_man">
                                     <a id="download_cdr_post" href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></a>   
