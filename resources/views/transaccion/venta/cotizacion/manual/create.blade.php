@@ -779,8 +779,8 @@
                         text: "Una vez Finalizado, no podras modificar la Cotizacion Manual",
                         type: "warning",
                         showCancelButton: true,
-                        confirmButtonColor: "#3686ff",
                         confirmButtonText: "Si, Finalizar",
+                        confirmButtonColor: "#1a3bb3",
                         cancelButtonText: "Cancelar!",
                         closeOnConfirm: false,
                         closeOnCancel: false

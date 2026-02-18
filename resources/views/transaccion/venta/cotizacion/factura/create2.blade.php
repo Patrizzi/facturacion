@@ -931,7 +931,7 @@
                         text: "Una vez Finalizado, No se podrá editar la Cotizacion",
                         type: "warning",
                         showCancelButton: true,
-                        confirmButtonColor: "#3686ff",
+                        confirmButtonColor: "#1a3bb3",
                         confirmButtonText: "Si, Finalizar",
                         cancelButtonText: "Cancelar!",
                         closeOnConfirm: false,
