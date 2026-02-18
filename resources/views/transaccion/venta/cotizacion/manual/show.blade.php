@@ -14,7 +14,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
         <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
-            <div class=" margin-left: 10px">
+            <div style="margin-top: 5px;margin-bottom: 8px; margin-left: 10px">
                 <a href="{{ route('cotizacion_manual.create') }}">
                     <i class="fa fa-arrow-left text-muted"></i>
                 </a>    
@@ -1016,7 +1016,7 @@
         }
 
     });
-    
+
     var clic = 1;
     function divAuto(){
        if(clic==1){
