@@ -16,6 +16,8 @@ use App\Http\Controllers\TipoCambioController;
 use Illuminate\Support\Facades\Route;
 
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\DB;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -55,7 +57,7 @@ Route::group([ 'middleware' => 'api.validate'], function () {
         ->get();
         return response()->json($producto);
     });
-
+    
     // Route::get('productos-inactivo',function(){
     //     $producto = DB::table('productos')
     //     ->select('*',

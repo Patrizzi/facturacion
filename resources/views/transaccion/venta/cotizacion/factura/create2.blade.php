@@ -382,12 +382,14 @@
                             </div>
                         </div>
                         <div class="col-md-12 text-right">
-                            <button data-style="zoom-out" class="guardar ladda-button btn btn-primary btn-outline"
-                                type="submit">Guardar</button>
+                            <button data-style="expand-right" class="guardar ladda-button btn btn-primary btn-outline"
+                                type="submit">
+                                <span class="ladda-label">Guardar</span>
+                            </button>
                             <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;"
                                 type="button">Guardar y Finalizar</button>
-                            <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
-                                data-style="zoom-out"></button>
+                            {{--  <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
+                                data-style="zoom-out"></button>  --}}
                         </div>
                     </div>
                 </form>
@@ -890,7 +892,20 @@
     <!-- Sweet alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#coti_store_Fac').on('submit', function(e) {
 
+                console.log('Submit disparado');
+
+                var btnG = $('.guardar');
+                console.log('Botón al submit:', btnG.length);
+
+                var l = Ladda.create(btnG[0]);
+                l.start();
+            });
+        });
+    </script>
     <script>
         function ajax_confi(parameters) {
             var configuracion_seleccionado = parameters.id;
@@ -949,12 +964,7 @@
 
             }
         });
-        $(document).ready(function() {
-            // Bind normal buttons
-            Ladda.bind('.ladda-button', {
-                timeout: 8000
-            });
-        });
+
 
         $.ajaxSetup({
             headers: {
