@@ -568,7 +568,11 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         $boleta->comisionista= $comisionista_buscador->id ?? null;
     // }
     $boleta->user_id =auth()->user()->id;
-    $boleta->estado='0';
+    if($request->button_submit == 0){
+        $boleta->estado = '0'; //!
+    }else{
+        $boleta->estado = '1'; //!
+    }
     $boleta->tipo='producto';
     $boleta->tipo_documento_id = 3;
     $boleta->tipo_operacion_id = $busca_ope->id;
