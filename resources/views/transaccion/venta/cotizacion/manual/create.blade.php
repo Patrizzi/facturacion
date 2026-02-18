@@ -38,7 +38,7 @@
             </div>
             <div class="ibox-content">
                 <form action="{{ route('cotizacion_manual.store') }}" enctype="multipart/form-data" method="post"
-                    id="form_sto" onsubmit="return valida(this)">
+                    id="form_sto">
                     @csrf
                     {{-- si existe un servicio guia en esta vista, mandarla al controller --}}
                     @if(isset($servicioGuia->id))
@@ -343,7 +343,9 @@
                             </div>
                         </div>
                         <div class="col-md-12 text-right">
-                            <button class="guardar ladda-button btn btn-primary btn-outline" type="submit">Guardar</button>
+                            <button class="guardar ladda-button btn btn-primary btn-outline" type="button" data-style="expand-right" data-spinner-color="#1c84c6" data-spinner-size="20">
+                                <span class="ladda-label">Guardar</span>
+                            </button>
                             <button class="btn btn-primary demo3 float-right" id="finalizar_button"
                                 style="margin-left: 10px;" type="button">Guardar y Finalizar</button>
                             <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
@@ -796,12 +798,8 @@
                     });
             }
         });
-        $(document).ready(function() {
-            // Bind normal buttons
-            Ladda.bind('.ladda-button', {
-                timeout: 8000
-            });
-        });
+        // Evita envíos múltiples de la misma cotización por doble/triple click.
+        var isSubmittingCotizacion = false;
 
         // $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
 
@@ -811,18 +809,68 @@
             $("#divmsg").show(200);
         }
         /* {{-- Darle valor a cada Boton si es Finalizar o solo Guardar --}} */
-        $(".guardar").on('submit', function(e) {
-            $(".demo3").attr('disabled', true);
-            var data =
-                `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
-            $('#inp_s').append(data);
+        // Reutiliza inputs ocultos en lugar de agregarlos en cada click.
+        function getOrCreateHiddenInput(form, id, name) {
+            var input = document.getElementById(id);
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.id = id;
+                input.name = name;
+                form.appendChild(input);
+            }
+            return input;
+        }
 
-        });
-        $(".finalizar").on('click', function(e) {
-            var data =
-                `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
-            $('#inp_s').append(data);
-            //  $(".guardar").dis();
+        $(document).ready(function() {
+            var form = document.getElementById('form_sto');
+            var guardarButton = document.querySelector('.guardar');
+            // Instancia manual de Ladda para controlar el estado de carga del botón Guardar.
+            var l = guardarButton ? Ladda.create(guardarButton) : null;
+
+            function enviarCotizacion(valorSubmit) {
+                // Si ya empezó el envío, salir sin hacer nada.
+                if (isSubmittingCotizacion) {
+                    return;
+                }
+
+                // Validación HTML5 antes de bloquear botones y enviar.
+                if (!form.reportValidity()) {
+                    return;
+                }
+
+                isSubmittingCotizacion = true;
+
+                if (l) {
+                    // Activa la animación de espera hasta que el navegador redirija.
+                    l.start();
+                }
+
+                // Bloquea botones de acción para prevenir registros duplicados.
+                // No se deshabilita '.guardar' aquí para no interferir con el render del spinner.
+                $(".demo3, #finalizar_button").prop('disabled', true);
+
+                var inputSubmit = getOrCreateHiddenInput(form, 'submit_hidden', 'submit');
+                var inputAccion = getOrCreateHiddenInput(form, 'accion_hidden', 'accion');
+                inputSubmit.value = valorSubmit;
+                inputAccion.value = 'guardar';
+
+                // Pequeño delay para permitir que el navegador pinte la animación antes de redirigir.
+                setTimeout(function() {
+                    // Submit nativo para evitar colisión con input[name="submit"].
+                    HTMLFormElement.prototype.submit.call(form);
+                }, 120);
+            }
+
+            $(".guardar").off('click').on('click', function(e) {
+                e.preventDefault();
+                enviarCotizacion('1');
+            });
+
+            $(".finalizar").off('click').on('click', function(e) {
+                e.preventDefault();
+                enviarCotizacion('2');
+            });
         });
         $(".select2_demo_almacen").select2({
             placeholder: "Seleccionar Almacen",
