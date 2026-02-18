@@ -1016,14 +1016,15 @@
         }
 
     });
+    
+    var clic = 1;
     function divAuto(){
-        var clic = 1;
        if(clic==1){
-            document.getElementById("div-mostrar").style.height = "50px";
-            clic = clic + 1;
+       document.getElementById("div-mostrar").style.height = "50px";
+       clic = clic + 1;
        } else{
-            document.getElementById("div-mostrar").style.height = "0px";
-            clic = 1;
+        document.getElementById("div-mostrar").style.height = "0px";
+        clic = 1;
        }
     }
         //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina
