@@ -463,6 +463,7 @@ Route::group(
         Route::resource('/boleta', 'BoletaController')->except(['store', 'create']);
         Route::post('/boleta/create', 'BoletaController@create')->name('boleta.create');
         Route::put('/boleta/store/{id_moneda}', 'BoletaController@store')->name('boleta.store');
+        Route::post('/boleta/update/{id}', 'BoletaController@update')->name('boleta.update');
         Route::get('/boleta/ticket/{id}', 'BoletaController@ticket')->name('boleta.ticket');
         /*Guia Remision*/
         //para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria

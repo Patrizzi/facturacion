@@ -513,7 +513,7 @@ class FacturacionController extends Controller
      */
     public function store(Request $request, $id_moneda)
     {
-        return $request;
+        // return $request;
         $articulo = $request->input('articulo');
 
         // return $articulo;
@@ -1330,7 +1330,7 @@ class FacturacionController extends Controller
         }
         // return $comi;
 
-        // Esicion de Registros
+        // Edicion de Registros
         $registros_count = count($factura->registros);
         $count_art = count($request->get('cantidad'));
         // OBTENCION DE PRODUCTOS O SERVICIOS
@@ -1353,7 +1353,7 @@ class FacturacionController extends Controller
                 if (isset($producto_busq)) {
                     $edit_reg->producto_id = $producto_busq->id;
                     $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
-                     if ($request->get('descripcion_item')[$index_reg] == null) {
+                    if ($request->get('descripcion_item')[$index_reg] == null) {
                         $edit_reg->descripcion_item = null;
                     } else {
                         $edit_reg->descripcion_item = $request->get('descripcion_item')[$index_reg];
