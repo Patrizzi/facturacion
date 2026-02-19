@@ -14,7 +14,7 @@
         <input hidden="hidden" type="submit" />
     </form>
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox">
+        <div class="ibox" style="">
             <div class="ibox-title" style="padding-right: 3.1%">
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">
@@ -294,14 +294,21 @@
         </div>
     </div>
 
-    <style>
+    <style type="text/css">
+        .ruc {
+            border-radius: 10px;
+            height: 125px;
+        }
+
+        .a {
+            height: 30px;
+            margin: 0;
+            border-radius: 0px;
+            text-align: center;
+        }
+
         #auto {
-            /*padding: -100px;*/
-            /*background: orange;*/
-            /*width: 95px;*/
             cursor: pointer;
-            /*margin-top: 10px;*/
-            /*margin-bottom: 10px;*/
             box-shadow: 0px 0px 1px #000;
             display: inline-block;
         }
@@ -311,12 +318,8 @@
         }
 
         #div-mostrar {
-            /*width: 50%;*/
             margin: auto;
             height: 0px;
-            /*margin-top: -5px*/
-            /*background: #000;*/
-            /*box-shadow: 10px 10px 3px #D8D8D8;*/
             transition: height .4s;
             color: white;
             text-align: right;
@@ -329,68 +332,121 @@
         #auto:hover+#div-mostrar {
             height: 50px;
         }
+
+        #watermark {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+
+        #watermark p {
+            position: absolute;
+            color: rgba(120, 120, 120, 0.31);
+            font-weight: bolder;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 95px;
+            pointer-events: none;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            top: 45%;
+            right: 40%;
+            z-index: 0;
+        }
     </style>
-
-    {{-- <style>
-    .form-control{margin-top: 5px; border-radius: 5px}
-    p#texto{
-        text-align: center;
-        color:black;
-    }
-
-    input#archivoInput{
-        position:absolute;
-        top:0px;
-        left:0px;
-        right:0px;
-        bottom:0px;
-        width:100%;
-        height:100%;
-        opacity: 0  ;
-    }
-</style> --}}
-
-    {{-- <script type="text/javascript">
-    function mostrarPassword(){
-        var cambio = document.getElementById("txtPassword");
-        if(cambio.type == "password"){
-            cambio.type = "text";
-            $('#ojo').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
-        }else{
-            cambio.type = "password";
-            $('#ojo').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
-        }
-    }
-
-</script> --}}
-    {{-- <script type="text/javascript">
-    function validarExt()
-    {
-        var archivoInput = document.getElementById('archivoInput');
-        var archivoRuta = archivoInput.value;
-        var extPermitidas = /(.jpg|.png|.jfif)$/i;
-        if(!extPermitidas.exec(archivoRuta)){
-            alert('Asegurese de haber seleccionado una Imagen');
-            archivoInput.value = '';
-            return false;
+    <style>
+        @media (min-width: 992px) {
+            #add_product_data>.modal-lg {
+                max-width: 1200px;
+            }
         }
 
-        else
-                                        {
-        //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-            var visor = new FileReader();
-            visor.onload = function(e)
-            {
-                document.getElementById('visorArchivo').innerHTML =
-                '<img name="firma" src="'+e.target.result+'"width="390px" height="200px" />';
-            };
-            visor.readAsDataURL(archivoInput.files[0]);
+        /* PARA EL EDITAR */
+        .input-group>.select2-container--bootstrap {
+            width: auto;
+            flex: 1 1 auto;
         }
-    }
-}
-</script> --}}
+
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .row_form {
+            align-items: center;
+            margin-bottom: 0px;
+        }
+
+        .edit_form {
+            margin: 0px !important;
+            padding-bottom: 0px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            font-size: 12px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none;
+        }
+
+        span.select2.select2-container.select2-container--default {
+            width: 100% !important;
+            background-color: #FFFFFF;
+            background-image: none;
+            border-radius: 1px;
+            display: block;
+            padding: 3px 12px;
+            border: 1px solid #e5e6e7;
+        }
+
+        .item_guia {
+            font-size: 11px;
+            margin: 0px 7px;
+            cursor: hand;
+        }
+
+        a.item_guia::after {
+            content: "x";
+            font-size: 9px;
+            color: red;
+            vertical-align: top;
+        }
+
+        .mostrar {
+            display: ;
+        }
+
+        .no_mostrar {
+            display: none;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+    </style>
+    <!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- Jquery Validate -->
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <!-- Steps -->
+    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
     <script>
         var clic = 1;
 
@@ -404,35 +460,68 @@
             }
         }
     </script>
-    <style type="text/css">
-        .ruc {
-            border-radius: 10px;
-            height: 125px;
+    <script>
+        var clic = 1;
+
+        function divAuto() {
+            if (clic == 1) {
+                document.getElementById("div-mostrar").style.height = "50px";
+                clic = clic + 1;
+            } else {
+                document.getElementById("div-mostrar").style.height = "0px";
+                clic = 1;
+            }
         }
 
-        .form-control {
-            border-radius: 10px;
+        function click_editar() {
+            // MOSTRAR LOS INPUTS
+            $('#edicion_boleta').removeClass('no_mostrar');
+            $('#edicion_boleta').addClass('mostrar');
+            // OCULTAR TABLA
+            $('#show_boleta').addClass('no_mostrar');
+            // BOTONES
+            $('.btn-no-editar').removeClass('no_mostrar');
+            $('.btn-editar').addClass('no_mostrar');
         }
 
-        .a {
-            height: 30px;
-            margin: 0;
-            border-radius: 0px;
-            text-align: center;
+        function click_cancelar_editar() {
+            // OCULTAR INPUTS
+            $('#edicion_boleta').removeClass('mostrar');
+            $('#edicion_boleta').addClass('no_mostrar');
+            // MOSTRAR TABLA
+            $('#show_boleta').removeClass('no_mostrar');
+            $('#show_boleta').addClass('mostrar');
+
+            $('.btn-editar').removeClass('no_mostrar');
+            $('.btn-no-editar').addClass('no_mostrar');
         }
-    </style>
+    </script>
+    @include('transaccion.venta.boleta._shared._edit_script')
+    <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
 
-    <!-- Mainly scripts -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+            @if (session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
 
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <!-- Custom and plugin javascript -->
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
 
+            @if (session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+        });
+    </script>    
 @endsection

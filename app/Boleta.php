@@ -76,6 +76,33 @@ class Boleta extends Model
         return $this->hasMany(Cuotas_credito::class, 'boleta_id');
     }
 
+    public function getFechaEmisionEditAttribute()
+    {
+        $edit_emision = Carbon::parse($this->attributes['fecha_emision'])->format('yyyy-mm-dd');
+        return $edit_emision;
+    }
+    
+    public function getFechaVencimientoEditAttribute()
+    {
+        $edit_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('Y-m-d');
+        return $edit_vencimiento;
+    }
+
+    public function getSelectComisionistaAttribute()
+    {
+        $raw = trim((string) $this->getAttribute('comisionista'));
+
+        if ($raw === '' || $raw === '0') {
+            return null;
+        }
+
+        if (!ctype_digit($raw)) {
+            return null;
+        }
+
+        return Personal_venta::with('personal.personal_l')->find((int) $raw);
+    }
+
     public static function revision_cuotas($id)
     {
 
