@@ -518,6 +518,47 @@
             padding: 6px 12px;
         }
 
+        .ladda-button[data-loading] {
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* Necesario para posicionar el spinner */
+    overflow: hidden;
+}
+
+/* 2. Ocultar el texto */
+.ladda-button[data-loading] .ladda-label {
+    display: none !important;
+}
+
+/* 3. Forzar al spinner de Ladda a ser visible y centrarse */
+.ladda-button[data-loading] .ladda-progress {
+    display: none !important; /* Oculta la barra de progreso si existe */
+}
+
+.ladda-button[data-loading] .ladda-spinner {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    margin: 0 !important;
+    /* Esto lo centra matemáticamente */
+    transform: translate(-50%, -50%) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 4. Ajuste para el círculo del spinner interno */
+.ladda-button[data-loading] .ladda-spinner > div {
+    left: 50% !important;
+    top: 50% !important;
+}
         .check {
             -webkit-appearance: none;
             height: 34px;
@@ -892,20 +933,7 @@
     <!-- Sweet alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    <script>
-        $(document).ready(function(){
-            $('#coti_store_Fac').on('submit', function(e) {
 
-                console.log('Submit disparado');
-
-                var btnG = $('.guardar');
-                console.log('Botón al submit:', btnG.length);
-
-                var l = Ladda.create(btnG[0]);
-                l.start();
-            });
-        });
-    </script>
     <script>
         function ajax_confi(parameters) {
             var configuracion_seleccionado = parameters.id;
