@@ -387,6 +387,20 @@ class Boleta extends Model
         $new_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('d-m-Y');
         return $new_vencimiento;
     }
+                
+    public function getSubTotalSinFormaAttribute()
+    {
+        $subtotal = ($this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada']);
+        return round($subtotal, 2);
+    }
+
+    public function getIgvSinFormaAttribute()
+    {
+        $igv = Igv::first()->renta;
+        $sub_igv = ($this->attributes['op_gravada'] * $igv) / 100;
+
+        return round($sub_igv, 2);
+    }
 
     public function getTotalPrecioAttribute(){
         // $boleta = Boleta::find($this->attributes['id']);
@@ -400,6 +414,21 @@ class Boleta extends Model
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
         $total_igv = $this->moneda->simbolo.' '.number_format($total, 2);
+        return $total_igv;
+    }
+    public function getTotalPrecioDescSinFormaAttribute()
+    {
+        // $boleta = Boleta::find($this->attributes['id']);
+        $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+
+        // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+        // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
+
+        $total_igv = $total;
         return $total_igv;
     }
     public function getTotalPrecioSinFormaAttribute()

@@ -1078,7 +1078,7 @@ return redirect()->route('boleta.show',$boleta->id);
         $boleta->guia_remision = $request->get('guia_r') ?? 0; 
         $boleta->cliente_id = $request->get('cliente_id');
         $boleta->moneda_id = $request->get('moneda_id');
-        $boleta->forma_pago_id = $request->get('forma_pago_id');
+        $boleta->forma_pago_id = $request->get('forma_pago');
         $boleta->fecha_vencimiento = $fecha_vencimiento;
         $boleta->observacion = $request->get('observacion');
         if($request->button_submit == 0){
@@ -1093,6 +1093,7 @@ return redirect()->route('boleta.show',$boleta->id);
         $boleta->op_gratuita = 0;
         $boleta->save();
 
+        $moneda = Moneda::where('principal', 1)->first();
         // Validacion para la moneda esocogida
         //! Crear o Editar cuotas dependiendo de la logica anterior
         if($create_cuotas == 1){
@@ -1124,7 +1125,8 @@ return redirect()->route('boleta.show',$boleta->id);
         }
         // Comision
         if($boleta->comisionista == null || $boleta->comisionista !=  "0"){
-            $comi = $boleta->select_comisionista;
+            $all_comi = $boleta->select_comisionista;
+            $comi =  $all_comi->comision;
             // return $factura->select_comisionista;
             // CAMBIO EN EL VALOR DE LA FACTURA PARA LAS VENTAS REGISTROS
             $venta_reg = Ventas_registro::where('id_bol', $id)->first();
@@ -1150,12 +1152,12 @@ return redirect()->route('boleta.show',$boleta->id);
         }
         // ret
         if($registros_count == $count_art){
-            foreach($boleta->registros as $index => $registro){
+            foreach($boleta->registros as $index_reg => $edit_reg){
                 $producto_busq = Producto::where('codigo_producto', $producto_id[$index_reg])->first();
                 if(isset($producto_busq)){
-                    $registro->producto_id = $producto_busq->id;
-                    $registro->cantidad = $request->get('cantidad')[$index_reg];
-                    $registro->servicio_id = null;
+                    $edit_reg->producto_id = $producto_busq->id;
+                    $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
+                    $edit_reg->servicio_id = null;
                     if ($request->get('descripcion_item')[$index_reg] == null) {
                         $edit_reg->descripcion_item = null;
                     } else {
@@ -1164,13 +1166,13 @@ return redirect()->route('boleta.show',$boleta->id);
                     $stock = Stock_almacen::where('producto_id',$producto_busq->id)->sum('stock');
                     $edit_reg->stock = $stock;
                     $boleta =  Boleta::find($id);
-                    if($moneda->id == $moneda_registrada){
+                    if($moneda->id == $boleta->moneda_id){
                         if ($moneda->tipo == 'nacional'){
                             //promedio original revisar que es  promedio nacional--------------------------------------------------------
                             $array2=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional');
                             $edit_reg->promedio_original=$array2;
 
-                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')*($producto->utilidad-$producto->descuento1)/100;
+                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')*($producto_busq->utilidad - $producto_busq->descuento1)/100;
                             $igv_p=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad);
                             $array=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad);
                             $edit_reg->precio=$array;
@@ -1179,7 +1181,7 @@ return redirect()->route('boleta.show',$boleta->id);
                             $array2=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero');
                             $edit_reg->promedio_original=$array2;
 
-                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*($producto->utilidad-$producto->descuento1)/100;
+                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*($producto_busq->utilidad - $producto_busq->descuento1)/100;
                             $igv_p=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')+$utilidad);
                             $array=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')+$utilidad);
                             $edit_reg->precio=$array;
@@ -1187,21 +1189,21 @@ return redirect()->route('boleta.show',$boleta->id);
                     }else{
                         if ($moneda->tipo == 'extranjera'){
                             //promedio original revisar que es  promedio nacional--------------------------------------------------------
-                            $array2=round(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*$cambio->paralelo,2);
+                            $array2=round(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*$boleta->cambio->paralelo,2);
                             $edit_reg->promedio_original=$array2;
 
-                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*($producto->utilidad-$producto->descuento1)/100;
+                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*($producto_busq->utilidad - $producto_busq->descuento1)/100;
                             $igv_p=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')+$utilidad);
-                            $array=round((Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero'))*$cambio->paralelo+$utilidad,2);
+                            $array=round((Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero'))*$boleta->cambio->paralelo+$utilidad,2);
                             $edit_reg->precio=$array;
                         }else{
                             //promedio original revisar que es  promedio nacional--------------------------------------------------------
-                            $array2=round(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')/$cambio->paralelo,2);
+                            $array2=round(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')/$boleta->cambio->paralelo,2);
                             $edit_reg->promedio_original=$array2;
 
-                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')*($producto->utilidad-$producto->descuento1)/100;
+                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')*($producto_busq->utilidad - $producto_busq->descuento1)/100;
                             $igv_p=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad);
-                            $array=round((Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad)/$cambio->paralelo,2);
+                            $array=round((Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad)/$boleta->cambio->paralelo,2);
                             $edit_reg->precio=$array;
                         }
                     }
