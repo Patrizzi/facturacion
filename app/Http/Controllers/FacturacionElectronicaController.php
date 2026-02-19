@@ -130,7 +130,7 @@ class FacturacionElectronicaController extends Controller
         $empresa=Empresa::first();
         $fecha_hoy = Carbon::now();
 
-        $boletas=Boleta::where('b_electronica',0)->get();
+        $boletas=Boleta::where('b_electronica',0)->where('estado', 1)->get();
         foreach ($boletas as $boleta) {
             $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
         }
@@ -148,7 +148,7 @@ class FacturacionElectronicaController extends Controller
         $empresa=Empresa::first();
         $fecha_hoy = Carbon::now();
 
-        $boletas_m=Boleta_m::where('b_electronica',0)->get();
+        $boletas_m=Boleta_m::where('b_electronica',0)->where('estado', 1)->get();
         foreach ($boletas_m as $boleta) {
             $boleta->diff_day =  intval(date_diff($boleta->created_at, $fecha_hoy)->format('%R%a'));
         }

@@ -115,7 +115,7 @@ class CobranzasComprobantesController extends Controller
                 $value->saldo_pendiente ?? "---",
                 $value->fecha_vencimiento,
                 $value->id,
-                $value->total_precio_sin_forma,
+                $value->total_precio_desc_sin_forma,
                 $value->doc_adicional,
             ];
         }
@@ -334,6 +334,7 @@ class CobranzasComprobantesController extends Controller
                 $value->saldo_pendiente ?? "---",
                 $value->fecha_vencimiento,
                 $value->id,
+                $value->total_precio_desc_sin_forma,
                 $value->doc_adicional,
             ];
         }

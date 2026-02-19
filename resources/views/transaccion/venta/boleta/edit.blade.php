@@ -366,23 +366,23 @@
                                 <td colspan="7" class="text-right"><strong>Subtotal:</strong></td>
                                 <td colspan="2">
                                     <input id='sub_total' type="text" name="sub_total_sin_igv" readonly
-                                        class="form-control" required />
+                                        class="form-control" required value="{{$boleta->sub_total_sin_forma}}" />
                                     <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly
-                                        class="form-control" required hidden="" />
+                                        class="form-control" required hidden="" value="{{$boleta->op_gravada}}" />
                                 </td>
                             </tr>
                             <tr style="background-color: #f5f5f500;">
                                 <td colspan="7" class="text-right"><strong>IGV:</strong></td>
                                 <td colspan="2">
                                     <input id='igv' type="text" disabled="disabled" class="form-control"
-                                        required />
+                                        required value="{{$boleta->igv_sin_forma}}" />
                                 </td>
                             </tr>
                             <tr align="center">
                                 <td colspan="7" class="text-right"><strong>Total:</strong></td>
                                 <td colspan="2">
                                     <input id='total_final' type="text" name="total_comi" readonly
-                                        class="form-control td-width" required />
+                                        class="form-control td-width" required value="{{$boleta->total_precio_sin_forma}}" />
                                 </td>
                             </tr>
                         </tbody>

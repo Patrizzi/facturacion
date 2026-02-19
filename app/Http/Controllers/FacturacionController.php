@@ -1314,7 +1314,9 @@ class FacturacionController extends Controller
         // Comision
         // return $factura->comisionista;
         if($factura->comisionista == null || $factura->comisionista !=  "0"){
-            $comi = $factura->select_comisionista;
+            $all_comi = $factura->select_comisionista;
+            $comi =  $all_comi->comision;
+            // dd($comi);
             // return $factura->select_comisionista;
             // CAMBIO EN EL VALOR DE LA FACTURA PARA LAS VENTAS REGISTROS
             $venta_reg = Ventas_registro::where('id_fac', $id)->first();
