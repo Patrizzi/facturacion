@@ -156,8 +156,10 @@
     </div>
 </div>
 <br>
-<button class="btn btn-xl btn-primary float-right m-t-n-xs" type="submit" ><strong>Grabar</strong></button>
-</div>
+<button id="btn_grabar_egreso" class="btn btn-xl btn-primary float-right m-t-n-xs" type="button">
+    <strong>Grabar</strong>
+</button>
+<button type="submit" id="submit_hidden_egreso" hidden></button></div>
 </div>
 </div>
 </form>
@@ -172,6 +174,38 @@
 <!-- Custom and plugin javascript -->
 <script src="{{ asset('js/inspinia.js') }}"></script>
 <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<script>
+    let enviandoEgreso = false;
 
+    $('#btn_grabar_egreso').on('click', function () {
+        if (enviandoEgreso) return;
+
+        const form = this.closest('form');
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        enviandoEgreso = true;
+
+        $(this).prop('disabled', true);
+        $(this).html('<strong>Guardando...</strong>');
+
+        $('#submit_hidden_egreso').click();
+    });
+
+    window.addEventListener('pageshow', function () {
+        enviandoEgreso = false;
+        $('#btn_grabar_egreso').prop('disabled', false).html('<strong>Grabar</strong>');
+    });
+
+    $('form').on('keydown', function(e){
+        if(e.key === 'Enter'){
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
 
 @stop
