@@ -957,7 +957,7 @@
     });
     $(document).ready(function() {
         Ladda.bind('.ladda-button', {
-            timeout: 8
+            timeout: 8000
         });
         $('#btn_popover').click();
 
