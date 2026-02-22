@@ -703,26 +703,26 @@
                                     {{-- <i class="fa fa-bell mx-3"></i> --}}
                                     <div class="left-side-slider">
                                         <div class="slides2">
-                                            
+
                                             @if ($fact_view_count > 0 || $fact_m_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index')}}">Enviar a Sunat</a>
-                                                
+
                                             @endif
                                             @if ($bol_view_count > 0 || $bol_m_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index_boleta')}}">Enviar a Sunat</a>
-                                                
+
                                             @endif
                                             @if ($guia_view_count > 0 || $guia_m_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index_guia_remision')}}">Enviar a Sunat</a>
-                                                
+
                                             @endif
                                             @if ($n_credito_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index_nota_credito')}}">Enviar a Sunat</a>
-                                                
+
                                             @endif
                                             @if ($n_debito_view_count > 0)
                                                 <a class="link span_slide2" href="{{route('facturacion_electronica.index_nota_debito')}}">Enviar a Sunat</a>
-                                                
+
                                             @endif
                                             @if (! $mostrar)
                                                 <a class="link span_slide2 disabled" href="javascript:void(0)">Enviar a Sunat</a>
@@ -1007,7 +1007,7 @@
         }
     });
 
-    
+
 </script>
 @yield('scripts')
 
