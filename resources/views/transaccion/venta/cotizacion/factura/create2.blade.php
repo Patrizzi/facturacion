@@ -387,7 +387,7 @@
                                 <span class="ladda-label">Guardar</span>
                             </button>
                             <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;"
-                                type="button">Guardar y Finalizar</button>
+                                id="btn-finalizar" type="button">Guardar y Finalizar</button>
                             {{--  <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
                                 data-style="zoom-out"></button>  --}}
                         </div>
@@ -518,47 +518,6 @@
             padding: 6px 12px;
         }
 
-        .ladda-button[data-loading] {
-    width: 42px !important;
-    height: 42px !important;
-    padding: 0 !important;
-    transition: all 0.2s ease-in-out;
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    position: relative; /* Necesario para posicionar el spinner */
-    overflow: hidden;
-}
-
-/* 2. Ocultar el texto */
-.ladda-button[data-loading] .ladda-label {
-    display: none !important;
-}
-
-/* 3. Forzar al spinner de Ladda a ser visible y centrarse */
-.ladda-button[data-loading] .ladda-progress {
-    display: none !important; /* Oculta la barra de progreso si existe */
-}
-
-.ladda-button[data-loading] .ladda-spinner {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    margin: 0 !important;
-    /* Esto lo centra matemáticamente */
-    transform: translate(-50%, -50%) !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-/* 4. Ajuste para el círculo del spinner interno */
-.ladda-button[data-loading] .ladda-spinner > div {
-    left: 50% !important;
-    top: 50% !important;
-}
         .check {
             -webkit-appearance: none;
             height: 34px;
@@ -934,7 +893,11 @@
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
+
     <script>
+        $('#coti_store_Fac').on('submit', function() {
+            $('#btn-finalizar').prop('disabled', true)
+        });
         function ajax_confi(parameters) {
             var configuracion_seleccionado = parameters.id;
             $.ajax({
