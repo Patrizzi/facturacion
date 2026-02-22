@@ -158,7 +158,10 @@
            </div>
          </div>
          <div class="col-sm-12">
-          <button class="btn btn-xl btn-primary float-right m-t-n-xs" type="submit" id="boton"><strong>Grabar</strong></button>
+            <button class="btn btn-xl btn-primary float-right m-t-n-xs" type="button" id="boton">
+                <strong>Grabar</strong>
+            </button>
+            <button type="submit" id="submit_hidden_informe" hidden></button>
         </div>
       </div>
     </form>
@@ -395,5 +398,38 @@ legend{
   }
 </script>
 
+<script>
+    let enviandoInforme = false;
 
+    $('#boton').on('click', function () {
+        if (enviandoInforme) return;
+
+        const form = this.closest('form');
+        if (!form) return;
+
+        if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+        }
+
+        enviandoInforme = true;
+
+        $(this).prop('disabled', true);
+        $(this).html('<strong>Guardando...</strong>');
+
+        $('#submit_hidden_informe').click();
+    });
+
+    window.addEventListener('pageshow', function () {
+        enviandoInforme = false;
+        $('#boton').prop('disabled', false).html('<strong>Grabar</strong>');
+    });
+
+    $(document).on('keydown', 'form', function(e){
+        if(e.key === 'Enter'){
+        e.preventDefault();
+        return false;
+        }
+    });
+</script>
 @stop
