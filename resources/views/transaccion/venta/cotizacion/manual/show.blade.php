@@ -14,7 +14,7 @@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
         <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
-            <div class=" margin-left: 10px">
+            <div style="margin-top: 5px;margin-bottom: 8px; margin-left: 10px">
                 <a href="{{ route('cotizacion_manual.create') }}">
                     <i class="fa fa-arrow-left text-muted"></i>
                 </a>    
@@ -1016,14 +1016,15 @@
         }
 
     });
+
+    var clic = 1;
     function divAuto(){
-        var clic = 1;
        if(clic==1){
-            document.getElementById("div-mostrar").style.height = "50px";
-            clic = clic + 1;
+       document.getElementById("div-mostrar").style.height = "50px";
+       clic = clic + 1;
        } else{
-            document.getElementById("div-mostrar").style.height = "0px";
-            clic = 1;
+        document.getElementById("div-mostrar").style.height = "0px";
+        clic = 1;
        }
     }
         //Llama predeterminada para el select articles (productos- servicios), se ejecuta al cargar la pagina

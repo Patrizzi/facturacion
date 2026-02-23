@@ -213,7 +213,11 @@
 						</div>
 						{{-- Vista --}}
 						{{-- <div align="ibox" align="right"> --}}
-							<button style="align: left" class="btn btn-xl btn-primary float-right m-t-n-xs" type="submit" ><strong>Grabar</strong></button>
+                            <button id="btn_grabar" class="btn btn-xl btn-primary float-right m-t-n-xs" type="button">
+                                <strong>Grabar</strong>
+                            </button>
+
+                            <button type="submit" id="submit_hidden" hidden></button>
 						{{-- </div> --}}
 					</div>
 				</div>
@@ -359,4 +363,44 @@
 			}
 		}
 	</script>
+
+
+    <script>
+        let enviando = false;
+
+        $('#btn_grabar').on('click', function () {
+            if (enviando) return; // evita doble click
+
+            const form = this.closest('form');
+
+            // Validación HTML5 (required, maxlength, etc.)
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            enviando = true;
+
+            // Bloquea el botón
+            $(this).prop('disabled', true);
+
+            // Cambia texto (opcional)
+            $(this).html('<strong>Guardando...</strong>');
+
+            // Envía el formulario una sola vez
+            $('#submit_hidden').click();
+        });
+
+        $('form').on('keydown', function(e){
+            if(e.key === 'Enter'){
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        window.addEventListener('pageshow', function() {
+            enviando = false;
+            $('#btn_grabar').prop('disabled', false).html('<strong>Grabar</strong>');
+        });
+    </script>
 	@stop

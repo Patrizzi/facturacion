@@ -104,7 +104,7 @@
                     </a>
                 </div>
             </div>
-            <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="ibox-content" style="padding-right: 3.1%">
                 <div class="row tooltip-demo">
                     <div class="col-sm-6"></div>
                     <div class="col-sm-6" align="right">
@@ -138,7 +138,7 @@
                             <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
                                     class="fa fa-times"></i></button>
                         @endif
-                        <div id="div-mostrar">
+                        <div id="div-mostrar" style="height: 0px; overflow: hidden;">
                             <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                                 style="text-align: none;padding-right: 0;padding-left: 0;">
                                 @csrf
