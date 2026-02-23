@@ -56,6 +56,7 @@ use App\Guia_remision;
 use App\GuiaRemisionManual;
 use App\MedioPagoDetraccion;
 use App\TipoDetraccion;
+use Greenter\Model\Retention\Retention;
 use Illuminate\Support\Facades\Redirect;
 
 class BoletaController extends Controller
@@ -1124,8 +1125,10 @@ return redirect()->route('boleta.show',$boleta->id);
             }
         }
         // Comision
-        if($boleta->comisionista == null || $boleta->comisionista !=  "0"){
+        // return var_dump($boleta->comisionista);
+        if ($boleta->comisionista !== NULL && $boleta->comisionista !== "0") {
             $all_comi = $boleta->select_comisionista;
+            // return $all_comi;    
             $comi =  $all_comi->comision;
             // return $factura->select_comisionista;
             // CAMBIO EN EL VALOR DE LA FACTURA PARA LAS VENTAS REGISTROS
@@ -1137,6 +1140,7 @@ return redirect()->route('boleta.show',$boleta->id);
             $venta_reg->save();
         } else {
             $comi = 0;
+            // return $comi+2;
         }
         // Edicion de Registros
         $registros_count = count($boleta->registros);
