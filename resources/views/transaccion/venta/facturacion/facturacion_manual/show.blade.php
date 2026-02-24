@@ -686,20 +686,6 @@
                 clic = 1;
             }
         }
-    </script>
-    <script>
-        var clic = 1;
-
-        function divAuto() {
-            if (clic == 1) {
-                document.getElementById("div-mostrar").style.height = "50px";
-                clic = clic + 1;
-            } else {
-                document.getElementById("div-mostrar").style.height = "0px";
-                clic = 1;
-            }
-        }
-
         function click_editar() {
             // MOSTRAR LOS INPUTS
             $('#edicion_factura').removeClass('no_mostrar');

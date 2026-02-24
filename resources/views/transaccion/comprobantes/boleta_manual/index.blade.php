@@ -235,10 +235,20 @@
                         const estadoSunat = parseInt(full[9]);
                         const estadoCredito = parseInt(full[10]);
                         const estadoDebito = parseInt(full[11]);
+                        const estadoProcesado = parseInt(full[14]);
 
+                        // Estado para Editable o no
+                        if(estadoProcesado == 0){
+                            end += `<button class="btn btn-warning btn-circle btn-ls" title="Sin Finalizar"><i class="fa fa-clock-o"></i></button> `;
+                            estados[0].clase = estados[0].clase + " disabled";
+                            estados[0].texto = "No se puede enviar hasta Finalizar la Factura"
+                        }else{
+                            end += `<button class="btn btn-info btn-circle btn-ls" title="Finalizado"><i class="fa fa-check-circle"></i></button> `;
+                        }
+                        
                         const e0 = estados[estadoSunat];
                         end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">
-                                    <i class="${e0.icono}"></i>
+                                    <img src="{{asset('sunat_blanco.png')}}" style="width:16px; height:16px;" />
                                 </button> `;
                         // Solo muestra botón si el estado es válido y diferente de 99
                         if (estadoCredito != 99) {

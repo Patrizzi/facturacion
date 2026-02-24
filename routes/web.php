@@ -440,14 +440,6 @@ Route::group(
 
         Route::post('/facturacion_manual/codigo', 'FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
         Route::resource('facturacion_manual', 'FacturacionMController');
-        Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
-        //facturacion manual
-        //->Vista para facturacion manual próximamente...
-        Route::get('/facturacion_manual/print/{id}', 'FacturacionMController@print')->name('facturacion_manual.print');
-        Route::get('/facturacion_manual/ticket/{id}', 'FacturacionMController@ticket')->name('facturacion_manual.ticket');
-
-        Route::post('/facturacion_manual/codigo', 'FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
-        Route::resource('facturacion_manual', 'FacturacionMController');
         Route::post('/facturacion_manual/update/{id}', 'FacturacionMController@update')->name('facturacion_manual.update');
         Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
 
@@ -470,6 +462,7 @@ Route::group(
         Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
         //boleta manual manual
         Route::resource('boleta_manual', 'BoletaMController');
+        Route::post('/boleta_manual/update/{id}', 'BoletaMController@update')->name('boleta_manual.update');
         Route::post('/boleta_manual/codigo', 'BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
         Route::get('/boleta_manual/print/{id}', 'BoletaMController@print')->name('boleta_manual.print');
         Route::get('/boleta_manual/ticket/{id}', 'BoletaMController@ticket')->name('boleta_manual.ticket');
