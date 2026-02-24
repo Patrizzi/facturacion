@@ -277,6 +277,7 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado_nota_debito,
                 $boleta->cliente->celular ?? '',
                 $boleta->cliente->email ?? '',
+                $boleta->estado
             ];
         }
         // Llamado para la suma total

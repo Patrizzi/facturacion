@@ -6,7 +6,7 @@
                 @csrf
                 <div class="row" style="align-items: center; justify-content: center">
                     @include('layout_cabecera_ventas')
-                    <div class="col-sm-4 ">
+                    <div class="col-sm-4">
                         <div class="form-control ruc" style="height: 125px">
                             <center>
                                 <h3 style="padding-top:10px ">R.U.C : {{ $empresa->ruc }}</h3>
