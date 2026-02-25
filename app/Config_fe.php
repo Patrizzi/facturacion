@@ -64,30 +64,38 @@ class Config_fe extends Model
 
         //libro: https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia%2Bxml%2Bfactura%2Bversion%202-1%2B1%2B0%20%282%29_0.pdf
         // valor que se coloca para validar mas abajo en el invoice de guias;
-        $val_7_adc = [];
-        $val_9_adc = [];
+        // $val_7_adc = [];
+        // $val_9_adc = [];
         if ($guia == 1) {
-            $new_cod_guia = $factura->guia_remision;
-            $exp = explode(' ', $new_cod_guia);
+            $exp = explode(' ', trim($factura->guia_remision));
+            foreach ($exp as $i => $codigoOriginal) {
 
-            for ($i = 0; $i < count($exp); $i++) {
-                $guia_ex = Guia_remision::where('cod_guia', $exp[$i])->first();
-                $guia_ex_m = GuiaRemisionManual::where('cod_guia', $exp[$i])->first();
-                if (isset($guia_ex) || isset($guia_ex_m)) {
-                    $split_g = explode('-', $exp[$i]);
-                    $split_20 =  (int)$split_g[1];
-                    $new_cod_guia = $split_g[0] . '-' . $split_20;
-                    $guiaRemision[] = (new Document())
-                        ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
-                        ->setNroDoc($new_cod_guia); // Serie y correlativo de la guia de remision    
-                    //valro adcional
-                    $val_7_adc[] = $i;
-                } else {
-                    $guiaRemision2[] = (new Document())
-                        ->setTipoDoc('99') // Guia de Remision remitente: 09, catalogo 01
-                        ->setNroDoc($exp[$i]); // Serie y correlativo de la guia de remision
-                    $val_9_adc[] = $i;
+                if (!str_contains($codigoOriginal, '-')) {
+                    continue;
                 }
+
+                [$serie, $correlativo] = explode('-', $codigoOriginal);
+
+                // Normalizamos a formato BD (8 dígitos)
+                $correlativoFormateado = str_pad((int)$correlativo, 8, '0', STR_PAD_LEFT);
+                $codigoNormalizado = $serie . '-' . $correlativoFormateado;
+
+                // Buscar SOLO con formato normalizado
+                // $guia_ex = Guia_remision::where('cod_guia', $codigoNormalizado)->first();
+                // $guia_ex_m = GuiaRemisionManual::where('cod_guia', $codigoNormalizado)->first();
+
+                // if ($guia_ex || $guia_ex_m) {
+                    $guiaRemision[] = (new Document())
+                        ->setTipoDoc('09')
+                        ->setNroDoc($codigoNormalizado); // Enviar formato correcto
+                    $set_guia[] = $i;
+                // } else {
+                //     $guiaRemision2[] = (new Document())
+                //         ->setTipoDoc('09')
+                //         ->setNroDoc($codigoNormalizado);
+
+                //     $val_9_adc[] = $i;
+                // }
             }
         }
 
@@ -218,17 +226,9 @@ class Config_fe extends Model
                 ->setMtoImpVenta($total);
 
             if ($guia == 1) {
-
-                if (count($val_7_adc) > 0) {
-                    $invoice->setRelDocs(
-                        $guiaRemision // Incluir guia remision de FACTURA ELECTRONICA
-                    );
-                }
-                if (count($val_9_adc) > 0) {
-                    $invoice->setGuias(
-                        $guiaRemision2 // Incluir guia remision.
-                    );
-                }
+                $invoice->setGuias(
+                    $guiaRemision // Incluir guia remision.
+                );
             }
 
 
@@ -286,14 +286,14 @@ class Config_fe extends Model
                 ->setMtoImpVenta($total);
 
             if ($guia == 1) {
-                if (count($val_7_adc) > 0) {
-                    $invoice->setRelDocs(
-                        $guiaRemision // Incluir guia remision de FACTURA ELECTRONICA
-                    );
-                }
-                if (count($val_9_adc) > 0) {
+                // if (count($val_7_adc) > 0) {
+                //     $invoice->setRelDocs(
+                //         $guiaRemision // Incluir guia remision de FACTURA ELECTRONICA
+                //     );
+                // }
+                if (count($set_guia) > 0) {
                     $invoice->setGuias(
-                        $guiaRemision2 // Incluir guia remision.
+                        $guiaRemision // Incluir guia remision.
                     );
                 }
             }
@@ -323,27 +323,35 @@ class Config_fe extends Model
         $val_7_adc = [];
         $val_9_adc = [];
         if ($guia == 1) {
-            $new_cod_guia = $factura->guia_remision;
-            $exp = explode(' ', $new_cod_guia);
+            $exp = explode(' ', trim($factura->guia_remision));
+            foreach ($exp as $i => $codigoOriginal) {
 
-            for ($i = 0; $i < count($exp); $i++) {
-                $guia_ex = Guia_remision::where('cod_guia', $exp[$i])->first();
-                $guia_ex_m = GuiaRemisionManual::where('cod_guia', $exp[$i])->first();
-                if (isset($guia_ex) || isset($guia_ex_m)) {
-                    $split_g = explode('-', $exp[$i]);
-                    $split_20 =  (int)$split_g[1];
-                    $new_cod_guia = $split_g[0] . '-' . $split_20;
-                    $guiaRemision[] = (new Document())
-                        ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
-                        ->setNroDoc($new_cod_guia); // Serie y correlativo de la guia de remision    
-                    //valro adcional
-                    $val_7_adc[] = $i;
-                } else {
-                    $guiaRemision2[] = (new Document())
-                        ->setTipoDoc('99') // Guia de Remision remitente: 09, catalogo 01
-                        ->setNroDoc($exp[$i]); // Serie y correlativo de la guia de remision
-                    $val_9_adc[] = $i;
+                if (!str_contains($codigoOriginal, '-')) {
+                    continue;
                 }
+
+                [$serie, $correlativo] = explode('-', $codigoOriginal);
+
+                // Normalizamos a formato BD (8 dígitos)
+                $correlativoFormateado = str_pad((int)$correlativo, 8, '0', STR_PAD_LEFT);
+                $codigoNormalizado = $serie . '-' . $correlativoFormateado;
+
+                // Buscar SOLO con formato normalizado
+                // $guia_ex = Guia_remision::where('cod_guia', $codigoNormalizado)->first();
+                // $guia_ex_m = GuiaRemisionManual::where('cod_guia', $codigoNormalizado)->first();
+
+                // if ($guia_ex || $guia_ex_m) {
+                    $guiaRemision[] = (new Document())
+                        ->setTipoDoc('09')
+                        ->setNroDoc($codigoNormalizado); // Enviar formato correcto
+                    $set_guia[] = $i;
+                // } else {
+                //     $guiaRemision2[] = (new Document())
+                //         ->setTipoDoc('09')
+                //         ->setNroDoc($codigoNormalizado);
+
+                //     $val_9_adc[] = $i;
+                // }
             }
         }
         if ($facturacion_manual == 0) {
@@ -488,17 +496,9 @@ class Config_fe extends Model
                 );
 
             if ($guia == 1) {
-
-                if (count($val_7_adc) > 0) {
-                    $invoice->setRelDocs(
-                        $guiaRemision // Incluir guia remision de FACTURA ELECTRONICA
-                    );
-                }
-                if (count($val_9_adc) > 0) {
-                    $invoice->setGuias(
-                        $guiaRemision2 // Incluir guia remision.
-                    );
-                }
+                $invoice->setGuias(
+                    $guiaRemision // Incluir guia remision.
+                );
             }
 
 
@@ -571,16 +571,9 @@ class Config_fe extends Model
                 );
 
             if ($guia == 1) {
-                if (count($val_7_adc) > 0) {
-                    $invoice->setRelDocs(
-                        $guiaRemision // Incluir guia remision de FACTURA ELECTRONICA
-                    );
-                }
-                if (count($val_9_adc) > 0) {
-                    $invoice->setGuias(
-                        $guiaRemision // Incluir guia remision.
-                    );
-                }
+                $invoice->setGuias(
+                    $guiaRemision // Incluir guia remision.
+                );
             }
 
             $formatter = new NumeroALetras();
