@@ -293,7 +293,7 @@ class Config_fe extends Model
                 }
                 if (count($val_9_adc) > 0) {
                     $invoice->setGuias(
-                        $guiaRemision // Incluir guia remision.
+                        $guiaRemision2 // Incluir guia remision.
                     );
                 }
             }
