@@ -94,7 +94,7 @@
                                             </div>
                                         </div>
                                         <div class="text-center mt-4">
-                                            <button type="submit" class="btn btn-success">Enviar</button>
+                                            <button type="submit" class=" ladda-button btn btn-success" data-style="expand-right"><span class="ladda-label">Enviar</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -182,7 +182,7 @@
                                             </div>
                                         </div>
                                         <div class="text-center mt-4">
-                                            <button type="submit" class="btn btn-success">Enviar</button>
+                                            <button type="submit" class=" ladda-button btn btn-success" data-style="expand-right"><span class="ladda-label">Enviar</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -278,6 +278,7 @@
             var hoy = yyyy + '-' + n_m + '-' + dd;
             document.getElementById('fecha_emision').value = hoy;
         }
+
     </script>
 
 @endsection
