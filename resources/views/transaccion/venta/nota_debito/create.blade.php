@@ -185,12 +185,17 @@
                                                             value="{{ $tipo }}"></span>
                                                     @foreach ($facturacion_registro as $e => $facturacion_registros)
                                                         <tr>
-                                                            <td style="text-align: center"><input
+                                                            <td style="text-align: center">
+                                                                {{-- Area del chek-box --}}
+                                                                <input
                                                                     class="form-check-input i-checks check_2"
                                                                     type="checkbox"
                                                                     id="inlineCheckbox_{{ $e }}"
                                                                     name="inlineCheckbox_{{ $e }}"
-                                                                    onclick="check('{{ $e }}')"></td>
+                                                                    onclick="check('{{ $e }}')"
+                                                                    required
+                                                                    >
+                                                                </td>
                                                             <td><input type="text" value="{{ $u++ }}"
                                                                     readonly class="form-control" name=""
                                                                     id=""></td>
@@ -279,7 +284,7 @@
                                             </table>
                                         </div>
                                         <div class="text-center" style="margin-top: 20px;">
-                                            <button type="button" id="enviar_pt" class="btn btn-success">Enviar</button>
+                                            <button type="button" id="enviar_pt" class="btn btn-success ladda-button">Enviar</button>
                                             <button type="submit" id="submit_pt" style="display: none">enviar </button>
                                         </div>
                                     </form>
