@@ -479,4 +479,6 @@ class Boleta_m extends Model
         $ultimo_pago =  ComprobantesPagos::where('boleta_m_id', $this->id)->latest()->first();
         return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
     }
+    
+    
 }

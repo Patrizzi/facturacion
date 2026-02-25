@@ -130,9 +130,9 @@
                                     <td>{{$cotizacion_registro->cantidad}}</td>
                                     <td>
                                         @if(isset($cotizacion_registro->producto_id))
-                                            {{$cotizacion_registro->producto->nombre}} | {{$cotizacion_registro->descripcion_item}}
+                                            {{$cotizacion_registro->producto->nombre}}
                                         @else
-                                            {{$cotizacion_registro->servicio->nombre}} | {{$cotizacion_registro->descripcion_item}}
+                                            {{$cotizacion_registro->servicio->nombre}}
                                         @endif
                                         <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
                                     </td>
