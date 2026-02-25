@@ -78,13 +78,13 @@ class Config_fe extends Model
                     $split_20 =  (int)$split_g[1];
                     $new_cod_guia = $split_g[0] . '-' . $split_20;
                     $guiaRemision[] = (new Document())
-                        ->setTipoDoc('07') // Guia de Remision remitente: 09, catalogo 01
+                        ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
                         ->setNroDoc($new_cod_guia); // Serie y correlativo de la guia de remision    
                     //valro adcional
                     $val_7_adc[] = $i;
                 } else {
                     $guiaRemision2[] = (new Document())
-                        ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
+                        ->setTipoDoc('99') // Guia de Remision remitente: 09, catalogo 01
                         ->setNroDoc($exp[$i]); // Serie y correlativo de la guia de remision
                     $val_9_adc[] = $i;
                 }
@@ -334,13 +334,13 @@ class Config_fe extends Model
                     $split_20 =  (int)$split_g[1];
                     $new_cod_guia = $split_g[0] . '-' . $split_20;
                     $guiaRemision[] = (new Document())
-                        ->setTipoDoc('07') // Guia de Remision remitente: 09, catalogo 01
+                        ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
                         ->setNroDoc($new_cod_guia); // Serie y correlativo de la guia de remision    
                     //valro adcional
                     $val_7_adc[] = $i;
                 } else {
                     $guiaRemision2[] = (new Document())
-                        ->setTipoDoc('09') // Guia de Remision remitente: 09, catalogo 01
+                        ->setTipoDoc('99') // Guia de Remision remitente: 09, catalogo 01
                         ->setNroDoc($exp[$i]); // Serie y correlativo de la guia de remision
                     $val_9_adc[] = $i;
                 }
