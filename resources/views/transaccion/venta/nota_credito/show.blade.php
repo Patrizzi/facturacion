@@ -39,24 +39,24 @@
                         </form>
                     @endif
                     <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
-                            data-placement="bottom" title="" data-original-title="Enviar a"><i
-                                class="fa fa-whatsapp fa-lg" style="color: white"></i> </a>
+                        <a class="btn btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
+                            data-placement="bottom" title="" data-original-title="Enviar a">
+                            <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                        </a>
                     </div>
                     <div id="div-mostrar" style="height: 0px; overflow: hidden;">
                         <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                             style="text-align: none;padding-right: 0;padding-left: 0;">
                             @csrf
-                            <input type="tel" name="numero"/>
+                            <input type="tel" name="numero" value="{{ $notas_credito->cliente_obj->celular ?? '' }}" />
                             <input type="text" name="mensaje" id="texto_orden" hidden="" />
                             <input type="text" hidden="" name="url"
                                 value="{{ route('nota_credito.pdf', $notas_credito->id) }}?archivo=">
                             <input type="text" name="name_sin_cambio" hidden=""
-                                value="Nota de Crédito_" />
-                            <button type="submit" class="btn  btn-success"
-                                style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip"
-                                data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i
-                                class="fa fa-send fa-lg"></i> </button>
+                                value="Nota de Crédito_{{ $notas_credito->codigo_n_c }}" />
+                            <button type="submit" class="btn btn-success" style="background: green;border-color: green;"
+                                formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
+                                data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i></button>
                         </form>
                     </div>
                 </div>
@@ -433,6 +433,16 @@
         right: 40%;
         z-index: 100;
     }
+    #auto {
+        display: inline-block;
+    }
+
+    #div-mostrar {
+        margin: auto;
+        height: 0px;
+        transition: height .4s;
+        text-align: right;
+    }
 </style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -461,7 +471,6 @@
     }
 
     var clic = 1;
-
     function divAuto() {
         if (clic == 1) {
             document.getElementById("div-mostrar").style.height = "50px";

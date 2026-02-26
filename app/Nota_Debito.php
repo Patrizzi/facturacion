@@ -113,6 +113,21 @@ class Nota_Debito extends Model
 
         return null; // explícito
     }
+
+    // Retorna a un objeto, no a un id
+    public function getClienteObjAttribute()
+    {
+        if ($this->facturacion_id)
+            return $this->nota_i_facturacion->cliente ?? null;
+        if ($this->facturacion_m_id)
+            return $this->nota_i_fac_manual->cliente ?? null;
+        if ($this->boleta_id)
+            return $this->nota_i_boleta->cliente ?? null;
+        if ($this->boleta_m_id)
+            return $this->nota_i_boleta_manual->cliente ?? null;
+        return null;
+    }
+
     public function getMonedaSimboloAttribute()
     {
         if ($this->facturacion_id) {

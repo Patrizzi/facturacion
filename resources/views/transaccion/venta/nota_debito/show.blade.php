@@ -26,7 +26,7 @@
                 </div>
                 <div class="col-sm-6" align="right">
                     <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('nota_debito.pdf' ,$notas_debito->id)}}">
-                        <input type="text" name="name" maxlength="50" hidden="" value="{{$notas_debito->codigo_n_c}}"  >
+                        <input type="text" name="name" maxlength="50" hidden="" value="{{$notas_debito->codigo_n_d}}"  >
                         <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                     </form>
                     <a class="btn btn-success" href="{{route('nota_debito.print',$notas_debito->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
@@ -38,6 +38,27 @@
                             </button>
                         </form>
                     @endif --}}
+                    <div id="auto" onclick="divAuto()">
+                        <a class="btn btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
+                            data-placement="bottom" title="" data-original-title="Enviar a">
+                            <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                        </a>
+                    </div>
+                    <div id="div-mostrar" style="height: 0px; overflow: hidden;">
+                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                            style="text-align: none;padding-right: 0;padding-left: 0;">
+                            @csrf
+                            <input type="tel" name="numero" value="{{ $notas_debito->cliente_obj->celular ?? '' }}" />
+                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                            <input type="text" hidden="" name="url"
+                                value="{{ route('nota_debito.pdf', $notas_debito->id) }}?archivo=">
+                            <input type="text" name="name_sin_cambio" hidden=""
+                                value="Nota de Débito_{{ $notas_debito->codigo_n_d }}" />
+                            <button type="submit" class="btn btn-success" style="background: green;border-color: green;"
+                                formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
+                                data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i></button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -295,6 +316,19 @@
     </div>
 </div>
 
+<style>
+    #auto {
+        display: inline-block;
+    }
+
+    #div-mostrar {
+        margin: auto;
+        height: 0px;
+        transition: height .4s;
+        text-align: right;
+    }
+</style>
+
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -310,7 +344,7 @@
 
 
 <script>
-    var document->=1;
+    var estado = 1;
     function check(i){
         if(document.getElementById(`inlineCheckbox_${i}`).value == "false"){
             document.getElementById(`input_disabled_${i}`).disabled = true;
@@ -318,6 +352,17 @@
         }else{
             document.getElementById(`input_disabled_${i}`).disabled = false;
             document.getElementById(`inlineCheckbox_${i}`).value = "false"
+        }
+    }
+
+    var clic = 1;
+    function divAuto() {
+        if (clic == 1) {
+            document.getElementById("div-mostrar").style.height = "50px";
+            clic = clic + 1;
+        } else {
+            document.getElementById("div-mostrar").style.height = "0px";
+            clic = 1;
         }
     }
 </script>
