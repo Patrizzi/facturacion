@@ -235,7 +235,7 @@
                 <div class="serie">{{ $guia_remision_m->cod_guia }}</div>
             </div>
         </div>
-        @if ($guia_remision->g_electronica == 2 || $guia_remision->estado_anulado == 1)
+        @if ($guia_remision_m->g_electronica == 2 || $guia_remision_m->estado_anulado == 1)
             <div id="watermark">
                 <p>Anulado</p>
             </div>
