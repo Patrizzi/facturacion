@@ -394,7 +394,7 @@ Route::group(
         Route::get('/nota-credito/create_boleta', 'NotaCreditoController@create_boleta')->name('nota-credito.create_boleta');
         Route::post('/nota-credito/store-boleta/{id}', 'NotaCreditoController@store_boleta')->name('nota-credito.store_boleta');
         Route::post('/nota-credito/store-factura/{id}', 'NotaCreditoController@store_factura')->name('nota-credito.store_factura');
-        Route::resource('/nota-credito', 'NotaCreditoController');
+        Route::resource('/nota-credito', 'NotaCreditoController')->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
 
 
         Route::post('/nota-debito-create-nc', 'NotaDebitoController@create_nota_debito')->name('nota-debito.create_nota_debito');
@@ -1172,16 +1172,16 @@ Route::get('/facturacion3', 'facturacioncontroller@index3')->name('facturacion3'
 Route::resource('/tipo_cambio', 'TipoCambioController');
 Route::get('busqueda_tipo_cambio', 'TipoCambioController@busquedaTipoCambio')->name('tipo_cambio.busqueda_tipo_cambio');
 
-// ServicioController:
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+// // ServicioController:
+// Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+// Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+// Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+// Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+// Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+// Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+// Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+// Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
 
 // Route::get('/servicio/vistaclientes', 'ServiciosController@vistaclientes')->name('servicio.vistaclientes');
