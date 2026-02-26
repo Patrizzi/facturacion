@@ -260,7 +260,7 @@
                                             </table>
                                         </div>
                                         <div class="text-center" style="margin-top: 20px;">
-                                            <button type="button" id="enviar_pt" class="btn btn-success">Enviar</button>
+                                            <button type="button" id="enviar_pt" class="btn btn-success ladda-button">Enviar</button>
                                             <button type="submit" id="submit_pt" style="display: none">enviar </button>
                                         </div>
                                     </form>

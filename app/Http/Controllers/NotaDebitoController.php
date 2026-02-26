@@ -58,7 +58,7 @@ class NotaDebitoController extends Controller
     {
         //cambiar de 0 a 1 en f_electronica
         $facturas=Facturacion::where('f_electronica',1)->where('estado',0)->where('nota_debito',0)->get();
-
+        
         $factura_manual=Facturacion_m::where('f_electronica',1)->where('estado',0)->where('nota_debito',0)->get();
         $igv=Igv::first();
         return view('transaccion.venta.nota_debito.lista_facturacion',compact('facturas','factura_manual','igv'));
