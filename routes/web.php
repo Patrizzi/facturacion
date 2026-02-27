@@ -394,7 +394,7 @@ Route::group(
         Route::get('/nota-credito/create_boleta', 'NotaCreditoController@create_boleta')->name('nota-credito.create_boleta');
         Route::post('/nota-credito/store-boleta/{id}', 'NotaCreditoController@store_boleta')->name('nota-credito.store_boleta');
         Route::post('/nota-credito/store-factura/{id}', 'NotaCreditoController@store_factura')->name('nota-credito.store_factura');
-        Route::resource('/nota-credito', 'NotaCreditoController')->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
+        Route::resource('/nota-credito', 'NotaCreditoController');
 
 
         Route::post('/nota-debito-create-nc', 'NotaDebitoController@create_nota_debito')->name('nota-debito.create_nota_debito');

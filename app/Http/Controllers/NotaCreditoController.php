@@ -74,6 +74,7 @@ class NotaCreditoController extends Controller
     public function create_nota_credito(Request $request)
     {
         // return $request;
+        dd($request);
         $fecha = $request->fecha_emision;
         // $date_format = date("d-m-Y", strtotime($fecha));
         // return $fecha;
@@ -122,8 +123,8 @@ class NotaCreditoController extends Controller
         $igv = Igv::first();
         $sub_total = 0;
         $banco = Banco::where('estado', 0)->get();
-
         //validación por boleta no encontrada
+
         if ($request->tipo_nota_credito == 02) {
             if ($tipo == "factura_origi") {
                 $factura_buscada = Facturacion::where('codigo_fac', $request->nueva_factura)->first();
@@ -139,6 +140,7 @@ class NotaCreditoController extends Controller
         if ($tipo_nota_credito == "01") { //anulación de la operación
             return view('transaccion.venta.nota_credito.tipos.anulacion_operacion', compact('facturacion', 'facturacion_registro', 'empresa', 'igv', 'sub_total', 'banco', 'fecha_emision', 'fecha_emision_db', 'tipo_nota_credito', 'sustento', 'nueva_factura', 'descuento_global', 'tipo'));
         } else if ($tipo_nota_credito == "02") { //anulación por el error en el RUC
+
             return view('transaccion.venta.nota_credito.tipos.anulacion_error_ruc', compact('facturacion', 'facturacion_registro', 'empresa', 'igv', 'sub_total', 'banco', 'fecha_emision', 'fecha_emision_db', 'tipo_nota_credito', 'sustento', 'nueva_factura', 'descuento_global', 'tipo'));
         } else if ($tipo_nota_credito == "03") { //Corrección por error en la descripcion
             return view('transaccion.venta.nota_credito.tipos.correccion_error_descripcion', compact('facturacion', 'facturacion_registro', 'empresa', 'igv', 'sub_total', 'banco', 'fecha_emision', 'fecha_emision_db', 'tipo_nota_credito', 'sustento', 'nueva_factura', 'descuento_global', 'tipo'));
@@ -149,8 +151,9 @@ class NotaCreditoController extends Controller
         }
     }
 
-    public function create_boleta_nota_credito(Request $request)
+    public function create_boleta_nota_credito(Request $request, $id)
     {
+        //error encontrado
 
         // return $request;
         $fecha = $request->fecha_emision;
@@ -187,10 +190,11 @@ class NotaCreditoController extends Controller
         }
         $tipo = $request->get('tipo');
         if ($tipo == "boleta_origi") {
-            $boleta = Boleta::where('codigo_boleta', $request->boleta_id)->first();
+            $boleta = Boleta::where('id', $id)->first();
             $boleta_registro = Boleta_registro::where('boleta_id', $boleta->id)->get();
         } else {
-            $boleta = Boleta_m::where('codigo_boleta', $request->boleta_id)->first();
+            $boleta = Boleta_m::where('id', $id)->first();
+
             $boleta_registro = Boleta_registros_m::where('boleta_m_id', $boleta->id)->get();
         }
         // return $boleta;
@@ -205,9 +209,10 @@ class NotaCreditoController extends Controller
         //validación por boleta no encontrada
         if ($request->tipo_nota_credito == "02") {
             if ($tipo == "boleta_origi") {
-                $boleta_buscada = Boleta::where('codigo_boleta', $request->nueva_boleta)->first();
+                $boleta_buscada = Boleta::where('id', $id)->first();
+
             } else {
-                $boleta_buscada = Boleta_m::where('codigo_boleta', $request->nueva_boleta)->first();
+                $boleta_buscada = Boleta_m::where('id', $id)->first();
             }
             if (isset($boleta_buscada)) {
             } else {
@@ -215,10 +220,10 @@ class NotaCreditoController extends Controller
             }
         }
 
+        //eleccion de error paso 1
         if ($tipo_nota_credito == "01") { //anulación de la operación
             return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_operacion', compact('boleta', 'boleta_registro', 'empresa', 'igv', 'sub_total', 'banco', 'fecha_emision', 'fecha_emision_db', 'tipo_nota_credito', 'sustento', 'nueva_boleta', 'descuento_global', 'tipo'));
         } else if ($tipo_nota_credito == "02") { //anulación por el error en el RUC\
-
             return view('transaccion.venta.nota_credito.tipos_boleta.anulacion_error_ruc', compact('boleta', 'boleta_registro', 'empresa', 'igv', 'sub_total', 'banco', 'fecha_emision', 'fecha_emision_db', 'tipo_nota_credito', 'sustento', 'nueva_boleta', 'descuento_global', 'tipo'));
         } else if ($tipo_nota_credito == "03") { //Corrección por error en la descripcion
 
@@ -235,6 +240,7 @@ class NotaCreditoController extends Controller
 
     public function motivo(Request $request)
     {
+
         // return $request;
         if (isset($request->factura_id)) {
             $facturacion = Facturacion::find($request->factura_id);
@@ -242,12 +248,12 @@ class NotaCreditoController extends Controller
         } elseif (isset($request->factura_manual_id)) {
             $facturacion_m = Facturacion_m::find($request->factura_manual_id);
             return view('transaccion.venta.nota_credito.create_motivo', compact('facturacion_m'));
-        } elseif (isset($request->boleta_manual_id)) {
-            $boleta_m = Boleta_m::find($request->boleta_manual_id);
+            } elseif (isset($request->boleta_manual_id)) {
+                $boleta_m = Boleta_m::find($request->boleta_manual_id);
+                //envio de bolet manual
             return view('transaccion.venta.nota_credito.create_motivo_boleta', compact('boleta_m'));
         } else {
             $boleta = Boleta::find($request->boleta_id);
-
             return view('transaccion.venta.nota_credito.create_motivo_boleta', compact('boleta'));
         }
     }
@@ -585,7 +591,6 @@ class NotaCreditoController extends Controller
 ///---error de rcu
     public function store_boleta(Request $request, $id)
     {
-
         // return $request;
         $tipo = $request->get('tipo');
 
