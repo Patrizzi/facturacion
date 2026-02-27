@@ -492,6 +492,33 @@ class Boleta extends Model
     public function getUltimaFechaPagoAttribute()
     {
         $ultimo_pago =  ComprobantesPagos::where('boleta_id', $this->id)->latest()->first();
-        return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
+        return $ultimo_pago ? Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y') : "Sin Pago Asociado";
+    }
+    
+    public function getUltimoTipoPagoAttribute(){
+        $ultimo_tipo =  ComprobantesPagos::where('boleta_id', $this->id)->latest()->first();
+        return $ultimo_tipo  ?$ultimo_tipo->tipo_pago : "Sin Pago Asociado";
+    }
+
+    public function getUltimoDatoPagoAttribute(){
+        $ultimo_pago =  ComprobantesPagos::where('boleta_id', $this->id)->latest()->first();
+
+        $registro = ComprobantesPagosDetalle::where('comprobante_pago_id', $ultimo_pago->id)->latest()->first();
+        // dd($registrol);
+        switch ($ultimo_pago->tipo_pago) {
+            case 'cheque':
+                $registro_data = $registro->numero_input ?? "Sin N° Asignado";
+                break;
+            case 'tarjeta':
+                $registro_data = $registro->persona_input ?? "Sin Titular";
+                break;
+            case 'efectivo':
+                $registro_data = $registro->persona_input ?? "Sin Persona";
+                break;
+            case  'transferencia':
+                $registro_data = $registro->numero_input ??  "Sin N° Operación";
+                break;
+        }
+        return $registro_data;
     }
 }

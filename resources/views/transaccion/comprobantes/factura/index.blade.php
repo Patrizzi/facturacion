@@ -502,7 +502,6 @@
         $('.select_2_tipo_pago').select2();
         $(document).on('click', '.button_hover_pago', function () {
             if (parseInt($(this).data('estado')) != 0) {
-                console.log($(this).data('id'));
                 pago_rapido_factura($(this).data('id'));
             }
         });

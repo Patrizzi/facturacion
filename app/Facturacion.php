@@ -559,7 +559,7 @@ class Facturacion extends Model
     
     public function getUltimoTipoPagoAttribute(){
         $ultimo_tipo =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
-        return $ultimo_tipo  ?$ultimo_tipo->tipo_pago : "Sin Pago Asociado";
+        return $ultimo_tipo ? $ultimo_tipo->tipo_pago : "Sin Pago Asociado";
     }
 
     public function getUltimoDatoPagoAttribute(){
