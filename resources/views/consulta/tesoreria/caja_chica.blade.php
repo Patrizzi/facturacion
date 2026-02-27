@@ -295,7 +295,7 @@
                                 <label class="form-label small text-muted">Nombre y DNI</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control form-control-lg" name="nombres" placeholder="Nombres" value="{{ old('nombres') }}" required>
-                                    <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}" required>
+                                    <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}" maxlength="8" minlength="8" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required>
                                 </div>
                             </div>
                         </div>
@@ -323,7 +323,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Descripción</label>
-                                <input type="text" class="form-control form-control-lg" name="descripcion" placeholder="Detalle o concepto" value="{{ old('descripcion') }}">
+                                <input type="text" class="form-control form-control-lg" name="descripcion" placeholder="Detalle o concepto" value="{{ old('descripcion') }}" required>
                             </div>
                         </div>
                         {{-- Método de Pago --}}
@@ -338,8 +338,7 @@
                                             class="btn-check"
                                             name="metodo_pago_trans"
                                             id="trans_{{ $metodo }}"
-                                            value="{{ $metodo }}"
-                                            @if($i===0) required @endif
+                                            value="{{ $metodo }}" required 
                                         >
                                         <label class="btn-method metodo-{{ strtolower($metodo) }}" for="trans_{{ $metodo }}">
                                             {{ $metodo }}
@@ -355,14 +354,14 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label">Nro. Operación:</label>
-                                <input type="text" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}">
+                                <input type="number" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}" required>
                                 @error('nro_operacion')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label">Comprobante:</label>
-                                <input type="file" name="comprobante" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf">
+                                <input type="file" name="comprobante" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf" >
                                 @error('comprobante')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
