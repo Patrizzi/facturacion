@@ -519,10 +519,69 @@ class Facturacion extends Model
         return $saldo_pendiente;
     }
 
+    public function getSaldoPendienteSinFormaAttribute()
+    {
+        // return $this->forma_pago_id;
+        $suma_cuota = $this->total_precio_sin_forma;
+        if ($this->forma_pago_id == 2) { // credito
+            $saldo_pendiente = 0;
+            $cuotas_total = 0;
+            // Falta sacar el monto por la cantidad de pago o adelanto que se ha realizado
+            $cuotas = Cuotas_credito::where('facturacion_id', $this->id)->where('estado', '!=',  0)->get();
+            foreach ($cuotas as $cuota) {
+                // if ($cuota->estado == 2 ) {
+                $suma_cuota = $suma_cuota - $cuota->monto;
+                // }
+            }
+            $cuotas_total += $suma_cuota;
+            $saldo_pendiente = number_format($cuotas_total, 2);
+        } else {
+            if ($this->estado_pago == 0) {
+                $saldo_pendiente = number_format($suma_cuota, 2);
+            } else {
+                // Sumatoria para los pagos
+                $totalPagado = ComprobantesPagos::where('factuacion_id', $this->id)
+                    ->sum('monto_pago');
+                $saldo_pendiente = number_format(max(0, $this->importe_total - $totalPagado), 2);
+                // $saldo_pendiente = 0;
+            }
+        }
+
+        // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
+        return $saldo_pendiente;
+    }
+
     public function getUltimaFechaPagoAttribute()
     {
         $ultimo_pago =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
-        return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
+        return $ultimo_pago ? Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y') : "Sin Pago Asociado";
+    }
+    
+    public function getUltimoTipoPagoAttribute(){
+        $ultimo_tipo =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
+        return $ultimo_tipo  ?$ultimo_tipo->tipo_pago : "Sin Pago Asociado";
+    }
+
+    public function getUltimoDatoPagoAttribute(){
+        $ultimo_pago =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
+
+        $registro = ComprobantesPagosDetalle::where('comprobante_pago_id', $ultimo_pago->id)->latest()->first();
+        // dd($registrol);
+        switch ($ultimo_pago->tipo_pago) {
+            case 'cheque':
+                $registro_data = $registro->numero_input ?? "Sin N° Asignado";
+                break;
+            case 'tarjeta':
+                $registro_data = $registro->persona_input ?? "Sin Titular";
+                break;
+            case 'efectivo':
+                $registro_data = $registro->persona_input ?? "Sin Persona";
+                break;
+            case  'transferencia':
+                $registro_data = $registro->numero_input ??  "Sin N° Operación";
+                break;
+        }
+        return $registro_data;
     }
 
     public static function cambio_estado_facturas()

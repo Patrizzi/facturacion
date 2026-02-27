@@ -78,6 +78,7 @@ class CreditosAdelantosController extends Controller
         }
         $array_end = array(
             'factura_cod' => $factura->codigo_fac,
+            'tipo_cambio' => $factura->cambio,
             'cliente_doc' => $factura->cliente->numero_documento,
             'cliente_nombre' => $factura->cliente->nombre,
             'factura_moneda' => $factura->moneda->nombre,
@@ -134,6 +135,7 @@ class CreditosAdelantosController extends Controller
         }
         $array_end = array(
             'factura_cod' => $factura->codigo_fac,
+            'tipo_cambio' => $factura->cambio,
             'cliente_doc' => $factura->cliente->numero_documento,
             'cliente_nombre' => $factura->cliente->nombre,
             'factura_moneda' => $factura->moneda->nombre,
@@ -185,6 +187,7 @@ class CreditosAdelantosController extends Controller
         }
         $array_end = array(
             'boleta_cod' => $boleta->codigo_boleta,
+            'tipo_cambio' => $boleta->cambio,
             'cliente_doc' => $boleta->cliente->numero_documento,
             'cliente_nombre' => $boleta->cliente->nombre,
             'boleta_moneda' => $boleta->moneda->nombre,
@@ -236,6 +239,7 @@ class CreditosAdelantosController extends Controller
         }
         $array_end = array(
             'boleta_cod' => $boleta->codigo_boleta,
+            'tipo_cambio' => $boleta->cambio,
             'cliente_doc' => $boleta->cliente->numero_documento,
             'cliente_nombre' => $boleta->cliente->nombre,
             'boleta_moneda' => $boleta->moneda->nombre,

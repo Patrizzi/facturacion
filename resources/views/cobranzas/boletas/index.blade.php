@@ -570,6 +570,7 @@
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
                             } else {
+                                var tipo_cambio = row.tipo_cambio;
                                 if (row.factura_moneda == "soles" && igual ==
                                     '$') { //DE DOLAR A SOL
                                     var new_val = parseFloat(data_cuota) / tipo_cambio;
@@ -833,6 +834,7 @@
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
                             } else {
+                                var tipo_cambio = row.tipo_cambio;
                                 if (row.factura_moneda == "soles" && igual ==
                                     '$') { //DE DOLAR A SOL
                                     var new_val = parseFloat(data_cuota) / tipo_cambio;
