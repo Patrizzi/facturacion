@@ -14,7 +14,7 @@
                 <div class="ibox">
                     {{-- <div class="ibox-content"> --}}
                     @if (isset($boleta->codigo_boleta))
-                        <form method="POST" action="{{ route('nota-credito.create_nota_credito_boleta') }}" class="row">
+                        <form method="POST" action="{{ route('nota-credito.create_nota_credito_boleta', $boleta->id) }}" class="row">
                             @csrf
                             <input type="hidden" name="tipo" id="" value="boleta_origi">
                             <div class="container col-lg-12">
@@ -39,11 +39,9 @@
                                                     <div class="col-sm-7">
                                                         <select class="form-control" name="tipo_nota_credito"
                                                             id="tipo_nota_credito" onchange="seleccion_motivo()" required>
-                                                            <option value=""></option>
                                                             <option value="01">Anulación de la operación</option>
                                                             <option value="02">Anulación por error en el RUC</option>
-                                                            <option value="03">Correción por error en la descripción
-                                                            </option>
+                                                            <option value="03">Correción por error en la descripción</option>
                                                             <option value="06">Devolución Total</option>
                                                             <option value="07">Devolución por Item</option>
                                                             {{-- <option value="8">Otros conceptos</option>
@@ -101,7 +99,7 @@
                             </div>
                         </form>
                     @else
-                        <form method="POST" action="{{ route('nota-credito.create_nota_credito_boleta') }}" class="row">
+                        <form method="POST" action="{{ route('nota-credito.create_nota_credito_boleta', $boleta_m->id) }}" class="row">
                             @csrf
                             <input type="hidden" name="tipo" id="" value="boleta_manual">
                             <div class="container col-lg-12">

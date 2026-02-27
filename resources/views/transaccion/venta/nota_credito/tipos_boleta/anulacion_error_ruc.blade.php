@@ -124,9 +124,9 @@
                                                                 class="col-sm-4 col-form-label"><strong>Tipo:</strong></label>
                                                             <div class="col-sm-8">
                                                                 <input required="required" class="form-control"
-                                                                    type="text" id="motivo" name=""
+                                                                    type="text" id="motivo" name="motivo"
                                                                     value="Anulación error Ruc" readonly />
-                                                                <input type="hidden" name="motivo" value="{{$tipo_nota_credito}}">
+                                                                <input type="hidden" name="motivo" value="{{str_pad($tipo_nota_credito, 2, '0', STR_PAD_LEFT)}}">
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
