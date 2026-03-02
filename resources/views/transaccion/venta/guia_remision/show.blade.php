@@ -94,7 +94,13 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
-            <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+                @include('transaccion.comprobantes._shared.btn_create_with_almacen', [
+                    'routeCreate' => 'guia_remision.create',
+                    'almacen' => $almacen,
+                    'useAlmacen' => true,
+                    'method' => 'POST'
+                ])
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up text-muted"></i>

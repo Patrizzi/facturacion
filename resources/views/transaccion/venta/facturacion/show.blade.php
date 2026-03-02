@@ -31,7 +31,9 @@
             <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
                 @include('transaccion.comprobantes._shared.btn_create_with_almacen', [
                     'routeCreate' => 'facturacion.create',
-                    'almacen' => $almacen
+                    'almacen' => $almacen,
+                    'useAlmacen' => true,
+                    'method' => 'POST'
                 ])
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">

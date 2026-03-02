@@ -928,6 +928,7 @@ return redirect()->route('boleta.show',$boleta->id);
         if($inventario_inicial == 0 && $servicios == 0){
             return back()->withErrors(['No hay Productos o Servicios Agregados: '.$boleta->almacen->nombre.'']);
         }
+        $almacen = Almacen::all();
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
         $igv=Igv::first();
@@ -953,9 +954,9 @@ return redirect()->route('boleta.show',$boleta->id);
         // return $remisiones;
         // $tipo_detraccion = TipoDetraccion::all();
         // $medio_pago_detraccion = MedioPagoDetraccion::all();
-        
 
-        return view('transaccion.venta.boleta.show', compact('boleta','empresa','banco','boleta_registro','igv','sub_total','forma_pagos','tipo_operacion','moneda','monedas_get'));
+
+        return view('transaccion.venta.boleta.show', compact('boleta','almacen','empresa','banco','boleta_registro','igv','sub_total','forma_pagos','tipo_operacion','moneda','monedas_get'));
     }
 
     public function print($id){
@@ -1036,7 +1037,7 @@ return redirect()->route('boleta.show',$boleta->id);
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {   
+    {
         // return $request;
         $boleta = Boleta::find($id);
         $create_cuotas = 0;
@@ -1054,7 +1055,7 @@ return redirect()->route('boleta.show',$boleta->id);
                 $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
                 $create_cuotas = 1;
             }
-            
+
         }else{ // Si el editado es credito
             if($request->get('forma_pago') == $boleta->forma_pago_id){ //Si sigue siendo credito
                 $fecha_pago_forma = $request->input('fecha_pago');
@@ -1076,7 +1077,7 @@ return redirect()->route('boleta.show',$boleta->id);
         $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
 
         $boleta->orden_compra = $request->get('orden_compra');
-        $boleta->guia_remision = $request->get('guia_r') ?? 0; 
+        $boleta->guia_remision = $request->get('guia_r') ?? 0;
         $boleta->cliente_id = $request->get('cliente_id');
         $boleta->moneda_id = $request->get('moneda_id');
         $boleta->forma_pago_id = $request->get('forma_pago');
@@ -1128,7 +1129,7 @@ return redirect()->route('boleta.show',$boleta->id);
         // return var_dump($boleta->comisionista);
         if ($boleta->comisionista !== NULL && $boleta->comisionista !== "0") {
             $all_comi = $boleta->select_comisionista;
-            // return $all_comi;    
+            // return $all_comi;
             $comi =  $all_comi->comision;
             // return $factura->select_comisionista;
             // CAMBIO EN EL VALOR DE LA FACTURA PARA LAS VENTAS REGISTROS
@@ -1277,7 +1278,7 @@ return redirect()->route('boleta.show',$boleta->id);
                             // return $array;
                         }
                     }
-                    
+
                     $edit_reg->precio = $array;
                     $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
                     $edit_reg->comision = $comi;

@@ -17,7 +17,7 @@
             <div style="margin-top: 5px;margin-bottom: 8px; margin-left: 10px">
                 <a href="{{ route('cotizacion_manual.create') }}">
                     <i class="fa fa-arrow-left text-muted"></i>
-                </a>    
+                </a>
             </div>
             <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px; margin-right: 10px">
                 <a class="collapse-link">

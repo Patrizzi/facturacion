@@ -854,6 +854,7 @@ class NotaCreditoController extends Controller
         //return "1";
         $notas_credito = Nota_Credito::where('id', $id)->first();
         $notas_credito_registros = Nota_Credito_registro::where('nota_credito_id', $id)->get();
+        $almacen = Almacen::all();
 
         $empresa = Empresa::first();
         //* FACTURA 0 - BOLETA  1 - FAC MANUAL 2
@@ -875,7 +876,7 @@ class NotaCreditoController extends Controller
             $estado = 2;
         }
         $igv = Igv::first();
-        return view('transaccion.venta.nota_credito.show', compact('notas_credito', 'notas_credito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg'));
+        return view('transaccion.venta.nota_credito.show', compact('notas_credito', 'almacen', 'notas_credito_registros', 'empresa', 'estado', 'igv', 'document', 'doc_reg'));
     }
 
     public function print($id)
