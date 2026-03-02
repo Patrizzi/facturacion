@@ -35,7 +35,7 @@
                                 <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
                                     @include('transaccion.venta._shared.tabs')
                                     {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: absolute;right: 0px">
                                         {{-- ALMACEN --}}
                                         <a href="#" class="btn btn-primary" id="add_cliente"><i
                                                 class="fa fa-plus"></i></a>
