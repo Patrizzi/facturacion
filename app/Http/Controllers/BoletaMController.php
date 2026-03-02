@@ -121,7 +121,7 @@ class BoletaMController extends Controller
         //Almacen
         $almacenes = Almacen::all();
         //cODIGO
-        $sucursal =Almacen::where('id', '1')->first();
+        $sucursal = Almacen::where('id', '1')->first();
             // return $sucursal;
         $cod_guia= Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
         $cod_boleta_m = $cod_guia->cod_boleta_m;
@@ -443,13 +443,15 @@ class BoletaMController extends Controller
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
+        $almacen = Almacen::all(); // o tu filtro real
+
         // Para editar
         $forma_pagos=Forma_pago::all();
         $tipo_operacion = Tipo_operacion_f::all();
         $almacenes = Almacen::all();
         $moneda=Moneda::where('principal','1')->first();
         $sucursal =Almacen::where('id', '1')->first();
-        return view('transaccion.venta.boleta.boleta_manual.show', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','forma_pagos','tipo_operacion','almacenes','moneda','sucursal'));
+        return view('transaccion.venta.boleta.boleta_manual.show', compact('j','almacen','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','forma_pagos','tipo_operacion','almacenes','moneda','sucursal'));
     }
 
     /**
@@ -490,7 +492,7 @@ class BoletaMController extends Controller
                 $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
                 $create_cuotas = 1;
             }
-            
+
         }else{ // Si el editado es credito
             if($request->get('forma_pago') == $boleta->forma_pago_id){ //Si sigue siendo credito
                 $fecha_pago_forma = $request->input('fecha_pago');
@@ -508,7 +510,7 @@ class BoletaMController extends Controller
             }
         }
 
-        
+
         $boleta->almacen_id = $request->get('almacen');
         $boleta->orden_compra =  $request->get('orden_compra');
         $boleta->guia_remision =  $request->get('guia_r');
@@ -574,7 +576,7 @@ class BoletaMController extends Controller
         $registros_count = count($boleta->registros_m);
         $count_art = count($request->get('cantidad'));
         if($registros_count == $count_art){ //Si son iguales se editan
-            foreach($boleta->registros_m as $key => $edit_reg) { 
+            foreach($boleta->registros_m as $key => $edit_reg) {
                 // Llamado de producto y servicio para su diferenciación y registro propio
                 $producto = Producto::where('codigo_producto', $producto_id[$key])->first();
                 if(isset($producto)){
@@ -628,10 +630,10 @@ class BoletaMController extends Controller
                     $edit_reg->save();
                 }
             }
-        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear 
+        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear
             // Eliminar registros anteriores
             $eliminar_registros = Boleta_registros_m::where('boleta_m_id', $id)->delete();
-            for ($i = 0; $i < $count_art ; $i++) { 
+            for ($i = 0; $i < $count_art ; $i++) {
                 $producto = Producto::where('codigo_producto', $producto_id[$i])->first();
                 if(isset($producto)){
                     $new_reg = new Boleta_registros_m();

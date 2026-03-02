@@ -266,7 +266,7 @@
                                         </select>
                                         <textarea type='text' name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"
                                             autocomplete="off" style="margin-top: 5px;">{{ $registros->descripcion_item }}</textarea>
-                                        <textarea id='numero_serie{{$index}}' name='numero_serie[]' class="form-control" placeholder="N° de Serie"
+                                        <textarea id='numero_serie{{$i_edit}}' name='numero_serie[]' class="form-control" placeholder="N° de Serie"
                                             autocomplete="off" style="margin-top: 5px">{{ $registros->numero_serie }}</textarea>
                                         <input type='text' id='tipo_afec{{ $i_edit }}' name='tipo_afec[]'
                                             readonly="readonly"

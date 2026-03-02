@@ -1025,6 +1025,7 @@ class FacturacionController extends Controller
         $sub_total = 0;
         $banco = Banco::where('estado', 0)->get();
         $j = 1;
+        $almacen = Almacen::all(); // o tu filtro real
 
         if($facturacion->tipo_operacion_id == 12 || $facturacion->tipo_operacion_id == 13 || $facturacion->tipo_operacion_id == 14 ||$facturacion->tipo_operacion_id == 15 ){
             $detraccion = Detracciones::where('factura_id', $facturacion->id)->first();
@@ -1050,7 +1051,7 @@ class FacturacionController extends Controller
         $tipo_detraccion = TipoDetraccion::all();
         $medio_pago_detraccion = MedioPagoDetraccion::all();
 
-        return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion','forma_pagos','remisiones','tipo_operacion','moneda','monedas_get','tipo_detraccion','medio_pago_detraccion'));
+        return view('transaccion.venta.facturacion.show', compact('j', 'almacen', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco','detraccion','forma_pagos','remisiones','tipo_operacion','moneda','monedas_get','tipo_detraccion','medio_pago_detraccion'));
 
         // if ($facturacion->id_cotizador_servicio == NULL) {
         //     return view('transaccion.venta.facturacion.show', compact('j', 'facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco'));
@@ -1203,7 +1204,7 @@ class FacturacionController extends Controller
                 $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
                 $create_cuotas = 1;
             }
-            
+
         }else{ // Si el editado es credito
             if($request->get('forma_pago') == $factura->forma_pago_id){ //Si sigue siendo credito
                 $fecha_pago_forma = $request->input('fecha_pago');
@@ -1224,7 +1225,7 @@ class FacturacionController extends Controller
         $operacion = $request->get('tipo_operacion');
         $nombre = strstr($operacion, '-', true);
         $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
-        // Actualizar los cabezera 
+        // Actualizar los cabezera
         // Almacen NO es EDITABLE
         $factura->orden_compra = $request->get('ord_compra');
         $factura->guia_remision = $request->get('guia_r') ?? 0;
@@ -1280,10 +1281,10 @@ class FacturacionController extends Controller
             }
         }
         // Tipo de Operacion para Detracciones
-        
+
         if($request->get('detraccion_value') == 1){ //Si  Activamos Detraccion
             // Editar
-            $search_det = Detracciones::where('factura_id', $id)->first();   
+            $search_det = Detracciones::where('factura_id', $id)->first();
             if(isset($search_det)){
                 $search_det->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
                 $search_det->id_cod_medio_pago = $request->get('medio_pago_detraccion');
@@ -1304,7 +1305,7 @@ class FacturacionController extends Controller
                 $fact_detra->save();
             }
         }else{
-            $search_det = Detracciones::where('factura_id', $id)->first();   
+            $search_det = Detracciones::where('factura_id', $id)->first();
             // Eliminar
             if(isset($search_det)){
                 $eliminar_detraccion = Detracciones::where('factura_id', $id)->delete();
@@ -1429,7 +1430,7 @@ class FacturacionController extends Controller
                     }
                     $facturacion->save();
                     $edit_reg->save();
-                    
+
                 } else {
                     $servicio = Servicios::where('codigo_servicio', $producto_id[$index_reg])->where('estado_anular', 0)->first();
                     $edit_reg->servicio_id = $servicio->id;
@@ -1467,7 +1468,7 @@ class FacturacionController extends Controller
                             // return $array;
                         }
                     }
-                    
+
                     $edit_reg->precio = $array;
                     $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
                     $edit_reg->comision = $comi;
@@ -1497,10 +1498,10 @@ class FacturacionController extends Controller
                     }
                     $facturacion->save();
                     $edit_reg->save();
-                    
+
                 }
-            } 
-        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear 
+            }
+        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear
             // Eliminar registros anteriores
             $eliminar_registros = Facturacion_registro::where('facturacion_id', $id)->delete();
             // Crear nuevos registros

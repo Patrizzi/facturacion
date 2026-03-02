@@ -1670,6 +1670,7 @@ class CotizacionController extends Controller
         $factura= Facturacion::where('id_cotizador',$id)->first();
         $boleta=Boleta::where('id_cotizador',$id)->first();
         $nota_venta=NotaVenta::where('id_cotizacion',$id)->first();
+        $almacenes_list = Almacen::all();
 
         /*registros boleta y factura*/
         $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
@@ -1781,7 +1782,7 @@ class CotizacionController extends Controller
         // $ruta = "transaccion.venta.cotizacion.pdf2";
         // $compact = "' ','cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'";
         // return $pdf;
-        return view('transaccion.venta.cotizacion.show2', compact('cotizacion','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2','garantia','validez','nota_venta','forma_pagos','renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero'));
+        return view('transaccion.venta.cotizacion.show2', compact('cotizacion', 'almacenes_list','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2','garantia','validez','nota_venta','forma_pagos','renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero'));
     }
 
 public function print($id){
@@ -4342,7 +4343,7 @@ if($validacion==1){
             $firma_email = $config_email->firma;
             $alto = $config_email->alto_firma;
             $ancho = $config_email->ancho_firma;
-            
+
             $titulo = "Cotizaciones - " . count($cotizacion_ids) . " documento(s)";
             $mensaje_html = "Estimado cliente, adjuntamos las cotizaciones solicitadas.";
             $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma_email', 'alto', 'ancho','firma'));

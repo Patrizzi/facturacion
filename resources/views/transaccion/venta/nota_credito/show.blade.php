@@ -9,7 +9,22 @@
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="ibox">
-        <div class="ibox-title" style="padding-right: 3.1%">
+        <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+            <span class="dropdown" style="margin-top: 5px;margin-bottom: 8px;margin-left: 10px">
+                <a id="dropdownTipoNotaCredito" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer;">
+                    <i class="fa fa-arrow-left text-muted"></i>
+                </a>
+
+                <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="dropdownTipoNotaCredito">
+                    <li style="padding: 3px 12px;"><b>Seleccionar tipo:</b></li>
+                    <li>
+                        <a class="btn btn-w-m btn-link" href="{{ route('nota-credito.create') }}">Factura</a>
+                    </li>
+                    <li>
+                        <a class="btn btn-w-m btn-link" href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
+                    </li>
+                </ul>
+            </span>
             <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up text-muted"></i>

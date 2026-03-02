@@ -17,7 +17,46 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
-            <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+                <div style="margin-top: 5px; margin-bottom: 8px; margin-left: 10px;">
+                    @php
+                        $dropdownNotaVenta = 'dropdownNotaVenta_' . uniqid();
+                    @endphp
+
+                    @if (auth()->check() && auth()->user()->name === 'Administrador')
+                        <span class="dropdown">
+                            <a id="{{ $dropdownNotaVenta }}" class="no-hover-icon" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+                                <i class="fa fa-arrow-left text-muted"></i>
+                            </a>
+
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="{{ $dropdownNotaVenta }}">
+                                <li style="padding: 3px 12px;"><b>Almacenes:</b></li>
+
+                                @foreach ($almacen as $almacens)
+                                    <li>
+                                        <form action="{{ route('nota_venta.create') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="almacen" value="{{ $almacens->id }}">
+                                            <button class="btn btn-w-m btn-link" type="submit">
+                                                {{ $almacens->nombre }}
+                                            </button>
+                                        </form>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </span>
+                    @else
+                        <form action="{{ route('nota_venta.create') }}" method="post" style="display:inline;">
+                            @csrf
+                            <input type="hidden" name="almacen" value="{{ auth()->user()->almacen_id }}">
+
+                            <button class="btn btn-link no-hover-icon" type="submit" style="cursor: pointer; padding:0;">
+                                <i class="fa fa-arrow-left text-muted"></i>
+                            </button>
+                        </form>
+                    @endif
+                </div>
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up text-muted"></i>
