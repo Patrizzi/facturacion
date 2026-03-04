@@ -388,8 +388,8 @@
                             </button>
                             <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;"
                                 id="btn-finalizar" type="button">Guardar y Finalizar</button>
-                            {{--  <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
-                                data-style="zoom-out"></button>  --}}
+                            <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
+                                data-style="zoom-out"></button>
                         </div>
                     </div>
                 </form>
