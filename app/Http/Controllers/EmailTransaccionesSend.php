@@ -695,6 +695,7 @@ class EmailTransaccionesSend extends Controller
         ));
     }
 
+    
     public function guia_ingreso(Request $request, $id)
     {
         $id_usuario = auth()->user()->id;
