@@ -215,6 +215,17 @@
             outline: none;
             box-shadow: none;
         }
+
+        /* Estilos personalizados para el Popover */
+        .popover-header {
+            background-color: #2641f8; /* Azul solicitado */
+            color: white;
+        }
+
+        .popover-body {
+            background-color: white; /* Blanco solicitado */
+            color: black;
+        }
     </style>
 
     <!-- Mainly scripts -->
@@ -245,6 +256,17 @@
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
+        });
+
+        //Cerrar el popover al hacer click fuera
+        $('body').on('click', function (e) {
+            $('[data-toggle="popover"]').each(function () {
+                //the 'is' for buttons that trigger popovers
+                //the 'has' for icons within a button that triggers a popover
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
         });
 
         $(document).ready(function () {
@@ -301,23 +323,46 @@
                 'render': function (data, type, full, meta) {
                     const cotizacionId = full[0];
                     const codigoCotizacion = full[2];
-                    const emailCliente = full[11] || '';
+
+                    //Logica para activar botones segun si tiene o no nota de credito
+                    let tieneNotaCredito = false;
+                    let atributosPopover = '';
+
+                    if(tieneNotaCredito){
+                        // Estado 1: Tiene nota de crédito (Hover + Texto informativo)
+                        atributosPopover = `
+                            data-toggle="popover"
+                            title="Detalle de Nota de crédito"
+                            data-trigger="hover"
+                            data-content="Esta cotización tiene una nota de crédito asociada. ID Nota de Crédito: ${cotizacionId}"
+                        `;
+                    }else{
+                        //Estado 2: No tiene nota de crédito (click + Formulario HTML)
+                        let formHTML = `<div class='form-group'><input type='text' id='input-nota-${cotizacionId}' class='form-control form-control-sm mb-2' placeholder='N° Nota de Crédito'><button class='btn btn-primary btn-sm w-100 btn-guardar-nota' onclick='guardarNota(${cotizacionId})' data-id='${cotizacionId}'>Agregar</button></div>`;
+
+                        atributosPopover = `
+                            data-trigger="click"
+                            data-html="true"
+                            data-toggle="popover"
+                            title="Agregar Nota de Crédito"
+                            data-content="${formHTML}"
+                        `;
+                    }
 
                     return `
-
-
-                                                <span class="" >
-                                                    <span class="mr-2 text-secondary-emphasis">
-                                                        ${codigoCotizacion}
-                                                    </span>
-                                                    <button type="button" class="btn btn-sm info-icon" data-toggle="tooltip" data-placement="top" title="Información adicional sobre la cotización">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-square-fill" viewBox="0 0 16 16">
-                                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
-                                                        </svg>
-                                                    </button>
-
-                                                </span>
-                                    `;
+                        <div class="d-flex align-items-center">
+                            <span class="mr-2 text-secondary-emphasis">
+                                ${codigoCotizacion}
+                            </span>
+                            <button type="button" class="btn btn-sm info-icon"
+                                    data-placement="top"
+                                    ${atributosPopover}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-square-fill" viewBox="0 0 16 16">
+                                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
                 }
             },
             {
@@ -630,6 +675,7 @@
 
             // Cuando se redibuje la tabla
             coti_table.on('draw', function () {
+                $('[data-toggle="popover"]').popover();
                 closeWhatsappPanels();
                 closeEmailPanels();
                 $('.dataTables-example-cotizacion tbody input[type="checkbox"]').iCheck({
