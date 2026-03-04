@@ -133,8 +133,13 @@
                         </div>
                     @endif
                     <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                        <div class="row" style="align-items: center; justify-content: center">
-                            @include('layout_cabecera_ventas')
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3>R.U.C : {{ $empresa->ruc }}</h3>
+                            <h2 style="text-align: center;">FACTURA ELECTRÓNICA</h2>
+                            <h5>{{ $facturacion->codigo_fac }}</h5>
+                        </div>
+                        {{--  <div class="row" style="align-items: center; justify-content: center">
+
                             <div class="col-sm-4 ">
                                 <div class="form-control ruc" style="height: 125px">
                                     <center>
@@ -144,7 +149,7 @@
                                     </center>
                                 </div>
                             </div>
-                        </div>
+                        </div>  --}}
                         <br>
                         <div class="row" align="center" style="padding-bottom: 5px">
                             <div class="col-sm-6" align="center">
