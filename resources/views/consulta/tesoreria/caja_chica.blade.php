@@ -6,6 +6,9 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/caja-chica/caja_chica.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda-themeless.min.css">
+
+
 @endsection
 
 @section('content')
@@ -338,7 +341,7 @@
                                             class="btn-check"
                                             name="metodo_pago_trans"
                                             id="trans_{{ $metodo }}"
-                                            value="{{ $metodo }}" required 
+                                            value="{{ $metodo }}"  
                                         >
                                         <label class="btn-method metodo-{{ strtolower($metodo) }}" for="trans_{{ $metodo }}">
                                             {{ $metodo }}
@@ -346,11 +349,14 @@
                                     </div>
                                     @endforeach
                                 </div>
+                                <div id="error-metodo-pago" class="text-danger small" style="display:none;">
+                                    Seleccione un método de pago.
+                                </div>
                                 @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                         {{-- Hidden para enviar al controlador --}}
-                        <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_trans" />
+                        <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_trans" required/>
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label">Nro. Operación:</label>
@@ -375,9 +381,12 @@
                     </div>
                 </div>
                 <div class="modal-footer-payment">
-                    <button type="submit" class="btn-confirm">
-                        <span class="icon-check"></span>Registrar
+                    <button type="submit" class="btn-confirm ladda-button" data-style="expand-right">
+                        <span class="ladda-label">
+                            <span class="icon-check"></span> Registrar
+                        </span>
                     </button>
+
                 </div>
             </form>
         </div>
@@ -539,8 +548,7 @@
                             class="btn-check"
                             name="metodo_pago_pago"
                             id="pago_{{ $metodo }}"
-                            value="{{ $metodo }}"
-                            @if($i===0) required @endif
+                            value="{{ $metodo }}"  
                         >
                         <label class="btn-method metodo-{{ strtolower($metodo) }}" for="pago_{{ $metodo }}">
                             {{ $metodo }}
@@ -551,7 +559,7 @@
                     @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                     {{-- Hidden para enviar al controlador --}}
-                    <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_pago" />
+                    <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_pago"  />
                     {{-- Tipo de Transacción --}}
                     <div class="form-group">
                         <label class="form-label">Tipo de Transacción:</label>
@@ -1045,6 +1053,7 @@ function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTra
         }
     });
     </script>
+
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const toast = document.getElementById('toast');
@@ -1057,5 +1066,53 @@ function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTra
             }, 4000);
         }
     });
+    
+
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda.min.js"></script>
+
+<script>
+document.getElementById("formTransaccion").addEventListener("submit", function () {
+    const laddaBtn = document.querySelector(".ladda-button");
+    const l = Ladda.create(laddaBtn);
+    l.start();
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("formTransaccion");
+    const error = document.getElementById("error-metodo-pago");
+    const btn = document.querySelector(".ladda-button");
+
+    form.addEventListener("submit", function (e) {
+
+        const metodo = document.querySelector('input[name="metodo_pago_trans"]:checked');
+
+        // Si NO selecciona método
+        if (!metodo) {
+            e.preventDefault();
+            error.style.display = "block";
+
+            // detener cualquier loader activo
+            Ladda.stopAll();
+
+            return false;
+        }
+
+        // Si todo está correcto
+        error.style.display = "none";
+
+        const l = Ladda.create(btn);
+        l.start();
+    });
+
+});
+
+</script>
+
+
+
 @endsection
