@@ -46,14 +46,16 @@
                         <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
                     </form>
                     <a class="btn btn-success" href="{{route('nota_debito.print',$notas_debito->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
-                    {{-- @if(Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.nota_credito', $notas_debito->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
+                    @if(Auth::user()->email_creado == 1)
+                        <form action="{{ route('email.nota_debito', $notas_debito->id) }}" method="post"
+                            style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
                             @csrf
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                                <i class="fa fa-envelope fa-lg" ></i>
+                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
+                                title="" formtarget="_blank" data-original-title="Enviar por correo">
+                                <i class="fa fa-envelope fa-lg"></i>
                             </button>
                         </form>
-                    @endif --}}
+                    @endif
                     <div id="auto" onclick="divAuto()">
                         <a class="btn btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
                             data-placement="bottom" title="" data-original-title="Enviar a">
