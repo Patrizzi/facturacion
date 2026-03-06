@@ -226,12 +226,13 @@
                 <div class="row">
                     <div class="col-sm-8">
                         <h3 >
-                            <?php $v=new CifrasEnLetras() ;
+                            @php
+                            $v=new CifrasEnLetras() ;
                             $letra=($v->convertirEurosEnLetras($end));
                             $letra_final = ucfirst(strstr($letra, 'soles',true));
                             $end_final_point=strstr($end, '.',false);
                             $end_final=str_replace('.', '',$end_final_point);
-                            ?>
+                            @endphp
                             Son: {{$letra_final}} con {{$end_final}}/100 {{$cotizacion->moneda->nombre}}
                             {{-- {{$end2}} --}}
                         </h3>

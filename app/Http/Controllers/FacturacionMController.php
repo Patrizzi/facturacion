@@ -430,13 +430,13 @@ class FacturacionMController extends Controller
                     //modificación para los tipos de afectación al producto y guardado a facturación
                     $facturacion_2=Facturacion_m::find($facturacion->id);
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_gravada += $facturacion_registro->precio*$facturacion_registro->cantidad;
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_exonerada += $facturacion_registro->precio*$facturacion_registro->cantidad;
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_inafecta += $facturacion_registro->precio*$facturacion_registro->cantidad;
                     }
                     $facturacion_2->save();
 
@@ -458,13 +458,13 @@ class FacturacionMController extends Controller
                     //modificación para los tipos de afectación al servicio y guardado a facturación
                     $facturacion_2=Facturacion_m::find($facturacion->id);
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $facturacion_2->op_gravada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_gravada += $facturacion_registro->precio*$facturacion_registro->cantidad;
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $facturacion_2->op_exonerada += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_exonerada += $facturacion_registro->precio*$facturacion_registro->cantidad;
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $facturacion_2->op_inafecta += round($facturacion_registro->precio*$facturacion_registro->cantidad,2);
+                        $facturacion_2->op_inafecta += $facturacion_registro->precio*$facturacion_registro->cantidad;
                     }
                     $facturacion_2->save();
 
@@ -821,13 +821,13 @@ class FacturacionMController extends Controller
 
                     // Modificacion para los tipos de afectación al producto y guardado a facturación
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
-                        $facturacion->op_gravada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $facturacion->op_gravada += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
-                        $facturacion->op_exonerada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $facturacion->op_exonerada += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
-                        $facturacion->op_inafecta += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $facturacion->op_inafecta += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     $facturacion->save();
                     $edit_reg->save();
@@ -846,13 +846,13 @@ class FacturacionMController extends Controller
 
                     // Modificacion para los tipos de afectación al producto y guardado a facturación
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
-                        $facturacion->op_gravada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $facturacion->op_gravada += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
-                        $facturacion->op_exonerada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $facturacion->op_exonerada += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
-                        $facturacion->op_inafecta += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $facturacion->op_inafecta += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     $facturacion->save();
                     $edit_reg->save();
@@ -878,13 +878,13 @@ class FacturacionMController extends Controller
                     $new_reg->save();
                     // Modificacion para los tipos de afectación al producto y guardado a facturación
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
-                        $facturacion->op_gravada += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $facturacion->op_gravada += $new_reg->precio * $new_reg->cantidad;
                     }
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
-                        $facturacion->op_exonerada += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $facturacion->op_exonerada += $new_reg->precio * $new_reg->cantidad;
                     }
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
-                        $facturacion->op_inafecta += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $facturacion->op_inafecta += $new_reg->precio * $new_reg->cantidad;
                     }
                     $facturacion->save();
                 }else{
@@ -903,13 +903,13 @@ class FacturacionMController extends Controller
                     $new_reg->save();
                     // Modificacion para los tipos de afectación al producto y guardado a facturación
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
-                        $facturacion->op_gravada += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $facturacion->op_gravada += $new_reg->precio * $new_reg->cantidad;
                     }
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
-                        $facturacion->op_exonerada += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $facturacion->op_exonerada += $new_reg->precio * $new_reg->cantidad;
                     }
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
-                        $facturacion->op_inafecta += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $facturacion->op_inafecta += $new_reg->precio * $new_reg->cantidad;
                     }
                     $facturacion->save();
                 }

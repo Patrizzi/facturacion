@@ -389,7 +389,7 @@ class Facturacion_m extends Model
     public function getIgvSinFormaAttribute()
     {
         $igv = Igv::first()->renta;
-        $sub_igv = ($this->attributes['op_gravada'] * $igv) / 100;
+        $sub_igv = ($this->attributes['op_gravada'] * ($igv / 100) );
 
         return round($sub_igv, 2);
     }
@@ -401,7 +401,7 @@ class Facturacion_m extends Model
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
-        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+        $total = $subtotal + ($this->attributes['op_gravada'] * ($igv / 100));
 
         if ($this->attributes['nota_credito'] == 2) {
             // Reduccion por nota de crédito
@@ -428,7 +428,7 @@ class Facturacion_m extends Model
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
-        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+        $total = $subtotal + ($this->attributes['op_gravada'] * ($igv / 100));
 
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
@@ -444,7 +444,7 @@ class Facturacion_m extends Model
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
-        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+        $total = $subtotal + ($this->attributes['op_gravada'] * ( $igv / 100) );
         if ($this->attributes['nota_credito'] == 2) {
             // Reduccion por nota de crédito
             $motivo = Facturacion_m::search_motivo_nc($this->attributes['id']);

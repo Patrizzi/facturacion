@@ -78,10 +78,17 @@ class Facturacion_registro_m extends Model
                 return $precio;
             } else {
                 // Si es servicio
-                $precio = ($this->servicio->calcularPreciosTCExacto($tipo_cambio)['precio_extranjero']) + ($this->servicio->calcularPreciosTCExacto($tipo_cambio)['precio_extranjero'] * ($igv->igv_total / 100)); ;
+                $precio = ($this->servicio->calcularPreciosTCExacto($tipo_cambio)['precio_extranjero']) + ($this->servicio->calcularPreciosTCExacto($tipo_cambio)['precio_extranjero_igv'] * ($igv->igv_total / 100)); ;
                 return $precio;
             }
         }
     }
 
+    public function getPrecioIgvEditAttribute(){
+        $igv = Igv::first();
+        $precio = $this->precio;
+        $precio_igv = $this->precio * ( $igv->igv_total / 100);
+        $total =  $precio  + $precio_igv;
+        return $total; 
+    }
 }

@@ -2,6 +2,7 @@
 namespace App\Exports;
 
 use App\CotizacionManual;
+use App\Igv;
 use App\RenovacionVentas;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\{
@@ -118,7 +119,8 @@ class CotizacionMExport implements FromQuery, WithHeadings, WithMapping, WithEve
                   + ($cotizacionM->op_inafecta ?? 0)
                   + ($cotizacionM->op_exonerada ?? 0);
 
-        $igv = round(($cotizacionM->op_gravada ?? 0) * 0.18, 2);
+        $igv_val = Igv::first();
+        $igv = ($cotizacionM->op_gravada ?? 0) * ($igv_val->igv_total / 100));
 
         $personal = '';
         if ($cotizacionM->user_personal && $cotizacionM->user_personal->personal) {
@@ -216,15 +218,15 @@ class CotizacionMExport implements FromQuery, WithHeadings, WithMapping, WithEve
             $cotizacionM->estado ? 'Activo' : 'Inactivo',
             $cotizacionM->estadoVigente ? 'Vigente' : 'No vigente',
             $cotizacionM->tipo,
-            $cotizacionM->op_gravada,
-            $cotizacionM->op_inafecta,
-            $cotizacionM->op_exonerada,
-            $cotizacionM->op_gratuita,
+            number_format(round($cotizacionM->op_gravada,2),2),
+            number_format(round($cotizacionM->op_inafecta,2),2),
+            number_format(round($cotizacionM->op_exonerada,2),2),
+            number_format(round($cotizacionM->op_gratuita,2),2),
             optional($cotizacionM->tipo_operacion)->informacion,
             optional($cotizacionM->tipo_documento)->informacion,
-            $subtotal,
-            $igv,
-            round($subtotal + $igv, 2),
+            number_format(round($subtotal,2),2),
+            number_format(round($igv, 2),2),
+            number_format(round($subtotal + $igv, 2), 2),
             $tiene_renovacion,
             $frecuencia_renovacion,
             $fecha_vencimiento_texto,

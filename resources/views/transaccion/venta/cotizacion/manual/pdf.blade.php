@@ -102,8 +102,8 @@
                             </td>
                         @endif
                         <td style="text-align: center">{{$cotizacion_registros->cantidad}}</td>
-                        <td style="text-align: right">{{number_format($cotizacion_registros->precio,2)}}</td>
-                        <td style="text-align: right">{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
+                        <td style="text-align: right">{{round($cotizacion_registros->precio,8)}}</td>
+                        <td style="text-align: right">{{round($cotizacion_registros->cantidad*$cotizacion_registros->precio,8)}}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -134,11 +134,11 @@
                     </td>
                     <td   style="width: auto;border: 1px #808080 solid;border-top-left-radius: 8px 8px 8px 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
                         <span>{{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span><br>
-                        <span>{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
-                        <span>{{$simbologia}} {{number_format($cotizacion->op_inafecta,2)}}</span><br>
-                        <span>{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format(round($cotizacion->op_gravada,2),2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format(round($cotizacion->op_inafecta,2),2)}}</span><br>
+                        <span>{{$simbologia}} {{number_format(round($cotizacion->op_exonerada,2),2)}}</span><br>
                         <span>{{$simbologia}} {{number_format(round($igv, 2),2)}}</span><br>
-                        <span>{{$simbologia}} {{number_format($end,2)}}</span>
+                        <span>{{$simbologia}} {{number_format(round($end,2),2)}}</span>
                     </td>
                 </tr>
             </table>
