@@ -3,6 +3,18 @@
 @section('title', 'Ventas | Cotización')
 
 @section('content')
+    <style>
+        /* Ajustes para el popover de la nota informativa */
+        .popover {
+            max-width: 400px; /* Permitir que sea más ancho si hay mucho texto */
+        }
+        .popover-body {
+            font-weight: normal !important; /* Quitar negrilla */
+            white-space: pre-wrap; /* Respetar saltos de línea y no desbordar */
+            word-wrap: break-word; /* Romper palabras largas si es necesario */
+            color: #333;
+        }
+    </style>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -220,11 +232,13 @@
         .popover-header {
             background-color: #2641f8; /* Azul solicitado */
             color: white;
+            font-weight: normal !important;
         }
 
         .popover-body {
             background-color: white; /* Blanco solicitado */
             color: black;
+            font-weight: normal !important;
         }
     </style>
 
@@ -325,28 +339,35 @@
                     const codigoCotizacion = full[2];
                     const notaInformativa = full[12];
 
-                    //Logica para activar botones segun si tiene o no nota
                     let tieneNota = notaInformativa !== null && notaInformativa !== '';
-                    let atributosPopover = '';
+                    let contenidoBoton = '';
 
                     if(tieneNota){
-                        // Estado 1: Tiene nota (Hover + Texto informativo)
-                        atributosPopover = `
-                            data-toggle="popover"
-                            title="Detalle"
-                            data-trigger="hover"
-                            data-content="${notaInformativa.replace(/"/g, '&quot;')}"
-                        `;
-                    }else{
-                        //Estado 2: No tiene nota (click + Formulario HTML)
-                        let formHTML = `<div class='form-group'><input type='text' id='input-nota-${cotizacionId}' class='form-control form-control-sm mb-2' placeholder='N° Nota de Crédito'><button class='btn btn-primary btn-sm w-100 btn-guardar-nota' onclick='guardarNota(${cotizacionId})' data-id='${cotizacionId}'>Agregar</button></div>`;
+                        let escapedNota = notaInformativa.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+                        let jsEscapedNota = notaInformativa.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
-                        atributosPopover = `
-                            data-trigger="click"
-                            data-html="true"
-                            data-toggle="popover"
-                            title="Agregar Nota"
-                            data-content="${formHTML}"
+                        contenidoBoton = `
+                            <button type="button" class="btn btn-sm info-icon"
+                                    data-trigger="hover"
+                                    data-placement="top"
+                                    data-toggle="popover"
+                                    title="Nota Informativa"
+                                    data-content="${escapedNota}"
+                                    onclick="gestionarNota(${cotizacionId}, '${jsEscapedNota}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-square-fill" viewBox="0 0 16 16">
+                                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+                                </svg>
+                            </button>
+                        `;
+                    } else {
+                        contenidoBoton = `
+                            <button type="button" class="btn btn-sm info-icon text-muted"
+                                    title="Añadir Nota"
+                                    onclick="gestionarNota(${cotizacionId}, '')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-dotted" viewBox="0 0 16 16">
+                                    <path d="M2.5 0c-.166 0-.33.016-.487.048l.194.98A1.51 1.51 0 0 1 2.5 1h.458V0zm2.292 0h-.917v1h.917zm1.833 0h-.917v1h.917zm1.833 0h-.916v1h.916zm1.834 0h-.917v1h.917zm1.833 0h-.917v1h.917zM13.5 0h-.458v1h.458c.1 0 .199.01.293.029l.194-.981A2.51 2.51 0 0 0 13.5 0m2.079 1.11a2.5 2.5 0 0 0-.69-.689l-.556.831c.164.11.305.251.415.415l.83-.556zM1 2.292V3.21h-1v-.917h1zm14 0v.917h1v-.917zM1 4.125v.917h-1v-.917h1zm14 0v.917h1v-.917zM1 5.958v.917h-1v-.917zm14 0v.917h1v-.917zM1 7.792v.916h-1v-.916zm14 0v.916h1v-.916zM1 9.625v.917h-1v-.917zm14 0v.917h1v-.917zM1 11.458v.917h-1v-.917zm14 0v.917h1v-.917zM1 13.292v.917h-1v-.917zm14 0v.917h1v-.917zM1.531 15.348a2.5 2.5 0 0 0 .69.689l.556-.831a1.5 1.5 0 0 1-.415-.415l-.83.556zM2.5 16h.458v-1h-.458a1.5 1.5 0 0 1-.293-.029l-.194.981c.157.032.321.048.487.048m2.292 0h.917v-1h-.917zm1.833 0h.917v-1h-.917zm1.833 0h.916v-1h-.916zm1.834 0h.917v-1h-.917zm1.833 0h.917v-1h-.917zM13.5 16c.166 0 .33-.016.487-.048l-.194-.98A1.51 1.51 0 0 1 13.5 15h-.458v1zM8 4.5a.5.5 0 0 1 .5.5v2.5H11a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V8.5H5a.5.5 0 0 1 0-1h2.5V5a.5.5 0 0 1 .5-.5"/>
+                                </svg>
+                            </button>
                         `;
                     }
 
@@ -355,13 +376,7 @@
                             <span class="mr-2 text-secondary-emphasis">
                                 ${codigoCotizacion}
                             </span>
-                            <button type="button" class="btn btn-sm info-icon"
-                                    data-placement="top"
-                                    ${atributosPopover}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-square-fill" viewBox="0 0 16 16">
-                                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
-                                </svg>
-                            </button>
+                            ${contenidoBoton}
                         </div>
                     `;
                 }
@@ -1281,34 +1296,121 @@
             };
         });
 
-        // Función para guardar nota de credito/informativa
-        function guardarNota(id) {
-            let noteInput = $('#input-nota-' + id).val();
-            if(!noteInput || noteInput.trim() === ''){
-                toastr.warning('Por favor ingrese una nota', 'Advertencia');
+// Función para gestionar nota usando un Modal Bootstrap estilizado e Inspinia-like
+        function gestionarNota(id, notaActual) {
+            // Cerrar popovers primero para que no estorben
+            $('[data-toggle="popover"]').popover('hide');
+
+            // Eliminar modal anterior si existe en el DOM
+            $('#modalGestionarNota').remove();
+
+            let title = notaActual ? 'Editar Nota Informativa' : 'Agregar Nota Informativa';
+            let deleteBtn = notaActual ? `<button type="button" class="btn btn-danger" style="border-radius: 4px;" onclick="confirmarEliminarNota(${id})"><i class="fa fa-trash"></i> Eliminar</button>` : '';
+            let saveBtnText = notaActual ? 'Actualizar' : 'Guardar';
+            let iconHeader = notaActual ? 'fa-pencil-square-o' : 'fa-plus-circle';
+
+            let modalHTML = `
+            <div class="modal fade" id="modalGestionarNota" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content border-0 shadow" style="border-radius: 6px; overflow: hidden;">
+                        <div class="modal-header d-flex justify-content-between align-items-center" style="background-color: #1a3bb3; color: white; border-bottom: none; padding: 15px 20px;">
+                            <h5 class="modal-title" style="margin: 0; font-weight: 500; font-size: 16px;"><i class="fa ${iconHeader} mr-2"></i>${title}</h5>
+                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 0.8; padding: 10px; margin: -10px -10px -10px auto; outline: none; text-shadow: none;">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body bg-light" style="padding: 20px;">
+                            <label class="font-weight-bold text-muted mb-2">Contenido de la nota:</label>
+                            <textarea id="input-modal-nota" class="form-control" rows="4" placeholder="Escriba aquí..." style="border-radius: 4px; resize: none;"></textarea>
+                        </div>
+                        <div class="modal-footer bg-white d-flex justify-content-between align-items-center" style="border-top: 1px solid #e7eaec; padding: 12px 20px;">
+                            <div>
+                                ${deleteBtn}
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-white" data-dismiss="modal" style="border-radius: 4px; margin-right: 5px;">Cancelar</button>
+                                <button type="button" class="btn btn-primary" onclick="guardarDesdeModal(${id})" style="background-color: #1a3bb3; border-color: #1a3bb3; border-radius: 4px;">${saveBtnText}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+            $('body').append(modalHTML);
+            $('#input-modal-nota').val(notaActual);
+
+            // Enfocar automáticamente el textarea cuando el modal se abre
+            $('#modalGestionarNota').on('shown.bs.modal', function () {
+                $('#input-modal-nota').focus();
+            });
+
+            $('#modalGestionarNota').modal('show');
+        }
+
+        function guardarDesdeModal(id) {
+            let nota = $('#input-modal-nota').val().trim();
+            if (!nota) {
+                toastr.warning('La nota no puede estar vacía al guardar. Si desea borrarla, use el botón rojo de "Eliminar".');
+                $('#input-modal-nota').focus();
                 return;
             }
+            enviarNotaAjax(id, nota, false);
+        }
+
+        function confirmarEliminarNota(id) {
+            // Ocultamos el modal principal mientras mostramos SweetAlert sobre el borrado
+            $('#modalGestionarNota').modal('hide');
+
+            setTimeout(function() {
+                swal({
+                    title: "¿Eliminar nota?",
+                    text: "Esta acción no se puede deshacer.",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#ed5565",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                    closeOnConfirm: true
+                }, function(isConfirm){
+                    if(isConfirm){
+                        enviarNotaAjax(id, '', true);
+                    } else {
+                        // Si cancela, reabrimos el modal de edición
+                        $('#modalGestionarNota').modal('show');
+                    }
+                });
+            }, 300);
+        }
+
+        function enviarNotaAjax(id, nota, isDelete = false) {
+            // Bloqueamos los botones para evitar doble submit
+            $('#modalGestionarNota').find('.btn').prop('disabled', true);
 
             $.ajax({
                 url: '/cotizacion/guardar-nota/' + id,
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    nota_informativa: noteInput
+                    nota_informativa: nota
                 },
                 success: function(response) {
                     if(response.success){
-                        // Cerrar popovers
-                        $('[data-toggle="popover"]').popover('hide');
-                        toastr.success(response.message, 'Éxito');
+                        $('#modalGestionarNota').modal('hide');
+                        if (isDelete) {
+                            toastr.success('Nota eliminada correctamente', 'Éxito');
+                        } else {
+                            toastr.success(response.message, 'Éxito');
+                        }
                         // Recargar tabla
                         $('.dataTables-example-cotizacion').DataTable().ajax.reload(null, false);
                     }else{
-                        toastr.error(response.message, 'Error');
+                        toastr.error(response.message, "Error");
+                        $('#modalGestionarNota').find('.btn').prop('disabled', false);
                     }
                 },
                 error: function(xhr) {
-                    toastr.error('Error al guardar la nota.', 'Error');
+                    toastr.error("Error al procesar la nota.", "Error");
+                    $('#modalGestionarNota').find('.btn').prop('disabled', false);
                 }
             });
         }
