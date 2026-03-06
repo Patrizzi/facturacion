@@ -323,28 +323,29 @@
                 'render': function (data, type, full, meta) {
                     const cotizacionId = full[0];
                     const codigoCotizacion = full[2];
+                    const notaInformativa = full[12];
 
-                    //Logica para activar botones segun si tiene o no nota de credito
-                    let tieneNotaCredito = false;
+                    //Logica para activar botones segun si tiene o no nota
+                    let tieneNota = notaInformativa !== null && notaInformativa !== '';
                     let atributosPopover = '';
 
-                    if(tieneNotaCredito){
-                        // Estado 1: Tiene nota de crédito (Hover + Texto informativo)
+                    if(tieneNota){
+                        // Estado 1: Tiene nota (Hover + Texto informativo)
                         atributosPopover = `
                             data-toggle="popover"
-                            title="Detalle de Nota de crédito"
+                            title="Detalle"
                             data-trigger="hover"
-                            data-content="Esta cotización tiene una nota de crédito asociada. ID Nota de Crédito: ${cotizacionId}"
+                            data-content="${notaInformativa.replace(/"/g, '&quot;')}"
                         `;
                     }else{
-                        //Estado 2: No tiene nota de crédito (click + Formulario HTML)
+                        //Estado 2: No tiene nota (click + Formulario HTML)
                         let formHTML = `<div class='form-group'><input type='text' id='input-nota-${cotizacionId}' class='form-control form-control-sm mb-2' placeholder='N° Nota de Crédito'><button class='btn btn-primary btn-sm w-100 btn-guardar-nota' onclick='guardarNota(${cotizacionId})' data-id='${cotizacionId}'>Agregar</button></div>`;
 
                         atributosPopover = `
                             data-trigger="click"
                             data-html="true"
                             data-toggle="popover"
-                            title="Agregar Nota de Crédito"
+                            title="Agregar Nota"
                             data-content="${formHTML}"
                         `;
                     }
@@ -1279,6 +1280,38 @@
                 return allSelectedIds;
             };
         });
+
+        // Función para guardar nota de credito/informativa
+        function guardarNota(id) {
+            let noteInput = $('#input-nota-' + id).val();
+            if(!noteInput || noteInput.trim() === ''){
+                toastr.warning('Por favor ingrese una nota', 'Advertencia');
+                return;
+            }
+
+            $.ajax({
+                url: '/cotizacion/guardar-nota/' + id,
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    nota_informativa: noteInput
+                },
+                success: function(response) {
+                    if(response.success){
+                        // Cerrar popovers
+                        $('[data-toggle="popover"]').popover('hide');
+                        toastr.success(response.message, 'Éxito');
+                        // Recargar tabla
+                        $('.dataTables-example-cotizacion').DataTable().ajax.reload(null, false);
+                    }else{
+                        toastr.error(response.message, 'Error');
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error('Error al guardar la nota.', 'Error');
+                }
+            });
+        }
     </script>
 
 @endsection

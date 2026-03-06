@@ -206,7 +206,8 @@ class Ventas_registroController extends Controller
                 $cotizacion->id,
                 $cotizacion->estado,
                 $cotizacion->cliente->celular,
-                $cotizacion->cliente->email
+                $cotizacion->cliente->email,
+                $cotizacion->nota_informativa
 
             ];
         }

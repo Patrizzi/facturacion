@@ -176,6 +176,8 @@ Route::group(
         Route::get('/cotizacion/print_cotizacion_servicio/{id}', 'CotizacionServiciosController@print')->name('cotizacion_servicio.print');
         Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
 
+        Route::post('/cotizacion/guardar-nota/{id}', 'CotizacionController@guardarNotaInformativa')->name('cotizacion.guardar_nota');
+
         Route::resource('/cotizacion', 'CotizacionController');
         Route::post('/cotizacion/update/{id}', 'CotizacionController@update')->name('cotizacion.update');
 

@@ -4342,7 +4342,7 @@ if($validacion==1){
             $firma_email = $config_email->firma;
             $alto = $config_email->alto_firma;
             $ancho = $config_email->ancho_firma;
-            
+
             $titulo = "Cotizaciones - " . count($cotizacion_ids) . " documento(s)";
             $mensaje_html = "Estimado cliente, adjuntamos las cotizaciones solicitadas.";
             $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma_email', 'alto', 'ancho','firma'));
@@ -4535,6 +4535,25 @@ if($validacion==1){
             }
 
         } catch (\Exception $e) {
+        }
+    }
+
+    public function guardarNotaInformativa(Request $request, $id)
+    {
+        try {
+            $cotizacion = Cotizacion::findOrFail($id);
+            $cotizacion->nota_informativa = $request->input('nota_informativa');
+            $cotizacion->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Nota guardada correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar la nota: ' . $e->getMessage()
+            ], 500);
         }
     }
 }
