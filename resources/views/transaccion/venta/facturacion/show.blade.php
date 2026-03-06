@@ -751,6 +751,119 @@
             $('.btn-no-editar').addClass('no_mostrar');
         }
     </script>
+    {{-- - 
+    <div class="row tooltip-demo align-items-center">
+
+    <!-- IZQUIERDA -->
+    <div class="col-md-auto">
+        <h5 class="mb-0">{{ $facturacion->codigo_fac }}</h5>
+        <span><strong>R.U.C :</strong> {{ $empresa->ruc }}</span>
+    </div>
+
+    <!-- CENTRO -->
+    <div class="col text-center">
+        <h4 class="mb-0 font-weight-bold">
+            FACTURA ELECTRÓNICA
+        </h4>
+    </div>
+
+    <!-- DERECHA (BOTONES) -->
+    <div class="col-md-auto d-flex align-items-center flex-wrap" style="gap:5px;">
+
+        <!-- PDF -->
+        <form action="{{ route('pdf_fac', $facturacion->id) }}" class="m-0">
+            <input type="text" name="name" hidden value="{{ $facturacion->codigo_fac }}">
+            <button type="submit" class="btn btn-success"
+                data-toggle="tooltip" title="Descargar PDF">
+                <i class="fa fa-file-pdf-o"></i>
+            </button>
+        </form>
+
+        <!-- Ticket -->
+        <a href="{{ route('facturacion.ticket', $facturacion->id) }}"
+           class="btn btn-info" target="_blank">
+           <i class="fa fa-ticket"></i>
+        </a>
+
+        <!-- Print -->
+        <a href="{{ route('facturacion.print', $facturacion->id) }}"
+           class="btn btn-success" target="_blank"
+           data-toggle="tooltip" title="Imprimir">
+            <i class="fa fa-print"></i>
+        </a>
+
+        <!-- Email -->
+        @if (Auth::user()->email_creado == 1)
+        <form action="{{ route('email.factura', $facturacion->id) }}" method="post" class="m-0">
+            @csrf
+            <button type="submit" class="btn btn-secondary"
+                data-toggle="tooltip" title="Enviar por correo"
+                formtarget="_blank">
+                <i class="fa fa-envelope"></i>
+            </button>
+        </form>
+        @endif
+
+        <!-- WhatsApp -->
+        <button class="btn btn-success"
+            style="background:green;border-color:green"
+            onclick="divAuto()">
+            <i class="fa fa-whatsapp"></i>
+        </button>
+
+        @if ($facturacion->estado == 0)
+
+        <button class="btn btn-warning btn-editar"
+            onclick="click_editar()">
+            <i class="fa fa-pencil"></i>
+        </button>
+
+        <button class="btn btn-warning btn-no-editar no_mostrar"
+            onclick="click_cancelar_editar()">
+            <i class="fa fa-times"></i>
+        </button>
+
+        @endif
+
+    </div>
+
+</div>
+
+<!-- FORM WHATSAPP -->
+<div id="div-mostrar" class="w-100 mt-2"
+     style="height:0; overflow:hidden; transition:height .4s;">
+
+    <form action="{{ route('agregado.whatsapp_send') }}"
+          method="post" class="d-flex align-items-center">
+
+        @csrf
+
+        <input type="tel" name="numero"
+               class="form-control mr-2"
+               value="{{ $facturacion->cliente->celular }}">
+
+        <input type="text" name="mensaje" id="texto_orden" hidden>
+
+        <input type="text" hidden name="url"
+               value="{{ route('pdf_fac', $facturacion->id) }}?archivo=">
+
+        <input type="text" hidden name="name_sin_cambio"
+               value="Facturacion_{{ $facturacion->codigo_fac }}">
+
+        <button type="submit"
+            class="btn btn-success"
+            style="background:green;border-color:green"
+            formtarget="_blank"
+            data-toggle="tooltip"
+            title="Enviar por Whatsapp">
+
+            <i class="fa fa-send"></i>
+
+        </button>
+
+    </form>
+
+</div>--}}
     {{-- Para Editar Factura Sin Finalizar --}}
     @include('transaccion.venta.facturacion._shared._edit_script')
 @endsection
