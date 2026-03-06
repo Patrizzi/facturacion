@@ -1331,7 +1331,7 @@
             var monto_c = document.getElementsByClassName('monto_pago');
             var monto_fc = document.getElementsByClassName('fecha_pago');
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var total = parseFloat(document.getElementById('total_final_view').value) || 0;
             var fin = 0.00;
             var comp = 0;
             for (var i = 0; i < inp_mont; i++) {
