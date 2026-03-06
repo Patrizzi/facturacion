@@ -18,7 +18,7 @@ class CobranzasComprobantesController extends Controller
     // * Lista de Comprobantes Facturas para mostrar
     public function lista_facturas_index(Request $request)
     {
-
+        // dd($request);
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
 
@@ -53,18 +53,18 @@ class CobranzasComprobantesController extends Controller
         } else {
             $query = Facturacion::where('estado', 1)->orderBy('id', 'desc');
         }
-        if($cliente != null){
+        if(!empty($cliente)){
             $query->where('cliente_id', $cliente);
         }
-        if ($estado_pago != null) {
+        if (!empty($estado_pago)) {
             $query->where('estado_pago', $estado_pago);
         } else {
             $query->whereIn('estado_pago', [0, 1]);
         }
-         if ($tipo != null) {
+        if (!empty($tipo)) {
             $query->where('forma_pago_id', $tipo);
         } else {
-            $query->whereIn('forma_pago_id', [0, 1]);
+            $query->whereIn('forma_pago_id', [1, 2]);
         }
 
         $recordsTotal = $query->count();
@@ -73,7 +73,7 @@ class CobranzasComprobantesController extends Controller
             ->take($length)
             ->skip($start);
 
-        $facturas_m = $query->get();
+        $facturas = $query->get();
 
         $json = [
             'draw' => $draw,
@@ -82,21 +82,27 @@ class CobranzasComprobantesController extends Controller
             'data' => [],
         ];
 
-        $facturas_m->transform(function ($factura_m) use ($igv) {
-            if ($factura_m->forma_pago_id == 2) {
-                $cuotas = Cuotas_credito::where('facturacion_m_id', $factura_m->id)->count();
+        $facturas->transform(function ($factura) use ($igv) {
+            if ($factura->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->count();
                 if ($cuotas == 0 || $cuotas == 1) {
-                    $factura_m->n_cuotas = "Pago Único";
+                    $factura->n_cuotas = "Pago Único";
                 } else {
-                    $factura_m->n_cuotas = $cuotas . " Cuotas";
+                    $factura->n_cuotas = $cuotas . " Cuotas";
                 }
             } else {
-                $factura_m->n_cuotas = "Pago Único";
+                $factura->n_cuotas = "Pago Único";
             }
-            return $factura_m;
+            // Documento Adicional )NC - ND)
+            if($factura->nota_credito != "0"){
+                $factura->doc_adicional = 1;    
+            }else{
+                $factura->doc_adicional = 0;
+            }
+            return $factura;
         });
 
-        foreach ($facturas_m as $value) {
+        foreach ($facturas as $value) {
             $json['data'][] = [
                 $value->id,
                 $value->estado_pago_text,
@@ -109,6 +115,8 @@ class CobranzasComprobantesController extends Controller
                 $value->saldo_pendiente ?? "---",
                 $value->fecha_vencimiento,
                 $value->id,
+                $value->total_precio_desc_sin_forma,
+                $value->doc_adicional,
             ];
         }
         return response()->json($json);
@@ -173,7 +181,7 @@ class CobranzasComprobantesController extends Controller
 
         $facturas_m->transform(function ($factura_m) use ($igv) {
             if ($factura_m->forma_pago_id == 2) {
-                $cuotas = Cuotas_credito::where('facturacion_m_id', $factura_m->id)->count();
+                $cuotas = Cuotas_credito::where('facturacion_id', $factura_m->id)->count();
                 if ($cuotas == 0 || $cuotas == 1) {
                     $factura_m->n_cuotas = "Pago Único";
                 } else {
@@ -303,6 +311,13 @@ class CobranzasComprobantesController extends Controller
             } else {
                 $factura_m->n_cuotas = "Pago Único";
             }
+            // Documento Adicional )NC - ND)
+            if($factura_m->nota_credito != "0"){
+                $factura_m->doc_adicional = 1;    
+
+            }else{
+                $factura_m->doc_adicional = 0;
+            }
             return $factura_m;
         });
 
@@ -319,6 +334,8 @@ class CobranzasComprobantesController extends Controller
                 $value->saldo_pendiente ?? "---",
                 $value->fecha_vencimiento,
                 $value->id,
+                $value->total_precio_desc_sin_forma,
+                $value->doc_adicional,
             ];
         }
         return response()->json($json);

@@ -386,7 +386,7 @@ Route::group(
         Route::post('/nota-credito/motivo', 'NotaCreditoController@motivo')->name('nota-credito.motivo');
 
         Route::post('/nota-credito-create-nc', 'NotaCreditoController@create_nota_credito')->name('nota-credito.create_nota_credito');
-        Route::post('/nota-credito-create_boleta-nc', 'NotaCreditoController@create_boleta_nota_credito')->name('nota-credito.create_nota_credito_boleta');
+        Route::post('/nota-credito-create_boleta-nc/{id}', 'NotaCreditoController@create_boleta_nota_credito')->name('nota-credito.create_nota_credito_boleta');
         Route::get('/nota-credito/print/{id}', 'NotaCreditoController@print')->name('nota_credito.print');
         Route::get('/nota-credito/pdf/{id}', 'NotaCreditoController@pdf')->name('nota_credito.pdf');
         Route::post('/nota-credito/anular', 'NotaCreditoController@anular')->name('nota_credito.anular');
@@ -440,14 +440,6 @@ Route::group(
 
         Route::post('/facturacion_manual/codigo', 'FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
         Route::resource('facturacion_manual', 'FacturacionMController');
-        Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
-        //facturacion manual
-        //->Vista para facturacion manual próximamente...
-        Route::get('/facturacion_manual/print/{id}', 'FacturacionMController@print')->name('facturacion_manual.print');
-        Route::get('/facturacion_manual/ticket/{id}', 'FacturacionMController@ticket')->name('facturacion_manual.ticket');
-
-        Route::post('/facturacion_manual/codigo', 'FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
-        Route::resource('facturacion_manual', 'FacturacionMController');
         Route::post('/facturacion_manual/update/{id}', 'FacturacionMController@update')->name('facturacion_manual.update');
         Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
 
@@ -463,12 +455,14 @@ Route::group(
         Route::resource('/boleta', 'BoletaController')->except(['store', 'create']);
         Route::post('/boleta/create', 'BoletaController@create')->name('boleta.create');
         Route::put('/boleta/store/{id_moneda}', 'BoletaController@store')->name('boleta.store');
+        Route::post('/boleta/update/{id}', 'BoletaController@update')->name('boleta.update');
         Route::get('/boleta/ticket/{id}', 'BoletaController@ticket')->name('boleta.ticket');
         /*Guia Remision*/
         //para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria
         Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
         //boleta manual manual
         Route::resource('boleta_manual', 'BoletaMController');
+        Route::post('/boleta_manual/update/{id}', 'BoletaMController@update')->name('boleta_manual.update');
         Route::post('/boleta_manual/codigo', 'BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
         Route::get('/boleta_manual/print/{id}', 'BoletaMController@print')->name('boleta_manual.print');
         Route::get('/boleta_manual/ticket/{id}', 'BoletaMController@ticket')->name('boleta_manual.ticket');
@@ -638,6 +632,7 @@ Route::group(
         Route::post('/email/boleta_manual/{id}', 'EmailTransaccionesSend@boleta_manual')->name('email.boleta_manual');
         Route::post('/email/nota_venta/{id}', 'EmailTransaccionesSend@nota_venta')->name('email.nota_venta');
         Route::post('/email/nota_credito/{id}', 'EmailTransaccionesSend@nota_credito')->name('email.nota_credito');
+        Route::post('/email/nota_debito/{id}', 'EmailTransaccionesSend@nota_debito')->name('email.nota_debito');
         Route::post('/email/guia_ingreso/{id}', 'EmailTransaccionesSend@guia_ingreso')->name('email.guia_ingreso');
         Route::post('/email/guia_egreso/{id}', 'EmailTransaccionesSend@guia_egreso')->name('email.guia_egreso');
         Route::post('/email/informe_tecnico/{id}', 'EmailTransaccionesSend@informe_tecnico')->name('email.informe_tecnico');
@@ -1172,16 +1167,16 @@ Route::get('/facturacion3', 'facturacioncontroller@index3')->name('facturacion3'
 Route::resource('/tipo_cambio', 'TipoCambioController');
 Route::get('busqueda_tipo_cambio', 'TipoCambioController@busquedaTipoCambio')->name('tipo_cambio.busqueda_tipo_cambio');
 
-// ServicioController:
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+// // ServicioController:
+// Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+// Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+// Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+// Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
-Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
-Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
-Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
-Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+// Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+// Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+// Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+// Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
 
 
 // Route::get('/servicio/vistaclientes', 'ServiciosController@vistaclientes')->name('servicio.vistaclientes');

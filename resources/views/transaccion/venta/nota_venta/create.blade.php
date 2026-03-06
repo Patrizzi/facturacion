@@ -190,15 +190,14 @@
                         </div>
                         <div class="col-md-12">
                             <div class="tooltip-demo" align="right">
-                                <button class="guardar ladda-button btn btn-primary btn-outline"
-                                    type="submit">Guardar</button>
-                                <button class=" btn btn-primary  demo3 float-right" style="margin-left: 10px;"
-                                    type="button">Guardar y Finalizar</button>
-                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
-                                    data-style="zoom-out">
+                                <button id="btn_guardar" class="ladda-button btn btn-primary btn-outline" type="button" data-style="zoom-out">
+                                    Guardar
                                 </button>
+                                <button id="btn_guardar_finalizar" class="btn btn-primary float-right" style="margin-left: 10px;" type="button">
+                                    Guardar y Finalizar
+                                </button>
+                                <button type="submit" id="submit_hidden_nota_venta" hidden></button>
                             </div>
-
                         </div>
                     </div>
                 </form>
@@ -381,25 +380,12 @@
         });
 
         // $.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}});
-
         function mostrarMensaje(mensaje) {
             $("#divmsg").empty(); //limpiar div
             $("#divmsg").append(mensaje);
             $("#divmsg").show(200);
         }
-        $(".guardar").on('submit', function(e) {
-            $(".demo3").attr('disabled', true);
-            var data =
-                `<input value="1" type='hidden' name='submit' class="form-control" required/>  <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
-            $('#inp_s').append(data);
-
-        });
-        $(".finalizar").on('click', function(e) {
-            var data =
-                `<input value="2" type='hidden' name='submit' class="form-control" required/>   <input type='hidden' name='accion' readonly="readonly" value="guardar"  hidden="hidden" />`;
-            $('#inp_s').append(data);
-            //  $(".guardar").dis();
-        });
+        
         $(".select2_demo_client").select2({
             theme: "bootstrap",
             placeholder: "Seleccionar Cliente",
@@ -891,6 +877,95 @@
                 return false; // no es JSON
             }
         }
+    </script>
+
+    <script>
+        let enviandoNotaVenta = false;
+
+        function setOrUpdateHiddenInput(form, name, value) {
+            let input = form.querySelector(`input[name="${name}"]`);
+            if (!input) {
+                input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                form.appendChild(input);
+            }
+            input.value = value;
+        }
+
+        function lockButtons(clicked) {
+            if (clicked === 'guardar') {
+                $('#btn_guardar').prop('disabled', true).text('Guardando...');
+                $('#btn_guardar_finalizar').prop('disabled', true);
+            } else {
+                $('#btn_guardar_finalizar').prop('disabled', true).text('Guardando...');
+                $('#btn_guardar').prop('disabled', true);
+            }
+        }
+
+        function unlockButtons() {
+            enviandoNotaVenta = false;
+            $('#btn_guardar').prop('disabled', false).text('Guardar');
+            $('#btn_guardar_finalizar').prop('disabled', false).text('Guardar y Finalizar');
+        }
+
+        function submitNotaVenta(submitValue, clicked) {
+            if (enviandoNotaVenta) return;
+
+            const form = document.getElementById('nota_venta_store');
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            enviandoNotaVenta = true;
+            lockButtons(clicked);
+
+            setOrUpdateHiddenInput(form, 'submit', submitValue);
+
+            document.getElementById('submit_hidden_nota_venta').click();
+        }
+
+        $('#btn_guardar').on('click', function () {
+            submitNotaVenta(1, 'guardar');
+        });
+
+        $('#btn_guardar_finalizar').on('click', function () {
+            const form = document.getElementById('nota_venta_store');
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            swal({
+                title: "¿Estas seguro que deseas Finalizar?",
+                text: "Una vez Finalizado, No se podrá editar la Nota de Venta",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3686ff",
+                confirmButtonText: "Si, Finalizar",
+                cancelButtonText: "Cancelar",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    submitNotaVenta(2, 'finalizar');
+                }
+            });
+        });
+
+        $('#nota_venta_store').on('keydown', function(e){
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        window.addEventListener('pageshow', function () {
+            unlockButtons();
+        });
     </script>
     @include('transaccion.venta.clientes.modal_create')
 @stop

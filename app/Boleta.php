@@ -76,6 +76,33 @@ class Boleta extends Model
         return $this->hasMany(Cuotas_credito::class, 'boleta_id');
     }
 
+    public function getFechaEmisionEditAttribute()
+    {
+        $edit_emision = Carbon::parse($this->attributes['fecha_emision'])->format('yyyy-mm-dd');
+        return $edit_emision;
+    }
+    
+    public function getFechaVencimientoEditAttribute()
+    {
+        $edit_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('Y-m-d');
+        return $edit_vencimiento;
+    }
+
+    public function getSelectComisionistaAttribute()
+    {
+        $raw = trim((string) $this->getAttribute('comisionista'));
+
+        if ($raw === '' || $raw === '0') {
+            return null;
+        }
+
+        if (!ctype_digit($raw)) {
+            return null;
+        }
+
+        return Personal_venta::with('personal.personal_l')->find((int) $raw);
+    }
+
     public static function revision_cuotas($id)
     {
 
@@ -360,6 +387,20 @@ class Boleta extends Model
         $new_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('d-m-Y');
         return $new_vencimiento;
     }
+                
+    public function getSubTotalSinFormaAttribute()
+    {
+        $subtotal = ($this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada']);
+        return round($subtotal, 2);
+    }
+
+    public function getIgvSinFormaAttribute()
+    {
+        $igv = Igv::first()->renta;
+        $sub_igv = ($this->attributes['op_gravada'] * $igv) / 100;
+
+        return round($sub_igv, 2);
+    }
 
     public function getTotalPrecioAttribute(){
         // $boleta = Boleta::find($this->attributes['id']);
@@ -373,6 +414,21 @@ class Boleta extends Model
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
         $total_igv = $this->moneda->simbolo.' '.number_format($total, 2);
+        return $total_igv;
+    }
+    public function getTotalPrecioDescSinFormaAttribute()
+    {
+        // $boleta = Boleta::find($this->attributes['id']);
+        $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+
+        // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+        // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
+
+        $total_igv = $total;
         return $total_igv;
     }
     public function getTotalPrecioSinFormaAttribute()
@@ -436,6 +492,33 @@ class Boleta extends Model
     public function getUltimaFechaPagoAttribute()
     {
         $ultimo_pago =  ComprobantesPagos::where('boleta_id', $this->id)->latest()->first();
-        return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
+        return $ultimo_pago ? Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y') : "Sin Pago Asociado";
+    }
+    
+    public function getUltimoTipoPagoAttribute(){
+        $ultimo_tipo =  ComprobantesPagos::where('boleta_id', $this->id)->latest()->first();
+        return $ultimo_tipo  ?$ultimo_tipo->tipo_pago : "Sin Pago Asociado";
+    }
+
+    public function getUltimoDatoPagoAttribute(){
+        $ultimo_pago =  ComprobantesPagos::where('boleta_id', $this->id)->latest()->first();
+
+        $registro = ComprobantesPagosDetalle::where('comprobante_pago_id', $ultimo_pago->id)->latest()->first();
+        // dd($registrol);
+        switch ($ultimo_pago->tipo_pago) {
+            case 'cheque':
+                $registro_data = $registro->numero_input ?? "Sin N° Asignado";
+                break;
+            case 'tarjeta':
+                $registro_data = $registro->persona_input ?? "Sin Titular";
+                break;
+            case 'efectivo':
+                $registro_data = $registro->persona_input ?? "Sin Persona";
+                break;
+            case  'transferencia':
+                $registro_data = $registro->numero_input ??  "Sin N° Operación";
+                break;
+        }
+        return $registro_data;
     }
 }

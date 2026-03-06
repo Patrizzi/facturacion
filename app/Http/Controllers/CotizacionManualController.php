@@ -416,16 +416,17 @@ class CotizacionManualController extends Controller
         }
 
         // CODIGO GUIA ALMACEN
-        $coti_manual=Codigo_guia_almacen::where('id', $sucursal->id)->first();
+        $cod_guia_fact=Codigo_guia_almacen::where('almacen_id', $sucursal->id)->first();
+        // return $cod_guia_fact;
         if($tipo_cotizacion == 'factura'){
-            if(is_numeric($coti_manual->cod_coti_fact_m)){
-                $coti_manual->cod_coti_fact_m='NN';
-                $coti_manual->save();
+            if(is_numeric($cod_guia_fact->cod_factura_m)){
+                $cod_guia_fact->cod_factura_m='NN';
+                $cod_guia_fact->save();
             }
         }elseif($tipo_cotizacion == 'boleta'){
-            if(is_numeric($coti_manual->cod_coti_bol_m)){
-                $coti_manual->cod_coti_bol_m='NN';
-                $coti_manual->save();
+            if(is_numeric($cod_guia_fact->cod_boleta_m)){
+                $cod_guia_fact->cod_boleta_m='NN';
+                $cod_guia_fact->save();
             }
         }
         //INSERCION DE REGISTROS EN PRODUCTOS
@@ -1118,37 +1119,36 @@ public function update(Request $request, $id)
         $cotizacion = CotizacionManual::where('id',$id)->first();
         $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
 
-        $cod_guia= Codigo_guia_almacen::where('almacen_id',$cotizacion->almacen_id)->first();
-        $factura_cod_fac=$cod_guia->cod_factura_m;
-        if (is_numeric($factura_cod_fac)) {
-            // expresión del numero de factura
-            $factura_cod_fac++;
-            $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
-            $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
-        }else{
-                // expresión del numero de factura
-                // GENERACIÓN DE NUMERO DE FACTURA
-            $ultima_factura=Facturacion_m::where('almacen_id',$cotizacion->almacen_id)->latest()->first();
-            $factura_num=$ultima_factura->codigo_fac;
-            $factura_num_string_porcion= explode("-", $factura_num);
-            $factura_num_string=$factura_num_string_porcion[1];
-            $factura_num=(int)$factura_num_string;
+        $cod_guia = Codigo_guia_almacen::where('almacen_id', $cotizacion->almacen_id)->first();
 
-            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura_m','DESC')->latest()->first();
-                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
-            if($factura_num == 99999999){
-                $ultima_factura = $almacen_codigo->serie_factura_m+1;
-                $factura_num = 00000000;
+        $correlatico_actu = is_numeric($cod_guia->cod_factura_m)
+            ? (int) $cod_guia->cod_factura_m
+            : 0;
 
-            }else{
-                $ultima_factura = $cod_guia->serie_factura_m;
+        if ($correlatico_actu === 0) {
+            $ult_factura = Facturacion_m::where('almacen_id', $cotizacion->almacen_id)
+                ->latest('id')
+                ->first();
+
+            if ($ult_factura) {
+                $cod_compl = explode('-', $ult_factura->codigo_fac);
+                $correlatico_actu = isset($cod_compl[1]) ? (int) $cod_compl[1] : 0;
             }
-            $factura_num++;
-            $sucursal_nr = str_pad($ultima_factura, 2, "0", STR_PAD_LEFT);
-            $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
         }
 
+        $correlativo_sig = $correlatico_actu + 1;
+
+        if ($correlativo_sig > 99999999) {
+            throw new \Exception('Correlativo máximo alcanzado.');
+        }
+
+        $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
+        $factura_nr = str_pad($correlativo_sig, 8, "0", STR_PAD_LEFT);
+
         $factura_numero="FA".$sucursal_nr."-".$factura_nr;
+
+        // return $factura_numero;
+
         $forma_pagos = Forma_pago::get();
         $empresa = Empresa::first();
         $igv = Igv::first();
@@ -1165,40 +1165,34 @@ public function update(Request $request, $id)
         $cotizacion = CotizacionManual::where('id',$id)->first();
         $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
 
-        $cod_guia= Codigo_guia_almacen::where('almacen_id',$cotizacion->almacen_id)->first();
-        $factura_cod_fac=$cod_guia->cod_factura_m;
-        if (is_numeric($factura_cod_fac)) {
-            // expresión del numero de factura
-            $factura_cod_fac++;
-            $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
-            $factura_nr=str_pad($factura_cod_fac, 8, "0", STR_PAD_LEFT);
-        }else{
-                // expresión del numero de factura
-                // GENERACIÓN DE NUMERO DE FACTURA
-            $ultima_factura=Facturacion_m::where('almacen_id',$cotizacion->almacen_id)->latest()->first();
-            $factura_num=$ultima_factura->codigo_fac;
-            $factura_num_string_porcion= explode("-", $factura_num);
-            $factura_num_string=$factura_num_string_porcion[1];
-            $factura_num=(int)$factura_num_string;
+         $cod_guia = Codigo_guia_almacen::where('almacen_id', $cotizacion->almacen_id)->first();
 
-            $almacen_codigo = Codigo_guia_almacen::orderBy('serie_factura_m','DESC')->latest()->first();
-                //CONDICIONAL PARA QUE EMPIECE DE NUEVO EN 0001 PARA EL NUMERO DE SERIE Y EL CORRELATIVO -> FALTA PULIR/IDEA GENERAL
-            if($factura_num == 99999999){
-                $ultima_factura = $almacen_codigo->serie_factura_m+1;
-                $almacen_save_last = Codigo_guia_almacen::find($cotizacion->almacen_id);
-                $almacen_save_last->serie_factura_m = $almacen_codigo->serie_factura_m+1;
-                $almacen_save_last->save();
-                $factura_num = 00000000;
+        $correlatico_actu = is_numeric($cod_guia->cod_factura_m)
+            ? (int) $cod_guia->cod_factura_m
+            : 0;
 
-            }else{
-                $ultima_factura = $cod_guia->serie_factura_m;
+        if ($correlatico_actu === 0) {
+            $ult_factura = Facturacion_m::where('almacen_id', $cotizacion->almacen_id)
+                ->latest('id')
+                ->first();
+
+            if ($ult_factura) {
+                $cod_compl = explode('-', $ult_factura->codigo_fac);
+                $correlatico_actu = isset($cod_compl[1]) ? (int) $cod_compl[1] : 0;
             }
-            $factura_num++;
-            $sucursal_nr = str_pad($ultima_factura, 2, "0", STR_PAD_LEFT);
-            $factura_nr=str_pad($factura_num, 8, "0", STR_PAD_LEFT);
         }
 
+        $correlativo_sig = $correlatico_actu + 1;
+
+        if ($correlativo_sig > 99999999) {
+            throw new \Exception('Correlativo máximo alcanzado.');
+        }
+
+        $sucursal_nr = str_pad($cod_guia->serie_factura_m, 2, "0", STR_PAD_LEFT);
+        $factura_nr = str_pad($correlativo_sig, 8, "0", STR_PAD_LEFT);
+
         $factura_numero="FA".$sucursal_nr."-".$factura_nr;
+        // return $factura_numero;
 
         // obtención de forma de pago
         $forma_pago_id=$request->get('forma_pago');
@@ -1246,7 +1240,7 @@ public function update(Request $request, $id)
         $cotizacion->save();
 
         // modificación para que se cierre el codigo en almacen
-        $factura_primera=Codigo_guia_almacen::where('id', $cotizacion->almacen_id)->first();
+        $factura_primera=Codigo_guia_almacen::where('almacen_id', $cotizacion->almacen_id)->first();
         if(is_numeric($factura_primera->cod_factura_m)){
             $factura_primera->cod_factura_m='NN';
             $factura_primera->save();
@@ -1326,7 +1320,11 @@ public function update(Request $request, $id)
         $existe_id=CotizacionManual::where('id',$id)->first();
         if(empty($existe_id)){ return redirect()->route('cotizacion_manual.index'); }
 
+        // Si ya está creada:
         $cotizacion = CotizacionManual::where('id',$id)->first();
+        if($cotizacion->estado == 1){
+            return redirect()->back();
+        }
         $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id',$cotizacion->id)->get();
 
         $cod_guia= Codigo_guia_almacen::where('almacen_id',$cotizacion->almacen_id)->first();
@@ -1438,7 +1436,7 @@ public function update(Request $request, $id)
         $boleta->cambio = $cambio->paralelo;
         $boleta->observacion = $request->get('observacion');
         $boleta->user_id =auth()->user()->id;
-        $boleta->estado='0';
+        $boleta->estado='1';
         $boleta->tipo_operacion_id= $cotizacion->tipo_operacion_id;
         $boleta->tipo_documento_id = 3;
         $boleta->save();

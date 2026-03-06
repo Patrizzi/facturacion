@@ -319,7 +319,14 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                <button type="button" class="btn btn-primary button-ladda" id="boton" name="boton">Guardar</button>
+                                {{-- <div class="d-flex justify-content-end mt-4">
+                                    <button type="button" class="btn btn-primary button-ladda" id="boton" name="boton">Guardar</button>
+                                </div> --}}
+                                <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
+                                    type="button">Guardar</button>
+                                <button data-style="zoom-out" class="btn btn-primary float-right button-lada" style="margin-left: 10px;"
+                                    type="button" id="finalizar">Guardar y Finalizar</button>
+                                <button type="submit" id="button_submit" hidden name="button_submit" value="0" ></button>
                             </div>
                         </div>
                     </div>
@@ -1150,7 +1157,7 @@
         $("#boton").on("click", function(event) {
             event.preventDefault();
 
-            var l = Ladda.create(document.querySelector('.button-ladda'));
+            var l = Ladda.create(document.querySelector('.button-lada'));
             var forma_pago = $("#forma_pago option:selected").val();
 
             if (forma_pago == 2) {
@@ -1227,6 +1234,95 @@
 
                 if (form) {
                     $("#boton").off("click");
+                    form.submit();
+                } else {
+                    var submitBtn = document.getElementById('button_submit');
+                    if (submitBtn) {
+                        submitBtn.click();
+                    }
+                }
+            }
+        });
+         $("#finalizar").on("click", function(event) {
+            event.preventDefault();
+
+            var l = Ladda.create(document.querySelector('.button-lada'));
+            var forma_pago = $("#forma_pago option:selected").val();
+
+            if (forma_pago == 2) {
+                var monto_c = document.getElementsByClassName('monto_pago');
+                var monto_fc = document.getElementsByClassName('fecha_pago');
+                var inp_mont = document.getElementsByClassName('monto_pago').length;
+
+                var total = parseFloat(document.getElementById('total_final').value) || 0;
+
+                var fin = 0.00;
+
+                for (var i = 0; i < inp_mont; i++) {
+                    var valor = parseFloat(monto_c[i].value) || 0;
+                    fin = fin + valor;
+                }
+                var fin_r = Math.round(fin * 100) / 100;
+                var total_r = Math.round(total * 100) / 100;
+
+                var camposVacios = false;
+                for (var i = 0; i < inp_mont; i++) {
+                    var fecha = monto_fc[i].id;
+                    var monto = monto_c[i].id;
+
+                    var input_text = document.getElementById(`${monto}`).value;
+                    var date_text = document.getElementById(`${fecha}`).value;
+
+                    if (input_text.length == 0 || date_text.length == 0) {
+                        camposVacios = true;
+                        $('#cuotas_modal').modal('show');
+                        document.getElementById('alert_campos').style.display = "flex";
+                        setTimeout(mostrarMensaje, 3000);
+                        break;
+                    }
+                }
+
+                if (camposVacios) {
+                    return;
+                }
+
+                if (fin_r != total_r) {
+                    // console.log('Las sumas no coinciden:', 'Calculada:', fin_r, 'Esperada:', total_r);
+                    $('#cuotas_modal').modal('show');
+                    document.getElementById('suma_campos').style.display = "flex";
+                    setTimeout(mostrarMensaje, 3000);
+                    return;
+                }
+
+                var form = document.getElementById('form_store');
+                if (form && !form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                l.start();
+
+                if (form) {
+                    $("finalizar").off("click");
+                    form.submit();
+                } else {
+                    var submitBtn = document.getElementById('button_submit');
+                    if (submitBtn) {
+                        submitBtn.click();
+                    }
+                }
+
+            } else {
+                var form = document.getElementById('form_store');
+                if (form && !form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                l.start();
+
+                if (form) {
+                    $("#finalizar").off("click");
                     form.submit();
                 } else {
                     var submitBtn = document.getElementById('button_submit');

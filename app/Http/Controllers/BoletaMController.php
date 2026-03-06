@@ -121,7 +121,7 @@ class BoletaMController extends Controller
         //Almacen
         $almacenes = Almacen::all();
         //cODIGO
-        $sucursal =Almacen::where('id', '1')->first();
+        $sucursal = Almacen::where('id', '1')->first();
             // return $sucursal;
         $cod_guia= Codigo_guia_almacen::where('almacen_id',$sucursal->id)->first();
         $cod_boleta_m = $cod_guia->cod_boleta_m;
@@ -319,7 +319,11 @@ class BoletaMController extends Controller
         $boleta->cambio=$cambio->paralelo;
         $boleta->observacion=$request->get('observacion');
         $boleta->user_id =auth()->user()->id;
-        $boleta->estado='0';
+        if($request->get('button_submit') == 0){
+            $boleta->estado='0';
+        }else{
+            $boleta->estado='1';
+        }
         $boleta->tipo_operacion_id= $busca_ope->id;
         $boleta->tipo_documento_id = 2;
         $boleta->save();
@@ -439,7 +443,15 @@ class BoletaMController extends Controller
         $sub_total=0;
         $banco=Banco::where('estado',0)->get();
         $j = 1;
-        return view('transaccion.venta.boleta.boleta_manual.show', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco'));
+        $almacen = Almacen::all(); // o tu filtro real
+
+        // Para editar
+        $forma_pagos=Forma_pago::all();
+        $tipo_operacion = Tipo_operacion_f::all();
+        $almacenes = Almacen::all();
+        $moneda=Moneda::where('principal','1')->first();
+        $sucursal =Almacen::where('id', '1')->first();
+        return view('transaccion.venta.boleta.boleta_manual.show', compact('j','almacen','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','forma_pagos','tipo_operacion','almacenes','moneda','sucursal'));
     }
 
     /**
@@ -462,7 +474,220 @@ class BoletaMController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // return $request;
+        $boleta = Boleta_m::find($id);
+        $forma_pago_id=$request->get('forma_pago');
+        $create_cuotas = 0;
+        if($boleta->forma_pago_id == 1){ //Si es contado
+            if($request->get('forma_pago') == $boleta->forma_pago_id){
+                $fecha_vencimiento = $request->get('fecha_vencimiento');
+                $create_cuotas = 0;
+            }else{
+                // Si cambia a credito
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $val = $fecha_pago_forma[$c];
+                }
+                $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
+                $create_cuotas = 1;
+            }
+
+        }else{ // Si el editado es credito
+            if($request->get('forma_pago') == $boleta->forma_pago_id){ //Si sigue siendo credito
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $val = $fecha_pago_forma[$c];
+                }
+                $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
+                $create_cuotas = 1;
+            }else{ // Si cambia a contado
+                // Eliminar cuotas anteriores
+                $eliminar_cuotas = Cuotas_credito::where('boleta_m_id', $id)->delete();
+                $fecha_vencimiento = $request->get('fecha_vencimiento');
+                $create_cuotas = 0;
+            }
+        }
+
+
+        $boleta->almacen_id = $request->get('almacen');
+        $boleta->orden_compra =  $request->get('orden_compra');
+        $boleta->guia_remision =  $request->get('guia_r');
+        $boleta->cliente_id =  $request->get('cliente');
+        $boleta->moneda_id =  $request->get('moneda_id');
+        $boleta->forma_pago_id =  $forma_pago_id;
+        $boleta->fecha_vencimiento =  $fecha_vencimiento;
+        $boleta->observacion = $request->get('observacion');
+        if($request->button_submit == 0){
+            $boleta->estado = '0'; //! Si se puede seguir editando
+        }else{
+            $boleta->estado = '1'; //! Si ya no se puede editar
+        }
+        $boleta->tipo_operacion_id = $request->get('tipo_operacion');
+        $boleta->op_gravada = 0;
+        $boleta->op_inafecta = 0;
+        $boleta->op_exonerada = 0;
+        $boleta->op_gratuita = 0;
+        $boleta->save();
+
+        //! Crear o Editar cuotas dependiendo de la logica anterior
+        if($create_cuotas == 1){
+            $count_cuotas = Cuotas_credito::where('boleta_m_id', $id)->count();
+            $new_count = count($request->get('fecha_pago'));
+            if($count_cuotas == $new_count){
+                // Se editan las cuotas existentes
+                foreach($boleta->cuotas_credito as $index => $cuota){
+                    $cuota->fecha_pago = $request->get('fecha_pago')[$index];
+                    $cuota->monto = $request->get('monto_pago')[$index];
+                    $cuota->save();
+                }
+            }else{
+                // Eliminar cuotas anteriores
+                $eliminar_cuotas = Cuotas_credito::where('boleta_m_id', $id)->delete();
+                // Crear nuevas cuotas
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                $monto_pago = $request->input('monto_pago');
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $cuota_cred = new Cuotas_credito;
+                    $cuota_cred->boleta_m_id = $id;
+                    $cuota_cred->numero_cuota = $c + 1;
+                    $cuota_cred->monto = $monto_pago[$c];
+                    $cuota_cred->fecha_pago = $fecha_pago_forma[$c];
+                    $cuota_cred->save();
+                }
+            }
+        }
+
+        $count_art = count($request->get('cantidad'));
+        // OBTENCION DE PRODUCTOS O SERVICIOS
+        // return $count_art;
+        for ($i = 0; $i < $count_art; $i++) {
+            $articulos[$i] = $request->input('articulo')[$i];
+            $producto_id_name[$i] = strstr($articulos[$i], '|');
+            $producto_id_2[$i] = strstr($producto_id_name[$i], ' ');
+            $producto_id_3[$i] = substr(strstr($producto_id_2[$i], ' '), 1);
+            $producto_id[$i] = strstr($producto_id_3[$i], ' ', true);
+        }
+
+        $boletas = Boleta_m::find($id);
+        // Registros
+        $registros_count = count($boleta->registros_m);
+        $count_art = count($request->get('cantidad'));
+        if($registros_count == $count_art){ //Si son iguales se editan
+            foreach($boleta->registros_m as $key => $edit_reg) {
+                // Llamado de producto y servicio para su diferenciación y registro propio
+                $producto = Producto::where('codigo_producto', $producto_id[$key])->first();
+                if(isset($producto)){
+                    $edit_reg->producto_id = $producto->id;
+                    $edit_reg->numero_serie = $request->get('numero_serie')[$key];
+                    if($request->get('descripcion_item')[$key] == null){
+                        $edit_reg->descripcion_item = null;
+                    }else{
+                        $edit_reg->descripcion_item = $request->get('descripcion_item')[$key];
+                    }
+                    $edit_reg->precio = $request->get('precio')[$key];
+                    $edit_reg->cantidad = $request->get('cantidad')[$key];
+                    $edit_reg->save();
+
+                    // Modificacion para los tipos de afectación al producto y guardado a boleta
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
+                        $boleta->op_gravada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
+                        $boleta->op_exonerada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
+                        $boleta->op_inafecta += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    $boleta->save();
+                    $edit_reg->save();
+                }else{
+                    $servicio = Servicios::where('codigo_servicio', $producto_id[$key])->where('estado_anular', 0)->first();
+                    $edit_reg->producto_id = $servicio->id;
+                    $edit_reg->numero_serie = $request->get('numero_serie')[$key];
+                    if($request->get('descripcion_item')[$key] == null){
+                        $edit_reg->descripcion_item = null;
+                    }else{
+                        $edit_reg->descripcion_item = $request->get('descripcion_item')[$key];
+                    }
+                    $edit_reg->precio = $request->get('precio')[$key];
+                    $edit_reg->cantidad = $request->get('cantidad')[$key];
+                    $edit_reg->save();
+
+                    // Modificacion para los tipos de afectación al producto y guardado a boleta
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
+                        $boleta->op_gravada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
+                        $boleta->op_exonerada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
+                        $boleta->op_inafecta += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                    }
+                    $boleta->save();
+                    $edit_reg->save();
+                }
+            }
+        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear
+            // Eliminar registros anteriores
+            $eliminar_registros = Boleta_registros_m::where('boleta_m_id', $id)->delete();
+            for ($i = 0; $i < $count_art ; $i++) {
+                $producto = Producto::where('codigo_producto', $producto_id[$i])->first();
+                if(isset($producto)){
+                    $new_reg = new Boleta_registros_m();
+                    $new_reg->boleta_m_id = $boleta->id;
+                    $new_reg->producto_id = $producto->id;
+                    $new_reg->numero_serie = $request->get('numero_serie')[$i];
+                    if ($request->get('descripcion_item')[$i] == null) {
+                        $new_reg->descripcion_item = null;
+                    } else {
+                        $new_reg->descripcion_item = $request->get('descripcion_item')[$i];
+                    }
+                    $new_reg->precio = $request->get('precio')[$i];
+                    $new_reg->cantidad = $request->get('cantidad')[$i];
+                    $new_reg->save();
+                    // Modificacion para los tipos de afectación al producto y guardado a boleta
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
+                        $boleta->op_gravada += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
+                        $boleta->op_exonerada += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
+                        $boleta->op_inafecta += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    $boleta->save();
+                }else{
+                    $servicio = Servicios::where('codigo_servicio', $producto_id[$i])->where('estado_anular', 0)->first();
+                    $new_reg = new Boleta_registros_m();
+                    $new_reg->boleta_m_id = $boleta->id;
+                    $new_reg->servicio_id = $servicio->id;
+                    $new_reg->numero_serie = $request->get('numero_serie')[$i];
+                    if ($request->get('descripcion_item')[$i] == null) {
+                        $new_reg->descripcion_item = null;
+                    } else {
+                        $new_reg->descripcion_item = $request->get('descripcion_item')[$i];
+                    }
+                    $new_reg->precio = $request->get('precio')[$i];
+                    $new_reg->cantidad = $request->get('cantidad')[$i];
+                    $new_reg->save();
+                    // Modificacion para los tipos de afectación al producto y guardado a boleta
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
+                        $boleta->op_gravada += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
+                        $boleta->op_exonerada += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
+                        $boleta->op_inafecta += round($new_reg->precio * $new_reg->cantidad, 2);
+                    }
+                    $boleta->save();
+                }
+            }
+        }
+        return redirect()->back()->with('success','Se editó la boleta correctamente');
     }
 
     public function print(Request $request,$id)

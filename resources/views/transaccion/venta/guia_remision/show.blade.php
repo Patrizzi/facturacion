@@ -94,7 +94,13 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
-            <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+                @include('transaccion.comprobantes._shared.btn_create_with_almacen', [
+                    'routeCreate' => 'guia_remision.create',
+                    'almacen' => $almacen,
+                    'useAlmacen' => true,
+                    'method' => 'POST',
+                ])
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up text-muted"></i>
@@ -104,56 +110,75 @@
                     </a>
                 </div>
             </div>
-            <div class="ibox-title" style="padding-right: 3.1%">
+            <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
                 <div class="row tooltip-demo">
-                    <div class="col-sm-6"></div>
-                    <div class="col-sm-6" align="right">
+                    <div style="display: flex; flex-direction: column;">
+                        <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
+                        <h5 style="margin: 0;">{{ $guia_remision->cod_guia }}</h5>
+                    </div>
+                    <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
+                        GUIA DE REMISIÓN ELECTRÓNICA
+                    </h2>
+
+                    <div
+                        style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
+
                         <a href="{{ route('pdf_guia', $guia_remision->id) }}" class="btn btn-success" data-toggle="tooltip"
-                            data-placement="bottom" title="" data-original-title="Descargar PDF"><i
-                                class="fa fa-file-pdf-o fa-lg"></i>
+                            data-placement="bottom" data-original-title="Descargar PDF">
+                            <i class="fa fa-file-pdf-o fa-lg"></i>
                         </a>
+
+                        <a class="btn btn-success" href="{{ route('guia_remision.print', $guia_remision->id) }}"
+                            target="_blank" data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
+                            <i class="fa fa-print fa-lg"></i>
+                        </a>
+
                         @if (Auth::user()->email_creado == 1)
                             <form action="{{ route('email.guia_remision', $guia_remision->id) }}" method="post"
-                                style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                                style="padding: 0;" class="btn">
                                 @csrf
                                 <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
-                                    data-placement="bottom" title="" formtarget="_blank"
-                                    data-original-title="Enviar por correo">
+                                    data-placement="bottom" data-original-title="Enviar por correo" formtarget="_blank">
                                     <i class="fa fa-envelope fa-lg"></i>
                                 </button>
                             </form>
                         @endif
-                        <a class="btn btn-success"
-                            href="{{ route('guia_remision.print', $guia_remision->id) }}"target="_blank"
-                            class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
-                            data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
-                        <div id="auto" onclick="divAuto()">
-                            <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
-                                data-placement="bottom" title="" data-original-title="Enviar a"><i
-                                    class="fa fa-whatsapp fa-lg" style="color: white"></i> </a>
+
+                        <div style="position: relative; display: inline-block;">
+                            <div id="auto" onclick="divAuto()">
+                                <a class="btn btn-success" style="background: green; border-color: green;">
+                                    <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                                </a>
+                            </div>
                         </div>
+
                         @if ($guia_remision->estado == 0)
-                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i
-                                    class="fa fa-pencil"></i></button>
-                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
-                                    class="fa fa-times"></i></button>
+                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
+                                <i class="fa fa-times"></i>
+                            </button>
                         @endif
-                        <div id="div-mostrar">
+
+                        <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
                             <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                                 style="text-align: none;padding-right: 0;padding-left: 0;">
                                 @csrf
                                 <input type="tel" name="numero" value="{{ $guia_remision->cliente->celular }}" />
-                                <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                                <input type="text" hidden="" name="url"
+                                <input type="text" name="mensaje" id="texto_orden" hidden />
+                                <input type="text" hidden name="url"
                                     value="{{ route('pdf_guia', $guia_remision->id) }}?archivo=">
-                                <input type="text" name="name_sin_cambio" hidden=""
+                                <input type="text" name="name_sin_cambio" hidden
                                     value="{{ $guia_remision->cod_guia }}" />
-                                <button type="submit" class="btn  btn-success"
+                                <button type="submit" class="btn btn-success"
                                     style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip"
-                                    data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i
-                                        class="fa fa-send fa-lg"></i> </button>
+                                    data-placement="bottom" data-original-title="Enviar por Whatsapp">
+                                    <i class="fa fa-send fa-lg"></i>
+                                </button>
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -163,24 +188,6 @@
                     <div class="col-lg-12" style="margin-top: -2px">
                         <div class="id_show">
                             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                                <div class="row">
-                                    <div class="col-sm-4 text-left" align="left">
-                                        <address class="col-sm-4" align="left">
-                                            <img src="{{ asset('img/logos/') }}/{{ $empresa->foto }}" alt=""
-                                                width="300px">
-                                        </address>
-                                    </div>
-                                    <div class="col-sm-4">
-                                    </div>
-                                    <div class="col-sm-4 ">
-                                        <div class="form-control" align="center" style="height: auto;">
-                                            <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                            <h2 style="font-size: 19px">GUIA REMISION ELECTRONICA</h2>
-                                            <h5>{{ $guia_remision->cod_guia }} </h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br>
                                 <div class="row" align="center" style="padding-bottom: 5px">
                                     <div class="col-sm-6" align="center">
                                         <div class="form-control">

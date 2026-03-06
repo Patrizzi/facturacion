@@ -52,6 +52,12 @@ use App\EmailConfiguraciones;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailBandejaEnvios;
 use App\Exports\BoletasExport;
+use App\Guia_remision;
+use App\GuiaRemisionManual;
+use App\MedioPagoDetraccion;
+use App\TipoDetraccion;
+use Greenter\Model\Retention\Retention;
+use Illuminate\Support\Facades\Redirect;
 
 class BoletaController extends Controller
 {
@@ -568,7 +574,11 @@ return view('transaccion.venta.boleta.create_ms',compact('productos','forma_pago
         $boleta->comisionista= $comisionista_buscador->id ?? null;
     // }
     $boleta->user_id =auth()->user()->id;
-    $boleta->estado='0';
+    if($request->button_submit == 0){
+        $boleta->estado = '0'; //!
+    }else{
+        $boleta->estado = '1'; //!
+    }
     $boleta->tipo='producto';
     $boleta->tipo_documento_id = 3;
     $boleta->tipo_operacion_id = $busca_ope->id;
@@ -918,17 +928,35 @@ return redirect()->route('boleta.show',$boleta->id);
         if($inventario_inicial == 0 && $servicios == 0){
             return back()->withErrors(['No hay Productos o Servicios Agregados: '.$boleta->almacen->nombre.'']);
         }
+        $almacen = Almacen::all();
 
         //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
-
-
-
         $igv=Igv::first();
         $banco=Banco::where('estado',0)->get();
         $empresa=Empresa::first();
         $sub_total=0;
 
-        return view('transaccion.venta.boleta.show', compact('boleta','empresa','banco','boleta_registro','igv','sub_total'));
+        // CAMPOS PARA EL EDITAR
+        $forma_pagos = Forma_pago::get();
+        // $remisiones = Guia_remision::select('id', 'cod_guia')
+        //     ->where('cliente_id', $boleta->cliente_id)
+        //     ->where('g_electronica', 0)
+        //     ->union(
+        //         GuiaRemisionManual::select('id', 'cod_guia')
+        //             ->where('cliente_id', $boleta->cliente_id)
+        //             ->where('g_electronica', 0)
+        //     )
+        //     ->get();
+        $tipo_operacion = Tipo_operacion_f::all();
+        $moneda = Moneda::where('principal', '1')->first();
+        $monedas_get = Moneda::all();
+        // $forma_pago_id = Forma_pago::all();
+        // return $remisiones;
+        // $tipo_detraccion = TipoDetraccion::all();
+        // $medio_pago_detraccion = MedioPagoDetraccion::all();
+
+
+        return view('transaccion.venta.boleta.show', compact('boleta','almacen','empresa','banco','boleta_registro','igv','sub_total','forma_pagos','tipo_operacion','moneda','monedas_get'));
     }
 
     public function print($id){
@@ -997,8 +1025,8 @@ return redirect()->route('boleta.show',$boleta->id);
      */
     public function edit($id)
     {
-        $facturacion=Facturacion::find($id);
-        return view('transaccion.venta.facturacion.edit', compact('facturacion'));
+        // $facturacion=Facturacion::find($id);
+        // return view('transaccion.venta.facturacion.edit', compact('facturacion'));
     }
 
     /**
@@ -1010,7 +1038,448 @@ return redirect()->route('boleta.show',$boleta->id);
      */
     public function update(Request $request, $id)
     {
-        //
+        // return $request;
+        $boleta = Boleta::find($id);
+        $create_cuotas = 0;
+         if($boleta->forma_pago_id == 1){ //Si es contado
+            if($request->get('forma_pago') == $boleta->forma_pago_id){
+                $fecha_vencimiento = $request->get('fecha_vencimiento');
+                $create_cuotas = 0;
+            }else{
+                // Si cambia a credito
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $val = $fecha_pago_forma[$c];
+                }
+                $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
+                $create_cuotas = 1;
+            }
+
+        }else{ // Si el editado es credito
+            if($request->get('forma_pago') == $boleta->forma_pago_id){ //Si sigue siendo credito
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $val = $fecha_pago_forma[$c];
+                }
+                $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
+                $create_cuotas = 1;
+            }else{ // Si cambia a contado
+                // Eliminar cuotas anteriores
+                $eliminar_cuotas = Cuotas_credito::where('boleta_id', $id)->delete();
+                $fecha_vencimiento = $request->get('fecha_vencimiento');
+                $create_cuotas = 0;
+            }
+        }
+        $operacion = $request->get('tipo_operacion');
+        $nombre = strstr($operacion, '-', true);
+        $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
+
+        $boleta->orden_compra = $request->get('orden_compra');
+        $boleta->guia_remision = $request->get('guia_r') ?? 0;
+        $boleta->cliente_id = $request->get('cliente_id');
+        $boleta->moneda_id = $request->get('moneda_id');
+        $boleta->forma_pago_id = $request->get('forma_pago');
+        $boleta->fecha_vencimiento = $fecha_vencimiento;
+        $boleta->observacion = $request->get('observacion');
+        if($request->button_submit == 0){
+            $boleta->estado = '0'; //! Si se puede seguir editando
+        }else{
+            $boleta->estado = '1'; //! Si ya no se puede editar
+        }
+        $boleta->tipo_operacion_id = $request->get('tipo_operacion_id');
+        $boleta->op_gravada = 0;
+        $boleta->op_inafecta = 0;
+        $boleta->op_exonerada = 0;
+        $boleta->op_gratuita = 0;
+        $boleta->save();
+
+        $moneda = Moneda::where('principal', 1)->first();
+        // Validacion para la moneda esocogida
+        //! Crear o Editar cuotas dependiendo de la logica anterior
+        if($create_cuotas == 1){
+            $count_cuotas = Cuotas_credito::where('boleta_id', $id)->count();
+            $new_count = count($request->get('fecha_pago'));
+            if($count_cuotas == $new_count){
+                // Se editan las cuotas existentes
+                foreach($boleta->cuotas_credito as $index => $cuota){
+                    $cuota->fecha_pago = $request->get('fecha_pago')[$index];
+                    $cuota->monto = $request->get('monto_pago')[$index];
+                    $cuota->save();
+                }
+            }else{
+                // Eliminar cuotas anteriores
+                $eliminar_cuotas = Cuotas_credito::where('boleta_id', $id)->delete();
+                // Crear nuevas cuotas
+                $fecha_pago_forma = $request->input('fecha_pago');
+                $contador_for_1 = count($fecha_pago_forma);
+                $monto_pago = $request->input('monto_pago');
+                for ($c = 0; $c < $contador_for_1; $c++) {
+                    $cuota_cred = new Cuotas_credito;
+                    $cuota_cred->boleta_id = $id;
+                    $cuota_cred->numero_cuota = $c + 1;
+                    $cuota_cred->monto = $monto_pago[$c];
+                    $cuota_cred->fecha_pago = $fecha_pago_forma[$c];
+                    $cuota_cred->save();
+                }
+            }
+        }
+        // Comision
+        // return var_dump($boleta->comisionista);
+        if ($boleta->comisionista !== NULL && $boleta->comisionista !== "0") {
+            $all_comi = $boleta->select_comisionista;
+            // return $all_comi;
+            $comi =  $all_comi->comision;
+            // return $factura->select_comisionista;
+            // CAMBIO EN EL VALOR DE LA FACTURA PARA LAS VENTAS REGISTROS
+            $venta_reg = Ventas_registro::where('id_bol', $id)->first();
+            $venta_reg->tipo_moneda = $boleta->moneda_id;
+            $venta_reg->monto_final_fac_bol = $request->get('precio_final_igv');
+            $porcentaje = 100 + $comi;
+            $venta_reg->monto_comision = (100 * $request->get('sub_total_sin_igv') / $porcentaje) * $comi / 100;
+            $venta_reg->save();
+        } else {
+            $comi = 0;
+            // return $comi+2;
+        }
+        // Edicion de Registros
+        $registros_count = count($boleta->registros);
+        $count_art = count($request->get('cantidad'));
+        // OBTENCION DE PRODUCTOS O SERVICIOS
+        // return $count_art;
+        for ($i = 0; $i < $count_art; $i++) {
+            $articulos[$i] = $request->input('articulo')[$i];
+            $producto_id_name[$i] = strstr($articulos[$i], '|');
+            $producto_id_2[$i] = strstr($producto_id_name[$i], ' ');
+            $producto_id_3[$i] = substr(strstr($producto_id_2[$i], ' '), 1);
+            $producto_id[$i] = strstr($producto_id_3[$i], ' ', true);
+        }
+        // ret
+        if($registros_count == $count_art){
+            foreach($boleta->registros as $index_reg => $edit_reg){
+                $producto_busq = Producto::where('codigo_producto', $producto_id[$index_reg])->first();
+                if(isset($producto_busq)){
+                    $edit_reg->producto_id = $producto_busq->id;
+                    $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
+                    $edit_reg->servicio_id = null;
+                    if ($request->get('descripcion_item')[$index_reg] == null) {
+                        $edit_reg->descripcion_item = null;
+                    } else {
+                        $edit_reg->descripcion_item = $request->get('descripcion_item')[$index_reg];
+                    }
+                    $stock = Stock_almacen::where('producto_id',$producto_busq->id)->sum('stock');
+                    $edit_reg->stock = $stock;
+                    $boleta =  Boleta::find($id);
+                    if($moneda->id == $boleta->moneda_id){
+                        if ($moneda->tipo == 'nacional'){
+                            //promedio original revisar que es  promedio nacional--------------------------------------------------------
+                            $array2=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional');
+                            $edit_reg->promedio_original=$array2;
+
+                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')*($producto_busq->utilidad - $producto_busq->descuento1)/100;
+                            $igv_p=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad);
+                            $array=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad);
+                            $edit_reg->precio=$array;
+                        }else{
+                            //promedio original revisar que es  promedio nacional--------------------------------------------------------
+                            $array2=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero');
+                            $edit_reg->promedio_original=$array2;
+
+                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*($producto_busq->utilidad - $producto_busq->descuento1)/100;
+                            $igv_p=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')+$utilidad);
+                            $array=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')+$utilidad);
+                            $edit_reg->precio=$array;
+                        }
+                    }else{
+                        if ($moneda->tipo == 'extranjera'){
+                            //promedio original revisar que es  promedio nacional--------------------------------------------------------
+                            $array2=round(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*$boleta->cambio->paralelo,2);
+                            $edit_reg->promedio_original=$array2;
+
+                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')*($producto_busq->utilidad - $producto_busq->descuento1)/100;
+                            $igv_p=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero')+$utilidad);
+                            $array=round((Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_extranjero'))*$boleta->cambio->paralelo+$utilidad,2);
+                            $edit_reg->precio=$array;
+                        }else{
+                            //promedio original revisar que es  promedio nacional--------------------------------------------------------
+                            $array2=round(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')/$boleta->cambio->paralelo,2);
+                            $edit_reg->promedio_original=$array2;
+
+                            $utilidad=Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')*($producto_busq->utilidad - $producto_busq->descuento1)/100;
+                            $igv_p=(Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad);
+                            $array=round((Stock_producto::where('producto_id',$producto_busq->id)->avg('precio_nacional')+$utilidad)/$boleta->cambio->paralelo,2);
+                            $edit_reg->precio=$array;
+                        }
+                    }
+                    $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
+                    $edit_reg->descuento = $request->get('check_descuento')[$index_reg];
+                    // CALCULO DE PRECIOS CON DESCUENTO Y COMISION
+                    $desc_comprobacion = $request->get('check_descuento')[$index_reg];
+                    if ($desc_comprobacion <> 0) {
+                        $edit_reg->precio_unitario_desc = $array - ($array2 * $desc_comprobacion / 100);
+                    } else {
+                        $edit_reg->precio_unitario_desc = $array;
+                    }
+                    //precio unitario comision ----------------------------------------
+                    if ($desc_comprobacion <> 0) {
+                        $boleta_desc = round($array - ($array2 * $desc_comprobacion / 100), 2);
+                        $edit_reg->precio_unitario_comi = round($boleta_desc + ($boleta_desc * $comi / 100), 2);
+                    } else {
+                        $edit_reg->precio_unitario_comi = round($array + ($array * $comi / 100), 2);
+                    }
+
+                    if (strpos($producto_busq->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
+                        $boleta->op_gravada += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($producto_busq->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
+                        $boleta->op_exonerada += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($producto_busq->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
+                        $boleta->op_inafecta += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    $boleta->save();
+                    $edit_reg->save();
+
+                }else{
+                    $servicio = Servicios::where('codigo_servicio', $producto_id[$index_reg])->where('estado_anular', 0)->first();
+                    $edit_reg->servicio_id = $servicio->id;
+                    if ($request->get('descripcion_item')[$index_reg] == null) {
+                        $edit_reg->descripcion_item = null;
+                    } else {
+                        $edit_reg->descripcion_item = $request->get('descripcion_item')[$index_reg];
+                    }
+                    $edit_reg->numero_serie = $edit_reg->get('numero_serie')[$index_reg];
+                    if ($moneda->id == $boleta->moneda_id) {
+                        if ($moneda->tipo == 'nacional') {
+                            $precio_prom = $servicio->precio_nacional;
+                            $edit_reg->promedio_original = $precio_prom;
+                            $utilidad = $servicio->precio_nacional * ($servicio->utilidad) / 100;
+                            $array = $servicio->precio_nacional + $utilidad;
+                        } else {
+                            $precio_prom = $servicio->precio_extranjero;
+                            $edit_reg->promedio_original = $precio_prom;
+                            $utilidad = $servicio->precio_extranjero * ($servicio->utilidad) / 100;
+                            $array = $servicio->precio_extranjero + $utilidad;
+                            // return '1';
+                        }
+                    } else {
+                        if ($moneda->tipo == 'extranjera') {
+                            $precio_prom = $servicio->precio_extranjero * $boleta->cambio;
+                            $edit_reg->promedio_original = $precio_prom;
+                            $utilidad = $servicio->precio_extranjero * ($servicio->utilidad) / 100;
+                            $array = round(($servicio->precio_extranjero + $utilidad) * $boleta->cambio, 2);
+                            // return '2';
+                        } else {
+                            $precio_prom = $servicio->precio_nacional / $boleta->cambio;
+                            $edit_reg->promedio_original = $precio_prom;
+                            $utilidad = $servicio->precio_nacional * ($servicio->utilidad) / 100;
+                            $array = round(($servicio->precio_nacional + $utilidad) / $boleta->cambio, 2);
+                            // return $array;
+                        }
+                    }
+
+                    $edit_reg->precio = $array;
+                    $edit_reg->cantidad = $request->get('cantidad')[$index_reg];
+                    $edit_reg->comision = $comi;
+                    $descuento_verificacion = $request->get('check_descuento')[$index_reg];
+                    $edit_reg->descuento = $descuento_verificacion;
+                    if ($descuento_verificacion <> 0) {
+                        $edit_reg->precio_unitario_desc = $array - ($precio_prom * $descuento_verificacion / 100);
+                    } else {
+                        $edit_reg->precio_unitario_desc = $array;
+                    }
+                    //precio unitario comision ----------------------------------------
+                    if ($descuento_verificacion <> 0) {
+                        $prec_uni_des = $array - ($precio_prom * $descuento_verificacion / 100);
+                        $edit_reg->precio_unitario_comi = ($prec_uni_des + ($prec_uni_des * $comi / 100));
+                    } else {
+                        $edit_reg->precio_unitario_comi = $array + ($array * $comi / 100);
+                    }
+
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
+                        $boleta->op_gravada += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
+                        $boleta->op_exonerada += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
+                        $boleta->op_inafecta += round($edit_reg->precio_unitario_comi * $edit_reg->cantidad, 2);
+                    }
+                    $boleta->save();
+                    $edit_reg->save();
+                }
+            }
+        }else{
+            // Eliminar registros anteriores
+            $eliminar_registros = Boleta_registro::where('boleta_id', $id)->delete();
+            // Crear nuevos registros
+            for ($i = 0; $i < $count_art; $i++) {
+                $producto_servicio = Producto::where('codigo_producto', $producto_id[$i])->first();
+                // return $producto_servicio;
+                if (isset($producto_servicio)) {
+                    $boleta_reg = new Boleta_registro();
+                    $boleta_reg->boleta_id = $boleta->id;
+                    $boleta_reg->producto_id = $producto_servicio->id;
+                    $boleta_reg->numero_serie = $request->get('numero_serie')[$i];
+                    if ($request->get('descripcion_item')[$i] == null) {
+                        $boleta_reg->descripcion_item = null;
+                    } else {
+                        $boleta_reg->descripcion_item = $request->get('descripcion_item')[$i];
+                    }
+                    $producto = Producto::where('id', $producto_servicio->id)->where('estado_id', 1)->where('estado_anular', 1)->first();
+                    // return $producto;
+                    //stock --------------------------------------------------------
+                    $stock = Stock_almacen::where('producto_id', $producto_servicio->id)->where('almacen_id', $boleta->almacen_id)->sum('stock');
+                    $boleta_reg->stock = $stock;
+
+                    //precio --------------------------------------------------------
+                    if ($moneda->id == $boleta->moneda_id) {
+                        if ($moneda->tipo == 'nacional') {
+                            //promedio original ojo revisar que es precio nacional --------------------------------------------------------
+                            $array2 = round(Stock_producto::where('producto_id', $producto->id)->avg('precio_nacional'), 2);
+                            $boleta_reg->promedio_original = $array2;
+                            // respectividad de la moneda deacurdo al id
+                            $utilidad = Stock_producto::where('producto_id', $producto->id)->avg('precio_nacional') * ($producto->utilidad - $producto->descuento1) / 100;
+                            $array = round(Stock_producto::where('producto_id', $producto->id)->avg('precio_nacional') + $utilidad, 2);
+                            $boleta_reg->precio = $array;
+                        } else {
+                            //promedio original ojo revisar que es precio nacional --------------------------------------------------------
+                            $array2 = round(Stock_producto::where('producto_id', $producto->id)->avg('precio_extranjero'), 2);
+                            $boleta_reg->promedio_original = $array2;
+                            // validacion para la otra moneda con igv paralelo
+                            $utilidad = Stock_producto::where('producto_id', $producto->id)->avg('precio_extranjero') * ($producto->utilidad - $producto->descuento1) / 100;
+                            $array = round(Stock_producto::where('producto_id', $producto->id)->avg('precio_extranjero') + $utilidad, 2);
+                            $boleta_reg->precio = $array;
+                        }
+                    } else {
+                        if ($moneda->tipo == 'extranjera') {
+                            //promedio original ojo revisar que es precio nacional --------------------------------------------------------
+                            $array2 = round(Stock_producto::where('producto_id', $producto->id)->avg('precio_extranjero') * $boleta->cambio, 2);
+                            $boleta_reg->promedio_original = $array2;
+                            // respectividad de la moneda deacuerdo al id
+                            $utilidad = Stock_producto::where('producto_id', $producto->id)->avg('precio_extranjero') * ($producto->utilidad - $producto->descuento1) / 100;
+                            $array = round((Stock_producto::where('producto_id', $producto->id)->avg('precio_extranjero') + $utilidad) * $boleta->cambio, 2);
+                            $boleta_reg->precio = $array;
+                        } else {
+                            //promedio original ojo revisar que es precio nacional --------------------------------------------------------
+                            $array2 = round(Stock_producto::where('producto_id', $producto->id)->avg('precio_nacional') / $boleta->cambio, 2);
+                            $boleta_reg->promedio_original = $array2;
+                            // validacion para la otra moneda con igv paralelo
+                            $utilidad = Stock_producto::where('producto_id', $producto->id)->avg('precio_nacional') * ($producto->utilidad - $producto->descuento1) / 100;
+                            $array = round((Stock_producto::where('producto_id', $producto->id)->avg('precio_nacional') + $utilidad) / $boleta->cambio, 2);
+                            $boleta_reg->precio = $array;
+                        }
+                    }
+                    $boleta_reg->cantidad = $request->get('cantidad')[$i];
+                    $boleta_reg->descuento = $request->get('check_descuento')[$i];
+                    $boleta_reg->comision = $comi;
+                    //precio unitario descuento ----------------------------------------
+                    $desc_comprobacion = $request->get('check_descuento')[$i];
+                    if ($desc_comprobacion <> 0) {
+                        $boleta_reg->precio_unitario_desc = $array - ($array2 * $desc_comprobacion / 100);
+                    } else {
+                        $boleta_reg->precio_unitario_desc = $array;
+                    }
+                    //precio unitario comision ----------------------------------------
+                    if ($desc_comprobacion <> 0) {
+                        $factura_desc = round($array - ($array2 * $desc_comprobacion / 100), 2);
+                        $boleta_reg->precio_unitario_comi = round($factura_desc + ($factura_desc * $comi / 100), 2);
+                    } else {
+                        $boleta_reg->precio_unitario_comi = round($array + ($array * $comi / 100), 2);
+                    }
+                    // $boleta_2 = Facturacion::find($boleta->id);
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
+                        $boleta->op_gravada += round($boleta_reg->precio_unitario_comi * $boleta_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
+                        $boleta->op_exonerada += round($boleta_reg->precio_unitario_comi * $boleta_reg->cantidad, 2);
+                    }
+                    if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
+                        $boleta->op_inafecta += round($boleta_reg->precio_unitario_comi * $boleta_reg->cantidad, 2);
+                    }
+                    // return $cotizacion_registro->precio_unitario_comi;
+                    $boleta->save();
+                    $boleta_reg->save();
+
+                    //empieza la busqueda total
+                } else {
+                    $servicio = Servicios::where('codigo_servicio', $producto_id[$i])->where('estado_anular', 0)->first();
+                    // return   $servicio;
+                    $boleta_reg = new Boleta_registro();
+                    $boleta_reg->boleta_id = $boleta->id;
+                    $boleta_reg->servicio_id = $servicio->id;
+                    //Precio -----------------------------------------------------------------------------------------
+                    if ($moneda->id == $boleta->moneda_id) {
+                        if ($moneda->tipo == 'nacional') {
+                            $precio_prom = $servicio->precio_nacional;
+                            $boleta_reg->promedio_original = $precio_prom;
+                            $utilidad = $servicio->precio_nacional * ($servicio->utilidad) / 100;
+                            $array = $servicio->precio_nacional + $utilidad;
+                        } else {
+                            $precio_prom = $servicio->precio_extranjero;
+                            $boleta_reg->promedio_original = $precio_prom;
+                            $utilidad = $servicio->precio_extranjero * ($servicio->utilidad) / 100;
+                            $array = $servicio->precio_extranjero + $utilidad;
+                            // return '1';
+                        }
+                    } else {
+                        if ($moneda->tipo == 'extranjera') {
+                            $precio_prom = $servicio->precio_extranjero * $boleta->cambio;
+                            $boleta_reg->promedio_original = $precio_prom;
+                            $utilidad = $servicio->precio_extranjero * ($servicio->utilidad) / 100;
+                            $array = round(($servicio->precio_extranjero + $utilidad) * $boleta->cambio, 2);
+                            // return '2';
+                        } else {
+                            $precio_prom = $servicio->precio_nacional / $boleta->cambio;
+                            $boleta_reg->promedio_original = $precio_prom;
+                            $utilidad = $servicio->precio_nacional * ($servicio->utilidad) / 100;
+                            $array = round(($servicio->precio_nacional + $utilidad) / $boleta->cambio, 2);
+                            // return $array;
+                        }
+                    }
+
+                    $boleta_reg->precio = $array;
+                    $boleta_reg->cantidad = $request->get('cantidad')[$i];
+                    $boleta_reg->comision = $comi;
+                    $descuento_verificacion = $request->get('check_descuento')[$i];
+                    $boleta_reg->descuento = $descuento_verificacion;
+                    if ($request->get('descripcion_item')[$i] == null) {
+                        $boleta_reg->descripcion_item = null;
+                    } else {
+                        $boleta_reg->descripcion_item = $request->get('descripcion_item')[$i];
+                    }
+                    if ($descuento_verificacion <> 0) {
+                        $boleta_reg->precio_unitario_desc = $array - ($precio_prom * $descuento_verificacion / 100);
+                    } else {
+                        $boleta_reg->precio_unitario_desc = $array;
+                    }
+                    //precio unitario comision ----------------------------------------
+                    if ($descuento_verificacion <> 0) {
+                        $prec_uni_des = $array - ($precio_prom * $descuento_verificacion / 100);
+                        $boleta_reg->precio_unitario_comi = ($prec_uni_des + ($prec_uni_des * $comi / 100));
+                    } else {
+                        $boleta_reg->precio_unitario_comi = $array + ($array * $comi / 100);
+                    }
+
+                    // $boleta_2 = Facturacion::find($boleta->id);
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
+                        $boleta->op_gravada += round($boleta_reg->precio_unitario_comi * $boleta_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
+                        $boleta->op_exonerada += round($boleta_reg->precio_unitario_comi * $boleta_reg->cantidad, 2);
+                    }
+                    if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
+                        $boleta->op_inafecta += round($boleta_reg->precio_unitario_comi * $boleta_reg->cantidad, 2);
+                    }
+                    // return $cotizacion_registro->precio_unitario_comi;
+                    $boleta->save();
+                    $boleta_reg->save();
+                }
+            }
+        }
+
+        return Redirect()->back()->with('success', 'Se actualizó la Boleta correctamente');
     }
 
     /**

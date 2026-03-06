@@ -370,6 +370,10 @@
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    
     <script>
         $(document).ready(function() {
 
@@ -720,17 +724,38 @@
             document.getElementById('button_submit').click();
             l.start();
         });
+        
         $('#finalizar').on('click', function() {
-            $('#button_submit').val('1');
-            var l = Ladda.create(document.querySelector('.button-lada-finalizar'));
             var form = document.getElementById('form_store');
             if (!form.checkValidity()) {
-                form.reportValidity(); // muestra mensajes nativos de HTML5
+                form.reportValidity();
                 return;
             }
-            document.getElementById('button_submit').click();
-            l.start();
 
+            swal({
+                    title: "¿Estás seguro que deseas Finalizar?",
+                    text: "Una vez Finalizado, no podrás modificar la Guía de Remisión",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Si, Finalizar",
+                    confirmButtonColor: "#1a3bb3",
+                    cancelButtonText: "Cancelar",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        swal("Guía de Remisión Finalizada", "Ya no podrás editar", "success");
+                        $('#button_submit').val('1');
+                        var l = Ladda.create(document.querySelector('.button-lada-finalizar'));
+                        document.getElementById('button_submit').click();
+                        l.start();
+                        $('#guardar').attr('disabled', true);
+                    } else {
+                        swal("Cancelado", "Se canceló la finalización", "error");
+                    }
+                }
+            );
         });
     </script>
     @include('transaccion.venta.clientes.modal_create')

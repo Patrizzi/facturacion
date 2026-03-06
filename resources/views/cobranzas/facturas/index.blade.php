@@ -99,6 +99,7 @@
                                                     <th>N° Cuotas</th>
                                                     <th>Saldo</th>
                                                     <th>Fecha V.</th>
+                                                    <th>Obs.</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -213,6 +214,9 @@
             padding-right: 15px;
             padding-left: 15px;
         }
+        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+            vertical-align: middle
+        }
     </style>
 
     <!-- scripts -->
@@ -249,7 +253,7 @@
         $('#tab-1-tab').addClass('active');
 
         $(document).ready(function() {
-           $('#modal_pago_tipo_comprobante').val('factura');
+            $('#modal_pago_tipo_comprobante').val('factura');
         });
         $('#collapse-head-three').on('click', function() {
             $('#collapseThree').collapse('show');
@@ -307,7 +311,7 @@
                 },
                 {
                     // 'width': '5%',
-                    'targets': [2],
+                    'targets': [2]
                 },
                 {
                     'width': '25%',
@@ -350,17 +354,31 @@
                     }
                 },
                 {
-                    // 'width': '55%',
                     'targets': [9],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                    //  console.log(full[10]['nota_credito']);
+                        var base_otros = '';
+                        if (full[11] == 1) {
+                            base_otros += `<span class="label label-success">NC</span> `;
+                        }else{
+                        base_otros +=``;
+                        }
+                        return base_otros;
+                    }
+                },
+                {
+                    // 'width': '55%',
+                    'targets': [10],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
                         var view =
-                            `<a class="btn btn-primary btn-ls"
+                            `<a class="btn btn-primary btn-sm btn-ls"
                         href=" ` + url_view + `"><i class="fa fa-eye"></i></a>
                             <div class="btn-group">
-                            <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
+                            <button data-toggle="dropdown" class="btn btn-primary btn-sm btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
                                 <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
@@ -570,6 +588,7 @@
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
                             } else {
+                                var tipo_cambio = row.tipo_cambio;
                                 if (row.factura_moneda == "soles" && igual ==
                                     '$') { //DE DOLAR A SOL
                                     var new_val = parseFloat(data_cuota) / tipo_cambio;
@@ -833,6 +852,7 @@
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
                             } else {
+                                var tipo_cambio = row.tipo_cambio;
                                 if (row.factura_moneda == "soles" && igual ==
                                     '$') { //DE DOLAR A SOL
                                     var new_val = parseFloat(data_cuota) / tipo_cambio;

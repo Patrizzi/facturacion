@@ -11,7 +11,7 @@ class Facturacion_m extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['estado_pago_text','total_precio','total_precio_sin_forma'];
+    protected $appends = ['estado_pago_text', 'total_precio', 'total_precio_sin_forma'];
 
     public function almacen()
     {
@@ -68,6 +68,10 @@ class Facturacion_m extends Model
     {
         return $this->hasMany(Cuotas_credito::class, 'facturacion_m_id');
     }
+    public function nota_credito_register()
+    {
+        return $this->hasOne(Nota_Credito::class , 'facturacion_m_id');
+    }
 
     public function getFechaEmisionAttribute()
     {
@@ -79,13 +83,13 @@ class Facturacion_m extends Model
     {
         return $this->hasOne(Detracciones::class, 'factura_m_id');
     }
-    
+
     public function getFechaEmisionEditAttribute()
     {
         $edit_emision = Carbon::parse($this->attributes['fecha_emision'])->format('yyyy-mm-dd');
         return $edit_emision;
     }
-    
+
     public function getFechaVencimientoEditAttribute()
     {
         $edit_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('Y-m-d');
@@ -382,11 +386,39 @@ class Facturacion_m extends Model
         return $subtotal;
     }
 
-    public function getIgvSinFormaAttribute(){
+    public function getIgvSinFormaAttribute()
+    {
         $igv = Igv::first()->renta;
         $sub_igv = ($this->attributes['op_gravada'] * $igv) / 100;
 
         return round($sub_igv, 2);
+    }
+
+    public function getTotalPrecioDescSinFormaAttribute()
+    {
+        // $boleta = Boleta::find($this->attributes['id']);
+        $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+
+        if ($this->attributes['nota_credito'] == 2) {
+            // Reduccion por nota de crédito
+            $motivo = Facturacion_m::search_motivo_nc($this->attributes['id']);
+            // dd($motivo);
+            if ($motivo == "Devolucion por Item") {
+                $nota_c = Nota_Credito::where('facturacion_m_id', $this->attributes['id'])->first();
+                //    dd($nota_c);
+                $total = $total - $nota_c->total_precio;
+                //    return $nota_c;
+            }
+        }
+        // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+        // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
+
+        $total_igv = $total;
+        return $total_igv;
     }
 
     public function getTotalPrecioSinFormaAttribute()
@@ -413,7 +445,17 @@ class Facturacion_m extends Model
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
         $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
-
+        if ($this->attributes['nota_credito'] == 2) {
+            // Reduccion por nota de crédito
+            $motivo = Facturacion_m::search_motivo_nc($this->attributes['id']);
+            // dd($motivo);
+            if ($motivo == "Devolucion por Item") {
+                $nota_c = Nota_Credito::where('facturacion_m_id', $this->attributes['id'])->first();
+                //    dd($nota_c);
+                $total = $total - $nota_c->total_precio;
+                //    return $nota_c;
+            }
+        }
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
@@ -466,7 +508,34 @@ class Facturacion_m extends Model
     public function getUltimaFechaPagoAttribute()
     {
         $ultimo_pago =  ComprobantesPagos::where('factuacion_m_id', $this->id)->latest()->first();
-        return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
+        return $ultimo_pago ? Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y') : "Sin Pago Asociado";
+    }
+
+    public function getUltimoTipoPagoAttribute(){
+        $ultimo_tipo =  ComprobantesPagos::where('factuacion_m_id', $this->id)->latest()->first();
+        return $ultimo_tipo  ?$ultimo_tipo->tipo_pago : "Sin Pago Asociado";
+    }
+        
+    public function getUltimoDatoPagoAttribute(){
+        $ultimo_pago =  ComprobantesPagos::where('factuacion_m_id', $this->id)->latest()->first();
+
+        $registro = ComprobantesPagosDetalle::where('comprobante_pago_id', $ultimo_pago->id)->latest()->first();
+        // dd($registrol);
+        switch ($ultimo_pago->tipo_pago) {
+            case 'cheque':
+                $registro_data = $registro->numero_input ?? "Sin N° Asignado";
+                break;
+            case 'tarjeta':
+                $registro_data = $registro->persona_input ?? "Sin Titular";
+                break;
+            case 'efectivo':
+                $registro_data = $registro->persona_input ?? "Sin Persona";
+                break;
+            case  'transferencia':
+                $registro_data = $registro->numero_input ??  "Sin N° Operación";
+                break;
+        }
+        return $registro_data;
     }
 
     public static function revision_pagados_contado()

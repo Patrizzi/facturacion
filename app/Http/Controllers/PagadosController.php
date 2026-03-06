@@ -215,10 +215,13 @@ class PagadosController extends Controller
                         break;
                 }
                 // Cambio para las cuotas en contado
-                if ($factura_db->forma_pago_id == 1) {
-                    $factura_db->estado_pago = 2;
-                    $factura_db->save();
-                }
+                
+            }
+            if ($factura_db->forma_pago_id == 1) {
+                $factura_db->estado_pago = 2;
+                $factura_db->save();
+            }else{
+                Cuotas_credito::actualizarEstadoFactura($factura_db->id,$comprobantes);
             }
         }
         return redirect()->back()->with('success', "El pago se adjuntó correctamente");
@@ -772,6 +775,7 @@ class PagadosController extends Controller
 
             $array_end[$key] = array(
                 'factura_cod' => $factura->codigo_fac,
+                'tipo_cambio' => $factura->cambio,
                 'cliente_doc' => $factura->cliente->numero_documento,
                 'cliente_nombre' => $factura->cliente->nombre,
                 'factura_moneda' => $factura->moneda->nombre,
@@ -1026,6 +1030,7 @@ class PagadosController extends Controller
 
             $array_end[$key] = array(
                 'factura_cod' => $factura->codigo_fac,
+                'tipo_cambio' => $factura->cambio,
                 'cliente_doc' => $factura->cliente->numero_documento,
                 'cliente_nombre' => $factura->cliente->nombre,
                 'factura_moneda' => $factura->moneda->nombre,
@@ -1291,6 +1296,7 @@ class PagadosController extends Controller
 
             $array_end[$key] = array(
                 'factura_cod' => $boleta->codigo_boleta,
+                'tipo_cambio' => $boleta->cambio,
                 'cliente_doc' => $boleta->cliente->numero_documento,
                 'cliente_nombre' => $boleta->cliente->nombre,
                 'factura_moneda' => $boleta->moneda->nombre,
@@ -1545,6 +1551,7 @@ class PagadosController extends Controller
 
             $array_end[$key] = array(
                 'factura_cod' => $boleta->codigo_boleta,
+                'tipo_cambio' => $boleta->cambio,
                 'cliente_doc' => $boleta->cliente->numero_documento,
                 'cliente_nombre' => $boleta->cliente->nombre,
                 'factura_moneda' => $boleta->moneda->nombre,

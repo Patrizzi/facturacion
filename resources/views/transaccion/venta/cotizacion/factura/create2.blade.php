@@ -382,10 +382,12 @@
                             </div>
                         </div>
                         <div class="col-md-12 text-right">
-                            <button data-style="zoom-out" class="guardar ladda-button btn btn-primary btn-outline"
-                                type="submit">Guardar</button>
+                            <button data-style="expand-right" class="guardar ladda-button btn btn-primary btn-outline"
+                                type="submit">
+                                <span class="ladda-label">Guardar</span>
+                            </button>
                             <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;"
-                                type="button">Guardar y Finalizar</button>
+                                id="btn-finalizar" type="button">Guardar y Finalizar</button>
                             <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
                                 data-style="zoom-out"></button>
                         </div>
@@ -891,7 +893,11 @@
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
+
     <script>
+        $('#coti_store_Fac').on('submit', function() {
+            $('#btn-finalizar').prop('disabled', true)
+        });
         function ajax_confi(parameters) {
             var configuracion_seleccionado = parameters.id;
             $.ajax({
@@ -931,7 +937,7 @@
                         text: "Una vez Finalizado, No se podrá editar la Cotizacion",
                         type: "warning",
                         showCancelButton: true,
-                        confirmButtonColor: "#3686ff",
+                        confirmButtonColor: "#1a3bb3",
                         confirmButtonText: "Si, Finalizar",
                         cancelButtonText: "Cancelar!",
                         closeOnConfirm: false,
@@ -949,12 +955,7 @@
 
             }
         });
-        $(document).ready(function() {
-            // Bind normal buttons
-            Ladda.bind('.ladda-button', {
-                timeout: 8000
-            });
-        });
+
 
         $.ajaxSetup({
             headers: {

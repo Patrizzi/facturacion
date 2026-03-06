@@ -361,7 +361,7 @@
 
                                 <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
                                     type="button">Guardar</button>
-                                <button class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
+                                <button data-style="zoom-out" class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
                                 {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
                                     data-style="zoom-out"> --}}
@@ -1459,7 +1459,7 @@
 
         $("#boton").on("click", function(buton) {
             $('#button_submit').val('0');
-            var l = Ladda.create(document.querySelector('.button-ladda'));
+            var l = Ladda.create(this);
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
@@ -1511,9 +1511,10 @@
                 document.getElementById('button_submit').click();
             }
         });
+
         $("#finalizar").on("click", function(buton) {
             $('#button_submit').val('1');
-            var l = Ladda.create(document.querySelector('.button-ladda'));
+            var l = Ladda.create(this);
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
@@ -1526,11 +1527,9 @@
                     fin = parseFloat(fin) + parseFloat(monto_c[i].value);
                 }
                 var fin_r = Math.round(fin * 100) / 100;
-                // console.log(total);
                 for (var i = 0; i < inp_mont; i++) {
                     var fecha = monto_fc[i].id;
                     var monto = monto_c[i].id;
-
                     var input_text = document.getElementById(`${monto}`).value;
                     var date_text = document.getElementById(`${fecha}`).value;
                     if (input_text.length == 0 || date_text.length == 0) {
@@ -1545,24 +1544,60 @@
                     document.getElementById('suma_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);
                 } else {
-                    // console.log('e')
                     var form = document.getElementById('form_store');
                     if (!form.checkValidity()) {
-                        form.reportValidity(); // muestra mensajes nativos de HTML5
+                        form.reportValidity();
                         return;
                     }
-                    l.start();
-                    document.getElementById('button_submit').click();
+                    swal({
+                            title: "¿Estás seguro que deseas Finalizar?",
+                            text: "Una vez Finalizado, no podrás modificar esta factura",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Si, Finalizar",
+                            confirmButtonColor: "#1a3bb3",
+                            cancelButtonText: "Cancelar",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                swal("Finalizado", "La factura ha sido finalizado correctamente", "success");
+                                l.start();
+                                document.getElementById('button_submit').click();
+                            } else {
+                                swal("Cancelado", "Se canceló la finalización", "error");
+                            }
+                        }
+                    );
                 }
-                // buton.preventDefault();
             } else {
                 var form = document.getElementById('form_store');
                 if (!form.checkValidity()) {
-                    form.reportValidity(); // muestra mensajes nativos de HTML5
+                    form.reportValidity();
                     return;
                 }
-                l.start();
-                document.getElementById('button_submit').click();
+                swal({
+                        title: "¿Estás seguro que deseas Finalizar?",
+                        text: "Una vez Finalizado, no podrás modificar esta factura",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, Finalizar",
+                        confirmButtonColor: "#1a3bb3",
+                        cancelButtonText: "Cancelar",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            swal("Finalizado", "La factura ha sido finalizado correctamente", "success");
+                            l.start();
+                            document.getElementById('button_submit').click();
+                        } else {
+                            swal("Cancelado", "Se canceló la finalización", "error");
+                        }
+                    }
+                );
             }
         });
 

@@ -762,7 +762,8 @@ $(document).ready(function() {
                 title: "Sin selección",
                 text: "Por favor, selecciona UNA cotización para duplicar.",
                 type: "warning",
-                confirmButtonText: "Entendido"
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#1a3bb3"
             });
             return;
         }
@@ -772,7 +773,8 @@ $(document).ready(function() {
                 title: "Solo una cotización",
                 text: "Solo puedes duplicar UNA cotización a la vez.",
                 type: "warning",
-                confirmButtonText: "Entendido"
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#1a3bb3"
             });
             return;
         }
@@ -785,6 +787,7 @@ $(document).ready(function() {
             type: "info",
             showCancelButton: true,
             confirmButtonText: "Sí, duplicar",
+            confirmButtonColor: "#1a3bb3",
             cancelButtonText: "Cancelar"
         }, function(isConfirm) {
             if (isConfirm) {

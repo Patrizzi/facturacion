@@ -146,13 +146,14 @@
                                                     </th>
                                                     <th>ID</th>
                                                     <th>N°</th>
-                                                    <th>RUC-/DNI</th>
+                                                    <th>RUC/DNI</th>
                                                     <th>Cliente</th>
                                                     <th>Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
                                                     <th>Ver</th>
-                                                    <th style="width: 0.5vmax !important">Acciones</th>
+                                                    <th style="width: 0.5vmax !important">Información</th>
+                                                    <th style="width: 0.5vmax !important">Pago</th>
                                                     <th>Compartir R.</th>
                                                 </tr>
                                             </thead>
@@ -161,8 +162,8 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
-                                                    <th class="total-columna">Total: 0</th>
+                                                    <th colspan="7"></th>
+                                                    <th colspan="2" class="total-columna">Total: 0</th>
                                                     <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
                                                 {{-- <tr>
@@ -180,13 +181,14 @@
             </div>
         </div>
     </div>
-
+    <input type="hidden" name="" id="tipo_comprobante_view" value="factura">
     @include('transaccion.comprobantes._shared.js_shared')
 
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
+            $('#modal_pago_tipo_comprobante').val('factura');
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-3-tab').addClass('active');
             var $bottom = $('.tabs-scroll-bottom');
@@ -237,7 +239,16 @@
                     'targets': [4]
                 },
                 {
-                    'width': '0.5vmax',
+                    'width': '5%',
+                    'targets': [6],
+                    'render': function(data, type, full, meta) {
+                        var nota = '<span>' + full[6] + '</span>';
+                        return nota;
+                    }
+
+                },
+                {
+                    'width': '1%',
                     'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
@@ -254,7 +265,7 @@
                     'targets': [9], // Configuración para otra columna (como la de acciones)
                     'orderable': false,
                     'className': 'column-actions',
-                    'width': '5%',
+                    // 'width': '5%',
                     'render': function(data, type, full, meta) {
 
                         const estados = {
@@ -275,6 +286,7 @@
                             }
                             // No incluimos 99 porque no queremos que aparezca
                         };
+                        
 
                         let end = "";
 
@@ -282,6 +294,7 @@
                         const estadoCredito = parseInt(full[10]);
                         const estadoDebito = parseInt(full[11]);
                         const estadoProcesado = parseInt(full[14]);
+                        const estadoPago = parseInt(full[15]);
 
                         // Estado para Editable o no
                         if(estadoProcesado == 0){
@@ -304,12 +317,61 @@
                                         <i style="font-weight: 700" >NC</i>
                                     </button> `;
                         }
-
                         if (estadoDebito != 99) {
                             const e2 = estados[estadoDebito];
                             end += `<button class="btn ${e2.clase} btn-circle btn-ls" title="Nota de débito: ${e2.texto}">
                                         <i style="font-weight: 700" >ND</i>
                                     </button> `;
+                        }
+                        return end;
+
+                    }
+                },
+                {
+                    'targets': [10], // Configuración para otra columna (como la de acciones)
+                    'orderable': false,
+                    'className': 'column-actions',
+                    'width': '1%',
+                    'render': function(data, type, full, meta) {
+
+                        const estado_pago = {
+                            0: { texto: "Sin Pago", clase: "btn-danger" },
+                            1: { texto: "Pago Parcial", clase: "btn-warning" },
+                            2: { texto: "Pago Completo", clase: "btn-info" }
+                        };
+                        const estadoPago = parseInt(full[15]);
+                        const e3 = estado_pago[estadoPago];
+
+                        let pago = full[16];
+                        
+                        if (pago) {
+                            var end = `
+                                <div class="wrapper-hover">
+                                    <button class="btn ${e3.clase} btn-circle btn-ls" 
+                                            title="Pago: ${e3.texto}">
+                                        <i style="font-weight:700" class="fa fa-dollar"></i>
+                                    </button>
+                                    <div class="contenedor">
+                                        <div class="mini-overlay">
+                                            <span class="info_overlay">Info. Pago</span><br>
+                                            <b>Monto: </b>${pago.monto_pagado}<br>
+                                            <b>Fecha: </b>${pago.fecha_pago}<br>
+                                            <b>Tipo: </b>${pago.tipo_pago}<br>
+                                            <b>Dato: </b>${pago.detalle_pago}
+                                        </div>
+                                    </div></div>
+                            `;
+                        }else{
+                            var end = `
+                                <div class="wrapper-hover">
+                                    <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
+                                        data-id="${full[0]}"
+                                        data-estado="${full[14]}"
+                                        title="Pago: ${e3.texto}">  
+                                    <i style="font-weight:700" class="fa fa-dollar"></i>
+                                    </button>
+                                </div>
+                            `;
                         }
 
                         return end;
@@ -317,7 +379,7 @@
                     }
                 },
                 {
-                    'targets': [10], // Columna de Compartir (Boton de correo sin funcionamiento por ahora)
+                    'targets': [11], // Columna de Compartir (Boton de correo sin funcionamiento por ahora)
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         const facturaId = full[0];
@@ -432,7 +494,186 @@
             coti_table.ajax.reload();
         });
     </script>
+    {{-- Pago rápido (?) --}}
+    @include('cobranzas._shared.facturas.modal_pago_all')
+    <script>
+        $(".select_2_multipl").select2();
+        $('.select_2_estado').select2();
+        $('.select_2_tipo_pago').select2();
+        $(document).on('click', '.button_hover_pago', function () {
+            if (parseInt($(this).data('estado')) != 0) {
+                pago_rapido_factura($(this).data('id'));
+            }
+        });
+        function pago_rapido_factura(n_factura) {
+            // console.log('a');
+            $('#div_facturas').empty();
+            $('#tota_totas').html("0.00");
+            $('#ids_divs_factura').empty();
+            $('#todo_pago').modal('show');
 
+            var only_id_fact = `
+                <input type="hidden" name="id_factura[]" class="" id="id_factura_` + n_factura + `" value="` +
+                n_factura + `">
+            `;
+            $('#ids_divs_factura').append(only_id_fact);
+            var ids_array = [n_factura];
+            $.ajax({
+                type: "post",
+                url: "{{ route('pagos.lista_ajax_fact') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'ids_facturas': ids_array
+                },
+                success: function(msg) {
+                    // console.log(msg)
+                    msg.forEach(function(row, index) {
+                        // console.log(row.cuotas_array);
+                        // cod_factura
+                        var data = `
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="d-flex align-items-center my-2">
+                                            <span class=" fw-bold"><strong>` + row.factura_cod + `</strong></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8 div_select">
+                                        <select id="sel_` + index + `" class="select_2_multipl_` + index +
+                            ` select2-selection--multiple" name="cuotas_precio_` + row.factura_cod +
+                            `[]" multiple="multiple" onchangue="select_2_(` + index + `)" required>
+                                                            ` + row.cuotas_array.map(function(bar) {
+                                if (bar.estado == 0) {
+                                    return '<option value="' + bar.id_cuota + '_' + bar.monto +
+                                        '">' +
+                                        'N°-' + bar.cuota_n + ': ' + bar.monto + '</option>'
+                                }
+                            }) + `
+                                        </select>
+                                    </div>
+                                    <div class="input-group  input-group-sm col-sm-4">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm"
+                                                style="justify-content: center">` + row.factura_simbolo + `</span>
+                                        </div>
+                                        <label class="form-control form-control" id="lbl_tot_` + index + `"
+                                            aria-describedby="inputGroup-sizing-sm">0</label>
+
+                                        <input class="form-control form-control-sm" type="hidden"
+                                            name="tot_cuotas[]" id="total_cuotas_` +
+                            index + `">
+                                    </div>
+                                </div>
+                            `;
+                        $('#div_facturas').append(data);
+                        $(`.select_2_multipl_` + index + ``).select2({
+                            placeholder: "Seleccionar 1 o más cuotas"
+                        });
+                        $(`.select_2_multipl_` + index + ``).on('select2:select', function(e) {
+                            var data = e.params.data;
+                            
+                            var ant = $(`#total_cuotas_` + index + ``).val();
+                            if (ant == "") {
+                                ant = 0;
+                            }
+                            console.log("total_cuotas_" + ant)
+
+                            var data_cuota = data.text.replace(/N°-\d+: /g, '');
+                            console.log(data_cuota);
+
+                            var math_total = Math.round((parseFloat(data_cuota) + parseFloat(
+                                ant)) * 100) / 100;
+                            console.log("math_total" + math_total);
+                            $(`#total_cuotas_` + index + ``).val(math_total);
+                            $(`#lbl_tot_` + index + ``).html(math_total);
+                            // TOTAL DE TOTALES
+                            var tota_tot = $('#tota_totas').html();
+                            if (tota_tot == "") {
+                                tota_tot = 0;
+                            }
+                            //TODO O NADA
+                            var igual = $("#simbolor_label").html();
+                            console.log("igual" + igual);
+                            console.log("row.factura_simbolo" + row.factura_simbolo);
+                            
+                            if (igual === row.factura_simbolo) {
+                                var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
+                                    data_cuota)) * 100) / 100;
+                            } else {
+                                var tipo_cambio = row.tipo_cambio;
+                                if (row.factura_moneda == "soles" && igual ==
+                                    '$') { //DE DOLAR A SOL
+                                    var new_val = parseFloat(data_cuota) / tipo_cambio;
+                                    var tot_math = Math.round((parseFloat(tota_tot) +
+                                        parseFloat(new_val)) * 100) / 100;
+                                    // console.log('a');
+                                } else { // DE SOL A DOLAR
+                                    var new_val = parseFloat(data_cuota) * tipo_cambio;
+                                    var tot_math = Math.round((parseFloat(tota_tot) +
+                                        parseFloat(new_val)) * 100) / 100;
+                                    // console.log('b');
+                                }
+                            }
+                            console.log("aaa" + tot_math);
+                            $('#tota_totas').html(tot_math);
+                            $('#cheque_monto').attr('max', tot_math);
+                            $('#efectivo_pago').attr('min', tot_math);
+                            $('#cheque_monto').val(tot_math);
+
+                            $('#tarjeta_monto').val(tot_math);
+                            $('#efectivo_monto').val(tot_math);
+                            $('#transferencia_monto').val(tot_math);
+
+                            console.log(data.id);
+                            var ids_cuotas = data.id;
+                            var ids_arry = ids_cuotas.split('_');
+
+                            var cuota_array = `
+                                <input class="input_check" type="hidden" name="id_cuota[]" value="` + ids_arry[0] +
+                                `" id='cuota_` + ids_arry[0] + `'>
+                            `;
+                            $('#ids_divs_factura').append(cuota_array);
+
+                        });
+                        $(`.select_2_multipl_` + index + ``).on('select2:unselect', function(e) {
+                            var data = e.params.data;
+                            var ids_cuotas = data.id;
+                            var ids_arry = ids_cuotas.split('_');
+                            console.log(ids_arry);
+                            $(`#cuota_` + ids_arry[0] + ``).remove();
+
+                            var ant = $(`#total_cuotas_` + index + ``).val();
+                            if (ant == "") {
+                                ant = 0;
+                            }
+                            var data_cuota = data.text.replace(/N°-\d+: /g, '');
+                            var math_total = Math.round((parseFloat(ant) - parseFloat(
+                                data_cuota)) * 100) / 100;
+                            $(`#total_cuotas_` + index + ``).val(math_total);
+                            $(`#lbl_tot_` + index + ``).html(math_total);
+                            var tota_tot = $('#tota_totas').html();
+
+                            if (tota_tot == "") {
+                                tota_tot = 0;
+                            }
+                            var tot_math = Math.round((parseFloat(tota_tot) - parseFloat(
+                                data_cuota)) * 100) / 100;
+                            $('#tota_totas').html(tot_math);
+                            $('#cheque_monto').attr('max', tot_math);
+                            $('#efectivo_pago').attr('min', tot_math);
+                            $('#cheque_monto').val(tot_math);
+                        });
+                    });
+
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        }
+    </script>
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset(path: 'js/icheck.min.js') }}"></script>
@@ -1203,4 +1444,32 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+        });
+    </script>
+    @include('cobranzas._shared.js')
 @endsection

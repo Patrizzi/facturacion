@@ -375,7 +375,7 @@
                                 </button> --}}
                                  <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
                                     type="button">Guardar</button>
-                                <button class="btn btn-primary float-right button-lada" style="margin-left: 10px;"
+                                <button data-style="zoom-out" class="btn btn-primary float-right button-lada" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
                                 {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
                                     data-style="zoom-out"></button> --}}
@@ -631,6 +631,9 @@
     <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
     <!-- Switchery -->
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script type="text/javascript">
         // var elem_2 = document.querySelector('.js-switch');
@@ -1613,7 +1616,7 @@
         // Boton para Solamente Guardar
         $("#boton").on("click", function(buton) {
             $('#button_submit').val('0');
-            var l = Ladda.create(document.querySelector('.button-lada'));
+            var l = Ladda.create(this);
             // $('#modal_detraccion').modal('show');
             // DETRACCIONES?
             var seletc_det = $('.select2_tipo_op').val();
@@ -1694,9 +1697,7 @@
         // Boton para Finalizar
         $("#finalizar").on("click", function(buton) {
             $('#button_submit').val('1');
-            var l = Ladda.create(document.querySelector('.button-lada'));
-            // $('#modal_detraccion').modal('show');
-            // DETRACCIONES?
+            var l = Ladda.create(this);
             var seletc_det = $('.select2_tipo_op').val();
             var split_id = seletc_det.split(' ');
             if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
@@ -1708,35 +1709,29 @@
                 if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
                     $('#modal_detraccion').modal('show');
                     var inputs = document.querySelectorAll('.detracc_campo_required');
-
                     inputs.forEach(function(input) {
                         input.style.display = 'block';
                     });
                     return;
                 }
-
             }
-            // return;
 
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                // correcion, se esta usando el total real, y no el dinamico
                 var total = parseFloat(document.getElementById('total_final').value) || 0;
                 var fin = 0.00;
-                var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
                     fin = parseFloat(fin) + parseFloat(monto_c[i].value);
                 }
                 var fin_r = Math.round(fin * 100) / 100;
-                var total_r = Math.round(total * 100) / 100;  // Redondea el total también para comparación precisa
-                // console.log(total);
+                var total_r = Math.round(total * 100) / 100;
+
                 for (var i = 0; i < inp_mont; i++) {
                     var fecha = monto_fc[i].id;
                     var monto = monto_c[i].id;
-
                     var input_text = document.getElementById(`${monto}`).value;
                     var date_text = document.getElementById(`${fecha}`).value;
                     if (input_text.length == 0 || date_text.length == 0) {
@@ -1746,31 +1741,68 @@
                         return;
                     }
                 }
-                if (fin_r != total_r) {  // Compara las versiones redondeadas
+
+                if (fin_r != total_r) {
                     $('#cuotas_modal').modal('show');
                     document.getElementById('suma_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);
                 } else {
                     var form = document.getElementById('form_store');
                     if (!form.checkValidity()) {
-                        form.reportValidity(); // muestra mensajes nativos de HTML5
+                        form.reportValidity();
                         return;
                     }
-                    l.start();
-                    document.getElementById('button_submit').click();
+                    swal({
+                            title: "¿Estás seguro que deseas Finalizar?",
+                            text: "Una vez Finalizado, no podrás modificar esta factura",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Si, Finalizar",
+                            confirmButtonColor: "#1a3bb3",
+                            cancelButtonText: "Cancelar",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                swal("Finalizado", "La factura ha sido finalizado correctamente", "success");
+                                l.start();
+                                document.getElementById('button_submit').click();
+                            } else {
+                                swal("Cancelado", "Se canceló la finalización", "error");
+                            }
+                        }
+                    );
                 }
-                // buton.preventDefault();
 
             } else {
                 var form = document.getElementById('form_store');
                 if (!form.checkValidity()) {
-                    form.reportValidity(); // muestra mensajes nativos de HTML5
+                    form.reportValidity();
                     return;
                 }
-                document.getElementById('button_submit').click();
-                l.start();
+                swal({
+                        title: "¿Estás seguro que deseas Finalizar?",
+                        text: "Una vez Finalizado, no podrás modificar esta factura",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, Finalizar",
+                        confirmButtonColor: "#1a3bb3",
+                        cancelButtonText: "Cancelar",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            swal("Finalizado", "La factura ha sido finalizado correctamente", "success");
+                            document.getElementById('button_submit').click();
+                            l.start();
+                        } else {
+                            swal("Cancelado", "Se canceló la finalización", "error");
+                        }
+                    }
+                );
             }
-
         });
         
         $('#guia_remi_input').on('change', function() {

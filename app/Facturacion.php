@@ -70,10 +70,13 @@ class Facturacion extends Model
         return $this->hasMany(Facturacion_registro::class, 'facturacion_id');
     }
 
-
     public function detracciones()
     {
         return $this->hasOne(Detracciones::class, 'factura_id');
+    }
+
+    public function nota_credito_register(){
+        return $this->hasOne(Nota_Credito::class , 'facturacion_id');
     }
 
 
@@ -397,7 +400,18 @@ class Facturacion extends Model
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
         $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
-
+        if($this->attributes['nota_credito'] == 2){
+            // Reduccion por nota de crédito
+            $motivo = Facturacion::search_motivo_nc($this->attributes['id']);
+                // dd($motivo);
+            if($motivo == "Devolucion por Item"){
+               $nota_c = Nota_Credito::where('facturacion_id', $this->attributes['id'])->first();
+            //    dd($nota_c);
+               $total = $total - $nota_c->total_precio;
+            //    return $nota_c;
+            } 
+        }
+        
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
@@ -418,7 +432,7 @@ class Facturacion extends Model
 
         return round($sub_igv, 2);
     }
-
+            
     public function getTotalPrecioSinFormaAttribute()
     {
         // $boleta = Boleta::find($this->attributes['id']);
@@ -431,7 +445,35 @@ class Facturacion extends Model
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
-        $total_igv = $total;
+        $total_igv = round($total, 2);
+        return $total_igv;
+    }
+    
+    public function getTotalPrecioDescSinFormaAttribute()
+    {
+        // $boleta = Boleta::find($this->attributes['id']);
+        $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+
+        // return $this->attributes['nota_credito'];
+        if($this->attributes['nota_credito'] == 2){
+            // Reduccion por nota de crédito
+            $motivo = Facturacion::search_motivo_nc($this->attributes['id']);
+                // dd($motivo);
+            if($motivo == "Devolucion por Item"){
+               $nota_c = Nota_Credito::where('facturacion_id', $this->attributes['id'])->first();
+            //    dd($nota_c);
+               $total = $total - $nota_c->total_precio;
+            //    return $nota_c;
+            } 
+        }
+        // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+        // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
+
+        $total_igv = round($total, 2);
         return $total_igv;
     }
 
@@ -477,10 +519,69 @@ class Facturacion extends Model
         return $saldo_pendiente;
     }
 
+    public function getSaldoPendienteSinFormaAttribute()
+    {
+        // return $this->forma_pago_id;
+        $suma_cuota = $this->total_precio_sin_forma;
+        if ($this->forma_pago_id == 2) { // credito
+            $saldo_pendiente = 0;
+            $cuotas_total = 0;
+            // Falta sacar el monto por la cantidad de pago o adelanto que se ha realizado
+            $cuotas = Cuotas_credito::where('facturacion_id', $this->id)->where('estado', '!=',  0)->get();
+            foreach ($cuotas as $cuota) {
+                // if ($cuota->estado == 2 ) {
+                $suma_cuota = $suma_cuota - $cuota->monto;
+                // }
+            }
+            $cuotas_total += $suma_cuota;
+            $saldo_pendiente = number_format($cuotas_total, 2);
+        } else {
+            if ($this->estado_pago == 0) {
+                $saldo_pendiente = number_format($suma_cuota, 2);
+            } else {
+                // Sumatoria para los pagos
+                $totalPagado = ComprobantesPagos::where('factuacion_id', $this->id)
+                    ->sum('monto_pago');
+                $saldo_pendiente = number_format(max(0, $this->importe_total - $totalPagado), 2);
+                // $saldo_pendiente = 0;
+            }
+        }
+
+        // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
+        return $saldo_pendiente;
+    }
+
     public function getUltimaFechaPagoAttribute()
     {
         $ultimo_pago =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
-        return Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y');
+        return $ultimo_pago ? Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y') : "Sin Pago Asociado";
+    }
+    
+    public function getUltimoTipoPagoAttribute(){
+        $ultimo_tipo =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
+        return $ultimo_tipo ? $ultimo_tipo->tipo_pago : "Sin Pago Asociado";
+    }
+
+    public function getUltimoDatoPagoAttribute(){
+        $ultimo_pago =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
+
+        $registro = ComprobantesPagosDetalle::where('comprobante_pago_id', $ultimo_pago->id)->latest()->first();
+        // dd($registrol);
+        switch ($ultimo_pago->tipo_pago) {
+            case 'cheque':
+                $registro_data = $registro->numero_input ?? "Sin N° Asignado";
+                break;
+            case 'tarjeta':
+                $registro_data = $registro->persona_input ?? "Sin Titular";
+                break;
+            case 'efectivo':
+                $registro_data = $registro->persona_input ?? "Sin Persona";
+                break;
+            case  'transferencia':
+                $registro_data = $registro->numero_input ??  "Sin N° Operación";
+                break;
+        }
+        return $registro_data;
     }
 
     public static function cambio_estado_facturas()

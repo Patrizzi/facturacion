@@ -98,6 +98,7 @@
                                                     <th>N° Cuotas</th>
                                                     <th>Saldo</th>
                                                     <th>Fecha V.</th>
+                                                    <th>Obs.</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -359,8 +360,22 @@
                     }
                 },
                 {
-                    // 'width': '55%',
                     'targets': [9],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                    //  console.log(full[10]['nota_credito']);
+                        var base_otros = '';
+                        if (full[10] == 1) {
+                            base_otros += `<span class="label label-success">NC</span> `;
+                        }else{
+                        base_otros +=``;
+                        }
+                        return base_otros;
+                    }
+                },
+                {
+                    // 'width': '55%',
+                    'targets': [10],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas_m', ':id') }}";
@@ -553,6 +568,7 @@
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
                             } else {
+                                var tipo_cambio = row.tipo_cambio;
                                 if (row.factura_moneda == "soles" && igual ==
                                     '$') { //DE DOLAR A SOL
                                     var new_val = parseFloat(data_cuota) / tipo_cambio;
@@ -816,6 +832,7 @@
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
                             } else {
+                                var tipo_cambio = row.tipo_cambio;
                                 if (row.factura_moneda == "soles" && igual ==
                                     '$') { //DE DOLAR A SOL
                                     var new_val = parseFloat(data_cuota) / tipo_cambio;

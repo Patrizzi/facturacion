@@ -302,7 +302,7 @@
                                             </table>
                                         </div>
                                         <div class="text-center" style="margin-top: 20px;">
-                                            <button type="submit" class="btn btn-success">Guardar</button>
+                                            <button type="submit" class="ladda-button btn btn-success" data-style="expand-right">Guardar</button>
                                         </div>
                                     </div>
                                 </div>

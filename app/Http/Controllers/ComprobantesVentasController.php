@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Almacen;
+use App\Banco;
 use App\Boleta;
 use App\Boleta_m;
 use App\ComprobantesVentas;
@@ -15,6 +16,7 @@ use App\Igv;
 use App\Moneda;
 use App\Nota_Credito;
 use App\Nota_Debito;
+use App\TipoCambio;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
@@ -30,8 +32,14 @@ class ComprobantesVentasController extends Controller
         $count_month_comprobantes = ComprobantesVentas::count_month_comprobantes($mes_año);
         $almacen = Almacen::get();
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
+        // Pago rápido
+        $fecha_hoy = Carbon::now()->add(1,'day');
+        $monedas = Moneda::get();   
+        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // return $count_month_comprobantes;
-        return view('transaccion.comprobantes.boleta.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes'));
+        return view('transaccion.comprobantes.boleta.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes','fecha_hoy','monedas','tipo_cambio','bancos'));
     }
 
     public function boleta_registers(Request $request)
@@ -124,6 +132,16 @@ class ComprobantesVentasController extends Controller
             $boleta->estado_proceso = Boleta::estado_sunat($boleta->id);
             $boleta->estado_nota_credito = Boleta::estado_nota_credito($boleta->id);
             $boleta->estado_nota_debito = Boleta::estado_nota_debito($boleta->id);
+
+            // Array Estado Pago
+            if($boleta->estado_pago != 0){ //Si es contado
+                $boleta->pago_detalle = [
+                    'monto_pagado' => $boleta->moneda->simbolo.' '.number_format($boleta->total_precio_sin_forma - $boleta->saldo_pendiente_sin_forma, 2),
+                    'fecha_pago' => $boleta->ultima_fecha_pago,
+                    'detalle_pago' => $boleta->ultimo_dato_pago,
+                    'tipo_pago' => ucfirst($boleta->ultimo_tipo_pago),
+                ];
+            }
             return $boleta;
         });
 
@@ -146,6 +164,9 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado_nota_debito,
                 $boleta->cliente->celular ?? '',
                 $boleta->cliente->email ?? '',
+                $boleta->estado,
+                $boleta->estado_pago,
+                $boleta->pago_detalle
             ];
         }
         // Llamado para la suma total
@@ -161,7 +182,13 @@ class ComprobantesVentasController extends Controller
         $count_month_comprobantes = ComprobantesVentas::count_month_comprobantes($mes_año);
         $almacen = Almacen::get();
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
-        return view('transaccion.comprobantes.boleta_manual.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes'));
+         // Pago rápido
+        $fecha_hoy = Carbon::now()->add(1,'day');
+        $monedas = Moneda::get();   
+        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
+        return view('transaccion.comprobantes.boleta_manual.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes','fecha_hoy','monedas','tipo_cambio','bancos'));
     }
 
     public function boletaM_registers(Request $request)
@@ -254,6 +281,15 @@ class ComprobantesVentasController extends Controller
             $boleta->estado_proceso = Boleta_m::estado_sunat($boleta->id);
             $boleta->estado_nota_credito = Boleta_m::estado_nota_credito($boleta->id);
             $boleta->estado_nota_debito = Boleta_m::estado_nota_debito($boleta->id);
+            // Array Estado Pago
+            if($boleta->estado_pago != 0){ //Si es contado
+                $boleta->pago_detalle = [
+                    'monto_pagado' => $boleta->moneda->simbolo.' '.number_format($boleta->total_precio_sin_forma - $boleta->saldo_pendiente_sin_forma, 2),
+                    'fecha_pago' => $boleta->ultima_fecha_pago,
+                    'detalle_pago' => $boleta->ultimo_dato_pago,
+                    'tipo_pago' => ucfirst($boleta->ultimo_tipo_pago),
+                ];
+            }
             return $boleta;
         });
 
@@ -276,6 +312,9 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado_nota_debito,
                 $boleta->cliente->celular ?? '',
                 $boleta->cliente->email ?? '',
+                $boleta->estado,
+                $boleta->estado_pago,
+                $boleta->pago_detalle
             ];
         }
         // Llamado para la suma total
@@ -295,8 +334,14 @@ class ComprobantesVentasController extends Controller
         $almacen = Almacen::where('estado', 0)->get();
         $almacen_primero = Almacen::where('estado', 0)->first();
         $igv = Igv::first();
+        // Pago rápido
+        $fecha_hoy = Carbon::now()->add(1,'day');
+        $monedas = Moneda::get();   
+        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Facturacion::cambio_estado_facturas();
-        return view('transaccion.comprobantes.factura.index', compact('count_all_comprobantes', 'count_month_comprobantes', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv'));
+        return view('transaccion.comprobantes.factura.index', compact('count_all_comprobantes', 'count_month_comprobantes', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv','fecha_hoy','monedas','tipo_cambio','bancos'));
     }
 
     public function factura_registers(Request $request)
@@ -388,6 +433,16 @@ class ComprobantesVentasController extends Controller
             $factura->estado_proceso = Facturacion::estado_sunat($factura->id);
             $factura->estado_nota_credito = Facturacion::estado_nota_credito($factura->id);
             $factura->estado_nota_debito = Facturacion::estado_nota_debito($factura->id);
+
+            // Array Estado Pago
+            if($factura->estado_pago != 0){ //Si es contado
+                $factura->pago_detalle = [
+                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->total_precio_sin_forma - $factura->saldo_pendiente_sin_forma, 2),
+                    'fecha_pago' => $factura->ultima_fecha_pago,
+                    'detalle_pago' => $factura->ultimo_dato_pago,
+                    'tipo_pago' => ucfirst($factura->ultimo_tipo_pago),
+                ];
+            }
             return $factura;
         });
 
@@ -410,7 +465,9 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_nota_debito,
                 $factura->cliente->celular ?? '',
                 $factura->cliente->email ?? '',
-                $factura->estado
+                $factura->estado,
+                $factura->estado_pago,
+                $factura->pago_detalle
             ];
         }
         // Llamado para la suma total
@@ -430,8 +487,14 @@ class ComprobantesVentasController extends Controller
         $almacen = Almacen::where('estado', 0)->get();
         $almacen_primero = Almacen::where('estado', 0)->first();
         $igv = Igv::first();
+        // Pago rápido
+        $fecha_hoy = Carbon::now()->add(1,'day');
+        $monedas = Moneda::get();   
+        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $bancos_pluck = Banco::where('estado', 0)->pluck('id');
+        $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Facturacion_m::cambio_estado_facturasM();
-        return view('transaccion.comprobantes.factura_manual.index', compact('count_all_comprobantes', 'count_month_comprobantes', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv'));
+        return view('transaccion.comprobantes.factura_manual.index', compact('count_all_comprobantes', 'count_month_comprobantes', 'user_login', 'conteo_almacen', 'almacen', 'almacen_primero', 'igv','fecha_hoy','monedas','tipo_cambio','bancos'));
     }
 
     public function facturaM_registers(Request $request)
@@ -524,6 +587,17 @@ class ComprobantesVentasController extends Controller
             $factura->estado_proceso = Facturacion_m::estado_sunat($factura->id);
             $factura->estado_nota_credito = Facturacion_m::estado_nota_credito($factura->id);
             $factura->estado_nota_debito = Facturacion_m::estado_nota_debito($factura->id);
+
+            // Array Estado Pago
+            if($factura->estado_pago != 0){ //Si es contado
+                $factura->pago_detalle = [
+                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->total_precio_sin_forma - $factura->saldo_pendiente_sin_forma, 2),
+                    'fecha_pago' => $factura->ultima_fecha_pago,
+                    'detalle_pago' => $factura->ultimo_dato_pago,
+                    'tipo_pago' => ucfirst($factura->ultimo_tipo_pago),
+                ];
+            }
+
             return $factura;
         });
 
@@ -546,7 +620,9 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_nota_debito,
                 $factura->cliente->celular ?? '',
                 $factura->cliente->email ?? '',
-                $factura->estado
+                $factura->estado,
+                $factura->estado_pago,
+                $factura->pago_detalle
 
             ];
         }

@@ -135,8 +135,8 @@
                                                 <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° Serie">
                                             </td>
                                         @endif
-                                        <td>{{$cotizacion_registro->precio}}</td>
-                                        <td>{{round($cotizacion_registro->precio * $cotizacion_registro->cantidad,2)}}</td>
+                                        <td>{{number_format(round($cotizacion_registro->precio,2), 2)}}</td>
+                                        <td>{{number_format(round($cotizacion_registro->precio * $cotizacion_registro->cantidad,2),2)}}</td>
                                     </tr>
                                     <td style="display: none">
                                         {{$sub_total=($cotizacion->op_gravada)+($cotizacion->op_exonerada)+($cotizacion->op_inafecta)}}

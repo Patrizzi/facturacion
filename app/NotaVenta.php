@@ -229,21 +229,7 @@ class NotaVenta extends Model
 
             foreach ($nota_venta_reg as $nota_venta_regs) {
                 // Condicional para soles
-                if ($moneda->id == "1") { // Si es soles
-                    if ($notaV->moneda->id == "1") { // Soles
                         $total = $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
-                    } else { // Dólares
-                        $subtotal = $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
-                        $total = $subtotal * $notaV->cambio;
-                    }
-                } else { // Si no, retorno dólares
-                    if ($notaV->moneda->id == "1") { // Soles
-                        $subtotal = $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
-                        $total = $subtotal / $notaV->cambio;
-                    } else { // Dólares
-                        $total = $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
-                    }
-                }
                 // return $total;
             }
             $suma += $total; // Mueve la suma aquí para acumular los totales
