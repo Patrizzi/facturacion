@@ -3,11 +3,11 @@
 @section('title', 'Ver Informe Técnico de Servicio')
 @section('breadcrumb', 'Ver Informe Técnico de Servicio')
 @section('breadcrumb2', 'Informe Técnico')
-@section('href_accion', route('servicio.index'))
+@section('href_accion', route('servicio-guias.index'))
 @section('value_accion', 'Atrás')
 
 @section('button2', 'Inicio')
-@section('config', route('servicio.index'))
+@section('config', route('servicio-guias.index'))
 
 @section('content')
 

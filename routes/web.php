@@ -632,6 +632,7 @@ Route::group(
         Route::post('/email/boleta_manual/{id}', 'EmailTransaccionesSend@boleta_manual')->name('email.boleta_manual');
         Route::post('/email/nota_venta/{id}', 'EmailTransaccionesSend@nota_venta')->name('email.nota_venta');
         Route::post('/email/nota_credito/{id}', 'EmailTransaccionesSend@nota_credito')->name('email.nota_credito');
+        Route::post('/email/nota_debito/{id}', 'EmailTransaccionesSend@nota_debito')->name('email.nota_debito');
         Route::post('/email/guia_ingreso/{id}', 'EmailTransaccionesSend@guia_ingreso')->name('email.guia_ingreso');
         Route::post('/email/guia_egreso/{id}', 'EmailTransaccionesSend@guia_egreso')->name('email.guia_egreso');
         Route::post('/email/informe_tecnico/{id}', 'EmailTransaccionesSend@informe_tecnico')->name('email.informe_tecnico');
