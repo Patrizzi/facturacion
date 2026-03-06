@@ -24,7 +24,7 @@
                 </div>
                 <div class="row_number">
                     @forelse ($facturacion->cuotas_credito as $i_cuota => $cuotas)
-                        <div class="pago_modal row">
+                        <div @if( $i_cuota == 0) class="pago_modal row"  @else class="delete_modal{{$i_cuota}} row" @endif>
                             <div class="col-sm-1"><label>Fecha:</label></div>
                             <div class="col-sm-4">
                                 <input type="date" name="fecha_pago[]" id="fecha_pago{{ $i_cuota }}"

@@ -203,12 +203,12 @@
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
-                                            <th style="width: 100%">Articulo</th>
-                                            <th style="width:100px">Cantidad</th>
-                                            <th style="width:100px">P. Sugerido</th>
-                                            <th style="width:100px">Precio s/Igv </th>
-                                            <th style="width:100px">Precio c/Igv</th>
-                                            <th style="width:100px">Total Igv</th>
+                                            <th class="row_articulo">Articulo</th>
+                                            <th>Cantidad</th>
+                                            <th>P. Sugerido</th>
+                                            <th>Precio s/Igv </th>
+                                            <th>Precio c/Igv</th>
+                                            <th>Total Igv</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -229,19 +229,19 @@
                                             </td>
 
                                             <td>
-                                                <input style="width: 100px" type='number' min="1" id='cantidad0'
+                                                <input type='number' min="1" id='cantidad0'
                                                     name='cantidad[]' max="" class="cantidad monto0 form-control"
                                                     onkeyup="multi(0)" required autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input style="width: 100px" type='text' id='precio_oficial0'
+                                                <input type='text' id='precio_oficial0'
                                                     name='precio_oficial[]' ondblclick="copy(0)"
                                                     class="precio_oficial0 p_inp form-control inp" required readonly
                                                     data-toggle="tooltip" data-placement="top"
                                                     title="Doble click (Copiar)" />
                                             </td>
                                             <td>
-                                                <input style="width: 100px" type='number' step="0.0000001"
+                                                <input type='number' step="0.0000001"
                                                     id='precio_s_igv0' name='precio_s_igv[]'
                                                     class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)"
                                                     required autocomplete="off" />
@@ -250,13 +250,13 @@
                                                     onkeyup="multi_s_igv(0),multi(0)" autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input style="width: 100px" type='number' step="0.0000001"
+                                                <input type='number' step="0.0000001"
                                                     id='precio_c_igv0' name='precio_c_igv[]'
                                                     class="precio_c_igv monto0 form-control"
                                                     onkeyup="multi_c_igv(0),multi(0)" required autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input style="width: 100px" type='number' id='total0' name='total'
+                                                <input type='number' id='total0' name='total'
                                                     disabled="disabled" class="total form-control " required
                                                     autocomplete="off" />
                                             </td>
@@ -270,24 +270,27 @@
                                             <td colspan="4"></td>
                                             <td>Subtotal: </td>
                                             <td colspan="2">
-                                                <input type="text" id='subtotal' name="subtotal" readonly="readonly"
-                                                    class="subtotal form-control" required />
+                                                <input type="text" id='subtotal_view'  readonly="readonly"
+                                                    class=" form-control" required />
+                                                <input type="hidden" id="subtotal" name="subtotal" class="subtotal">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="4"></td>
                                             <td>Igv:</td>
                                             <td colspan="2">
-                                                <input type="text" id='igv' name="igv" readonly="readonly"
-                                                    class="igv form-control" required />
+                                                <input type="text" id='igv_view'  readonly="readonly"
+                                                    class=" form-control" required />
+                                                <input type="hidden" name="igv" id="igv" class="igv">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="4"></td>
                                             <td>Total :</td>
                                             <td colspan="2">
-                                                <input type="text" id='total_final' name="total_final"
-                                                    readonly="readonly" class="total_final form-control" required />
+                                                <input type="text" id='total_view' name=""
+                                                    readonly="readonly" class=" form-control" required />
+                                                <input type="hidden" class="total_final" name="total_final" id="total_final">
                                             </td>
                                         </tr>
                                     </tbody>
@@ -438,6 +441,10 @@
         .td_selected>span.select2.select2-container.select2-container--default {
             width: 100%;
         }
+        .row_articulo{
+            width: 45% !important;
+            max-width: 45% !important;
+        }
 
         @media only screen and (max-width: 1498px) {
             .td_selected>span.select2.select2-container.select2-container--default {
@@ -493,7 +500,9 @@
     </script>
 
     <script type="text/javascript">
-        // $(document).ready(function () {
+        $(document).ready(function () {
+
+        });
         $('.demo3').click(function(e) {
             if (document.forms['form_sto'].reportValidity()) {
                 swal({
@@ -604,20 +613,20 @@
                 <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
             </td>
             <td>
-                <input type='number' min='1' style="width: 100px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                <input type='number' min='1'  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
             </td>
             <td class="full-height-scroll tooltip-demo">
-                <input type='number' style="width: 100px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                <input type='number'  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
             </td>
             <td>
-                <input style="width: 100px" type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
             </td>
             <td>
-                <input style="width: 100px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
             </td>
             <td>
-                <input type='number' id='total${i}'  style="width: 100px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                <input type='number' id='total${i}'   name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
             </td>
         </tr>
         `;
@@ -778,7 +787,8 @@
             //CALCULAR PRECIO SIN IGV
             var precio_sin = document.querySelector(`#precio_s_igv${a}`).value;
             var final_sin = precio_sin * cantidad;
-            var final_decimal_sin = Math.round(final_sin * multiplier) / multiplier;
+            // var final_decimal_sin = Math.round(final_sin * multiplier) / multiplier;
+            var final_decimal_sin = final_sin;
 
 
             document.getElementById(`precio_s_igv_float${a}`).value = final_decimal_sin;
@@ -788,10 +798,10 @@
             // var final_decimal = Math.round(final * multiplier) / multiplier;
             //igv calculo
             var only_igv = final_sin + (parseFloat(final_sin) * (igv / multiplier));
-            var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            var igv_decimal = only_igv;
 
             document.getElementById(`total${a}`).value = igv_decimal;
-
 
 
             // Operacion para subtotal sin igv
@@ -800,14 +810,18 @@
             sub_igv.each(function() {
                 sub_igv_t += parseFloat($(this).val());
             });
-            var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+            // var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+            var sub_igv_tt = sub_igv_t;
             $('#sub_total').val(sub_igv_tt);
             document.getElementById("subtotal").value = sub_igv_tt;
+            document.getElementById("subtotal_view").value = sub_igv_tt.toFixed(2);
 
             //OPERACION PARA CALULCAR EL IGV
             var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
-            var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            var igv_decimal = only_igv;
             document.getElementById("igv").value = igv_decimal;
+            document.getElementById("igv_view").value = igv_decimal.toFixed(2);
 
             // Operacion para total
             // var totalInp = $('[name="total"]');
@@ -818,9 +832,11 @@
             // console.log(total_t);
             var multiplier2 = 100;
             var total_all = sub_igv_t + igv_decimal;
-            var total_tt = Math.round(total_all * multiplier2) / multiplier2;
+            // var total_tt = Math.round(total_all * multiplier2) / multiplier2;
+            var total_tt = total_all;
 
             $('#total').val(total_tt);
+            $('#total_view').val(total_tt.toFixed(2));
 
             var subtotal = document.querySelector(`#total`).value;
             document.getElementById("total_final").value = subtotal;
@@ -847,14 +863,19 @@
                 sub_igv.each(function() {
                     sub_igv_t += parseFloat($(this).val());
                 });
-                var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+                // var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+                var sub_igv_tt = sub_igv_t;
                 $('#sub_total').val(sub_igv_tt);
                 document.getElementById("subtotal").value = sub_igv_tt;
+                document.getElementById("subtotal_view").value = sub_igv_tt.toFixed(2);
 
                 //OPERACION PARA CALULCAR EL IGV
                 var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
-                var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+                // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+                var igv_decimal = only_igv;
+
                 document.getElementById("igv").value = igv_decimal;
+                document.getElementById("igv_view").value = igv_decimal.toFixed(2);
 
                 // Operacion para total
                 var totalInp = $('[name="total"]');
@@ -864,10 +885,13 @@
                 });
 
                 var multiplier2 = 100;
-                var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+                // var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+                var total_tt = total_t;
 
                 console.log(total_tt);
                 $('#total').val(total_tt);
+                $('#total_view').val(total_tt.toFixed(2));
+
 
                 var subtotal = document.querySelector(`#total`).value;
                 document.getElementById("total_final").value = subtotal;
@@ -888,7 +912,8 @@
             var pr_s_igv = $(`#precio_s_igv${a}`).val();
             $(`#precio_s_igv_float${a}`).val(pr_s_igv);
             var c_igv_s_redondeo = parseFloat(pr_s_igv) + (parseFloat(pr_s_igv) * igv / multiplier);
-            var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+            // var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+            var c_igv_redondeo = c_igv_s_redondeo;
             $(`#precio_c_igv${a}`).val(c_igv_redondeo);
         }
 
@@ -896,7 +921,8 @@
             var pr_c_igv = $(`#precio_c_igv${a}`).val();
             var igv_dec = igv / multiplier;
             var s_igv_s_base = parseFloat(pr_c_igv) / (1 + parseFloat(igv_dec));
-            var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+            // var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+            var s_igv_redondeo = s_igv_s_base;
             $(`#precio_s_igv${a}`).val(s_igv_redondeo);
             $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
 

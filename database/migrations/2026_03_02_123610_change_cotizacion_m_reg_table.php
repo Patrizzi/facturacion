@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeCotizacionManualRegisterTable extends Migration
+class ChangeCotizacionMRegTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class ChangeCotizacionManualRegisterTable extends Migration
     public function up()
     {
         Schema::table('cotizacion_manual_registros', function (Blueprint $table) {
-            $table->decimal('precio', 17, 5)->change();
+            $table->decimal('precio', 17, 8)->change();
         });
     }
 
@@ -26,7 +26,7 @@ class ChangeCotizacionManualRegisterTable extends Migration
     public function down()
     {
         Schema::table('cotizacion_manual_registros', function (Blueprint $table) {
-            $table->decimal('precio', 17, 2)->change();
+            $table->decimal('precio', 17, 5)->change();
         });
     }
 }

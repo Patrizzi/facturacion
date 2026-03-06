@@ -319,8 +319,9 @@
                                             <td></td>
                                             <td>Subtotal :</td>
                                             <td colspan="2">
-                                                <input id='sub_total' type="number" name="sub_total_sin_igv" readonly
+                                                <input id='sub_total_view' type="text" name="" readonly
                                                     class="form-control inp" required />
+                                                <input type="hidden" name="sub_total_sin_igv" id="sub_total">
                                                 <input id='subtotal_gravado' type="text" name="subtotal_gravado"
                                                     readonly class="form-control inp" required hidden="" />
                                             </td>
@@ -332,8 +333,9 @@
                                             <td></td>
                                             <td>IGV :</td>
                                             <td colspan="2">
-                                                <input id='igv' type="number" disabled="disabled"
+                                                <input id='igv_view' type="number" disabled="disabled"
                                                     class="form-control inp" required />
+                                                <input type="hidden"  name="igv" id="igv">
                                             </td>
                                         </tr>
                                         <tr align="center">
@@ -342,8 +344,11 @@
                                             <td></td>
                                             <td></td>
                                             <td>Total :</td>
-                                            <td colspan="2"><input id='total_final' type="number" name="costo_total"
-                                                    readonly="readonly" class="form-control inp" required /></td>
+                                            <td colspan="2">
+                                                <input id='total_final_view' type="number" name=""
+                                                    readonly="readonly" class="form-control inp" required />
+                                                <input type="hidden" name="costo_total" id="total_final">    
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1170,11 +1175,13 @@
 
             var multiplier = 100;
             var final = precio * cantidad;
-            var final_decimal = Math.round(final * multiplier) / multiplier;
+            // var final_decimal = Math.round(final * multiplier) / multiplier;
+            var final_decimal = final;
 
             document.getElementById(`precio_s_igv_float${a}`).value = final_decimal;
             var only_igv = final + (parseFloat(final) * (igv / multiplier));
-            var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            var igv_decimal = only_igv;
             document.getElementById(`total${a}`).value = igv_decimal;
 
             // Operacion para subtotal sin igv
@@ -1183,17 +1190,23 @@
             sub_igv.each(function() {
                 sub_igv_t += parseFloat($(this).val());
             });
-            var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
-            $('#sub_total').val(sub_igv_tt);
+            console.log(sub_igv_t);
+            // var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+            var sub_igv_tt = sub_igv_t;
+            // $('#sub_total').val(sub_igv_tt);
             document.getElementById("sub_total").value = sub_igv_tt;
+            document.getElementById("sub_total_view").value = sub_igv_tt.toFixed(2);
 
             //OPERACION PARA CALULCAR EL IGV
             var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
-            var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            var igv_decimal = only_igv;
             document.getElementById("igv").value = igv_decimal;
+            document.getElementById("igv_view").value = igv_decimal.toFixed(2);
 
             var end = igv_decimal + parseFloat(sub_igv_tt);
-            var end2 = Math.round(end * multiplier) / multiplier;
+            // var end2 = Math.round(end * multiplier) / multiplier;
+            var end2 = end;
             // Operacion para total
             // var totalInp = $('[name="total"]');
             // var total_t = 0;
@@ -1208,6 +1221,7 @@
 
             // var subtotal = document.querySelector(`#total`).value;
             document.getElementById("total_final").value = end2;
+            document.getElementById("total_final_view").value = end2.toFixed(2);
 
             if(parseFloat(end2) > 700){
                 console.log('mayor a 700');
@@ -1245,7 +1259,7 @@
             console.log(monto_c)
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             // se usa el total real de la factura manual, mas no el dinamico
-            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var total = parseFloat(document.getElementById('total_final_view').value) || 0;
             console.log(total);
             var fin = 0.00;
             var comp = 0;
@@ -1261,7 +1275,7 @@
                 var input_text = document.getElementById(`${monto}`).value;
                 var date_text = document.getElementById(`${fecha}`).value;
                 if (input_text.length == 0 || date_text.length == 0) {
-                    console.log("a");
+                    // console.log("a");
                     document.getElementById('alert_campos').style.display = "flex";
                     mostrarMensaje();
                     return;
@@ -1315,22 +1329,30 @@
             var total_tt = Math.round(total_t * multiplier2) / multiplier2;
 
             $('#sub_total').val(total_tt);
+            document.getElementById("sub_total").value = total_tt;
+            document.getElementById("sub_total_view").value = total_tt.toFixed(2);
 
             var igv_valor = {{ $igv->renta }};
             var subtotal = document.querySelector(`#sub_total`).value;
-            var igv = subtotal * igv_valor / 100;
+            var igv = subtotal * (igv_valor / 100);
 
-            var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+            // var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+            var igv_decimal = igv;
             var end = igv_decimal + parseFloat(subtotal);
 
-            var end2 = Math.round(end * multiplier2) / multiplier2;
+            // var end2 = Math.round(end * multiplier2) / multiplier2;
+            var end2 = end;
+
+
 
             document.getElementById("igv").value = igv_decimal;
-            document.getElementById("sub_total").value = subtotal;
+            document.getElementById("igv_view").value = igv_decimal.toFixed(2);
 
             var end = parseFloat(igv_decimal) + parseFloat(subtotal);
-            var end3 = Math.round(end * multiplier2) / multiplier2;
+            // var end3 = Math.round(end * multiplier2) / multiplier2;
+            var end3 = end;
             document.getElementById("total_final").value = end3;
+            document.getElementById("total_final_view").value = end3.toFixed(2);
 
             var monto_c = document.getElementsByClassName('monto_pago');
 
@@ -1465,7 +1487,7 @@
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                var total = parseFloat(document.getElementById('total_final').value) || 0;
+                var total = parseFloat(document.getElementById('total_final_view').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
@@ -1520,7 +1542,7 @@
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                var total = parseFloat(document.getElementById('total_final').value) || 0;
+                var total = parseFloat(document.getElementById('total_final_view').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
@@ -1681,7 +1703,8 @@
             var pr_s_igv = $(`#precio${a}`).val();
             $(`#precio_s_igv_float${a}`).val(pr_s_igv);
             var c_igv_s_redondeo = parseFloat(pr_s_igv) + (parseFloat(pr_s_igv) * igv / multiplier);
-            var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+            // var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+            var c_igv_redondeo = c_igv_s_redondeo;
             $(`#precio_c_igv${a}`).val(c_igv_redondeo);
         }
 
@@ -1689,7 +1712,8 @@
             var pr_c_igv = $(`#precio_c_igv${a}`).val();
             var igv_dec = igv / multiplier;
             var s_igv_s_base = parseFloat(pr_c_igv) / (1 + parseFloat(igv_dec));
-            var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+            // var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+            var s_igv_redondeo = s_igv_s_base;
             $(`#precio${a}`).val(s_igv_redondeo);
             $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
         }

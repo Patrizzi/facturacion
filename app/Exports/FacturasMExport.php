@@ -2,6 +2,7 @@
 namespace App\Exports;
 
 use App\Facturacion_m;
+use App\Igv;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\{
     FromQuery,
@@ -118,8 +119,8 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
         $subtotal = ($f->op_gravada ?? 0)
                   + ($f->op_inafecta ?? 0)
                   + ($f->op_exonerada ?? 0);
-
-        $igv = round(($f->op_gravada ?? 0) * 0.18, 2);
+        $igv_val = Igv::first();
+        $igv = ($f->op_gravada ?? 0) * ($igv_val->igv_total / 100);
 
         return [
             $f->codigo_fac,
@@ -139,17 +140,17 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
             $f->estado ? 'Activo' : 'Inactivo',
             $f->f_electronica ? 'Emitido' : 'Pendiente',
             $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
-            $f->op_gravada,
-            $f->op_inafecta,
-            $f->op_exonerada,
-            $f->op_gratuita,
+            number_format(round($f->op_gravada,2),2),
+            number_format(round($f->op_inafecta,2),2),
+            number_format(round($f->op_exonerada,2),2),
+            number_format(round($f->op_gratuita,2),2),
             $f->nota_credito,
             $f->nota_debito,
             optional($f->tipo_operacion)->informacion,
             optional($f->tipo_documento)->informacion,
-            $subtotal,
-            $igv,
-            round($subtotal + $igv, 2),
+            number_format(round($subtotal),2),
+            number_format(round($igv),2),
+            number_format(round($subtotal + $igv, 2),2),
         ];
     }
 

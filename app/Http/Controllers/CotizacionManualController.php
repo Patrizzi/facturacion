@@ -461,13 +461,13 @@ class CotizacionManualController extends Controller
 
                     $cotizacion_m_2=CotizacionManual::find($cotizacion_manual->id);
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $cotizacion_m_2->op_gravada += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,2);
+                        $cotizacion_m_2->op_gravada += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,8);
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $cotizacion_m_2->op_exonerada += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,2);
+                        $cotizacion_m_2->op_exonerada += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,8);
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $cotizacion_m_2->op_inafecta += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,2);
+                        $cotizacion_m_2->op_inafecta += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,8);
                     }
                     $cotizacion_m_2->save();
                 }else{
@@ -485,13 +485,13 @@ class CotizacionManualController extends Controller
 
                     $cotizacion_m_2=CotizacionManual::find($cotizacion_manual->id);
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $cotizacion_m_2->op_gravada += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,2);
+                        $cotizacion_m_2->op_gravada += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,8);
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $cotizacion_m_2->op_exonerada += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,2);
+                        $cotizacion_m_2->op_exonerada += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,8);
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $cotizacion_m_2->op_inafecta += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,2);
+                        $cotizacion_m_2->op_inafecta += round($cotizacion_reg_manual->precio*$cotizacion_reg_manual->cantidad,8);
                     }
                     $cotizacion_m_2->save();
                 }
@@ -638,18 +638,20 @@ class CotizacionManualController extends Controller
         $igv_t = Igv::first();
         $banco = Banco::where('estado', 0)->get();
         $banco_count = count($banco);
+        $tipo_operacion=Tipo_operacion_f::get();
+        $moneda=Moneda::get();
         $j = 1;
         $sum = 0;
 
         // SUBTOTAL
-        $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+        $sub_total = 0;
 
         // IGV
-        $igv = round($cotizacion->op_gravada, 2) * $igv_t->igv_total / 100;
+        $igv = 0;
 
         // TOTAL
-        $end = round($sub_total, 2) + round($igv, 2);
-        $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+        $end = 0;
+        $end2 = 0;
 
         $factura = Facturacion_m::where('cotizador_id', $id)->first();
         $boleta = Boleta_m::where('cotizador_id', $id)->first();
@@ -726,7 +728,7 @@ class CotizacionManualController extends Controller
             'j', 'cotizacion', 'empresa', 'cotizacion_m_reg', 'sum', 'igv',
             'sub_total', 'banco', 'banco_count', 'igv_t', 'factura', 'boleta',
             'nota_venta', 'garantia', 'validez', 'forma_pagos', 'end', 'end2',
-            'renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero'
+            'renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero','tipo_operacion','moneda'
         ));
     }
     public function print($id){
@@ -741,12 +743,12 @@ class CotizacionManualController extends Controller
         $j = 1;
 
         //SUBTOTAL
-        $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+        $sub_total =0;
         //IGV
-        $igv = round( $cotizacion->op_gravada ,2) * $igv->igv_total/100;
+        // $igv = 0;
         //TOTAL
-        $end = round($sub_total, 2) + round($igv,2);
-        $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
+        $end = 0;
+        $end2 = 0;
 
         // VERIFICAR SI EXISTE RENOVACIÓN
         $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
@@ -834,10 +836,10 @@ class CotizacionManualController extends Controller
         //SUBTOTAL
         $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
         //IGV
-        $igv = round( $cotizacion->op_gravada ,2) * $igv->igv_total/100;
+        $igv = $cotizacion->op_gravada * ($igv->igv_total/100);
         //TOTAL
-        $end = round($sub_total, 2) + round($igv,2);
-        $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
+        $end = $sub_total + $igv;
+        $end2 = number_format(round($sub_total + $igv ,2),2);
 
         // $archivo=$name.'_'.$id;
 
@@ -996,13 +998,13 @@ public function update(Request $request, $id)
                     //operaciones para SUNAT
                     $cotizacion_m = CotizacionManual::find($cotizacion->id);
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $cotizacion_m->op_gravada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_gravada += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $cotizacion_m->op_inafecta += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_inafecta += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $cotizacion_m->op_exonerada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_exonerada += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     $cotizacion_m->save();
                 }else{
@@ -1013,13 +1015,13 @@ public function update(Request $request, $id)
                     $cotizacion_r_upd_new->save();
                     $cotizacion_m = CotizacionManual::find($cotizacion->id);
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $cotizacion_m->op_gravada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_gravada += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $cotizacion_m->op_inafecta += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_inafecta += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $cotizacion_m->op_exonerada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_exonerada += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     $cotizacion_m->save();
                 }
@@ -1035,13 +1037,13 @@ public function update(Request $request, $id)
                     $cotizacion_r_upd_new->save();
                     $cotizacion_m = CotizacionManual::find($cotizacion->id);
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $cotizacion_m->op_gravada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_gravada += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $cotizacion_m->op_inafecta += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_inafecta += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $cotizacion_m->op_exonerada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_exonerada += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     $cotizacion_m->save();
                 }else{
@@ -1052,13 +1054,13 @@ public function update(Request $request, $id)
                     $cotizacion_r_upd_new->save();
                     $cotizacion_m = CotizacionManual::find($cotizacion->id);
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $cotizacion_m->op_gravada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_gravada += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $cotizacion_m->op_inafecta += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_inafecta += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $cotizacion_m->op_exonerada += round($cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad,2 );
+                        $cotizacion_m->op_exonerada += $cotizacion_r_upd_new->precio * $cotizacion_r_upd_new->cantidad;
                     }
                     $cotizacion_m->save();
                 }
@@ -1277,13 +1279,13 @@ public function update(Request $request, $id)
 
                 $facturacion_2=Facturacion_m::find($facturacion->id);
                 if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                    $facturacion_2->op_gravada += round($factura_registro->precio*$factura_registro->cantidad,2);
+                    $facturacion_2->op_gravada += $factura_registro->precio*$factura_registro->cantidad;
                 }
                 if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                    $facturacion_2->op_exonerada += round($factura_registro->precio*$factura_registro->cantidad,2);
+                    $facturacion_2->op_exonerada += $factura_registro->precio*$factura_registro->cantidad;
                 }
                 if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                    $facturacion_2->op_inafecta += round($factura_registro->precio*$factura_registro->cantidad,2);
+                    $facturacion_2->op_inafecta += $factura_registro->precio*$factura_registro->cantidad;
                 }
                 $facturacion_2->save();
             }else{
@@ -1299,13 +1301,13 @@ public function update(Request $request, $id)
 
                 $facturacion_2=Facturacion_m::find($facturacion->id);
                 if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                    $facturacion_2->op_gravada += round($factura_registro->precio*$factura_registro->cantidad,2);
+                    $facturacion_2->op_gravada += $factura_registro->precio*$factura_registro->cantidad;
                 }
                 if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                    $facturacion_2->op_exonerada += round($factura_registro->precio*$factura_registro->cantidad,2);
+                    $facturacion_2->op_exonerada += $factura_registro->precio*$factura_registro->cantidad;
                 }
                 if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                    $facturacion_2->op_inafecta += round($factura_registro->precio*$factura_registro->cantidad,2);
+                    $facturacion_2->op_inafecta += $factura_registro->precio*$factura_registro->cantidad;
                 }
                 $facturacion_2->save();
             }
@@ -1616,10 +1618,10 @@ public function update(Request $request, $id)
         //SUBTOTAL
         $sub_total = $cotizacion_m->op_gravada + $cotizacion_m->op_inafecta + $cotizacion_m->op_exonerada;
         //IGV
-        $igv = round( $cotizacion_m->op_gravada ,2) * $igv->igv_total/100;
+        $igv = $cotizacion_m->op_gravada *( $igv->igv_total/100);
         //TOTAL
-        $end = round($sub_total, 2) + round($igv,2);
-        $end2 = number_format(round($sub_total,2) + round($igv ,2),2);
+        $end = $sub_total + $igv;
+        $end2 = number_format(round($end,2),2);
 
         return view('transaccion.venta.cotizacion.manual.free_print', compact('j','cotizacion_m','empresa','cotizacion_m_reg','sum','igv','sub_total','banco','banco_count','sub_total','igv','end','end2'));
     }
@@ -1693,10 +1695,10 @@ public function update(Request $request, $id)
                 $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
 
                 // IGV
-                $igv = round($cotizacion->op_gravada, 2) * $igvModel->igv_total / 100;
+                $igv = $cotizacion->op_gravada *($igvModel->igv_total / 100);
 
                 // TOTAL
-                $end = round($sub_total, 2) + round($igv, 2);
+                $end = $sub_total + $igv;
 
                 // VERIFICAR SI EXISTE RENOVACIÓN PARA ESTA COTIZACIÓN
                 $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)
@@ -1845,9 +1847,9 @@ public function update(Request $request, $id)
                     $sum = 0;
                     $j = 1;
                     $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-                    $igv = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
-                    $end = round($sub_total, 2) + round($igv, 2);
-                    $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+                    $igv = $cotizacion->op_gravada * ($igv_config->igv_total / 100);
+                    $end = $sub_total + $igv;
+                    $end2 = number_format(round($sub_total + $igv, 2), 2);
 
                     // VERIFICAR SI EXISTE RENOVACIÓN
                     $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)
@@ -1984,11 +1986,11 @@ public function update(Request $request, $id)
             $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
 
             // IGV
-            $igv = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
+            $igv = $cotizacion->op_gravada * ($igv_config->igv_total / 100);
 
             // TOTAL
-            $end = round($sub_total, 2) + round($igv, 2);
-            $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+            $end = $sub_total + $igv;
+            $end2 = number_format(round($end, 2), 2);
 
             // VERIFICAR SI EXISTE RENOVACIÓN
             $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)
@@ -2152,10 +2154,10 @@ public function update(Request $request, $id)
             //SUBTOTAL
             $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
             //IGV
-            $igv = round($cotizacion->op_gravada, 2) * $igv->igv_total / 100;
+            $igv = $cotizacion->op_gravada * ($igv->igv_total / 100);
             //TOTAL
-            $end = round($sub_total, 2) + round($igv, 2);
-            $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+            $end = $sub_total + $igv;
+            $end2 = number_format(round($end, 2), 2);
 
             // VERIFICAR SI EXISTE RENOVACIÓN
             $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
@@ -2405,10 +2407,10 @@ public function update(Request $request, $id)
                 //SUBTOTAL
                 $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
                 //IGV
-                $igv = round($cotizacion->op_gravada, 2) * $igv->igv_total / 100;
+                $igv = $cotizacion->op_gravada * ($igv->igv_total / 100);
                 //TOTAL
-                $end = round($sub_total, 2) + round($igv, 2);
-                $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+                $end = $sub_total + $igv;
+                $end2 = number_format(round($end, 2), 2);
 
                 // VERIFICAR SI EXISTE RENOVACIÓN
                 $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion_manual_id)

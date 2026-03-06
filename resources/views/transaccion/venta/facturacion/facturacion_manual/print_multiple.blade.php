@@ -166,10 +166,10 @@
     $detraccion = $facturaData['detraccion'];
     $cuotas = $facturaData['cuotas'];
     $i = 1;
-    $sub_total_gravado = $factura->op_gravada;
-    $igv_p = round($sub_total_gravado, 2) * $igv->igv_total / 100;
-    $end = round($sub_total, 2) + round($igv_p, 2);
-    $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2);
+    // $sub_total_gravado = $factura->op_gravada;
+    $igv_p = $factura->op_gravada * ( $igv->igv_total / 100);
+    $end = $sub_total + $igv_p ;
+    $end2 = number_format($end, 2);
     @endphp
 
     <div class="row" @if($index> 0) style="page-break-before: always;" @endif>
@@ -236,20 +236,20 @@
                         </thead>
                         <tbody>
                             @foreach($factura_registro as $factura_registros)
-                            <tr>
-                                <td style="text-align:center">{{$i}}</td>
-                                @if(isset($factura_registros->producto))
-                                <td style="text-align:center">{{$factura_registros->producto->codigo_producto}}</td>
-                                <td>{{$factura_registros->producto->nombre}} {{$factura_registros->descripcion_item}}@if(isset($factura_registros->numero_serie)) <br><strong>N/S:</strong> {{$factura_registros->numero_serie}}@endif</td>
-                                @else
-                                <td style="text-align:center">{{$factura_registros->servicio->codigo_servicio}}</td>
-                                <td>{{$factura_registros->servicio->nombre}} {{$factura_registros->descripcion_item}}</td>
-                                @endif
-                                <td style="text-align:center">{{$factura_registros->cantidad}}</td>
-                                <td style="text-align:right">{{number_format($factura_registros->precio,2)}}</td>
-                                <td style="text-align:right">{{number_format($factura_registros->precio * $factura_registros->cantidad - ($factura_registros->precio * $factura_registros->cantidad * $factura_registros->descuento)/100, 2)}}</td>
-                            </tr>
-                            @php $i++; @endphp
+                                <tr>
+                                    <td style="text-align:center">{{$i}}</td>
+                                    @if(isset($factura_registros->producto))
+                                    <td style="text-align:center">{{$factura_registros->producto->codigo_producto}}</td>
+                                    <td>{{$factura_registros->producto->nombre}} {{$factura_registros->descripcion_item}}@if(isset($factura_registros->numero_serie)) <br><strong>N/S:</strong> {{$factura_registros->numero_serie}}@endif</td>
+                                    @else
+                                    <td style="text-align:center">{{$factura_registros->servicio->codigo_servicio}}</td>
+                                    <td>{{$factura_registros->servicio->nombre}} {{$factura_registros->descripcion_item}}</td>
+                                    @endif
+                                    <td style="text-align:center">{{$factura_registros->cantidad}}</td>
+                                    <td style="text-align:right">{{round($factura_registros->precio,8)}}</td>
+                                    <td style="text-align:right">{{round($factura_registros->precio * $factura_registros->cantidad, 8)}}</td>
+                                </tr>
+                                @php $i++; @endphp
                             @endforeach
                         </tbody>
                     </table>
@@ -286,11 +286,11 @@
                         <span style="display:block; float:right">{{$simbologia=$factura->moneda->simbolo}} {{number_format($sub_total,2)}}</span>
                         <br>
                         <span style="display:block; float:left">Op. Gravada:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format($factura->op_gravada,2)}}</span><br>
+                        <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_gravada,2),2)}}</span><br>
                         <span style="display:block; float:left">Op. Inafecta:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format($factura->op_inafecta,2)}}</span><br>
+                        <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_inafecta,2),2)}}</span><br>
                         <span style="display:block; float:left">Op. Exonerada:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format($factura->op_exonerada,2)}}</span><br>
+                        <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_exonerada,2),2)}}</span><br>
                         <span style="display:block; float:left">I.G.V.:</span>
                         <span style="display:block; float:right">{{$factura->moneda->simbolo}} {{number_format(round($igv_p,2),2)}}</span><br>
                         <span style="display:block; float:left">Importe Total:</span>
