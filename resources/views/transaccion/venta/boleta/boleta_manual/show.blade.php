@@ -36,7 +36,7 @@
                     'routeCreate' => 'boleta_manual.create',
                     'useAlmacen' => false,
                     'method' => 'GET',
-                    'asLink' => true
+                    'asLink' => true,
                 ])
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">
@@ -49,72 +49,90 @@
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
                 <div class="row tooltip-demo">
-                    <div class="col-sm-6">
+                    <div style="display: flex; flex-direction: column;">
+                        <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
+                        <h5 style="margin: 0;">{{ $boleta->codigo_boleta }}</h5>
+                    </div>
+                    <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
+                        BOLETA ELECTRÓNICA
+                    </h2>
+
+                    <div
+                        style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
+
                         <?php use Carbon\Carbon;
                         use App\Boleta_m; ?>
                         @if ($boleta->nota_credito != 0)
-                            <span data-toggle="tooltip" data-placement="bottom" title=""
+                            <span data-toggle="tooltip" data-placement="bottom"
                                 data-original-title="Motivo: {{ Boleta_m::search_motivo_nc($boleta->id) }}">
                                 <a class="btn btn-primary"
                                     href="{{ route('nota-credito.show', Boleta_m::nota_credito_id($boleta->id)) }}">Ver nota
                                     de Credito</a>
                             </span>
                         @endif
-                    </div>
-                    <div class="col-sm-6" align="right">
-                        <form class="btn" style="text-align: none;padding: 0 0 0 0"
-                            action="{{ route('boleta_manual.pdf', $boleta->id) }}">
-                            <input type="text" name="name" maxlength="50" hidden=""
-                                value="{{ $boleta->codigo_boleta }}">
+
+                        <form class="btn" style="padding: 0;" action="{{ route('boleta_manual.pdf', $boleta->id) }}">
+                            <input type="text" name="name" maxlength="50" hidden value="{{ $boleta->codigo_boleta }}">
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
-                                title="" data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i>
-                            </button>
+                                data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i></button>
                         </form>
-                        <a href="{{ route('boleta_manual.ticket', $boleta->id) }}" class="btn btn-info" target="_blank"><i
-                                class="fa fa-ticket fa-lg"></i></a>
-                        <a class="btn btn-success" href="{{ route('boleta_manual.print', $boleta->id) }}" target="_blank"
-                            class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
-                            data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i>
+
+                        <a href="{{ route('boleta_manual.ticket', $boleta->id) }}" class="btn btn-info" target="_blank">
+                            <i class="fa fa-ticket fa-lg"></i>
                         </a>
+
+                        <a class="btn btn-success" href="{{ route('boleta_manual.print', $boleta->id) }}" target="_blank"
+                            data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
+                            <i class="fa fa-print fa-lg"></i>
+                        </a>
+
                         @if (Auth::user()->email_creado == 1)
                             <form action="{{ route('email.boleta_manual', $boleta->id) }}" method="post"
-                                style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                                style="padding: 0;" class="btn">
                                 @csrf
                                 <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
-                                    data-placement="bottom" title="" formtarget="_blank"
-                                    data-original-title="Enviar por correo">
+                                    data-placement="bottom" data-original-title="Enviar por correo" formtarget="_blank">
                                     <i class="fa fa-envelope fa-lg"></i>
                                 </button>
                             </form>
                         @endif
-                        <div id="auto" onclick="divAuto()">
-                            <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
-                                data-placement="bottom" title="" data-original-title="Enviar a">
-                                <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
-                            </a>
+
+                        <div style="position: relative; display: inline-block;">
+                            <div id="auto" onclick="divAuto()">
+                                <a class="btn btn-success" style="background: green; border-color: green;">
+                                    <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                                </a>
+                            </div>
                         </div>
+
                         @if ($boleta->estado == 0)
-                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i
-                                    class="fa fa-pencil"></i></button>
-                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
-                                    class="fa fa-times"></i></button>
+                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
+                                <i class="fa fa-times"></i>
+                            </button>
                         @endif
-                        <div id="div-mostrar" style="height: 0px; overflow: hidden;">
+
+                        <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
                             <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                                 style="text-align: none;padding-right: 0;padding-left: 0;">
                                 @csrf
                                 <input type="tel" name="numero" value="{{ $boleta->cliente->celular }}" />
-                                <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                                <input type="text" hidden="" name="url"
+                                <input type="text" name="mensaje" id="texto_orden" hidden />
+                                <input type="text" hidden name="url"
                                     value="{{ route('boleta_manual.pdf', $boleta->id) }}?archivo=">
-                                <input type="text" name="name_sin_cambio" hidden=""
+                                <input type="text" name="name_sin_cambio" hidden
                                     value="BoletaM_{{ $boleta->codigo_boleta }}" />
-                                <button type="submit" class="btn  btn-success"
+                                <button type="submit" class="btn btn-success"
                                     style="background: green;border-color: green;" formtarget="_blank"
-                                    data-toggle="tooltip" data-placement="bottom" title=""
-                                    data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
+                                    data-toggle="tooltip" data-placement="bottom"
+                                    data-original-title="Enviar por Whatsapp">
+                                    <i class="fa fa-send fa-lg"></i>
+                                </button>
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -128,19 +146,7 @@
                         </div>
                     @endif
                     <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                        <div class="row" style="align-items: center; justify-content: center">
-                            @include('layout_cabecera_ventas')
-                            <div class="col-sm-4 ">
-                                <div class="form-control ruc" style="height: 125px">
-                                    <center>
-                                        <h3 style="padding-top:10px ">R.U.C : {{ $empresa->ruc }}</h3>
-                                        <h2>BOLETA ELECTRÓNICA</h2>
-                                        <h5> {{ $boleta->codigo_boleta }}</h5>
-                                    </center>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
+
                         <div class="row">
                             <div class="col-sm-6" align="center">
                                 <div class="form-control">
@@ -425,8 +431,8 @@
         }
 
         /* .form-control {
-                    border-radius: 10px;
-                } */
+                        border-radius: 10px;
+                    } */
         .a {
             height: 30px;
             margin: 0;
@@ -466,9 +472,9 @@
         }
 
         /* .form-control {
-                    margin-top: 5px;
-                    border-radius: 5px
-                } */
+                        margin-top: 5px;
+                        border-radius: 5px
+                    } */
 
         p#texto {
             text-align: center;
@@ -508,8 +514,8 @@
         }
 
         /* .form-control {
-                    background-color: transparent !important;
-                } */
+                        background-color: transparent !important;
+                    } */
     </style>
 
     <!-- Mainly scripts -->
@@ -566,7 +572,6 @@
             $('.btn-editar').removeClass('no_mostrar');
             $('.btn-no-editar').addClass('no_mostrar');
         }
-
     </script>
     @include('transaccion.venta.boleta.boleta_manual._shared._edit_script')
     <script>
