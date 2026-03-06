@@ -82,27 +82,10 @@
                             </form>
                         @endif
                         <div style="position: relative; display: inline-block;">
-
                             <div id="auto" onclick="divAuto()">
                                 <a class="btn btn-success" style="background: green; border-color: green;" ...>
                                     <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
                                 </a>
-                                <div  id="div-mostrar" style="height: 0px; overflow: hidden; position: absolute; right: 0; top: 100%; z-index: 10; white-space: nowrap;">
-                                    <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
-                                        style="text-align: none;padding-right: 0;padding-left: 0;">
-                                        @csrf
-                                        <input type="tel" name="numero" value="{{ $facturacion->cliente->celular }}" />
-                                        <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                                        <input type="text" hidden="" name="url"
-                                            value="{{ route('pdf_fac', $facturacion->id) }}?archivo=">
-                                        <input type="text" name="name_sin_cambio" hidden=""
-                                            value="Facturacion_{{ $facturacion->codigo_fac }}" />
-                                        <button type="submit" class="btn  btn-success"
-                                            style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip"
-                                            data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i
-                                                class="fa fa-send fa-lg"></i> </button>
-                                    </form>
-                                </div>
                             </div>
                         </div>
 
@@ -114,8 +97,22 @@
                                 <i class="fa fa-times"></i>
                             </button>
                         @endif
-
-
+                    </div>
+                    <div  id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                            <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                                style="text-align: none;padding-right: 0;padding-left: 0;">
+                                @csrf
+                                <input type="tel" name="numero" value="{{ $facturacion->cliente->celular }}" />
+                                <input type="text" name="mensaje" id="texto_orden" hidden="" />
+                                <input type="text" hidden="" name="url"
+                                    value="{{ route('pdf_fac', $facturacion->id) }}?archivo=">
+                                <input type="text" name="name_sin_cambio" hidden=""
+                                    value="Facturacion_{{ $facturacion->codigo_fac }}" />
+                                <button type="submit" class="btn  btn-success"
+                                    style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip"
+                                    data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i
+                                        class="fa fa-send fa-lg"></i> </button>
+                            </form>
                     </div>
                 </div>
             </div>
