@@ -295,8 +295,9 @@
                                         <tr style="background-color: #f5f5f500;" align="right">
                                             <td colspan="5"><strong>Subtotal :</strong></td>
                                             <td colspan="2">
-                                                <input id='sub_total' type="number" name="sub_total_sin_igv" readonly
+                                                <input id='sub_total_view' type="number" name="" readonly
                                                     class="form-control inp" required />
+                                                <input type="hidden" name="sub_total_sin_igv" id="sub_total">
                                                 <input id='subtotal_gravado' type="text" name="subtotal_gravado"
                                                     readonly class="form-control inp" required hidden="" />
                                             </td>
@@ -304,14 +305,18 @@
                                         <tr style="background-color: #f5f5f500;" align="right">
                                             <td colspan="5"><strong>IGV :</strong></td>
                                             <td colspan="2">
-                                                <input id='igv' type="number" disabled="disabled"
+                                                <input id='igv_view' type="number" disabled="disabled"
                                                     class="form-control inp" required />
+                                                <input type="hidden"  name="igv" id="igv">
                                             </td>
                                         </tr>
                                         <tr align="right">
                                             <td colspan="5"><strong>Total :</strong></td>
-                                            <td colspan="2"><input id='total_final' type="number" name="costo_total"
-                                                    readonly="readonly" class="form-control inp" required /></td>
+                                            <td colspan="2">
+                                                <input id='total_final_view' type="number" name=""
+                                                    readonly="readonly" class="form-control inp" required />
+                                                <input type="hidden" name="costo_total" id="total_final">
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -840,7 +845,7 @@
 
         // funcion dinamica de actualizar el total a cuotas
         function actualizarSaldoRestante() {
-            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var total = parseFloat(document.getElementById('total_final_view').value) || 0;
             var sumaMontos = 0;
 
             // Sumar todos los montos ingresados
@@ -884,11 +889,13 @@
 
             var multiplier = 100;
             var final = precio * cantidad;
-            var final_decimal = Math.round(final * multiplier) / multiplier;
+            // var final_decimal = Math.round(final * multiplier) / multiplier;
+            var final_decimal = final;
 
             document.getElementById(`precio_s_igv_float${a}`).value = final_decimal;
             var only_igv = final + (parseFloat(final) * (igv / multiplier));
-            var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            var igv_decimal = only_igv;
             document.getElementById(`total${a}`).value = igv_decimal;
 
             // Operacion para subtotal sin igv
@@ -898,30 +905,37 @@
                 sub_igv_t += parseFloat($(this).val());
             });
             var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
-            $('#sub_total').val(sub_igv_tt);
+            var sub_igv_tt = sub_igv_t;
+            // $('#sub_total').val(sub_igv_tt);
             document.getElementById("sub_total").value = sub_igv_tt;
+            document.getElementById("sub_total_view").value = sub_igv_tt.toFixed(2);
 
             //OPERACION PARA CALULCAR EL IGV
             var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
-            var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            var igv_decimal = only_igv;
             document.getElementById("igv").value = igv_decimal;
+            document.getElementById("igv_view").value = igv_decimal.toFixed(2);
 
             var end = igv_decimal + parseFloat(sub_igv_tt);
-            var end2 = Math.round(end * multiplier) / multiplier;
+            // var end2 = Math.round(end * multiplier) / multiplier;
+            var end2 = end;
             // Operacion para total
             var totalInp = $('[name="total"]');
             var total_t = 0;
             totalInp.each(function() {
                 total_t += parseFloat($(this).val());
             });
-            console.log(total_t);
+            // console.log(total_t);
             var multiplier2 = 100;
-            var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+            // var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+            var total_tt = total_t;
 
             $('#total').val(total_tt);
 
             // var subtotal = document.querySelector(`#total`).value;
             document.getElementById("total_final").value = total_tt;
+            document.getElementById("total_final_view").value = total_tt.toFixed(2);
 
 
             var monto_c = document.getElementsByClassName('monto_pago');
@@ -932,7 +946,7 @@
                 var fin = (end2 / inp_mont)
                 document.getElementById("monto_pago0").value = Math.round(total_tt * multiplier) / multiplier;
             }
-            $("#cuotas_footer").html(total_tt);
+            $("#cuotas_footer").html(total_tt.T);
         }
 
         //Función de borrado de fila de articulos (Producto-Servicio)
