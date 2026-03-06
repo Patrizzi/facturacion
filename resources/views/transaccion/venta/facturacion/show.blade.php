@@ -46,9 +46,9 @@
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
                 <div class="row tooltip-demo">
-                    <div style="display: flex; flex-direction: column;">
-                        <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
-                        <h5 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
+                    <div class>
+                        <h3 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
+                        <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
                     <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
                         FACTURA ELECTRÓNICA
