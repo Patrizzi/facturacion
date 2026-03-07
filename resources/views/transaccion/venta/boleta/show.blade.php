@@ -14,7 +14,7 @@
         <input hidden="hidden" type="submit" />
     </form>
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox" style="">
+        <div class="ibox">
             <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
                 @include('transaccion.comprobantes._shared.btn_create_with_almacen', [
                     'routeCreate' => 'boleta.create',
@@ -34,24 +34,35 @@
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
                 <div class="row align-items-center">
                     <div class="col-12 col-md-3">
-                        <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
-                        <strong style="margin: 0;">{{ $boleta->codigo_boleta }}</strong>
+                        <h3 style="margin: 0;">{{ $boleta->codigo_boleta }}</h5>
+                        <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
-                    <div class="col-12 col-md-6 text-center">
-                        <h2 class="mb-0 text-nowrap">
+                    <div class="col-12 col-md-4 text-center">
+                        <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
                             BOLETA ELECTRÓNICA
                         </h2>
                     </div>
-                    <div style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
+                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
                         @php use Carbon\Carbon;
                         use App\Boleta; @endphp
                         @if ($boleta->nota_credito != 0)
-                            <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
-                                data-original-title="Motivo: {{ Boleta::search_motivo_nc($boleta->id) }}"
-                                href="{{ route('nota-credito.show', Boleta::nota_credito_id($boleta->id)) }}">
-                                <i class="fa fa-file-text fa-lg"></i>
-                            </a>
-                            {{-- Divisor vertical --}}
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
+                                {{-- Botón NC (oculto por defecto) --}}
+                                <div id="nc-slider" style="width: 0; overflow: hidden; transition: width 0.3s ease;">
+                                    <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                                        data-original-title="Motivo: {{ Boleta::search_motivo_nc($boleta->id) }}"
+                                        href="{{ route('nota-credito.show', Boleta::nota_credito_id($boleta->id)) }}"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                        <i class="fa fa-file-text fa-lg"></i>
+                                    </a>
+                                </div>
+                                {{-- Flecha toggle --}}
+                                <button id="nc-toggle" onclick="toggleNC()" class="btn btn-default"
+                                    style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                    <i class="fa fa-chevron-right" id="nc-arrow"></i>
+                                </button>
+                            </div>
+                            {{-- Divisor --}}
                             <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
                         @endif
                         <form class="btn" style="padding: 0;" action="{{ route('boleta_manual.pdf', $boleta->id) }}">
@@ -115,7 +126,6 @@
                                 </button>
                             </form>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -531,5 +541,25 @@
                 });
             @endif
         });
+    </script>
+
+    <script>
+        var ncAbierto = false;
+        function toggleNC() {
+            var slider = document.getElementById('nc-slider');
+            var arrow = document.getElementById('nc-arrow');
+
+            if (ncAbierto) {
+                slider.style.width = '0';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
+            } else {
+                slider.style.width = '42px';
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-left');
+            }
+
+            ncAbierto = !ncAbierto;
+        }
     </script>
 @endsection

@@ -44,12 +44,12 @@
                         <h3 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
                         <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
-                    <div class="col-12 col-md-6 text-center">
-                        <h2 class="mb-0 text-nowrap">
+                    <div class="col-12 col-md-4 text-center">
+                        <h2 class="mb-0 text-nowrap" style="margin-left:200px;">
                             FACTURA ELECTRÓNICA
                         </h2>
                     </div>
-                    <div style="margin-left: auto; display: flex; align-items: center; gap: 4px;">
+                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
                         @php use Carbon\Carbon;
                         use App\Facturacion_m; @endphp
                         @if ($facturacion->nota_credito != 0)
