@@ -45,14 +45,16 @@
                 </div>
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-                <div class="row tooltip-demo">
-                    <div class>
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-3">
                         <h3 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
                         <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
-                    <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
-                        FACTURA ELECTRÓNICA
-                    </h2>
+                    <div class="col-12 col-md-6 text-center">
+                        <h2 class="mb-0 text-nowrap">
+                            FACTURA ELECTRÓNICA
+                        </h2>
+                    </div>
                     <div style="margin-left: auto; display: flex; align-items: center; gap: 4px;">
                         <!-- PDF -->
                         <form class="btn" style="padding: 0;" action="{{ route('pdf_fac', $facturacion->id) }}">
@@ -751,7 +753,7 @@
             $('.btn-no-editar').addClass('no_mostrar');
         }
     </script>
-    {{-- - 
+    {{-- -
     <div class="row tooltip-demo align-items-center">
 
     <!-- IZQUIERDA -->

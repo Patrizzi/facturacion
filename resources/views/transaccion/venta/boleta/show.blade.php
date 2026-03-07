@@ -32,29 +32,28 @@
                 </div>
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-                <div class="row tooltip-demo">
-                    <div style="display: flex; flex-direction: column;">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-3">
                         <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
-                        <h5 style="margin: 0;">{{ $boleta->codigo_boleta }}</h5>
+                        <strong style="margin: 0;">{{ $boleta->codigo_boleta }}</strong>
                     </div>
-                    <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
-                        BOLETA ELECTRÓNICA
-                    </h2>
-
-                    <div
-                        style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
-
-                        <?php use Carbon\Carbon;
-                        use App\Boleta_m; ?>
+                    <div class="col-12 col-md-6 text-center">
+                        <h2 class="mb-0 text-nowrap">
+                            BOLETA ELECTRÓNICA
+                        </h2>
+                    </div>
+                    <div style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
+                        @php use Carbon\Carbon;
+                        use App\Boleta; @endphp
                         @if ($boleta->nota_credito != 0)
-                            <span data-toggle="tooltip" data-placement="bottom"
-                                data-original-title="Motivo: {{ Boleta_m::search_motivo_nc($boleta->id) }}">
-                                <a class="btn btn-primary"
-                                    href="{{ route('nota-credito.show', Boleta_m::nota_credito_id($boleta->id)) }}">Ver nota
-                                    de Credito</a>
-                            </span>
+                            <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                                data-original-title="Motivo: {{ Boleta::search_motivo_nc($boleta->id) }}"
+                                href="{{ route('nota-credito.show', Boleta::nota_credito_id($boleta->id)) }}">
+                                <i class="fa fa-file-text fa-lg"></i>
+                            </a>
+                            {{-- Divisor vertical --}}
+                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
                         @endif
-
                         <form class="btn" style="padding: 0;" action="{{ route('boleta_manual.pdf', $boleta->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $boleta->codigo_boleta }}">
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"

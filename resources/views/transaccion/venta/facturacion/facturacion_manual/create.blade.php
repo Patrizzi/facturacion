@@ -347,7 +347,7 @@
                                             <td colspan="2">
                                                 <input id='total_final_view' type="number" name=""
                                                     readonly="readonly" class="form-control inp" required />
-                                                <input type="hidden" name="costo_total" id="total_final">    
+                                                <input type="hidden" name="costo_total" id="total_final">
                                             </td>
                                         </tr>
                                     </tbody>
@@ -368,8 +368,8 @@
                                     type="button">Guardar</button>
                                 <button data-style="zoom-out" class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
-                                {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
-                                    data-style="zoom-out"> --}}
+                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
+                                    data-style="zoom-out">
                                 </button>
                                 <button type="submit" id="button_submit" hidden name="button_submit" value="0" ></button>
                             </div>
@@ -727,6 +727,10 @@
     <!-- Switchery -->
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
+
     <script type="text/javascript">
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Producto",
@@ -884,9 +888,9 @@
                 s.children[0].remove()
             }
             var data = e.params.data;
-            
+
             // Si el tipo de pago es desde cliente cambiar
-            $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
+            $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true);
             seleccionado_fp();
 
             $.ajax({
