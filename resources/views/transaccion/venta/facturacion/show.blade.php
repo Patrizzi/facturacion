@@ -56,6 +56,44 @@
                         </h2>
                     </div>
                     <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                        @php
+                            use Carbon\Carbon;
+                            use App\Facturacion;
+                        @endphp
+
+                        <div class="d-flex align-items-center" style="overflow: hidden;">
+                            {{-- Slider con los botones --}}
+                            <div id="btn-slider" style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+
+                                {{-- Botón Anular --}}
+                                @if ($facturacion->f_electronica == 0 && $facturacion->created_at->diffInDays(Carbon::now()) > 7)
+                                    <span data-toggle="tooltip" data-placement="bottom"
+                                        data-original-title="Anular La Factura"
+                                        style="display: inline-flex; animation: circleScale 3s infinite; margin-right: 4px;">
+                                        <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modal_anular">
+                                            <i class="fa fa-ban fa-xl"></i>
+                                        </button>
+                                    </span>
+                                @endif
+
+                                {{-- Botón Nota de Crédito --}}
+                                @if ($facturacion->nota_credito != 0)
+                                    <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                                        data-original-title="Motivo: {{ Facturacion::search_motivo_nc($facturacion->id) }}"
+                                        href="{{ route('nota-credito.show', Facturacion::nota_credito_id($facturacion->id)) }}"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                        <i class="fa fa-file-text fa-lg"></i>
+                                    </a>
+                                @endif
+
+                            </div>
+
+                            {{-- Flecha toggle --}}
+                            <button id="btn-toggle" onclick="toggleBtns()" class="btn btn-default"
+                                style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                <i class="fa fa-chevron-right" id="btn-arrow"></i>
+                            </button>
+                        </div>
                         <!-- PDF -->
                         <form class="btn" style="padding: 0;" action="{{ route('pdf_fac', $facturacion->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $facturacion->codigo_fac }}">
@@ -751,6 +789,24 @@
 
             $('.btn-editar').removeClass('no_mostrar');
             $('.btn-no-editar').addClass('no_mostrar');
+        }
+    </script>
+
+    <script>
+        function toggleBtns() {
+            const slider = document.getElementById('btn-slider');
+            const arrow = document.getElementById('btn-arrow');
+            const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
+
+            if (isOpen) {
+                slider.style.width = '0';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
+            } else {
+                slider.style.width = slider.scrollWidth + 'px';
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-left');
+            }
         }
     </script>
     {{-- -
