@@ -194,11 +194,11 @@
     {{$end=round($sub_total, 2)+round($igv_p, 2)}}
 </div>
 <h3 align="left">
-    <?php $v=new CifrasEnLetras() ;
+    @php $v=new CifrasEnLetras() ;
     $letra=($v->convertirEurosEnLetras($end));
     $letra_final = strstr($letra, 'soles',true);
     $end_final=strstr($end, '.');
-    ?>
+    @endphp
     Son : {{$letra_final}} {{$end_final}}/100 {{$moneda->nombre}}
 </h3>
 <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px">

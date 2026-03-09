@@ -173,46 +173,44 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr style="text-align: center">
                                     <span hidden="hidden">{{ $i = 1 }} </span>
                                     @foreach ($facturacion_registro as $facturacion_registros)
-                                <tr>
-                                    <td style="text-align:center">{{ $i }} </td>
-                                    @if (isset($facturacion_registros->producto))
-                                        <td style="text-align:center">
-                                            {{ $facturacion_registros->producto->codigo_producto }}</td>
-                                        <td>{{ $facturacion_registros->producto->nombre }}
-                                            {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
-                                                <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
+                                        <tr>
+                                            <td style="text-align:center">{{ $i }} </td>
+                                            @if (isset($facturacion_registros->producto))
+                                                <td style="text-align:center">
+                                                    {{ $facturacion_registros->producto->codigo_producto }}</td>
+                                                <td>{{ $facturacion_registros->producto->nombre }}
+                                                    {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
+                                                        <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
+                                                    @endif
+                                                </td>
+                                            @else
+                                                <td style="text-align:center">
+                                                    {{ $facturacion_registros->servicio->codigo_servicio }}</td>
+                                                <td>{{ $facturacion_registros->servicio->nombre }}
+                                                    {{ $facturacion_registros->descripcion_item }}
                                             @endif
-                                        </td>
-                                    @else
-                                        <td style="text-align:center">
-                                            {{ $facturacion_registros->servicio->codigo_servicio }}</td>
-                                        <td>{{ $facturacion_registros->servicio->nombre }}
-                                            {{ $facturacion_registros->descripcion_item }}
-                                    @endif
-                                    <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
-                                    <td style="text-align:right">{{ number_format($facturacion_registros->precio, 2) }}
-                                    </td>
+                                            <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
+                                            <td style="text-align:right">{{ round($facturacion_registros->precio, 8) }}
+                                            </td>
 
-                                    <td style="text-align:right">
-                                        {{ number_format($facturacion_registros->precio * $facturacion_registros->cantidad - ($facturacion_registros->precio * $facturacion_registros->cantidad * $facturacion_registros->descuento) / 100, 2) }}
-                                    </td>
+                                            <td style="text-align:right">
+                                                {{ round($facturacion_registros->precio * $facturacion_registros->cantidad, 8) }}
+                                            </td>
 
-                                    <td style="display: none">
-                                        {{ $sub_total = $facturacion_registros->factura_ids->op_gravada + $facturacion_registros->factura_ids->op_inafecta + $facturacion_registros->factura_ids->op_exonerada }}
-                                        {{ $sub_total_gravado = $facturacion_registros->factura_ids->op_gravada }}
-                                        {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                        {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                        {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                    </td>
-                                </tr>
-                                <span hidden="hidden">{{ $i++ }}</span>
-                                @endforeach
+                                        </tr>
+                                        <span hidden="hidden">{{ $i++ }}</span>
+                                    @endforeach
                                 </tr>
                             </tbody>
                         </table>
+                        @php
+                            $sub_total = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada;
+                            $igv_p = $facturacion->op_gravada * ( $igv->igv_total  / 100);
+                            $end = $sub_total + $igv_p;
+                            $end2 = number_format(round($end , 2), 2);
+                        @endphp
                     </div><br><br><br><br>
 
                     <div class="row">
@@ -260,18 +258,18 @@
                             <br>
                             <span style="display: block;float: left"> Op. Agravada: </span>
                             <span style="display: block;float: right">{{ $simbologia }}
-                                {{ number_format($facturacion->op_gravada, 2) }}</span><br>
+                                {{ number_format(round($facturacion->op_gravada,2), 2) }}</span><br>
                             <span style="display: block;float: left"> Op. Inafecta: </span>
                             <span style="display: block;float: right">{{ $simbologia }}
-                                {{ number_format($facturacion->op_inafecta, 2) }}</span><br>
+                                {{ number_format(round($facturacion->op_inafecta,2), 2) }}</span><br>
                             <span style="display: block;float: left"> Op. Exonerada: </span>
                             <span style="display: block;float: right">{{ $simbologia }}
-                                {{ number_format($facturacion->op_exonerada, 2) }} </span><br>
+                                {{ number_format(round($facturacion->op_exonerada,2), 2) }} </span><br>
                             <span style="display: block;float: left"> I.G.V.: </span>
-                            <span style="display: block;float: right">{{ $facturacion->moneda->simbolo }}
+                            <span style="display: block;float: right">{{ $simbologia }}
                                 {{ number_format(round($igv_p, 2), 2) }}</span><br>
                             <span style="display: block;float: left"> Importe Total: </span>
-                            <span style="display: block;float: right">{{ $facturacion->moneda->simbolo }}
+                            <span style="display: block;float: right">{{ $simbologia }}
                                 {{ number_format(round($end, 2), 2) }}</span>
 
                         </div>

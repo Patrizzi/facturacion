@@ -239,7 +239,7 @@
                                 <table cellspacing="0" class="table tables" id="inp_s">
                                     <thead>
                                         <tr>
-                                            <th style="width: 10px">
+                                            <th style="width: 10px;">
                                                 <div>
                                                     <button type="button" class='addmore btn btn-sm btn-primary btn-outline'
                                                         style="display: none"><i class="fa fa-plus-square"
@@ -250,12 +250,12 @@
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
-                                            <th style="width: 100%">Artículo</th>
-                                            <th style="width:100px">Cantidad</th>
-                                            <th style="width:100px">P. Sugerido</th>
-                                            <th style="width:100px">Precio s/Igv </th>
-                                            <th style="width:100px">Precio c/Igv</th>
-                                            <th style="width:100px">Total Igv</th>
+                                            <th class="row_articulo">Artículo</th>
+                                            <th >Cantidad</th>
+                                            <th >P. Sugerido</th>
+                                            <th >Precio s/Igv </th>
+                                            <th >Precio c/Igv</th>
+                                            <th>Total Igv</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -277,19 +277,19 @@
                                             </td>
 
                                             <td>
-                                                <input style="width: 100px" type='number' min="1" id='cantidad0'
+                                                <input style="" type='number' min="1" id='cantidad0'
                                                     name='cantidad[]' max="" class="cantidad monto0 form-control"
                                                     onkeyup="multi(0)" required autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input style="width: 100px" type='text' id='precio_oficial0'
+                                                <input style="" type='text' id='precio_oficial0'
                                                     name='precio_oficial[]' ondblclick="copy(0)"
                                                     class="precio_oficial0 p_inp form-control inp" required readonly
                                                     data-toggle="tooltip" data-placement="top"
                                                     title="Doble click (Copiar)" />
                                             </td>
                                             <td>
-                                                <input style="width: 100px" type='number' step="0.0000001"
+                                                <input style="" type='number' step="0.0000001"
                                                     id='precio_s_igv0' name='precio_s_igv[]'
                                                     class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)"
                                                     required autocomplete="off" />
@@ -298,13 +298,13 @@
                                                     onkeyup="multi_s_igv(0),multi(0)" autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input style="width: 100px" type='number' step="0.0000001"
+                                                <input style="" type='number' step="0.0000001"
                                                     id='precio_c_igv0' name='precio_c_igv[]'
                                                     class="precio_c_igv monto0 form-control"
                                                     onkeyup="multi_c_igv(0),multi(0)" required autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input style="width: 100px" type='number' id='total0' name='total'
+                                                <input style="" type='number' id='total0' name='total'
                                                     disabled="disabled" class="total form-control " required
                                                     autocomplete="off" />
                                             </td>
@@ -318,24 +318,27 @@
                                             <td colspan="4"></td>
                                             <td>Subtotal: </td>
                                             <td colspan="2">
-                                                <input type="text" id='subtotal' name="subtotal" readonly="readonly"
-                                                    class="subtotal form-control" required />
+                                                <input type="text" id='subtotal_view'  readonly="readonly"
+                                                    class=" form-control" required />
+                                                <input type="hidden" id="subtotal" name="subtotal" class="subtotal">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="4"></td>
                                             <td>Igv:</td>
                                             <td colspan="2">
-                                                <input type="text" id='igv' name="igv" readonly="readonly"
-                                                    class="igv form-control" required />
+                                                <input type="text" id='igv_view'  readonly="readonly"
+                                                    class=" form-control" required />
+                                                <input type="hidden" name="igv" id="igv" class="igv">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="4"></td>
                                             <td>Total :</td>
                                             <td colspan="2">
-                                                <input type="text" id='total_final' name="total_final"
-                                                    readonly="readonly" class="total_final form-control" required />
+                                                <input type="text" id='total_view' name=""
+                                                    readonly="readonly" class=" form-control" required />
+                                                <input type="hidden" class="total_final" name="total_final" id="total_final">    
                                             </td>
                                         </tr>
                                     </tbody>
@@ -484,7 +487,14 @@
         .dataTables_wrapper {
             padding-bottom: 0px;
         }
-
+        .td_selected{
+            /* width: 50%;    */
+            /* max-width: 50%;    */
+        }
+        .row_articulo{
+            width: 45% !important;
+            max-width: 45% !important;
+        }
         .td_selected>span.select2.select2-container.select2-container--default {
             width: 100%;
         }
@@ -982,20 +992,20 @@
                         <input hidden="hidden" class="celda" name="articulo[]" id="input_prod${i}">
                     </td>
                     <td>
-                        <input type='number' min='1' style="width: 100px" id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required autocomplete="off"/>
+                        <input type='number' min='1' style="" id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required autocomplete="off"/>
                     </td>
                     <td class="full-height-scroll tooltip-demo">
-                        <input type='number' style="width: 100px" id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                        <input type='number' style="" id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                     </td>
                     <td>
-                        <input style="width: 100px" type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]' class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required autocomplete="off" />
+                        <input style="" type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]' class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required autocomplete="off" />
                         <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float' class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" autocomplete="off" />
                     </td>
                     <td>
-                        <input style="width: 100px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required autocomplete="off" />
+                        <input style="" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required autocomplete="off" />
                     </td>
                     <td>
-                        <input type='number' id='total${i}' style="width: 100px" name='total' disabled="disabled" class="total form-control " required autocomplete="off"/>
+                        <input type='number' id='total${i}' style="" name='total' disabled="disabled" class="total form-control " required autocomplete="off"/>
                     </td>
                 </tr>
             `;
@@ -1024,20 +1034,20 @@
                 <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
             </td>
             <td>
-                <input type='number' min='1' style="width: 100px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                <input type='number' min='1'   id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
             </td>
             <td class="full-height-scroll tooltip-demo">
-                <input type='number' style="width: 100px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                <input type='number'   id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
             </td>
             <td>
-                <input style="width: 100px" type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input  type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
             </td>
             <td>
-                <input style="width: 100px" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input  type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
             </td>
             <td>
-                <input type='number' id='total${i}'  style="width: 100px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                <input type='number' id='total${i}'    name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
             </td>
         </tr>
         `;
@@ -1217,8 +1227,9 @@
             //CALCULAR PRECIO SIN IGV
             var precio_sin = document.querySelector(`#precio_s_igv${a}`).value;
             var final_sin = precio_sin * cantidad;
-            var final_decimal_sin = Math.round(final_sin * multiplier) / multiplier;
-
+            // var final_decimal_sin = Math.round(final_sin * multiplier) / multiplier;
+            var final_decimal_sin = final_sin;
+            // console.log("precio x cant"+final_decimal_sin);
 
             document.getElementById(`precio_s_igv_float${a}`).value = final_decimal_sin;
             //CALCULAR PRECIO CON IGV
@@ -1227,7 +1238,9 @@
             // var final_decimal = Math.round(final * multiplier) / multiplier;
             //igv calculo
             var only_igv = final_sin + (parseFloat(final_sin) * (igv / multiplier));
-            var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            var igv_decimal = only_igv;
+            // console.log("igv_decimal "+igv_decimal);
 
             document.getElementById(`total${a}`).value = igv_decimal;
 
@@ -1239,14 +1252,18 @@
             sub_igv.each(function() {
                 sub_igv_t += parseFloat($(this).val());
             });
-            var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+            // var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+            var sub_igv_tt = sub_igv_t;
             $('#sub_total').val(sub_igv_tt);
             document.getElementById("subtotal").value = sub_igv_tt;
+            document.getElementById("subtotal_view").value = sub_igv_tt.toFixed(2);
 
             //OPERACION PARA CALULCAR EL IGV
             var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
-            var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+            var igv_decimal = only_igv;
             document.getElementById("igv").value = igv_decimal;
+            document.getElementById("igv_view").value = igv_decimal.toFixed(2);
 
             // Operacion para total
             // var totalInp = $('[name="total"]');
@@ -1257,9 +1274,12 @@
             // console.log(total_t);
             var multiplier2 = 100;
             var total_all = sub_igv_t + igv_decimal;
-            var total_tt = Math.round(total_all * multiplier2) / multiplier2;
+            // var total_tt = Math.round(total_all * multiplier2) / multiplier2;
+            var total_tt = total_all;
+            // var total_tt = total_all;
 
             $('#total').val(total_tt);
+            $('#total_view').val(total_tt.toFixed(2));
 
             var subtotal = document.querySelector(`#total`).value;
             document.getElementById("total_final").value = subtotal;
@@ -1286,14 +1306,18 @@
                 sub_igv.each(function() {
                     sub_igv_t += parseFloat($(this).val());
                 });
-                var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+                // var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+                var sub_igv_tt = sub_igv_t;
                 $('#sub_total').val(sub_igv_tt);
                 document.getElementById("subtotal").value = sub_igv_tt;
+                document.getElementById("subtotal_view").value = sub_igv_tt.toFixed(2);
 
                 //OPERACION PARA CALULCAR EL IGV
                 var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
-                var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+                // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+                var igv_decimal = only_igv;
                 document.getElementById("igv").value = igv_decimal;
+                document.getElementById("igv_view").value = igv_decimal.toFixed(2);
 
                 // Operacion para total
                 var totalInp = $('[name="total"]');
@@ -1304,9 +1328,12 @@
 
                 var multiplier2 = 100;
                 var total_tt = Math.round(total_t * multiplier2) / multiplier2;
-
+                var total_tt = total_t;
+                
                 // console.log(total_tt);
                 $('#total').val(total_tt);
+                $('#total_view').val(total_tt.toFixed(2));
+                
 
                 var subtotal = document.querySelector(`#total`).value;
                 document.getElementById("total_final").value = subtotal;
@@ -1327,7 +1354,8 @@
             var pr_s_igv = $(`#precio_s_igv${a}`).val();
             $(`#precio_s_igv_float${a}`).val(pr_s_igv);
             var c_igv_s_redondeo = parseFloat(pr_s_igv) + (parseFloat(pr_s_igv) * igv / multiplier);
-            var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+            // var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+            var c_igv_redondeo = c_igv_s_redondeo;
             $(`#precio_c_igv${a}`).val(c_igv_redondeo);
         }
 
@@ -1335,7 +1363,8 @@
             var pr_c_igv = $(`#precio_c_igv${a}`).val();
             var igv_dec = igv / multiplier;
             var s_igv_s_base = parseFloat(pr_c_igv) / (1 + parseFloat(igv_dec));
-            var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+            // var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+            var s_igv_redondeo = s_igv_s_base;
             $(`#precio_s_igv${a}`).val(s_igv_redondeo);
             $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
 
@@ -1634,7 +1663,7 @@
     <script>
         $(document).ready(function() {
             var cotiDuplicada = @json($cotiDuplicada ?? null);
-
+            // $('#loaderGif').show();
             if (cotiDuplicada) {
                 // console.log('🔄 Cotización a duplicar:', cotiDuplicada);
 
@@ -1759,6 +1788,7 @@
             setTimeout(function() {
                 cargarArticulosManual(data);
             }, 2000); // ← Aumentado
+            
         }
 
         function cargarArticulosManual(data) {
@@ -1813,20 +1843,20 @@
                         <input hidden class="celda input-articulo" name="articulo[]">
                     </td>
                     <td>
-                        <input type='number' min='1' style="width: 100px" id='cantidad${index}' name='cantidad[]' class="cantidad monto${index} form-control" onkeyup="multi(${index})" required/>
+                        <input type='number' min='1'  id='cantidad${index}' name='cantidad[]' class="cantidad monto${index} form-control" onkeyup="multi(${index})" required/>
                     </td>
                     <td>
-                        <input type='number' style="width: 100px" id='precio_oficial${index}' name='precio_oficial[]' ondblclick="copy(${index})" class="precio_oficial${index} form-control inp" readonly data-toggle="tooltip" title="Doble click (Copiar)" />
+                        <input type='number'  id='precio_oficial${index}' name='precio_oficial[]' ondblclick="copy(${index})" class="precio_oficial${index} form-control inp" readonly data-toggle="tooltip" title="Doble click (Copiar)" />
                     </td>
                     <td>
-                        <input style="width: 100px" type='number' step="0.0000001" id='precio_s_igv${index}' name='precio_s_igv[]' class="precio_s_igv monto${index} form-control" onkeyup="multi_s_igv(${index}),multi(${index})" required/>
+                        <input  type='number' step="0.0000001" id='precio_s_igv${index}' name='precio_s_igv[]' class="precio_s_igv monto${index} form-control" onkeyup="multi_s_igv(${index}),multi(${index})" required/>
                         <input hidden id='precio_s_igv_float${index}' name='precio_s_igv_float' class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${index}),multi(${index})"/>
                     </td>
                     <td>
-                        <input style="width: 100px" type='number' step="0.0000001" id='precio_c_igv${index}' name='precio_c_igv[]' class="precio_c_igv p_inp monto${index} form-control" onkeyup="multi_c_igv(${index}),multi(${index})" required/>
+                        <input  type='number' step="0.0000001" id='precio_c_igv${index}' name='precio_c_igv[]' class="precio_c_igv p_inp monto${index} form-control" onkeyup="multi_c_igv(${index}),multi(${index})" required/>
                     </td>
                     <td>
-                        <input type='number' id='total${index}' style="width: 100px" name='total' disabled class="total form-control" required/>
+                        <input type='number' id='total${index}'  name='total' disabled class="total form-control" required/>
                     </td>
                 </tr>
             `;
@@ -1844,7 +1874,7 @@
 
         function cargarArticuloEnFilaManual(registro, index, callback) {
             // console.log(`  📝 Procesando fila ${index}:`, registro);
-
+            $('#loaderGif').show();
             let articuloId, codigo, codigoOriginal, nombre;
 
             if (registro.producto_id && registro.producto) {
@@ -1894,7 +1924,8 @@
 
                 var precio_s_igv = parseFloat(registro.precio);
                 var multiplier = 100;
-                var precio_s_igv_redondeo = Math.round(precio_s_igv * multiplier) / multiplier;
+                // var precio_s_igv_redondeo = Math.round(precio_s_igv * multiplier) / multiplier;
+                var precio_s_igv_redondeo = precio_s_igv;
 
                 $(precioSIgvId).val(precio_s_igv_redondeo);
 
@@ -1904,321 +1935,333 @@
                     // console.log(`  ✅ Fila ${index} OK`);
                     if (callback) callback();
                 }, 500);
-
+                
             }, 2500);
+            $('#loaderGif').hide();
         }
     </script>
 
   {{-- script para manejar las renovaciones --}}
     <script>
-    // ==================== VARIABLES GLOBALES ====================
-    let calendarioMesActual = new Date();
-    let calendarioAnualMesActual = new Date();
-    let fechaEmisionGlobal = new Date();
-    let diaSeleccionadoAnual = null;
-    let mesSeleccionadoAnual = null;
+        // ==================== VARIABLES GLOBALES ====================
+        let calendarioMesActual = new Date();
+        let calendarioAnualMesActual = new Date();
+        let fechaEmisionGlobal = new Date();
+        let diaSeleccionadoAnual = null;
+        let mesSeleccionadoAnual = null;
 
-    // ==================== CALENDARIO MENSUAL (CORREGIDO) ====================
-    function generarCalendarioMensual(mesOffset = 0) {
-        const extraSelects = document.getElementById("extra_selects");
+        // ==================== CALENDARIO MENSUAL (CORREGIDO) ====================
+        function generarCalendarioMensual(mesOffset = 0) {
+            const extraSelects = document.getElementById("extra_selects");
 
-        let fechaEmision;
-        const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
+            let fechaEmision;
+            const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
 
-        if (inputFechaEmision && inputFechaEmision.value) {
-            const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
-            const partes = inputFechaEmision.value.split(separador);
+            if (inputFechaEmision && inputFechaEmision.value) {
+                const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
+                const partes = inputFechaEmision.value.split(separador);
 
-            if (partes.length === 3) {
-                const dia = parseInt(partes[0]);
-                const mes = parseInt(partes[1]) - 1;
-                const anio = parseInt(partes[2]);
-                fechaEmision = new Date(anio, mes, dia);
+                if (partes.length === 3) {
+                    const dia = parseInt(partes[0]);
+                    const mes = parseInt(partes[1]) - 1;
+                    const anio = parseInt(partes[2]);
+                    fechaEmision = new Date(anio, mes, dia);
+                } else {
+                    fechaEmision = new Date();
+                }
             } else {
                 fechaEmision = new Date();
             }
-        } else {
-            fechaEmision = new Date();
-        }
 
-        if (isNaN(fechaEmision.getTime())) {
-            fechaEmision = new Date();
-        }
-
-        fechaEmisionGlobal = fechaEmision;
-
-        if (mesOffset === 0) {
-            calendarioMesActual = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
-        }
-
-        const mesVista = calendarioMesActual.getMonth();
-        const anioVista = calendarioMesActual.getFullYear();
-        const fechaMaxima = new Date(fechaEmision);
-        fechaMaxima.setDate(fechaMaxima.getDate() + 30);
-
-        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-        const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
-        const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
-        const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
-
-        let html = `
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
-                        <i class="fa fa-chevron-left"></i>
-                    </button>
-                    <h6>${meses[mesVista]} ${anioVista}</h6>
-                    <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
-                        <i class="fa fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="calendar-grid">
-                    <div class="calendar-day-header">Lu</div>
-                    <div class="calendar-day-header">Ma</div>
-                    <div class="calendar-day-header">Mi</div>
-                    <div class="calendar-day-header">Ju</div>
-                    <div class="calendar-day-header">Vi</div>
-                    <div class="calendar-day-header">Sa</div>
-                    <div class="calendar-day-header">Do</div>
-        `;
-
-        const ultimoDia = new Date(anioVista, mesVista + 1, 0);
-        const diasEnMes = ultimoDia.getDate();
-        const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
-        const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
-        const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
-        const diasMesAnterior = ultimoDiaMesAnterior.getDate();
-
-        for (let i = ajusteDia - 1; i >= 0; i--) {
-            const dia = diasMesAnterior - i;
-            html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
-        }
-
-        const diaEmision = fechaEmision.getDate();
-        const mesEmision = fechaEmision.getMonth();
-        const anioEmision = fechaEmision.getFullYear();
-
-        for (let dia = 1; dia <= diasEnMes; dia++) {
-            const fechaDia = new Date(anioVista, mesVista, dia);
-            const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
-            const fechaEmisionNormalizada = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), fechaEmision.getDate());
-
-            const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
-            const esAnteriorEmision = fechaDiaNormalizada < fechaEmisionNormalizada;
-            const esPosteriorMaximo = fechaDia > fechaMaxima;
-            const esDeshabilitado = esAnteriorEmision || esPosteriorMaximo;
-
-            let clases = 'calendar-day';
-            if (esDeshabilitado) {
-                clases += ' disabled';
-            } else {
-                clases += ' selectable';
-                if (esFechaEmision) clases += ' fecha-emision';
+            if (isNaN(fechaEmision.getTime())) {
+                fechaEmision = new Date();
             }
 
-            html += `<div class="${clases}" data-dia="${dia}" data-mes="${mesVista + 1}" data-anio="${anioVista}">${dia}</div>`;
-        }
+            fechaEmisionGlobal = fechaEmision;
 
-        const celdasUsadas = ajusteDia + diasEnMes;
-        const filasNecesarias = Math.ceil(celdasUsadas / 7);
-        const totalCeldas = filasNecesarias * 7;
-        const diasVaciosFinal = totalCeldas - celdasUsadas;
+            if (mesOffset === 0) {
+                calendarioMesActual = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
+            }
 
-        for (let i = 1; i <= diasVaciosFinal; i++) {
-            html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
-        }
+            const mesVista = calendarioMesActual.getMonth();
+            const anioVista = calendarioMesActual.getFullYear();
+            const fechaMaxima = new Date(fechaEmision);
+            fechaMaxima.setDate(fechaMaxima.getDate() + 30);
 
-        html += `</div></div>`;
-        extraSelects.innerHTML = html;
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-        const prevBtn = document.getElementById('prevMonth');
-        const nextBtn = document.getElementById('nextMonth');
+            const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
+            const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
+            const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
 
-        if (prevBtn && !prevBtn.disabled) {
-            prevBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                calendarioMesActual.setMonth(calendarioMesActual.getMonth() - 1);
-                generarCalendarioMensual(-1);
+            let html = `
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
+                            <i class="fa fa-chevron-left"></i>
+                        </button>
+                        <h6>${meses[mesVista]} ${anioVista}</h6>
+                        <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header">Lu</div>
+                        <div class="calendar-day-header">Ma</div>
+                        <div class="calendar-day-header">Mi</div>
+                        <div class="calendar-day-header">Ju</div>
+                        <div class="calendar-day-header">Vi</div>
+                        <div class="calendar-day-header">Sa</div>
+                        <div class="calendar-day-header">Do</div>
+            `;
+
+            const ultimoDia = new Date(anioVista, mesVista + 1, 0);
+            const diasEnMes = ultimoDia.getDate();
+            const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
+            const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+            const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
+            const diasMesAnterior = ultimoDiaMesAnterior.getDate();
+
+            for (let i = ajusteDia - 1; i >= 0; i--) {
+                const dia = diasMesAnterior - i;
+                html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
+            }
+
+            const diaEmision = fechaEmision.getDate();
+            const mesEmision = fechaEmision.getMonth();
+            const anioEmision = fechaEmision.getFullYear();
+
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                const fechaDia = new Date(anioVista, mesVista, dia);
+                const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
+                const fechaEmisionNormalizada = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), fechaEmision.getDate());
+
+                const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
+                const esAnteriorEmision = fechaDiaNormalizada < fechaEmisionNormalizada;
+                const esPosteriorMaximo = fechaDia > fechaMaxima;
+                const esDeshabilitado = esAnteriorEmision || esPosteriorMaximo;
+
+                let clases = 'calendar-day';
+                if (esDeshabilitado) {
+                    clases += ' disabled';
+                } else {
+                    clases += ' selectable';
+                    if (esFechaEmision) clases += ' fecha-emision';
+                }
+
+                html += `<div class="${clases}" data-dia="${dia}" data-mes="${mesVista + 1}" data-anio="${anioVista}">${dia}</div>`;
+            }
+
+            const celdasUsadas = ajusteDia + diasEnMes;
+            const filasNecesarias = Math.ceil(celdasUsadas / 7);
+            const totalCeldas = filasNecesarias * 7;
+            const diasVaciosFinal = totalCeldas - celdasUsadas;
+
+            for (let i = 1; i <= diasVaciosFinal; i++) {
+                html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
+            }
+
+            html += `</div></div>`;
+            extraSelects.innerHTML = html;
+
+            const prevBtn = document.getElementById('prevMonth');
+            const nextBtn = document.getElementById('nextMonth');
+
+            if (prevBtn && !prevBtn.disabled) {
+                prevBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    calendarioMesActual.setMonth(calendarioMesActual.getMonth() - 1);
+                    generarCalendarioMensual(-1);
+                });
+            }
+
+            if (nextBtn && !nextBtn.disabled) {
+                nextBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    calendarioMesActual.setMonth(calendarioMesActual.getMonth() + 1);
+                    generarCalendarioMensual(1);
+                });
+            }
+
+            document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
+                elemento.addEventListener('click', function() {
+                    document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
+                    this.classList.add('selected');
+
+                    const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
+
+                    document.getElementById('dia_mensual_hidden').value = diaSeleccionado;
+                });
             });
         }
+        // ==================== CALENDARIO ANUAL ====================
+        function generarCalendarioAnual(mesOffset = 0) {
+            const extraSelects = document.getElementById("extra_selects");
 
-        if (nextBtn && !nextBtn.disabled) {
-            nextBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                calendarioMesActual.setMonth(calendarioMesActual.getMonth() + 1);
-                generarCalendarioMensual(1);
-            });
-        }
+            let fechaEmision;
+            const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
 
-        document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
-            elemento.addEventListener('click', function() {
-                document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
-                this.classList.add('selected');
+            if (inputFechaEmision && inputFechaEmision.value) {
+                const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
+                const partes = inputFechaEmision.value.split(separador);
 
-                const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
-
-                document.getElementById('dia_mensual_hidden').value = diaSeleccionado;
-            });
-        });
-    }
-
-    // ==================== CALENDARIO ANUAL ====================
-    function generarCalendarioAnual(mesOffset = 0) {
-        const extraSelects = document.getElementById("extra_selects");
-
-        let fechaEmision;
-        const inputFechaEmision = document.querySelector('input[name="fecha_emision"]');
-
-        if (inputFechaEmision && inputFechaEmision.value) {
-            const separador = inputFechaEmision.value.includes('/') ? '/' : '-';
-            const partes = inputFechaEmision.value.split(separador);
-
-            if (partes.length === 3) {
-                const dia = parseInt(partes[0]);
-                const mes = parseInt(partes[1]) - 1;
-                const anio = parseInt(partes[2]);
-                fechaEmision = new Date(anio, mes, dia);
+                if (partes.length === 3) {
+                    const dia = parseInt(partes[0]);
+                    const mes = parseInt(partes[1]) - 1;
+                    const anio = parseInt(partes[2]);
+                    fechaEmision = new Date(anio, mes, dia);
+                } else {
+                    fechaEmision = new Date();
+                }
             } else {
                 fechaEmision = new Date();
             }
-        } else {
-            fechaEmision = new Date();
-        }
 
-        if (isNaN(fechaEmision.getTime())) {
-            fechaEmision = new Date();
-        }
-
-        if (mesOffset === 0) {
-            calendarioAnualMesActual = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
-        }
-
-        const mesVista = calendarioAnualMesActual.getMonth();
-        const anioVista = calendarioAnualMesActual.getFullYear();
-
-        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-        const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
-        const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
-
-        let html = `
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonthAnual" ${!puedeRetroceder ? 'disabled' : ''}>
-                        <i class="fa fa-chevron-left"></i>
-                    </button>
-                    <h6>${meses[mesVista]} ${anioVista}</h6>
-                    <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonthAnual">
-                        <i class="fa fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="calendar-grid">
-                    <div class="calendar-day-header">Lu</div>
-                    <div class="calendar-day-header">Ma</div>
-                    <div class="calendar-day-header">Mi</div>
-                    <div class="calendar-day-header">Ju</div>
-                    <div class="calendar-day-header">Vi</div>
-                    <div class="calendar-day-header">Sa</div>
-                    <div class="calendar-day-header">Do</div>
-        `;
-
-        const ultimoDia = new Date(anioVista, mesVista + 1, 0);
-        const diasEnMes = ultimoDia.getDate();
-        const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
-        const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
-        const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
-        const diasMesAnterior = ultimoDiaMesAnterior.getDate();
-
-        for (let i = ajusteDia - 1; i >= 0; i--) {
-            const dia = diasMesAnterior - i;
-            html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
-        }
-
-        const diaEmision = fechaEmision.getDate();
-        const mesEmision = fechaEmision.getMonth();
-        const anioEmision = fechaEmision.getFullYear();
-
-        for (let dia = 1; dia <= diasEnMes; dia++) {
-            const fechaDia = new Date(anioVista, mesVista, dia);
-            const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
-            const fechaEmisionNormalizada = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), fechaEmision.getDate());
-
-            const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
-            const esAnteriorEmision = fechaDiaNormalizada < fechaEmisionNormalizada;
-
-            let clases = 'calendar-day';
-            if (esAnteriorEmision) {
-                clases += ' disabled';
-            } else {
-                clases += ' selectable';
-                if (esFechaEmision) clases += ' fecha-emision';
+            if (isNaN(fechaEmision.getTime())) {
+                fechaEmision = new Date();
             }
 
-            html += `<div class="${clases}" data-dia="${dia}" data-mes="${mesVista + 1}" data-anio="${anioVista}">${dia}</div>`;
-        }
+            if (mesOffset === 0) {
+                calendarioAnualMesActual = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
+            }
 
-        const celdasUsadas = ajusteDia + diasEnMes;
-        const filasNecesarias = Math.ceil(celdasUsadas / 7);
-        const totalCeldas = filasNecesarias * 7;
-        const diasVaciosFinal = totalCeldas - celdasUsadas;
+            const mesVista = calendarioAnualMesActual.getMonth();
+            const anioVista = calendarioAnualMesActual.getFullYear();
 
-        for (let i = 1; i <= diasVaciosFinal; i++) {
-            html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
-        }
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-        html += `</div></div>`;
-        extraSelects.innerHTML = html;
+            const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
+            const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), 1);
 
-        const prevBtn = document.getElementById('prevMonthAnual');
-        const nextBtn = document.getElementById('nextMonthAnual');
+            let html = `
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonthAnual" ${!puedeRetroceder ? 'disabled' : ''}>
+                            <i class="fa fa-chevron-left"></i>
+                        </button>
+                        <h6>${meses[mesVista]} ${anioVista}</h6>
+                        <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonthAnual">
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day-header">Lu</div>
+                        <div class="calendar-day-header">Ma</div>
+                        <div class="calendar-day-header">Mi</div>
+                        <div class="calendar-day-header">Ju</div>
+                        <div class="calendar-day-header">Vi</div>
+                        <div class="calendar-day-header">Sa</div>
+                        <div class="calendar-day-header">Do</div>
+            `;
 
-        if (prevBtn && !prevBtn.disabled) {
-            prevBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() - 1);
-                generarCalendarioAnual(-1);
+            const ultimoDia = new Date(anioVista, mesVista + 1, 0);
+            const diasEnMes = ultimoDia.getDate();
+            const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
+            const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
+            const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
+            const diasMesAnterior = ultimoDiaMesAnterior.getDate();
+
+            for (let i = ajusteDia - 1; i >= 0; i--) {
+                const dia = diasMesAnterior - i;
+                html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
+            }
+
+            const diaEmision = fechaEmision.getDate();
+            const mesEmision = fechaEmision.getMonth();
+            const anioEmision = fechaEmision.getFullYear();
+
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                const fechaDia = new Date(anioVista, mesVista, dia);
+                const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
+                const fechaEmisionNormalizada = new Date(fechaEmision.getFullYear(), fechaEmision.getMonth(), fechaEmision.getDate());
+
+                const esFechaEmision = dia === diaEmision && mesVista === mesEmision && anioVista === anioEmision;
+                const esAnteriorEmision = fechaDiaNormalizada < fechaEmisionNormalizada;
+
+                let clases = 'calendar-day';
+                if (esAnteriorEmision) {
+                    clases += ' disabled';
+                } else {
+                    clases += ' selectable';
+                    if (esFechaEmision) clases += ' fecha-emision';
+                }
+
+                html += `<div class="${clases}" data-dia="${dia}" data-mes="${mesVista + 1}" data-anio="${anioVista}">${dia}</div>`;
+            }
+
+            const celdasUsadas = ajusteDia + diasEnMes;
+            const filasNecesarias = Math.ceil(celdasUsadas / 7);
+            const totalCeldas = filasNecesarias * 7;
+            const diasVaciosFinal = totalCeldas - celdasUsadas;
+
+            for (let i = 1; i <= diasVaciosFinal; i++) {
+                html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
+            }
+
+            html += `</div></div>`;
+            extraSelects.innerHTML = html;
+
+            const prevBtn = document.getElementById('prevMonthAnual');
+            const nextBtn = document.getElementById('nextMonthAnual');
+
+            if (prevBtn && !prevBtn.disabled) {
+                prevBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() - 1);
+                    generarCalendarioAnual(-1);
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() + 1);
+                    generarCalendarioAnual(1);
+                });
+            }
+
+            document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
+                elemento.addEventListener('click', function() {
+                    document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
+                    this.classList.add('selected');
+
+                    diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
+                    mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
+                    const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
+
+                    document.getElementById('dia_anual_hidden').value = diaSeleccionadoAnual;
+                    document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
+                    document.getElementById('anio_anual_hidden').value = anioSeleccionado;
+                });
             });
         }
 
-        if (nextBtn) {
-            nextBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() + 1);
-                generarCalendarioAnual(1);
+        // ==================== EVENT LISTENERS ====================
+        document.addEventListener("DOMContentLoaded", function () {
+            const checkRenovacion = document.getElementById("estado_renovacion");
+            const contenedorRenovacion = document.getElementById("renovacion_container");
+            const selectFecha = document.getElementById("select_fecha");
+            const extraSelects = document.getElementById("extra_selects");
+            const divRenovacion = document.querySelector(".renovacion");
+
+            checkRenovacion.addEventListener("change", function () {
+                contenedorRenovacion.style.display = this.checked ? "block" : "none";
+                if (!this.checked) {
+                    selectFecha.value = "";
+                    extraSelects.innerHTML = "";
+                    document.getElementById('dia_mensual_hidden').value = "";
+                    document.getElementById('dia_anual_hidden').value = "";
+                    document.getElementById('mes_anual_hidden').value = "";
+                    document.getElementById('anio_anual_hidden').value = "";
+                    diaSeleccionadoAnual = null;
+                    mesSeleccionadoAnual = null;
+                }
             });
-        }
 
-        document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
-            elemento.addEventListener('click', function() {
-                document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
-                this.classList.add('selected');
-
-                diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
-                mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
-                const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
-
-                document.getElementById('dia_anual_hidden').value = diaSeleccionadoAnual;
-                document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
-                document.getElementById('anio_anual_hidden').value = anioSeleccionado;
-            });
-        });
-    }
-
-    // ==================== EVENT LISTENERS ====================
-    document.addEventListener("DOMContentLoaded", function () {
-        const checkRenovacion = document.getElementById("estado_renovacion");
-        const contenedorRenovacion = document.getElementById("renovacion_container");
-        const selectFecha = document.getElementById("select_fecha");
-        const extraSelects = document.getElementById("extra_selects");
-        const divRenovacion = document.querySelector(".renovacion");
-
-        checkRenovacion.addEventListener("change", function () {
-            contenedorRenovacion.style.display = this.checked ? "block" : "none";
-            if (!this.checked) {
-                selectFecha.value = "";
+            selectFecha.addEventListener("change", function () {
+                const selected = this.value;
                 extraSelects.innerHTML = "";
                 document.getElementById('dia_mensual_hidden').value = "";
                 document.getElementById('dia_anual_hidden').value = "";
@@ -2226,74 +2269,62 @@
                 document.getElementById('anio_anual_hidden').value = "";
                 diaSeleccionadoAnual = null;
                 mesSeleccionadoAnual = null;
+
+                if (selected === "Mensual") {
+                    generarCalendarioMensual(0);
+                } else if (selected === "Anual") {
+                    generarCalendarioAnual(0);
+                }
+            });
+
+            const selectTipo = document.querySelector(".select2_tipo_coti");
+            if (selectTipo) {
+                if (selectTipo.value == "1") {
+                    divRenovacion.style.display = "block";
+                } else {
+                    divRenovacion.style.display = "none";
+                }
             }
         });
 
-        selectFecha.addEventListener("change", function () {
-            const selected = this.value;
-            extraSelects.innerHTML = "";
-            document.getElementById('dia_mensual_hidden').value = "";
-            document.getElementById('dia_anual_hidden').value = "";
-            document.getElementById('mes_anual_hidden').value = "";
-            document.getElementById('anio_anual_hidden').value = "";
-            diaSeleccionadoAnual = null;
-            mesSeleccionadoAnual = null;
+        function select_tipo() {
+            const selectTipo = document.querySelector(".select2_tipo_coti");
+            const divRenovacion = document.querySelector(".renovacion");
 
-            if (selected === "Mensual") {
-                generarCalendarioMensual(0);
-            } else if (selected === "Anual") {
-                generarCalendarioAnual(0);
-            }
-        });
-
-        const selectTipo = document.querySelector(".select2_tipo_coti");
-        if (selectTipo) {
             if (selectTipo.value == "1") {
                 divRenovacion.style.display = "block";
             } else {
                 divRenovacion.style.display = "none";
+
+                const checkRenovacion = document.getElementById("estado_renovacion");
+                const contenedorRenovacion = document.getElementById("renovacion_container");
+                const selectFecha = document.getElementById("select_fecha");
+                const extraSelects = document.getElementById("extra_selects");
+
+                if (checkRenovacion) checkRenovacion.checked = false;
+                if (contenedorRenovacion) contenedorRenovacion.style.display = "none";
+                if (selectFecha) selectFecha.value = "";
+                if (extraSelects) extraSelects.innerHTML = "";
+                if (document.getElementById('dia_mensual_hidden')) {
+                    document.getElementById('dia_mensual_hidden').value = "";
+                }
+                if (document.getElementById('dia_anual_hidden')) {
+                    document.getElementById('dia_anual_hidden').value = "";
+                }
+                if (document.getElementById('mes_anual_hidden')) {
+                    document.getElementById('mes_anual_hidden').value = "";
+                }
+                if (document.getElementById('anio_anual_hidden')) {
+                    document.getElementById('anio_anual_hidden').value = "";
+                }
+                diaSeleccionadoAnual = null;
+                mesSeleccionadoAnual = null;
             }
         }
-    });
-
-    function select_tipo() {
-        const selectTipo = document.querySelector(".select2_tipo_coti");
-        const divRenovacion = document.querySelector(".renovacion");
-
-        if (selectTipo.value == "1") {
-            divRenovacion.style.display = "block";
-        } else {
-            divRenovacion.style.display = "none";
-
-            const checkRenovacion = document.getElementById("estado_renovacion");
-            const contenedorRenovacion = document.getElementById("renovacion_container");
-            const selectFecha = document.getElementById("select_fecha");
-            const extraSelects = document.getElementById("extra_selects");
-
-            if (checkRenovacion) checkRenovacion.checked = false;
-            if (contenedorRenovacion) contenedorRenovacion.style.display = "none";
-            if (selectFecha) selectFecha.value = "";
-            if (extraSelects) extraSelects.innerHTML = "";
-            if (document.getElementById('dia_mensual_hidden')) {
-                document.getElementById('dia_mensual_hidden').value = "";
-            }
-            if (document.getElementById('dia_anual_hidden')) {
-                document.getElementById('dia_anual_hidden').value = "";
-            }
-            if (document.getElementById('mes_anual_hidden')) {
-                document.getElementById('mes_anual_hidden').value = "";
-            }
-            if (document.getElementById('anio_anual_hidden')) {
-                document.getElementById('anio_anual_hidden').value = "";
-            }
-            diaSeleccionadoAnual = null;
-            mesSeleccionadoAnual = null;
-        }
-    }
     </script>
 
 
     {{-- @include('transaccpion.venta.clientes.modal_create') --}}
 
     @include('transaccion.venta.clientes.modal_create')
-@stop
+@endsection

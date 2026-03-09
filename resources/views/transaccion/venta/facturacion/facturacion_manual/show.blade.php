@@ -27,7 +27,7 @@
                     'routeCreate' => 'facturacion_manual.create',
                     'useAlmacen' => false,
                     'method' => 'GET',
-                    'asLink' => true
+                    'asLink' => true,
                 ])
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">
@@ -40,9 +40,17 @@
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
                 <div class="row tooltip-demo">
-                    <div style="display: flex; flex-direction: column;">
-                        <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
-                        <h5 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
+                    <div class="col-sm-6">
+                        @php use Carbon\Carbon;
+                        use App\Facturacion_m; @endphp
+                        @if ($facturacion->nota_credito != 0)
+                            <span data-toggle="tooltip" data-placement="bottom" title=""
+                                data-original-title="Motivo: {{ Facturacion_m::search_motivo_nc($facturacion->id) }}">
+                                <a class="btn btn-primary"
+                                    href="{{ route('nota-credito.show', Facturacion_m::nota_credito_id($facturacion->id)) }}">Ver
+                                    nota de Credito</a>
+                            </span>
+                        @endif
                     </div>
                     <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
                         FACTURA ELECTRÓNICA
@@ -54,23 +62,18 @@
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
                                 data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i></button>
                         </form>
-
-                        <a href="{{ route('facturacion.ticket', $facturacion->id) }}" class="btn btn-info" target="_blank">
-                            <i class="fa fa-ticket fa-lg"></i>
-                        </a>
-
-                        <input type="text" value="{{ $facturacion->id }}" name="id" id="id" hidden>
-
-                        <a class="btn btn-success" href="{{ route('facturacion.print', $facturacion->id) }}" target="_blank"
-                            data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
-                            <i class="fa fa-print fa-lg"></i>
-                        </a>
-
+                        <a href="{{ route('facturacion_manual.ticket', $facturacion->id) }}" class="btn btn-info"
+                            target="_blank"><i class="fa fa-ticket fa-lg"></i></a>
+                        <input type="text" value="{{ $facturacion->id }}" name="id" id="id" hidden="">
+                        <a class="btn btn-success" href="{{ route('facturacion_manual.print', $facturacion->id) }}"
+                            target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                            title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
                         @if (Auth::user()->email_creado == 1)
                             <form action="{{ route('email.factura', $facturacion->id) }}" method="post" style="padding: 0;" class="btn">
                                 @csrf
-                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
-                                    data-original-title="Enviar por correo" formtarget="_blank">
+                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
+                                    data-placement="bottom" title="" formtarget="_blank"
+                                    data-original-title="Enviar por correo">
                                     <i class="fa fa-envelope fa-lg"></i>
                                 </button>
                             </form>
@@ -103,9 +106,9 @@
                                 <input type="text" name="name_sin_cambio" hidden=""
                                     value="Facturacion_{{ $facturacion->codigo_fac }}" />
                                 <button type="submit" class="btn  btn-success"
-                                    style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip"
-                                    data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i
-                                        class="fa fa-send fa-lg"></i> </button>
+                                    style="background: green;border-color: green;" formtarget="_blank"
+                                    data-toggle="tooltip" data-placement="bottom" title=""
+                                    data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
                             </form>
                     </div>
                 </div>
@@ -195,47 +198,45 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <span hidden="hidden">{{ $i = 1 }} </span>
-                                        @foreach ($facturacion_registro as $facturacion_registros)
-                                    <tr>
-                                        <td style="text-align:center">{{ $i }} </td>
-                                        @if (isset($facturacion_registros->producto))
-                                            <td style="text-align:center">
-                                                {{ $facturacion_registros->producto->codigo_producto }}</td>
-                                            <td>{{ $facturacion_registros->producto->nombre }}
-                                                {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
-                                                    <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
-                                                @endif
+                                    <span hidden="hidden">{{ $i = 1 }} </span>
+                                    @foreach ($facturacion_registro as $facturacion_registros)
+                                        <tr>
+                                            <td style="text-align:center">{{ $i }} </td>
+                                            @if (isset($facturacion_registros->producto))
+                                                <td style="text-align:center">
+                                                    {{ $facturacion_registros->producto->codigo_producto }}</td>
+                                                <td>{{ $facturacion_registros->producto->nombre }}
+                                                    {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
+                                                        <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
+                                                    @endif
+                                                </td>
+                                            @else
+                                                <td style="text-align:center">
+                                                    {{ $facturacion_registros->servicio->codigo_servicio }}</td>
+                                                <td>{{ $facturacion_registros->servicio->nombre }}
+                                                    {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
+                                                        <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
+                                                    @endif
+                                            @endif
+                                            <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
+                                            <td style="text-align:right">
+                                                {{ round($facturacion_registros->precio, 8) }}
                                             </td>
-                                        @else
-                                            <td style="text-align:center">
-                                                {{ $facturacion_registros->servicio->codigo_servicio }}</td>
-                                            <td>{{ $facturacion_registros->servicio->nombre }}
-                                                {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
-                                                    <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
-                                                @endif
-                                        @endif
-                                        <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
-                                        <td style="text-align:center">
-                                            {{ number_format($facturacion_registros->precio, 2) }}
-                                        </td>
 
-                                        <td style="text-align:center">
-                                            {{ number_format($facturacion_registros->precio * $facturacion_registros->cantidad - ($facturacion_registros->precio * $facturacion_registros->cantidad * $facturacion_registros->descuento) / 100, 2) }}
-                                        </td>
-
-                                        <td style="display: none">
-                                            {{ $sub_total = $facturacion_registros->factura_ids->op_gravada + $facturacion_registros->factura_ids->op_inafecta + $facturacion_registros->factura_ids->op_exonerada }}
-                                            {{ $sub_total_gravado = $facturacion_registros->factura_ids->op_gravada }}
-                                            {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                            {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                            {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                        </td>
-                                    </tr>
-                                    <span hidden="hidden">{{ $i++ }}</span>
+                                            <td style="text-align:right">
+                                                {{ round($facturacion_registros->precio * $facturacion_registros->cantidad, 8) }}
+                                            </td>
+                                        </tr>
+                                        <span hidden="hidden">{{ $i++ }}</span>
                                     @endforeach
-                                    </tr>
+                                    @php
+                                        $sub_total = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada;
+                                        // $sub_total_gravado = $facturacion_registros->factura_ids->op_gravada;
+                                        $igv_p = $facturacion->op_gravada * ($igv->igv_total / 100);
+                                        $end = $sub_total + $igv_p;
+                                        $end2 = number_format(round($end, 2), 2);
+                                        $simbologia =  $facturacion->moneda->simbolo;
+                                    @endphp
                                 </tbody>
                             </table>
                         </div><br><br><br><br>
@@ -243,14 +244,14 @@
                         <div class="row">
                             <div class="col-sm-8">
                                 <h3 align="left">
-                                    <?php use Luecano\NumeroALetras\NumeroALetras;
+                                    @php use Luecano\NumeroALetras\NumeroALetras;
                                     $v = new NumeroALetras();
                                     $letra = $v->toInvoice($end, 2);
                                     // $letra = $v->convertirEurosEnLetras($end);
                                     // $letra_final = ucfirst(strstr($letra, 'soles', true));
                                     // $end_final_point = strstr($end2, '.', false);
                                     // $end_final = str_replace('.', '', $end_final_point);
-                                    ?>
+                                    @endphp
                                     Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $facturacion->moneda->nombre }}
                                     {{-- {{$end2}} --}}
                                 </h3>
@@ -258,8 +259,7 @@
                             <div class="col-sm-4 form-control">
                                 {{-- <div class="col-sm-4 form-control" > --}}
                                 <span style="display: block;float: left"> Sub Total:</span>
-                                <span style="display: block;float: right;">
-                                    {{ $simbologia = $facturacion->moneda->simbolo }}
+                                <span style="display: block;float: right;">{{ $simbologia }}
                                     {{ number_format($sub_total, 2) }}</span>
                                 <br>
                                 <span style="display: block;float: left"> Op. Agravada: </span>
@@ -272,10 +272,10 @@
                                 <span style="display: block;float: right">{{ $simbologia }}
                                     {{ number_format($facturacion->op_exonerada, 2) }} </span><br>
                                 <span style="display: block;float: left"> I.G.V.: </span>
-                                <span style="display: block;float: right">{{ $facturacion->moneda->simbolo }}
+                                <span style="display: block;float: right">{{ $simbologia }}
                                     {{ number_format(round($igv_p, 2), 2) }}</span><br>
                                 <span style="display: block;float: left"> Importe Total: </span>
-                                <span style="display: block;float: right">{{ $facturacion->moneda->simbolo }}
+                                <span style="display: block;float: right">{{ $simbologia }}
                                     {{ number_format(round($end, 2), 2) }}</span>
 
                             </div>
@@ -523,8 +523,8 @@
         }
 
         /* .form-control {
-                border-radius: 10px;
-            } */
+                    border-radius: 10px;
+                } */
         .a {
             height: 30px;
             margin: 0;
@@ -564,9 +564,9 @@
         }
 
         /* .form-control {
-                margin-top: 5px;
-                border-radius: 5px
-            } */
+                    margin-top: 5px;
+                    border-radius: 5px
+                } */
 
         p#texto {
             text-align: center;
@@ -606,8 +606,8 @@
         }
 
         /* .form-control {
-                background-color: transparent !important;
-            } */
+                    background-color: transparent !important;
+                } */
     </style>
 
     <!-- Mainly scripts -->
@@ -677,6 +677,7 @@
                 clic = 1;
             }
         }
+
         function click_editar() {
             // MOSTRAR LOS INPUTS
             $('#edicion_factura').removeClass('no_mostrar');

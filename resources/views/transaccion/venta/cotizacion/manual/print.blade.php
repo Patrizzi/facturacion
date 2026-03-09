@@ -129,13 +129,19 @@
                                                     </td>
                                                 @endif
                                                 <td style="text-align: center">{{$cotizacion_registros->cantidad}}</td>
-                                                <td style="text-align: right">{{number_format($cotizacion_registros->precio,2)}}</td>
-                                                <td style="text-align: right">{{number_format($cotizacion_registros->cantidad*$cotizacion_registros->precio,2)}}</td>
+                                                <td style="text-align: right">{{round($cotizacion_registros->precio,8)}}</td>
+                                                <td style="text-align: right">{{round($cotizacion_registros->cantidad*$cotizacion_registros->precio,8)}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div><!-- /table-responsive -->
+                            <?php
+                                $simbologia = $cotizacion->moneda->simbolo;
+                                $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+                                $igv_tt = $cotizacion->op_gravada *($igv->igv_total / 100);
+                                $end = $sub_total + $igv_tt;
+                            ?>
                             <div class="row">
                                 <div class="col-sm-8">
                                     <h3 align="left">
@@ -150,18 +156,18 @@
                                 </div>
                                 <div class="col-sm-4 form-control ">
                                         <span style="display: block;float: left"> Subtotal:</span>
-                                        <span style="display: block;float: right;"> {{$simbologia=$cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
+                                        <span style="display: block;float: right;"> {{$simbologia}} {{number_format($sub_total, 2)}}</span>
                                         <br>
                                         <span style="display: block;float: left"> Op. Gravada: </span>
-                                        <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_gravada,2)}}</span><br>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($cotizacion->op_gravada,2),2)}}</span><br>
                                         <span style="display: block;float: left"> Op. Inafecta: </span>
-                                        <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion->op_inafecta,2)}}</span><br>
+                                        <span style="display: block;float: right">{{$simbologia}} {{ number_format(round($cotizacion->op_inafecta,2),2)}}</span><br>
                                         <span style="display: block;float: left"> Op. Exonerada: </span>
-                                        <span style="display: block;float: right">{{$simbologia}} {{number_format($cotizacion->op_exonerada,2)}} </span><br>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($cotizacion->op_exonerada,2),2)}} </span><br>
                                         <span style="display: block;float: left"> I.G.V.: </span>
-                                        <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format(round($igv, 2),2)}}</span><br>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($igv_tt, 2),2)}}</span><br>
                                         <span style="display: block;float: left"> Importe Total: </span>
-                                        <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format($end,2)}}</span>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($end,2),2)}}</span>
                                     {{-- @endif --}}
                                 </div>
                             </div>

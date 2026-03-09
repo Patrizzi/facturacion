@@ -56,6 +56,18 @@ class CotizacionManual extends Model
         return $this->hasMany(CotizacionManual_registros::class, 'cotizacion_m_id', 'id');
     }
 
+    public function getFechaEmisionEditAttribute()
+    {
+        $edit_emision = Carbon::parse($this->attributes['fecha_emision'])->format('Y-m-d');
+        return $edit_emision;
+    }
+
+    public function getFechaVencimientoEditAttribute()
+    {
+        $edit_vencimiento = Carbon::parse($this->attributes['fecha_vencimiento'])->format('Y-m-d');
+        return $edit_vencimiento;
+    }
+
     public static function count_mes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
@@ -103,6 +115,25 @@ class CotizacionManual extends Model
 
         return $mes;
     }
+
+    public function getTipoLabelAttribute(){
+         switch ($this->attributes['tipo']) {
+            case 'factura':
+                $tipo = "Factura";
+                break;
+            case 'boleta':
+                $tipo = "Boleta";
+                break;
+            case 'nota_venta':
+                $tipo = "Nota de Venta";
+                break;
+            default:
+                $tipo = "Desconocido";
+                break;
+        }
+        return $tipo;
+    }
+
     public static function estado_proceso($id)
     {
         $cotizacion = CotizacionManual::find($id);

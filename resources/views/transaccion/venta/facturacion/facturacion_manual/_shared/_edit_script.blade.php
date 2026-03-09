@@ -215,13 +215,13 @@
         }
     }
     // Para las cuotas
-    var total = document.getElementById('total_final').value;
+    var total = document.getElementById('total_final_view').value;
     var x = 1;
     $(".add_pago").on('click', function() {
         console.log(x);
         var simb = $('#basic-addon3').html();
         var fecha_min = "$facturacion->fecha_emision }}";
-        var total = document.getElementById('total_final').value;
+        var total = document.getElementById('total_final_view').value;
         var data = `
                 <div class="delete_modal${x} row">
                 <div class="col-sm-1"><label>Fecha:</label></div>
@@ -296,11 +296,80 @@
         actualizarSaldoRestante();
     }
 
+    //Función de borrado de fila de articulos (Producto-Servicio)
+        $(document).on('click', '.borrar', function(event) {
+            event.preventDefault();
+            var e = document.getElementsByClassName("e").length;
+            var fila = $(this).parents("tr");
+            var input_text_opt = fila.find('input[class="celda"]').val();
+            $('option[value="' + input_text_opt + '"]').prop("disabled", false);
+            $(".addmore").prop("disabled", false);
+            $(".select2_demo_3").select2({
+                placeholder: "Seleccionar Item",
+            });
+            // ELIMINAR TR
+            if (e > 1) {
+                fila.closest('tr').remove();
+                // $(".borrar").prop("disabled", false);
+                $(".addmore").prop("disabled", false);
+            } else {
+                // $(".borrar").prop("disabled", true);
+                $(".addmore").prop("disabled", false);
+                $(".select2_demo_3").val(null).trigger("change");
+                $(".inp").val(null);
+
+            }
+            var totalInp = $('[name="total"]');
+            var total_t = 0;
+
+            totalInp.each(function() {
+                total_t += parseFloat($(this).val());
+            });
+
+            var multiplier2 = 100;
+            // var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+            var total_tt = total_t ;
+
+            document.getElementById("sub_total").value = total_tt;
+            document.getElementById("sub_total_view").value = total_tt.toFixed(2);
+
+            var igv_valor = {{ $igv->renta }};
+            var subtotal = document.querySelector(`#sub_total`).value;
+            var igv = subtotal * igv_valor / 100;
+
+            // var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+            var igv_decimal = igv;
+            var end = igv_decimal + parseFloat(subtotal);
+
+            // var end2 = Math.round(end * multiplier2) / multiplier2;
+            var end2 = end;
+
+            document.getElementById("igv").value = igv_decimal;
+            document.getElementById("igv_view").value = igv_decimal.toFixed(2);
+            
+
+            var end = parseFloat(igv_decimal) + parseFloat(subtotal);
+            // var end3 = Math.round(end * multiplier2) / multiplier2;
+            var end3 = end ;
+            document.getElementById("total_final").value = end3;
+            document.getElementById("total_final_view").value = end3.toFixed(2);
+
+            var monto_c = document.getElementsByClassName('monto_pago');
+
+            var inp_mont = document.getElementsByClassName('monto_pago').length;
+            for (var i = 0; i < inp_mont; i++) {
+                var monto = monto_c[i].id;
+                var fin = (end2 / inp_mont)
+                document.getElementById("monto_pago0").value = Math.round(end2 * multiplier2) / multiplier2;
+            }
+            articlesSelect2();
+        });
+
     function eliminar(x) {
         $(`.delete_modal${x}`).remove();
         var monto_c = document.getElementsByClassName('monto_pago');
         var inp_mont = document.getElementsByClassName('monto_pago').length;
-        var total = document.getElementById('total_final').value;
+        var total = document.getElementById('total_final_view').value;
         var multiplier2 = 100;
         for (var i = 0; i < inp_mont; i++) {
             var monto = monto_c[i].id;
@@ -508,7 +577,8 @@
         var pr_s_igv = $(`#precio${a}`).val();
         $(`#precio_s_igv_float${a}`).val(pr_s_igv);
         var c_igv_s_redondeo = parseFloat(pr_s_igv) + (parseFloat(pr_s_igv) * igv / multiplier);
-        var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+        // var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+        var c_igv_redondeo = c_igv_s_redondeo;
         $(`#precio_c_igv${a}`).val(c_igv_redondeo);
     }
 
@@ -516,7 +586,8 @@
         var pr_c_igv = $(`#precio_c_igv${a}`).val();
         var igv_dec = igv / multiplier;
         var s_igv_s_base = parseFloat(pr_c_igv) / (1 + parseFloat(igv_dec));
-        var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+        // var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+        var s_igv_redondeo = s_igv_s_base;
         $(`#precio${a}`).val(s_igv_redondeo);
         $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
     }
@@ -576,11 +647,13 @@
 
         var multiplier = 100;
         var final = precio * cantidad;
-        var final_decimal = Math.round(final * multiplier) / multiplier;
+        // var final_decimal = Math.round(final * multiplier) / multiplier;
+        var final_decimal =final;
 
         document.getElementById(`precio_s_igv_float${a}`).value = final_decimal;
         var only_igv = final + (parseFloat(final) * (igv / multiplier));
-        var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+        // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+        var igv_decimal = only_igv;
         document.getElementById(`total${a}`).value = igv_decimal;
         console.log(igv_decimal);
         // Operacion para subtotal sin igv
@@ -590,19 +663,25 @@
         sub_igv.each(function() {
             sub_igv_t += parseFloat($(this).val());
         });
-        var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
-        console.log(sub_igv_t);
-        console.log(Math.round(sub_igv_t * multiplier) / multiplier);
-        $('#sub_total').val(sub_igv_tt);
+        // var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+        var sub_igv_tt = sub_igv_t;
+        // console.log(sub_igv_t);
+        // console.log(Math.round(sub_igv_t * multiplier) / multiplier);
+        // console.log(Math.round( * multiplier) / multiplier);
+        // $('#sub_total').val(sub_igv_tt);
         document.getElementById("sub_total").value = sub_igv_tt;
+        document.getElementById("sub_total_view").value = sub_igv_tt.toFixed(2);
 
         //OPERACION PARA CALULCAR EL IGV
         var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
-        var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+        // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+        var igv_decimal = only_igv;
         document.getElementById("igv").value = igv_decimal;
+        document.getElementById("igv_view").value = igv_decimal.toFixed(2);
 
         var end = igv_decimal + parseFloat(sub_igv_tt);
-        var end2 = Math.round(end * multiplier) / multiplier;
+        // var end2 = Math.round(end * multiplier) / multiplier;
+        var end2 = end;
 
         if (parseFloat(end2) > 700) {
             console.log('mayor a 700');
@@ -637,6 +716,7 @@
 
         // var subtotal = document.querySelector(`#total`).value;
         document.getElementById("total_final").value = end2;
+        document.getElementById("total_final_view").value = end2.toFixed(2);
 
 
         var monto_c = document.getElementsByClassName('monto_pago');
@@ -997,7 +1077,7 @@
         console.log(monto_c)
         var inp_mont = document.getElementsByClassName('monto_pago').length;
         // se usa el total real, mas no el dinamico
-        var total = parseFloat(document.getElementById('total_final').value) || 0;
+        var total = parseFloat(document.getElementById('total_final_view').value) || 0;
         var fin = 0;
         var comp = 0;
         for (var i = 0; i < inp_mont; i++) {
@@ -1197,7 +1277,7 @@
             var monto_c = document.getElementsByClassName('monto_pago');
             var monto_fc = document.getElementsByClassName('fecha_pago');
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var total = parseFloat(document.getElementById('total_final_view').value) || 0;
             var fin = 0.00;
             var comp = 0;
             for (var i = 0; i < inp_mont; i++) {
@@ -1251,7 +1331,7 @@
             var monto_c = document.getElementsByClassName('monto_pago');
             var monto_fc = document.getElementsByClassName('fecha_pago');
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var total = parseFloat(document.getElementById('total_final_view').value) || 0;
             var fin = 0.00;
             var comp = 0;
             for (var i = 0; i < inp_mont; i++) {

@@ -336,11 +336,11 @@
                                             id='precio{{ $i_edit }}' name='precio[]'
                                             class="monto{{ $i_edit }} form-control inp"
                                             onkeyup="multi_s_igv({{ $i_edit }}),multi({{ $i_edit }})"
-                                            required autocomplete="off" value="{{ $registros->precio }}" />
+                                            required autocomplete="off" value="{{ round($registros->precio, 8) }}" />
                                         <input type='text' hidden id='precio_s_igv_float{{ $i_edit }}'
-                                            name='precio_s_igv_float' class="precio_s_igv_float form-control"
+                                            name='precio_s_igv_float' class="monto{{ $i_edit }} form-control"
                                             onkeyup="multi_s_igv({{ $i_edit }}),multi({{ $i_edit }})"
-                                            required autocomplete="off" value="{{$registros->precio}}" />
+                                            required autocomplete="off" value="{{round($registros->precio * $registros->cantidad, 8)}}" />
                                     </td>
                                     <td>
                                         <input style="min-width: 100px" type='number' step="0.0000001"
@@ -348,13 +348,13 @@
                                             class="precio_c_igv monto{{ $i_edit }} form-control inp"
                                             onkeyup="multi_c_igv({{ $i_edit }}),multi({{ $i_edit }})"
                                             required autocomplete="off"
-                                            value="{{ round($registros->precio_igv, 2) }}" />
+                                            value="{{ round($registros->precio_igv_edit, 8) }}" />
                                     </td>
                                     <td>
                                         <input style="min-width: 100px" type='number' id='total{{ $i_edit }}'
                                             name='total' disabled="disabled" class="total form-control inp"
                                             required
-                                            value="{{ round($registros->precio_igv * $registros->cantidad, 2) }}"
+                                            value="{{ round($registros->precio_igv_edit * $registros->cantidad, 8) }}"
                                             autocomplete="off" />
                                     </td>
                                     <span id="spTotal"></span>
@@ -365,23 +365,28 @@
                             <tr style="background-color: #f5f5f500;" align="center">
                                 <td colspan="5" class="text-right align-middle" ><strong>Subtotal :</strong></td>
                                 <td colspan="2">
-                                    <input id='sub_total' type="number" name="sub_total_sin_igv" readonly
-                                        class="form-control inp" required value="{{ $facturacion->sub_total_precio_sin_forma }}" />
-                                    <input id='subtotal_gravado' type="text" name="subtotal_gravado" readonly
-                                        class="form-control inp" required hidden value="{{ $facturacion->op_gravada }}"/>
+                                    <input id='sub_total_view' type="number" name="" readonly
+                                        class="form-control inp" required value="{{ number_format(round($facturacion->sub_total_precio_sin_forma, 2), 2) }}" />
+                                    <input type="hidden" name="sub_total_sin_igv" id="sub_total" value="{{ $facturacion->sub_total_precio_sin_forma }}">
+                                    <input id='subtotal_gravado' type="hidden" name="subtotal_gravado" readonly
+                                        class="form-control inp" required  value="{{ $facturacion->op_gravada }}"/>
                                 </td>
                             </tr>
                             <tr style="background-color: #f5f5f500;" align="center">
                                 <td colspan="5" class="text-right align-middle"><strong>IGV :</strong></td>
                                 <td colspan="2">
-                                    <input id='igv' type="number" disabled="disabled"
-                                        class="form-control inp" required value="{{$facturacion->igv_sin_forma}}" />
+                                    <input id='igv_view' type="number" disabled="disabled"
+                                        class="form-control inp" required value="{{number_format(round($facturacion->igv_sin_forma,2),2)}}" />
+                                    <input type="hidden"  name="igv" id="igv" value="{{$facturacion->igv_sin_forma}}">
                                 </td>
                             </tr>
                             <tr align="center">
                                 <td colspan="5" class="text-right align-middle"><strong>Total :</strong></td>
-                                <td colspan="2"><input id='total_final' type="number" name="costo_total"
-                                        readonly="readonly" class="form-control inp" required value="{{$facturacion->total_precio_sin_forma}}" /></td>
+                                <td colspan="2">
+                                    <input id='total_final_view' type="number" name=""
+                                        readonly="readonly" class="form-control inp" required value="{{number_format(round($facturacion->total_precio_sin_forma,2),2)}}" />
+                                    <input type="hidden" name="costo_total" id="total_final" value="{{$facturacion->total_precio_sin_forma}}">    
+                                </td>
                             </tr>
                         </tbody>
                     </table>

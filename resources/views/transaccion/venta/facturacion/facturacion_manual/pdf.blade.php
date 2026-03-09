@@ -135,17 +135,16 @@
                                     {{ $facturacion_registros->descripcion_item }}
                             @endif
                             <td style="text-align:center;">{{ $facturacion_registros->cantidad }}</td>
-                            <td style="text-align: center;">{{ number_format($facturacion_registros->precio, 2) }}</td>
-                            <td style="text-align: center;">
-                                {{ number_format($facturacion_registros->precio * $facturacion_registros->cantidad, 2) }}
+                            <td style="text-align: right;">{{ round($facturacion_registros->precio, 8) }}</td>
+                            <td style="text-align: right;">
+                                {{ round($facturacion_registros->precio * $facturacion_registros->cantidad, 8) }}
                             </td>
-                            <td style="display: none">
-                                {{ $sub_total = $facturacion->op_gravada }}
-                                {{ $sub_total_gravado = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada }}
-                                {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                            </td>
+                            @php
+                                $sub_total = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada;
+                                $igv_p =$facturacion->op_gravada * ($igv->igv_total / 100);
+                                $end = $sub_total + $igv_p;
+                                $end2 = number_format(round($end, 2), 2);
+                            @endphp
                         </tr>
                     @endforeach
                 </tbody>
@@ -200,9 +199,9 @@
                         align="right">
                         <span>{{ $simbologia = $facturacion->moneda->simbolo }}
                             {{ number_format($sub_total, 2) }}</span><br>
-                        <span>{{ $simbologia }} {{ number_format($facturacion->op_gravada, 2) }}</span><br>
-                        <span>{{ $simbologia }} {{ number_format($facturacion->op_inafecta, 2) }}</span><br>
-                        <span>{{ $simbologia }} {{ number_format($facturacion->op_exonerada, 2) }}</span><br>
+                        <span>{{ $simbologia }} {{ number_format(round($facturacion->op_gravada, 2), 2) }}</span><br>
+                        <span>{{ $simbologia }} {{ number_format(round($facturacion->op_inafecta, 2), 2) }}</span><br>
+                        <span>{{ $simbologia }} {{ number_format(round($facturacion->op_exonerada, 2), 2) }}</span><br>
                         <span>{{ $simbologia }} {{ number_format(round($igv_p, 2), 2) }}</span><br>
                         <span>{{ $simbologia }} {{ number_format($end, 2) }}</span>
                     </td>
