@@ -74,7 +74,7 @@ class NotaCreditoController extends Controller
     public function create_nota_credito(Request $request)
     {
         // return $request;
-        dd($request);
+        // dd($request);
         $fecha = $request->fecha_emision;
         // $date_format = date("d-m-Y", strtotime($fecha));
         // return $fecha;

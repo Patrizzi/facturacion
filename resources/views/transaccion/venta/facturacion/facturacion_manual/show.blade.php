@@ -57,7 +57,7 @@
                     </h2>
                     <div style="margin-left: auto; display: flex; align-items: center; gap: 4px;">
                         <!-- PDF -->
-                        <form class="btn" style="padding: 0;" action="{{ route('pdf_fac', $facturacion->id) }}">
+                        <form class="btn" style="padding: 0;" action="{{ route('pdf_fac_m', $facturacion->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $facturacion->codigo_fac }}">
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
                                 data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i></button>
