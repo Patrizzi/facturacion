@@ -275,7 +275,7 @@
                                             {{ $sub_total = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
                                             {{ $igv_p = $boleta->op_gravada * ($igv->igv_total / 100) }}
                                             {{ $end = $sub_total + $igv_p }}
-                                            {{ $end2 = number_format( round($sub_total + $igv_p), 2) }}
+                                            {{ $end2 = number_format( round($end, 2), 2) }}
                                         </td>
                                 </tbody>
                             </table>

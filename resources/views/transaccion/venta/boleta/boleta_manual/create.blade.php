@@ -980,7 +980,8 @@
             });
 
             var multiplier2 = 100;
-            var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+            // var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+            var total_tt = total_t;
 
             $('#sub_total').val(total_tt);
 
@@ -988,16 +989,19 @@
             var subtotal = document.querySelector(`#sub_total`).value;
             var igv = subtotal * igv_valor / 100;
 
-            var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+            // var igv_decimal = Math.round(igv * multiplier2) / multiplier2;
+            var igv_decimal = igv;
             var end = igv_decimal + parseFloat(subtotal);
 
-            var end2 = Math.round(end * multiplier2) / multiplier2;
+            // var end2 = Math.round(end * multiplier2) / multiplier2;
+            var end2 = end;
 
             document.getElementById("igv").value = igv_decimal;
             document.getElementById("sub_total").value = subtotal;
 
             var end = parseFloat(igv_decimal) + parseFloat(subtotal);
-            var end3 = Math.round(end * multiplier2) / multiplier2;
+            // var end3 = Math.round(end * multiplier2) / multiplier2;
+            var end3 = end;
             document.getElementById("total_final").value = end3;
 
             var monto_c = document.getElementsByClassName('monto_pago');
@@ -1427,7 +1431,8 @@
             var pr_s_igv = $(`#precio${a}`).val();
             $(`#precio_s_igv_float${a}`).val(pr_s_igv);
             var c_igv_s_redondeo = parseFloat(pr_s_igv) + (parseFloat(pr_s_igv) * igv / multiplier);
-            var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+            // var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+            var c_igv_redondeo = c_igv_s_redondeo;
             $(`#precio_c_igv${a}`).val(c_igv_redondeo);
         }
 
@@ -1435,7 +1440,8 @@
             var pr_c_igv = $(`#precio_c_igv${a}`).val();
             var igv_dec = igv / multiplier;
             var s_igv_s_base = parseFloat(pr_c_igv) / (1 + parseFloat(igv_dec));
-            var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+            // var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+            var s_igv_redondeo = s_igv_s_base;
             $(`#precio${a}`).val(s_igv_redondeo);
             $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
         }
