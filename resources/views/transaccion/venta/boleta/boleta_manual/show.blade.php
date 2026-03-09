@@ -233,50 +233,50 @@
                                 </thead>
                                 <tbody>
                                     <span hidden="hidden">{{ $i = 1 }} </span>
-                                    <tr>
+                                    
                                         @foreach ($boleta_registro as $boletas_registros)
-                                            <td style="text-align:center">{{ $i }} </td>
-                                            @if (isset($boletas_registros->producto_id))
+                                            <tr>
+                                                <td style="text-align:center">{{ $i }} </td>
+                                                @if (isset($boletas_registros->producto_id))
+                                                    <td style="text-align:center">
+                                                        {{ $boletas_registros->producto->codigo_producto }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $boletas_registros->producto->nombre }}
+                                                        {{ $boletas_registros->descripcion_item }}
+                                                        @if (isset($boletas_registros->numero_serie))
+                                                            <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td style="text-align:center">
+                                                        {{ $boletas_registros->servicio->codigo_servicio }}</td>
+                                                    <td>
+                                                        {{ $boletas_registros->servicio->nombre }}
+                                                        {{ $boletas_registros->descripcion_item }}
+                                                        @if (isset($boletas_registros->numero_serie))
+                                                            <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
+                                                        @endif
+                                                    </td>
+                                                @endif
+                                                <td style="text-align:center">{{ $boletas_registros->cantidad }}</td>
                                                 <td style="text-align:center">
-                                                    {{ $boletas_registros->producto->codigo_producto }}
-                                                </td>
-                                                <td>
-                                                    {{ $boletas_registros->producto->nombre }}
-                                                    {{ $boletas_registros->descripcion_item }}
-                                                    @if (isset($boletas_registros->numero_serie))
-                                                        <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
-                                                    @endif
-                                                </td>
-                                            @else
+                                                    {{ round($boletas_registros->precio, 8) }}</td>
+
                                                 <td style="text-align:center">
-                                                    {{ $boletas_registros->servicio->codigo_servicio }}</td>
-                                                <td>
-                                                    {{ $boletas_registros->servicio->nombre }}
-                                                    {{ $boletas_registros->descripcion_item }}
-                                                    @if (isset($boletas_registros->numero_serie))
-                                                        <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
-                                                    @endif
+                                                    {{ round($boletas_registros->precio * $boletas_registros->cantidad,8) }}
                                                 </td>
-                                            @endif
-                                            <td style="text-align:center">{{ $boletas_registros->cantidad }}</td>
-                                            <td style="text-align:center">
-                                                {{ number_format($boletas_registros->precio, 2) }}</td>
-
-                                            <td style="text-align:center">
-                                                {{ number_format($boletas_registros->precio * $boletas_registros->cantidad - ($boletas_registros->precio * $boletas_registros->cantidad * $boletas_registros->descuento) / 100, 2) }}
-                                            </td>
-
-                                            <td style="display: none">
-                                                {{ $sub_total = $boletas_registros->boleta_i->op_gravada + $boletas_registros->boleta_i->op_inafecta + $boletas_registros->boleta_i->op_exonerada }}
-                                                {{ $sub_total_gravado = $boletas_registros->boleta_i->op_gravada }}
-                                                {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                                {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                                {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                            </td>
-                                    </tr>
-                                    <span hidden="hidden">{{ $i++ }}</span>
-                                    @endforeach
-                                    </tr>
+                                                <span hidden="hidden">{{ $i++ }}</span>
+                                            </tr>
+                                        @endforeach
+                                    
+                                    
+                                        <td style="display: none">
+                                            {{ $sub_total = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
+                                            {{ $igv_p = $boleta->op_gravada * ($igv->igv_total / 100) }}
+                                            {{ $end = $sub_total + $igv_p }}
+                                            {{ $end2 = number_format( round($sub_total + $igv_p), 2) }}
+                                        </td>
                                 </tbody>
                             </table>
                         </div>

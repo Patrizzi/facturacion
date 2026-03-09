@@ -1485,13 +1485,13 @@ public function update(Request $request, $id)
 
                 $boleta_2=Boleta_m::find($boleta->id);
                 if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                    $boleta_2->op_gravada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                    $boleta_2->op_gravada += $boleta_registro->precio*$boleta_registro->cantidad;
                 }
                 if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                    $boleta_2->op_exonerada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                    $boleta_2->op_exonerada += $boleta_registro->precio*$boleta_registro->cantidad;
                 }
                 if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                    $boleta_2->op_inafecta += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                    $boleta_2->op_inafecta += $boleta_registro->precio*$boleta_registro->cantidad;
                 }
                 $boleta_2->save();
             }else{
@@ -1507,13 +1507,13 @@ public function update(Request $request, $id)
 
                 $boleta_2=Boleta_m::find($boleta->id);
                 if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                    $boleta_2->op_gravada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                    $boleta_2->op_gravada += $boleta_registro->precio*$boleta_registro->cantidad;
                 }
                 if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                    $boleta_2->op_exonerada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                    $boleta_2->op_exonerada += $boleta_registro->precio*$boleta_registro->cantidad;
                 }
                 if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                    $boleta_2->op_inafecta += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                    $boleta_2->op_inafecta += $boleta_registro->precio*$boleta_registro->cantidad;
                 }
                 $boleta_2->save();
             }

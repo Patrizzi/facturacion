@@ -379,13 +379,13 @@ class BoletaMController extends Controller
                     //modificación para los tipos de afectación al producto y guardado a facturación
                     $boleta_m=Boleta_m::find($boleta->id);
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Gravado') !== false){
-                        $boleta_m->op_gravada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                        $boleta_m->op_gravada += $boleta_registro->precio*$boleta_registro->cantidad;
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Exonerado') !== false){
-                        $boleta_m->op_exonerada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                        $boleta_m->op_exonerada += $boleta_registro->precio*$boleta_registro->cantidad;
                     }
                     if(strpos($producto->tipo_afec_i_producto->informacion,'Inafecto') !== false){
-                        $boleta_m->op_inafecta += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                        $boleta_m->op_inafecta += $boleta_registro->precio*$boleta_registro->cantidad;
                     }
                     $boleta_m->save();
                 }else{ // Guardado para servicios
@@ -403,13 +403,13 @@ class BoletaMController extends Controller
                     $boleta_registro->save();
                     $boleta_m=Boleta_m::find($boleta->id);
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Gravado') !== false){
-                        $boleta_m->op_gravada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                        $boleta_m->op_gravada += $boleta_registro->precio*$boleta_registro->cantidad;
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Exonerado') !== false){
-                        $boleta_m->op_exonerada += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                        $boleta_m->op_exonerada += $boleta_registro->precio*$boleta_registro->cantidad;
                     }
                     if(strpos($servicio->tipo_afec_i_serv->informacion,'Inafecto') !== false){
-                        $boleta_m->op_inafecta += round($boleta_registro->precio*$boleta_registro->cantidad,2);
+                        $boleta_m->op_inafecta += $boleta_registro->precio*$boleta_registro->cantidad;
                     }
                     $boleta_m->save();
                 }
@@ -593,13 +593,13 @@ class BoletaMController extends Controller
 
                     // Modificacion para los tipos de afectación al producto y guardado a boleta
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
-                        $boleta->op_gravada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $boleta->op_gravada += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
-                        $boleta->op_exonerada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $boleta->op_exonerada += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
-                        $boleta->op_inafecta += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $boleta->op_inafecta += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     $boleta->save();
                     $edit_reg->save();
@@ -618,13 +618,13 @@ class BoletaMController extends Controller
 
                     // Modificacion para los tipos de afectación al producto y guardado a boleta
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
-                        $boleta->op_gravada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $boleta->op_gravada += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
-                        $boleta->op_exonerada += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $boleta->op_exonerada += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
-                        $boleta->op_inafecta += round($edit_reg->precio * $edit_reg->cantidad, 2);
+                        $boleta->op_inafecta += $edit_reg->precio * $edit_reg->cantidad;
                     }
                     $boleta->save();
                     $edit_reg->save();
@@ -650,13 +650,13 @@ class BoletaMController extends Controller
                     $new_reg->save();
                     // Modificacion para los tipos de afectación al producto y guardado a boleta
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
-                        $boleta->op_gravada += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $boleta->op_gravada += $new_reg->precio * $new_reg->cantidad;
                     }
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
-                        $boleta->op_exonerada += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $boleta->op_exonerada += $new_reg->precio * $new_reg->cantidad;
                     }
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
-                        $boleta->op_inafecta += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $boleta->op_inafecta += $new_reg->precio * $new_reg->cantidad;
                     }
                     $boleta->save();
                 }else{
@@ -675,13 +675,13 @@ class BoletaMController extends Controller
                     $new_reg->save();
                     // Modificacion para los tipos de afectación al producto y guardado a boleta
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
-                        $boleta->op_gravada += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $boleta->op_gravada += $new_reg->precio * $new_reg->cantidad;
                     }
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
-                        $boleta->op_exonerada += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $boleta->op_exonerada += $new_reg->precio * $new_reg->cantidad;
                     }
                     if (strpos($servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
-                        $boleta->op_inafecta += round($new_reg->precio * $new_reg->cantidad, 2);
+                        $boleta->op_inafecta += $new_reg->precio * $new_reg->cantidad;
                     }
                     $boleta->save();
                 }
@@ -1008,7 +1008,7 @@ class BoletaMController extends Controller
             $numero = $partes[1] ?? '';
 
             $sub_total_gravado = $boleta->op_gravada ?? 0;
-            $igv_monto = round($sub_total_gravado * ($igv->igv_total / 100), 2);
+            $igv_monto = $sub_total_gravado * ($igv->igv_total / 100);
 
             $sub_total = ($boleta->op_gravada ?? 0) + ($boleta->op_inafecta ?? 0) + ($boleta->op_exonerada ?? 0);
             $montoTotal = number_format(round($sub_total + $igv_monto, 2), 2, '.', '');

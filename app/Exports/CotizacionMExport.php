@@ -120,7 +120,7 @@ class CotizacionMExport implements FromQuery, WithHeadings, WithMapping, WithEve
                   + ($cotizacionM->op_exonerada ?? 0);
 
         $igv_val = Igv::first();
-        $igv = ($cotizacionM->op_gravada ?? 0) * ($igv_val->igv_total / 100));
+        $igv = ($cotizacionM->op_gravada ?? 0) * ($igv_val->igv_total / 100);
 
         $personal = '';
         if ($cotizacionM->user_personal && $cotizacionM->user_personal->personal) {

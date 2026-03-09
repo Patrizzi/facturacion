@@ -145,9 +145,9 @@
     $sub_total = $boletaData['sub_total'];
     $i = 1;
     $sub_total_gravado = $boleta->op_gravada;
-    $igv_p = round($sub_total_gravado, 2) * $igv->igv_total / 100;
-    $end = round($sub_total, 2) + round($igv_p, 2);
-    $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2);
+    $igv_p = $sub_total_gravado * ($igv->igv_total / 100 );
+    $end = $sub_total +  $igv_p;
+    $end2 = number_format(round($end , 2), 2);
     @endphp
 
     <div class="row" @if($index> 0) style="page-break-before: always;" @endif>
@@ -222,8 +222,8 @@
                                 <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
                                 @endif
                                 <td style="text-align:center">{{$boleta_registros->cantidad}}</td>
-                                <td style="text-align:right">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
-                                <td style="text-align:right">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad,2)}}</td>
+                                <td style="text-align:right">{{round($boleta_registros->precio_unitario_comi,8)}}</td>
+                                <td style="text-align:right">{{round($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad,8)}}</td>
                             </tr>
                             @php $i++; @endphp
                             @endforeach

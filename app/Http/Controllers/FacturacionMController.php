@@ -1233,7 +1233,7 @@ class FacturacionMController extends Controller
             $numero = $partes[1] ?? '';
 
             $sub_total_gravado = $factura->op_gravada ?? 0;
-            $igv_monto = round($sub_total_gravado * ($igv->igv_total / 100), 2);
+            $igv_monto = $sub_total_gravado * ($igv->igv_total / 100);
 
             $sub_total = ($factura->op_gravada ?? 0) + ($factura->op_inafecta ?? 0) + ($factura->op_exonerada ?? 0);
             $montoTotal = number_format(round($sub_total + $igv_monto, 2), 2, '.', '');

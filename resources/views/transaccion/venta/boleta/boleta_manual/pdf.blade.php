@@ -91,34 +91,34 @@
                     </thead>
                     <tbody>
                         @foreach($boleta_registro as $boleta_registros)
-                        <tr>
-                            <td style="text-align:center;">{{$j++}} </td>
-                            @if(isset($boleta_registros->producto))
-                                <td style="text-align:center;">{{$boleta_registros->producto->codigo_producto}}</td>
-                                <td>{{$boleta_registros->producto->nombre}} {{$boleta_registros->descripcion_item}} @if(isset($boleta_registros->numero_serie))<br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
-                            @else
-                                <td style="text-align:center;">{{$boleta_registros->servicio->codigo_servicio}}</td>
-                                <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}
-                            @endif
-                            <td style="text-align:center;">{{$boleta_registros->cantidad}}</td>
-                            <td style="text-align: right;">{{number_format($boleta_registros->precio,2)}}</td>
-                            <td style="text-align: right;">{{number_format($boleta_registros->precio * $boleta_registros->cantidad ,2)}}</td>
-                            <td style="display: none">
-                                {{$sub_total=($boleta->op_gravada)}}
-                                {{$sub_total_gravado=($boleta->op_gravada)+($boleta->op_inafecta)+($boleta->op_exonerada)}}
-                                {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
-                                {{$end=round($sub_total, 2)+round($igv_p, 2)}}
-                                {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
-                            </td>
-                        </tr>
+                            <tr>
+                                <td style="text-align:center;">{{$j++}} </td>
+                                @if(isset($boleta_registros->producto))
+                                    <td style="text-align:center;">{{$boleta_registros->producto->codigo_producto}}</td>
+                                    <td>{{$boleta_registros->producto->nombre}} {{$boleta_registros->descripcion_item}} @if(isset($boleta_registros->numero_serie))<br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
+                                @else
+                                    <td style="text-align:center;">{{$boleta_registros->servicio->codigo_servicio}}</td>
+                                    <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}
+                                @endif
+                                <td style="text-align:center;">{{$boleta_registros->cantidad}}</td>
+                                <td style="text-align: right;">{{round($boleta_registros->precio,8)}}</td>
+                                <td style="text-align: right;">{{round($boleta_registros->precio * $boleta_registros->cantidad ,8)}}</td>
+                                
+                            </tr>
                         @endforeach
+                        <td style="display: none">
+                            {{$sub_total=($boleta->op_gravada)+($boleta->op_inafecta)+($boleta->op_exonerada)}}
+                            {{$igv_p=$boleta->op_gravada * ($igv->igv_total/100)}}
+                            {{$end= $sub_total + $igv_p}}
+                            {{$end2=number_format(round($end, 2),2)}}
+                        </td>
                     </tbody>
                 </table >
             </div>
             <footer style="padding-top: 120px">
                 <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
                 <tr>
-                        <td style="width: 70%;border: none">
+                        <td style="width: 50%;border: none">
                             <h3 align="left">
                                 <?php use Luecano\NumeroALetras\NumeroALetras;
                                     $v=new NumeroALetras() ;
@@ -140,7 +140,7 @@
                                 Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
                             </small>
                         </td>
-                        <td class="col-sm-4 qr-container">
+                        <td class="qr-container">
                             <div class="qr-box">
                                 @if(!empty($qrCode))
                                     <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
@@ -159,9 +159,9 @@
                         </td>
                         <td   style="width: auto;border: 1px #808080 solid;border-top-left-radius: 8px 8px 8px 8px;margin-top: 0px;border-left: none;border-collapse:collapse;" align="right">
                             <span>{{$simbologia=$boleta->moneda->simbolo}} {{number_format($sub_total, 2)}}</span><br>
-                            <span>{{$simbologia}} {{number_format($boleta->op_gravada,2)}}</span><br>
-                            <span>{{$simbologia}} {{number_format($boleta->op_inafecta,2)}}</span><br>
-                            <span>{{$simbologia}} {{number_format($boleta->op_exonerada,2)}}</span><br>
+                            <span>{{$simbologia}} {{number_format(round($boleta->op_gravada, 2),2)}}</span><br>
+                            <span>{{$simbologia}} {{number_format(round($boleta->op_inafecta,2),2)}}</span><br>
+                            <span>{{$simbologia}} {{number_format(round($boleta->op_exonerada,2),2)}}</span><br>
                             <span>{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
                             <span>{{$simbologia}} {{number_format($end,2)}}</span>
                         </td>
@@ -215,11 +215,12 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                border: none;
             }
 
             .qr-box {
-                width: 120px;
-                height: 120px;
+                width: 80px;
+                height: 80px;
                 border: 2px solid #3D3D3D;
                 border-radius: 10px;
                 display: flex;
