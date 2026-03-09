@@ -11,83 +11,117 @@
 @section('content')
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox">
-        <div class="ibox-title" style="padding-right: 3.1%">
-            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up text-muted"></i>
-                </a>
-                <a class="" href="{{ route('garantia_guia_egreso.index') }}">
-                    <i class="fa fa-times text-muted"></i>
-                </a>
-            </div>
+<div class="ibox">
+    <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+        <div></div>
+        <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up text-muted"></i>
+            </a>
+            <a href="{{ route('garantia_guia_egreso.index') }}" title="Cerrar">
+                <i class="fa fa-times text-muted"></i>
+            </a>
         </div>
-        <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-            <div class="row tooltip-demo">
-                <div class="col-sm-6">
-                    @if($garantias_guias_egreso->estado == 1 and $garantias_guias_egreso->egresado == 0 )
-                    <a href="{{ route('garantia_guia_ingreso.edit', $garantia_guia_ingreso->id) }}"><button type="button" class="btn btn-success"><i class="fa fa-edit"></i></button></a>
-                    @endif
-                    <a href="#form_egreso" onclick="Formulario_edit()"  id="click" class="btn btn-info"><i class="fa fa-edit"></i></a>
-                </div>
-                <div class="col-sm-6 tooltip-demo "align="right"  >
-                    <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_egreso' ,$garantias_guias_egreso->id)}}">
-                        <input type="text" name="archivo" maxlength="50" value="{{$garantias_guias_egreso->garantia_ingreso_i->orden_servicio}}" oninput="actualizatext()" id="texto2">
-                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
-                    </form>
+    </div>
 
-                    @if(Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.guia_egreso', $garantias_guias_egreso->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
-                            @csrf
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                                <i class="fa fa-envelope fa-lg" ></i>
-                            </button>
-                        </form>
+    <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-3">
+                <h3 style="margin: 0;">{{ $garantias_guias_egreso->garantia_ingreso_i->orden_servicio }}</h3>
+                <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
+            </div>
+
+            <div class="col-12 col-md-4 text-center">
+                <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
+                    GUÍA DE EGRESO
+                </h2>
+            </div>
+
+            <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                <div class="d-flex align-items-center">
+                    @if($garantias_guias_egreso->estado == 1 and $garantias_guias_egreso->egresado == 0)
+                        <a href="{{ route('garantia_guia_ingreso.edit', $garantias_guias_egreso->garantia_ingreso_i->id) }}"
+                           class="btn btn-success">
+                            <i class="fa fa-edit fa-lg"></i>
+                        </a>
                     @endif
-                    <a href="{{route('impresiones_egreso' ,$garantias_guias_egreso->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
+
+                    <a href="#form_egreso" onclick="Formulario_edit()" id="click" class="btn btn-info">
+                        <i class="fa fa-edit fa-lg"></i>
+                    </a>
+                </div>
+
+                <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+
+                <form class="btn" style="padding: 0;" action="{{ route('pdf_egreso', $garantias_guias_egreso->id) }}">
+                    <input type="text" name="archivo" hidden
+                           value="{{ $garantias_guias_egreso->garantia_ingreso_i->orden_servicio }}">
+                    <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
+                        data-original-title="Descargar PDF">
+                        <i class="fa fa-file-pdf-o fa-lg"></i>
+                    </button>
+                </form>
+
+                @if(Auth::user()->email_creado == 1)
+                    <form action="{{ route('email.guia_egreso', $garantias_guias_egreso->id) }}" method="post"
+                          style="padding: 0;" class="btn">
+                        @csrf
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
+                            data-placement="bottom" data-original-title="Enviar por correo" formtarget="_blank">
+                            <i class="fa fa-envelope fa-lg"></i>
+                        </button>
+                    </form>
+                @endif
+
+                <a href="{{ route('impresiones_egreso', $garantias_guias_egreso->id) }}"
+                   target="_blank"
+                   class="btn btn-primary"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-original-title="Imprimir">
+                    <i class="fa fa-print fa-lg"></i>
+                </a>
+
+                <div style="position: relative; display: inline-block;">
                     <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
-                    </div>
-                    <div id="div-mostrar" style="height: 0px; overflow: hidden;">
-                        {{-- <br style="width: -1px"> --}}
-                        <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                            @csrf
-                            <input type="tel" name="numero"  value="{{$garantias_guias_egreso->garantia_ingreso_i->clientes_i->celular}}"  />
-                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                            <input type="text" hidden="" name="url" value="{{route('pdf_ingreso' ,$garantias_guias_egreso->id)}}?archivo=">
-                            <input type="text" name="name_sin_cambio" hidden="" value="{{$garantias_guias_egreso->garantia_ingreso_i->orden_servicio}}" />
-                            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-                        </form>
+                        <a class="btn btn-success" style="background: green; border-color: green;"
+                           data-toggle="tooltip" data-placement="bottom"
+                           data-original-title="Enviar a">
+                            <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                        </a>
                     </div>
                 </div>
+            </div>
+
+            <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                      style="text-align: none;padding-right: 0;padding-left: 0;">
+                    @csrf
+                    <input type="tel" name="numero"
+                           value="{{ $garantias_guias_egreso->garantia_ingreso_i->clientes_i->celular }}" />
+                    <input type="text" name="mensaje" id="texto_orden" hidden />
+                    <input type="text" hidden name="url"
+                           value="{{ route('pdf_egreso', $garantias_guias_egreso->id) }}?archivo=">
+                    <input type="text" name="name_sin_cambio" hidden
+                           value="{{ $garantias_guias_egreso->garantia_ingreso_i->orden_servicio }}" />
+                    <button type="submit" class="btn btn-success"
+                            style="background: green;border-color: green;"
+                            formtarget="_blank"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-original-title="Enviar por Whatsapp">
+                        <i class="fa fa-send fa-lg"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
 {{--  --}}
 <div class="row">
     <div class="col-lg-12" style="margin-top: -26px">
         <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-            <div class="row" style="height: auto;">
-                <div class="col-sm-4 text-left" align="left">
-                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;" align="left">
-                        <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="max-width: 100%;max-height: 100px;padding: 5px;">
-                    </div>
-                </div>
-                <div class="col-sm-4" align="center">
-                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;" align="center"  >
-                        <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantias_guias_egreso->garantia_ingreso_i->marcas_i->imagen)}}" style="height: 70px;width: 90%;margin-top: 5px">
-                    </div>
-                </div>
-                <div class="col-sm-4" align="right" >
-                    <div class="form-control" align="center" style="height: 100%;"align="right">
-                        <h2 style="">R.U.C {{$empresa->ruc}}</h2>
-                        <h3 style="font-size: 19px">GUÍA DE EGRESO</h3>
-                        <h4>{{$garantias_guias_egreso->garantia_ingreso_i->orden_servicio}}</h4>
-                    </div>
-                </div>
-            </div>
-            <br>
             <div class="row" align="center" style="padding-bottom: 5px">
                 <div class="col-sm-6" align="center">
                     <div class="form-control">
