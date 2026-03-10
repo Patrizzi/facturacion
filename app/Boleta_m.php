@@ -380,7 +380,7 @@ class Boleta_m extends Model
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
-        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+        $total = $subtotal + ($this->attributes['op_gravada'] * ($igv / 100) );
 
         if ($this->attributes['nota_credito'] == 2) {
             // Reduccion por nota de crédito
@@ -407,7 +407,7 @@ class Boleta_m extends Model
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
-        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+        $total = $subtotal + ($this->attributes['op_gravada'] * ($igv / 100) );
 
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
@@ -423,7 +423,7 @@ class Boleta_m extends Model
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
-        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+        $total = $subtotal + ($this->attributes['op_gravada'] * ($igv / 100) );
 
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);

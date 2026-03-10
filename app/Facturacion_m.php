@@ -444,7 +444,7 @@ class Facturacion_m extends Model
         // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
-        $total = $subtotal + ($this->attributes['op_gravada'] * ( $igv / 100) );
+        $total = $subtotal + ($this->attributes['op_gravada'] * ( $igv / 100    ) );
         if ($this->attributes['nota_credito'] == 2) {
             // Reduccion por nota de crédito
             $motivo = Facturacion_m::search_motivo_nc($this->attributes['id']);

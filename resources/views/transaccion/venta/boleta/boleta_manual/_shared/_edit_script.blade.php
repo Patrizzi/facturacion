@@ -309,11 +309,11 @@
                     <input type='text' style="min-width: 100px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                 </td>
                 <td>
-                    <input type='number' style="min-width: 100px"step="0.0000001"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off"/>
+                    <input type='number' style="min-width: 100px"step="0.0000000000001"  id='precio${i}' onchange="change(${i})" name='precio[]' class="monto${i} form-control inp" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off"/>
                     <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 </td>
                 <td>
-                    <input style="min-width: 100px" type='number' step="0.0000001"id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control inp" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                    <input style="min-width: 100px" type='number' step="0.0000000000001"id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control inp" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
                 </td>
                 <td>
                     <input type='number' id='total${i}'  style="min-width: 100px"  name='total' disabled="disabled" class="total form-control inp"  required  autocomplete="off"/>
@@ -475,7 +475,8 @@
         var pr_s_igv = $(`#precio${a}`).val();
         $(`#precio_s_igv_float${a}`).val(pr_s_igv);
         var c_igv_s_redondeo = parseFloat(pr_s_igv) + (parseFloat(pr_s_igv) * igv / multiplier);
-        var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+        // var c_igv_redondeo = Math.round(c_igv_s_redondeo * multiplier) / multiplier;
+        var c_igv_redondeo = c_igv_s_redondeo;
         $(`#precio_c_igv${a}`).val(c_igv_redondeo);
     }
 
@@ -483,7 +484,8 @@
         var pr_c_igv = $(`#precio_c_igv${a}`).val();
         var igv_dec = igv / multiplier;
         var s_igv_s_base = parseFloat(pr_c_igv) / (1 + parseFloat(igv_dec));
-        var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+        // var s_igv_redondeo = Math.round(s_igv_s_base * multiplier) / multiplier;
+        var s_igv_redondeo = s_igv_s_base;
         $(`#precio${a}`).val(s_igv_redondeo);
         $(`#precio_s_igv_float${a}`).val(s_igv_redondeo);
     }
@@ -549,6 +551,7 @@
         document.getElementById(`precio_s_igv_float${a}`).value = final_decimal;
         var only_igv = final + (parseFloat(final) * (igv / multiplier));
         var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+        var igv_decimal = only_igv;
         document.getElementById(`total${a}`).value = igv_decimal;
         console.log("1. "+igv_decimal);
         // Operacion para subtotal sin igv
@@ -558,19 +561,23 @@
         sub_igv.each(function() {
             sub_igv_t += parseFloat($(this).val());
         });
-        var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
-        console.log(sub_igv_t);
-        console.log(Math.round(sub_igv_t * multiplier) / multiplier);
+        // var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
+        var sub_igv_tt = sub_igv_t;
+        
         $('#sub_total').val(sub_igv_tt);
         document.getElementById("sub_total").value = sub_igv_tt;
+        document.getElementById("sub_total_view").value = sub_igv_tt.toFixed(2);
         
         //OPERACION PARA CALULCAR EL IGV
         var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
-        var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+        // var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
+        var igv_decimal = only_igv;
         document.getElementById("igv").value = igv_decimal;
+        document.getElementById("igv_view").value = igv_decimal.toFixed(2);
         
         var end = igv_decimal + parseFloat(sub_igv_tt);
         var end2 = Math.round(end * multiplier) / multiplier;
+        var end2 = end;
         
         // if (parseFloat(end2) > 700) {
         //     console.log('mayor a 700');
@@ -605,6 +612,7 @@
 
         // var subtotal = document.querySelector(`#total`).value;
         document.getElementById("total_final").value = end2;
+        document.getElementById("total_final_view").value = end2.toFixed(2);
 
 
         var monto_c = document.getElementsByClassName('monto_pago');
