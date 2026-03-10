@@ -2,6 +2,9 @@
     //*Condicional para el tipo de factura
     var tipo_coti = $('#tipo_coti').val();
     var cliente_default = $('#cliente_id').val();
+    $(".select2_tipo_op").select2();
+    $(".select2_moneda").select2();
+    
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
         ajax: {

@@ -32,21 +32,21 @@
             <div class="row tooltip-demo">
                 <div class="col-sm-6" align="left" style="padding: 0 15px;padding: 0 15px; margin: auto">
                     @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 0)
-                        <a class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
+                        <a id="button_edit" class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
                         <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
                     @endif
                     @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 1)
                         <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('facturacion_manual.show',$factura->id)}}" >Ver Factura</a>
                     @endif
                     @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
-                        <a class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
+                        <a id="button_edit" class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
                         <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
                     @endif
                     @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 1)
                         <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('boleta_manual.show',$boleta->id)}}" >Ver Boleta</a>
                     @endif
                     @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 0)
-                        <a class="btn btn-success" href="{{route('cotizacion_manual.gen_nota_venta',$cotizacion->id)}}" target="_blank">Generar Nota de V.</a>
+                        <a id="button_edit" class="btn btn-success" href="{{route('cotizacion_manual.gen_nota_venta',$cotizacion->id)}}" target="_blank">Generar Nota de V.</a>
                         <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
                     @endif
                     @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 1)
@@ -774,6 +774,8 @@
         // BOTONES
         $('.btn-no-editar').removeClass('no_mostrar');
         $('.btn-editar').addClass('no_mostrar');
+
+        $('#button_edit').addClass('no_mostrar');
     }
     function click_cancelar_editar(){
         // OCULTAR INPUTS
@@ -785,6 +787,9 @@
 
         $('.btn-editar').removeClass('no_mostrar');
         $('.btn-no-editar').addClass('no_mostrar');
+
+        $('#button_edit').removeClass('no_mostrar');
+        $('#button_edit').addClass('mostrar');
     }
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
