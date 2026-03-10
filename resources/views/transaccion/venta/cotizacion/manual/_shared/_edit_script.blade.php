@@ -226,16 +226,26 @@
                 'moneda': moneda
             },
             success: function(msg) {
+                const $input = $(`#cantidad${a}`);
+
                 if (msg.price == 0 && msg.amount == 0) {
                     // $(`#precio${a}`).val(0);
-                    $(`#cantidad${a}`).val(1);
+                    if ($input.val() > 1) {
+                        $input.val($input.val());
+                    } else if ($input.length) {
+                        $input.val(1);
+                    }
                     // $(`#cantidad${a}`).attr('max', msg.amount );
                     // $(`#cantidad`).attr('max', msg.amount );
                     $(`#precio_oficial${a}`).val(msg.price)
                 } else {
                     // $(`#precio${a}`).val(1);
                     $(`#precio_oficial${a}`).val(msg.price)
-                    $(`#cantidad${a}`).val(1);
+                    if ($input.val() > 1) {
+                        $input.val($input.val());
+                    } else if ($input.length) {
+                        $input.val(1);
+                    }
                     // $(`#cantidad${a}`).attr('max', msg.amount );
                     // $(`#cantidad`).attr('max', msg.amount );
                 }
