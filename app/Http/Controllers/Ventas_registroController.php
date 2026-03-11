@@ -332,6 +332,7 @@ class Ventas_registroController extends Controller
                 $cotizacion_manual->estado,
                 $cotizacion_manual->cliente->celular,
                 $cotizacion_manual->cliente->email,
+                $cotizacion_manual->nota_informativa,
             ];
         }
         // Llamado para la suma total
