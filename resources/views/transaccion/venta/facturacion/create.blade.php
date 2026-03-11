@@ -796,9 +796,9 @@
                 s.children[0].remove()
             }
             var data = e.params.data;
-            
+
             // Si el tipo de pago es desde cliente cambiar
-            $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
+            $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true);
             seleccionado_fp();
 
             $.ajax({
@@ -1804,7 +1804,7 @@
                 );
             }
         });
-        
+
         $('#guia_remi_input').on('change', function() {
             var valor = this.value;
             var conversion = valor.replace(/ /g, "|");
@@ -1879,7 +1879,7 @@
             var split_id = seletc_det.split(' ');
             // Detracciones validas
             if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
-                
+
                 var tipo_detra = $('#select_tipo_pago').val();
                 var ipt_medio = $('.select2_mediopago').val();
                 var porce_detra = $('#porcentaje_detc').val();

@@ -385,7 +385,7 @@ Route::group(
         //NOTA DE CREDITO
         Route::post('/nota-credito/motivo', 'NotaCreditoController@motivo')->name('nota-credito.motivo');
 
-        Route::post('/nota-credito-create-nc', 'NotaCreditoController@create_nota_credito')->name('nota-credito.create_nota_credito');
+        Route::post('/nota-credito-create-nc/{id}', 'NotaCreditoController@create_nota_credito')->name('nota-credito.create_nota_credito');
         Route::post('/nota-credito-create_boleta-nc/{id}', 'NotaCreditoController@create_boleta_nota_credito')->name('nota-credito.create_nota_credito_boleta');
         Route::get('/nota-credito/print/{id}', 'NotaCreditoController@print')->name('nota_credito.print');
         Route::get('/nota-credito/pdf/{id}', 'NotaCreditoController@pdf')->name('nota_credito.pdf');
