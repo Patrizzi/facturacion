@@ -312,7 +312,7 @@
                                     </td>
                                     <td>
                                         <input style="min-width: 80px" type='number'
-                                            value="{{ $registros->cantidad }}" id='cantidad{{ $i_edit }}'
+                                            value="{{ round($registros->cantidad,2) }}" id='cantidad{{ $i_edit }}'
                                             name='cantidad[]' max="" min="1"
                                             class="monto{{ $i_edit }} form-control"
                                             onkeyup="multi({{ $i_edit }})" required autocomplete="off" />
@@ -322,7 +322,7 @@
                                             name='precio[]' readonly="readonly"
                                             class="monto{{ $i_edit }} form-control"
                                             onkeyup="multi({{ $i_edit }})" required autocomplete="off"
-                                            value="{{ $registros->precio }}" />
+                                            value="{{ round($registros->precio,2) }}" />
                                     </td>
                                     <td>
                                         <div style="position: relative;">
@@ -349,14 +349,14 @@
                                             @endif
                                         </div>
                                         <input type='hidden' id='promedio_original{{ $i_edit }}'
-                                            name='promedio_original[]' class="form-control" required value="{{$registros->promedio_original}}"> 
+                                            name='promedio_original[]' class="form-control" required value="{{round($registros->promedio_original,2)}}"> 
                                     </td>
                                     <td>
                                         <input style="min-width: 85px" type='text'
                                             id='precio_unitario_descuento{{ $i_edit }}'
                                             name='precio_unitario_descuento[]' readonly="readonly"
                                             class="precio_unitario_descuento{{ $i_edit }} form-control" required
-                                            autocomplete="off" value="{{ $registros->precio_unitario_desc }}" />
+                                            autocomplete="off" value="{{ round( $registros->precio_unitario_desc,2) }}" />
                                     </td>
                                     <input type='hidden' name="comision[]" id='comision{{ $i_edit }}'
                                         readonly="readonly" class="form-control comision_input" required
@@ -367,7 +367,7 @@
                                             id='precio_unitario_comision{{ $i_edit }}'
                                             name='precio_unitario_comision[]' readonly="readonly"
                                             class="form-control" required autocomplete="off"
-                                            value="{{ $registros->precio_unitario_comi * $registros->cantidad }}" />
+                                            value="{{ round($registros->precio_unitario_comi * $registros->cantidad,2) }}" />
                                     </td>
                                     <td>
                                         <input style="min-width: 85px" type='text' id='total{{ $i_edit }}'
@@ -377,7 +377,7 @@
                                         <input type='text' id='afectacion{{ $i_edit }}' name='afectacion'
                                             disabled="disabled" class="afectacion form-control" hidden=""
                                             required autocomplete="off"
-                                            value="{{ $registros->precio_unitario_comi * $registros->cantidad }}" />
+                                            value="{{ round($registros->precio_unitario_comi * $registros->cantidad,2) }}" />
                                     </td>
                                     <span id="spTotal"></span>
                                 </tr>

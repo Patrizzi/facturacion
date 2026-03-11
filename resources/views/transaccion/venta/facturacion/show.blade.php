@@ -261,12 +261,12 @@
                                             </td>
                                         @endif
                                         <td>{{ $facturacion_registros->cantidad }}</td>
-                                        <td>{{ $facturacion_registros->precio }}</td>
+                                        <td>{{ number_format(round($facturacion_registros->precio,2),2) }}</td>
                                         <td>{{ $facturacion_registros->descuento }}%</td>
-                                        <td>{{ $facturacion_registros->precio_unitario_desc }}</td>
+                                        <td>{{ number_format(round($facturacion_registros->precio_unitario_desc), 2) }}</td>
                                         <td>{{ $facturacion_registros->comision }}%</td>
-                                        <td>{{ $facturacion_registros->precio_unitario_comi }}</td>
-                                        <td>{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}
+                                        <td>{{ number_format(round($facturacion_registros->precio_unitario_comi ,2),2 )}}</td>
+                                        <td>{{ number_format(round($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad,2),2  ) }}
                                         </td>
 
                                         <td style="display: none">
