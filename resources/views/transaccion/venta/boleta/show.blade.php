@@ -229,12 +229,12 @@
                                             </td>
                                         @endif
                                         <td>{{ $boleta_registros->cantidad }}</td>
-                                        <td>{{ $boleta_registros->precio }}</td>
+                                        <td>{{ number_format(round($boleta_registros->precio,2),2) }}</td>
                                         <td>{{ $boleta_registros->descuento }}%</td>
-                                        <td>{{ $boleta_registros->precio_unitario_desc }}</td>
+                                        <td>{{ number_format(round($boleta_registros->precio_unitario_desc,2),2) }}</td>
                                         <td>{{ $boleta_registros->comision }}%</td>
-                                        <td>{{ number_format($boleta_registros->precio_unitario_comi, 2) }}</td>
-                                        <td>{{ number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad, 2) }}
+                                        <td>{{ number_format(round($boleta_registros->precio_unitario_comi,2), 2) }}</td>
+                                        <td>{{ number_format(round($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad,2), 2) }}
                                         </td>
                                         <td style="display: none">
                                             {{-- {{$sub_total=(($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad)+$sub_total)}} --}}

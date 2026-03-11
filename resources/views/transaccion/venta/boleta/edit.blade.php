@@ -290,7 +290,7 @@
                                     </td>
                                     <td>
                                         <input type='number' id='precio{{ $i_edit }}' name='precio[]'
-                                            readonly="readonly" value="{{ $registros->precio }}"
+                                            readonly="readonly" value="{{ round($registros->precio,2) }}"
                                             class="monto{{ $i_edit }} form-control td-width"
                                             onkeyup="multi({{ $i_edit }})" required autocomplete="off" />
                                     </td>
@@ -320,7 +320,7 @@
                                             @endif
                                         </div>
                                         <input type='hidden' id='promedio_original{{ $i_edit }}'
-                                            value="{{ $registros->promedio_original }}" name='promedio_original[]'
+                                            value="{{ round($registros->promedio_original,2) }}" name='promedio_original[]'
                                             class="form-control td-width" required>
                                     </td>
                                     <td>
@@ -328,7 +328,7 @@
                                             name='precio_unitario_descuento[]' readonly="readonly"
                                             class="precio_unitario_descuento{{ $i_edit }} form-control td-width"
                                             required autocomplete="off"
-                                            value="{{ $registros->precio_unitario_desc }}" />
+                                            value="{{ round($registros->precio_unitario_desc,2) }}" />
                                     </td>
                                     {{--                                        <td> --}}
                                     <input type='hidden' name="comision" id='comision{{ $i_edit }}'
@@ -339,7 +339,7 @@
                                     <td>
                                         <input type='text' id='precio_unitario_comision{{ $i_edit }}'
                                             readonly="readonly" class="form-control td-width" required
-                                            autocomplete="off" value="{{ $registros->precio_unitario_comi }}" />
+                                            autocomplete="off" value="{{ round($registros->precio_unitario_comi,2) }}" />
                                     </td>
                                     <td>
                                         <input type='text' id='total{{ $i_edit }}' name='total'
