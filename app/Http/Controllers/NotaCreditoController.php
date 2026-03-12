@@ -113,7 +113,7 @@ class NotaCreditoController extends Controller
             $facturacion = Facturacion::where('estado', 1)->where('id', $id)->first();
             $facturacion_registro = Facturacion_registro::where('facturacion_id', $facturacion->id)->get();
         } else {
-            $facturacion = Facturacion_m::where('estado', 1)->where('id', $request->factura_id)->first();
+            $facturacion = Facturacion_m::where('estado', 1)->where('id', $id)->first();
             $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id', $facturacion->id)->get();
         }
 

@@ -105,7 +105,7 @@
                             </div>
                         </form>
                     @else
-                        <form method="POST" action="{{ route('nota-credito.create_nota_credito') }}" class="row">
+                        <form method="POST" action="{{ route('nota-credito.create_nota_credito', $facturacion_m->id) }}" class="row">
                             @csrf
                             <input type="hidden" name="tipo" id="" value="factura_manual">
                             <div class="container col-lg-12">
