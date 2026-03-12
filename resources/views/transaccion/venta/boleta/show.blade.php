@@ -45,33 +45,33 @@
                         style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
 
                         <?php use Carbon\Carbon;
-                        use App\Boleta_m; ?>
+                        use App\Boleta; ?>
                         @if ($boleta->nota_credito != 0)
                             <span data-toggle="tooltip" data-placement="bottom"
-                                data-original-title="Motivo: {{ Boleta_m::search_motivo_nc($boleta->id) }}">
+                                data-original-title="Motivo: {{ Boleta::search_motivo_nc($boleta->id) }}">
                                 <a class="btn btn-primary"
-                                    href="{{ route('nota-credito.show', Boleta_m::nota_credito_id($boleta->id)) }}">Ver nota
+                                    href="{{ route('nota-credito.show', Boleta::nota_credito_id($boleta->id)) }}">Ver nota
                                     de Credito</a>
                             </span>
                         @endif
 
-                        <form class="btn" style="padding: 0;" action="{{ route('boleta_manual.pdf', $boleta->id) }}">
+                        <form class="btn" style="padding: 0;" action="{{ route('pdf_bol', $boleta->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $boleta->codigo_boleta }}">
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
                                 data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i></button>
                         </form>
 
-                        <a href="{{ route('boleta_manual.ticket', $boleta->id) }}" class="btn btn-info" target="_blank">
+                        <a href="{{ route('boleta.ticket', $boleta->id) }}" class="btn btn-info" target="_blank">
                             <i class="fa fa-ticket fa-lg"></i>
                         </a>
 
-                        <a class="btn btn-success" href="{{ route('boleta_manual.print', $boleta->id) }}" target="_blank"
+                        <a class="btn btn-success" href="{{ route('boleta.print', $boleta->id) }}" target="_blank"
                             data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
                             <i class="fa fa-print fa-lg"></i>
                         </a>
 
                         @if (Auth::user()->email_creado == 1)
-                            <form action="{{ route('email.boleta_manual', $boleta->id) }}" method="post"
+                            <form action="{{ route('email.boleta', $boleta->id) }}" method="post"
                                 style="padding: 0;" class="btn">
                                 @csrf
                                 <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
@@ -122,6 +122,11 @@
             </div>
         </div>
         <div class="mostrar" id="show_boleta">
+            @if ($boleta->b_electronica != 0 || ($boleta->nota_credito == 1 && $boleta->motivo == "01"))
+                <div id="watermark">
+                    <p>Anulado</p>
+                </div>
+            @endif
             <div class="row">
                 <div class="col-lg-12" style="margin-top: -26px;">
                     <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
@@ -360,7 +365,7 @@
             -moz-transform: rotate(-45deg);
             top: 45%;
             right: 40%;
-            z-index: 0;
+            z-index: 9999;
         }
     </style>
     <style>

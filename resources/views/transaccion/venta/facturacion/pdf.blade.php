@@ -307,7 +307,7 @@
             -moz-transform: rotate(-45deg);
             top: 35%;
             right: 35%;
-            z-index: 0;
+            z-index: 99999;
         }
         .form-control {
             background-color: transparent !important;
