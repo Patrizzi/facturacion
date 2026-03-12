@@ -284,7 +284,9 @@
                                             </table>
                                         </div>
                                         <div class="text-center" style="margin-top: 20px;">
-                                            <button type="submit" class="btn btn-success">Guardar</button>
+                                            <button class="btn btn-success ladda-button" data-style="expand-left" type="submit">
+                                                <span class="ladda-label">Guardar </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

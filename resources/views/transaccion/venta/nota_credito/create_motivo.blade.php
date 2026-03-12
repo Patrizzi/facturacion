@@ -14,7 +14,7 @@
                 <div class="ibox">
                     {{-- <div class="ibox-content"> --}}
                     @if (isset($facturacion->codigo_fac))
-                        <form method="POST" action="{{ route('nota-credito.create_nota_credito') }}" class="row">
+                        <form method="POST" action="{{ route('nota-credito.create_nota_credito', $facturacion->id) }}" class="row">
                             @csrf
                             <input type="hidden" name="tipo" id="" value="factura_origi">
                             <div class="container col-lg-12">
@@ -96,14 +96,16 @@
                                             </div>
                                         </div>
                                         <div class="text-center mt-4">
-                                            <button class="btn btn-success" type="submit">Enviar</button>
+                                            <button class="btn btn-success ladda-button" data-style="expand-left" type="submit">
+                                                <span class="ladda-label">Enviar</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </form>
                     @else
-                        <form method="POST" action="{{ route('nota-credito.create_nota_credito') }}" class="row">
+                        <form method="POST" action="{{ route('nota-credito.create_nota_credito', $facturacion_m->id) }}" class="row">
                             @csrf
                             <input type="hidden" name="tipo" id="" value="factura_manual">
                             <div class="container col-lg-12">
@@ -185,7 +187,9 @@
                                             </div>
                                         </div>
                                         <div class="text-center mt-4">
-                                            <button type="submit" class="btn btn-success">Enviar</button>
+                                            <button type="submit" class="ladda-button btn btn-success" data-style="expand-right">
+                                                <span class="ladda-label">Enviar</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

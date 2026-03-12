@@ -71,7 +71,7 @@ class NotaCreditoController extends Controller
         return view('transaccion.venta.nota_credito.lista_boleta', compact('boletas', 'boletas_manuales', 'igv'));
     }
 
-    public function create_nota_credito(Request $request)
+    public function create_nota_credito(Request $request,$id)
     {
         // return $request;
         $fecha = $request->fecha_emision;
@@ -110,10 +110,10 @@ class NotaCreditoController extends Controller
         }
         $tipo = $request->get('tipo');
         if ($tipo == "factura_origi") {
-            $facturacion = Facturacion::where('estado', 1)->where('codigo_fac', $request->factura_id)->first();
+            $facturacion = Facturacion::where('estado', 1)->where('id', $id)->first();
             $facturacion_registro = Facturacion_registro::where('facturacion_id', $facturacion->id)->get();
         } else {
-            $facturacion = Facturacion_m::where('estado', 1)->where('codigo_fac', $request->factura_id)->first();
+            $facturacion = Facturacion_m::where('estado', 1)->where('id', $id)->first();
             $facturacion_registro = Facturacion_registro_m::where('facturacion_m_id', $facturacion->id)->get();
         }
 
@@ -126,9 +126,9 @@ class NotaCreditoController extends Controller
 
         if ($request->tipo_nota_credito == 02) {
             if ($tipo == "factura_origi") {
-                $factura_buscada = Facturacion::where('codigo_fac', $request->nueva_factura)->first();
+                $factura_buscada = Facturacion::where('id', $id)->first();
             } else {
-                $factura_buscada = Facturacion_m::where('codigo_fac', $request->nueva_factura)->first();
+                $factura_buscada = Facturacion_m::where('id', $id)->first();
             }
             if (isset($factura_buscada)) {
             } else {
@@ -243,6 +243,7 @@ class NotaCreditoController extends Controller
         // return $request;
         if (isset($request->factura_id)) {
             $facturacion = Facturacion::find($request->factura_id);
+            //Area de Facturacion
             return view('transaccion.venta.nota_credito.create_motivo', compact('facturacion'));
         } elseif (isset($request->factura_manual_id)) {
             $facturacion_m = Facturacion_m::find($request->factura_manual_id);
