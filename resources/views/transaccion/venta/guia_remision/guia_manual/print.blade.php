@@ -339,21 +339,25 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width:28px" class="tac">N°</th>
-                        <th style="width:110px" class="tac">CÓDIGO</th>
-                        <th style="width:80px" class="tac">CÓDIGO SUNAT</th>
+                        <th style="width:5%" class="tac">N°</th>
+                        <th style="width:11%" class="tac">CÓDIGO</th>
+                        {{-- <th style="width:80px" class="tac">CÓDIGO SUNAT</th> --}}
                         <th>DESCRIPCIÓN</th>
-                        <th style="width:60px" class="tac">UNIDAD</th>
-                        <th style="width:60px" class="tac">CANTIDAD</th>
+                        <th style="width:10%" class="tac">UNIDAD</th>
+                        <th style="width:10%" class="tac">CANTIDAD</th>
+                        <th style="width:10%" class="tac">PESO U.</th>
+                        <th style="width:10%" class="tac">PESO TOT</th>
                     </tr>
                 </thead>
                 <tbody>
                     @php($i = 1)
                     @foreach ($guia_remision_m_reg as $guia_registros)
+                        @php($pesoItem = $guia_registros->cantidad * $guia_registros->peso)
+                        @php($tota[]= $pesoItem)
                         <tr>
                             <td class="tac">{{ $i++ }}</td>
                             <td class="tac">{{ $guia_registros->producto->codigo_producto ?? '-' }}</td>
-                            <td class="tac">{{ $guia_registros->producto->codigo_sunat ?? '-' }}</td>
+                            {{-- <td class="tac">{{ $guia_registros->producto->codigo_sunat ?? '-' }}</td> --}}
                             <td>
                                 {{ $guia_registros->producto->nombre ?? '' }}
                                 @if (!empty($guia_registros->numero_serie) || !empty($guia_registros->descripcion))
@@ -367,16 +371,15 @@
                             </td>
                             <td class="tac">{{ $guia_registros->producto->unidad_i_producto->medida ?? 'NIU' }}</td>
                             <td class="tac">{{ $guia_registros->cantidad }}</td>
-                            {{-- <td class="tac">{{ $guia_registros->peso }}</td>
-                        <td class="tac">{{ number_format($pesoItem, 2) }} kg</td>
-                        --}}
+                            <td class="tac">{{ $guia_registros->peso }}</td>
+                             <td class="tac">{{ number_format( $pesoItem, 2) }}</td>
                         </tr>
                     @endforeach
-                    {{-- <tr>
-                    <td colspan="7" class="tar"><b>Peso Total:</b></td>
-                    <td class="tac"><b>{{ number_format($totalPeso, 2) }} kg</b></td>
-                </tr>
-                --}}
+                    <tr>
+                        <td colspan="6" class="tar"><b>Peso Total:</b></td>
+                        <td class="tac"><b>{{ number_format(array_sum($tota), 2) }} KGM</b></td>
+                    </tr>
+                   
                 </tbody>
             </table>
         </div>

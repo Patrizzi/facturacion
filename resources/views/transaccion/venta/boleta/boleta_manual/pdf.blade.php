@@ -118,8 +118,8 @@
             <footer style="padding-top: 120px">
                 <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
                 <tr>
-                        <td style="width: 70%;border: none">
-                            <h3 align="left">
+                        <td style="width: 50%;border: none;padding-top: 0px;padding-bottom: 0px">
+                            <h3 align="left" style="margin: 0px;"> 
                                 <?php use Luecano\NumeroALetras\NumeroALetras;
                                     $v=new NumeroALetras() ;
                                     $letra=($v->toInvoice($end, 2));
@@ -140,7 +140,7 @@
                                 Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
                             </small>
                         </td>
-                        <td class="col-sm-4 qr-container">
+                        <td class="qr-container">
                             <div class="qr-box">
                                 @if(!empty($qrCode))
                                     <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
@@ -215,17 +215,20 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                border: none;
+                padding-top: 0px;
+                padding-bottom: 0px
             }
 
             .qr-box {
-                width: 120px;
-                height: 120px;
+                width: 70px;
+                height: 70px;
                 border: 2px solid #3D3D3D;
                 border-radius: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 5px;
+                padding: 3px;
                 background: white;
             }
 
