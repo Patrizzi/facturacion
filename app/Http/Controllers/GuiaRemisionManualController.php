@@ -328,6 +328,10 @@ class GuiaRemisionManualController extends Controller
         $textoQR = $this->generarTextoQRGuiaRemisionManual($guia_remision_m, $id);
         $qrCode  = $this->generarImagenQR($textoQR);
 
+        // return View(
+        //     'transaccion.venta.guia_remision.guia_manual.pdf',
+        //     compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota','textoQR','qrCode')
+        // );
         $pdf = \PDF::loadView(
             'transaccion.venta.guia_remision.guia_manual.pdf',
             compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota','textoQR','qrCode')
