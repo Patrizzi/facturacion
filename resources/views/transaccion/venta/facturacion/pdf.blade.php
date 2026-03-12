@@ -19,10 +19,10 @@
             transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
             width: 100%;
         }
-        /*@page {
+        @page {
             size: A4;
             font-size: 55%;
-        }*/
+        }
     </style>
     <body class="white-bg">
         <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
@@ -140,7 +140,7 @@
 
             <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
             <tr>
-                <td style="width: 70%;border: none">
+                <td style="width: 50%;border: none">
                         <h3 align="left">
                             <?php  use Luecano\NumeroALetras\NumeroALetras;
                             $v=new NumeroALetras() ;
@@ -162,7 +162,7 @@
                             Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
                         </small>
                     </td>
-                    <td class="col-sm-4 qr-container">
+                    <td class="qr-container">
                         <div class="qr-box">
                             @if(!empty($qrCode))
                                 <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
@@ -320,17 +320,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            border: none;
+            padding-top: 0px;
+            padding-bottom: 0px
         }
 
         .qr-box {
-            width: 120px;
-            height: 120px;
+            width: 70px;
+            height: 70px;
             border: 2px solid #3D3D3D;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5px;
+            padding: 3px;
             background: white;
         }
 
