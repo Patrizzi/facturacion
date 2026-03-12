@@ -141,7 +141,7 @@
             <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
             <tr>
                 <td style="width: 50%;border: none">
-                        <h3 align="left">
+                        <h3 align="left" style="margin: 0px;">
                             <?php  use Luecano\NumeroALetras\NumeroALetras;
                             $v=new NumeroALetras() ;
                             $letra=($v->toInvoice($end, 2));
