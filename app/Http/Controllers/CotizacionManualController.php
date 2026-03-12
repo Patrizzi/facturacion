@@ -2566,4 +2566,23 @@ public function update(Request $request, $id)
         } catch (\Exception $e) {
         }
     }
+
+    public function guardarNotaInformativa(Request $request, $id)
+    {
+        try {
+            $cotizacion = CotizacionManual::findOrFail($id);
+            $cotizacion->nota_informativa = $request->input('nota_informativa');
+            $cotizacion->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Nota guardada correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar la nota: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

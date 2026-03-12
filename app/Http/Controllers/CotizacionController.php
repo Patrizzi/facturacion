@@ -4538,4 +4538,23 @@ if($validacion==1){
         } catch (\Exception $e) {
         }
     }
+
+    public function guardarNotaInformativa(Request $request, $id)
+    {
+        try {
+            $cotizacion = Cotizacion::findOrFail($id);
+            $cotizacion->nota_informativa = $request->input('nota_informativa');
+            $cotizacion->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Nota guardada correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar la nota: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

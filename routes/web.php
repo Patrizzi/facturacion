@@ -98,6 +98,7 @@ Route::group(
         Route::post('/whatsapp', 'AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
         Route::resource('/almacen', 'AlmacenController');
         Route::resource('/apariencia', 'ConfigController');
+        Route::post("/cotizacion_manual/guardar-nota/{id}", "CotizacionManualController@guardarNotaInformativa")->name("cotizacion_manual.guardar_nota");
         Route::resource('/cotizacion_manual', 'CotizacionManualController');
         Route::post('/cotizacion_manual/update/{id}', 'CotizacionManualController@update')->name('cotizacion_manual.update');
         Route::post('/cotizacion_manual/codigo', 'CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
@@ -175,6 +176,8 @@ Route::group(
         Route::post('/cotizacion/boletear_store', 'CotizacionController@boletear_store')->name('cotizacion.boletear_store');
         Route::get('/cotizacion/print_cotizacion_servicio/{id}', 'CotizacionServiciosController@print')->name('cotizacion_servicio.print');
         Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
+
+        Route::post('/cotizacion/guardar-nota/{id}', 'CotizacionController@guardarNotaInformativa')->name('cotizacion.guardar_nota');
 
         Route::resource('/cotizacion', 'CotizacionController');
         Route::post('/cotizacion/update/{id}', 'CotizacionController@update')->name('cotizacion.update');
