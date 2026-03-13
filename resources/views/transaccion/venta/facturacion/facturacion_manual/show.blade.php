@@ -117,7 +117,7 @@
         <div class="mostrar" id="show_factura">
             <div class="row">
                 <div class="col-lg-12" style="margin-top: -26px;">
-                    @if ($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
+                    @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->motivo == "01"))
                         <div id="watermark">
                             <p>Anulado</p>
                         </div>
@@ -602,7 +602,7 @@
             -moz-transform: rotate(-45deg);
             top: 45%;
             right: 40%;
-            z-index: 0;
+            z-index: 99999999;
         }
 
         /* .form-control {

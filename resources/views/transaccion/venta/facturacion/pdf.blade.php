@@ -41,7 +41,7 @@
             </tr>
         </table>
         <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
-            @if($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
+            @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->motivo == "01"))
                 <div id="watermark">
                     <p>Anulado</p>
                 </div>
@@ -307,7 +307,7 @@
             -moz-transform: rotate(-45deg);
             top: 35%;
             right: 35%;
-            z-index: 0;
+            z-index: 99999;
         }
         .form-control {
             background-color: transparent !important;
