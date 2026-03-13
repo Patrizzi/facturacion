@@ -1387,7 +1387,7 @@
             $('#modalGestionarNota').find('.btn').prop('disabled', true);
 
             $.ajax({
-                url: '/cotizacion/guardar-nota/' + id,
+                url: "{{ route('cotizacion.guardar_nota', ':id') }}".replace(':id', id),
                 method: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',

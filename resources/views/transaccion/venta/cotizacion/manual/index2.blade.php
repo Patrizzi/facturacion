@@ -1365,7 +1365,7 @@ function enviarNotaAjax(id, nota, isDelete = false) {
     $('#modalGestionarNota').find('.btn').prop('disabled', true);
 
     $.ajax({
-        url: '/cotizacion_manual/guardar-nota/' + id,
+        url: "{{ route('cotizacion_manual.guardar_nota', ':id') }}".replace(':id', id),
         method: 'POST',
         data: {
             _token: '{{ csrf_token() }}',
