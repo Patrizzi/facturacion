@@ -28,67 +28,204 @@
                 </a>
             </div>
         </div>
-        <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-            <div class="row tooltip-demo">
-                <div class="col-sm-6" align="left" style="padding: 0 15px;padding: 0 15px; margin: auto">
-                    @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 0)
-                        <a class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
-                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
-                    @endif
-                    @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 1)
-                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('facturacion_manual.show',$factura->id)}}" >Ver Factura</a>
-                    @endif
-                    @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
-                        <a class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
-                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
-                    @endif
-                    @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 1)
-                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('boleta_manual.show',$boleta->id)}}" >Ver Boleta</a>
-                    @endif
-                    @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 0)
-                        <a class="btn btn-success" href="{{route('cotizacion_manual.gen_nota_venta',$cotizacion->id)}}" target="_blank">Generar Nota de V.</a>
-                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
-                    @endif
-                    @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 1)
-                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('nota_venta.show',$nota_venta->id)}}" >Ver Nota de V.</a>
-                    @endif
-
-
+        <div class="ibox-content" style="padding-right: 3.1%; padding-left: 3.1%; padding-bottom: 10px;">
+            <div class="row align-items-center tooltip-demo">
+                <div class="col-12 col-md-3">
+                    <h3 style="margin: 0;">{{ $cotizacion->cod_cotizacion }}</h3>
+                    <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                 </div>
-                <div class="col-sm-6" align="right">
-                    <a href="{{route('cotizacion_manual.free_print', $cotizacion->id)}}" class="btn btn-secondary" target="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Impresion Libre"><i class="fa fa-share-alt"></i></a>
-                    <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('cotizacion_manual_pdf' ,$cotizacion->id)}}">@csrf
-                        <input type="text" name="name" maxlength="50" hidden="" value="CotizacionManual_{{$cotizacion->tipo}}"  >
-                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+
+                <div class="col-12 col-md-4 text-center">
+                    <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
+                        COTIZACIÓN
+                    </h2>
+                </div>
+
+                <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                    <div class="d-flex align-items-center" style="overflow: hidden;">
+                        <div id="btn-slider-cotizacion-manual"
+                            style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+
+                            @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
+                                <button type="button"
+                                        class="btn btn-warning btn-editar"
+                                        id="edit"
+                                        onclick="click_editar()"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        data-original-title="Editar cotización manual"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+
+                                <button type="button"
+                                        class="btn-no-editar no_mostrar btn btn-warning"
+                                        onclick="click_cancelar_editar()"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        data-original-title="Cancelar edición"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endif
+
+                            @if ($cotizacion->tipo == 'factura' && $cotizacion->estado == 0)
+                                <a class="btn btn-success"
+                                href="{{ route('cotizacion_manual.facturar', $cotizacion->id) }}"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Facturar"
+                                style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                                <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
+                            @endif
+
+                            @if ($cotizacion->tipo == 'factura' && $cotizacion->estado == 1)
+                                <a class="btn btn-default procesado"
+                                style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
+                                href="{{ route('facturacion_manual.show', $factura->id) }}"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Ver Factura">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                            @endif
+
+                            @if($cotizacion->tipo == 'boleta' && $cotizacion->estado == 0)
+                                <a class="btn btn-success"
+                                href="{{ route('cotizacion_manual.boletear', $cotizacion->id) }}"
+                                target="_blank"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Boletear"
+                                style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                                <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
+                            @endif
+
+                            @if($cotizacion->tipo == 'boleta' && $cotizacion->estado == 1)
+                                <a class="btn btn-default procesado"
+                                style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
+                                href="{{ route('boleta_manual.show', $boleta->id) }}"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Ver Boleta">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                            @endif
+
+                            @if($cotizacion->tipo == 'nota_venta' && $cotizacion->estado == 0)
+                                <a class="btn btn-success"
+                                href="{{ route('cotizacion_manual.gen_nota_venta', $cotizacion->id) }}"
+                                target="_blank"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Generar Nota de Venta"
+                                style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                                <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
+                            @endif
+
+                            @if($cotizacion->tipo == 'nota_venta' && $cotizacion->estado == 1)
+                                <a class="btn btn-default procesado"
+                                style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
+                                href="{{ route('nota_venta.show', $nota_venta->id) }}"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Ver Nota de Venta">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                            @endif
+                        </div>
+
+                        <button type="button"
+                                id="btn-toggle-cotizacion-manual"
+                                onclick="toggleBtnsCotizacionManual()"
+                                class="btn btn-default"
+                                style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                            <i class="fa fa-chevron-right" id="btn-arrow-cotizacion-manual"></i>
+                        </button>
+                    </div>
+
+                    <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+
+                    <a href="{{ route('cotizacion_manual.free_print', $cotizacion->id) }}"
+                    class="btn btn-secondary"
+                    target="_blank"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    data-original-title="Impresión Libre">
+                        <i class="fa fa-share-alt"></i>
+                    </a>
+
+                    <form class="btn" style="padding: 0;" action="{{ route('cotizacion_manual_pdf', $cotizacion->id) }}">
+                        @csrf
+                        <input type="text" name="name" maxlength="50" hidden value="CotizacionManual_{{ $cotizacion->tipo }}">
+                        <button type="submit"
+                                class="btn btn-success"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Descargar PDF">
+                            <i class="fa fa-file-pdf-o fa-lg"></i>
+                        </button>
                     </form>
-                    <a class="btn btn-success" href="{{route('cotizacion_manual.print',$cotizacion->id)}}" target="_blank"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+
+                    <a class="btn btn-success"
+                    href="{{ route('cotizacion_manual.print', $cotizacion->id) }}"
+                    target="_blank"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    data-original-title="Imprimir">
+                        <i class="fa fa-print fa-lg"></i>
+                    </a>
+
                     @if(Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.cotizacion_manual', $cotizacion->id )}}" method="post" style="text-align: none;padding: 0;" class="btn"  >
+                        <form action="{{ route('email.cotizacion_manual', $cotizacion->id) }}" method="post" style="padding: 0;" class="btn">
                             @csrf
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                                <i class="fa fa-envelope fa-lg" ></i>
+                            <button type="submit"
+                                    class="btn btn-secondary"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    formtarget="_blank"
+                                    data-original-title="Enviar por correo">
+                                <i class="fa fa-envelope fa-lg"></i>
                             </button>
                         </form>
                     @endif
-                    <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
-                    </div>
-                    @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
-                        <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i class="fa fa-pencil"></i></button>
-                        <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i class="fa fa-times"></i></button>
-                    @else
 
-                    @endif
-                    <div id="div-mostrar" style="height: 0px; overflow: hidden;">
-                        <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                            @csrf
-                            <input type="tel" name="numero"  value="{{$cotizacion->cliente->celular}}"   />
-                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                            <input type="text" hidden="" name="url" value="{{route('cotizacion_manual_pdf' ,$cotizacion->id)}}?archivo=">
-                            <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$cotizacion->tipo}}" />
-                            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-                        </form>
+                    <div style="position: relative; display: inline-block;">
+                        <div id="auto" onclick="divAuto()">
+                            <a class="btn btn-success"
+                            style="background: green; border-color: green;"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-original-title="Enviar a">
+                                <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                            </a>
+                        </div>
                     </div>
+                </div>
+
+                <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                    <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn" style="text-align: none; padding-right: 0; padding-left: 0;">
+                        @csrf
+                        <input type="tel" name="numero" value="{{ $cotizacion->cliente->celular }}" />
+                        <input type="text" name="mensaje" id="texto_orden" hidden />
+                        <input type="text" hidden name="url" value="{{ route('cotizacion_manual_pdf', $cotizacion->id) }}?archivo=">
+                        <input type="text" name="name_sin_cambio" hidden value="Cotizacion_{{ $cotizacion->tipo }}" />
+                        <button type="submit"
+                                class="btn btn-success"
+                                style="background: green; border-color: green;"
+                                formtarget="_blank"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Enviar por Whatsapp">
+                            <i class="fa fa-send fa-lg"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -96,16 +233,7 @@
     <div class="row">
         <div class="col-lg-12" style="margin-top: -26px;">
             <div class="ibox-content p-xl" style="margin-bottom: 20px;padding-bottom: 50px;">
-                <div class="row" style="align-items: center; justify-content: center">
-                    @include('layout_cabecera_ventas')
-                    <div class="col-sm-4">
-                        <div class="form-control" align="center" style="height: auto;">
-                            <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
-                            <h5>{{$cotizacion->cod_cotizacion}} </h5>
-                        </div>
-                    </div>
-                </div><br>
+                <br>
                 <div class="table-no mostrar">
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">
@@ -1309,5 +1437,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+<script>
+    function toggleBtnsCotizacionManual() {
+        const slider = document.getElementById('btn-slider-cotizacion-manual');
+        const arrow = document.getElementById('btn-arrow-cotizacion-manual');
+        const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
 
+        if (isOpen) {
+            slider.style.width = '0';
+            arrow.classList.remove('fa-chevron-left');
+            arrow.classList.add('fa-chevron-right');
+        } else {
+            slider.style.width = slider.scrollWidth + 'px';
+            arrow.classList.remove('fa-chevron-right');
+            arrow.classList.add('fa-chevron-left');
+        }
+    }
+</script>
 @endsection
