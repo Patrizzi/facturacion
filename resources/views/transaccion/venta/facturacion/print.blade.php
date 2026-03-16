@@ -94,7 +94,7 @@
                 </div><br>
 
                 <div class="row" align="center" style="padding-bottom: 5px">
-                    @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->motivo == "01"))
+                    @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->nota_credito_register->motivo == "01"))
                         <div id="watermark">
                             <p>Anulado</p>
                         </div>

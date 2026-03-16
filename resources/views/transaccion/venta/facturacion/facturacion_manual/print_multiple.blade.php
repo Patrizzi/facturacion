@@ -174,7 +174,7 @@
 
     <div class="row" @if($index> 0) style="page-break-before: always;" @endif>
         <div class="col-lg-12" style="margin-top: -5px;">
-            @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->motivo == "01"))
+            @if ($factura->f_electronica == 2 || ($factura->nota_credito == 1 || $factura->nota_credito == 2 && $factura->nota_credito_register->motivo == "01"))
             <div id="watermark">
                 <p>Anulado</p>
             </div>
