@@ -192,13 +192,12 @@
                                                     {{ $facturacion_registros->descripcion_item }}
                                             @endif
                                             <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
-                                            <td style="text-align:right">{{ round($facturacion_registros->precio, 8) }}
+                                            <td style="text-align:right">{{ number_format(round($facturacion_registros->precio, 2),2) }}
                                             </td>
 
                                             <td style="text-align:right">
-                                                {{ round($facturacion_registros->precio * $facturacion_registros->cantidad, 8) }}
+                                                {{ number_format(round($facturacion_registros->precio * $facturacion_registros->cantidad, 2),2) }}
                                             </td>
-
                                         </tr>
                                         <span hidden="hidden">{{ $i++ }}</span>
                                     @endforeach

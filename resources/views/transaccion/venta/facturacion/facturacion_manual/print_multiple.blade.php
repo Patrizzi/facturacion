@@ -246,8 +246,8 @@
                                     <td>{{$factura_registros->servicio->nombre}} {{$factura_registros->descripcion_item}}</td>
                                     @endif
                                     <td style="text-align:center">{{$factura_registros->cantidad}}</td>
-                                    <td style="text-align:right">{{round($factura_registros->precio,8)}}</td>
-                                    <td style="text-align:right">{{round($factura_registros->precio * $factura_registros->cantidad, 8)}}</td>
+                                    <td style="text-align:right">{{number_format(round($factura_registros->precio,2),2)}}</td>
+                                    <td style="text-align:right">{{number_format(round($factura_registros->precio * $factura_registros->cantidad, 2),2)}}</td>
                                 </tr>
                                 @php $i++; @endphp
                             @endforeach
