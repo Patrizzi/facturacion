@@ -138,7 +138,7 @@
                                         {{-- Si es contado, se oculta --}}
                                         <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
                                             data-toggle="modal" data-target="#cuotas_modal"><i
-                                                class="fa fa-dollar"></i></button>
+                                                class="fa fa-calendar"></i></button>
                                     </div>
                                 </div>
                             </div>
