@@ -588,12 +588,18 @@
                             return {
                                 id: item.id,
                                 text: item.nombre + ' | ' + item.numero_documento,
+                                tipo_pago: item.tipo_pago_id
                             };
                         })
                     };
                 },
                 cache: true
             }
+        });
+        $('.select2_demo_client').on('select2:select', function(e) {
+            var data = e.params.data;
+            // Si el tipo de pago es desde cliente cambiar
+            $('select[name="forma_pago"]').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
         });
     </script>
     <script>

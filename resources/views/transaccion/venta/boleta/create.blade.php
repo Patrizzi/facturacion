@@ -168,7 +168,7 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-4"><strong>Forma Pago:</strong></label>
                                         <div class="col-md-6 pago_first_column">
-                                            <select class="form-control" name="forma_pago" id ="forma_pago"
+                                            <select class="form-control" name="forma_pago" id="forma_pago"
                                                 onchange="seleccionado_fp()">
                                                 @foreach ($forma_pagos as $forma_pago)
                                                     <option value="{{ $forma_pago->id }}">
@@ -740,6 +740,11 @@
             var text = e.params.args.data.text.split(' | ');
             $('#nombre_cliente').html(text[0]);
             $('#rucdni_cliente').html(text[1]);
+        });
+        $('.select2_demo_client').on('select2:select', function(e) {
+            var data = e.params.data;
+            // Si el tipo de pago es desde cliente cambiar
+            $('select[name="forma_pago"]').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
         });
         $(".select2_demo_comisionista").select2({
             // placeholder: "Sin comisión"
