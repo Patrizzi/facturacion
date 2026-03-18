@@ -59,41 +59,51 @@
                         @php
                             use Carbon\Carbon;
                             use App\Facturacion;
+
+                            $showAnular = $facturacion->f_electronica == 0 && $facturacion->created_at->diffInDays(Carbon::now()) > 7;
+                            $showNC = $facturacion->nota_credito != 0;
                         @endphp
 
-                        <div class="d-flex align-items-center" style="overflow: hidden;">
-                            {{-- Slider con los botones --}}
-                            <div id="btn-slider" style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+                        @if ($showAnular || $showNC)
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
 
-                                {{-- Botón Anular --}}
-                                @if ($facturacion->f_electronica == 0 && $facturacion->created_at->diffInDays(Carbon::now()) > 7)
-                                    <span data-toggle="tooltip" data-placement="bottom"
-                                        data-original-title="Anular La Factura"
-                                        style="display: inline-flex; animation: circleScale 3s infinite; margin-right: 4px;">
-                                        <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modal_anular">
-                                            <i class="fa fa-ban fa-xl"></i>
-                                        </button>
-                                    </span>
-                                @endif
+                                {{-- Slider con los botones --}}
+                                <div id="btn-slider" style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
 
-                                {{-- Botón Nota de Crédito --}}
-                                @if ($facturacion->nota_credito != 0)
-                                    <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
-                                        data-original-title="Motivo: {{ Facturacion::search_motivo_nc($facturacion->id) }}"
-                                        href="{{ route('nota-credito.show', Facturacion::nota_credito_id($facturacion->id)) }}"
-                                        style="white-space: nowrap; margin-right: 4px;">
-                                        <i class="fa fa-file-text fa-lg"></i>
-                                    </a>
-                                @endif
+                                    {{-- Botón Anular --}}
+                                    @if ($showAnular)
+                                        <span data-toggle="tooltip" data-placement="bottom"
+                                            data-original-title="Anular La Factura"
+                                            style="display: inline-flex; animation: circleScale 3s infinite; margin-right: 4px;">
+                                            <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modal_anular">
+                                                <i class="fa fa-ban fa-xl"></i>
+                                            </button>
+                                        </span>
+                                    @endif
+
+                                    {{-- Botón Nota de Crédito --}}
+                                    @if ($showNC)
+                                        <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                                            data-original-title="Motivo: {{ Facturacion::search_motivo_nc($facturacion->id) }}"
+                                            href="{{ route('nota-credito.show', Facturacion::nota_credito_id($facturacion->id)) }}"
+                                            style="white-space: nowrap; margin-right: 4px;">
+                                            <i class="fa fa-file-text fa-lg"></i>
+                                        </a>
+                                    @endif
+
+                                </div>
+
+                                {{-- Flecha toggle --}}
+                                <button id="btn-toggle" onclick="toggleBtns()" class="btn btn-default"
+                                    style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                    <i class="fa fa-chevron-right" id="btn-arrow"></i>
+                                </button>
 
                             </div>
 
-                            {{-- Flecha toggle --}}
-                            <button id="btn-toggle" onclick="toggleBtns()" class="btn btn-default"
-                                style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                                <i class="fa fa-chevron-right" id="btn-arrow"></i>
-                            </button>
-                        </div>
+                            {{-- Divisor --}}
+                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+                        @endif
                         <!-- PDF -->
                         <form class="btn" style="padding: 0;" action="{{ route('pdf_fac', $facturacion->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $facturacion->codigo_fac }}">
