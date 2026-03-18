@@ -64,7 +64,7 @@
             <a class="collapse-link">
                 <i class="fa fa-chevron-up text-muted"></i>
             </a>
-            <a href="{{ route('garantia_guia_egreso.index') }}" title="Cerrar">
+            <a href="{{ route('garantia_guia_ingreso.index') }}" title="Cerrar">
                 <i class="fa fa-times text-muted"></i>
             </a>
         </div>
