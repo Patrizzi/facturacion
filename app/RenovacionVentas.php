@@ -15,7 +15,6 @@ class RenovacionVentas extends Model
     protected $fillable = [
         'cotizacion_id',
         'cotizacion_manual_id',
-        'nota_venta_id',
         'frecuencia',
         'dia_anual',
         'dia_mensual',
@@ -46,11 +45,6 @@ class RenovacionVentas extends Model
         return $this->belongsTo(CotizacionManual::class, 'cotizacion_manual_id', 'id');
     }
 
-    // Relación con NotaVenta (nota_venta_id)
-    public function nota_venta()
-    {
-        return $this->belongsTo(NotaVenta::class, 'nota_venta_id', 'id');
-    }
 
     // Scopes útiles
     public function scopeActivas($query)

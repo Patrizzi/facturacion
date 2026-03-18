@@ -2451,7 +2451,7 @@
             if (selectTipo.value == "1") {
                 divRenovacion.style.display = "block";
             } else {
-                divRenovacion.style.display = "none";
+                divRenovacion.style.display = "block";
             }
         }
     });
@@ -2463,7 +2463,7 @@
         if (selectTipo.value == "1") {
             divRenovacion.style.display = "block";
         } else {
-            divRenovacion.style.display = "none";
+            divRenovacion.style.display = "block";
 
             const checkRenovacion = document.getElementById("estado_renovacion");
             const contenedorRenovacion = document.getElementById("renovacion_container");
