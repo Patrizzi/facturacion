@@ -706,9 +706,9 @@
     }
 
     #renovacion_container {
-    animation: slideDown 0.3s ease-out;
-    margin-top: 10px;
-}
+        animation: slideDown 0.3s ease-out;
+        margin-top: 10px;
+    }
 
     @keyframes slideDown {
         from {
@@ -1965,93 +1965,93 @@
     </script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const checkRenovacion      = document.getElementById("estado_renovacion");
-    const contenedorRenovacion = document.getElementById("renovacion_container");
-    const inputVencimiento     = document.getElementById("fecha_vencimiento");
-    const diasPreview          = document.getElementById("dias_restantes_preview");
-    const divRenovacion        = document.querySelector(".renovacion");
+        document.addEventListener("DOMContentLoaded", function () {
+        const checkRenovacion      = document.getElementById("estado_renovacion");
+        const contenedorRenovacion = document.getElementById("renovacion_container");
+        const inputVencimiento     = document.getElementById("fecha_vencimiento");
+        const diasPreview          = document.getElementById("dias_restantes_preview");
+        const divRenovacion        = document.querySelector(".renovacion");
 
-    // Siempre visible
-    if (divRenovacion) divRenovacion.style.display = "block";
-
-    // ── Helpers ──────────────────────────────────────────────
-    function getFechaEmision() {
-        const input = document.querySelector('input[name="fecha_emision"]');
-        if (!input || !input.value) return new Date();
-
-        const sep   = input.value.includes('/') ? '/' : '-';
-        const [dia, mes, anio] = input.value.split(sep).map(Number);
-        const fecha = new Date(anio, mes - 1, dia);
-        return isNaN(fecha.getTime()) ? new Date() : fecha;
-    }
-
-    function formatDate(date) {
-        // Formato YYYY-MM-DD para input[type=date]
-        return date.toISOString().split('T')[0];
-    }
-
-    function actualizarMinDate() {
-        const fechaEmision = getFechaEmision();
-        const minDate      = new Date(fechaEmision);
-        minDate.setDate(minDate.getDate() + 1); // mínimo: día siguiente a emisión
-        inputVencimiento.min = formatDate(minDate);
-
-        // Limpiar si la fecha actual ya no es válida
-        if (inputVencimiento.value && inputVencimiento.value < formatDate(minDate)) {
-            inputVencimiento.value = "";
-            diasPreview.textContent = "";
-        }
-    }
-
-    function mostrarDiasRestantes() {
-        if (!inputVencimiento.value) {
-            diasPreview.textContent = "";
-            return;
-        }
-
-        const hoy         = new Date();
-        hoy.setHours(0, 0, 0, 0);
-        const vencimiento = new Date(inputVencimiento.value + 'T00:00:00');
-        const diff        = Math.round((vencimiento - hoy) / (1000 * 60 * 60 * 24));
-
-        if (diff > 0) {
-            diasPreview.style.color   = diff <= 7 ? '#f8ac59' : '#1ab394';
-            diasPreview.textContent   = `Vence en ${diff} día${diff !== 1 ? 's' : ''}`;
-        } else if (diff === 0) {
-            diasPreview.style.color   = '#ed5565';
-            diasPreview.textContent   = 'Vence hoy';
-        } else {
-            diasPreview.style.color   = '#ed5565';
-            diasPreview.textContent   = `Venció hace ${Math.abs(diff)} día${Math.abs(diff) !== 1 ? 's' : ''}`;
-        }
-    }
-
-    // ── Toggle renovación ─────────────────────────────────────
-    checkRenovacion.addEventListener("change", function () {
-        contenedorRenovacion.style.display = this.checked ? "block" : "none";
-        if (!this.checked) {
-            inputVencimiento.value  = "";
-            diasPreview.textContent = "";
-        } else {
-            actualizarMinDate();
-        }
-    });
-
-    // ── Preview días restantes al elegir fecha ────────────────
-    inputVencimiento.addEventListener("change", mostrarDiasRestantes);
-
-    // ── select_tipo: resetea el check al cambiar tipo doc ─────
-    window.select_tipo = function () {
-        const divRenovacion = document.querySelector(".renovacion");
+        // Siempre visible
         if (divRenovacion) divRenovacion.style.display = "block";
 
-        checkRenovacion.checked                = false;
-        contenedorRenovacion.style.display     = "none";
-        inputVencimiento.value                 = "";
-        diasPreview.textContent                = "";
-    };
-});
+        // ── Helpers ──────────────────────────────────────────────
+        function getFechaEmision() {
+            const input = document.querySelector('input[name="fecha_emision"]');
+            if (!input || !input.value) return new Date();
+
+            const sep   = input.value.includes('/') ? '/' : '-';
+            const [dia, mes, anio] = input.value.split(sep).map(Number);
+            const fecha = new Date(anio, mes - 1, dia);
+            return isNaN(fecha.getTime()) ? new Date() : fecha;
+        }
+
+        function formatDate(date) {
+            // Formato YYYY-MM-DD para input[type=date]
+            return date.toISOString().split('T')[0];
+        }
+
+        function actualizarMinDate() {
+            const fechaEmision = getFechaEmision();
+            const minDate      = new Date(fechaEmision);
+            minDate.setDate(minDate.getDate() + 1); // mínimo: día siguiente a emisión
+            inputVencimiento.min = formatDate(minDate);
+
+            // Limpiar si la fecha actual ya no es válida
+            if (inputVencimiento.value && inputVencimiento.value < formatDate(minDate)) {
+                inputVencimiento.value = "";
+                diasPreview.textContent = "";
+            }
+        }
+
+        function mostrarDiasRestantes() {
+            if (!inputVencimiento.value) {
+                diasPreview.textContent = "";
+                return;
+            }
+
+            const hoy         = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const vencimiento = new Date(inputVencimiento.value + 'T00:00:00');
+            const diff        = Math.round((vencimiento - hoy) / (1000 * 60 * 60 * 24));
+
+            if (diff > 0) {
+                diasPreview.style.color   = diff <= 7 ? '#f8ac59' : '#1ab394';
+                diasPreview.textContent   = `Vence en ${diff} día${diff !== 1 ? 's' : ''}`;
+            } else if (diff === 0) {
+                diasPreview.style.color   = '#ed5565';
+                diasPreview.textContent   = 'Vence hoy';
+            } else {
+                diasPreview.style.color   = '#ed5565';
+                diasPreview.textContent   = `Venció hace ${Math.abs(diff)} día${Math.abs(diff) !== 1 ? 's' : ''}`;
+            }
+        }
+
+        // ── Toggle renovación ─────────────────────────────────────
+        checkRenovacion.addEventListener("change", function () {
+            contenedorRenovacion.style.display = this.checked ? "block" : "none";
+            if (!this.checked) {
+                inputVencimiento.value  = "";
+                diasPreview.textContent = "";
+            } else {
+                actualizarMinDate();
+            }
+        });
+
+        // ── Preview días restantes al elegir fecha ────────────────
+        inputVencimiento.addEventListener("change", mostrarDiasRestantes);
+
+        // ── select_tipo: resetea el check al cambiar tipo doc ─────
+        window.select_tipo = function () {
+            const divRenovacion = document.querySelector(".renovacion");
+            if (divRenovacion) divRenovacion.style.display = "block";
+
+            checkRenovacion.checked                = false;
+            contenedorRenovacion.style.display     = "none";
+            inputVencimiento.value                 = "";
+            diasPreview.textContent                = "";
+        };
+    });
     </script>
     @include('transaccion.venta.clientes.modal_create')
 @endsection
