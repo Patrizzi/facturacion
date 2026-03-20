@@ -102,8 +102,8 @@
                 <td width="120px" style="">{{$cotizacion_registros->producto->codigo_producto}}</td>
                 <td width="400px" style="">{{$cotizacion_registros->producto->nombre}} <br>{{$cotizacion_registros->producto->descripcion}}</span></td>
                 <td width="auto" style="">{{$cotizacion_registros->cantidad}}</td>
-                <td width="auto" style="">{{$cotizacion_registros->precio_unitario_comi}}</td>
-                <td width="80px" style="" >{{$cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi}}</td>
+                <td width="auto" style="">{{number_format(round($cotizacion_registros->precio_unitario_comi,2),2)}}</td>
+                <td width="80px" style="" >{{number_format(round($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi,2),2)}}</td>
             </tr>
             @endforeach
         </tbody>
