@@ -77,11 +77,10 @@
 
                     {{-- MENU DESPELEGABLE NUEVO --}}
 
-                    {{-- <li><a href=""{{ route('comprobantes.index_factura') }}""><i class="fa fa-tags fa-lg text-white"></i><span
-                                class="nav-label text-white">Ventas</span></a></li> --}}
+                    @canany(['cotizacion.listar', 'cotizacion_m.listar'])
                     <li><a href="{{ route('ventas.cotizacion') }}"><i class="fa fa-tags fa-lg text-white"></i><span
                                 class="nav-label text-white">Ventas</span></a></li>
-
+                    @endcan
                     <li><a href="{{ route('caja_chica.index') }}">
                             <i class="fa fa-money fa-lg text-white"></i><span
                                 class="nav-label text-white">Tesorería</span></a></li>
