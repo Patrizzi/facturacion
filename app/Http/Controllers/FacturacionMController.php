@@ -515,7 +515,7 @@ class FacturacionMController extends Controller
         $banco=Banco::where('estado',0)->get();
         $j = 1;
 
-        // Datos para el update 
+        // Datos para el update
         // Tipo de operación
         $forma_pagos = Forma_pago::get();
         $remisiones = Guia_remision::select('id', 'cod_guia')
@@ -635,7 +635,12 @@ class FacturacionMController extends Controller
         $empresa=Empresa::first();
         $moneda = Moneda::where('id',$facturacion->moneda_id)->first();
         $igv=Igv::first();
-        return view('transaccion.venta.facturacion.facturacion_manual.ticket',compact('facturacion','facturacion_registro','empresa','igv','moneda'));
+        $textoQR = $this->generarTextoQRFacturaM($facturacion, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
+        $pdf=PDF:: loadView('transaccion.venta.facturacion.facturacion_manual.ticket',
+        compact('facturacion', 'facturacion_registro', 'empresa', 'igv', 'moneda', 'textoQR', 'qrCode'))
+        ->setPaper([0,0,170.08,500], 'portrait');
+        return $pdf->stream('ticket-' . $facturacion->codigo_fac. '.pdf');
     }
     public function edit($id)
     {
@@ -683,7 +688,7 @@ class FacturacionMController extends Controller
                 $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
                 $create_cuotas = 1;
             }
-            
+
         }else{ // Si el editado es credito
             if($request->get('forma_pago') == $factura->forma_pago_id){ //Si sigue siendo credito
                 $fecha_pago_forma = $request->input('fecha_pago');
@@ -705,7 +710,7 @@ class FacturacionMController extends Controller
         // $nombre = strstr($operacion, '-', true);
         // $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
 
-        
+
         $factura->cliente_id = $request->get('cliente_id');
         $factura->almacen_id = $request->get('almacen');
         $factura->orden_compra = $request->get('ord_compra');
@@ -785,7 +790,7 @@ class FacturacionMController extends Controller
                 $fact_detra->save();
             }
         }
-        
+
         //  $registros_count = count($factura->registros);
         $count_art = count($request->get('cantidad'));
         // OBTENCION DE PRODUCTOS O SERVICIOS
@@ -858,10 +863,10 @@ class FacturacionMController extends Controller
                     $edit_reg->save();
                 }
             }
-        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear 
+        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear
             // Eliminar registros anteriores
             $eliminar_registros = Facturacion_registro_m::where('facturacion_m_id', $id)->delete();
-            for ($i = 0; $i < $count_art ; $i++) { 
+            for ($i = 0; $i < $count_art ; $i++) {
                 $producto = Producto::where('codigo_producto', $producto_id[$i])->first();
                 if(isset($producto)){
                     $new_reg = new Facturacion_registro_m();
