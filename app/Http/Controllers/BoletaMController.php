@@ -755,7 +755,12 @@ class BoletaMController extends Controller
         $empresa=Empresa::first();
         $moneda = Moneda::where('id',$boleta->moneda_id)->first();
         $igv=Igv::first();
-        return view('transaccion.venta.boleta.boleta_manual.ticket',compact('boleta','boleta_registro','empresa','igv','moneda'));
+        $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
+        $pdf=PDF:: loadView('transaccion.venta.boleta.boleta_manual.ticket',
+        compact('boleta','boleta_registro','empresa','igv','moneda','qrCode','textoQR'))
+        ->setPaper([0,0,170.08,500], 'portrait');
+        return $pdf->stream('ticket-' . $boleta->codigo_boleta . '.pdf');
     }
 
     //FUNCION PARA COMPROBANTES

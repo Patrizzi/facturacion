@@ -1511,14 +1511,17 @@ return redirect()->route('boleta.show',$boleta->id);
         $empresa=Empresa::first();
         $moneda = Moneda::where('id',$boleta->moneda_id)->first();
         $igv=Igv::first();
+        $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
         $pdf=PDF:: loadView('transaccion.venta.boleta.ticket',
-        compact('boleta','boleta_registro','empresa','igv','moneda'))
+        compact('boleta','boleta_registro','empresa','igv','moneda','qrCode','textoQR'))
         ->setPaper([0,0,170.08,500], 'portrait');
         return $pdf->stream('ticket-' . $boleta->codigo_bol . '.pdf');
     }
     public function index3(){
         return view('transaccion.venta.boleta.index3');
     }
+
     public function create2(){
         return view ('transaccion.venta.boleta.create2');
     }
