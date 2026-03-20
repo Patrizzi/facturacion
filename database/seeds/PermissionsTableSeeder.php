@@ -196,23 +196,25 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'personal.crear'], ['description' => 'Crear Personal']);
         Permission::create(['name' => 'personal.ver'], ['description' => 'Mostrar Personal']);
         Permission::create(['name' => 'personal.editar'], ['description' => 'Editar Personal']);
-        Permission::create(['name' => 'personal.anular'], ['description' => 'Anular Personal en el Sistema']);
+        Permission::create(['name' => 'personal.estado'], ['description' => 'Cambiar el estado de un Personal en el Sistema']);
 
         Permission::create(['name' => 'vendedores.listar'], ['description' => 'Lista de Vendedores']);
         Permission::create(['name' => 'vendedores.crear'], ['description' => 'Crear Vendedor']);
         Permission::create(['name' => 'vendedores.ver'], ['description' => 'Mostrar Vendedor']);
         Permission::create(['name' => 'vendedores.editar'], ['description' => 'Editar Vendedor']);
-        Permission::create(['name' => 'vendedores.anular'], ['description' => 'Anular Personal en el Sistema']);
+        Permission::create(['name' => 'vendedores.estado'], ['description' => 'Cambiar el estado de un Personal en el Sistema']);
 
         Permission::create(['name' => 'transporte_publico.listar'], ['description' => 'Lista de Vehiculos de Transporte Público']);
-        Permission::create(['name' => 'transporte_publico.crear'], ['description' => 'Crea Vehiculo de Transporte Público']);
+        Permission::create(['name' => 'transporte_publico.crear'], ['description' => 'Crear Vehiculo de Transporte Público']);
+        Permission::create(['name' => 'transporte_publico.ver'], ['description' => 'Mostrar Vehiculo de Transporte Público']);
         Permission::create(['name' => 'transporte_publico.editar'], ['description' => 'Editar Vehiculo de Transporte Público']);
-        Permission::create(['name' => 'transporte_publico.anular'], ['description' => 'Anular Vehiculo de Transporte Público en el Sistema']);
+        Permission::create(['name' => 'transporte_publico.estado'], ['description' => 'Cambiar el estado de un Vehiculo de Transporte Público en el Sistema']);
 
         Permission::create(['name' => 'transporte_privado.listar'], ['description' => 'Lista de Vehiculos de Transporte Privado']);
-        Permission::create(['name' => 'transporte_privado.crear'], ['description' => 'Crea Vehiculo de Transporte Privado']);
+        Permission::create(['name' => 'transporte_privado.crear'], ['description' => 'Crear Vehiculo de Transporte Privado']);
+        Permission::create(['name' => 'transporte_privado.ver'], ['description' => 'Mostrar Vehiculo de Transporte Privado']);
         Permission::create(['name' => 'transporte_privado.editar'], ['description' => 'Editar Vehiculo de Transporte Privado']);
-        Permission::create(['name' => 'transporte_privado.anular'], ['description' => 'Anular Vehiculo de Transporte Privado en el Sistema']);
+        Permission::create(['name' => 'transporte_privado.estado'], ['description' => 'Cambiar el estado de un Vehiculo de Transporte Privado en el Sistema']);
 
         //* Consultas
 
@@ -256,13 +258,103 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'nota_debito.xml'], ['description' => 'Descargar XML de Nota de Débito Emitida']);
         Permission::create(['name' => 'nota_debito.cdr'], ['description' => 'Descargar XML de Nota de Débito Emitida']);
 
-        // ?
+       
+        // * Productos y Servicios
+
+        Permission::create(['name' => 'productos.listar'], ['description' => 'Lista de Productos']);
+        Permission::create(['name' => 'productos.crear'], ['description' => 'Crear Producto']);
+        Permission::create(['name' => 'productos.ver'], ['description' => 'Mostrar Producto']);
+        Permission::create(['name' => 'productos.editar'], ['description' => 'Editar Producto']);
+        Permission::create(['name' => 'productos.estado'], ['description' => 'Cambiar el estado de un Producto']);
+
+        Permission::create(['name' => 'servicios.listar'], ['description' => 'Lista de Servicios']);
+        Permission::create(['name' => 'servicios.crear'], ['description' => 'Crear Servicio']);
+        Permission::create(['name' => 'servicios.ver'], ['description' => 'Mostrar Servicio']);
+        Permission::create(['name' => 'servicios.editar'], ['description' => 'Editar Servicio']);
+        Permission::create(['name' => 'servicios.estado'], ['description' => 'Cambiar el estado de un Servicio']);
+
+        //* Proyecto PBM
 
         // ?
+
+        //* Correo
         
         // ?
 
-        
+
+        //* Auxiliar
+
+        //? Clientes existe 
+
+        Permission::create(['name' => 'proveedor.listar'], ['description' => 'Lista de Proveedores']);
+        Permission::create(['name' => 'proveedor.crear'], ['description' => 'Crear Proveedor']);
+        Permission::create(['name' => 'proveedor.ver'], ['description' => 'Mostrar Proveedor']);
+        Permission::create(['name' => 'proveedor.editar'], ['description' => 'Editar Proveedor']);
+        Permission::create(['name' => 'proveedor.anular'], ['description' => 'Anular Proveedor']);
+
+        //* Perfil de Usuario
+
+        Permission::create(['name' => 'perfil_usuario.ver'], ['description' => 'Ver informacion del Perfil del Usuario']);
+        Permission::create(['name' => 'perfil_usuario.editar'], ['description' => 'Editar informacion del Perfil del Usuario']);
+
+        //* Mi empresa
+
+        Permission::create(['name' => 'empresa.ver'], ['description' => 'Ver informacion de la Empresa']);
+        Permission::create(['name' => 'empresa.editar'], ['description' => 'Editar informacion de la Empresa']);
+
+        Permission::create(['name' => 'bancos.editar'], ['description' => 'Editar informacion de los Bancos de la Empresa']);
+
+        Permission::create(['name' => 'moneda.editar'], ['description' => 'Editar la Moneda Principal de la Empresa']);
+
+        // * Configuracion
+
+        Permission::create(['name' => 'almacen.listar'], ['description' => 'Lista de los Almacenes']);
+        Permission::create(['name' => 'almacen.crear'], ['description' => 'Crear Almacen para el Sistema']);
+        Permission::create(['name' => 'almacen.ver'], ['description' => 'Mostrar informacion del Almacen']);
+        Permission::create(['name' => 'almacen.editar'], ['description' => 'Editar informacion del Almacen']);
+        Permission::create(['name' => 'almacen.estado'], ['description' => 'Cambiar el estado del Almacen']);
+
+        Permission::create(['name' => 'apariencia.ver'], ['description' => 'Mostrar configuracion de la Apariencia del Sistema']);
+        Permission::create(['name' => 'apariencia.editar'], ['description' => 'Editar configuracion de la Apariencia del Sistema']);
+
+        Permission::create(['name' => 'familia.listar'], ['description' => 'Lista de las Familias de los Productos y Servicios']);
+        Permission::create(['name' => 'familia.crear'], ['description' => 'Crear Familia para los Productos y Servicios']);
+        Permission::create(['name' => 'familia.editar'], ['description' => 'Editar Familia para los Productos y Servicios']);
+        Permission::create(['name' => 'familia.estado'], ['description' => 'Cambiar el estado de la Familia para los Productos y Servicios']);
+
+        Permission::create(['name' => 'subfamilia.ver'], ['description' => 'Mostrar Subfamilia']);
+        Permission::create(['name' => 'subfamilia.crear'], ['description' => 'Crear Subfamilia']);
+        Permission::create(['name' => 'subfamilia.editar'], ['description' => 'Editar Subfamilia']);
+        Permission::create(['name' => 'subfamilia.estado'], ['description' => 'Cambiar el estado de la Subfamilia']);
+
+        Permission::create(['name' => 'garantia_doc.listar'], ['description' => 'Lista de las Garantias para Documentos']);
+        Permission::create(['name' => 'garantia_doc.crear'], ['description' => 'Crear Garantia para Documentos']);
+        Permission::create(['name' => 'garantia_doc.editar'], ['description' => 'Editar Garantia para Documentos']);
+        Permission::create(['name' => 'garantia_doc.estado'], ['description' => 'Cambiar el estado de la Garantia para Documentos']);
+
+        Permission::create(['name' => 'marcas.listar'], ['description' => 'Lista de las Marcas de los Productos y Servicios']);
+        Permission::create(['name' => 'marcas.crear'], ['description' => 'Crear Marca para los Productos y Servicios']);
+        Permission::create(['name' => 'marcas.editar'], ['description' => 'Editar Marca para los Productos y Servicios']);
+        Permission::create(['name' => 'marcas.estado'], ['description' => 'Cambiar el estado de la Marca para los Productos y Servicios']);
+
+        Permission::create(['name' => 'motivos.listar'], ['description' => 'Lista de Motivos']);
+        Permission::create(['name' => 'motivos.crear'], ['description' => 'Crear Marca para los Productos y Servicios']);
+        Permission::create(['name' => 'motivos.editar'], ['description' => 'Editar Marca para los Productos y Servicios']);
+        Permission::create(['name' => 'motivos.estado'], ['description' => 'Cambiar el estado de la Marca para los Productos y Servicios']);
+
+        Permission::create(['name' => 'tipo_cambio.listar'], ['description' => 'Lista de Tipo de Cambio Historico']);
+        Permission::create(['name' => 'tipo_cambio.crar'], ['description' => 'Generar el Tipo de Cambio del Día']);
+        Permission::create(['name' => 'tipo_cambio.editar'], ['description' => 'Editar el Tipo de Cambio del Día']);
+
+        Permission::create(['name' => 'unidad_m.listar'], ['description' => 'Lista Unidades de Medida']);
+        Permission::create(['name' => 'unidad_m.crar'], ['description' => 'Crear Unidad de Medida']);
+        Permission::create(['name' => 'unidad_m.editar'], ['description' => 'Editar Unidad de Medida']);
+        Permission::create(['name' => 'unidad_m.estado'], ['description' => 'Cambiar estado de Unidad de Medida']);
+
+        Permission::create(['name' => 'usuarios.listar'], ['description' => 'Lista Usuarios del Sisitema']);
+        Permission::create(['name' => 'usuarios.crar'], ['description' => 'Crear Unidad de Medida']);
+        Permission::create(['name' => 'usuarios.editar'], ['description' => 'Editar Unidad de Medida']);
+        Permission::create(['name' => 'usuarios.estado'], ['description' => 'Cambiar estado de Unidad de Medida']);
 
 
         //Admin
