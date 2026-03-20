@@ -303,23 +303,23 @@ window.print();
 
 <div class="ticket">
     <div class="header-box box-outline">
-        <h1>Factura Electronica<br>F002-00003848</h1>
+        <h1>Factura Electronica<br>{{ $facturacion->codigo_fac }}</h1>
     </div>
 
     <hr>
 
     <div class="info-section">
-        <p><span class="bold">CLIENTE:</span> SOMA LIMA S.A.C</p>
-        <p><span class="bold">RUC:</span> 202515005</p>
-        <p><span class="bold">FECHA DE EMISION:</span> 14/09/2020 11:14:48</p>
-        <p><span class="bold">FECHA DE FINALIZACION:</span> 14/09/2020</p>
+        <p><span class="bold">CLIENTE: {{ $facturacion->cliente->nombre }} </span> </p>
+        <p><span class="bold">{{ $facturacion->cliente->documento_identificacion }}:</span> {{ $facturacion->cliente->numero_documento }}</p>
+        <p><span class="bold">FECHA DE EMISION:</span> {{ $facturacion->created_at }}</p>
+        <p><span class="bold">FECHA DE FINALIZACION:</span> {{ $facturacion->fecha_vencimiento }}</p>
     </div>
 
     <hr>
 
     <div class="flex-row">
-        <p><span class="bold">Condicion :</span> efectivo</p>
-        <p><span class="bold">Moneda:</span> soles</p>
+        <p><span class="bold">Forma de pago :</span> {{ $facturacion->forma_pago->nombre }}</p>
+        <p><span class="bold">Moneda:</span> {{ $facturacion->moneda->nombre }}</p>
     </div>
 
     <div class="details-header box-outline">
@@ -327,34 +327,26 @@ window.print();
     </div>
 
     <div class="details-body box-outline">
-        <div class="item">
-            <div class="item-title">COMPUTADOR SAMSUNG RTX5090 CORE i9</div>
-            <div>8 UNI | <span class="bold">Precio:</span> S/20.00 | <span class="bold">Importe:</span> S/ 160.00</div>
-        </div>
-        <div class="item">
-            <div class="item-title">COMPUTADOR SAMSUNG RTX5090 CORE i9</div>
-            <div>8 UNI | <span class="bold">Precio:</span> S/20.00 | <span class="bold">Importe:</span> S/ 160.00</div>
-        </div>
-        <div class="item">
-            <div class="item-title">COMPUTADOR SAMSUNG RTX5090 CORE i9</div>
-            <div>8 UNI | <span class="bold">Precio:</span> S/20.00 | <span class="bold">Importe:</span> S/ 160.00</div>
-        </div>
-        <div class="item">
-            <div class="item-title">COMPUTADOR SAMSUNG RTX5090 CORE i9</div>
-            <div>8 UNI | <span class="bold">Precio:</span> S/20.00 | <span class="bold">Importe:</span> S/ 160.00</div>
-        </div>
+        {{ foreach ($facturacion_registro as $registro) {
+
+            <div class="item">
+                <div class="item-title">{$registro->producto_id->name}</div>
+                <div> {{ $registro->cantidad }} UND. | <span class="bold">Precio: </span> {{ $facturacion->moneda->simbolo, numberformat($registro->precio,2)  }} | <span class="bold">Importe:</span> S/ {{ numberformat($registro->precio_unitario_comi * $registro->cantidad),2  }}</div>
+            </div>
+        } }}
+
     </div>
 
     <hr>
 
     <div class="totals-section">
-        <div class="flex-row"><span>OP. GRAVADAS</span><span>S/20.00</span></div>
-        <div class="flex-row"><span>OP. GRATUITAS</span><span>S/20.00</span></div>
-        <div class="flex-row"><span>OP. EXONERADAS</span><span>S/20.00</span></div>
-        <div class="flex-row"><span>OP. INAFECTADAS</span><span>S/20.00</span></div>
-        <div class="flex-row"><span>I.G.V</span><span>S/20.00</span></div>
-        <div class="flex-row"><span>SUBTOTAL</span><span>S/20.00</span></div>
-        <div class="flex-row total-venta"><span>TOTAL VENTA</span><span>S/20.00</span></div>
+        <div class="flex-row"><span>OP. GRAVADAS</span><span>{{ $simbolo }}, {{$operacion_gravada = number_format($facturacion->op_gravada,2)}}</span></div>
+        <div class="flex-row"><span>OP. GRATUITAS</span><span>{{ $simbolo }}, {{ $operacion_gratuita = number_format($facturacion->op_gratuita,2) }}</span></div>
+        <div class="flex-row"><span>OP. EXONERADAS</span><span>{{ $simbolo }}, {{$operacion_exonerada = number_format($facturacion->op_exonerada,2) }}</span></div>
+        <div class="flex-row"><span>OP. INAFECTADAS</span><span>{{ $simbolo }}, {{$operacion_infectada = number_format($facturacion->op_inafectada,2) }}</span></div>
+        <div class="flex-row"><span>I.G.V</span><span>{{ $simbolo }}, {{ $igv = number_format(round($facturacion->op_gravada * $igv->igv_total/100,2),2)  }}</span></div>
+        <div class="flex-row"><span>SUBTOTAL</span><span>{{ $simbolo }}, {{$subtotal = number_format($operacion_gravada+$operacion_inafectada+$operacion_inafectada+$operacion_exonerada)  }}</span></div>
+        <div class="flex-row total-venta"><span>TOTAL VENTA</span><span>{{ $simbolo }}, {{ $igv+$subtotal }} </span></div>
     </div>
 
     <div class="amount-words">

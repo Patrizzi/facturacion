@@ -1705,6 +1705,7 @@ class FacturacionController extends Controller
         $facturacion_registro = Facturacion_registro::where('facturacion_id', $id)->get();
         $empresa = Empresa::first();
         $moneda = Moneda::where('id', $facturacion->moneda_id)->first();
+        $simbolo = $moneda->simbolo;
         $igv = Igv::first();
         $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
