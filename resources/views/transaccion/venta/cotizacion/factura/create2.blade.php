@@ -192,35 +192,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 renovacion">
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="switch-container col-sm-12">
-                <label class="switch">
-                    <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
-                    <span class="slider"></span>
-                </label>
-                <label for="estado_renovacion" class="switch-label">Activar renovación</label>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-12" id="renovacion_container" style="display: none;">
-        <div class="row">
-            <div class="col-sm-6">
-                <label class="control-label" style="font-size:12px; color:#676a6c;">Fecha de vencimiento</label>
-                <input 
-                    type="date" 
-                    id="fecha_vencimiento" 
-                    name="fecha_vencimiento" 
-                    class="form-control"
-                    autocomplete="off"
-                >
-                <span id="dias_restantes_preview" style="font-size:11px; color:#1ab394; margin-top:4px; display:block;"></span>
-            </div>
-        </div>
-    </div>
-</div>
+                       <div class="col-md-6 renovacion">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="switch-container col-sm-12" style="display: flex; align-items: center; gap: 15px;">
+                                        <label class="switch">
+                                            <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
+                                            <span class="slider"></span>
+                                        </label>
+                                        <label for="estado_renovacion" class="switch-label">Activar renovación</label>
+                                        <div id="renovacion_container" style="display: none; flex: 1; margin-left: 60px;">
+                                            <input 
+                                                type="date" 
+                                                id="fecha_vencimiento" 
+                                                name="fecha_vencimiento" 
+                                                class="form-control"
+                                                autocomplete="off"
+                                                style="max-width: 219px;">
+                                            <span id="dias_restantes_preview" style="font-size:11px; color:#1ab394; margin-top:4px; display:block;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-12">
                             <hr style="border: 1px solid #ddd; margin: 10px 0;width: 100%;">
                             <input type="hidden" name   ="almacen" id="almacen_id" class="form-control "
