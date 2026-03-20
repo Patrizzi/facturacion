@@ -2448,11 +2448,7 @@
 
         const selectTipo = document.querySelector(".select2_tipo_coti");
         if (selectTipo) {
-            if (selectTipo.value == "1") {
-                divRenovacion.style.display = "block";
-            } else {
-                divRenovacion.style.display = "block";
-            }
+            divRenovacion.style.display = "block";
         }
     });
 
@@ -2460,35 +2456,31 @@
         const selectTipo = document.querySelector(".select2_tipo_coti");
         const divRenovacion = document.querySelector(".renovacion");
 
-        if (selectTipo.value == "1") {
-            divRenovacion.style.display = "block";
-        } else {
-            divRenovacion.style.display = "block";
+        divRenovacion.style.display = "block";
 
-            const checkRenovacion = document.getElementById("estado_renovacion");
-            const contenedorRenovacion = document.getElementById("renovacion_container");
-            const selectFecha = document.getElementById("select_fecha");
-            const extraSelects = document.getElementById("extra_selects");
+        const checkRenovacion = document.getElementById("estado_renovacion");
+        const contenedorRenovacion = document.getElementById("renovacion_container");
+        const selectFecha = document.getElementById("select_fecha");
+        const extraSelects = document.getElementById("extra_selects");
 
-            if (checkRenovacion) checkRenovacion.checked = false;
-            if (contenedorRenovacion) contenedorRenovacion.style.display = "none";
-            if (selectFecha) selectFecha.value = "";
-            if (extraSelects) extraSelects.innerHTML = "";
-            if (document.getElementById('dia_mensual_hidden')) {
-                document.getElementById('dia_mensual_hidden').value = "";
-            }
-            if (document.getElementById('dia_anual_hidden')) {
-                document.getElementById('dia_anual_hidden').value = "";
-            }
-            if (document.getElementById('mes_anual_hidden')) {
-                document.getElementById('mes_anual_hidden').value = "";
-            }
-            if (document.getElementById('anio_anual_hidden')) {
-                document.getElementById('anio_anual_hidden').value = "";
-            }
-            diaSeleccionadoAnual = null;
-            mesSeleccionadoAnual = null;
+        if (checkRenovacion) checkRenovacion.checked = false;
+        if (contenedorRenovacion) contenedorRenovacion.style.display = "none";
+        if (selectFecha) selectFecha.value = "";
+        if (extraSelects) extraSelects.innerHTML = "";
+        if (document.getElementById('dia_mensual_hidden')) {
+            document.getElementById('dia_mensual_hidden').value = "";
         }
+        if (document.getElementById('dia_anual_hidden')) {
+            document.getElementById('dia_anual_hidden').value = "";
+        }
+        if (document.getElementById('mes_anual_hidden')) {
+            document.getElementById('mes_anual_hidden').value = "";
+        }
+        if (document.getElementById('anio_anual_hidden')) {
+            document.getElementById('anio_anual_hidden').value = "";
+        }
+        diaSeleccionadoAnual = null;
+        mesSeleccionadoAnual = null;
     }
     </script>
     @include('transaccion.venta.clientes.modal_create')
