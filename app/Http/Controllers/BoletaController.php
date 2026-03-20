@@ -1513,11 +1513,22 @@ return redirect()->route('boleta.show',$boleta->id);
         $igv=Igv::first();
         $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
-        $pdf=PDF:: loadView('transaccion.venta.boleta.ticket',
-        compact('boleta','boleta_registro','empresa','igv','moneda','qrCode','textoQR'))
-        ->setPaper([0,0,170.08,500], 'portrait');
+        $alturaBase  = 480;
+        $alturaItems = $boleta_registro->count() * 30;
+        $alturaPapel = $alturaBase + $alturaItems;
+        $pdf = PDF::loadView('transaccion.venta.boleta.ticket',
+            compact('boleta', 'boleta_registro', 'empresa', 'igv', 'moneda', 'qrCode', 'textoQR'))
+            ->setPaper([0, 0, 178, $alturaPapel], 'portrait')
+            ->setOptions([
+                'dpi'                  => 96,
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'Courier',
+            ]);
         return $pdf->stream('ticket-' . $boleta->codigo_bol . '.pdf');
+
     }
+
     public function index3(){
         return view('transaccion.venta.boleta.index3');
     }
