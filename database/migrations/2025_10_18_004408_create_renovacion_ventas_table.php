@@ -19,11 +19,8 @@ class CreateRenovacionVentasTable extends Migration
             $table->foreign('cotizacion_id')->references('id')->on('cotizacion')->onDelete('cascade');
             $table->unsignedBigInteger('cotizacion_manual_id')->nullable();
             $table->foreign('cotizacion_manual_id')->references('id')->on('cotizacion_manual')->onDelete('cascade');
-            $table->enum('frecuencia', ['Mensual', 'Anual']);
-            $table->tinyInteger('dia_mensual')->nullable();
-            $table->tinyInteger('dia_anual')->nullable();
-            $table->tinyInteger('mes_anual')->nullable();
-            $table->smallInteger('anio_anual')->nullable();
+            $table->date('fecha_inicio');
+            $table->date('fecha_vencimiento');
             $table->boolean('estado')->default(1);
             $table->timestamps();
         });
