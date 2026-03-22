@@ -700,67 +700,27 @@ class CotizacionManualController extends Controller
         // VERIFICAR SI EXISTE RENOVACIÓN
         $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
             ->where('estado', 1)
-            ->with('cotizacionManual')
             ->first();
 
-        $fecha_vencimiento = null;
-        $dias_restantes_texto = null;
+        $fecha_vencimiento     = null;
+        $dias_restantes_texto  = null;
         $dias_restantes_numero = null;
 
-        if ($renovacion && $renovacion->cotizacionManual) {
-            $fecha_actual = Carbon::now()->startOfDay();
-            $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay();
+        if ($renovacion) {
+            $fecha_actual      = Carbon::now()->startOfDay();
+            $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+            $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
 
-            if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                $dia_renovacion = (int) $renovacion->dia_mensual;
+            $dias_restantes_numero = $diff;
 
-                $fecha_vencimiento = Carbon::create(
-                    $fecha_emision->year,
-                    $fecha_emision->month,
-                    min($dia_renovacion, $fecha_emision->daysInMonth)
-                )->startOfDay();
-
-                if ($fecha_vencimiento->lt($fecha_emision)) {
-                    $fecha_vencimiento->addMonth();
-                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                }
-
-                while ($fecha_vencimiento->lte($fecha_actual)) {
-                    $fecha_vencimiento->addMonth();
-                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                }
-            }
-            elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                $dia_vencimiento = (int) $renovacion->dia_anual;
-                $mes_vencimiento = (int) $renovacion->mes_anual;
-                $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                try {
-                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                } catch (\Exception $e) {
-                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                        ->endOfMonth()
-                        ->startOfDay();
-                }
-
-                while ($fecha_vencimiento->lte($fecha_actual)) {
-                    $fecha_vencimiento->addYear();
-                }
-            }
-
-            if ($fecha_vencimiento) {
-                $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                $dias_restantes_numero = $dias_diferencia;
-
-                if ($dias_diferencia < 0) {
-                    $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                } elseif ($dias_diferencia == 0) {
-                    $dias_restantes_texto = 'Vence hoy';
-                } elseif ($dias_diferencia == 1) {
-                    $dias_restantes_texto = '1 día';
-                } else {
-                    $dias_restantes_texto = $dias_diferencia . ' días';
-                }
+            if ($diff < 0) {
+                $dias_restantes_texto = abs($diff) . ' días vencido';
+            } elseif ($diff == 0) {
+                $dias_restantes_texto = 'Vence hoy';
+            } elseif ($diff == 1) {
+                $dias_restantes_texto = '1 día';
+            } else {
+                $dias_restantes_texto = $diff . ' días';
             }
         }
 
@@ -793,67 +753,27 @@ class CotizacionManualController extends Controller
         // VERIFICAR SI EXISTE RENOVACIÓN
         $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
             ->where('estado', 1)
-            ->with('cotizacionManual')
             ->first();
 
-        $fecha_vencimiento = null;
-        $dias_restantes_texto = null;
+        $fecha_vencimiento     = null;
+        $dias_restantes_texto  = null;
         $dias_restantes_numero = null;
 
-        if ($renovacion && $renovacion->cotizacionManual) {
-            $fecha_actual = Carbon::now()->startOfDay();
-            $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay();
+        if ($renovacion) {
+            $fecha_actual      = Carbon::now()->startOfDay();
+            $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+            $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
 
-            if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                $dia_renovacion = (int) $renovacion->dia_mensual;
+            $dias_restantes_numero = $diff;
 
-                $fecha_vencimiento = Carbon::create(
-                    $fecha_emision->year,
-                    $fecha_emision->month,
-                    min($dia_renovacion, $fecha_emision->daysInMonth)
-                )->startOfDay();
-
-                if ($fecha_vencimiento->lt($fecha_emision)) {
-                    $fecha_vencimiento->addMonth();
-                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                }
-
-                while ($fecha_vencimiento->lte($fecha_actual)) {
-                    $fecha_vencimiento->addMonth();
-                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                }
-            }
-            elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                $dia_vencimiento = (int) $renovacion->dia_anual;
-                $mes_vencimiento = (int) $renovacion->mes_anual;
-                $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                try {
-                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                } catch (\Exception $e) {
-                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                        ->endOfMonth()
-                        ->startOfDay();
-                }
-
-                while ($fecha_vencimiento->lte($fecha_actual)) {
-                    $fecha_vencimiento->addYear();
-                }
-            }
-
-            if ($fecha_vencimiento) {
-                $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                $dias_restantes_numero = $dias_diferencia;
-
-                if ($dias_diferencia < 0) {
-                    $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                } elseif ($dias_diferencia == 0) {
-                    $dias_restantes_texto = 'Vence hoy';
-                } elseif ($dias_diferencia == 1) {
-                    $dias_restantes_texto = '1 día';
-                } else {
-                    $dias_restantes_texto = $dias_diferencia . ' días';
-                }
+            if ($diff < 0) {
+                $dias_restantes_texto = abs($diff) . ' días vencido';
+            } elseif ($diff == 0) {
+                $dias_restantes_texto = 'Vence hoy';
+            } elseif ($diff == 1) {
+                $dias_restantes_texto = '1 día';
+            } else {
+                $dias_restantes_texto = $diff . ' días';
             }
         }
 
@@ -1022,37 +942,22 @@ public function update(Request $request, $id)
     }
 
     if ($request->has('estado_renovacion') && $request->estado_renovacion == 1) {
-        // Buscar o crear renovación
         $renovacion = RenovacionVentas::firstOrNew([
-            'cotizacion_manual_id' => $cotizacion->id
+            'cotizacion_manual_id' => $cotizacion_m->id
         ]);
 
-        $renovacion->frecuencia = $request->select_fecha;
-        $renovacion->estado = 1;
-
-        if ($request->select_fecha == 'Mensual') {
-            $renovacion->dia_mensual = (int) $request->dia_mensual;
-            $renovacion->dia_anual = null;
-            $renovacion->mes_anual = null;
-            $renovacion->anio_anual = null;
-
-        } elseif ($request->select_fecha == 'Anual') {
-            $renovacion->dia_mensual = null;
-            $renovacion->dia_anual = (int) $request->dia_anual;
-            $renovacion->mes_anual = (int) $request->mes_anual;
-            $renovacion->anio_anual = (int) $request->anio_anual;
-        }
-
+        $renovacion->fecha_inicio      = $renovacion->exists
+                                            ? $renovacion->fecha_vencimiento
+                                            : now()->toDateString();
+        $renovacion->fecha_vencimiento = $request->fecha_vencimiento;
+        $renovacion->estado            = 1;
         $renovacion->save();
 
     } else {
-        // Si se desmarcó el checkbox, desactivar renovación
-        $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)->first();
-        if ($renovacion) {
-            $renovacion->estado = 0;
-            $renovacion->save();
-        }
+        RenovacionVentas::where('cotizacion_manual_id', $cotizacion_m->id)
+            ->update(['estado' => 0]);
     }
+
     return back()->with('success', 'Cotización actualizada correctamente');
 }
 
@@ -1647,76 +1552,29 @@ public function update(Request $request, $id)
                 // TOTAL
                 $end = $sub_total + $igv;
 
-                // VERIFICAR SI EXISTE RENOVACIÓN PARA ESTA COTIZACIÓN
                 $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)
-                    ->where('estado', 1) // ⚠️ Agregué el filtro de estado si lo necesitas
-                    ->with('cotizacionManual')
+                    ->where('estado', 1)
                     ->first();
 
-                $fecha_vencimiento = null;
-                $dias_restantes_texto = null;
+                $fecha_vencimiento     = null;
+                $dias_restantes_texto  = null;
                 $dias_restantes_numero = null;
 
-                if ($renovacion && $renovacion->cotizacionManual) {
-                    $fecha_actual = Carbon::now()->startOfDay(); // ✅ Agregado startOfDay()
-                    $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay(); // ✅ Agregado startOfDay()
+                if ($renovacion) {
+                    $fecha_actual      = Carbon::now()->startOfDay();
+                    $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                    $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
 
-                    // CALCULAR FECHA DE VENCIMIENTO
-                    if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                        $dia_renovacion = (int) $renovacion->dia_mensual; // ✅ Cambiado nombre de variable
+                    $dias_restantes_numero = $diff;
 
-                        // ✅ Crear fecha de vencimiento en el mes de emisión
-                        $fecha_vencimiento = Carbon::create(
-                            $fecha_emision->year,
-                            $fecha_emision->month,
-                            min($dia_renovacion, $fecha_emision->daysInMonth)
-                        )->startOfDay();
-
-                        // ✅ Si la fecha de vencimiento es anterior a la emisión, avanzar un mes
-                        if ($fecha_vencimiento->lt($fecha_emision)) {
-                            $fecha_vencimiento->addMonth();
-                            $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                        }
-
-                        // ✅ Avanzar mientras sea menor o igual a fecha actual
-                        while ($fecha_vencimiento->lte($fecha_actual)) {
-                            $fecha_vencimiento->addMonth();
-                            $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                        }
-
-                    } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                        $dia_vencimiento = (int) $renovacion->dia_anual;
-                        $mes_vencimiento = (int) $renovacion->mes_anual;
-                        $anio_base = $renovacion->anio_anual ?? $fecha_actual->year; // ✅ Cambiado nombre
-
-                        try {
-                            $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay(); // ✅ Agregado startOfDay()
-                        } catch (\Exception $e) {
-                            $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                                ->endOfMonth()
-                                ->startOfDay(); // ✅ Agregado startOfDay()
-                        }
-
-                        // ✅ Avanzar mientras sea menor o igual a fecha actual
-                        while ($fecha_vencimiento->lte($fecha_actual)) {
-                            $fecha_vencimiento->addYear();
-                        }
-                    }
-
-                    // CALCULAR DÍAS RESTANTES
-                    if ($fecha_vencimiento) {
-                        $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                        $dias_restantes_numero = $dias_diferencia;
-
-                        if ($dias_diferencia < 0) {
-                            $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                        } elseif ($dias_diferencia == 0) {
-                            $dias_restantes_texto = 'Vence hoy';
-                        } elseif ($dias_diferencia == 1) {
-                            $dias_restantes_texto = '1 día'; // ✅ Cambiado a '1 día' fijo
-                        } else {
-                            $dias_restantes_texto = $dias_diferencia . ' días';
-                        }
+                    if ($diff < 0) {
+                        $dias_restantes_texto = abs($diff) . ' días vencido';
+                    } elseif ($diff == 0) {
+                        $dias_restantes_texto = 'Vence hoy';
+                    } elseif ($diff == 1) {
+                        $dias_restantes_texto = '1 día';
+                    } else {
+                        $dias_restantes_texto = $diff . ' días';
                     }
                 }
 
@@ -1800,72 +1658,27 @@ public function update(Request $request, $id)
 
                     // VERIFICAR SI EXISTE RENOVACIÓN
                     $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)
-                        ->where('estado', 1) // ✅ Agregado filtro de estado
-                        ->with('cotizacionManual')
+                        ->where('estado', 1)
                         ->first();
 
-                    $fecha_vencimiento = null;
-                    $dias_restantes_texto = null;
+                    $fecha_vencimiento     = null;
+                    $dias_restantes_texto  = null;
                     $dias_restantes_numero = null;
 
-                    if ($renovacion && $renovacion->cotizacionManual) {
-                        $fecha_actual = Carbon::now()->startOfDay(); // ✅ Agregado startOfDay()
-                        $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay(); // ✅ Agregado startOfDay()
+                    if ($renovacion) {
+                        $fecha_actual      = Carbon::now()->startOfDay();
+                        $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                        $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                        $dias_restantes_numero = $diff;
 
-                        if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                            $dia_renovacion = (int) $renovacion->dia_mensual; // ✅ Cambiado nombre y lógica
-
-                            // ✅ Crear fecha de vencimiento en el mes de emisión
-                            $fecha_vencimiento = Carbon::create(
-                                $fecha_emision->year,
-                                $fecha_emision->month,
-                                min($dia_renovacion, $fecha_emision->daysInMonth)
-                            )->startOfDay();
-
-                            // ✅ Si la fecha de vencimiento es anterior a la emisión, avanzar un mes
-                            if ($fecha_vencimiento->lt($fecha_emision)) {
-                                $fecha_vencimiento->addMonth();
-                                $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                            }
-
-                            // ✅ Avanzar mientras sea menor o igual a fecha actual
-                            while ($fecha_vencimiento->lte($fecha_actual)) {
-                                $fecha_vencimiento->addMonth();
-                                $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                            }
-
-                        } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                            $dia_vencimiento = (int) $renovacion->dia_anual;
-                            $mes_vencimiento = (int) $renovacion->mes_anual;
-                            $anio_base = $renovacion->anio_anual ?? $fecha_actual->year; // ✅ Cambiado nombre
-
-                            try {
-                                $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay(); // ✅ Agregado startOfDay()
-                            } catch (\Exception $e) {
-                                $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                                    ->endOfMonth()
-                                    ->startOfDay(); // ✅ Agregado startOfDay()
-                            }
-
-                            // ✅ Avanzar mientras sea menor o igual a fecha actual
-                            while ($fecha_vencimiento->lte($fecha_actual)) {
-                                $fecha_vencimiento->addYear();
-                            }
-                        }
-
-                        if ($fecha_vencimiento) {
-                            $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                            $dias_restantes_numero = $dias_diferencia;
-
-                            if ($dias_diferencia < 0) {
-                                $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                            } elseif ($dias_diferencia == 0) {
-                                $dias_restantes_texto = 'Vence hoy';
-                            } elseif ($dias_diferencia == 1) {
-                                $dias_restantes_texto = '1 día'; // ✅ Cambiado a '1 día' fijo
-                            } else {
-                                $dias_restantes_texto = $dias_diferencia . ' días';
-                            }
+                        if ($diff < 0) {
+                            $dias_restantes_texto = abs($diff) . ' días vencido';
+                        } elseif ($diff == 0) {
+                            $dias_restantes_texto = 'Vence hoy';
+                        } elseif ($diff == 1) {
+                            $dias_restantes_texto = '1 día';
+                        } else {
+                            $dias_restantes_texto = $diff . ' días';
                         }
                     }
 
@@ -1940,75 +1753,28 @@ public function update(Request $request, $id)
             $end2 = number_format(round($end, 2), 2);
 
             // VERIFICAR SI EXISTE RENOVACIÓN
-            $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion->id)
-                ->where('estado', 1) // ✅ Agregado filtro de estado
-                ->with('cotizacionManual')
+            $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
+                ->where('estado', 1)
                 ->first();
 
-            $fecha_vencimiento = null;
-            $dias_restantes_texto = null;
+            $fecha_vencimiento     = null;
+            $dias_restantes_texto  = null;
             $dias_restantes_numero = null;
 
-            if ($renovacion && $renovacion->cotizacionManual) {
-                $fecha_actual = Carbon::now()->startOfDay(); // ✅ Agregado startOfDay()
-                $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay(); // ✅ Agregado startOfDay()
+            if ($renovacion) {
+                $fecha_actual      = Carbon::now()->startOfDay();
+                $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                $dias_restantes_numero = $diff;
 
-                // CALCULAR FECHA DE VENCIMIENTO
-                if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                    $dia_renovacion = (int) $renovacion->dia_mensual; // ✅ Cambiado nombre y lógica
-
-                    // ✅ Crear fecha de vencimiento en el mes de emisión
-                    $fecha_vencimiento = Carbon::create(
-                        $fecha_emision->year,
-                        $fecha_emision->month,
-                        min($dia_renovacion, $fecha_emision->daysInMonth)
-                    )->startOfDay();
-
-                    // ✅ Si la fecha de vencimiento es anterior a la emisión, avanzar un mes
-                    if ($fecha_vencimiento->lt($fecha_emision)) {
-                        $fecha_vencimiento->addMonth();
-                        $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                    }
-
-                    // ✅ Avanzar mientras sea menor o igual a fecha actual
-                    while ($fecha_vencimiento->lte($fecha_actual)) {
-                        $fecha_vencimiento->addMonth();
-                        $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                    }
-
-                } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                    $dia_vencimiento = (int) $renovacion->dia_anual;
-                    $mes_vencimiento = (int) $renovacion->mes_anual;
-                    $anio_base = $renovacion->anio_anual ?? $fecha_actual->year; // ✅ Cambiado nombre
-
-                    try {
-                        $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay(); // ✅ Agregado startOfDay()
-                    } catch (\Exception $e) {
-                        $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                            ->endOfMonth()
-                            ->startOfDay(); // ✅ Agregado startOfDay()
-                    }
-
-                    // ✅ Avanzar mientras sea menor o igual a fecha actual
-                    while ($fecha_vencimiento->lte($fecha_actual)) {
-                        $fecha_vencimiento->addYear();
-                    }
-                }
-
-                // CALCULAR DÍAS RESTANTES
-                if ($fecha_vencimiento) {
-                    $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                    $dias_restantes_numero = $dias_diferencia;
-
-                    if ($dias_diferencia < 0) {
-                        $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                    } elseif ($dias_diferencia == 0) {
-                        $dias_restantes_texto = 'Vence hoy';
-                    } elseif ($dias_diferencia == 1) {
-                        $dias_restantes_texto = '1 día'; // ✅ Cambiado a '1 día' fijo
-                    } else {
-                        $dias_restantes_texto = $dias_diferencia . ' días';
-                    }
+                if ($diff < 0) {
+                    $dias_restantes_texto = abs($diff) . ' días vencido';
+                } elseif ($diff == 0) {
+                    $dias_restantes_texto = 'Vence hoy';
+                } elseif ($diff == 1) {
+                    $dias_restantes_texto = '1 día';
+                } else {
+                    $dias_restantes_texto = $diff . ' días';
                 }
             }
 
@@ -2109,67 +1875,26 @@ public function update(Request $request, $id)
             // VERIFICAR SI EXISTE RENOVACIÓN
             $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
                 ->where('estado', 1)
-                ->with('cotizacionManual')
                 ->first();
 
-            $fecha_vencimiento = null;
-            $dias_restantes_texto = null;
+            $fecha_vencimiento     = null;
+            $dias_restantes_texto  = null;
             $dias_restantes_numero = null;
 
-            if ($renovacion && $renovacion->cotizacionManual) {
-                $fecha_actual = Carbon::now()->startOfDay();
-                $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay();
+            if ($renovacion) {
+                $fecha_actual      = Carbon::now()->startOfDay();
+                $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                $dias_restantes_numero = $diff;
 
-                if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                    $dia_renovacion = (int) $renovacion->dia_mensual;
-
-                    $fecha_vencimiento = Carbon::create(
-                        $fecha_emision->year,
-                        $fecha_emision->month,
-                        min($dia_renovacion, $fecha_emision->daysInMonth)
-                    )->startOfDay();
-
-                    if ($fecha_vencimiento->lt($fecha_emision)) {
-                        $fecha_vencimiento->addMonth();
-                        $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                    }
-
-                    while ($fecha_vencimiento->lte($fecha_actual)) {
-                        $fecha_vencimiento->addMonth();
-                        $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                    }
-                }
-                elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                    $dia_vencimiento = (int) $renovacion->dia_anual;
-                    $mes_vencimiento = (int) $renovacion->mes_anual;
-                    $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                    try {
-                        $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                    } catch (\Exception $e) {
-                        $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                            ->endOfMonth()
-                            ->startOfDay();
-                    }
-
-                    while ($fecha_vencimiento->lte($fecha_actual)) {
-                        $fecha_vencimiento->addYear();
-                    }
-                }
-
-                if ($fecha_vencimiento) {
-                    $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                    $dias_restantes_numero = $dias_diferencia;
-
-                    if ($dias_diferencia < 0) {
-                        $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                    } elseif ($dias_diferencia == 0) {
-                        $dias_restantes_texto = 'Vence hoy';
-                    } elseif ($dias_diferencia == 1) {
-                        $dias_restantes_texto = '1 día';
-                    } else {
-                        $dias_restantes_texto = $dias_diferencia . ' días';
-                    }
+                if ($diff < 0) {
+                    $dias_restantes_texto = abs($diff) . ' días vencido';
+                } elseif ($diff == 0) {
+                    $dias_restantes_texto = 'Vence hoy';
+                } elseif ($diff == 1) {
+                    $dias_restantes_texto = '1 día';
+                } else {
+                    $dias_restantes_texto = $diff . ' días';
                 }
             }
 
@@ -2362,67 +2087,26 @@ public function update(Request $request, $id)
                 // VERIFICAR SI EXISTE RENOVACIÓN
                 $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion_manual_id)
                     ->where('estado', 1)
-                    ->with('cotizacionManual')
                     ->first();
 
-                $fecha_vencimiento = null;
-                $dias_restantes_texto = null;
+                $fecha_vencimiento     = null;
+                $dias_restantes_texto  = null;
                 $dias_restantes_numero = null;
 
-                if ($renovacion && $renovacion->cotizacionManual) {
-                    $fecha_actual = Carbon::now()->startOfDay();
-                    $fecha_emision = Carbon::parse($renovacion->cotizacionManual->fecha_emision)->startOfDay();
+                if ($renovacion) {
+                    $fecha_actual      = Carbon::now()->startOfDay();
+                    $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                    $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                    $dias_restantes_numero = $diff;
 
-                    if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                        $dia_renovacion = (int) $renovacion->dia_mensual;
-
-                        $fecha_vencimiento = Carbon::create(
-                            $fecha_emision->year,
-                            $fecha_emision->month,
-                            min($dia_renovacion, $fecha_emision->daysInMonth)
-                        )->startOfDay();
-
-                        if ($fecha_vencimiento->lt($fecha_emision)) {
-                            $fecha_vencimiento->addMonth();
-                            $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                        }
-
-                        while ($fecha_vencimiento->lte($fecha_actual)) {
-                            $fecha_vencimiento->addMonth();
-                            $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                        }
-                    }
-                    elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                        $dia_vencimiento = (int) $renovacion->dia_anual;
-                        $mes_vencimiento = (int) $renovacion->mes_anual;
-                        $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                        try {
-                            $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                        } catch (\Exception $e) {
-                            $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                                ->endOfMonth()
-                                ->startOfDay();
-                        }
-
-                        while ($fecha_vencimiento->lte($fecha_actual)) {
-                            $fecha_vencimiento->addYear();
-                        }
-                    }
-
-                    if ($fecha_vencimiento) {
-                        $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                        $dias_restantes_numero = $dias_diferencia;
-
-                        if ($dias_diferencia < 0) {
-                            $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                        } elseif ($dias_diferencia == 0) {
-                            $dias_restantes_texto = 'Vence hoy';
-                        } elseif ($dias_diferencia == 1) {
-                            $dias_restantes_texto = '1 día';
-                        } else {
-                            $dias_restantes_texto = $dias_diferencia . ' días';
-                        }
+                    if ($diff < 0) {
+                        $dias_restantes_texto = abs($diff) . ' días vencido';
+                    } elseif ($diff == 0) {
+                        $dias_restantes_texto = 'Vence hoy';
+                    } elseif ($diff == 1) {
+                        $dias_restantes_texto = '1 día';
+                    } else {
+                        $dias_restantes_texto = $diff . ' días';
                     }
                 }
 

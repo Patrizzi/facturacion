@@ -160,7 +160,7 @@
                                     </div>
                                     <div class="col-sm-4 form-control">
                                         <span style="display: block;float: left"> Subtotal:</span>
-                                        <span style="display: block;float: right;"> {{$simbologia}} {{number_format($sub_total, 2)}}</span>
+                                        <span style="display: block;float: right;">{{$simbologia = $cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
                                         <br>
                                         <span style="display: block;float: left"> Op. Gravada: </span>
                                         <span style="display: block;float: right">{{$simbologia}} {{number_format(round($cotizacion->op_gravada,2),2)}}</span><br>
