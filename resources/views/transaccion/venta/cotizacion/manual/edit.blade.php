@@ -142,13 +142,11 @@
                             <div id="renovacion_container" style="display: none;">
                                 <div class="row" style="margin: 0;">
                                     <div class="col-sm-6" style="padding-left: 0;">
-                                        <label style="font-size:11px; color:#676a6c; margin-bottom:3px;">Fecha de vencimiento</label>
                                         <input
                                             type="date"
                                             id="fecha_vencimiento"
                                             name="fecha_vencimiento"
                                             class="form-control form-control-sm"
-                                            style="max-width: 160px;"
                                             min="{{ $renovacion ? $renovacion->fecha_vencimiento->format('Y-m-d') : now()->addDay()->format('Y-m-d') }}"
                                         >
                                         <span id="dias_restantes_preview" style="font-size:11px; margin-top:3px; display:block;"></span>
