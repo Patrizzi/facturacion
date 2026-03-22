@@ -1,288 +1,376 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Factura Electrónica</title>
-</head>
-<body>
+@php $chunks = $boleta_registro->chunk($itemsPorPagina); @endphp
 
-<div class="ticket">
+@foreach($chunks as $pagina => $items)
+<div class="ticket {{ $pagina + 1 < $totalPaginas ? 'page-break' : '' }}">
 
     {{-- ─── HEADER ─── --}}
-    <div class="header-box box-outline">
-        <h1>Factura Electronica<br>F002-00003848</h1>
-    </div>
+    <header>
+        <div class="header-box box-outline">
+            <h1>Boleta Electronica<br>{{ $boleta->codigo_boleta }}</h1>
+            @if($totalPaginas > 1)
+                <small>Página {{ $pagina + 1 }} de {{ $totalPaginas }}</small>
+            @endif
+        </div>
+        <hr>
 
-    <hr>
-
-    {{-- ─── CLIENTE ─── --}}
-    <div class="info-section">
-        <p><span class="bold">CLIENTE:</span> SOMA LIMA S.A.C</p>
-        <p><span class="bold">RUC:</span> 202515005</p>
-        <p><span class="bold">FECHA DE EMISION:</span> 14/09/2020 11:14:48</p>
-        <p><span class="bold">FECHA DE FINALIZACION:</span> 14/09/2020</p>
-    </div>
-
-    <hr>
-
-    {{-- ─── CONDICION / MONEDA ─── --}}
-    <table class="tabla-condicion">
-        <tbody>
-            <tr>
-                <td><span class="bold">Condicion:</span> efectivo</td>
-                <td class="text-right"><span class="bold">Moneda:</span> soles</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <hr>
+        @if($pagina === 0)
+            {{-- Datos del cliente solo en la primera página --}}
+            <div class="info-section">
+                @if(isset($boleta->cliente_id))
+                    <p><span class="bold">CLIENTE:</span> {{ $boleta->cliente->nombre }}</p>
+                    <p><span class="bold">{{ $boleta->cliente->documento_identificacion }}:</span> {{ $boleta->cliente->numero_documento }}</p>
+                @else
+                    <p><span class="bold">CLIENTE:</span> {{ $boleta->cotizacion->cliente->nombre }}</p>
+                @endif
+                <p><span class="bold">FECHA DE EMISION:</span> {{ $boleta->fecha_emision }}</p>
+                <p><span class="bold">FECHA DE FINALIZACION:</span> {{ $boleta->fecha_vencimiento }}</p>
+            </div>
+            <hr>
+            <table class="tabla-condicion">
+                <tr>
+                    <td><span class="bold">Condicion:</span> {{ $boleta->forma_pago->nombre }}</td>
+                    <td class="text-right"><span class="bold">Moneda:</span> {{ $boleta->moneda->nombre }}</td>
+                </tr>
+            </table>
+            <hr>
+        @endif
+    </header>
 
     {{-- ─── DETALLE ─── --}}
-    <div class="details-header box-outline">
-        DETALLE DE COMPRA
-    </div>
-
-    <div class="details-body box-outline">
-        <div class="item">
-            <div class="item-title">IMPRESORA EPSON  TM-U220 TICKET</div>
-            <div class="item-detail">
-                8 UNI | <span class="bold">Precio:</span> S/20.00 | <span class="bold">Importe:</span> S/160.00
+    <main>
+        <div class="details-header box-outline">DETALLE DE COMPRA</div>
+        <div class="details-body box-outline">
+            @foreach($items as $boleta_registros)
+            <div class="item">
+                <div class="item-title">
+                    @if(isset($boleta_registros->producto))
+                        {{ $boleta_registros->producto->nombre }} {{ $boleta_registros->descripcion_item }}
+                        @if(isset($boleta_registros->numero_serie))
+                            <br><strong>N/S:</strong> {{ $boleta_registros->numero_serie }}
+                        @endif
+                    @else
+                        {{ $boleta_registros->servicio->nombre }} {{ $boleta_registros->descripcion_item }}
+                        @if(isset($boleta_registros->numero_serie))
+                            <br><strong>N/S:</strong> {{ $boleta_registros->numero_serie }}
+                        @endif
+                    @endif
+                </div>
+                <div class="item-detail">
+                    {{ $boleta_registros->cantidad }} UNI |
+                    <span class="bold">Precio:</span> S/{{ number_format((float)$boleta_registros->precio_unitario_comi, 2) }} |
+                    <span class="bold">Importe:</span> S/{{ number_format((float)$boleta_registros->precio_unitario_comi * (float)$boleta_registros->cantidad, 2) }}
+                </div>
             </div>
+            @endforeach
         </div>
-        <div class="item">
-            <div class="item-title">COMPUTADOR SAMSUNG RTX5090 CORE i9</div>
-            <div class="item-detail">
-                8 UNI | <span class="bold">Precio:</span> S/20.00 | <span class="bold">Importe:</span> S/160.00
-            </div>
-        </div>
-        <div class="item">
-            <div class="item-title">COMPUTADOR SAMSUNG RTX5090 CORE i9</div>
-            <div class="item-detail">
-                8 UNI | <span class="bold">Precio:</span> S/20.00 | <span class="bold">Importe:</span> S/160.00
-            </div>
-        </div>
-    </div>
+    </main>
 
-    <hr>
-
-    {{-- ─── TOTALES ─── --}}
-    <table class="totals-section">
-        <tbody>
+    {{-- ─── FOOTER (se repite en cada página) ─── --}}
+    <footer>
+        <hr>
+        <table class="totals-section">
+            @php
+                // Valores numéricos puros (float) para operar
+                $sub_total     = (float)$boleta->op_gravada + (float)$boleta->op_inafecta + (float)$boleta->op_exonerada;
+                $igv_p         = round((float)$boleta->op_gravada, 2) * (float)$igv->igv_total / 100;
+                $TotalVent_num = round($sub_total, 2) + round($igv_p, 2); // <- número puro para cálculos
+                $TotalVent     = number_format($TotalVent_num, 2);         // <- string solo para mostrar
+            @endphp
+            <tr>
+                <td class="col-label">SUBTOTAL</td>
+                <td class="col-valor">{{ number_format($sub_total, 2) }}</td>
+            </tr>
             <tr>
                 <td class="col-label">OP. GRAVADAS</td>
-                <td class="col-valor">S/20.00</td>
+                <td class="col-valor">{{ number_format((float)$boleta->op_gravada, 2) }}</td>
             </tr>
             <tr>
                 <td class="col-label">OP. GRATUITAS</td>
-                <td class="col-valor">S/20.00</td>
+                <td class="col-valor">{{ number_format((float)$boleta->op_gratuita, 2) }}</td>
             </tr>
             <tr>
                 <td class="col-label">OP. EXONERADAS</td>
-                <td class="col-valor">S/20.00</td>
+                <td class="col-valor">{{ number_format((float)$boleta->op_exonerada, 2) }}</td>
             </tr>
             <tr>
                 <td class="col-label">OP. INAFECTADAS</td>
-                <td class="col-valor">S/20.00</td>
+                <td class="col-valor">{{ number_format((float)$boleta->op_inafecta, 2) }}</td>
             </tr>
             <tr>
                 <td class="col-label">I.G.V</td>
-                <td class="col-valor">S/20.00</td>
-            </tr>
-            <tr>
-                <td class="col-label">SUBTOTAL</td>
-                <td class="col-valor">S/20.00</td>
+                <td class="col-valor">{{ number_format($igv_p, 2) }}</td>
             </tr>
             <tr class="total-venta">
                 <td class="col-label"><strong>TOTAL VENTA</strong></td>
-                <td class="col-valor"><strong>S/20.00</strong></td>
+                <td class="col-valor"><strong>{{ $TotalVent }}</strong></td>
             </tr>
-        </tbody>
-    </table>
-
-    {{-- ─── MONTO EN LETRAS ─── --}}
-    <div class="amount-words">DOS 40/100 PEN</div>
-
-    <hr>
-
-    {{-- ─── VENDEDOR ─── --}}
-    <div class="vendedor">
-        <p><span class="bold">VENDEDOR(A):</span> DYLAN</p>
-    </div>
-
-    <hr>
-
-    {{-- ─── FOOTER ─── --}}
-    <div class="footer-text">
-        <p>Representacion impresa de la factura electronica.<br>Gracias por su preferencia.</p>
-    </div>
-
-    {{-- ─── QR ─── --}}
-    <div class="qr-container">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Factura+F002-00003848" alt="QR">
-    </div>
+        </table>
+        <hr>
+        <div class="amount-words">
+            @php
+                $v     = new \Luecano\NumeroALetras\NumeroALetras();
+                $letra = $v->toInvoice($TotalVent_num, 2); // <- usa el número, no el string
+            @endphp
+            {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $boleta->moneda->nombre }}
+        </div>
+        <hr>
+        <div class="footer-text">
+            <small>Representación Impresa de <strong>BOLETA ELECTRÓNICA</strong></small>
+            <small>Esta puede ser consultada en www.codecta.pe</small>
+            <small>Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT</small>
+        </div>
+        <div class="qr-container">
+            @if(!empty($qrCode))
+                <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
+            @else
+                <span class="qr-placeholder">QR</span>
+            @endif
+        </div>
+    </footer>
 
 </div>
-
-</body>
-<script>
-    window.print();
-</script>
-</html>
+@endforeach
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    .page-break {
+        page-break-after: always;
+        break-after: always;
+        margin-bottom: 0;
+    }
 
-body    { width: 213px; }
-.ticket { width: 213px; padding: 6px; }
+    header small {
+        display: block;
+        text-align: center;
+        font-size: 9px;
+        font-style: italic;
+        margin-top: 2px;
+    }
 
-.box-outline {
-    border: 1px solid #111;
-}
+    header,
+    footer,
+    main {
+        display: block;
+        width: 100%;
+    }
+    footer{
+         position: relative !important;
+    }
+    .qr-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.header-box {
-    text-align: center;
-    padding: 6px;
-    margin-bottom: 5px;
-}
+    .qr-box {
+        width: 120px;
+        height: 120px;
+        border: 2px solid #3D3D3D;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        background: white;
+    }
 
-.header-box h1 {
-    font-size: 11px;
-    font-weight: bold;
-    line-height: 1.4;
-    margin: 0;
-}
+    .qr-image {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    }
 
-hr {
-    border: none;
-    border-top: 1px solid #111;
-    margin: 4px 0;
-}
+    .qr-placeholder {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
 
-p {
-    margin: 2px 0;
-    font-size: 10px;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-.bold       { font-weight: 700; }
-.text-right { text-align: right; }
+    body {
+        width: 213px;
+    }
 
-.info-section p {
-    font-size: 10px;
-    margin: 2px 0;
-}
+    .ticket {
+        width: 213px;
+        padding: 6px;
+        height: auto !important;
+        overflow: visible !important;
+    }
 
-/* ─── Condicion / Moneda ─── */
-.tabla-condicion {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
+    .box-outline {
+        border: 1px solid #111;
+    }
 
-.tabla-condicion td {
-    font-size: 10px;
-    padding: 1px 0;
-    width: 50%;
-}
+    .header-box {
+        text-align: center;
+        padding: 6px;
+        margin-bottom: 5px;
+    }
 
-/* ─── Detalle header ─── */
-.details-header {
-    text-align: center;
-    padding: 4px;
-    font-size: 10px;
-    font-weight: bold;
-    margin: 4px 0 3px 0;
-    background-color: #f0f0f0;
-}
+    .header-box h1 {
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 1.4;
+        margin: 0;
+    }
 
-/* ─── Detalle body ─── */
-.details-body {
-    padding: 5px 4px;
-    margin-bottom: 4px;
-}
+    hr {
+        border: none;
+        border-top: 1px solid #111;
+        margin: 4px 0;
+    }
 
-.item {
-    text-align: center;
-    margin-bottom: 5px;
-    font-size: 9px;
-    page-break-inside: avoid;
-}
+    p {
+        margin: 2px 0;
+        font-size: 10px;
+    }
 
-.item:last-child { margin-bottom: 0; }
+    .bold {
+        font-weight: 700;
+    }
 
-.item-title {
-    font-weight: 700;
-    font-size: 10px;
-    margin-bottom: 2px;
-}
+    .text-right {
+        text-align: right;
+    }
 
-.item-detail {
-    width: 100%;
-    font-size: 9px;
-    margin-top: 2px;
-    text-align: center;
-}
+    .info-section p {
+        font-size: 10px;
+        margin: 2px 0;
+    }
 
-/* ─── Totales ─── */
-.totals-section {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
+    /* ─── Condicion / Moneda ─── */
+    .tabla-condicion {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
 
-.totals-section td {
-    padding: 2px 0;
-    font-size: 10px;
-    overflow: hidden;
-}
+    .tabla-condicion td {
+        font-size: 10px;
+        padding: 1px 0;
+        width: 50%;
+    }
 
-.col-label { width: 60%; text-align: left; }
-.col-valor { width: 40%; text-align: right; }
+    /* ─── Detalle header ─── */
+    .details-header {
+        text-align: center;
+        padding: 4px;
+        font-size: 10px;
+        font-weight: bold;
+        margin: 4px 0 3px 0;
+        background-color: #f0f0f0;
+    }
 
-.total-venta td {
-    border-top: 1px solid #111;
-    padding-top: 3px;
-    font-size: 11px;
-}
+    /* ─── Detalle body ─── */
+    .details-body {
+        padding: 5px 4px;
+        margin-bottom: 4px;
+    }
 
-/* ─── Monto en letras ─── */
-.amount-words {
-    text-align: center;
-    font-size: 9px;
-    margin: 5px 0;
-    font-style: italic;
-}
+    .item {
+        text-align: center;
+        margin-bottom: 5px;
+        font-size: 9px;
+        page-break-inside: avoid;
+    }
 
-/* ─── Vendedor ─── */
-.vendedor p { font-size: 10px; }
+    .item:last-child {
+        margin-bottom: 0;
+    }
 
-/* ─── Footer ─── */
-.footer-text {
-    text-align: center;
-    font-size: 9px;
-    margin-top: 4px;
-}
+    .item-title {
+        font-weight: 700;
+        font-size: 10px;
+        margin-bottom: 2px;
+    }
 
-.footer-text p { font-size: 9px; }
+    .item-detail {
+        width: 100%;
+        font-size: 9px;
+        margin-top: 2px;
+        text-align: center;
+    }
 
-/* ─── QR ─── */
-.qr-container {
-    text-align: center;
-    margin-top: 6px;
-}
+    /* ─── Totales ─── */
+    .totals-section {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
 
-.qr-container img {
-    width: 80px;
-    height: 80px;
-    border: 1px solid #111;
-    padding: 2px;
-}
+    .totals-section td {
+        padding: 2px 0;
+        font-size: 10px;
+        overflow: hidden;
+    }
 
-@media print {
-    @page { size: 75mm auto; margin: 0; }
-    body  { width: 213px; }
-}
+    .col-label {
+        width: 60%;
+        text-align: left;
+    }
+
+    .col-valor {
+        width: 40%;
+        text-align: right;
+    }
+
+    .total-venta td {
+        border-top: 1px solid #111;
+        padding-top: 3px;
+        font-size: 11px;
+    }
+
+    /* ─── Monto en letras ─── */
+    .amount-words {
+        text-align: center;
+        font-size: 9px;
+        margin: 5px 0;
+        font-style: italic;
+    }
+
+    /* ─── Footer text ─── */
+    .footer-text {
+        text-align: center;
+        font-size: 9px;
+        margin-top: 4px;
+    }
+
+    .footer-text small {
+        display: block;
+        font-size: 70%;
+    }
+
+    /* ─── QR ─── */
+    .qr-container {
+        text-align: center;
+        margin-top: 6px;
+    }
+
+    .qr-container img {
+        width: 80px;
+        height: 80px;
+        border: 1px solid #111;
+        padding: 2px;
+    }
+
+    @media print {
+        @page {
+            size: 75mm auto;
+            margin: 0;
+        }
+
+        html, body {
+            height: auto !important;
+            overflow: hidden !important;
+        }
+
+        .ticket {
+            page-break-inside: avoid;
+        }
+    }
 </style>
