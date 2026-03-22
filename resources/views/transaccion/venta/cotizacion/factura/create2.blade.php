@@ -192,7 +192,7 @@
                                 </div>
                             </div>
                         </div>
-                       <div class="col-md-6 renovacion">
+                        <div class="col-md-6 renovacion">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="switch-container col-sm-12" style="display: flex; align-items: center; gap: 15px;">
@@ -202,10 +202,10 @@
                                         </label>
                                         <label for="estado_renovacion" class="switch-label">Activar renovación</label>
                                         <div id="renovacion_container" style="display: none; flex: 1; margin-left: 60px;">
-                                            <input 
-                                                type="date" 
-                                                id="fecha_vencimiento" 
-                                                name="fecha_vencimiento" 
+                                            <input
+                                                type="date"
+                                                id="fecha_vencimiento"
+                                                name="fecha_vencimiento"
                                                 class="form-control"
                                                 autocomplete="off"
                                                 style="max-width: 219px;">
