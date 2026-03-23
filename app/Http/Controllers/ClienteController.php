@@ -205,7 +205,7 @@ class ClienteController extends Controller
         $ruc = $request->get('ruc');
 
         $response = Http::timeout(10)
-            ->get("http://jypsac.dyndns.org:190/apidata/public/v1/ruc/{$ruc}", [
+            ->get("http://jypsac.dyndns.org:7000/v1/ruc/{$ruc}", [
                 'token' => 'rtjK4ZNT49MSvpfs08pY5oXu3DlX80FNlXZTPv5hXvXzGJk25JL'
             ]);
 
@@ -248,7 +248,7 @@ class ClienteController extends Controller
         $dni = $request->get('dni');
         
         $response = Http::timeout(10)
-            ->get("http://jypsac.dyndns.org:190/apidata/public/v1/dni/{$dni}", [
+            ->get("http://jypsac.dyndns.org:7000/v1/dni/{$dni}", [
                 'token' => 'rtjK4ZNT49MSvpfs08pY5oXu3DlX80FNlXZTPv5hXvXzGJk25JL'
             ]);
 
