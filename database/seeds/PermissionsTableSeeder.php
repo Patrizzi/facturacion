@@ -58,10 +58,15 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'clientes.editar'], ['description' => 'Editar Cliente']);
         Permission::create(['name' => 'clientes.anular'], ['description' => 'Anular Cliente']);
 
+        Permission::create(['name' => 'coti_renovacion.listar'], ['description' => 'Lista de Cotizaciones que se han renovado']); //?
+
         //* Tesoreria
 
-        // ?
-
+        Permission::create(['name' => 'tesoreria.abrir_caja'], ['description' => 'Abrir Caja de Tesorería']); //* Vista de lista
+        Permission::create(['name' => 'tesoreria.cerrar_caja'], ['description' => 'Cerrar Caja de Tesorería']);
+        Permission::create(['name' => 'tesoreria.depositar'], ['description' => 'Depositar en Caja de Tesorería']);
+        Permission::create(['name' => 'tesoreria.pagar'], ['description' => 'Pagar en Caja de Tesorería']);
+        
         //*Comprobantes
         Permission::create(['name' => 'factura.listar'], ['description' => 'Lista de Facturas']);
         Permission::create(['name' => 'factura.crear'], ['description' => 'Crear Factura']);
@@ -153,11 +158,12 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'kardex_salida.ver'], ['description' => 'Mostrar Guía de Salida en Kardex']);
         Permission::create(['name' => 'kardex_salida.anular'], ['description' => 'Anular Guía de Salida en Kardex']);
         
-        // ?
+        Permission::create(['name' => 'inventario.consulta'], ['description' => 'Consulta de Inventario por Producto']);
 
-        // ?
+        Permission::create(['name' => 'cierre_periodo.listar'], ['description' => 'Lista de los Cierres de Periodo en el Sistema']);
+        Permission::create(['name' => 'cierre_periodo.ver'], ['description' => 'Lista de Guías de Salida en Kardex']);
 
-        // ?
+        Permission::create(['name' => 'inventario.movimiento'], ['description' => 'Lista de Movimientos por Productos o Servicios']);
 
         //* Créditos y Cobranzas 
 
@@ -218,7 +224,10 @@ class PermissionsTableSeeder extends Seeder
 
         //* Consultas
 
-        // ?
+        // Permission::create(['name' => 'servicio_tecnico.listar_servicios'], ['description' => 'Lista de Vehiculos de Transporte Privado']);
+        // Permission::create(['name' => 'servicio_tecnico.ingreso'], ['description' => 'Lista de Vehiculos de Transporte Privado']);
+        // Permission::create(['name' => 'servicio_tecnico.egreso'], ['description' => 'Lista de Vehiculos de Transporte Privado']);
+        // Permission::create(['name' => 'servicio_tecnico.informe_tecnico'], ['description' => 'Lista de Vehiculos de Transporte Privado']);
 
         //* Registro Sunat
 
@@ -275,16 +284,22 @@ class PermissionsTableSeeder extends Seeder
 
         //* Proyecto PBM
 
-        // ?
+        
 
         //* Correo
         
-        // ?
+        Permission::create(['name' => 'correo.listar_enviados'], ['description' => 'Lista de Correos Enviados']);
+        Permission::create(['name' => 'correo.enviar'], ['description' => 'Enviar Correo']);
+        Permission::create(['name' => 'correo.lista_borradores'], ['description' => 'Lista de Borradores de Correos']);
+        Permission::create(['name' => 'correo.configuracion'], ['description' => 'Mostrar Servicio']);
+        Permission::create(['name' => 'correo.eliminar'], ['description' => 'Mostrar Servicio']);
+        Permission::create(['name' => 'correo.papelera'], ['description' => 'Mostrar Servicio']);
+        Permission::create(['name' => 'correo.suprimir'], ['description' => 'Mostrar Servicio']);
 
 
         //* Auxiliar
 
-        //? Clientes existe 
+        //! Clientes existe 
 
         Permission::create(['name' => 'proveedor.listar'], ['description' => 'Lista de Proveedores']);
         Permission::create(['name' => 'proveedor.crear'], ['description' => 'Crear Proveedor']);
@@ -343,19 +358,28 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'motivos.estado'], ['description' => 'Cambiar el estado de la Marca para los Productos y Servicios']);
 
         Permission::create(['name' => 'tipo_cambio.listar'], ['description' => 'Lista de Tipo de Cambio Historico']);
-        Permission::create(['name' => 'tipo_cambio.crar'], ['description' => 'Generar el Tipo de Cambio del Día']);
+        Permission::create(['name' => 'tipo_cambio.crear'], ['description' => 'Generar el Tipo de Cambio del Día']);
         Permission::create(['name' => 'tipo_cambio.editar'], ['description' => 'Editar el Tipo de Cambio del Día']);
 
         Permission::create(['name' => 'unidad_m.listar'], ['description' => 'Lista Unidades de Medida']);
-        Permission::create(['name' => 'unidad_m.crar'], ['description' => 'Crear Unidad de Medida']);
+        Permission::create(['name' => 'unidad_m.crear'], ['description' => 'Crear Unidad de Medida']);
         Permission::create(['name' => 'unidad_m.editar'], ['description' => 'Editar Unidad de Medida']);
         Permission::create(['name' => 'unidad_m.estado'], ['description' => 'Cambiar estado de Unidad de Medida']);
 
         Permission::create(['name' => 'usuarios.listar'], ['description' => 'Lista Usuarios del Sisitema']);
-        Permission::create(['name' => 'usuarios.crar'], ['description' => 'Crear Unidad de Medida']);
+        Permission::create(['name' => 'usuarios.crear'], ['description' => 'Crear Unidad de Medida']);
         Permission::create(['name' => 'usuarios.editar'], ['description' => 'Editar Unidad de Medida']);
         Permission::create(['name' => 'usuarios.estado'], ['description' => 'Cambiar estado de Unidad de Medida']);
 
+        Permission::create(['name' => 'validez.listar'], ['description' => 'Lista de Validez para Comprobantes']);
+        Permission::create(['name' => 'validez.crear'], ['description' => 'Crear Validez para Comprobantes']);
+        Permission::create(['name' => 'validez.editar'], ['description' => 'Crear Validez para Comprobantes']);
+        Permission::create(['name' => 'validez.estado'], ['description' => 'Crear Validez para Comprobantes']);
+
+        Permission::create(['name' => 'alarma.listar'], ['description' => 'Lista de Alarma para Comprobantes']);
+        Permission::create(['name' => 'alarma.crear'], ['description' => 'Crear de Alarma para Comprobantes']);
+        Permission::create(['name' => 'alarma.editar'], ['description' => 'Crear de Alarma para Comprobantes']);
+        Permission::create(['name' => 'alarma.estado'], ['description' => 'Crear de Alarma para Comprobantes']);
 
         //Admin
         $super_admin = Role::create(['name' => 'SuperAdministrador']);
