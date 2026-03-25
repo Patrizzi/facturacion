@@ -123,9 +123,9 @@
                 <span class="qr-placeholder">QR</span>
             @endif
         </div>
-        {{--  <div class="cabecera-include">
+        <div class="cabecera-include">
             @include('layout_cabecera_ventas')
-        </div>  --}}
+        </div>
     </footer>
 
 </div>
