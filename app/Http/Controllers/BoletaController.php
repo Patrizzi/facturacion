@@ -1511,19 +1511,22 @@ class BoletaController extends Controller
         $igv             = Igv::first();
         $textoQR         = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
         $qrCode          = $this->generarImagenQR($textoQR);
-
-        $itemsPorPagina  = 15;
+        //secicon de total de paignas
+        $itemsPorPagina  = 10;
         $totalItems      = $boleta_registro->count();
+        $alturaPapel = 0;
         $totalPaginas    = ceil($totalItems / $itemsPorPagina);
+        //ancho y alto de papeles
         $anchoPapel  = 170;
         $alturaHeader = 120;
         $alturaFooter = 300;
-        $alturaItem   = 28;
-
-        $alturaPorPagina = $alturaHeader + ($itemsPorPagina * $alturaItem) + $alturaFooter;
-        $alturaPapel = 0;
-        foreach ($boleta_registro->chunk($itemsPorPagina) as $chunk) {
-            $alturaPapel += $alturaHeader + ($chunk->count() * $alturaItem) + $alturaFooter;
+        //cargar datos por seccion
+        if($itemsPorPagina>$totalItems){
+                $alturaPapel += $alturaHeader+$alturaFooter;
+        }else{
+            foreach ($boleta_registro->chunk($itemsPorPagina) as $chunk) {
+                $alturaPapel += $alturaHeader + $chunk->count() + $alturaFooter;
+            }
         }
         $pdf = PDF::loadView(
             'transaccion.venta.boleta.ticket',

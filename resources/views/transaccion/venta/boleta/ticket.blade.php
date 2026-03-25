@@ -109,7 +109,7 @@
         <div class="amount-words">
             @php
                 $v     = new \Luecano\NumeroALetras\NumeroALetras();
-                $letra = $v->toInvoice($TotalVent_num, 2); // <- usa el número, no el string
+                $letra = $v->toInvoice($TotalVent_num, 2);
             @endphp
             {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $boleta->moneda->nombre }}
         </div>
