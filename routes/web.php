@@ -526,6 +526,7 @@ Route::group(
         Route::post('parameter_call/ajax_remision', 'ParameterCallController@ajax_remision')->name('pa.ajax_remision');
         Route::post('parameter_call/getPersonalVendedor', 'ParameterCallController@getPersonalVendedor')->name('pa.getPersonalVendedor');
         Route::post('parameter_call/getFormaPago', 'ParameterCallController@getFormaPago')->name('pa.getFormaPago');
+        Route::post('parameter_call/getPersonalData', 'ParameterCallController@getPersonalData')->name('pa.getPersonalData');
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
@@ -909,7 +910,7 @@ Route::group(
         Route::post('usuario/permisos/asignar/{id}', 'UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
         Route::post('usuario/permisos/delegar/{id}', 'UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
         Route::resource('/usuario', 'UsuarioController');
-        Route::get('/usuarios', 'UsuarioController@index_usuarios')->name('usuarios.index');
+        Route::get('/perfil', 'UsuarioController@perfil')->name('usuario.perfil');
         Route::resource('/venta', 'VentaController');
 
         //Roles y Permisos

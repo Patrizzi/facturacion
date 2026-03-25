@@ -577,7 +577,7 @@
                                 <!-- Menú desplegable -->
                                 <div id="dropdownMenu"
                                     style="display: none; position: absolute; bottom: 50px; right: 0; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 5px; padding: 10px; width: 150px;">
-                                    <a href="{{ route('usuario.index') }}" class="dropdown-item"
+                                    <a href="{{ route('usuario.perfil') }}" class="dropdown-item"
                                         style="display: block; color: black; padding: 8px; text-decoration: none;">
                                         <i class="fa fa-user-circle-o fa-lg"></i> Mi perfil</a>
                                     <a href="{{ route('empresa.index') }}" class="dropdown-item"

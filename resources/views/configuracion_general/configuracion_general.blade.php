@@ -190,7 +190,7 @@
 
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('usuarios.index') }}">
+                <a href="{{ route('usuario.index') }}">
                     <div class="img-container">
                         <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Usuarios" class="img-bg">
                         <img src="https://static.vecteezy.com/system/resources/previews/060/498/831/non_2x/fascinating-acclaimed-facial-recognition-software-icon-with-transparent-background-free-png.png" alt="Icono Usuarios" class="img-overlay">
@@ -351,7 +351,7 @@
                             </div>
                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
                                 <button class="btn btn-success dim tam pt-4" type="button">
-                                    <a href="{{ route('usuarios.index') }}">
+                                    <a href="{{ route('usuario.index') }}">
                                         <img class="rounded bg-white p-2" src="{{ asset('img/logos/usuarios.svg') }}"
                                             width="50px" alt="">
                                         <p class="pt-md-3 display-6 fs-4 text-white">USUARIOS</p>
@@ -377,7 +377,6 @@
                                </button>
                            </div></a>
                             <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                <!-- ELEMENTO FANTASMA - RELLENO
                             </div>
                         </div>
                     </div>

@@ -21,6 +21,7 @@ use App\Forma_pago;
 use App\TipoCambio;
 use App\Kardex_entrada;
 use App\helpers;
+use App\Personal;
 use App\Personal_venta;
 use App\Tipo_operacion_f;
 use App\TipoDetraccion;
@@ -883,5 +884,9 @@ class ParameterCallController extends Controller
         return response()->json($forma_pago);
     }
 
+    public function getPersonalData(Request $request){
+        $data = Personal::findorFail($request->id);
+        return response()->json($data);
+    }
 
 }

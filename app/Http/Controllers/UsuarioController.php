@@ -34,8 +34,11 @@ class UsuarioController extends Controller
         $usuarios=User::where('id','!=',1)->get();
         $almacen=Almacen::where('estado',0)->get();
         $i = 1;
+        $roles = Role::where('id', '!=', '1')->get();
+        $personal = Personal::where('usuario_registrado',0)->where('estado',1)->get();
         // return view('configuracion_general.usuario.index',compact('usuarios','almacen','i'));
-        return view('configuracion_general.usuario.index2',compact('usuarios'));
+        // return $personal;
+        return view('configuracion_general.usuario.index',compact('usuarios','almacen','i','roles','personal'));
     }
     public function index_usuarios()
     {
@@ -216,6 +219,19 @@ class UsuarioController extends Controller
     public function show($id)
     {
         //no xD
+    }
+
+     public function perfil()
+    {
+        // $usuarios=User::where('id','!=',1)->get();
+        $usuarios=User::where('id','!=',1)->get();
+        $almacen=Almacen::where('estado',0)->get();
+        $i = 1;
+        $roles = Role::where('id', '!=', '1')->get();
+        $personal = Personal::where('usuario_registrado',0)->where('estado',1)->get();
+        // return view('configuracion_general.usuario.index',compact('usuarios','almacen','i'));
+        // return $personal;
+        return view('configuracion_general.usuario.perfil',compact('usuarios','roles','personal'));
     }
 
     /**

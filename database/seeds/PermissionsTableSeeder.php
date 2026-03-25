@@ -59,6 +59,8 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'clientes.anular'], ['description' => 'Anular Cliente']);
 
         Permission::create(['name' => 'coti_renovacion.listar'], ['description' => 'Lista de Cotizaciones que se han renovado']); //?
+        Permission::create(['name' => 'coti_renovacion.crear'], ['description' => 'Activar la Renovacion de Comprobantes']);
+
 
         //* Tesoreria
 
