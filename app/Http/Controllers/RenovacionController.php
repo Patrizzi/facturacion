@@ -151,79 +151,31 @@ public function index()
                 $end = round($sub_total, 2) + round($igv, 2);
 
                 // CALCULAR FECHA DE VENCIMIENTO Y DÍAS RESTANTES
-                $fecha_vencimiento = null;
-                $dias_restantes_texto = null;
-                $dias_restantes_numero = null;
+                $fecha_actual      = Carbon::now()->startOfDay();
+                $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
 
-                $fecha_actual = Carbon::now()->startOfDay();
-                $fecha_emision = Carbon::parse($cotizacion->fecha_emision)->startOfDay();
-
-                // CALCULAR FECHA DE VENCIMIENTO
-                if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                    $dia_renovacion = (int) $renovacion->dia_mensual;
-
-                    $fecha_vencimiento = Carbon::create(
-                        $fecha_emision->year,
-                        $fecha_emision->month,
-                        min($dia_renovacion, $fecha_emision->daysInMonth)
-                    )->startOfDay();
-
-                    if ($fecha_vencimiento->lt($fecha_emision)) {
-                        $fecha_vencimiento->addMonth();
-                        $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                    }
-
-                    while ($fecha_vencimiento->lte($fecha_actual)) {
-                        $fecha_vencimiento->addMonth();
-                        $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                    }
-
-                } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                    $dia_vencimiento = (int) $renovacion->dia_anual;
-                    $mes_vencimiento = (int) $renovacion->mes_anual;
-                    $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                    try {
-                        $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                    } catch (\Exception $e) {
-                        $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                            ->endOfMonth()
-                            ->startOfDay();
-                    }
-
-                    while ($fecha_vencimiento->lte($fecha_actual)) {
-                        $fecha_vencimiento->addYear();
-                    }
-                }
-
-                // CALCULAR DÍAS RESTANTES
-                if ($fecha_vencimiento) {
-                    $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                    $dias_restantes_numero = $dias_diferencia;
-
-                    if ($dias_diferencia < 0) {
-                        $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                    } elseif ($dias_diferencia == 0) {
-                        $dias_restantes_texto = 'Vence hoy';
-                    } elseif ($dias_diferencia == 1) {
-                        $dias_restantes_texto = '1 día';
-                    } else {
-                        $dias_restantes_texto = $dias_diferencia . ' días';
-                    }
+                if ($diff < 0) {
+                    $dias_restantes_texto = abs($diff) . ' días vencido';
+                } elseif ($diff == 0) {
+                    $dias_restantes_texto = 'Vence hoy';
+                } elseif ($diff == 1) {
+                    $dias_restantes_texto = '1 día';
+                } else {
+                    $dias_restantes_texto = $diff . ' días';
                 }
 
                 $cotizacionesData[] = [
-                    'cotizacion' => $cotizacion,
-                    'cotizacion_m_reg' => $cotizacion_m_reg, // ✅ Mantener el nombre original
-                    'sub_total' => $sub_total,
-                    'igv' => $igv,
-                    'end' => $end,
-                    'renovacion' => $renovacion,
-                    'fecha_vencimiento' => $fecha_vencimiento,
-                    'dias_restantes_texto' => $dias_restantes_texto,
-                    'dias_restantes_numero' => $dias_restantes_numero
+                    'cotizacion'            => $cotizacion,
+                    'cotizacion_m_reg'      => $cotizacion_m_reg,
+                    'sub_total'             => $sub_total,
+                    'igv'                   => $igv,
+                    'end'                   => $end,
+                    'renovacion'            => $renovacion,
+                    'fecha_vencimiento'     => $fecha_vencimiento,
+                    'dias_restantes_texto'  => $dias_restantes_texto,
+                    'dias_restantes_numero' => $diff
                 ];
-            }
 
             // Datos comunes
             $banco = Banco::where('estado', '0')->get();
@@ -236,8 +188,10 @@ public function index()
                 'empresa',
                 'banco',
                 'banco_count',
-                'j'
+                'j',
+                'igv'
             ));
+        }
 
         } catch (\Exception $e) {
             return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
