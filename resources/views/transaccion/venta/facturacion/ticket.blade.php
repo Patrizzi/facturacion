@@ -1,251 +1,294 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ticket Factura</title>
-    {{-- <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"> --}}
-    {{-- <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet"> --}}
-    <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-    <script LANGUAGE="JavaScript">
-        function cerrar() {
-            // window.close();
-        }
-    </script>
-
-</head>
-<body class="" onLoad="setTimeout('cerrar()',1*1000)">
-{{--
-
-
-<div class="contenedor-impresion-ticket">
-    <div class="row">
-        <div class="col-lg-12" align="center">
-            <strong><span>Factura Electronica</span></strong><br>
-            <span>{{$facturacion->codigo_fac}}</span>
-        </div>
-        <hr>
-        <div class="col-lg-12" align="center">
-            <span>{{$facturacion->created_at}}</span><br>
-            <span>{{$empresa->razon_social}}</span><br>
-            <span><strong>R.U.C:</strong> {{$empresa->ruc}}</span><br>
-            <span>{{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}}</span><br>
-            <span>Telefono: {{$empresa->telefono}}</span>
-        </div>
-        <hr>
-        <div class="col-lg-12">
-            <table class="table" style="border-color: white;width: 100%">
-
-                    <tr style="border-color: white;width: 100%">
-                        <td>Cliente</td>
-                        <td>:</td>
-                        <td>{{$facturacion->cliente->nombre}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{$facturacion->cliente->documento_identificacion}}</td>
-                        <td>:</td>
-                        <td>{{$facturacion->cliente->numero_documento}}</td>
-                    </tr>
-
-            </table>
-        </div>
-
-        <hr>
-        <div class="col-lg-12">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="width: 40%">Articulo</th>
-                        <th style="width: 14%">Cant.</th>
-                        <th style="width: 24%">P. Unit</th>
-                        <th style="width: 22%">Total</th>
-                    </tr>
-                </thead>
-                <tbody  >
-                    @foreach ($facturacion_registro as $item)
-                        <tr class="body_table">
-                            @if(isset($item->producto_id))
-                                <td>{{$item->producto->nombre}}</td>
-                            @else
-                                <td>{{$item->servicio->nombre}}</td>
-                            @endif
-                            <td >{{$item->cantidad}}</td>
-                            <td class="mont">{{number_format($item->precio_unitario_comi,2)}}</td>
-                            <td class="mont">{{number_format($item->precio_unitario_comi* $item->cantidad,2)}}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-    <table style="width: 100%">
-        <tbody>
-            <tr>
-                <td>Subtotal</td>
-                <td>:</td>
-                <td align="right">{{$simbolo  = $moneda->simbolo }}{{$subtotal = number_format($facturacion->op_gravada+$facturacion->op_inafecta + $facturacion->op_exonerada,2)}} </td>
-            </tr>
-            <tr>
-                <td>Op. Gravada</td>
-                <td>:</td>
-                <td align="right">{{$simbolo}}. {{number_format($facturacion->op_gravada,2)}}</td>
-            </tr>
-            <tr>
-                <td>Op. Inafecta</td>
-                <td>:</td>
-                <td align="right">{{$simbolo}}. {{number_format($facturacion->op_inafecta,2)}} </td>
-            </tr>
-            <tr>
-                <td>Op. Exonerada</td>
-                <td>:</td>
-                <td align="right">{{$simbolo}}. {{number_format($facturacion->op_exonerada,2)}}  </td>
-            </tr>
-            <tr>
-                <td>I.G.V</td>
-                <td>:</td>
-                <td align="right">{{$simbolo}}. {{$igv = number_format(round($facturacion->op_gravada * $igv->igv_total/100,2),2)}}</td>
-            </tr>
-            <tr>
-                <td>Total</td>
-                <td>:</td>
-                <td align="right">{{$simbolo}}. {{$total = number_format(round($subtotal + $igv,2),2)}}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="row" >
-        <div class="col-sm-12" align="center">
-            <span>Atendido por {{auth()->user()->nombre}}</span><br>
-            <span>Autorizado mediante resolucion</span><br>
-            <span>N° RS 018-005-0002243/SUNAT</span><br>
-            <span>Representación impresa de la</span><br>
-            <span>Factura de Venta Electronica</span><br>
-            <span>Para consultar el documento</span><br>
-            <span>Ingrese a:</span><br>
-            <span>{{$empresa->pagina_web}}</span><br>
-        </div>
-    </div>
-</div>
-</body>
-
-<style>
-*{
-    margin: 0mm;
-    padding: 0mm;
-
-    font-size: 13px;
-
-}
-html{
-    margin: 0mm;
-    padding: 0mm;
-}
-
-table{
-    border: none;
-}
-.body_table > td{
-
-    font-size: 12px;
-}
-.mont{
-    text-align: right;
-}
-</style>
-
-<script type="text/javascript">
-window.print();
-</script>
---}}
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Factura Electrónica</title>
+
+</head>
+<body>
+
+@php $chunks = $facturacion_registro->chunk($itemsPorPagina); @endphp
+
+@foreach($chunks as $pagina => $items)
+<div class="ticket {{ $pagina + 1 < $totalPaginas ? 'page-break' : '' }}">
+
+    {{-- ─── HEADER ─── --}}
+    <header>
+        <div class="header-box box-outline">
+            <h1>Boleta Electronica<br>{{ $facturacion->codigo_fac }}</h1>
+            @if($totalPaginas > 1)
+                <small>Página {{ $pagina + 1 }} de {{ $totalPaginas }}</small>
+            @endif
+        </div>
+        <hr>
+
+        @if($pagina === 0)
+            {{-- Datos del cliente solo en la primera página --}}
+            <div class="info-section">
+                @if(isset($facturacion->cliente))
+                    <p><span class="bold">CLIENTE:</span> {{ $facturacion->cliente->nombre }}</p>
+                    <p><span class="bold">{{ $facturacion->cliente->documento_identificacion }}:</span> {{ $facturacion->cliente->numero_documento }}</p>
+                @else
+                    <p><span class="bold">CLIENTE:</span> {{ $facturacion->cotizador->cliente->nombre}}</p>
+                @endif
+                <p><span class="bold">FECHA DE EMISION:</span> {{ $facturacion->fecha_emision }}</p>
+                <p><span class="bold">FECHA DE FINALIZACION:</span> {{ $facturacion->fecha_vencimiento }}</p>
+            </div>
+            <hr>
+            <table class="tabla-condicion">
+                <tr>
+                    <td><span class="bold">Condicion:</span> {{ $facturacion->forma_pago->nombre }}</td>
+                    <td class="text-right"><span class="bold">Moneda:</span> {{ $facturacion->moneda->nombre }}</td>
+                </tr>
+            </table>
+            <hr>
+        @endif
+    </header>
+
+    {{-- ─── DETALLE ─── --}}
+    <main>
+        <div class="details-header box-outline">DETALLE DE COMPRA</div>
+        <div class="details-body box-outline">
+            @foreach($items as $registro)
+            <div class="item">
+                <div class="item-title">
+                    @if(isset($registro->producto))
+                        {{ $registro->producto->nombre }} {{ $registro->descripcion_item }}
+                        @if(isset($registro->numero_serie))
+                            <br><strong>N/S:</strong> {{ $registro->numero_serie }}
+                        @endif
+                    @else
+                        {{ $registro->servicio->nombre }} {{ $registro->descripcion_item }}
+                        @if(isset($registro->numero_serie))
+                            <br><strong>N/S:</strong> {{ $registro->numero_serie }}
+                        @endif
+                    @endif
+                </div>
+                <div class="item-detail">
+                    {{ $registro->cantidad }} UNI |
+                    <span class="bold">Precio:</span> S/{{ number_format((float)$registro->precio_unitario_comi, 2) }} |
+                    <span class="bold">Importe:</span> S/{{ number_format((float)$registro->precio_unitario_comi * (float)$registro->cantidad, 2) }}
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </main>
+
+    {{-- ─── FOOTER (se repite en cada página) ─── --}}
+    <footer>
+        <hr>
+        <table class="totals-section">
+            @php
+                // Valores numéricos puros (float) para operar
+                $sub_total     = (float)$facturacion->op_gravada + (float)$facturacion->op_inafecta + (float)$facturacion->op_exonerada;
+                $igv_p         = round((float)$facturacion->op_gravada, 2) * (float)$igv->igv_total / 100;
+                $TotalVent_num = round($sub_total, 2) + round($igv_p, 2); // <- número puro para cálculos
+                $TotalVent     = number_format($TotalVent_num, 2);         // <- string solo para mostrar
+            @endphp
+            <tr>
+                <td class="col-label">SUBTOTAL</td>
+                <td class="col-valor">{{ number_format($sub_total, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">OP. GRAVADAS</td>
+                <td class="col-valor">{{ number_format((float)$facturacion->op_gravada, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">OP. GRATUITAS</td>
+                <td class="col-valor">{{ number_format((float)$facturacion->op_gratuita, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">OP. EXONERADAS</td>
+                <td class="col-valor">{{ number_format((float)$facturacion->op_exonerada, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">OP. INAFECTADAS</td>
+                <td class="col-valor">{{ number_format((float)$facturacion->op_inafecta, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">I.G.V</td>
+                <td class="col-valor">{{ number_format($igv_p, 2) }}</td>
+            </tr>
+            <tr class="total-venta">
+                <td class="col-label"><strong>TOTAL VENTA</strong></td>
+                <td class="col-valor"><strong>{{ $TotalVent }}</strong></td>
+            </tr>
+        </table>
+        <hr>
+        <div class="amount-words">
+            @php
+                $v     = new \Luecano\NumeroALetras\NumeroALetras();
+                $letra = $v->toInvoice($TotalVent_num, 2);
+            @endphp
+            {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $facturacion->moneda->nombre }}
+        </div>
+        <hr>
+        <div class="footer-text">
+            <small>Representación Impresa de <strong>BOLETA ELECTRÓNICA</strong></small>
+            <small>Esta puede ser consultada en www.codecta.pe</small>
+            <small>Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT</small>
+        </div>
+        <div class="qr-container">
+            @if(!empty($qrCode))
+                <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
+            @else
+                <span class="qr-placeholder">QR</span>
+            @endif
+        </div>
+    </footer>
+
+</div>
+@endforeach
+<script type="text/javascript">
+window.print();
+</script>
 <style>
-    /* Estilos Generales */
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f4f4;
+    .page-break {
+        page-break-after: always;
+        break-after: always;
+        margin-bottom: 0;
+    }
+
+    header small {
+        display: block;
+        text-align: center;
+        font-size: 9px;
+        font-style: italic;
+        margin-top: 2px;
+    }
+
+    header,
+    footer,
+    main {
+        display: block;
+        width: 100%;
+    }
+    footer{
+         position: relative !important;
+    }
+    .qr-container {
         display: flex;
         justify-content: center;
-        padding: 20px;
-        color: #111;
+        align-items: center;
     }
 
-    /* Contenedor principal del ticket */
+    .qr-box {
+        width: 120px;
+        height: 120px;
+        border: 2px solid #3D3D3D;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        background: white;
+    }
+
+    .qr-image {
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+    }
+
+    .qr-placeholder {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        width: 213px;
+    }
+
     .ticket {
-        background-color: #fff;
-        width: 340px;
-        padding: 20px 25px;
-        border-radius: 5px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        width: 213px;
+        padding: 6px;
+        height: auto !important;
+        overflow: visible !important;
     }
 
-    /* Cajas con bordes redondeados y sombra sutil */
     .box-outline {
-        border: 1.5px solid #111;
-        border-radius: 8px;
-        box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+        border: 1px solid #111;
     }
 
     .header-box {
         text-align: center;
-        padding: 12px;
-        margin-bottom: 15px;
+        padding: 6px;
+        margin-bottom: 5px;
     }
 
     .header-box h1 {
-        font-size: 20px;
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 1.4;
         margin: 0;
-        font-weight: normal;
-        line-height: 1.3;
     }
 
-    /* Separadores */
     hr {
         border: none;
-        border-top: 1.5px solid #111;
-        margin: 12px 0;
+        border-top: 1px solid #111;
+        margin: 4px 0;
     }
 
-    /* Tipografía y utilidades */
     p {
-        margin: 4px 0;
-        font-size: 13px;
+        margin: 2px 0;
+        font-size: 10px;
     }
 
     .bold {
         font-weight: 700;
     }
 
-    .flex-row {
-        display: flex;
-        justify-content: space-between;
+    .text-right {
+        text-align: right;
     }
 
-    /* Sección de Detalles */
+    .info-section p {
+        font-size: 10px;
+        margin: 2px 0;
+    }
+
+    /* ─── Condicion / Moneda ─── */
+    .tabla-condicion {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .tabla-condicion td {
+        font-size: 10px;
+        padding: 1px 0;
+        width: 50%;
+    }
+
+    /* ─── Detalle header ─── */
     .details-header {
         text-align: center;
-        padding: 6px;
-        font-size: 14px;
+        padding: 4px;
+        font-size: 10px;
         font-weight: bold;
-        margin: 15px 0 5px 0;
-        background-color: #fafafa;
+        margin: 4px 0 3px 0;
+        background-color: #f0f0f0;
     }
 
+    /* ─── Detalle body ─── */
     .details-body {
-        padding: 15px 10px;
-        margin-bottom: 15px;
+        padding: 5px 4px;
+        margin-bottom: 4px;
     }
 
     .item {
         text-align: center;
-        margin-bottom: 12px;
-        font-size: 12px;
+        margin-bottom: 5px;
+        font-size: 9px;
+        page-break-inside: avoid;
     }
 
     .item:last-child {
@@ -254,124 +297,95 @@ window.print();
 
     .item-title {
         font-weight: 700;
+        font-size: 10px;
         margin-bottom: 2px;
-        font-size: 11.5px;
     }
 
-    /* Sección de Totales */
+    .item-detail {
+        width: 100%;
+        font-size: 9px;
+        margin-top: 2px;
+        text-align: center;
+    }
+
+    /* ─── Totales ─── */
     .totals-section {
-        font-size: 12px;
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
     }
 
-    .totals-section .flex-row {
-        margin-bottom: 4px;
+    .totals-section td {
+        padding: 2px 0;
+        font-size: 10px;
+        overflow: hidden;
     }
 
-    .total-venta {
-        font-weight: 700;
+    .col-label {
+        width: 60%;
+        text-align: left;
+    }
+
+    .col-valor {
+        width: 40%;
+        text-align: right;
+    }
+
+    .total-venta td {
+        border-top: 1px solid #111;
+        padding-top: 3px;
+        font-size: 11px;
+    }
+
+    /* ─── Monto en letras ─── */
+    .amount-words {
+        text-align: center;
+        font-size: 9px;
+        margin: 5px 0;
+        font-style: italic;
+    }
+
+    /* ─── Footer text ─── */
+    .footer-text {
+        text-align: center;
+        font-size: 9px;
+        margin-top: 4px;
+    }
+
+    .footer-text small {
+        display: block;
+        font-size: 70%;
+    }
+
+    /* ─── QR ─── */
+    .qr-container {
+        text-align: center;
         margin-top: 6px;
     }
 
-    .amount-words {
-        text-align: center;
-        font-size: 14px;
-        margin: 15px 0 5px 0;
-    }
-
-    /* Footer y QR */
-    .footer-text {
-        text-align: center;
-        font-size: 12px;
-        margin-top: 10px;
-    }
-
-    .qr-container {
-        text-align: center;
-        margin-top: 15px;
-    }
-
     .qr-container img {
-        width: 130px;
-        height: 130px;
-        border: 2px solid #111;
-        border-radius: 8px;
-        padding: 4px;
+        width: 80px;
+        height: 80px;
+        border: 1px solid #111;
+        padding: 2px;
+    }
+
+    @media print {
+        @page {
+            size: 75mm auto;
+            margin: 0;
+        }
+
+        html, body {
+            height: auto !important;
+            overflow: hidden !important;
+        }
+
+        .ticket {
+            page-break-inside: avoid;
+        }
     }
 </style>
-</head>
-<body>
-
-<div class="ticket">
-    <div class="header-box box-outline">
-        <h1>Factura Electronica<br>{{ $facturacion->codigo_fac }}</h1>
-    </div>
-
-    <hr>
-
-    <div class="info-section">
-        <p><span class="bold">CLIENTE: {{ $facturacion->cliente->nombre }} </span> </p>
-        <p><span class="bold">{{ $facturacion->cliente->documento_identificacion }}:</span> {{ $facturacion->cliente->numero_documento }}</p>
-        <p><span class="bold">FECHA DE EMISION:</span> {{ $facturacion->created_at }}</p>
-        <p><span class="bold">FECHA DE FINALIZACION:</span> {{ $facturacion->fecha_vencimiento }}</p>
-    </div>
-
-    <hr>
-
-    <div class="flex-row">
-        <p><span class="bold">Forma de pago :</span> {{ $facturacion->forma_pago->nombre }}</p>
-        <p><span class="bold">Moneda:</span> {{ $facturacion->moneda->nombre }}</p>
-    </div>
-
-    <div class="details-header box-outline">
-        DETALLE DE COMPRA
-    </div>
-
-    <div class="details-body box-outline">
-        {{ foreach ($facturacion_registro as $registro) {
-
-            <div class="item">
-                <div class="item-title">{$registro->producto_id->name}</div>
-                <div> {{ $registro->cantidad }} UND. | <span class="bold">Precio: </span> {{ $facturacion->moneda->simbolo, numberformat($registro->precio,2)  }} | <span class="bold">Importe:</span> S/ {{ numberformat($registro->precio_unitario_comi * $registro->cantidad),2  }}</div>
-            </div>
-        } }}
-
-    </div>
-
-    <hr>
-
-    <div class="totals-section">
-        <div class="flex-row"><span>OP. GRAVADAS</span><span>{{ $simbolo }}, {{$operacion_gravada = number_format($facturacion->op_gravada,2)}}</span></div>
-        <div class="flex-row"><span>OP. GRATUITAS</span><span>{{ $simbolo }}, {{ $operacion_gratuita = number_format($facturacion->op_gratuita,2) }}</span></div>
-        <div class="flex-row"><span>OP. EXONERADAS</span><span>{{ $simbolo }}, {{$operacion_exonerada = number_format($facturacion->op_exonerada,2) }}</span></div>
-        <div class="flex-row"><span>OP. INAFECTADAS</span><span>{{ $simbolo }}, {{$operacion_infectada = number_format($facturacion->op_inafectada,2) }}</span></div>
-        <div class="flex-row"><span>I.G.V</span><span>{{ $simbolo }}, {{ $igv = number_format(round($facturacion->op_gravada * $igv->igv_total/100,2),2)  }}</span></div>
-        <div class="flex-row"><span>SUBTOTAL</span><span>{{ $simbolo }}, {{$subtotal = number_format($operacion_gravada+$operacion_inafectada+$operacion_inafectada+$operacion_exonerada)  }}</span></div>
-        <div class="flex-row total-venta"><span>TOTAL VENTA</span><span>{{ $simbolo }}, {{ $igv+$subtotal }} </span></div>
-    </div>
-
-    <div class="amount-words">
-        DOS 40/100 PEN
-    </div>
-
-    <hr>
-
-    <div>
-        <p><span class="bold">VENDEDOR(A):</span> DYLAN</p>
-    </div>
-
-    <hr>
-
-    <div class="footer-text">
-        <p>Representacion impresa de la factura electronica.<br>Gracias por su preferencia.</p>
-    </div>
-
-    <div class="qr-container">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Factura+F002-00003848" alt="Código QR">
-    </div>
-</div>
-<script type="text/javascript">
-window.print();
-</script>
 
 </body>
 </html>
