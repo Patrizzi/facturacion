@@ -2,231 +2,202 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $titulo }}</title>
-    <link rel="stylesheet" href="css/caja-chica/pdf-deposito.css">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 10px;
-            background-color: #f8f9fa;
-            font-size: 12px;
+            font-size: 10px;
+            color: #1a1a1a;
+            background: #fff;
         }
 
-        .pdf-container {
-            max-width: 800px;
+        .doc-wrapper {
+            width: 750px;
             margin: 0 auto;
-            background: white;
-            padding: 15px;
+            padding: 50px 20px;
+
+        }
+
+        /* ── CABECERA CENTRADA ── */
+        .header-center {
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .header-center .empresa-nombre {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .header-center div {
+            font-size: 10px;
+        }
+
+        /* ── NRO PAGO (alineado a la derecha) ── */
+        .nro-pago-row {
+            text-align: right;
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            margin-right: 20px;
+        }
+
+        /* ── DOS CAJAS: CLIENTE | CONDICIONES ── */
+        .two-boxes {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+            table-layout: fixed;
+        }
+
+        .box-left, .box-right {
+            display: table-cell;
+            border: 1px solid #1a1a1a;
+            padding: 10px 12px;
+            vertical-align: top;
+        }
+
+        .box-left {
+            margin-right: 4%;
+        }
+
+        /* No hay display:table-cell margin, usamos wrapper */
+        .boxes-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 16px 0;
+            margin-bottom: 30px;
+        }
+
+        .boxes-table td {
+            border: 1px solid #1a1a1a;
+            padding: 10px 12px;
+            vertical-align: top;
+            font-size: 10px;
+            width: 50%;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .pdf-header {
-            text-align: center;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-        }
-
-        .pdf-title {
-            color: #007bff;
-            font-size: 20px;
+        .boxes-table .field-label {
             font-weight: bold;
-            margin: 0;
+        } 
+
+        /* ── TABLA DE ÍTEMS ── */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
         }
 
-        .pdf-subtitle {
-            color: #6c757d;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-
-        .pdf-info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .pdf-info-item {
-            margin-bottom: 8px;
-        }
-
-        .pdf-label {
-            font-weight: bold;
-            color: #495057;
-            font-size: 10px;
-            text-transform: uppercase;
-            margin-bottom: 3px;
-            display: block;
-        }
-
-        .pdf-value {
-            font-size: 12px;
-            color: #212529;
+        .items-table th {
+            border-top: 0.5px solid #ccc;
+            border-bottom: 1px solid #1a1a1a;
             padding: 5px 8px;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            min-height: 16px;
-        }
-
-        .pdf-value.large {
-            font-size: 16px;
-            font-weight: bold;
-            color: #dc3545;
-        }
-
-        .pdf-value.badge {
-            background-color: #17a2b8;
-            color: white;
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            border: none;
-        }
-
-        .pdf-full-width {
-            grid-column: 1 / -1;
-        }
-
-        .pdf-comprobante {
-            text-align: center;
-            margin: 8px 0;
-            padding: 8px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-        }
-
-        .pdf-comprobante img {
-            width: 250px%;
-            height: 250px;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-            margin-top: 5px;
-        }
-
-        .pdf-comprobante p {
-            margin: 3px 0;
             font-size: 10px;
-        }
-
-        .pdf-footer {
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #dee2e6;
-            text-align: center;
-            font-size: 10px;
-            color: #6c757d;
-        }
-
-        .pdf-nro-pago {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #ffc107;
-            color: #212529;
-            padding: 5px 10px;
-            border-radius: 15px;
             font-weight: bold;
-            font-size: 12px;
+            text-align: left;
+        }
+
+        .items-table th.right,
+        .items-table td.right {
+            text-align: right;
+        }
+
+        .items-table td {
+            padding: 5px 8px;
+            font-size: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .items-table .col-sep {
+            border-left: 1px solid #1a1a1a;   
+        }
+
+        /* separadores verticales en cabecera */
+        .items-table thead th + th {
+            border-left: 1px solid #1a1a1a;
+        }
+
+        /* ── CAJA OBSERVACIONES ── */
+        .obs-box {
+            border: 1px solid #1a1a1a;
+            padding: 10px 12px;
+            min-height: 5%;
+            font-size: 10px;
+            border-radius: 10px;
+        }
+
+        .obs-box .obs-label {
+            font-weight: bold;
+            margin-bottom: 6px;
         }
 
         @media print {
-            body {
-                margin: 0;
-                padding: 5px;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .pdf-container {
-                box-shadow: none;
-                margin: 0;
-                padding: 10px;
-            }
-
-            @page {
-                margin: 0.5in;
-                size: A4;
-            }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .doc-wrapper { width: 100%; }
+            @page { margin: 0.4in; size: A4; }
         }
     </style>
 </head>
 <body>
-    <div class="pdf-container">
-        <div class="pdf-nro-pago">
-            NRO. PAGO: {{ $transaccion->nro_pago }}
-        </div>
+<div class="doc-wrapper">
 
-        <div class="pdf-header">
-            <h1 class="pdf-title">{{ $titulo }}</h1>
-            <p class="pdf-subtitle">Sistema de Tesorería - Caja Chica</p>
-        </div>
-
-        <div class="pdf-info-grid">
-            <div class="pdf-info-item">
-                <span class="pdf-label">Fecha:</span>
-                <div class="pdf-value">{{ $fecha }}</div>
-            </div>
-
-            <div class="pdf-info-item">
-                <span class="pdf-label">DNI:</span>
-                <div class="pdf-value">{{ $dni ?: 'No especificado' }}</div>
-            </div>
-
-            <div class="pdf-info-item pdf-full-width">
-                <span class="pdf-label">Nombres:</span>
-                <div class="pdf-value">{{ $nombres }}</div>
-            </div>
-
-            <div class="pdf-info-item">
-                <span class="pdf-label">Tipo de Transacción:</span>
-                <div class="pdf-value badge">{{ $tipo_transaccion }}</div>
-            </div>
-
-            <div class="pdf-info-item">
-                <span class="pdf-label">Monto:</span>
-                <div class="pdf-value large">S/ {{ number_format($monto, 2) }}</div>
-            </div>
-
-            <div class="pdf-info-item pdf-full-width">
-                <span class="pdf-label">Descripción:</span>
-                <div class="pdf-value">{{ $descripcion ?: 'Sin descripción' }}</div>
-            </div>
-
-            <div class="pdf-info-item">
-                <span class="pdf-label">Método de Pago:</span>
-                <div class="pdf-value">{{ $metodo_pago ?: 'No especificado' }}</div>
-            </div>
-
-            <div class="pdf-info-item">
-                <span class="pdf-label">Nro. Operación:</span>
-                <div class="pdf-value">{{ $nro_operacion ?: 'No aplica' }}</div>
-            </div>
-
-            @if($comprobante)
-            <div class="pdf-info-item pdf-full-width">
-                <span class="pdf-label">Comprobante:</span>
-                <div class="pdf-comprobante">
-                    <img src="{{ public_path('storage/comprobantes/' . basename($comprobante)) }}" alt="Comprobante de depósito">
-                </div>
-            </div>
-            @endif
-
-            <div class="pdf-info-item pdf-full-width">
-                <span class="pdf-label">Observaciones:</span>
-                <div class="pdf-value">{{ $observaciones ?: 'Sin observaciones' }}</div>
-            </div>
-        </div>
-
-        <div class="pdf-footer">
-            <p>Fecha de generación: {{ date('d/m/Y H:i:s') }}</p>
-            <p>Sistema de Tesorería - Caja Chica</p>
-        </div>
+    <!-- ══ CABECERA CENTRADA ══ -->
+    <div class="header-center">
+        <div class="empresa-nombre">{{ $empresa_nombre ?? 'J&P PERIFERICOS' }}</div>
+        <div>Tel.: {{ $empresa_telefono ?? '013308292/ móvil -51946201443' }}</div>
+        <div>{{ $empresa_email ?? 'julioflores@jypperifericos.com' }}</div>
+        <div>{{ $empresa_direccion ?? 'Av. Bolivia 148 Of. 2218 Pta4 - Galeria Centro de Lima - Lima - Peru' }}</div>
     </div>
+
+    <!-- ══ NRO PAGO ══ -->
+    <div class="nro-pago-row">
+        NRO PAGO: {{ str_pad($transaccion->nro_pago, 5, '0', STR_PAD_LEFT) }}
+    </div>
+
+    <!-- ══ CAJA CLIENTE | CAJA CONDICIONES ══ -->
+    <table class="boxes-table">
+        <tr>
+            <td>
+                <div class="field-row"><span class="field-label">Cliente:</span> {{ $nombres }}</div>
+                <div class="field-row"><span class="field-label">DNI:</span> {{ $dni ?: 'No especificado' }}</div>
+            </td>
+            <td>
+                <div class="field-row"><span class="field-label">Fecha emisión:</span> {{ $fecha }}</div>
+                <div class="field-row"><span class="field-label">Tipo de transacción:</span> {{ $tipo_transaccion }}</div>
+                <div class="field-row"><span class="field-label">Método de pago:</span> {{ $metodo_pago ?: 'No especificado' }}</div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- ══ TABLA DE ÍTEMS ══ -->
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th style="width:15%">Nro. Operación</th>
+                <th style="width:55%" class="col-sep">Descripción</th>
+                <th style="width:20%" class="col-sep right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ $nro_operacion ?: 'No aplica' }}</td>
+                <td class="col-sep">{{ $descripcion ?: 'Sin descripción' }}</td>
+                <td class="col-sep right">S/ {{ number_format($monto, 2) }}</td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+    <!-- ══ CAJA OBSERVACIONES ══ -->
+    <div class="obs-box">
+        <div class="obs-label">Observaciones:</div>
+        <div>{{ $observaciones ?: '' }}</div>
+    </div>
+
+</div>
 </body>
 </html>
