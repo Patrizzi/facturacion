@@ -498,7 +498,7 @@
                                                 <div id="renovacion_container" style="display: none;">
                                                     <div class="row" style="margin: 0;">
                                                         <div class="col-sm-7" style="padding-left: 0;">
-                                                            <label style="font-size:11px; color:#676a6c; margin-bottom:3px;">Fecha de vencimiento</label>
+                                                            <label style="font-size:11px; color:#676a6c; margin-bottom:3px;">Nueva Fecha de Renovación</label>
                                                             <input 
                                                                 type="date" 
                                                                 id="fecha_vencimiento" 
