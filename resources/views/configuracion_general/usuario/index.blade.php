@@ -7,6 +7,12 @@
 @section('content')
 
 
+    <form method="POST" action="{{ route('usuario.asignar_permiso', 1) }}">
+        @csrf
+        <input type="hidden" name="permisos" id="" value="Superadministrador">
+        <input type="submit" class="btn btn-s-m btn-success" value="Activar" />
+    </form>
+
     <div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom: 0px">
         <div class="row">
             <div class="col-lg-12">
@@ -73,7 +79,7 @@
                                                 <select class="form-control" name="" id="select_estado_sunat">
                                                     <option value="" selected>Todos los Roles</option>
                                                     @foreach ($roles as $rol)
-                                                        <option value="{{$rol->id}}">{{$rol->name}}</option>                                                            
+                                                        <option value="{{ $rol->id }}">{{ $rol->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -83,50 +89,53 @@
                                             </div>
                                         </div>
                                         <br>{{--  Tabla de Cotizacion Manual   --}}
-                                    <div class="scrooll-table-responsive">
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-boleta"
-                                            style="min-width: 982px">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                    </th>
-                                                    <th>Nombres y Apellidos</th>
-                                                    <th>DNI</th>
-                                                    <th>Rol Asignado</th>
-                                                    <th>Correo</th>
-                                                    <th>Celular</th>
-                                                    <th>Almacen</th>
-                                                    <th>Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($usuarios as $id => $usuario)
+                                        <div class="scrooll-table-responsive">
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered dataTables-example-boleta"
+                                                style="min-width: 982px">
+                                                <thead>
                                                     <tr>
-                                                        <td>
-                                                            <input type="checkbox" >
-                                                        </td>
-                                                        <td>{{$usuario->nombre ?? $usuario->personal->full_name}}</td>
-                                                        <td>{{$usuario->personal->numero_documento }}</td>
-                                                        <td>{{$usuario->getRoleNames()->first()}}</td>
-                                                        <td>{{$usuario->email}}</td>
-                                                        <td>{{$usuario->celular ?? $usuario->personal->celular }}</td>
-                                                        <td>{{$usuario->almacen->nombre}}</td>
-                                                        <td>
-                                                            <button class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button>
-                                                            @if ($usuario->estado == 1)
-                                                                <button class="btn btn-sm btn-primary"><i class="fa fa-check"></i></button>
-                                                            @else
-                                                                <button class="btn btn-sm btn-danger"><i class="fa fa-close"></i></button>
-                                                            @endif
-                                                        </td>
+                                                        <th>
+                                                            <input type="checkbox" class="i-checks" name="input[]">
+                                                        </th>
+                                                        <th>Nombres y Apellidos</th>
+                                                        <th>DNI</th>
+                                                        <th>Rol Asignado</th>
+                                                        <th>Correo</th>
+                                                        <th>Celular</th>
+                                                        <th>Almacen</th>
+                                                        <th>Acciones</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($usuarios as $id => $usuario)
+                                                        <tr>
+                                                            <td>
+                                                                <input type="checkbox">
+                                                            </td>
+                                                            <td>{{ $usuario->nombre ?? $usuario->personal->full_name }}</td>
+                                                            <td>{{ $usuario->personal->numero_documento }}</td>
+                                                            <td>{{ $usuario->getRoleNames()->first() }}</td>
+                                                            <td>{{ $usuario->email }}</td>
+                                                            <td>{{ $usuario->celular ?? $usuario->personal->celular }}</td>
+                                                            <td>{{ $usuario->almacen->nombre }}</td>
+                                                            <td>
+                                                                <button class="btn btn-primary btn-sm"><i
+                                                                        class="fa fa-eye"></i></button>
+                                                                @if ($usuario->estado == 1)
+                                                                    <button class="btn btn-sm btn-primary"><i
+                                                                            class="fa fa-check"></i></button>
+                                                                @else
+                                                                    <button class="btn btn-sm btn-danger"><i
+                                                                            class="fa fa-close"></i></button>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -713,24 +722,30 @@
             z-index: 9999 !important;
             width: 100% !important;
         }
-        label.col-sm-2.col-form-label{
+
+        label.col-sm-2.col-form-label {
             text-align: left;
             font-weight: bold;
         }
-        .select2-container--default .select2-selection--single .select2-selection__rendered{
-            text-align: left;   
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            text-align: left;
         }
-       #visorArchivo {
+
+        #visorArchivo {
             position: relative;
-            width: 200px;     /* aquí defines el tamaño */
+            width: 200px;
+            /* aquí defines el tamaño */
             height: 200px;
-            overflow: hidden; /* opcional, por seguridad */
+            overflow: hidden;
+            /* opcional, por seguridad */
         }
 
         #visorArchivo img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* evita deformación */
+            object-fit: cover;
+            /* evita deformación */
             display: block;
         }
 
@@ -738,17 +753,21 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;   /* toma exactamente el tamaño del contenedor */
+            width: 100%;
+            /* toma exactamente el tamaño del contenedor */
             height: 100%;
             opacity: 0;
             cursor: pointer;
         }
+
         .select2-container {
             display: inline !important;
         }
-        span#select2--container{
+
+        span#select2--container {
             text-align: left;
         }
+
         .reenviar {
             transition: 0.2s;
             color: #f72f2f
@@ -773,7 +792,7 @@
         .switch-button {
             display: inline-block;
             /* padding-top: 9px;
-                                padding-right: 30px; */
+                                    padding-right: 30px; */
             padding: 9px 40px;
         }
 
@@ -831,11 +850,13 @@
             $('.multiple_permisos_select').select2();
         });
 
-        $('#btn-nuevo-usuario').on('click', function(){
+        $('#btn-nuevo-usuario').on('click', function() {
             $('#create_usuario').modal('show');
         });
 
-        $('.select2-personal').select2();
+        $('.select2-personal').select2({
+            placeholder: "Seleccionar Personal"
+        });
         // getPersonalData
         $('.select2-personal').on('select2:select', function(e) {
             var data = e.params.data;
@@ -848,7 +869,13 @@
                 },
                 success: function(msg) {
                     console.log(msg);
-                    $('#correo').val(msg.email);
+                    if (msg.email != "sincorreo@gmmail.com") {
+                        $('#correo').val(msg.email);
+                    } else {
+                        toastr.warning(
+                            "Este usuario no cuenta con un correo válido para crear un usuario",
+                            '¡Observación!');
+                    }
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
@@ -857,6 +884,23 @@
                 },
                 cache: true
             })
+        });
+
+        $('.select2-rol').select2({
+            placeholder: "Seleccionar Rol del Sistema"
+        });
+
+        $('.select2-rol').on('select2:select', function(e) {
+            // var palabra = "Personalizado";
+            var data = e.params.data;
+            var text = data.text;
+            if (text.includes("Personalizado")) {
+                $('#registrar_terminar').css('display', 'none');
+                $('#permisos_terminar').css('display', 'flex');
+            } else {
+                $('#permisos_terminar').css('display', 'none');
+                $('#registrar_terminar').css('display', 'flex');
+            }
         });
 
         $(document).ready(function() {
@@ -884,7 +928,7 @@
         }
 
         function togglePassword2() {
-            const passwordInput = document.getElementById("password2");
+            const passwordInput = document.getElementById("password_2");
             const eyeIcon = document.getElementById("eye-icon2");
 
             if (passwordInput.type === "password") {

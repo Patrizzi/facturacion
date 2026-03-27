@@ -12,7 +12,7 @@
                 {{-- ccccccccccccccccc --}}
                 <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
                     <h2>Agregar Nuevo Usuario</h2>
-                    <form action="" enctype="multipart/form-data" method="post">
+                    <form action="{{route('usuario.create')}}" enctype="multipart/form-data" method="post">
                         @csrf
                         <fieldset>
                             <legend style="margin-bottom: 10px;">
@@ -21,13 +21,11 @@
                                         style="width: 200px;height: 200px;border-radius: 5px">
                                     <input type="file" id="archivoInput" name="avatar" onchange="return validarExt()" />
                                 </div>
-                                
                             </legend>
                             <small>(Click para cambiar la imagen)</small>
                             <div>
                                 <div class="panel-body">
                                     <div class="row">
-
                                         <label class="col-sm-2 col-form-label">Personal:</label>
                                         <div class="col-sm-10" style="padding-bottom: 10px">
                                             <select class="select2-personal" name="persona_id" id="persona_id">
@@ -71,16 +69,17 @@
                                                     autocomplete="off" placeholder="******" required="required"> --}}
                                                 <div class="input-group-append">
                                                     <span class="input-group-addon toggle-password"
-                                                        onclick="togglePassword()">
+                                                        onclick="togglePassword2()">
                                                         <i class="fa fa-eye-slash" id="eye-icon2"></i>
                                                         <!-- Cambiado a "fa-eye-slash" -->
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <label class="col-sm-2 col-form-label">Cargo:</label>
+                                        <label class="col-sm-2 col-form-label">Rol:</label>
                                         <div class="col-sm-4" style="padding-bottom: 10px">
-                                            <select class="select2-personal" name="rol_id" id="rol_id">
+                                            <select class="select2-rol" name="rol_id" id="rol_id">
+                                                <option value="">Seleccionar Rol</option>
                                                 @foreach ($roles as $rol)
                                                     <option value="{{ $rol->id }}">{{ $rol->name }}
                                                     </option>
@@ -97,7 +96,9 @@
                                             </select>
                                         </div>
                                         <div class="col-sm-12">
-                                            <button class="btn btn-primary" type="submit">Registrar</button>
+                                            <br style="margin: 5px">
+                                            <button class="btn btn-primary" type="submit" id="registrar_terminar" value="0">Registrar</button>
+                                            <button class="btn btn-primary" type="submit" id="permisos_terminar" value="1" style="display: none">Configurar Permisos</button>
                                         </div>
                                     </div>
                                 </div>

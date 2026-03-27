@@ -902,14 +902,15 @@ Route::group(
 
         //Usuarios
         Route::get('/usuario/lista', 'UsuarioController@lista')->name('usuario.lista');
-        Route::get('usuario/crear/{id}', 'UsuarioController@crear')->name('usuario.crear');
-        Route::post('usuario/creacion/{guia}', 'UsuarioController@creacion')->name('usuario.creacion');
+        // Route::get('usuario/crear/{id}', 'UsuarioController@crear')->name('usuario.crear');
         Route::post('usuario/envio_codigo/{id}', 'UsuarioController@envio_codigo')->name('usuario.envio_codigo');
         Route::post('usuario/activar/{id}', 'UsuarioController@activar')->name('usuario.activar');
         Route::get('usuario/permiso/{id}', 'UsuarioController@permiso')->name('usuario.permiso');
         Route::post('usuario/permisos/asignar/{id}', 'UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
         Route::post('usuario/permisos/delegar/{id}', 'UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
-        Route::resource('/usuario', 'UsuarioController');
+        Route::resource('/usuario', 'UsuarioController')->except(['create']);
+        Route::post('usuario/crear/', 'UsuarioController@create')->name('usuario.create');
+
         Route::get('/perfil', 'UsuarioController@perfil')->name('usuario.perfil');
         Route::resource('/venta', 'VentaController');
 

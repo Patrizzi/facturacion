@@ -83,8 +83,31 @@ class UsuarioController extends Controller
 
     // }
 
-    public function crear($id)
-    {
+    public function create(Request $request)
+    {   
+        
+        // return $request;
+        $datos = $request;
+        $almacen=Almacen::where('estado',0)->get();
+        $i = 1;
+        $personal = Personal::findorFail($request->persona_id);
+        $rol = Role::find($request->rol_id);
+        $permisos = Permission::orderBy('module')
+            ->orderBy('id')
+            ->get()
+            ->groupBy('module') // nivel 1
+            ->map(function ($grupo) {
+                return $grupo->groupBy(function ($permiso) {
+                    return explode('.', $permiso->name)[0]; // nivel 2
+                });
+            });
+        if($request->rol_id == 4){ // Rol Personalizado
+            // Se debe crear un "Rol Personalizado, diferente de los demas " 
+            return view('configuracion_general.usuario.add_permisos_user', compact('datos','almacen','personal','rol','permisos'));
+        }else{
+
+        }
+        $id = $request->persona_id;
         $personal=Personal::find($id);
         return view('configuracion_general.usuario.create',compact('personal'));
     }
