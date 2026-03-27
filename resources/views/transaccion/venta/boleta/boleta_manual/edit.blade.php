@@ -288,7 +288,7 @@
                                                     value="{{ $registros->precio_sugerido }}" />
                                             </td>
                                             <td>
-                                                <input style="min-width: 100px" type='number' step="0.0000001"
+                                                <input style="min-width: 100px" type='number' step="0.0000000000000001"
                                                     id='precio{{ $i_edit }}' name='precio[]'
                                                     class="monto{{ $i_edit }} form-control inp"
                                                     onkeyup="multi_s_igv({{ $i_edit }}),multi({{ $i_edit }})"
@@ -300,7 +300,7 @@
                                                     required autocomplete="off" value="{{ $registros->precio }}" />
                                             </td>
                                             <td>
-                                                <input style="min-width: 100px" type='number' step="0.0000001"
+                                                <input style="min-width: 100px" type='number' step="0.0000000000000001"
                                                     id='precio_c_igv{{ $i_edit }}' name='precio_c_igv[]'
                                                     class="precio_c_igv monto{{ $i_edit }} form-control inp"
                                                     onkeyup="multi_c_igv({{ $i_edit }}),multi({{ $i_edit }})"
