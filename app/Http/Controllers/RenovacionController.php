@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use App\Exports\RenovacionExport;
 use ZipArchive;
 class RenovacionController extends Controller
 {
@@ -189,129 +190,16 @@ public function index()
 
     public function exportarRenovaciones(Request $request)
     {
-        if (ob_get_contents()) {
-            ob_end_clean();
-        }
+        $ids = $request->input('renovacion_ids', []);
 
-        $renovacionIds = $request->input('renovacion_ids', []);
-
-        if (empty($renovacionIds) || !is_array($renovacionIds)) {
+        if (empty($ids) || !is_array($ids)) {
             return back()->withErrors(['No se seleccionaron renovaciones para exportar.']);
         }
 
-        $renovaciones = RenovacionVentas::with([
-            'cotizacionManual.almacen',
-            'cotizacionManual.cliente',
-            'cotizacionManual.moneda',
-            'cotizacionManual.forma_pago',
-            'cotizacionManual.user_personal.personal',
-            'cotizacionManual.tipo_operacion',
-            'cotizacionManual.tipo_documento',
-            'cotizacion.almacen',
-            'cotizacion.cliente',
-            'cotizacion.moneda',
-            'cotizacion.forma_pago',
-            'cotizacion.user_personal.personal',
-            'cotizacion.tipo_operacion',
-            'cotizacion.tipo_documento'
-        ])
-        ->whereIn('id', $renovacionIds)
-        ->get();
-
-        $headers = [
-            'Código cotizacion', 'Almacén', 'Cliente', 'Moneda', 'Forma de pago',
-            'Garantia', 'Validez', 'Fecha de emision', 'Cambio', 'Observacion',
-            'Personal', 'Estado', 'Estado vigente', 'Tipo', 'Operacion gravada',
-            'Operacion inafecta', 'Operacion Exonerada', 'Operacion gratuita',
-            'Tipo de Operacion', 'Tipo de Documento', 'Subtotal', 'IGV',
-            'Importe Total', 'Tiene Renovación', 'Fecha Vencimiento', 'Días Restantes'
-        ];
-
-        $rows = [$headers];
-        $fecha_actual = Carbon::now()->startOfDay();
-
-        foreach ($renovaciones as $renovacion) {
-            $cotizacion = $renovacion->cotizacionManual ?? $renovacion->cotizacion;
-            if (!$cotizacion) continue;
-
-            $personal = '';
-            if ($cotizacion->user_personal && $cotizacion->user_personal->personal) {
-                $personal = trim(
-                    $cotizacion->user_personal->personal->nombres . ' ' .
-                    $cotizacion->user_personal->personal->apellidos
-                );
-            }
-
-            $subtotal      = ($cotizacion->op_gravada ?? 0) + ($cotizacion->op_inafecta ?? 0) + ($cotizacion->op_exonerada ?? 0);
-            $igv_p         = round(($cotizacion->op_gravada ?? 0) * 0.18, 2);
-            $importeTotal  = round($subtotal + $igv_p, 2);
-
-            // ✅ Usar fecha_vencimiento guardada en BD, no recalcular
-            $fecha_vencimiento_texto = '-';
-            $dias_restantes_texto    = '-';
-
-            if ($renovacion->fecha_vencimiento) {
-                $fecha_vencimiento       = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
-                $fecha_vencimiento_texto = $fecha_vencimiento->format('d-m-Y');
-                $diff                    = $fecha_actual->diffInDays($fecha_vencimiento, false);
-
-                if ($diff < 0) {
-                    $dias_restantes_texto = abs($diff) . ' días vencido';
-                } elseif ($diff == 0) {
-                    $dias_restantes_texto = 'Vence hoy';
-                } elseif ($diff == 1) {
-                    $dias_restantes_texto = '1 día';
-                } else {
-                    $dias_restantes_texto = $diff . ' días';
-                }
-            }
-
-            $rows[] = [
-                $cotizacion->cod_cotizacion,
-                optional($cotizacion->almacen)->nombre,
-                optional($cotizacion->cliente)->nombre,
-                optional($cotizacion->moneda)->nombre,
-                optional($cotizacion->forma_pago)->nombre,
-                $cotizacion->garantia,
-                $cotizacion->validez,
-                $cotizacion->fecha_emision,
-                $cotizacion->cambio,
-                $cotizacion->observacion,
-                $personal,
-                $cotizacion->estado ? 'Activo' : 'Inactivo',
-                $cotizacion->estadoVigente ? 'Vigente' : 'No vigente',
-                $cotizacion->tipo,
-                $cotizacion->op_gravada,
-                $cotizacion->op_inafecta,
-                $cotizacion->op_exonerada,
-                $cotizacion->op_gratuita,
-                optional($cotizacion->tipo_operacion)->informacion,
-                optional($cotizacion->tipo_documento)->informacion,
-                $subtotal,
-                $igv_p,
-                $importeTotal,
-                'Sí',
-                $fecha_vencimiento_texto,
-                $dias_restantes_texto
-            ];
-        }
-
-        $export = new class($rows) implements FromArray, WithEvents {
-            private $rows;
-            public function __construct($rows) { $this->rows = $rows; }
-            public function array(): array { return $this->rows; }
-            public function registerEvents(): array {
-                return [
-                    AfterSheet::class => function(AfterSheet $event) {
-                        foreach (range('A', 'Z') as $col) {
-                            $event->sheet->getColumnDimension($col)->setAutoSize(true);
-                        }
-                    },
-                ];
-            }
-        };
-
-        return Excel::download($export, 'Renovaciones_' . now('America/Lima')->format('d-m-Y') . '.xlsx');
+        return Excel::download(
+            new RenovacionExport($ids),
+            'Renovaciones_' . now('America/Lima')->format('d-m-Y') . '.xlsx'
+        );
     }
 
     public function downloadMultiplePDFs(Request $request)
@@ -324,7 +212,7 @@ public function index()
             }
 
             if (count($renovacionIds) === 1) {
-                return $this->downloadSinglePDF($renovacionIds[0]); // ✅ nombre correcto
+                return $this->downloadSinglePDF($renovacionIds[0]);
             }
 
             $renovaciones = RenovacionVentas::with(['cotizacionManual', 'cotizacion'])
@@ -483,7 +371,7 @@ public function index()
                 'j'                     => $j,
                 'cotizacion'            => $cotizacion,
                 'empresa'               => $empresa,
-                'cotizacion_m_reg'      => $cotizacion_reg, // ✅ nombre correcto para la vista
+                'cotizacion_m_reg'      => $cotizacion_reg,
                 'sum'                   => $sum,
                 'igv'                   => $igv,
                 'sub_total'             => $sub_total,

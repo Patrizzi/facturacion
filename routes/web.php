@@ -1325,7 +1325,7 @@ Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::c
 Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
     ->name('renovaciones.print.multiple');
 
-Route::get('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
+Route::post('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
     ->name('exportarRenovaciones');
 
 Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])
