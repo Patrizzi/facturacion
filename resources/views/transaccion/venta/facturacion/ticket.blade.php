@@ -8,22 +8,21 @@
 </head>
 <body>
 
-@php $chunks = $facturacion_registro->chunk($itemsPorPagina); @endphp
 
-@foreach($chunks as $pagina => $items)
-<div class="ticket {{ $pagina + 1 < $totalPaginas ? 'page-break' : '' }}">
+
+
+
+
+<div class="ticket">
 
     {{-- ─── HEADER ─── --}}
     <header>
         <div class="header-box box-outline">
-            <h1>Boleta Electronica<br>{{ $facturacion->codigo_fac }}</h1>
-            @if($totalPaginas > 1)
-                <small>Página {{ $pagina + 1 }} de {{ $totalPaginas }}</small>
-            @endif
+            <h1>Factura Electronica<br>{{ $facturacion->codigo_fac }}</h1>
+
         </div>
         <hr>
 
-        @if($pagina === 0)
             {{-- Datos del cliente solo en la primera página --}}
             <div class="info-section">
                 @if(isset($facturacion->cliente))
@@ -43,14 +42,14 @@
                 </tr>
             </table>
             <hr>
-        @endif
+
     </header>
 
     {{-- ─── DETALLE ─── --}}
     <main>
         <div class="details-header box-outline">DETALLE DE COMPRA</div>
         <div class="details-body box-outline">
-            @foreach($items as $registro)
+            @foreach($facturacion_registro as $registro)
             <div class="item">
                 <div class="item-title">
                     @if(isset($registro->producto))
@@ -139,7 +138,7 @@
     </footer>
 
 </div>
-@endforeach
+
 <script type="text/javascript">
 window.print();
 </script>

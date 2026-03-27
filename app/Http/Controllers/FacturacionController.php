@@ -1709,23 +1709,14 @@ class FacturacionController extends Controller
         $igv = Igv::first();
         $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
-         //secicon de total de paignas
-        $itemsPorPagina  = 10;
-        $totalItems      = $facturacion_registro->count();
-        $alturaPapel = 0;
-        $totalPaginas    = ceil($totalItems / $itemsPorPagina);
-        //ancho y alto de papeles
+
+        // Altura dinámica según cantidad de ítems
+        $totalItems  = $facturacion_registro->count();
         $anchoPapel  = 170;
-        $alturaHeader = 120;
-        $alturaFooter = 300;
-        //cargar datos por seccion
-        if($itemsPorPagina>$totalItems){
-                $alturaPapel += $alturaHeader+$alturaFooter;
-        }else{
-            foreach ($facturacion_registro->chunk($itemsPorPagina) as $chunk) {
-                $alturaPapel += $alturaHeader + $chunk->count() + $alturaFooter;
-            }
-        }
+        $alturaItem  = 18;
+        $alturaPapel = 320 + ($totalItems * $alturaItem) + 220;
+
+
         $pdf = PDF::loadView(
             'transaccion.venta.facturacion.ticket',
             compact(
@@ -1736,8 +1727,8 @@ class FacturacionController extends Controller
                 'moneda',
                 'qrCode',
                 'textoQR',
-                'itemsPorPagina',
-                'totalPaginas'
+
+
             )
         )
             ->setPaper([0, 0, $anchoPapel, $alturaPapel], 'portrait')
