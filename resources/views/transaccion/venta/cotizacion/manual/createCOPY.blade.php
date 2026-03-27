@@ -241,7 +241,7 @@
                                                     title="Doble click (Copiar)" />
                                             </td>
                                             <td>
-                                                <input type='number' step="0.0000001"
+                                                <input type='number' step="0.0000000000000001"
                                                     id='precio_s_igv0' name='precio_s_igv[]'
                                                     class="precio_s_igv form-control" onkeyup="multi_s_igv(0),multi(0)"
                                                     required autocomplete="off" />
@@ -250,7 +250,7 @@
                                                     onkeyup="multi_s_igv(0),multi(0)" autocomplete="off" />
                                             </td>
                                             <td>
-                                                <input type='number' step="0.0000001"
+                                                <input type='number' step="0.0000000000000001"
                                                     id='precio_c_igv0' name='precio_c_igv[]'
                                                     class="precio_c_igv monto0 form-control"
                                                     onkeyup="multi_c_igv(0),multi(0)" required autocomplete="off" />
@@ -619,11 +619,11 @@
                 <input type='number'  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
             </td>
             <td>
-                <input type='number' step="0.0000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input type='number' step="0.0000000000000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
             </td>
             <td>
-                <input type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000000000000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
             </td>
             <td>
                 <input type='number' id='total${i}'   name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
