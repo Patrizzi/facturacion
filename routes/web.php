@@ -915,6 +915,8 @@ Route::group(
         Route::resource('/venta', 'VentaController');
 
         //Roles y Permisos
+        Route::resource('/roles', 'RolController');
+        
         Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
         Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
         Route::get('/gestRol/{rol_id}', [RolController::class, 'gestionarRol'])->name('roles.gestRol');

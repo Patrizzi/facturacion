@@ -92,8 +92,8 @@ class UsuarioController extends Controller
         $i = 1;
         $personal = Personal::findorFail($request->persona_id);
         $rol = Role::find($request->rol_id);
-        $permisos = Permission::orderBy('module')
-            ->orderBy('id')
+        $roles = Role::whereNotIn('id',[1,4])->where('type', 0)->get();
+        $permisos = Permission::orderBy('id')
             ->get()
             ->groupBy('module') // nivel 1
             ->map(function ($grupo) {
@@ -103,7 +103,7 @@ class UsuarioController extends Controller
             });
         if($request->rol_id == 4){ // Rol Personalizado
             // Se debe crear un "Rol Personalizado, diferente de los demas " 
-            return view('configuracion_general.usuario.add_permisos_user', compact('datos','almacen','personal','rol','permisos'));
+            return view('configuracion_general.usuario.add_permisos_user', compact('datos','almacen','personal','rol','permisos','roles'));
         }else{
 
         }

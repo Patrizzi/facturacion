@@ -32,7 +32,7 @@ class PermissionsTableSeeder extends Seeder
 
 
         // CREACION DE LAS NUEVOS PERMISOS
-        Permission::create(['name' => 'inicio', 'module' => 'dashboard', 'description' => 'Dashboard Inicio']);
+        Permission::create(['name' => 'inicio.inicio', 'module' => 'dashboard', 'description' => 'Dashboard Inicio']);
         //* VENTAS
         Permission::create(['name' => 'cotizacion.listar', 'module' => 'ventas', 'description' => 'Lista de Cotizaciones']);
         Permission::create(['name' => 'cotizacion.crear', 'module' => 'ventas', 'description' => 'Crear Cotizacion']);
@@ -65,10 +65,10 @@ class PermissionsTableSeeder extends Seeder
 
         //* Tesoreria
 
-        Permission::create(['name' => 'tesoreria.abrir_caja', 'module' => 'tesoreria', 'description' => 'Abrir Caja de Tesorería']); //* Vista de lista
-        Permission::create(['name' => 'tesoreria.cerrar_caja', 'module' => 'tesoreria', 'description' => 'Cerrar Caja de Tesorería']);
-        Permission::create(['name' => 'tesoreria.depositar', 'module' => 'tesoreria', 'description' => 'Depositar en Caja de Tesorería']);
-        Permission::create(['name' => 'tesoreria.pagar', 'module' => 'tesoreria', 'description' => 'Pagar en Caja de Tesorería']);
+        Permission::create(['name' => 'caja-chica.abrir_caja', 'module' => 'tesoreria', 'description' => 'Abrir Caja de Tesorería']); //* Vista de lista
+        Permission::create(['name' => 'caja-chica.cerrar_caja', 'module' => 'tesoreria', 'description' => 'Cerrar Caja de Tesorería']);
+        Permission::create(['name' => 'caja-chica.depositar', 'module' => 'tesoreria', 'description' => 'Depositar en Caja de Tesorería']);
+        Permission::create(['name' => 'caja-chica.pagar', 'module' => 'tesoreria', 'description' => 'Pagar en Caja de Tesorería']);
 
         //*Comprobantes
         Permission::create(['name' => 'factura.listar', 'module' => 'comprobantes', 'description' => 'Lista de Facturas']);

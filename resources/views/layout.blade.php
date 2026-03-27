@@ -15,7 +15,7 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
     {{-- <script src="@yield('vue_js', '#')" defer></script> --}}
-    <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
+    
     <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
     <link href="{{ asset('css/plugins/footable/footable.core.css') }}" rel="stylesheet">
@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="{{ asset('css/side-bar/side-bar.css') }}">
     @yield('styles')
     <link href="{{ asset('css/plugins/select2/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
 
 </head>
 

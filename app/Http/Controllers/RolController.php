@@ -14,6 +14,10 @@ use Illuminate\Http\Request;
 class RolController extends Controller
 {
 
+    public function index(Request $request){
+        return view('');
+    }
+
     public function crearRol(Request $request){
         DB::beginTransaction();
         try{

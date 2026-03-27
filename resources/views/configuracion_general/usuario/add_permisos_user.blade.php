@@ -55,7 +55,7 @@
                                         <label class="col-sm-2 col-form-label">Correo:</label>
                                         <div class="col-sm-4" style="padding-bottom: 10px">
                                             <input type="text" class="form-control" name="correo" id="correo"
-                                                value="" required="required" autocomplete="off">
+                                                value="{{$datos->correo}}" required="required" autocomplete="off">
                                         </div>
 
                                         <label class="col-sm-2 col-form-label">Contraseña:</label>
@@ -94,7 +94,7 @@
                                         <label class="col-sm-2 col-form-label">Rol:</label>
                                         <div class="col-sm-4" style="padding-bottom: 10px">
                                             <input type="text" class="form-control" value="{{ $rol->name }}"
-                                                name="" id="">
+                                                name="" id="" readonly>
                                         </div>
                                         <label class="col-sm-2 col-form-label">Asig. Almacen:</label>
                                         <div class="col-sm-4">
@@ -112,13 +112,18 @@
                     </div>
                 </div>
             </div>
-
+           {{-- <div class="checkbox checkbox-primary">
+                <input id="checkbox2" type="checkbox" >
+                <label for="checkbox2">
+                    Primary
+                </label>
+            </div> --}}
             <div class="animated fadeInRight">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="ibox ">
                             <div class="ibox-title">
-                                <h4>Permisos de Usuarios</h4>
+                                <h4>Permisos Personalizado del Usuario</h4>
                                 <div class="ibox-tools">
                                     <a class="collapse-link">
                                         <i class="fa fa-chevron-up"></i>
@@ -130,19 +135,34 @@
                             </div>
                             <div class="ibox-content">
                                 <div class="row">
+                                    <div class="col-sm-12" style="">
+                                        <p>Seleccione un Rol predefinido para seleccionar Permisos Automaticamente</p>
+                                        @foreach ($roles as $rol)
+                                            <button class="btn btn-primary btn-outline">{{$rol->name}}</button>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    @php $i = 0; @endphp
                                     @foreach ($permisos as $modulo => $prefijos)
                                         @php $moduloSlug = Str::slug($modulo); @endphp
                                         <div class="col-lg-3 col-md-6 col-sm-12">
                                             <div class="panel-group" id="modulo-{{ $moduloSlug }}">
                                                 <!-- NIVEL 1: MODULO -->
                                                 <div class="panel panel-default">
-                                                    <div class="panel-heading">
-                                                        <h5 class="panel-title">
-                                                            <a data-toggle="collapse"
-                                                                href="#collapse-modulo-{{ $moduloSlug }}">
-                                                                {{ Str::of($modulo)->replace('_', ' ')->title() }}
-                                                            </a>
-                                                        </h5>
+                                                    <div class="panel-heading" style="display: flex">
+                                                        <div class="checkbox checkbox-primary" style="padding-left: 0px">
+                                                            <input type="checkbox" name="" id="forcheck_{{$i}}" class="" onclick="check_modulo(this,`{{$modulo}}`)">
+                                                            <label for="forcheck_{{$i}}" style="margin-bottom: 0px;margin">
+                                                                <h5 class="panel-title" style="margin-bottom: 0px;font-size:15px">
+                                                                    <a data-toggle="collapse"
+                                                                        href="#collapse-modulo-{{ $moduloSlug }}">
+                                                                        {{ Str::of($modulo)->replace('_', ' ')->title() }}
+                                                                    </a>
+                                                                </h5>
+                                                            </label>
+                                                        </div>
                                                     </div>
 
                                                     <div id="collapse-modulo-{{ $moduloSlug }}"
@@ -152,39 +172,75 @@
                                                             <div class="panel-group" id="prefijo-{{ $moduloSlug }}">
                                                                 <div class="row">
                                                                     @foreach ($prefijos as $prefijo => $listaPermisos)
+                                                                        {{-- {{ $i }} --}}
                                                                         @php $prefijoSlug = Str::slug($prefijo); @endphp
-                                                                        <div class="col-6">
-                                                                            <label for="" style="display: flex">
-                                                                                <input type="checkbox" name="permissions[]" value="{{ $prefijo }}">{{ Str::title($prefijo) }}
-                                                                            </label>
-                                                                            <!-- NIVEL 3: ACCIONES -->
-                                                                            <div style="margin-left: 15px">
-                                                                                @foreach ($listaPermisos as $permiso)
-                                                                                    @php
-                                                                                        $accion = explode('.',$permiso->name,)[1] ?? '';
-                                                                                    @endphp
-                                                                                    <div class="">
-                                                                                        <span style="display: flex;align-items: center;">
-                                                                                            <input type="checkbox" name="permissions[]" value="{{ $permiso->name }}" class="sub_permisos">
-                                                                                            {{ Str::of($accion)->replace('_', ' ')->title() }} 
-                                                                                            <div class="tooltip-demo text-center" style="display: contents">
-                                                                                                <button class="btn btn-link btn-xs"  data-toggle="popover" data-placement="bottom" data-content="{{ $permiso->description }}">
-                                                                                                    <i style="font-size: 9px" class="fa fa-info-circle"></i>
-                                                                                                </button>
-                                                                                            </div>
+                                                                        <div class="col-6"
+                                                                            style="margin-bottom: 5px;display: flex;flex-direction: column;justify-content: space-between;"
+                                                                            id="lista_permisos">
+                                                                            <div>
+                                                                                <label for=""
+                                                                                    style="display: flex;margin-bottom: 2px;justify-content: space-between;">
+                                                                                    <input type="checkbox"
+                                                                                        name="permissions[]"
+                                                                                        value="{{ $prefijo }}" class="modulo_{{$modulo}}" onclick="check_submodulo(this,`{{$modulo}}`,`{{$prefijo}}`)">
+                                                                                        <span
+                                                                                            style="margin-left: 5px"><h4 style="margin: 0px">{{ Str::title($prefijo) }}</h4>
                                                                                         </span>
-
-                                                                                        {{-- @if ($permiso->description)
-                                                                                            <small
-                                                                                                class="text-muted d-block">
-                                                                                                {{ $permiso->description }}
-                                                                                            </small>
-                                                                                        @endif --}}
+                                                                                    <div>
+                                                                                        <span>
+                                                                                            <a id="modulo_arrow" onclick="abrir_modulo(this,{{$i}})">
+                                                                                                <i class="fa fa-toggle-down" ></i>
+                                                                                            </a>
+                                                                                        </span>
                                                                                     </div>
-                                                                                    {{-- <hr style="margin: 5px"> --}}
-                                                                                @endforeach
+                                                                                </label>
+                                                                                <!-- NIVEL 3: ACCIONES -->
+                                                                                <div style="margin-left: 15px ;display: none;" id="div_{{$i}}">
+                                                                                    @foreach ($listaPermisos as $permiso)
+                                                                                        @php
+                                                                                            $accion =
+                                                                                                explode(
+                                                                                                    '.',
+                                                                                                    $permiso->name,
+                                                                                                )[1] ?? '';
+                                                                                        @endphp
+                                                                                        <div class="">
+                                                                                            <span
+                                                                                                style="display: flex;align-items: center;justify-content: space-between;">
+                                                                                                <span
+                                                                                                    style="display: flex;">
+                                                                                                    <input type="checkbox"
+                                                                                                        name="permissions[]"
+                                                                                                        value="{{ $permiso->id }}"
+                                                                                                        class="modulo_{{$modulo}} permisos_{{$prefijo}}">
+                                                                                                    {{ Str::of($accion)->replace('_', ' ')->title() }}
+                                                                                                </span>
+                                                                                                <div class="tooltip-demo"
+                                                                                                    style="display: contents">
+                                                                                                    <button
+                                                                                                        class="btn btn-link btn-xs"
+                                                                                                        data-toggle="tooltip"
+                                                                                                        data-placement="bottom"
+                                                                                                        title="{{ $permiso->description }}">
+                                                                                                        <i style="font-size: 9px"
+                                                                                                            class="fa fa-info-circle"></i>
+                                                                                                    </button>
+                                                                                                </div>
+                                                                                            </span>
+
+                                                                                            {{-- @if ($permiso->description)
+                                                                                                <small
+                                                                                                    class="text-muted d-block">
+                                                                                                    {{ $permiso->description }}
+                                                                                                </small>
+                                                                                            @endif --}}
+                                                                                        </div>
+                                                                                    @endforeach
+                                                                                </div>
                                                                             </div>
+                                                                            <hr style="margin:5px 0px">
                                                                         </div>
+                                                                        @php $i++; @endphp
                                                                     @endforeach
                                                                 </div>
                                                             </div>
@@ -286,11 +342,19 @@
             opacity: 0;
             cursor: pointer;
         }
-        .col-lg-3{
+
+        .col-lg-3 {
             margin-bottom: 25px;
         }
-        .sub_permisos{
-            margin-right: 
+
+        .sub_permisos {
+            margin-right: 5px;
+        }
+        .checkbox label::before{
+            margin-top: 5px;
+        }
+        .checkbox-primary input[type="checkbox"]:checked + label::after, .checkbox-primary input[type="radio"]:checked + label::after{
+            margin-top: 7px;
         }
     </style>
     <!-- Mainly scripts -->
@@ -305,7 +369,7 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --}}
+    {{-- <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }} "></script> --}}
 
     <script>
         $(document).ready(function() {
@@ -374,6 +438,44 @@
                 eyeIcon.classList.remove("fa-eye");
                 eyeIcon.classList.add("fa-eye-slash");
             }
+        }
+
+        function abrir_modulo(icon,item){
+            let div = document.getElementById(`div_${item}`);
+
+            if (div.style.display === 'none' || div.style.display === '') {
+                div.style.display = 'block';
+            } else {
+                div.style.display = 'none';
+            }
+
+            // obtener el icono dentro del <a>
+            let son = icon.querySelector('i');
+
+            // cambiar icono
+            son.classList.toggle('fa-toggle-down');
+            son.classList.toggle('fa-toggle-up');
+        }
+        function check_modulo(check,modulo){
+            // console.log(modulo);
+            // var permisos = document.querySelectorAll('input.'+modulo);
+            // console.log(permisos[0]);
+            // $(`input.`+modulo).prop('checked', true).trigger('change');
+
+            $(`input.modulo_`+modulo).each(function () {
+                $(this)
+                    .prop('checked', !$(this).prop('checked'))
+                    .trigger('change');
+            });
+        }
+        function check_submodulo(check,modulo,submodulo){
+            // console.log(`input.modulo_`+modulo+`_permisos_`+submodulo);
+            // var permisos = document.querySelectorAll('input.'+submodulo);
+            $(`input.modulo_`+modulo+`.permisos_`+submodulo).each(function () {
+                $(this)
+                    .prop('checked', !$(this).prop('checked'))
+                    .trigger('change');
+            });
         }
     </script>
     <!-- Page-Level Scripts -->
