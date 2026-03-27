@@ -1503,7 +1503,6 @@ class BoletaController extends Controller
     }
     public function ticket(Request $request, $id)
     {
-
         $boleta          = Boleta::find($id);
         $boleta_registro = Boleta_registro::where('boleta_id', $id)->get();
         $empresa         = Empresa::first();
@@ -1511,23 +1510,13 @@ class BoletaController extends Controller
         $igv             = Igv::first();
         $textoQR         = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
         $qrCode          = $this->generarImagenQR($textoQR);
-        //secicon de total de paignas
-        $itemsPorPagina  = 10;
-        $totalItems      = $boleta_registro->count();
-        $alturaPapel = 0;
-        $totalPaginas    = ceil($totalItems / $itemsPorPagina);
-        //ancho y alto de papeles
+
+        // Altura dinámica según cantidad de ítems
+        $totalItems  = $boleta_registro->count();
         $anchoPapel  = 170;
-        $alturaHeader = 120;
-        $alturaFooter = 300;
-        //cargar datos por seccion
-        if($itemsPorPagina>$totalItems){
-                $alturaPapel += $alturaHeader+$alturaFooter;
-        }else{
-            foreach ($boleta_registro->chunk($itemsPorPagina) as $chunk) {
-                $alturaPapel += $alturaHeader + $chunk->count() + $alturaFooter;
-            }
-        }
+        $alturaItem  = 18;
+        $alturaPapel = 320 + ($totalItems * $alturaItem) + 220;
+
         $pdf = PDF::loadView(
             'transaccion.venta.boleta.ticket',
             compact(
@@ -1537,9 +1526,7 @@ class BoletaController extends Controller
                 'igv',
                 'moneda',
                 'qrCode',
-                'textoQR',
-                'itemsPorPagina',
-                'totalPaginas'
+                'textoQR'
             )
         )
             ->setPaper([0, 0, $anchoPapel, $alturaPapel], 'portrait')

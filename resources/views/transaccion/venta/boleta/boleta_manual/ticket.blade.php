@@ -1,156 +1,312 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Ticket Boleta</title>
-    {{-- <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet"> --}}
-    {{-- <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet"> --}}
-    <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
-    <script LANGUAGE="JavaScript">
-        function cerrar() {
-            // window.close();
-        }
-    </script>
 
-</head>
-<body class="" onLoad="setTimeout('cerrar()',1*1000)">
-    <div class="contenedor-impresion-ticket">
-        <div class="row">
-            <div class="col-lg-12" align="center">
-                <strong><span>Boleta Electrónica</span></strong><br>
-                <span>{{$boleta->codigo_bol}}</span>
-            </div>
-            <hr>
-            <div class="col-lg-12" align="center">
-                <span>{{$boleta->created_at}}</span><br>
-                <span>{{$empresa->razon_social}}</span><br>
-                <span><strong>R.U.C:</strong> {{$empresa->ruc}}</span><br>
-                <span>{{$empresa->calle}} - {{$empresa->ciudad}} - {{$empresa->region_provincia}}</span><br>
-                <span>Teléfono: {{$empresa->telefono}}</span>
-            </div>
-            <hr>
-            <div class="col-lg-12">
-                <table class="table" style="border-color: white;width: 100%">
-                    {{-- <tbody> --}}
-                        <tr style="border-color: white;width: 100%">
-                            <td>Cliente</td>
-                            <td>:</td>
-                            <td>{{$boleta->cliente->nombre}}</td>
-                        </tr>
-                        <tr>
-                            <td>{{$boleta->cliente->documento_identificacion}}</td>
-                            <td>:</td>
-                            <td>{{$boleta->cliente->numero_documento}}</td>
-                        </tr>
-                    {{-- </tbody> --}}
-                </table>
-            </div>
-            <hr>
-            <div class="col-lg-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th style="width: 40%">Artículo</th>
-                            <th style="width: 14%">Cant.</th>
-                            <th style="width: 24%">P. Unit</th>
-                            <th style="width: 22%">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody  >
-                        @foreach ($boleta_registro as $item)
-                            <tr class="body_table">
-                                @if(isset($item->producto_id))
-                                    <td>{{$item->producto->nombre}}</td>
-                                @else
-                                    <td>{{$item->servicio->nombre}}</td>
-                                @endif
-                                <td >{{$item->cantidad}}</td>
-                                <td class="mont">{{number_format($item->precio ,2)}}</td>
-                                <td class="mont">{{number_format($item->precio * $item->cantidad,2)}}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+<div class="ticket">
 
+    {{-- ─── HEADER ─── --}}
+    <header>
+        <div class="header-box box-outline">
+            <h1>Boleta Electronica<br>{{ $boleta->codigo_boleta }}</h1>
         </div>
-        <table style="width: 100%">
-            <tbody>
-                <tr>
-                    <td>Subtotal</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo  = $moneda->simbolo }}{{$subtotal = number_format($boleta->op_gravada+$boleta->op_inafecta + $boleta->op_exonerada,2)}} </td>
-                </tr>
-                <tr>
-                    <td>Op. Gravada</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{number_format($boleta->op_gravada,2)}}</td>
-                </tr>
-                <tr>
-                    <td>Op. Inafecta</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{number_format($boleta->op_inafecta,2)}} </td>
-                </tr>
-                <tr>
-                    <td>Op. Exonerada</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{number_format($boleta->op_exonerada,2)}}  </td>
-                </tr>
-                <tr>
-                    <td>I.G.V</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{$igv = number_format(round($boleta->op_gravada * $igv->igv_total/100,2),2)}}</td>
-                </tr>
-                <tr>
-                    <td>Total</td>
-                    <td>:</td>
-                    <td align="right">{{$simbolo}}. {{$total = number_format(round($subtotal + $igv,2),2)}}</td>
-                </tr>
-            </tbody>
+        <hr>
+        <div class="info-section">
+            @if(isset($boleta->cliente_id))
+                <p><span class="bold">CLIENTE:</span> {{ $boleta->cliente->nombre }}</p>
+                <p><span class="bold">{{ $boleta->cliente->documento_identificacion }}:</span> {{ $boleta->cliente->numero_documento }}</p>
+            @else
+                <p><span class="bold">CLIENTE:</span> {{ $boleta->cotizacion->cliente->nombre }}</p>
+            @endif
+            <p><span class="bold">FECHA DE EMISION:</span> {{ $boleta->fecha_emision }}</p>
+            <p><span class="bold">FECHA DE FINALIZACION:</span> {{ $boleta->fecha_vencimiento }}</p>
+        </div>
+        <hr>
+        <table class="tabla-condicion">
+            <tr>
+                <td><span class="bold">Condicion:</span> {{ $boleta->forma_pago->nombre }}</td>
+                <td class="text-right"><span class="bold">Moneda:</span> {{ $boleta->moneda->nombre }}</td>
+            </tr>
         </table>
-        <div class="row" >
-            <div class="col-sm-12" align="center">
-                <span>Atendido por {{auth()->user()->nombre}}</span><br>
-                <span>Autorizado mediante resolucion</span><br>
-                <span>N° RS 018-005-0002243/SUNAT</span><br>
-                <span>Representación impresa de la</span><br>
-                <span>Boleta de Venta Electrónica</span><br>
-                <span>Para consultar el documento</span><br>
-                <span>Ingrese a:</span><br>
-                <span>{{$empresa->pagina_web}}</span><br>
+        <hr>
+    </header>
+
+    {{-- ─── DETALLE ─── --}}
+    <main>
+        <div class="details-header box-outline">DETALLE DE COMPRA</div>
+        <div class="details-body box-outline">
+            @foreach($boleta_registro as $item)
+            <div class="item">
+                <div class="item-title">
+                    @if(isset($item->producto))
+                        {{ $item->producto->codigo_producto }}
+                        @php
+                           $InicialesP = substr($item->producto->nombre,0,5);
+                        @endphp
+                        {{ $InicialesP}}
+                        @if(isset($item->numero_serie))
+                            <br><strong>N/S:</strong> {{ $item->numero_serie }}
+                        @endif
+                    @else
+                        @php
+                           $InicialesS = substr($item->servicio->nombre,0,5);
+                        @endphp
+                        {{ $item->servicio->codigo_servicio }} {{ $InicialesS }}
+                        @if(isset($item->numero_serie))
+                            <br><strong>N/S:</strong> {{ $item->numero_serie }}
+                        @endif
+                    @endif
+                    <div class="item-detail">
+                        {{ $item->cantidad }} UNI |
+                        <span class="bold">Precio:</span> S/{{ number_format((float)$item->precio, 2) }} |
+                        <span class="bold">Importe:</span> S/{{ number_format((float)$item->precio * (float)$item->cantidad, 2) }}
+                    </div>
+                </div>
             </div>
+            @endforeach
         </div>
-    </div>
-</body>
+    </main>
+
+    {{-- ─── FOOTER ─── --}}
+    <footer>
+        <hr>
+        @php
+            $sub_total     = (float)$boleta->op_gravada + (float)$boleta->op_inafecta + (float)$boleta->op_exonerada;
+            $igv_p         = round((float)$boleta->op_gravada, 2) * (float)$igv->igv_total / 100;
+            $TotalVent_num = round($sub_total, 2) + round($igv_p, 2);
+            $TotalVent     = number_format($TotalVent_num, 2);
+        @endphp
+        <table class="totals-section">
+            <tr>
+                <td class="col-label">SUBTOTAL</td>
+                <td class="col-valor">{{ number_format($sub_total, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">OP. GRAVADAS</td>
+                <td class="col-valor">{{ number_format((float)$boleta->op_gravada, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">OP. GRATUITAS</td>
+                <td class="col-valor">{{ number_format((float)$boleta->op_gratuita, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">OP. EXONERADAS</td>
+                <td class="col-valor">{{ number_format((float)$boleta->op_exonerada, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">OP. INAFECTADAS</td>
+                <td class="col-valor">{{ number_format((float)$boleta->op_inafecta, 2) }}</td>
+            </tr>
+            <tr>
+                <td class="col-label">I.G.V</td>
+                <td class="col-valor">{{ number_format($igv_p, 2) }}</td>
+            </tr>
+            <tr class="total-venta">
+                <td class="col-label"><strong>TOTAL VENTA</strong></td>
+                <td class="col-valor"><strong>{{ $TotalVent }}</strong></td>
+            </tr>
+        </table>
+        <hr>
+        <div class="amount-words">
+            @php
+                $v     = new \Luecano\NumeroALetras\NumeroALetras();
+                $letra = $v->toInvoice($TotalVent_num, 2);
+            @endphp
+            {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $boleta->moneda->nombre }}
+        </div>
+        <hr>
+        <div class="footer-text">
+            <small>Representación Impresa de <strong>BOLETA ELECTRÓNICA</strong></small>
+            <small>Esta puede ser consultada en www.codecta.pe</small>
+            <small>Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT</small>
+        </div>
+        <div class="qr-container">
+            @if(!empty($qrCode))
+                <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
+            @else
+                <span class="qr-placeholder">QR</span>
+            @endif
+        </div>
+        <div class="cabecera-include">
+            @include('layout_cabecera_ventas')
+        </div>
+    </footer>
+
+</div>
 
 <style>
-    *{
-        /* margin: 0mm; */
-        /* padding: 0mm; */
-        /* size: 297mm 70mm landscape;  */
-        font-size: 13px;
-
+    .cabecera-include {
+        width: 100%;
+        text-align: center;
+        margin-top: 4px;
     }
-    html{
-        margin: 0mm;
-        padding: 0mm;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
 
-    table{
+    body {
+        width: 213px;
+    }
+
+    .ticket {
+        width: 213px;
+        padding: 6px;
+    }
+
+    .box-outline {
+        border: 1px solid #111;
+    }
+
+    .header-box {
+        text-align: center;
+        padding: 6px;
+        margin-bottom: 5px;
+    }
+
+    .header-box h1 {
+        font-size: 11px;
+        font-weight: bold;
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    hr {
         border: none;
+        border-top: 1px solid #111;
+        margin: 4px 0;
     }
-    .body_table > td{
 
-        font-size: 12px;
+    p {
+        margin: 2px 0;
+        font-size: 10px;
     }
-    .mont{
+
+    .bold { font-weight: 700; }
+    .text-right { text-align: right; }
+
+    .info-section p {
+        font-size: 10px;
+        margin: 2px 0;
+    }
+
+    .tabla-condicion {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .tabla-condicion td {
+        font-size: 10px;
+        padding: 1px 0;
+        width: 50%;
+    }
+
+    .details-header {
+        text-align: center;
+        padding: 4px;
+        font-size: 10px;
+        font-weight: bold;
+        margin: 4px 0 3px 0;
+        background-color: #f0f0f0;
+    }
+
+    .details-body {
+        padding: 5px 4px;
+        margin-bottom: 4px;
+    }
+
+    .item {
+        text-align: center;
+        margin-bottom: 5px;
+        font-size: 9px;
+    }
+
+    .item:last-child { margin-bottom: 0; }
+
+    .item-title {
+        font-weight: 700;
+        font-size: 10px;
+        margin-bottom: 2px;
+    }
+
+    .item-detail {
+        font-size: 9px;
+        margin-top: 2px;
+        text-align: center;
+    }
+
+    .totals-section {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .totals-section td {
+        padding: 2px 0;
+        font-size: 10px;
+    }
+
+    .col-label {
+        width: 60%;
+        text-align: left;
+    }
+
+    .col-valor {
+        width: 40%;
         text-align: right;
     }
-</style>
 
-<script type="text/javascript">
-    window.print();
-</script>
-</html>
+    .total-venta td {
+        border-top: 1px solid #111;
+        padding-top: 3px;
+        font-size: 11px;
+    }
+
+    .amount-words {
+        text-align: center;
+        font-size: 9px;
+        margin: 5px 0;
+        font-style: italic;
+    }
+
+    .footer-text {
+        text-align: center;
+        font-size: 9px;
+        margin-top: 4px;
+    }
+
+    .footer-text small {
+        display: block;
+        font-size: 70%;
+    }
+
+    .qr-container {
+        width: 100%;
+        display: block;
+        text-align: center;
+        margin-top: 6px;
+    }
+
+    .qr-container img {
+        width: 80px;
+        height: 80px;
+        border: 1px solid #111;
+        padding: 2px;
+        display: inline-block;  /* <-- clave para que text-align: center funcione */
+    }
+
+    .qr-placeholder {
+        font-size: 12px;
+        color: #999;
+    }
+
+    @media print {
+        @page {
+            size: 75mm auto;
+            margin: 0;
+        }
+
+        html, body {
+            height: auto !important;
+            overflow: hidden !important;
+        }
+    }
+</style>

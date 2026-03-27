@@ -1,81 +1,78 @@
-@php $chunks = $boleta_registro->chunk($itemsPorPagina); @endphp
 
-@foreach($chunks as $pagina => $items)
-<div class="ticket {{ $pagina + 1 < $totalPaginas ? 'page-break' : '' }}">
+<div class="ticket">
 
     {{-- ─── HEADER ─── --}}
     <header>
         <div class="header-box box-outline">
             <h1>Boleta Electronica<br>{{ $boleta->codigo_boleta }}</h1>
-            @if($totalPaginas > 1)
-                <small>Página {{ $pagina + 1 }} de {{ $totalPaginas }}</small>
-            @endif
         </div>
         <hr>
-
-        @if($pagina === 0)
-            {{-- Datos del cliente solo en la primera página --}}
-            <div class="info-section">
-                @if(isset($boleta->cliente_id))
-                    <p><span class="bold">CLIENTE:</span> {{ $boleta->cliente->nombre }}</p>
-                    <p><span class="bold">{{ $boleta->cliente->documento_identificacion }}:</span> {{ $boleta->cliente->numero_documento }}</p>
-                @else
-                    <p><span class="bold">CLIENTE:</span> {{ $boleta->cotizacion->cliente->nombre }}</p>
-                @endif
-                <p><span class="bold">FECHA DE EMISION:</span> {{ $boleta->fecha_emision }}</p>
-                <p><span class="bold">FECHA DE FINALIZACION:</span> {{ $boleta->fecha_vencimiento }}</p>
-            </div>
-            <hr>
-            <table class="tabla-condicion">
-                <tr>
-                    <td><span class="bold">Condicion:</span> {{ $boleta->forma_pago->nombre }}</td>
-                    <td class="text-right"><span class="bold">Moneda:</span> {{ $boleta->moneda->nombre }}</td>
-                </tr>
-            </table>
-            <hr>
-        @endif
+        <div class="info-section">
+            @if(isset($boleta->cliente_id))
+                <p><span class="bold">CLIENTE:</span> {{ $boleta->cliente->nombre }}</p>
+                <p><span class="bold">{{ $boleta->cliente->documento_identificacion }}:</span> {{ $boleta->cliente->numero_documento }}</p>
+            @else
+                <p><span class="bold">CLIENTE:</span> {{ $boleta->cotizacion->cliente->nombre }}</p>
+            @endif
+            <p><span class="bold">FECHA DE EMISION:</span> {{ $boleta->fecha_emision }}</p>
+            <p><span class="bold">FECHA DE FINALIZACION:</span> {{ $boleta->fecha_vencimiento }}</p>
+        </div>
+        <hr>
+        <table class="tabla-condicion">
+            <tr>
+                <td><span class="bold">Condicion:</span> {{ $boleta->forma_pago->nombre }}</td>
+                <td class="text-right"><span class="bold">Moneda:</span> {{ $boleta->moneda->nombre }}</td>
+            </tr>
+        </table>
+        <hr>
     </header>
 
     {{-- ─── DETALLE ─── --}}
     <main>
         <div class="details-header box-outline">DETALLE DE COMPRA</div>
         <div class="details-body box-outline">
-            @foreach($items as $boleta_registros)
+            @foreach($boleta_registro as $item)
             <div class="item">
                 <div class="item-title">
-                    @if(isset($boleta_registros->producto))
-                        {{ $boleta_registros->producto->nombre }} {{ $boleta_registros->descripcion_item }}
-                        @if(isset($boleta_registros->numero_serie))
-                            <br><strong>N/S:</strong> {{ $boleta_registros->numero_serie }}
+                    @if(isset($item->producto))
+                        {{ $item->producto->codigo_producto }}
+                        @php
+                           $InicialesP = substr($item->producto->nombre,0,5);
+                        @endphp
+                        {{ $InicialesP}}
+                        @if(isset($item->numero_serie))
+                            <br><strong>N/S:</strong> {{ $item->numero_serie }}
                         @endif
                     @else
-                        {{ $boleta_registros->servicio->nombre }} {{ $boleta_registros->descripcion_item }}
-                        @if(isset($boleta_registros->numero_serie))
-                            <br><strong>N/S:</strong> {{ $boleta_registros->numero_serie }}
+                        @php
+                           $InicialesS = substr($item->servicio->nombre,0,5);
+                        @endphp
+                        {{ $item->servicio->codigo_servicio }} {{ $InicialesS }}
+                        @if(isset($item->numero_serie))
+                            <br><strong>N/S:</strong> {{ $item->numero_serie }}
                         @endif
                     @endif
-                </div>
-                <div class="item-detail">
-                    {{ $boleta_registros->cantidad }} UNI |
-                    <span class="bold">Precio:</span> S/{{ number_format((float)$boleta_registros->precio_unitario_comi, 2) }} |
-                    <span class="bold">Importe:</span> S/{{ number_format((float)$boleta_registros->precio_unitario_comi * (float)$boleta_registros->cantidad, 2) }}
+                    <div class="item-detail">
+                        {{ $item->cantidad }} UNI |
+                        <span class="bold">Precio:</span> S/{{ number_format((float)$item->precio_unitario_comi, 2) }} |
+                        <span class="bold">Importe:</span> S/{{ number_format((float)$item->precio_unitario_comi * (float)$item->cantidad, 2) }}
+                    </div>
                 </div>
             </div>
             @endforeach
         </div>
     </main>
 
-    {{-- ─── FOOTER (se repite en cada página) ─── --}}
+    {{-- ─── FOOTER ─── --}}
     <footer>
         <hr>
+        @php
+            $sub_total     = (float)$boleta->op_gravada + (float)$boleta->op_inafecta + (float)$boleta->op_exonerada;
+            $igv_p         = round((float)$boleta->op_gravada, 2) * (float)$igv->igv_total / 100;
+            $TotalVent_num = round($sub_total, 2) + round($igv_p, 2);
+            $TotalVent     = number_format($TotalVent_num, 2);
+        @endphp
         <table class="totals-section">
-            @php
-                // Valores numéricos puros (float) para operar
-                $sub_total     = (float)$boleta->op_gravada + (float)$boleta->op_inafecta + (float)$boleta->op_exonerada;
-                $igv_p         = round((float)$boleta->op_gravada, 2) * (float)$igv->igv_total / 100;
-                $TotalVent_num = round($sub_total, 2) + round($igv_p, 2); // <- número puro para cálculos
-                $TotalVent     = number_format($TotalVent_num, 2);         // <- string solo para mostrar
-            @endphp
             <tr>
                 <td class="col-label">SUBTOTAL</td>
                 <td class="col-valor">{{ number_format($sub_total, 2) }}</td>
@@ -126,65 +123,19 @@
                 <span class="qr-placeholder">QR</span>
             @endif
         </div>
+        <div class="cabecera-include">
+            @include('layout_cabecera_ventas')
+        </div>
     </footer>
 
 </div>
-@endforeach
 
 <style>
-    .page-break {
-        page-break-after: always;
-        break-after: always;
-        margin-bottom: 0;
-    }
-
-    header small {
-        display: block;
-        text-align: center;
-        font-size: 9px;
-        font-style: italic;
-        margin-top: 2px;
-    }
-
-    header,
-    footer,
-    main {
-        display: block;
+    .cabecera-include {
         width: 100%;
-    }
-    footer{
-         position: relative !important;
-    }
-    .qr-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .qr-box {
-        width: 120px;
-        height: 120px;
-        border: 2px solid #3D3D3D;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px;
-        background: white;
-    }
-
-    .qr-image {
-        max-width: 100%;
-        max-height: 100%;
-        display: block;
-    }
-
-    .qr-placeholder {
-        font-size: 12px;
-        color: #999;
         text-align: center;
+        margin-top: 4px;
     }
-
     * {
         margin: 0;
         padding: 0;
@@ -198,8 +149,6 @@
     .ticket {
         width: 213px;
         padding: 6px;
-        height: auto !important;
-        overflow: visible !important;
     }
 
     .box-outline {
@@ -230,20 +179,14 @@
         font-size: 10px;
     }
 
-    .bold {
-        font-weight: 700;
-    }
-
-    .text-right {
-        text-align: right;
-    }
+    .bold { font-weight: 700; }
+    .text-right { text-align: right; }
 
     .info-section p {
         font-size: 10px;
         margin: 2px 0;
     }
 
-    /* ─── Condicion / Moneda ─── */
     .tabla-condicion {
         width: 100%;
         border-collapse: collapse;
@@ -256,7 +199,6 @@
         width: 50%;
     }
 
-    /* ─── Detalle header ─── */
     .details-header {
         text-align: center;
         padding: 4px;
@@ -266,7 +208,6 @@
         background-color: #f0f0f0;
     }
 
-    /* ─── Detalle body ─── */
     .details-body {
         padding: 5px 4px;
         margin-bottom: 4px;
@@ -276,12 +217,9 @@
         text-align: center;
         margin-bottom: 5px;
         font-size: 9px;
-        page-break-inside: avoid;
     }
 
-    .item:last-child {
-        margin-bottom: 0;
-    }
+    .item:last-child { margin-bottom: 0; }
 
     .item-title {
         font-weight: 700;
@@ -290,13 +228,11 @@
     }
 
     .item-detail {
-        width: 100%;
         font-size: 9px;
         margin-top: 2px;
         text-align: center;
     }
 
-    /* ─── Totales ─── */
     .totals-section {
         width: 100%;
         border-collapse: collapse;
@@ -306,7 +242,6 @@
     .totals-section td {
         padding: 2px 0;
         font-size: 10px;
-        overflow: hidden;
     }
 
     .col-label {
@@ -325,7 +260,6 @@
         font-size: 11px;
     }
 
-    /* ─── Monto en letras ─── */
     .amount-words {
         text-align: center;
         font-size: 9px;
@@ -333,7 +267,6 @@
         font-style: italic;
     }
 
-    /* ─── Footer text ─── */
     .footer-text {
         text-align: center;
         font-size: 9px;
@@ -345,8 +278,9 @@
         font-size: 70%;
     }
 
-    /* ─── QR ─── */
     .qr-container {
+        width: 100%;
+        display: block;
         text-align: center;
         margin-top: 6px;
     }
@@ -356,6 +290,12 @@
         height: 80px;
         border: 1px solid #111;
         padding: 2px;
+        display: inline-block;  /* <-- clave para que text-align: center funcione */
+    }
+
+    .qr-placeholder {
+        font-size: 12px;
+        color: #999;
     }
 
     @media print {
@@ -367,10 +307,6 @@
         html, body {
             height: auto !important;
             overflow: hidden !important;
-        }
-
-        .ticket {
-            page-break-inside: avoid;
         }
     }
 </style>
