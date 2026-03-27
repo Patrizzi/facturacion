@@ -184,18 +184,16 @@
                 radioClass: 'iradio_square-green',
             });
 
-            // Función para obtener TODOS los IDs mediante AJAX
             function getAllIds(callback) {
                 $.ajax({
-                    url: "/ventas/renovacion/registros", // ← CAMBIA ESTO (URL directa)
+                    url: "{{ route('ventas.renovacion_registers') }}", // ← misma ruta que el datatable
                     method: "GET",
                     data: {
                         daterange: $('#data_range_filter').val(),
                         tipo_renovacion: $('#select_tipo_coti').val(),
                         value: $('#search_all_column').val(),
                         length: -1,
-                        start: 0,
-                        get_all_ids: true
+                        start: 0
                     },
                     success: function(response) {
                         var ids = [];
