@@ -153,8 +153,8 @@
                                                                 <div class="row">
                                                                     @foreach ($prefijos as $prefijo => $listaPermisos)
                                                                         @php $prefijoSlug = Str::slug($prefijo); @endphp
-                                                                        <div class="col-sm-6">
-                                                                            <label for="">
+                                                                        <div class="col-6">
+                                                                            <label for="" style="display: flex">
                                                                                 <input type="checkbox" name="permissions[]" value="{{ $prefijo }}">{{ Str::title($prefijo) }}
                                                                             </label>
                                                                             <!-- NIVEL 3: ACCIONES -->
@@ -164,9 +164,15 @@
                                                                                         $accion = explode('.',$permiso->name,)[1] ?? '';
                                                                                     @endphp
                                                                                     <div class="">
-                                                                                        <label>
-                                                                                            <input type="checkbox" name="permissions[]" value="{{ $permiso->name }}">{{ Str::of($accion)->replace('_', ' ')->title() }} <i class="fa fa-"></i>
-                                                                                        </label>
+                                                                                        <span style="display: flex;align-items: center;">
+                                                                                            <input type="checkbox" name="permissions[]" value="{{ $permiso->name }}" class="sub_permisos">
+                                                                                            {{ Str::of($accion)->replace('_', ' ')->title() }} 
+                                                                                            <div class="tooltip-demo text-center" style="display: contents">
+                                                                                                <button class="btn btn-link btn-xs"  data-toggle="popover" data-placement="bottom" data-content="{{ $permiso->description }}">
+                                                                                                    <i style="font-size: 9px" class="fa fa-info-circle"></i>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </span>
 
                                                                                         {{-- @if ($permiso->description)
                                                                                             <small
@@ -175,6 +181,7 @@
                                                                                             </small>
                                                                                         @endif --}}
                                                                                     </div>
+                                                                                    {{-- <hr style="margin: 5px"> --}}
                                                                                 @endforeach
                                                                             </div>
                                                                         </div>
@@ -281,6 +288,9 @@
         }
         .col-lg-3{
             margin-bottom: 25px;
+        }
+        .sub_permisos{
+            margin-right: 
         }
     </style>
     <!-- Mainly scripts -->
