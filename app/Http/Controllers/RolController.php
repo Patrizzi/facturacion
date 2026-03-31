@@ -15,8 +15,13 @@ class RolController extends Controller
 {
 
     public function index(Request $request){
-        return view('');
+        $roles = Role::where('id', '!=', 1)->where('type', '!=', 1)->get();
+        return view('configuracion_general.usuario.roles.index', compact('roles'));
     }
+
+    // public function create(Request $request){
+
+    // }
 
     public function crearRol(Request $request){
         DB::beginTransaction();

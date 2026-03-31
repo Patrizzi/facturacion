@@ -718,6 +718,20 @@
     </div>
 
     <style>
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+
         .select2-container.select2-container--default.select2-container--open {
             z-index: 9999 !important;
             width: 100% !important;
@@ -792,7 +806,7 @@
         .switch-button {
             display: inline-block;
             /* padding-top: 9px;
-                                    padding-right: 30px; */
+                                            padding-right: 30px; */
             padding: 9px 40px;
         }
 
@@ -837,14 +851,41 @@
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+
+    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+
+    <!-- Switchery -->
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+
+    <script src="{{ asset('js/plugins/slick/slick.min.js') }}"></script>
+
+    <!-- check -->
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    {{-- <script src="{{ asset('js/toastr-config.js') }}"></script> --}}
 
     <script>
+        $(document).ready(function() {
+            $('.dataTables-usu').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: []
+            });
+        });
         //Select2
         $(document).ready(function() {
             $('.multiple_permisos_select').select2();
@@ -1054,34 +1095,6 @@
         };
     </script> --}}
 
-
-    <style>
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-    </style>
-    <script>
-        $(document).ready(function() {
-            $('.dataTables-usu').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
-        });
-    </script>
     {{-- <script>
         // Mostrar el formulario de agregar usuario
         document.getElementById("btn-agregar").onclick = function() {
@@ -1097,33 +1110,32 @@
         };
     </script> --}}
 
-
-    <style>
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
-        div.dataTables_length {
-            display: none;
-        }
-
-        /* El Buscar */
-        div.dataTables_filter {
-            display: none;
-        }
-
-        /* CSV, Excel, PDF, Print */
-        div.dt-buttons {
-            display: none;
-        }
-    </style>
     <script>
         $(document).ready(function() {
-            $('.dataTables-usu').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+                
+            @endif
+
+            @if (session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
         });
     </script>
-
 @endsection

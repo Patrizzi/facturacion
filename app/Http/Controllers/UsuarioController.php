@@ -101,6 +101,7 @@ class UsuarioController extends Controller
                     return explode('.', $permiso->name)[0]; // nivel 2
                 });
             });
+        // return $personal->id;
         if($request->rol_id == 4){ // Rol Personalizado
             // Se debe crear un "Rol Personalizado, diferente de los demas " 
             return view('configuracion_general.usuario.add_permisos_user', compact('datos','almacen','personal','rol','permisos','roles'));
@@ -109,7 +110,9 @@ class UsuarioController extends Controller
         }
         $id = $request->persona_id;
         $personal=Personal::find($id);
-        return view('configuracion_general.usuario.create',compact('personal'));
+        // Funcion para enviar el correo 
+        $msg = "Se envió un código a ".$request->correo.', digitarlo para activar al usuario en el sistema';
+        return redirect()->back()->with('success',$msg)->with('id_user', $request);
     }
 
 
