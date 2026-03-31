@@ -206,7 +206,8 @@ class Ventas_registroController extends Controller
                 $cotizacion->id,
                 $cotizacion->estado,
                 $cotizacion->cliente->celular,
-                $cotizacion->cliente->email
+                $cotizacion->cliente->email,
+                $cotizacion->nota_informativa
 
             ];
         }
@@ -331,6 +332,7 @@ class Ventas_registroController extends Controller
                 $cotizacion_manual->estado,
                 $cotizacion_manual->cliente->celular,
                 $cotizacion_manual->cliente->email,
+                $cotizacion_manual->nota_informativa,
             ];
         }
         // Llamado para la suma total
@@ -456,76 +458,45 @@ class Ventas_registroController extends Controller
         $fecha_actual = Carbon::now();
 
         $renovaciones->transform(function ($renovacion) use ($igv, $fecha_actual) {
-            // Determinar qué tipo de cotización es
             $cotizacion = $renovacion->cotizacion ?? $renovacion->cotizacionManual;
 
             if ($cotizacion) {
                 $subtotal = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-                $total = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
+                $total    = round($subtotal + ($cotizacion->op_gravada * $igv) / 100, 2);
 
-                $renovacion->total_conv = Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total);
-                $renovacion->total = $cotizacion->moneda->simbolo . number_format($total, 2);
-                $renovacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
+                $renovacion->total_conv    = Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total);
+                $renovacion->total         = $cotizacion->moneda->simbolo . number_format($total, 2);
+                $renovacion->emision       = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
 
-                // Usar el modelo correcto para estado_proceso
                 $modelo = $renovacion->cotizacion ? Cotizacion::class : CotizacionManual::class;
                 $renovacion->estado_proceso = $modelo::estado_proceso($cotizacion->id);
                 $renovacion->cotizacion_data = $cotizacion;
 
-                $fecha_emision = Carbon::parse($cotizacion->fecha_emision);
-                $fecha_vencimiento = null;
-                $dias_texto = '-';
+                // ── Fecha vencimiento y días restantes ────────────────
+                $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
 
-                if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                    $dias_acumulados = (int) $renovacion->dia_mensual;
-                    $fecha_vencimiento = $fecha_emision->copy()->addDays($dias_acumulados);
-
-                    while ($fecha_vencimiento->isPast()) {
-                        $fecha_vencimiento->addDays($dias_acumulados);
-                    }
-
-                } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                    $dia_vencimiento = (int) $renovacion->dia_anual;
-                    $mes_vencimiento = (int) $renovacion->mes_anual;
-                    $anio_vencimiento = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                    try {
-                        $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, $dia_vencimiento);
-                    } catch (\Exception $e) {
-                        $fecha_vencimiento = Carbon::create($anio_vencimiento, $mes_vencimiento, 1)->endOfMonth();
-                    }
-
-                    if ($fecha_vencimiento->isPast()) {
-                        $fecha_vencimiento->addYear();
-                    }
+                if ($diff < 0) {
+                    $dias_texto = abs($diff) . ' días vencido';
+                } elseif ($diff == 0) {
+                    $dias_texto = 'Vence hoy';
+                } elseif ($diff == 1) {
+                    $dias_texto = '1 día';
+                } else {
+                    $dias_texto = $diff . ' días';
                 }
 
-                // CALCULAR DÍAS RESTANTES
-                if ($fecha_vencimiento) {
-                    $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-
-                    if ($dias_diferencia < 0) {
-                        $dias_texto = abs($dias_diferencia) . ' días vencido';
-                    } elseif ($dias_diferencia == 0) {
-                        $dias_texto = 'Vence hoy';
-                    } elseif ($dias_diferencia == 1){
-                        $dias_texto = $dias_diferencia . ' día';
-                    } else {
-                        $dias_texto = $dias_diferencia . ' días';
-                    }
-                }
-
-                $renovacion->fecha_vencimiento = $fecha_vencimiento;
-                $renovacion->dias_vencimiento = $dias_texto;
+                $renovacion->fecha_vencimiento_fmt = $fecha_vencimiento->format('d-m-Y');
+                $renovacion->dias_vencimiento      = $dias_texto;
 
             } else {
-                $renovacion->total_conv = 0;
-                $renovacion->total = '0.00';
-                $renovacion->emision = '';
-                $renovacion->estado_proceso = 0;
-                $renovacion->cotizacion_data = null;
-                $renovacion->fecha_vencimiento = null;
-                $renovacion->dias_vencimiento = '-';
+                $renovacion->total_conv            = 0;
+                $renovacion->total                 = '0.00';
+                $renovacion->emision               = '';
+                $renovacion->estado_proceso        = 0;
+                $renovacion->cotizacion_data       = null;
+                $renovacion->fecha_vencimiento_fmt = '-';
+                $renovacion->dias_vencimiento      = '-';
             }
 
             return $renovacion;
@@ -549,9 +520,7 @@ class Ventas_registroController extends Controller
                     $cotizacion->cliente->numero_documento,             // 3 - RUC-DNI
                     $cotizacion->cliente->nombre,                       // 4 - Cliente
                     $cotizacion->fecha_emision,                         // 5 - Fecha Emisión
-                    $renovacion->fecha_vencimiento
-                        ? $renovacion->fecha_vencimiento->format('d-m-Y')
-                        : '-',                                          // 6 - Fecha Vencimiento
+                    $renovacion->fecha_vencimiento_fmt,                 // 6 - Fecha Vencimiento
                     $renovacion->dias_vencimiento,                      // 7 - Tiempo Vencimiento
                     $cotizacion->forma_pago->nombre,                    // 8 - Forma Pago
                     $renovacion->total,                                 // 9 - Importe Total

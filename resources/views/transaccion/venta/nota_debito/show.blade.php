@@ -36,18 +36,17 @@
                 </div>
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-                <div class="row tooltip-demo">
-                    <div style="display: flex; flex-direction: column;">
-                        <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
-                        <h5 style="margin: 0;">{{ $notas_debito->codigo_n_d }}</h5>
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-3">
+                        <h3 style="margin: 0;">{{ $notas_debito->codigo_n_d }}</h3>
+                        <strong style="margin: 0;">R.U.C :</strong>{{ $empresa->ruc }}
                     </div>
-                    <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
-                        NOTA DE DÉBITO
-                    </h2>
-
-                    <div
-                        style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
-
+                    <div class="col-12 col-md-4 text-center">
+                        <h2 class="mb-0 text-nowrap" style="margin-left:200px;">
+                            NOTA DE DÉBITO
+                        </h2>
+                    </div>
+                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
                         <form class="btn" style="padding: 0;" action="{{ route('nota_debito.pdf', $notas_debito->id) }}">
                             <input type="text" name="name" maxlength="50" hidden
                                 value="{{ $notas_debito->codigo_n_d }}">

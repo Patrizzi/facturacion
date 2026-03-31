@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
+use App\Exports\RenovacionExport;
 use ZipArchive;
 class RenovacionController extends Controller
 {
@@ -115,7 +116,6 @@ public function index()
                 return back()->withErrors(['No se seleccionaron renovaciones para imprimir.']);
             }
 
-            // OBTENER LAS RENOVACIONES Y SUS COTIZACIONES (AMBAS)
             $renovaciones = RenovacionVentas::with(['cotizacionManual', 'cotizacion'])
                 ->whereIn('id', $renovacionIds)
                 ->get();
@@ -124,119 +124,63 @@ public function index()
                 return back()->withErrors(['Algunas renovaciones seleccionadas no existen.']);
             }
 
-            // Recopilar datos para múltiples cotizaciones
+            $igvModel  = Igv::first();
+            $banco     = Banco::where('estado', '0')->get();
+            $banco_count = Banco::where('estado', '0')->count();
+            $empresa   = Empresa::first();
+            $j         = 1;
+
             $cotizacionesData = [];
-            $igvModel = Igv::first();
 
             foreach ($renovaciones as $renovacion) {
-                // Determinar qué tipo de cotización usar
                 $cotizacion = $renovacion->cotizacionManual ?? $renovacion->cotizacion;
 
                 if (!$cotizacion) continue;
 
-                // Determinar el tipo de registros según el tipo de cotización
                 if ($renovacion->cotizacionManual) {
                     $cotizacion_m_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
                 } else {
                     $cotizacion_m_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get();
                 }
 
-                // Calcular subtotales
                 $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+                $igv       = round($cotizacion->op_gravada, 2) * $igvModel->igv_total / 100;
+                $end       = round($sub_total, 2) + round($igv, 2);
 
-                // IGV
-                $igv = round($cotizacion->op_gravada, 2) * $igvModel->igv_total / 100;
+                $fecha_actual      = Carbon::now()->startOfDay();
+                $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
 
-                // TOTAL
-                $end = round($sub_total, 2) + round($igv, 2);
-
-                // CALCULAR FECHA DE VENCIMIENTO Y DÍAS RESTANTES
-                $fecha_vencimiento = null;
-                $dias_restantes_texto = null;
-                $dias_restantes_numero = null;
-
-                $fecha_actual = Carbon::now()->startOfDay();
-                $fecha_emision = Carbon::parse($cotizacion->fecha_emision)->startOfDay();
-
-                // CALCULAR FECHA DE VENCIMIENTO
-                if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                    $dia_renovacion = (int) $renovacion->dia_mensual;
-
-                    $fecha_vencimiento = Carbon::create(
-                        $fecha_emision->year,
-                        $fecha_emision->month,
-                        min($dia_renovacion, $fecha_emision->daysInMonth)
-                    )->startOfDay();
-
-                    if ($fecha_vencimiento->lt($fecha_emision)) {
-                        $fecha_vencimiento->addMonth();
-                        $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                    }
-
-                    while ($fecha_vencimiento->lte($fecha_actual)) {
-                        $fecha_vencimiento->addMonth();
-                        $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                    }
-
-                } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                    $dia_vencimiento = (int) $renovacion->dia_anual;
-                    $mes_vencimiento = (int) $renovacion->mes_anual;
-                    $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                    try {
-                        $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                    } catch (\Exception $e) {
-                        $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                            ->endOfMonth()
-                            ->startOfDay();
-                    }
-
-                    while ($fecha_vencimiento->lte($fecha_actual)) {
-                        $fecha_vencimiento->addYear();
-                    }
-                }
-
-                // CALCULAR DÍAS RESTANTES
-                if ($fecha_vencimiento) {
-                    $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                    $dias_restantes_numero = $dias_diferencia;
-
-                    if ($dias_diferencia < 0) {
-                        $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                    } elseif ($dias_diferencia == 0) {
-                        $dias_restantes_texto = 'Vence hoy';
-                    } elseif ($dias_diferencia == 1) {
-                        $dias_restantes_texto = '1 día';
-                    } else {
-                        $dias_restantes_texto = $dias_diferencia . ' días';
-                    }
+                if ($diff < 0) {
+                    $dias_restantes_texto = abs($diff) . ' días vencido';
+                } elseif ($diff == 0) {
+                    $dias_restantes_texto = 'Vence hoy';
+                } elseif ($diff == 1) {
+                    $dias_restantes_texto = '1 día';
+                } else {
+                    $dias_restantes_texto = $diff . ' días';
                 }
 
                 $cotizacionesData[] = [
-                    'cotizacion' => $cotizacion,
-                    'cotizacion_m_reg' => $cotizacion_m_reg, // ✅ Mantener el nombre original
-                    'sub_total' => $sub_total,
-                    'igv' => $igv,
-                    'end' => $end,
-                    'renovacion' => $renovacion,
-                    'fecha_vencimiento' => $fecha_vencimiento,
-                    'dias_restantes_texto' => $dias_restantes_texto,
-                    'dias_restantes_numero' => $dias_restantes_numero
+                    'cotizacion'            => $cotizacion,
+                    'cotizacion_m_reg'      => $cotizacion_m_reg,
+                    'sub_total'             => $sub_total,
+                    'igv'                   => $igv,
+                    'end'                   => $end,
+                    'renovacion'            => $renovacion,
+                    'fecha_vencimiento'     => $fecha_vencimiento,
+                    'dias_restantes_texto'  => $dias_restantes_texto,
+                    'dias_restantes_numero' => $diff
                 ];
-            }
-
-            // Datos comunes
-            $banco = Banco::where('estado', '0')->get();
-            $banco_count = Banco::where('estado', '0')->count();
-            $empresa = Empresa::first();
-            $j = 1;
+            } // ← foreach cierra aquí correctamente
 
             return view('transaccion.venta.cotizacion.manual.print_multiple', compact(
                 'cotizacionesData',
                 'empresa',
                 'banco',
                 'banco_count',
-                'j'
+                'j',
+                'igvModel'
             ));
 
         } catch (\Exception $e) {
@@ -246,235 +190,31 @@ public function index()
 
     public function exportarRenovaciones(Request $request)
     {
-        if (ob_get_contents()) {
-            ob_end_clean();
-        }
+        $ids = $request->input('renovacion_ids', []);
 
-        $renovacionIds = $request->input('renovacion_ids', []);
-
-        if (empty($renovacionIds) || !is_array($renovacionIds)) {
+        if (empty($ids) || !is_array($ids)) {
             return back()->withErrors(['No se seleccionaron renovaciones para exportar.']);
         }
 
-        // OBTENER LAS RENOVACIONES CON SUS COTIZACIONES (AMBAS)
-        $renovaciones = RenovacionVentas::with([
-            'cotizacionManual.almacen',
-            'cotizacionManual.cliente',
-            'cotizacionManual.moneda',
-            'cotizacionManual.forma_pago',
-            'cotizacionManual.user_personal.personal',
-            'cotizacionManual.tipo_operacion',
-            'cotizacionManual.tipo_documento',
-            'cotizacion.almacen',
-            'cotizacion.cliente',
-            'cotizacion.moneda',
-            'cotizacion.forma_pago',
-            'cotizacion.user_personal.personal',
-            'cotizacion.tipo_operacion',
-            'cotizacion.tipo_documento'
-        ])
-        ->whereIn('id', $renovacionIds)
-        ->get();
-
-        $headers = [
-            'Código cotizacion',
-            'Almacén',
-            'Cliente',
-            'Moneda',
-            'Forma de pago',
-            'Garantia',
-            'Validez',
-            'Fecha de emision',
-            'Cambio',
-            'Observacion',
-            'Personal',
-            'Estado',
-            'Estado vigente',
-            'Tipo',
-            'Operacion gravada',
-            'Operacion inafecta',
-            'Operacion Exonerada',
-            'Operacion gratuita',
-            'Tipo de Operacion',
-            'Tipo de Documento',
-            'Subtotal',
-            'IGV',
-            'Importe Total',
-            'Tiene Renovación',
-            'Frecuencia Renovación',
-            'Fecha Vencimiento',
-            'Días Restantes'
-        ];
-
-        $rows = [$headers];
-
-        $fecha_actual = Carbon::now()->startOfDay();
-
-        foreach ($renovaciones as $renovacion) {
-            // Determinar qué tipo de cotización usar
-            $cotizacion = $renovacion->cotizacionManual ?? $renovacion->cotizacion;
-
-            if (!$cotizacion) continue;
-
-            $almacen = optional($cotizacion->almacen)->nombre;
-            $cliente = optional($cotizacion->cliente)->nombre;
-            $moneda = optional($cotizacion->moneda)->nombre;
-            $formaPago = optional($cotizacion->forma_pago)->nombre;
-            $personal = '';
-
-            if ($cotizacion->user_personal && $cotizacion->user_personal->personal) {
-                $personal = trim($cotizacion->user_personal->personal->nombres . ' ' . $cotizacion->user_personal->personal->apellidos);
-            }
-
-            $estado = $cotizacion->estado ? 'algo' : 'nada';
-            $estadoVigente = $cotizacion->estadoVigente ? 'algo' : 'nada';
-            $infoOperacion = optional($cotizacion->tipo_operacion)->informacion;
-            $infoDocumento = optional($cotizacion->tipo_documento)->informacion;
-            $subtotal = ($cotizacion->op_gravada ?? 0) + ($cotizacion->op_inafecta ?? 0) + ($cotizacion->op_exonerada ?? 0);
-            $subtotalGravado = ($cotizacion->op_gravada);
-            $igv_p = round(($subtotalGravado ?? 0) * 0.18, 2);
-            $importeTotal = round($subtotal + $igv_p, 2);
-
-            $tiene_renovacion = 'Sí';
-            $frecuencia_renovacion = $renovacion->frecuencia;
-
-            $fecha_emision = Carbon::parse($cotizacion->fecha_emision)->startOfDay();
-            $fecha_vencimiento = null;
-            $fecha_vencimiento_texto = '-';
-            $dias_restantes_texto = '-';
-
-            // CALCULAR FECHA DE VENCIMIENTO
-            if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                $dia_renovacion = (int) $renovacion->dia_mensual;
-
-                $fecha_vencimiento = Carbon::create(
-                    $fecha_emision->year,
-                    $fecha_emision->month,
-                    min($dia_renovacion, $fecha_emision->daysInMonth)
-                )->startOfDay();
-
-                if ($fecha_vencimiento->lt($fecha_emision)) {
-                    $fecha_vencimiento->addMonth();
-                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                }
-
-                while ($fecha_vencimiento->lte($fecha_actual)) {
-                    $fecha_vencimiento->addMonth();
-                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                }
-
-            } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                $dia_vencimiento = (int) $renovacion->dia_anual;
-                $mes_vencimiento = (int) $renovacion->mes_anual;
-                $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                try {
-                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                } catch (\Exception $e) {
-                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                        ->endOfMonth()
-                        ->startOfDay();
-                }
-
-                while ($fecha_vencimiento->lte($fecha_actual)) {
-                    $fecha_vencimiento->addYear();
-                }
-            }
-
-            // CALCULAR DÍAS RESTANTES
-            if ($fecha_vencimiento) {
-                $fecha_vencimiento_texto = $fecha_vencimiento->format('d-m-Y');
-                $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-
-                if ($dias_diferencia < 0) {
-                    $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                } elseif ($dias_diferencia == 0) {
-                    $dias_restantes_texto = 'Vence hoy';
-                } elseif ($dias_diferencia == 1) {
-                    $dias_restantes_texto = '1 día';
-                } else {
-                    $dias_restantes_texto = $dias_diferencia . ' días';
-                }
-            }
-
-            $row = [
-                $cotizacion->cod_cotizacion,
-                $almacen,
-                $cliente,
-                $moneda,
-                $formaPago,
-                $cotizacion->garantia,
-                $cotizacion->validez,
-                $cotizacion->fecha_emision,
-                $cotizacion->cambio,
-                $cotizacion->observacion,
-                $personal,
-                $estado,
-                $estadoVigente,
-                $cotizacion->tipo,
-                $cotizacion->op_gravada,
-                $cotizacion->op_inafecta,
-                $cotizacion->op_exonerada,
-                $cotizacion->op_gratuita,
-                $infoOperacion,
-                $infoDocumento,
-                $subtotal,
-                $igv_p,
-                $importeTotal,
-                $tiene_renovacion,
-                $frecuencia_renovacion,
-                $fecha_vencimiento_texto,
-                $dias_restantes_texto
-            ];
-
-            $rows[] = $row;
-        }
-
-        $export = new class($rows) implements FromArray, WithEvents {
-            private $rows;
-
-            public function __construct($rows) {
-                $this->rows = $rows;
-            }
-
-            public function array(): array {
-                return $this->rows;
-            }
-
-            public function registerEvents(): array {
-                return [
-                    AfterSheet::class => function(AfterSheet $event) {
-                        foreach(range('A','Z') as $column) {
-                            $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                        }
-                        foreach(range('A','Z') as $letter1) {
-                            foreach(range('A','Z') as $letter2) {
-                                $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
-                            }
-                        }
-                    },
-                ];
-            }
-        };
-
-        $fecha = now('America/Lima')->format('d-m-Y');
-        return Excel::download($export, 'Renovaciones_' . $fecha . '.xlsx');
+        return Excel::download(
+            new RenovacionExport($ids),
+            'Renovaciones_' . now('America/Lima')->format('d-m-Y') . '.xlsx'
+        );
     }
 
     public function downloadMultiplePDFs(Request $request)
     {
         try {
-            $renovacionIds = $request->input('cotizacion_ids', []); // Mantener el nombre del parámetro por compatibilidad con el JS
+            $renovacionIds = $request->input('cotizacion_ids', []);
 
             if (empty($renovacionIds) || !is_array($renovacionIds)) {
                 return back()->with('error', 'No se seleccionaron renovaciones para descargar.');
             }
 
             if (count($renovacionIds) === 1) {
-                return $this->downloadSinglePDFRenovacion($renovacionIds[0]);
+                return $this->downloadSinglePDF($renovacionIds[0]);
             }
 
-            // OBTENER LAS RENOVACIONES CON SUS COTIZACIONES (AMBAS)
             $renovaciones = RenovacionVentas::with(['cotizacionManual', 'cotizacion'])
                 ->whereIn('id', $renovacionIds)
                 ->get();
@@ -483,12 +223,8 @@ public function index()
                 return back()->with('error', 'Algunas renovaciones seleccionadas no existen.');
             }
 
-            // Limpiar cualquier output previo
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
+            if (ob_get_level()) ob_end_clean();
 
-            // Crear ZIP temporal usando tempnam
             $tempZip = tempnam(sys_get_temp_dir(), 'renovaciones_');
             $zip = new ZipArchive();
 
@@ -497,114 +233,67 @@ public function index()
             }
 
             $igv_config = Igv::first();
-            $empresa = Empresa::first();
+            $empresa    = Empresa::first();
+            $fecha_actual = Carbon::now()->startOfDay();
 
             foreach ($renovaciones as $renovacion) {
                 try {
-                    // Determinar qué tipo de cotización usar
                     $cotizacion = $renovacion->cotizacionManual ?? $renovacion->cotizacion;
-
                     if (!$cotizacion) continue;
 
-                    // Determinar el tipo de registros según el tipo de cotización
                     if ($renovacion->cotizacionManual) {
-                        $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+                        $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get(); // ✅
                         $vista_pdf = 'transaccion.venta.cotizacion.manual.pdf';
                     } else {
-                        $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get();
-                        $vista_pdf = 'transaccion.venta.cotizacion.pdf'; // Ajusta según tu vista
+                        $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get(); // ✅
+                        $vista_pdf = 'transaccion.venta.cotizacion.pdf';
                     }
 
-                    $sum = 0;
-                    $j = 1;
+                    $sum       = 0;
+                    $j         = 1;
                     $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-                    $igv = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
-                    $end = round($sub_total, 2) + round($igv, 2);
-                    $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
+                    $igv       = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
+                    $end       = round($sub_total, 2) + round($igv, 2);
+                    $end2      = number_format($end, 2);
 
-                    $fecha_vencimiento = null;
-                    $dias_restantes_texto = null;
-                    $dias_restantes_numero = null;
+                    $fecha_vencimiento       = null;
+                    $dias_restantes_texto    = null;
+                    $dias_restantes_numero   = null;
 
-                    $fecha_actual = Carbon::now()->startOfDay();
-                    $fecha_emision = Carbon::parse($cotizacion->fecha_emision)->startOfDay();
+                    if ($renovacion->fecha_vencimiento) {
+                        $fecha_vencimiento     = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                        $diff                  = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                        $dias_restantes_numero = $diff;
 
-                    // CALCULAR FECHA DE VENCIMIENTO
-                    if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                        $dia_renovacion = (int) $renovacion->dia_mensual;
-
-                        $fecha_vencimiento = Carbon::create(
-                            $fecha_emision->year,
-                            $fecha_emision->month,
-                            min($dia_renovacion, $fecha_emision->daysInMonth)
-                        )->startOfDay();
-
-                        if ($fecha_vencimiento->lt($fecha_emision)) {
-                            $fecha_vencimiento->addMonth();
-                            $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                        }
-
-                        while ($fecha_vencimiento->lte($fecha_actual)) {
-                            $fecha_vencimiento->addMonth();
-                            $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                        }
-
-                    } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                        $dia_vencimiento = (int) $renovacion->dia_anual;
-                        $mes_vencimiento = (int) $renovacion->mes_anual;
-                        $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                        try {
-                            $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                        } catch (\Exception $e) {
-                            $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                                ->endOfMonth()
-                                ->startOfDay();
-                        }
-
-                        while ($fecha_vencimiento->lte($fecha_actual)) {
-                            $fecha_vencimiento->addYear();
-                        }
-                    }
-
-                    // CALCULAR DÍAS RESTANTES
-                    if ($fecha_vencimiento) {
-                        $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                        $dias_restantes_numero = $dias_diferencia;
-
-                        if ($dias_diferencia < 0) {
-                            $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                        } elseif ($dias_diferencia == 0) {
+                        if ($diff < 0) {
+                            $dias_restantes_texto = abs($diff) . ' días vencido';
+                        } elseif ($diff == 0) {
                             $dias_restantes_texto = 'Vence hoy';
-                        } elseif ($dias_diferencia == 1) {
+                        } elseif ($diff == 1) {
                             $dias_restantes_texto = '1 día';
                         } else {
-                            $dias_restantes_texto = $dias_diferencia . ' días';
+                            $dias_restantes_texto = $diff . ' días';
                         }
                     }
 
-                    // Generar PDF individual
-                    $pdf = PDF::loadView($vista_pdf, compact(
-                        'j',
-                        'cotizacion',
-                        'empresa',
-                        'cotizacion_m_reg',
-                        'sum',
-                        'igv',
-                        'sub_total',
-                        'end',
-                        'end2',
-                        'renovacion',
-                        'fecha_vencimiento',
-                        'dias_restantes_texto',
-                        'dias_restantes_numero'
-                    ));
-
-                    $pdfContent = $pdf->output();
+                    $pdf = PDF::loadView($vista_pdf, [
+                        'j'                    => $j,
+                        'cotizacion'           => $cotizacion,
+                        'empresa'              => $empresa,
+                        'cotizacion_m_reg'     => $cotizacion_reg,
+                        'sum'                  => $sum,
+                        'igv'                  => $igv,
+                        'sub_total'            => $sub_total,
+                        'end'                  => $end,
+                        'end2'                 => $end2,
+                        'renovacion'           => $renovacion,
+                        'fecha_vencimiento'    => $fecha_vencimiento,
+                        'dias_restantes_texto' => $dias_restantes_texto,
+                        'dias_restantes_numero'=> $dias_restantes_numero
+                    ]);
 
                     $codigoCotizacion = preg_replace('/[^a-zA-Z0-9_-]/', '_', $cotizacion->cod_cotizacion);
-                    $fileName = 'Renovacion_' . $codigoCotizacion . '.pdf';
-                    $zip->addFromString($fileName, $pdfContent);
+                    $zip->addFromString('Renovacion_' . $codigoCotizacion . '.pdf', $pdf->output());
 
                 } catch (\Exception $e) {
                     continue;
@@ -616,7 +305,6 @@ public function index()
             clearstatcache(true, $tempZip);
             usleep(100000);
 
-            // Descargar ZIP usando streamDownload
             return response()->streamDownload(
                 function () use ($tempZip) {
                     readfile($tempZip);
@@ -624,9 +312,7 @@ public function index()
                 },
                 'Renovaciones_' . date('Y-m-d_H-i-s') . '.zip',
                 ['Content-Type' => 'application/zip']
-            )->send();
-
-            exit(); // CRÍTICO: Detener la ejecución después de enviar
+            );
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar renovaciones: ' . $e->getMessage());
@@ -636,117 +322,66 @@ public function index()
     private function downloadSinglePDF($renovacionId)
     {
         try {
-            // Cargar AMBAS relaciones
             $renovacion = RenovacionVentas::with(['cotizacionManual', 'cotizacion'])->findOrFail($renovacionId);
-
-            // Determinar qué tipo de cotización usar
             $cotizacion = $renovacion->cotizacionManual ?? $renovacion->cotizacion;
 
             if (!$cotizacion) {
                 return back()->with('error', 'No se encontró la cotización asociada a esta renovación.');
             }
 
-            // Determinar el tipo de registros según el tipo de cotización
             if ($renovacion->cotizacionManual) {
-                $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+                $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get(); // ✅
                 $vista_pdf = 'transaccion.venta.cotizacion.manual.pdf';
             } else {
-                $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get();
-                $vista_pdf = 'transaccion.venta.cotizacion.pdf'; // Ajusta según tu vista
+                $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get(); // ✅
+                $vista_pdf = 'transaccion.venta.cotizacion.pdf';
             }
 
-            $empresa = Empresa::first();
+            $empresa    = Empresa::first();
             $igv_config = Igv::first();
-            $sum = 0;
-            $j = 1;
+            $sum        = 0;
+            $j          = 1;
+            $sub_total  = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+            $igv        = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
+            $end        = round($sub_total, 2) + round($igv, 2);
+            $end2       = number_format($end, 2);
 
-            // SUBTOTAL
-            $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+            $fecha_vencimiento       = null;
+            $dias_restantes_texto    = null;
+            $dias_restantes_numero   = null;
+            $fecha_actual            = Carbon::now()->startOfDay();
 
-            // IGV
-            $igv = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
+            if ($renovacion->fecha_vencimiento) {
+                $fecha_vencimiento     = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                $diff                  = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                $dias_restantes_numero = $diff;
 
-            // TOTAL
-            $end = round($sub_total, 2) + round($igv, 2);
-            $end2 = number_format(round($sub_total, 2) + round($igv, 2), 2);
-
-            $fecha_vencimiento = null;
-            $dias_restantes_texto = null;
-            $dias_restantes_numero = null;
-
-            $fecha_actual = Carbon::now()->startOfDay();
-            $fecha_emision = Carbon::parse($cotizacion->fecha_emision)->startOfDay();
-
-            // CALCULAR FECHA DE VENCIMIENTO
-            if ($renovacion->frecuencia == 'Mensual' && $renovacion->dia_mensual) {
-                $dia_renovacion = (int) $renovacion->dia_mensual;
-
-                $fecha_vencimiento = Carbon::create(
-                    $fecha_emision->year,
-                    $fecha_emision->month,
-                    min($dia_renovacion, $fecha_emision->daysInMonth)
-                )->startOfDay();
-
-                if ($fecha_vencimiento->lt($fecha_emision)) {
-                    $fecha_vencimiento->addMonth();
-                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                }
-
-                while ($fecha_vencimiento->lte($fecha_actual)) {
-                    $fecha_vencimiento->addMonth();
-                    $fecha_vencimiento->day = min($dia_renovacion, $fecha_vencimiento->daysInMonth);
-                }
-
-            } elseif ($renovacion->frecuencia == 'Anual' && $renovacion->dia_anual && $renovacion->mes_anual) {
-                $dia_vencimiento = (int) $renovacion->dia_anual;
-                $mes_vencimiento = (int) $renovacion->mes_anual;
-                $anio_base = $renovacion->anio_anual ?? $fecha_actual->year;
-
-                try {
-                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, $dia_vencimiento)->startOfDay();
-                } catch (\Exception $e) {
-                    $fecha_vencimiento = Carbon::create($anio_base, $mes_vencimiento, 1)
-                        ->endOfMonth()
-                        ->startOfDay();
-                }
-
-                while ($fecha_vencimiento->lte($fecha_actual)) {
-                    $fecha_vencimiento->addYear();
-                }
-            }
-
-            // CALCULAR DÍAS RESTANTES
-            if ($fecha_vencimiento) {
-                $dias_diferencia = $fecha_actual->diffInDays($fecha_vencimiento, false);
-                $dias_restantes_numero = $dias_diferencia;
-
-                if ($dias_diferencia < 0) {
-                    $dias_restantes_texto = abs($dias_diferencia) . ' días vencido';
-                } elseif ($dias_diferencia == 0) {
+                if ($diff < 0) {
+                    $dias_restantes_texto = abs($diff) . ' días vencido';
+                } elseif ($diff == 0) {
                     $dias_restantes_texto = 'Vence hoy';
-                } elseif ($dias_diferencia == 1) {
+                } elseif ($diff == 1) {
                     $dias_restantes_texto = '1 día';
                 } else {
-                    $dias_restantes_texto = $dias_diferencia . ' días';
+                    $dias_restantes_texto = $diff . ' días';
                 }
             }
 
-            // Generar PDF
-            $pdf = PDF::loadView($vista_pdf, compact(
-                'j',
-                'cotizacion',
-                'empresa',
-                'cotizacion_m_reg',
-                'sum',
-                'igv',
-                'sub_total',
-                'end',
-                'end2',
-                'renovacion',
-                'fecha_vencimiento',
-                'dias_restantes_texto',
-                'dias_restantes_numero'
-            ));
+            $pdf = PDF::loadView($vista_pdf, [
+                'j'                     => $j,
+                'cotizacion'            => $cotizacion,
+                'empresa'               => $empresa,
+                'cotizacion_m_reg'      => $cotizacion_reg,
+                'sum'                   => $sum,
+                'igv'                   => $igv,
+                'sub_total'             => $sub_total,
+                'end'                   => $end,
+                'end2'                  => $end2,
+                'renovacion'            => $renovacion,
+                'fecha_vencimiento'     => $fecha_vencimiento,
+                'dias_restantes_texto'  => $dias_restantes_texto,
+                'dias_restantes_numero' => $dias_restantes_numero
+            ]);
 
             return $pdf->download('Renovacion_' . $cotizacion->cod_cotizacion . '.pdf');
 

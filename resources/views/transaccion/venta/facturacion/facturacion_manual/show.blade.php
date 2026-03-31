@@ -39,23 +39,39 @@
                 </div>
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-                <div class="row tooltip-demo">
-                    <div class="col-sm-6">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-3">
+                        <h3 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
+                        <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
+                    </div>
+                    <div class="col-12 col-md-4 text-center">
+                        <h2 class="mb-0 text-nowrap" style="margin-left:200px;">
+                            FACTURA ELECTRÓNICA
+                        </h2>
+                    </div>
+                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
                         @php use Carbon\Carbon;
                         use App\Facturacion_m; @endphp
                         @if ($facturacion->nota_credito != 0)
-                            <span data-toggle="tooltip" data-placement="bottom" title=""
-                                data-original-title="Motivo: {{ Facturacion_m::search_motivo_nc($facturacion->id) }}">
-                                <a class="btn btn-primary"
-                                    href="{{ route('nota-credito.show', Facturacion_m::nota_credito_id($facturacion->id)) }}">Ver
-                                    nota de Credito</a>
-                            </span>
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
+                                {{-- Botón NC (oculto por defecto) --}}
+                                <div id="nc-slider" style="width: 0; overflow: hidden; transition: width 0.3s ease;">
+                                    <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                                        data-original-title="Motivo: {{ Facturacion_m::search_motivo_nc($facturacion->id) }}"
+                                        href="{{ route('nota-credito.show', Facturacion_m::nota_credito_id($facturacion->id)) }}"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                        <i class="fa fa-file-text fa-lg"></i>
+                                    </a>
+                                </div>
+                                {{-- Flecha toggle --}}
+                                <button id="nc-toggle" onclick="toggleNC()" class="btn btn-default"
+                                    style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                    <i class="fa fa-chevron-right" id="nc-arrow"></i>
+                                </button>
+                            </div>
+                            {{-- Divisor --}}
+                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
                         @endif
-                    </div>
-                    <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
-                        FACTURA ELECTRÓNICA
-                    </h2>
-                    <div style="margin-left: auto; display: flex; align-items: center; gap: 4px;">
                         <!-- PDF -->
                         <form class="btn" style="padding: 0;" action="{{ route('pdf_fac_m', $facturacion->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $facturacion->codigo_fac }}">
@@ -699,6 +715,26 @@
 
             $('.btn-editar').removeClass('no_mostrar');
             $('.btn-no-editar').addClass('no_mostrar');
+        }
+    </script>
+
+    <script>
+        var ncAbierto = false;
+        function toggleNC() {
+            var slider = document.getElementById('nc-slider');
+            var arrow = document.getElementById('nc-arrow');
+
+            if (ncAbierto) {
+                slider.style.width = '0';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
+            } else {
+                slider.style.width = '42px';
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-left');
+            }
+
+            ncAbierto = !ncAbierto;
         }
     </script>
     @include('transaccion.venta.facturacion.facturacion_manual._shared._edit_script')

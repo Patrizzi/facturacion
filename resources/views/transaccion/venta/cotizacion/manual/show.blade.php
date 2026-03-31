@@ -28,67 +28,204 @@
                 </a>
             </div>
         </div>
-        <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-            <div class="row tooltip-demo">
-                <div class="col-sm-6" align="left" style="padding: 0 15px;padding: 0 15px; margin: auto">
-                    @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 0)
-                        <a id="button_edit" class="btn btn-success" href="{{route('cotizacion_manual.facturar',$cotizacion->id)}}">Facturar</a>
-                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
-                    @endif
-                    @if ($cotizacion->tipo =='factura' &&  $cotizacion->estado == 1)
-                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('facturacion_manual.show',$factura->id)}}" >Ver Factura</a>
-                    @endif
-                    @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 0)
-                        <a id="button_edit" class="btn btn-success" href="{{route('cotizacion_manual.boletear',$cotizacion->id)}}" target="_blank">Boletear</a>
-                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
-                    @endif
-                    @if($cotizacion->tipo =='boleta' &&  $cotizacion->estado == 1)
-                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('boleta_manual.show',$boleta->id)}}" >Ver Boleta</a>
-                    @endif
-                    @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 0)
-                        <a id="button_edit" class="btn btn-success" href="{{route('cotizacion_manual.gen_nota_venta',$cotizacion->id)}}" target="_blank">Generar Nota de V.</a>
-                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
-                    @endif
-                    @if($cotizacion->tipo =='nota_venta' &&  $cotizacion->estado == 1)
-                        <a class="btn btn-default procesado" style="color: inherit !important; transition: 1s"  href="{{route('nota_venta.show',$nota_venta->id)}}" >Ver Nota de V.</a>
-                    @endif
-
-
+        <div class="ibox-content" style="padding-right: 3.1%; padding-left: 3.1%; padding-bottom: 10px;">
+            <div class="row align-items-center tooltip-demo">
+                <div class="col-12 col-md-3">
+                    <h3 style="margin: 0;">{{ $cotizacion->cod_cotizacion }}</h3>
+                    <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                 </div>
-                <div class="col-sm-6" align="right">
-                    <a href="{{route('cotizacion_manual.free_print', $cotizacion->id)}}" class="btn btn-secondary" target="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Impresion Libre"><i class="fa fa-share-alt"></i></a>
-                    <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('cotizacion_manual_pdf' ,$cotizacion->id)}}">@csrf
-                        <input type="text" name="name" maxlength="50" hidden="" value="CotizacionManual_{{$cotizacion->tipo}}"  >
-                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+
+                <div class="col-12 col-md-4 text-center">
+                    <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
+                        COTIZACIÓN
+                    </h2>
+                </div>
+
+                <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                    <div class="d-flex align-items-center" style="overflow: hidden;">
+                        <div id="btn-slider-cotizacion-manual"
+                            style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+
+                            @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
+                                <button type="button"
+                                        class="btn btn-warning btn-editar"
+                                        id="edit"
+                                        onclick="click_editar()"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        data-original-title="Editar cotización manual"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+
+                                <button type="button"
+                                        class="btn-no-editar no_mostrar btn btn-warning"
+                                        onclick="click_cancelar_editar()"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        data-original-title="Cancelar edición"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endif
+
+                            @if ($cotizacion->tipo == 'factura' && $cotizacion->estado == 0)
+                                <a class="btn btn-success"
+                                href="{{ route('cotizacion_manual.facturar', $cotizacion->id) }}"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Facturar"
+                                style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                                <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
+                            @endif
+
+                            @if ($cotizacion->tipo == 'factura' && $cotizacion->estado == 1)
+                                <a class="btn btn-default procesado"
+                                style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
+                                href="{{ route('facturacion_manual.show', $factura->id) }}"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Ver Factura">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                            @endif
+
+                            @if($cotizacion->tipo == 'boleta' && $cotizacion->estado == 0)
+                                <a class="btn btn-success"
+                                href="{{ route('cotizacion_manual.boletear', $cotizacion->id) }}"
+                                target="_blank"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Boletear"
+                                style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                                <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
+                            @endif
+
+                            @if($cotizacion->tipo == 'boleta' && $cotizacion->estado == 1)
+                                <a class="btn btn-default procesado"
+                                style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
+                                href="{{ route('boleta_manual.show', $boleta->id) }}"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Ver Boleta">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                            @endif
+
+                            @if($cotizacion->tipo == 'nota_venta' && $cotizacion->estado == 0)
+                                <a class="btn btn-success"
+                                href="{{ route('cotizacion_manual.gen_nota_venta', $cotizacion->id) }}"
+                                target="_blank"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Generar Nota de Venta"
+                                style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                                <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
+                            @endif
+
+                            @if($cotizacion->tipo == 'nota_venta' && $cotizacion->estado == 1)
+                                <a class="btn btn-default procesado"
+                                style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
+                                href="{{ route('nota_venta.show', $nota_venta->id) }}"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Ver Nota de Venta">
+                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                </a>
+                            @endif
+                        </div>
+
+                        <button type="button"
+                                id="btn-toggle-cotizacion-manual"
+                                onclick="toggleBtnsCotizacionManual()"
+                                class="btn btn-default"
+                                style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                            <i class="fa fa-chevron-right" id="btn-arrow-cotizacion-manual"></i>
+                        </button>
+                    </div>
+
+                    <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+
+                    <a href="{{ route('cotizacion_manual.free_print', $cotizacion->id) }}"
+                    class="btn btn-secondary"
+                    target="_blank"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    data-original-title="Impresión Libre">
+                        <i class="fa fa-share-alt"></i>
+                    </a>
+
+                    <form class="btn" style="padding: 0;" action="{{ route('cotizacion_manual_pdf', $cotizacion->id) }}">
+                        @csrf
+                        <input type="text" name="name" maxlength="50" hidden value="CotizacionManual_{{ $cotizacion->tipo }}">
+                        <button type="submit"
+                                class="btn btn-success"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Descargar PDF">
+                            <i class="fa fa-file-pdf-o fa-lg"></i>
+                        </button>
                     </form>
-                    <a class="btn btn-success" href="{{route('cotizacion_manual.print',$cotizacion->id)}}" target="_blank"  data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i></a>
+
+                    <a class="btn btn-success"
+                    href="{{ route('cotizacion_manual.print', $cotizacion->id) }}"
+                    target="_blank"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    data-original-title="Imprimir">
+                        <i class="fa fa-print fa-lg"></i>
+                    </a>
+
                     @if(Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.cotizacion_manual', $cotizacion->id )}}" method="post" style="text-align: none;padding: 0;" class="btn"  >
+                        <form action="{{ route('email.cotizacion_manual', $cotizacion->id) }}" method="post" style="padding: 0;" class="btn">
                             @csrf
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                                <i class="fa fa-envelope fa-lg" ></i>
+                            <button type="submit"
+                                    class="btn btn-secondary"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    formtarget="_blank"
+                                    data-original-title="Enviar por correo">
+                                <i class="fa fa-envelope fa-lg"></i>
                             </button>
                         </form>
                     @endif
-                    <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
-                    </div>
-                    @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
-                        <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()"><i class="fa fa-pencil"></i></button>
-                        <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i class="fa fa-times"></i></button>
-                    @else
 
-                    @endif
-                    <div id="div-mostrar" style="height: 0px; overflow: hidden;">
-                        <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                            @csrf
-                            <input type="tel" name="numero"  value="{{$cotizacion->cliente->celular}}"   />
-                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                            <input type="text" hidden="" name="url" value="{{route('cotizacion_manual_pdf' ,$cotizacion->id)}}?archivo=">
-                            <input type="text" name="name_sin_cambio" hidden="" value="Cotizacion_{{$cotizacion->tipo}}" />
-                            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-                        </form>
+                    <div style="position: relative; display: inline-block;">
+                        <div id="auto" onclick="divAuto()">
+                            <a class="btn btn-success"
+                            style="background: green; border-color: green;"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-original-title="Enviar a">
+                                <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                            </a>
+                        </div>
                     </div>
+                </div>
+
+                <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                    <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn" style="text-align: none; padding-right: 0; padding-left: 0;">
+                        @csrf
+                        <input type="tel" name="numero" value="{{ $cotizacion->cliente->celular }}" />
+                        <input type="text" name="mensaje" id="texto_orden" hidden />
+                        <input type="text" hidden name="url" value="{{ route('cotizacion_manual_pdf', $cotizacion->id) }}?archivo=">
+                        <input type="text" name="name_sin_cambio" hidden value="Cotizacion_{{ $cotizacion->tipo }}" />
+                        <button type="submit"
+                                class="btn btn-success"
+                                style="background: green; border-color: green;"
+                                formtarget="_blank"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Enviar por Whatsapp">
+                            <i class="fa fa-send fa-lg"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -96,16 +233,7 @@
     <div class="row">
         <div class="col-lg-12" style="margin-top: -26px;">
             <div class="ibox-content p-xl" style="margin-bottom: 20px;padding-bottom: 50px;">
-                <div class="row" style="align-items: center; justify-content: center">
-                    @include('layout_cabecera_ventas')
-                    <div class="col-sm-4">
-                        <div class="form-control" align="center" style="height: auto;">
-                            <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
-                            <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
-                            <h5>{{$cotizacion->cod_cotizacion}} </h5>
-                        </div>
-                    </div>
-                </div><br>
+                <br>
                 <div class="table-no mostrar">
                     <div class="row" align="center" style="padding-bottom: 5px">
                         <div class="col-sm-6" align="center">
@@ -127,7 +255,7 @@
                             </div>
                         </div>
                         <div class="col-sm-6" align="center">
-                          <div class="form-control" >
+                        <div class="form-control" >
                                 <h3>Condiciones Generales</h3>
                                 <div align="left">
                                     <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}<br>
@@ -190,7 +318,7 @@
                     </tbody>
                 </table>
             </div>
-             <?php
+            <?php
                 $simbologia = $cotizacion->moneda->simbolo;
                 $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
                 $igv = $cotizacion->op_gravada *($igv_t->igv_total / 100);
@@ -227,9 +355,9 @@
         </div>
         <span hidden>{{$h = 0 }} {{$igv_1 =  1 + ($igv_t->igv_total/100)}}</span>
         <div class="div-editar no_mostrar">
-           @if($cotizacion->estado == 0)
+        @if($cotizacion->estado == 0)
                 @include('transaccion.venta.cotizacion.manual.edit')
-           @endif
+        @endif
         </div>
 
         <!-- /table-responsive -->
@@ -237,7 +365,7 @@
 <br>
 <!-- Fin Totales de Productos -->
 @include('layout_bancos')
-          <br>
+        <br>
         @include('layout_firma_pie_hoja')
     </div>
 </div>
@@ -552,135 +680,6 @@
         width: 100%;
     }
 
-    .calendar-container {
-        background: #fff;
-        border-radius: 4px;
-        padding: 8px;
-        padding-top: 0px !important;
-        margin-top: 0px !important;
-        border: 1px solid #e5e6e7;
-        margin-top: 6px;
-        max-width: 260px;
-    }
-
-    .calendar-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-        padding-bottom: 6px;
-        border-bottom: 1px solid #e5e6e7;
-    }
-
-    .calendar-header h6 {
-        font-size: 12px;
-        font-weight: 600;
-        color: #333;
-        margin: 0;
-        flex: 1;
-        text-align: center;
-    }
-
-    .calendar-nav-btn {
-        background: #fff;
-        border: 1px solid #e5e6e7;
-        border-radius: 3px;
-        width: 26px;
-        height: 26px;
-        padding: 0;
-        color: #676a6c;
-        transition: all 0.2s;
-        cursor: pointer;
-    }
-
-    .calendar-nav-btn:hover:not(:disabled) {
-        background: #1ab394;
-        color: white;
-        border-color: #1ab394;
-    }
-
-    .calendar-nav-btn:disabled {
-        opacity: 0.3;
-        cursor: not-allowed;
-    }
-
-    .calendar-nav-btn i {
-        font-size: 11px;
-    }
-
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 2px;
-    }
-
-    .calendar-day-header {
-        text-align: center;
-        font-weight: 600;
-        font-size: 10px;
-        padding: 5px 0;
-        color: #676a6c;
-        background: #f8f9fa;
-        border-radius: 2px;
-    }
-
-    .calendar-day {
-        aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 2px;
-        cursor: pointer;
-        font-size: 10px;
-        border: 1px solid transparent;
-        transition: all 0.2s;
-        color: #333;
-        min-height: 24px;
-        max-height: 26px;
-    }
-
-    .calendar-day.selectable {
-        cursor: pointer;
-        background: #fff;
-    }
-
-    .calendar-day.selectable:hover {
-        background: #e8f4f8;
-        border-color: #1c84c6;
-    }
-
-    .calendar-day.disabled {
-        color: #ccc;
-        cursor: not-allowed;
-        background: #f9f9f9;
-    }
-
-    .calendar-day.selected {
-        background: #1c84c6 !important;
-        color: white !important;
-        font-weight: 600;
-        border-color: #1c84c6;
-    }
-
-    .calendar-day.fecha-emision {
-        background: #1ab394 !important;
-        color: white !important;
-        font-weight: 600;
-        border-color: #1ab394 !important;
-    }
-
-    .calendar-day.fecha-emision:hover {
-        background: #18a689 !important;
-        border-color: #18a689 !important;
-    }
-
-    .calendar-day.fecha-emision.selected {
-        background: #1c84c6 !important;
-        color: white !important;
-        box-shadow: 0 0 0 2px #1ab394;
-        border-color: #1c84c6 !important;
-    }
-
     .renovacion .row {
         margin-bottom: 6px;
     }
@@ -806,513 +805,69 @@
 
 {{-- script para manejar las renovaciones --}}
 <script>
-// ==================== VARIABLES GLOBALES ====================
-let calendarioMesActual = new Date();
-let calendarioAnualMesActual = new Date();
-let fechaEmisionGlobal = new Date();
-let diaSeleccionadoAnual = null;
-let mesSeleccionadoAnual = null;
+    document.addEventListener("DOMContentLoaded", function () {
+        const checkRenovacion      = document.getElementById("estado_renovacion");
+        const contenedorRenovacion = document.getElementById("renovacion_container");
+        const inputVencimiento     = document.getElementById("fecha_vencimiento");
+        const diasPreview          = document.getElementById("dias_restantes_preview");
 
-// ==================== CALENDARIO MENSUAL CORREGIDO ====================
-function generarCalendarioMensual(mesOffset = 0) {
-    const extraSelects = document.getElementById("extra_selects");
-
-    @if($renovacion && $fecha_vencimiento)
-        const fechaVencimientoText = "{{ $fecha_vencimiento->format('d-m-Y') }}";
-        let fechaReferencia;
-
-        if (fechaVencimientoText) {
-            const separador = fechaVencimientoText.includes('/') ? '/' : '-';
-            const partes = fechaVencimientoText.split(separador);
-
-            if (partes.length === 3) {
-                const dia = parseInt(partes[0]);
-                const mes = parseInt(partes[1]) - 1;
-                const anio = parseInt(partes[2]);
-                fechaReferencia = new Date(anio, mes, dia);
-            } else {
-                fechaReferencia = new Date();
+        // ── Preview días restantes ────────────────────────────────
+        function mostrarDiasRestantes() {
+            if (!inputVencimiento.value) {
+                diasPreview.textContent = "";
+                return;
             }
-        } else {
-            fechaReferencia = new Date();
-        }
-    @else
-        // Si no hay vencimiento, usar fecha de emisión
-        const fechaEmisionText = "{{ $cotizacion->fecha_emision }}";
-        let fechaReferencia;
 
-        if (fechaEmisionText) {
-            const separador = fechaEmisionText.includes('/') ? '/' : '-';
-            const partes = fechaEmisionText.split(separador);
+            const hoy         = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const vencimiento = new Date(inputVencimiento.value + 'T00:00:00');
+            const diff        = Math.round((vencimiento - hoy) / (1000 * 60 * 60 * 24));
 
-            if (partes.length === 3) {
-                const dia = parseInt(partes[0]);
-                const mes = parseInt(partes[1]) - 1;
-                const anio = parseInt(partes[2]);
-                fechaReferencia = new Date(anio, mes, dia);
+            if (diff > 0) {
+                diasPreview.style.color = diff <= 7 ? '#f8ac59' : '#1ab394';
+                diasPreview.textContent = `Vence en ${diff} día${diff !== 1 ? 's' : ''}`;
+            } else if (diff === 0) {
+                diasPreview.style.color = '#ed5565';
+                diasPreview.textContent = 'Vence hoy';
             } else {
-                fechaReferencia = new Date();
+                diasPreview.style.color = '#ed5565';
+                diasPreview.textContent = `Venció hace ${Math.abs(diff)} día${Math.abs(diff) !== 1 ? 's' : ''}`;
             }
-        } else {
-            fechaReferencia = new Date();
-        }
-    @endif
-
-    if (isNaN(fechaReferencia.getTime())) {
-        fechaReferencia = new Date();
-    }
-
-    fechaEmisionGlobal = fechaReferencia;
-
-    if (mesOffset === 0) {
-        // Iniciar el calendario en el mes de la fecha de referencia (vencimiento)
-        calendarioMesActual = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
-    }
-
-    const mesVista = calendarioMesActual.getMonth();
-    const anioVista = calendarioMesActual.getFullYear();
-
-    // Fecha máxima: 30 días después de la fecha de referencia (vencimiento)
-    const fechaMaxima = new Date(fechaReferencia);
-    fechaMaxima.setDate(fechaMaxima.getDate() + 30);
-
-    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-    // Calcular si se puede retroceder (solo meses que contengan la fecha de referencia o posteriores)
-    const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
-    const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
-
-    // Calcular si se puede avanzar (hasta 30 días después de la fecha de referencia)
-    const puedeAvanzar = new Date(anioVista, mesVista + 1, 1) <= fechaMaxima;
-
-    let html = `
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonth" ${!puedeRetroceder ? 'disabled' : ''}>
-                    <i class="fa fa-chevron-left"></i>
-                </button>
-                <h6>${meses[mesVista]} ${anioVista}</h6>
-                <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonth" ${!puedeAvanzar ? 'disabled' : ''}>
-                    <i class="fa fa-chevron-right"></i>
-                </button>
-            </div>
-            <div class="calendar-grid">
-                <div class="calendar-day-header">Lu</div>
-                <div class="calendar-day-header">Ma</div>
-                <div class="calendar-day-header">Mi</div>
-                <div class="calendar-day-header">Ju</div>
-                <div class="calendar-day-header">Vi</div>
-                <div class="calendar-day-header">Sa</div>
-                <div class="calendar-day-header">Do</div>
-    `;
-
-    const ultimoDia = new Date(anioVista, mesVista + 1, 0);
-    const diasEnMes = ultimoDia.getDate();
-    const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
-
-    const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
-
-    const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
-    const diasMesAnterior = ultimoDiaMesAnterior.getDate();
-
-    // Días del mes anterior (SIEMPRE deshabilitados en el show)
-    for (let i = ajusteDia - 1; i >= 0; i--) {
-        const dia = diasMesAnterior - i;
-        html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
-    }
-
-    const diaReferencia = fechaReferencia.getDate();
-    const mesReferencia = fechaReferencia.getMonth();
-    const anioReferencia = fechaReferencia.getFullYear();
-
-    // Días del mes actual
-    for (let dia = 1; dia <= diasEnMes; dia++) {
-        const fechaDia = new Date(anioVista, mesVista, dia);
-
-        // Normalizar fechas a medianoche para comparación correcta
-        const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
-        const fechaReferenciaNormalizada = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), fechaReferencia.getDate());
-
-        const esFechaReferencia = dia === diaReferencia && mesVista === mesReferencia && anioVista === anioReferencia;
-        const esAnteriorReferencia = fechaDiaNormalizada < fechaReferenciaNormalizada;
-        const esPosteriorMaximo = fechaDia > fechaMaxima;
-        const esDeshabilitado = esAnteriorReferencia || esPosteriorMaximo;
-
-        let clases = 'calendar-day';
-        if (esDeshabilitado) {
-            clases += ' disabled';
-        } else {
-            clases += ' selectable';
-            if (esFechaReferencia) clases += ' fecha-emision';
         }
 
-        html += `<div class="${clases}"
-                    data-dia="${dia}"
-                    data-mes="${mesVista + 1}"
-                    data-anio="${anioVista}">${dia}</div>`;
-    }
+        // Mostrar preview al cargar si ya hay fecha
+        mostrarDiasRestantes();
 
-    // Días vacíos al final
-    const celdasUsadas = ajusteDia + diasEnMes;
-    const filasNecesarias = Math.ceil(celdasUsadas / 7);
-    const totalCeldas = filasNecesarias * 7;
-    const diasVaciosFinal = totalCeldas - celdasUsadas;
-
-    for (let i = 1; i <= diasVaciosFinal; i++) {
-        html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
-    }
-
-    html += `</div></div>`;
-    extraSelects.innerHTML = html;
-
-    // Eventos de navegación
-    const prevBtn = document.getElementById('prevMonth');
-    const nextBtn = document.getElementById('nextMonth');
-
-    if (prevBtn && !prevBtn.disabled) {
-        prevBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            calendarioMesActual.setMonth(calendarioMesActual.getMonth() - 1);
-            generarCalendarioMensual(-1);
+        checkRenovacion.addEventListener("change", function () {
+            contenedorRenovacion.style.display = this.checked ? "block" : "none";
+            if (!this.checked) {
+                inputVencimiento.value  = "";
+                diasPreview.textContent = "";
+            }
+            // Al activar, NO tocar el min — ya viene seteado desde Blade
         });
-    }
 
-    if (nextBtn && !nextBtn.disabled) {
-        nextBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            calendarioMesActual.setMonth(calendarioMesActual.getMonth() + 1);
-            generarCalendarioMensual(1);
-        });
-    }
-
-    // Eventos de selección de día
-    document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
-        elemento.addEventListener('click', function() {
-            document.querySelectorAll('.calendar-day').forEach(el => {
-                el.classList.remove('selected');
-            });
-
-            this.classList.add('selected');
-
-            // ✅ ÚNICO CAMBIO: Guardar día del mes (1-31) directamente
-            const diaSeleccionado = parseInt(this.getAttribute('data-dia'));
-            document.getElementById('dia_mensual_hidden').value = diaSeleccionado;
+        inputVencimiento.addEventListener("change", function () {
+            // Quitar la línea que pisaba el min con hoy
+            mostrarDiasRestantes();
         });
     });
-
-    // Restaurar selección guardada
-    const diaGuardado = document.getElementById('dia_mensual_hidden').value;
-    if (diaGuardado && diaGuardado !== "") {
-        const fechaSeleccionada = new Date(fechaEmisionGlobal);
-        fechaSeleccionada.setDate(fechaSeleccionada.getDate() + parseInt(diaGuardado));
-
-        const diaSelec = fechaSeleccionada.getDate();
-        const mesSelec = fechaSeleccionada.getMonth();
-        const anioSelec = fechaSeleccionada.getFullYear();
-
-        if (mesSelec === mesVista && anioSelec === anioVista) {
-            document.querySelectorAll('.calendar-day.selectable').forEach(el => {
-                if (parseInt(el.getAttribute('data-dia')) === diaSelec) {
-                    el.classList.add('selected');
-                }
-            });
-        }
-    }
-}
-
-// ==================== CALENDARIO ANUAL CORREGIDO ====================
-function generarCalendarioAnual(mesOffset = 0) {
-    const extraSelects = document.getElementById("extra_selects");
-
-    // EN EL SHOW, USAR LA FECHA DE VENCIMIENTO COMO REFERENCIA
-    @if($renovacion && $fecha_vencimiento)
-        const fechaVencimientoText = "{{ $fecha_vencimiento->format('d-m-Y') }}";
-        let fechaReferencia;
-
-        if (fechaVencimientoText) {
-            const separador = fechaVencimientoText.includes('/') ? '/' : '-';
-            const partes = fechaVencimientoText.split(separador);
-
-            if (partes.length === 3) {
-                const dia = parseInt(partes[0]);
-                const mes = parseInt(partes[1]) - 1;
-                const anio = parseInt(partes[2]);
-                fechaReferencia = new Date(anio, mes, dia);
-            } else {
-                fechaReferencia = new Date();
-            }
-        } else {
-            fechaReferencia = new Date();
-        }
-    @else
-        // Si no hay vencimiento, usar fecha de emisión
-        const fechaEmisionText = "{{ $cotizacion->fecha_emision }}";
-        let fechaReferencia;
-
-        if (fechaEmisionText) {
-            const separador = fechaEmisionText.includes('/') ? '/' : '-';
-            const partes = fechaEmisionText.split(separador);
-
-            if (partes.length === 3) {
-                const dia = parseInt(partes[0]);
-                const mes = parseInt(partes[1]) - 1;
-                const anio = parseInt(partes[2]);
-                fechaReferencia = new Date(anio, mes, dia);
-            } else {
-                fechaReferencia = new Date();
-            }
-        } else {
-            fechaReferencia = new Date();
-        }
-    @endif
-
-    if (isNaN(fechaReferencia.getTime())) {
-        fechaReferencia = new Date();
-    }
-
-    if (mesOffset === 0) {
-        calendarioAnualMesActual = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
-    }
-
-    const mesVista = calendarioAnualMesActual.getMonth();
-    const anioVista = calendarioAnualMesActual.getFullYear();
-
-    const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-
-    // Calcular si se puede retroceder (solo meses que contengan la fecha de referencia o posteriores)
-    const primerDiaMesAnterior = new Date(anioVista, mesVista - 1, 1);
-    const puedeRetroceder = primerDiaMesAnterior >= new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), 1);
-
-    let html = `
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button type="button" class="btn btn-xs calendar-nav-btn" id="prevMonthAnual" ${!puedeRetroceder ? 'disabled' : ''}>
-                    <i class="fa fa-chevron-left"></i>
-                </button>
-                <h6>${meses[mesVista]} ${anioVista}</h6>
-                <button type="button" class="btn btn-xs calendar-nav-btn" id="nextMonthAnual">
-                    <i class="fa fa-chevron-right"></i>
-                </button>
-            </div>
-            <div class="calendar-grid">
-                <div class="calendar-day-header">Lu</div>
-                <div class="calendar-day-header">Ma</div>
-                <div class="calendar-day-header">Mi</div>
-                <div class="calendar-day-header">Ju</div>
-                <div class="calendar-day-header">Vi</div>
-                <div class="calendar-day-header">Sa</div>
-                <div class="calendar-day-header">Do</div>
-    `;
-
-    const ultimoDia = new Date(anioVista, mesVista + 1, 0);
-    const diasEnMes = ultimoDia.getDate();
-    const primerDiaSemana = new Date(anioVista, mesVista, 1).getDay();
-
-    const ajusteDia = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1;
-
-    const ultimoDiaMesAnterior = new Date(anioVista, mesVista, 0);
-    const diasMesAnterior = ultimoDiaMesAnterior.getDate();
-
-    // Días del mes anterior (SIEMPRE deshabilitados)
-    for (let i = ajusteDia - 1; i >= 0; i--) {
-        const dia = diasMesAnterior - i;
-        html += `<div class="calendar-day disabled" style="color: #d1dade;">${dia}</div>`;
-    }
-
-    const diaReferencia = fechaReferencia.getDate();
-    const mesReferencia = fechaReferencia.getMonth();
-    const anioReferencia = fechaReferencia.getFullYear();
-
-    // Días del mes actual
-    for (let dia = 1; dia <= diasEnMes; dia++) {
-        const fechaDia = new Date(anioVista, mesVista, dia);
-
-        // Normalizar fechas a medianoche para comparación correcta
-        const fechaDiaNormalizada = new Date(fechaDia.getFullYear(), fechaDia.getMonth(), fechaDia.getDate());
-        const fechaReferenciaNormalizada = new Date(fechaReferencia.getFullYear(), fechaReferencia.getMonth(), fechaReferencia.getDate());
-
-        const esFechaReferencia = dia === diaReferencia && mesVista === mesReferencia && anioVista === anioReferencia;
-        const esAnteriorReferencia = fechaDiaNormalizada < fechaReferenciaNormalizada;
-
-        let clases = 'calendar-day';
-        if (esAnteriorReferencia) {
-            clases += ' disabled';
-        } else {
-            clases += ' selectable';
-            if (esFechaReferencia) clases += ' fecha-emision';
-        }
-
-        html += `<div class="${clases}"
-                    data-dia="${dia}"
-                    data-mes="${mesVista + 1}"
-                    data-anio="${anioVista}">${dia}</div>`;
-    }
-
-    // Días vacíos al final
-    const celdasUsadas = ajusteDia + diasEnMes;
-    const filasNecesarias = Math.ceil(celdasUsadas / 7);
-    const totalCeldas = filasNecesarias * 7;
-    const diasVaciosFinal = totalCeldas - celdasUsadas;
-
-    for (let i = 1; i <= diasVaciosFinal; i++) {
-        html += `<div class="calendar-day disabled" style="color: #d1dade;">${i}</div>`;
-    }
-
-    html += `</div></div>`;
-
-    extraSelects.innerHTML = html;
-
-    // Navegación
-    const prevBtn = document.getElementById('prevMonthAnual');
-    const nextBtn = document.getElementById('nextMonthAnual');
-
-    if (prevBtn && !prevBtn.disabled) {
-        prevBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() - 1);
-            generarCalendarioAnual(-1);
-        });
-    }
-
-    if (nextBtn) {
-        nextBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            calendarioAnualMesActual.setMonth(calendarioAnualMesActual.getMonth() + 1);
-            generarCalendarioAnual(1);
-        });
-    }
-
-    // Eventos de selección
-    document.querySelectorAll('.calendar-day.selectable').forEach(function(elemento) {
-        elemento.addEventListener('click', function() {
-            document.querySelectorAll('.calendar-day').forEach(el => {
-                el.classList.remove('selected');
-            });
-
-            this.classList.add('selected');
-
-            // ✅ ÚNICO CAMBIO: Guardar día, mes y año directamente
-            diaSeleccionadoAnual = parseInt(this.getAttribute('data-dia'));
-            mesSeleccionadoAnual = parseInt(this.getAttribute('data-mes'));
-            const anioSeleccionado = parseInt(this.getAttribute('data-anio'));
-
-            document.getElementById('dia_anual_hidden').value = diaSeleccionadoAnual;
-            document.getElementById('mes_anual_hidden').value = mesSeleccionadoAnual;
-            document.getElementById('anio_anual_hidden').value = anioSeleccionado;
-        });
-    });
-
-    // Restaurar selección guardada
-    const diaGuardado = document.getElementById('dia_anual_hidden').value;
-    const mesGuardado = document.getElementById('mes_anual_hidden').value;
-
-    if (diaGuardado && diaGuardado !== "" && mesGuardado && mesGuardado !== "") {
-        const diasAcumulados = parseInt(diaGuardado);
-
-        // Calcular la fecha real sumando días acumulados a la fecha de referencia
-        @if($renovacion && $fecha_vencimiento)
-            const fechaVencimientoBase = "{{ $fecha_vencimiento->format('d-m-Y') }}";
-            let fechaBase;
-
-            if (fechaVencimientoBase) {
-                const separador = fechaVencimientoBase.includes('/') ? '/' : '-';
-                const partes = fechaVencimientoBase.split(separador);
-
-                if (partes.length === 3) {
-                    const dia = parseInt(partes[0]);
-                    const mes = parseInt(partes[1]) - 1;
-                    const anio = parseInt(partes[2]);
-                    fechaBase = new Date(anio, mes, dia);
-                } else {
-                    fechaBase = new Date();
-                }
-            } else {
-                fechaBase = new Date();
-            }
-        @else
-            const fechaEmisionBase = "{{ $cotizacion->fecha_emision }}";
-            let fechaBase;
-
-            if (fechaEmisionBase) {
-                const separador = fechaEmisionBase.includes('/') ? '/' : '-';
-                const partes = fechaEmisionBase.split(separador);
-
-                if (partes.length === 3) {
-                    const dia = parseInt(partes[0]);
-                    const mes = parseInt(partes[1]) - 1;
-                    const anio = parseInt(partes[2]);
-                    fechaBase = new Date(anio, mes, dia);
-                } else {
-                    fechaBase = new Date();
-                }
-            } else {
-                fechaBase = new Date();
-            }
-        @endif
-
-        const fechaSeleccionada = new Date(fechaBase);
-        fechaSeleccionada.setDate(fechaSeleccionada.getDate() + diasAcumulados);
-
-        diaSeleccionadoAnual = fechaSeleccionada.getDate();
-        mesSeleccionadoAnual = fechaSeleccionada.getMonth() + 1;
-
-        if (mesSeleccionadoAnual === mesVista + 1) {
-            document.querySelectorAll('.calendar-day.selectable').forEach(el => {
-                if (parseInt(el.getAttribute('data-dia')) === diaSeleccionadoAnual) {
-                    el.classList.add('selected');
-                }
-            });
-        }
-    }
-}
-
-// ==================== EVENT LISTENERS ====================
-document.addEventListener("DOMContentLoaded", function () {
-    const checkRenovacion = document.getElementById("estado_renovacion");
-    const contenedorRenovacion = document.getElementById("renovacion_container");
-    const selectFecha = document.getElementById("select_fecha");
-    const extraSelects = document.getElementById("extra_selects");
-
-    // Al cargar, si hay frecuencia seleccionada, generar el calendario correspondiente
-    if (selectFecha.value === "Mensual") {
-        generarCalendarioMensual(0);
-    } else if (selectFecha.value === "Anual") {
-        generarCalendarioAnual(0);
-    }
-
-    checkRenovacion.addEventListener("change", function () {
-        contenedorRenovacion.style.display = this.checked ? "block" : "none";
-        if (!this.checked) {
-            selectFecha.value = "";
-            extraSelects.innerHTML = "";
-            document.getElementById('dia_mensual_hidden').value = "";
-            document.getElementById('dia_anual_hidden').value = "";
-            document.getElementById('mes_anual_hidden').value = "";
-            document.getElementById('anio_anual_hidden').value = "";
-            diaSeleccionadoAnual = null;
-            mesSeleccionadoAnual = null;
-        }
-    });
-
-    selectFecha.addEventListener("change", function () {
-        const selected = this.value;
-        extraSelects.innerHTML = "";
-        document.getElementById('dia_mensual_hidden').value = "";
-        document.getElementById('dia_anual_hidden').value = "";
-        document.getElementById('mes_anual_hidden').value = "";
-        document.getElementById('anio_anual_hidden').value = "";
-        diaSeleccionadoAnual = null;
-        mesSeleccionadoAnual = null;
-
-        if (selected === "Mensual") {
-            generarCalendarioMensual(0);
-        } else if (selected === "Anual") {
-            generarCalendarioAnual(0);
-        }
-    });
-});
 </script>
+<script>
+    function toggleBtnsCotizacionManual() {
+        const slider = document.getElementById('btn-slider-cotizacion-manual');
+        const arrow = document.getElementById('btn-arrow-cotizacion-manual');
+        const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
 
+        if (isOpen) {
+            slider.style.width = '0';
+            arrow.classList.remove('fa-chevron-left');
+            arrow.classList.add('fa-chevron-right');
+        } else {
+            slider.style.width = slider.scrollWidth + 'px';
+            arrow.classList.remove('fa-chevron-right');
+            arrow.classList.add('fa-chevron-left');
+        }
+    }
+</script>
 @endsection

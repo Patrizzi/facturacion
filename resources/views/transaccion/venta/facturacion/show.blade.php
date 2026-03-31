@@ -45,15 +45,65 @@
                 </div>
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-                <div class="row tooltip-demo">
-                    <div style="display: flex; flex-direction: column;">
-                        <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
-                        <h5 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-3">
+                        <h3 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
+                        <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
-                    <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
-                        FACTURA ELECTRÓNICA
-                    </h2>
-                    <div style="margin-left: auto; display: flex; align-items: center; gap: 4px;">
+                    <div class="col-12 col-md-4 text-center">
+                        <h2 class="mb-0 text-nowrap" style="margin-left:200px;">
+                            FACTURA ELECTRÓNICA
+                        </h2>
+                    </div>
+                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                        @php
+                            use Carbon\Carbon;
+                            use App\Facturacion;
+
+                            $showAnular = $facturacion->f_electronica == 0 && $facturacion->created_at->diffInDays(Carbon::now()) > 7;
+                            $showNC = $facturacion->nota_credito != 0;
+                        @endphp
+
+                        @if ($showAnular || $showNC)
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
+
+                                {{-- Slider con los botones --}}
+                                <div id="btn-slider" style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+
+                                    {{-- Botón Anular --}}
+                                    @if ($showAnular)
+                                        <span data-toggle="tooltip" data-placement="bottom"
+                                            data-original-title="Anular La Factura"
+                                            style="display: inline-flex; animation: circleScale 3s infinite; margin-right: 4px;">
+                                            <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modal_anular">
+                                                <i class="fa fa-ban fa-xl"></i>
+                                            </button>
+                                        </span>
+                                    @endif
+
+                                    {{-- Botón Nota de Crédito --}}
+                                    @if ($showNC)
+                                        <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                                            data-original-title="Motivo: {{ Facturacion::search_motivo_nc($facturacion->id) }}"
+                                            href="{{ route('nota-credito.show', Facturacion::nota_credito_id($facturacion->id)) }}"
+                                            style="white-space: nowrap; margin-right: 4px;">
+                                            <i class="fa fa-file-text fa-lg"></i>
+                                        </a>
+                                    @endif
+
+                                </div>
+
+                                {{-- Flecha toggle --}}
+                                <button id="btn-toggle" onclick="toggleBtns()" class="btn btn-default"
+                                    style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                    <i class="fa fa-chevron-right" id="btn-arrow"></i>
+                                </button>
+
+                            </div>
+
+                            {{-- Divisor --}}
+                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+                        @endif
                         <!-- PDF -->
                         <form class="btn" style="padding: 0;" action="{{ route('pdf_fac', $facturacion->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $facturacion->codigo_fac }}">
@@ -221,12 +271,12 @@
                                             </td>
                                         @endif
                                         <td>{{ $facturacion_registros->cantidad }}</td>
-                                        <td>{{ $facturacion_registros->precio }}</td>
+                                        <td>{{ number_format(round($facturacion_registros->precio,2),2) }}</td>
                                         <td>{{ $facturacion_registros->descuento }}%</td>
-                                        <td>{{ $facturacion_registros->precio_unitario_desc }}</td>
+                                        <td>{{ number_format(round($facturacion_registros->precio_unitario_desc), 2) }}</td>
                                         <td>{{ $facturacion_registros->comision }}%</td>
-                                        <td>{{ $facturacion_registros->precio_unitario_comi }}</td>
-                                        <td>{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}
+                                        <td>{{ number_format(round($facturacion_registros->precio_unitario_comi ,2),2 )}}</td>
+                                        <td>{{ number_format(round($facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad,2),2  ) }}
                                         </td>
 
                                         <td style="display: none">
@@ -751,6 +801,137 @@
             $('.btn-no-editar').addClass('no_mostrar');
         }
     </script>
+
+    <script>
+        function toggleBtns() {
+            const slider = document.getElementById('btn-slider');
+            const arrow = document.getElementById('btn-arrow');
+            const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
+
+            if (isOpen) {
+                slider.style.width = '0';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
+            } else {
+                slider.style.width = slider.scrollWidth + 'px';
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-left');
+            }
+        }
+    </script>
+    {{-- -
+    <div class="row tooltip-demo align-items-center">
+
+    <!-- IZQUIERDA -->
+    <div class="col-md-auto">
+        <h5 class="mb-0">{{ $facturacion->codigo_fac }}</h5>
+        <span><strong>R.U.C :</strong> {{ $empresa->ruc }}</span>
+    </div>
+
+    <!-- CENTRO -->
+    <div class="col text-center">
+        <h4 class="mb-0 font-weight-bold">
+            FACTURA ELECTRÓNICA
+        </h4>
+    </div>
+
+    <!-- DERECHA (BOTONES) -->
+    <div class="col-md-auto d-flex align-items-center flex-wrap" style="gap:5px;">
+
+        <!-- PDF -->
+        <form action="{{ route('pdf_fac', $facturacion->id) }}" class="m-0">
+            <input type="text" name="name" hidden value="{{ $facturacion->codigo_fac }}">
+            <button type="submit" class="btn btn-success"
+                data-toggle="tooltip" title="Descargar PDF">
+                <i class="fa fa-file-pdf-o"></i>
+            </button>
+        </form>
+
+        <!-- Ticket -->
+        <a href="{{ route('facturacion.ticket', $facturacion->id) }}"
+           class="btn btn-info" target="_blank">
+           <i class="fa fa-ticket"></i>
+        </a>
+
+        <!-- Print -->
+        <a href="{{ route('facturacion.print', $facturacion->id) }}"
+           class="btn btn-success" target="_blank"
+           data-toggle="tooltip" title="Imprimir">
+            <i class="fa fa-print"></i>
+        </a>
+
+        <!-- Email -->
+        @if (Auth::user()->email_creado == 1)
+        <form action="{{ route('email.factura', $facturacion->id) }}" method="post" class="m-0">
+            @csrf
+            <button type="submit" class="btn btn-secondary"
+                data-toggle="tooltip" title="Enviar por correo"
+                formtarget="_blank">
+                <i class="fa fa-envelope"></i>
+            </button>
+        </form>
+        @endif
+
+        <!-- WhatsApp -->
+        <button class="btn btn-success"
+            style="background:green;border-color:green"
+            onclick="divAuto()">
+            <i class="fa fa-whatsapp"></i>
+        </button>
+
+        @if ($facturacion->estado == 0)
+
+        <button class="btn btn-warning btn-editar"
+            onclick="click_editar()">
+            <i class="fa fa-pencil"></i>
+        </button>
+
+        <button class="btn btn-warning btn-no-editar no_mostrar"
+            onclick="click_cancelar_editar()">
+            <i class="fa fa-times"></i>
+        </button>
+
+        @endif
+
+    </div>
+
+</div>
+
+<!-- FORM WHATSAPP -->
+<div id="div-mostrar" class="w-100 mt-2"
+     style="height:0; overflow:hidden; transition:height .4s;">
+
+    <form action="{{ route('agregado.whatsapp_send') }}"
+          method="post" class="d-flex align-items-center">
+
+        @csrf
+
+        <input type="tel" name="numero"
+               class="form-control mr-2"
+               value="{{ $facturacion->cliente->celular }}">
+
+        <input type="text" name="mensaje" id="texto_orden" hidden>
+
+        <input type="text" hidden name="url"
+               value="{{ route('pdf_fac', $facturacion->id) }}?archivo=">
+
+        <input type="text" hidden name="name_sin_cambio"
+               value="Facturacion_{{ $facturacion->codigo_fac }}">
+
+        <button type="submit"
+            class="btn btn-success"
+            style="background:green;border-color:green"
+            formtarget="_blank"
+            data-toggle="tooltip"
+            title="Enviar por Whatsapp">
+
+            <i class="fa fa-send"></i>
+
+        </button>
+
+    </form>
+
+</div>--}}
     {{-- Para Editar Factura Sin Finalizar --}}
     @include('transaccion.venta.facturacion._shared._edit_script')
 @endsection

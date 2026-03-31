@@ -48,29 +48,39 @@
                 </div>
             </div>
             <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-                <div class="row tooltip-demo">
-                    <div style="display: flex; flex-direction: column;">
-                        <h3 style="margin: 0;">R.U.C : {{ $empresa->ruc }}</h3>
-                        <h5 style="margin: 0;">{{ $boleta->codigo_boleta }}</h5>
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-3">
+                        <h3 style="margin: 0;">{{ $boleta->codigo_boleta }}</h3>
+                        <strong style="margin: 0;">R.U.C :</strong>{{ $empresa->ruc }}
                     </div>
-                    <h2 style="position: absolute; left: 50%; transform: translateX(-50%); margin: 0; white-space: nowrap;">
-                        BOLETA ELECTRÓNICA
-                    </h2>
-
-                    <div
-                        style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
-
+                    <div class="col-12 col-md-4 text-center">
+                        <h2 class="mb-0 text-nowrap" style="margin-left:200px;">
+                            BOLETA ELECTRÓNICA
+                        </h2>
+                    </div>
+                    <div style="margin-left: auto; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: flex-end;">
                         <?php use Carbon\Carbon;
                         use App\Boleta_m; ?>
                         @if ($boleta->nota_credito != 0)
-                            <span data-toggle="tooltip" data-placement="bottom"
-                                data-original-title="Motivo: {{ Boleta_m::search_motivo_nc($boleta->id) }}">
-                                <a class="btn btn-primary"
-                                    href="{{ route('nota-credito.show', Boleta_m::nota_credito_id($boleta->id)) }}">Ver nota
-                                    de Credito</a>
-                            </span>
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
+                                {{-- Botón NC (oculto por defecto) --}}
+                                <div id="nc-slider" style="width: 0; overflow: hidden; transition: width 0.3s ease;">
+                                    <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                                        data-original-title="Motivo: {{ Boleta_m::search_motivo_nc($boleta->id) }}"
+                                        href="{{ route('nota-credito.show', Boleta_m::nota_credito_id($boleta->id)) }}"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                        <i class="fa fa-file-text fa-lg"></i>
+                                    </a>
+                                </div>
+                                {{-- Flecha toggle --}}
+                                <button id="nc-toggle" onclick="toggleNC()" class="btn btn-default"
+                                    style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                    <i class="fa fa-chevron-right" id="nc-arrow"></i>
+                                </button>
+                            </div>
+                            {{-- Divisor --}}
+                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
                         @endif
-
                         <form class="btn" style="padding: 0;" action="{{ route('boleta_manual.pdf', $boleta->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $boleta->codigo_boleta }}">
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
@@ -223,50 +233,50 @@
                                 </thead>
                                 <tbody>
                                     <span hidden="hidden">{{ $i = 1 }} </span>
-                                    <tr>
+                                    
                                         @foreach ($boleta_registro as $boletas_registros)
-                                            <td style="text-align:center">{{ $i }} </td>
-                                            @if (isset($boletas_registros->producto_id))
+                                            <tr>
+                                                <td style="text-align:center">{{ $i }} </td>
+                                                @if (isset($boletas_registros->producto_id))
+                                                    <td style="text-align:center">
+                                                        {{ $boletas_registros->producto->codigo_producto }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $boletas_registros->producto->nombre }}
+                                                        {{ $boletas_registros->descripcion_item }}
+                                                        @if (isset($boletas_registros->numero_serie))
+                                                            <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
+                                                        @endif
+                                                    </td>
+                                                @else
+                                                    <td style="text-align:center">
+                                                        {{ $boletas_registros->servicio->codigo_servicio }}</td>
+                                                    <td>
+                                                        {{ $boletas_registros->servicio->nombre }}
+                                                        {{ $boletas_registros->descripcion_item }}
+                                                        @if (isset($boletas_registros->numero_serie))
+                                                            <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
+                                                        @endif
+                                                    </td>
+                                                @endif
+                                                <td style="text-align:center">{{ $boletas_registros->cantidad }}</td>
                                                 <td style="text-align:center">
-                                                    {{ $boletas_registros->producto->codigo_producto }}
-                                                </td>
-                                                <td>
-                                                    {{ $boletas_registros->producto->nombre }}
-                                                    {{ $boletas_registros->descripcion_item }}
-                                                    @if (isset($boletas_registros->numero_serie))
-                                                        <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
-                                                    @endif
-                                                </td>
-                                            @else
+                                                    {{ round($boletas_registros->precio, 8) }}</td>
+
                                                 <td style="text-align:center">
-                                                    {{ $boletas_registros->servicio->codigo_servicio }}</td>
-                                                <td>
-                                                    {{ $boletas_registros->servicio->nombre }}
-                                                    {{ $boletas_registros->descripcion_item }}
-                                                    @if (isset($boletas_registros->numero_serie))
-                                                        <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
-                                                    @endif
+                                                    {{ round($boletas_registros->precio * $boletas_registros->cantidad,8) }}
                                                 </td>
-                                            @endif
-                                            <td style="text-align:center">{{ $boletas_registros->cantidad }}</td>
-                                            <td style="text-align:center">
-                                                {{ number_format($boletas_registros->precio, 2) }}</td>
-
-                                            <td style="text-align:center">
-                                                {{ number_format($boletas_registros->precio * $boletas_registros->cantidad - ($boletas_registros->precio * $boletas_registros->cantidad * $boletas_registros->descuento) / 100, 2) }}
-                                            </td>
-
-                                            <td style="display: none">
-                                                {{ $sub_total = $boletas_registros->boleta_i->op_gravada + $boletas_registros->boleta_i->op_inafecta + $boletas_registros->boleta_i->op_exonerada }}
-                                                {{ $sub_total_gravado = $boletas_registros->boleta_i->op_gravada }}
-                                                {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                                {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                                {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                            </td>
-                                    </tr>
-                                    <span hidden="hidden">{{ $i++ }}</span>
-                                    @endforeach
-                                    </tr>
+                                                <span hidden="hidden">{{ $i++ }}</span>
+                                            </tr>
+                                        @endforeach
+                                    
+                                    
+                                        <td style="display: none">
+                                            {{ $sub_total = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
+                                            {{ $igv_p = $boleta->op_gravada * ($igv->igv_total / 100) }}
+                                            {{ $end = $sub_total + $igv_p }}
+                                            {{ $end2 = number_format( round($end, 2), 2) }}
+                                        </td>
                                 </tbody>
                             </table>
                         </div>
@@ -600,5 +610,25 @@
                 });
             @endif
         });
+    </script>
+
+    <script>
+        var ncAbierto = false;
+        function toggleNC() {
+            var slider = document.getElementById('nc-slider');
+            var arrow = document.getElementById('nc-arrow');
+
+            if (ncAbierto) {
+                slider.style.width = '0';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
+            } else {
+                slider.style.width = '42px';
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-left');
+            }
+
+            ncAbierto = !ncAbierto;
+        }
     </script>
 @endsection

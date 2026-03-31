@@ -12,60 +12,118 @@
 @section('content')
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="ibox">
-        <div class="ibox-title" style="padding-right: 3.1%">
-            <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up text-muted"></i>
-                </a>
-                <a class="" href="{{ route('garantia_informe_tecnico.index') }}">
-                    <i class="fa fa-times text-muted"></i>
-                </a>
-            </div>
+<div class="ibox">
+    <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+        <div></div>
+        <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up text-muted"></i>
+            </a>
+            <a href="{{ route('garantia_informe_tecnico.index') }}" title="Cerrar">
+                <i class="fa fa-times text-muted"></i>
+            </a>
         </div>
-        <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-            <div class="row tooltip-demo">
-                <div class="col-sm-6">
-                    <a href="#punto" onclick="Formulario_edit()"  id="click" class="btn btn-info"><i class="fa fa-edit"></i></a>
+    </div>
+
+    <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-3">
+                <h3 style="margin: 0;">{{ $garantias_informe_tecnico->orden_servicio }}</h3>
+                <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
+            </div>
+
+            <div class="col-12 col-md-4 text-center">
+                <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
+                    INFORME TÉCNICO
+                </h2>
+            </div>
+
+            <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                <div class="d-flex align-items-center" style="overflow: hidden;">
+                    <div id="btn-slider-informe"
+                        style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+                        <a href="#punto"
+                        onclick="Formulario_edit()"
+                        id="click"
+                        class="btn btn-info"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        data-original-title="Editar informe técnico"
+                        style="white-space: nowrap; margin-right: 4px;">
+                            <i class="fa fa-edit fa-lg"></i>
+                        </a>
+                    </div>
+                    <button type="button"
+                            id="btn-toggle-informe"
+                            onclick="toggleBtnsInforme()"
+                            class="btn btn-default"
+                            style="background-color: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                        <i class="fa fa-chevron-right" id="btn-arrow-informe"></i>
+                    </button>
                 </div>
-            <div class="col-sm-6">
-                <div class="tooltip-demo" align="right">
-                    <form class="btn" style="text-align: none;padding: 0 0 0 0" action="{{route('pdf_informe' ,$garantias_informe_tecnico->id)}}">
-                        <input type="text" name="archivo" maxlength="50" value="{{$garantias_informe_tecnico->orden_servicio}}" oninput="actualizatext()" id="texto2">
-                        <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Descargar PDF" ><i class="fa fa-file-pdf-o fa-lg"></i>  </button>
+
+                <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+
+                <form class="btn" style="padding: 0;" action="{{ route('pdf_informe', $garantias_informe_tecnico->id) }}">
+                    <input type="text" name="archivo" hidden
+                           value="{{ $garantias_informe_tecnico->orden_servicio }}">
+                    <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
+                        data-original-title="Descargar PDF">
+                        <i class="fa fa-file-pdf-o fa-lg"></i>
+                    </button>
+                </form>
+
+                @if(Auth::user()->email_creado == 1)
+                    <form action="{{ route('email.informe_tecnico', $garantias_informe_tecnico->id) }}" method="post"
+                          style="padding: 0;" class="btn">
+                        @csrf
+                        <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
+                            data-placement="bottom" data-original-title="Enviar por correo" formtarget="_blank">
+                            <i class="fa fa-envelope fa-lg"></i>
+                        </button>
                     </form>
-                    @if(Auth::user()->email_creado ==1)
-                        {{-- <form action="{{route('email.save')}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
-                            @csrf
-                            <input type="text" hidden="hidden" name="tipo" value="App\GarantiaInformeTecnico"/>
-                            <input type="text" hidden="hidden" name="id" value="{{$garantias_informe_tecnico->id}}"/>
-                            <input type="text" hidden="hidden" name="redict" value="garantias_informe_tecnico">
-                            <input type="text" hidden="hidden" name="cliente" value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->email}}">
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por correo"><i class="fa fa-envelope fa-lg"  ></i> </button>
-                        </form> --}}
-                        <form action="{{ route('email.informe_tecnico', $garantias_informe_tecnico->id )}}" method="post" style="text-align: none;padding-right: 0;padding-left: 0;" class="btn"  >
-                            @csrf
-                            <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title=""  formtarget="_blank"  data-original-title="Enviar por correo">
-                                <i class="fa fa-envelope fa-lg" ></i>
-                            </button>
-                        </form>
-                    @endif
-                    <a href="{{route('impresiones_informe' ,$garantias_informe_tecnico->id)}}" target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg" ></i>   </a>
+                @endif
+
+                <a href="{{ route('impresiones_informe', $garantias_informe_tecnico->id) }}"
+                   target="_blank"
+                   class="btn btn-primary"
+                   data-toggle="tooltip"
+                   data-placement="bottom"
+                   data-original-title="Imprimir">
+                    <i class="fa fa-print fa-lg"></i>
+                </a>
+
+                <div style="position: relative; display: inline-block;">
                     <div id="auto" onclick="divAuto()">
-                        <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar a"><i class="fa fa-whatsapp fa-lg" style="color: white"></i>  </a>
-                    </div>
-                    <div id="div-mostrar" style="height: 0px; overflow: hidden;">
-                        {{-- <br style="width: -1px"> --}}
-                        <form action="{{route('agregado.whatsapp_send')}}" method="post" class="btn" style="text-align: none;padding-right: 0;padding-left: 0;">
-                            @csrf
-                            <input type="tel" name="numero"  value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->celular}}"  />
-                            <input type="text" name="mensaje" id="texto_orden" hidden="" />
-                            <input type="text" hidden="" name="url" value="{{route('pdf_informe' ,$garantias_informe_tecnico->id)}}?archivo=">
-                            <input type="text" name="name_sin_cambio" hidden="" value="{{$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->orden_servicio}}" />
-                            <button type="submit" class="btn  btn-success" style="background: green;border-color: green;" formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i>  </button>
-                        </form>
+                        <a class="btn btn-success" style="background: green;border-color: green;"
+                           data-toggle="tooltip" data-placement="bottom"
+                           data-original-title="Enviar a">
+                            <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                        </a>
                     </div>
                 </div>
+            </div>
+
+            <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                      style="text-align: none;padding-right: 0;padding-left: 0;">
+                    @csrf
+                    <input type="tel" name="numero"
+                           value="{{ $garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->clientes_i->celular }}" />
+                    <input type="text" name="mensaje" id="texto_orden" hidden />
+                    <input type="text" hidden name="url"
+                           value="{{ route('pdf_informe', $garantias_informe_tecnico->id) }}?archivo=">
+                    <input type="text" name="name_sin_cambio" hidden
+                           value="{{ $garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->orden_servicio }}" />
+                    <button type="submit" class="btn btn-success"
+                            style="background: green;border-color: green;"
+                            formtarget="_blank"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-original-title="Enviar por Whatsapp">
+                        <i class="fa fa-send fa-lg"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -73,26 +131,6 @@
 <div class="row">
     <div class="col-lg-12" style="margin-top: -26px">
         <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
-            <div class="row" style="height: auto;">
-                <div class="col-sm-4 text-left" align="left">
-                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;"" align="left">
-                        <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="max-width: 100%;max-height: 100px;padding: 5px;">
-                    </div>
-                </div>
-                <div class="col-sm-4" align="center">
-                    <div class="form-control" align="center" style="height: 100%;vertical-align: middle;align-items: center;display: inline-flex;justify-content: center;" align="center"  >
-                        <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantias_informe_tecnico->garantia_egreso_i->garantia_ingreso_i->marcas_i->imagen)}}" style="max-width: 100%;max-height: 100px;padding: 5px">
-                    </div>
-                </div>
-                <div class="col-sm-4" align="right" >
-                    <div class="form-control" align="center" style="height: 100%;"align="right">
-                        <h2 style="">R.U.C {{$empresa->ruc}}</h2>
-                        <h3 style="font-size: 19px">GUÍA DE INFORME TÉCNICO</h3>
-                        <h4>{{$garantias_informe_tecnico->orden_servicio}}</h4>
-                    </div>
-                </div>
-            </div>
-            <br>
             <div class="row" align="center" style="padding-bottom: 5px">
                 <div class="col-sm-6" align="center">
                     <div class="form-control" style="height: 90%">
@@ -371,9 +409,24 @@
           boton.innerHTML='<i class="fa fa-edit"></i>';
           vista_update.removeAttribute("hidden", "");
           boton.removeAttribute("href", "");
-
       }
-
   }
+</script>
+<script>
+    function toggleBtnsInforme() {
+        const slider = document.getElementById('btn-slider-informe');
+        const arrow = document.getElementById('btn-arrow-informe');
+        const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
+
+        if (isOpen) {
+            slider.style.width = '0';
+            arrow.classList.remove('fa-chevron-left');
+            arrow.classList.add('fa-chevron-right');
+        } else {
+            slider.style.width = slider.scrollWidth + 'px';
+            arrow.classList.remove('fa-chevron-right');
+            arrow.classList.add('fa-chevron-left');
+        }
+    }
 </script>
 @endsection

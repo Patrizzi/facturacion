@@ -82,4 +82,12 @@ class Boleta_registros_m extends Model
             }
         }
     }
+
+    public function getPrecioIgvEditAttribute(){
+        $igv = Igv::first();
+        $precio = $this->precio;
+        $precio_igv = $this->precio * ( $igv->igv_total / 100);
+        $total =  $precio  + $precio_igv;
+        return $total; 
+    }
 }

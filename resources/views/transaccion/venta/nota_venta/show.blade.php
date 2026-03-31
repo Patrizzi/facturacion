@@ -66,64 +66,129 @@
                     </a>
                 </div>
             </div>
-            <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
-                <div class="row tooltip-demo">
-                    <div class="col-sm-6">
-                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null  )
-                            <button class="btn-editar btn btn-warning" onclick="click_editar()"><i
-                                    class="fa fa-pencil"></i></button>
-                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()"><i
-                                    class="fa fa-times"></i></button>
-                        {{-- @elseif($nota_venta->cotizacion_id == null || $nota_venta->cotizacion_m_id == null)
-                        @else --}}
-                        @endif
-                        {{-- <a href="" id="btn-editar" class="btn-editar btn btn-warning">Editar</a> --}}
+            <div class="ibox-content" style="padding-right: 3.1%; padding-left: 3.1%; padding-bottom: 10px;">
+                <div class="row align-items-center tooltip-demo">
+                    <div class="col-12 col-md-3">
+                        <h3 style="margin: 0;">{{ $nota_venta->cod_nota_venta }}</h3>
+                        <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
-                    <div class="col-sm-6 tooltip-demo "align="right">
-                        <!-- PDF -->
-                        <a href="{{ route('nota_venta_pdf', $nota_venta->id) }}"class="btn btn-success" data-toggle="tooltip"
-                            data-placement="bottom" title="" data-original-title="Descargar PDF"><i
-                                class="fa fa-file-pdf-o fa-lg"></i></a>
-                        <!-- Ticket -->
-                        <a href="{{ route('nota_venta.ticket', $nota_venta->id) }}" class="btn btn-info" target="_blank"><i
-                                class="fa fa-ticket fa-lg"></i></a>
-                        <!-- Impresion -->
-                        <a class="btn btn-success" href="{{ route('nota_venta.print', $nota_venta->id) }}" target="_blank"
-                            class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title=""
-                            data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
-                        <!-- Email -->
+
+                    <div class="col-12 col-md-4 text-center">
+                        <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
+                            NOTA DE VENTA
+                        </h2>
+                    </div>
+
+                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null)
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
+                                <div id="btn-slider-nota-venta"
+                                    style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+
+                                    <button class="btn-editar btn btn-warning"
+                                            onclick="click_editar()"
+                                            data-toggle="tooltip"
+                                            data-placement="bottom"
+                                            data-original-title="Editar nota de venta"
+                                            style="white-space: nowrap; margin-right: 4px;">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+
+                                    <button class="btn-no-editar no_mostrar btn btn-warning"
+                                            onclick="click_cancelar_editar()"
+                                            data-toggle="tooltip"
+                                            data-placement="bottom"
+                                            data-original-title="Cancelar edición"
+                                            style="white-space: nowrap; margin-right: 4px;">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+
+                                <button type="button"
+                                        id="btn-toggle-nota-venta"
+                                        onclick="toggleBtnsNotaVenta()"
+                                        class="btn btn-default"
+                                        style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                    <i class="fa fa-chevron-right" id="btn-arrow-nota-venta"></i>
+                                </button>
+                            </div>
+
+                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+                        @endif
+
+                        <a href="{{ route('nota_venta_pdf', $nota_venta->id) }}"
+                        class="btn btn-success"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        data-original-title="Descargar PDF">
+                            <i class="fa fa-file-pdf-o fa-lg"></i>
+                        </a>
+
+                        <a href="{{ route('nota_venta.ticket', $nota_venta->id) }}"
+                        class="btn btn-info"
+                        target="_blank"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        data-original-title="Ticket">
+                            <i class="fa fa-ticket fa-lg"></i>
+                        </a>
+
+                        <a class="btn btn-success"
+                        href="{{ route('nota_venta.print', $nota_venta->id) }}"
+                        target="_blank"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        data-original-title="Imprimir">
+                            <i class="fa fa-print fa-lg"></i>
+                        </a>
+
                         @if (Auth::user()->email_creado == 1)
                             <form action="{{ route('email.nota_venta', $nota_venta->id) }}" method="post"
-                                style="text-align: none;padding-right: 0;padding-left: 0;" class="btn">
+                                style="padding-right: 0; padding-left: 0;" class="btn">
                                 @csrf
-                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
-                                    title="" formtarget="_blank" data-original-title="Enviar por correo">
+                                <button type="submit"
+                                        class="btn btn-secondary"
+                                        data-toggle="tooltip"
+                                        data-placement="bottom"
+                                        formtarget="_blank"
+                                        data-original-title="Enviar por correo">
                                     <i class="fa fa-envelope fa-lg"></i>
                                 </button>
                             </form>
                         @endif
 
-                        <!-- Whatsapp -->
-                        <div id="auto" onclick="divAuto()">
-                            <a class="btn  btn-success" style="background: green;border-color: green;" data-toggle="tooltip"
-                                data-placement="bottom" title="" data-original-title="Enviar a"><i
-                                    class="fa fa-whatsapp fa-lg" style="color: white"></i> </a>
+                        <div style="position: relative; display: inline-block;">
+                            <div id="auto" onclick="divAuto()">
+                                <a class="btn btn-success"
+                                style="background: green; border-color: green;"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Enviar a">
+                                    <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div id="div-mostrar" style="height: 0px; overflow: hidden;">
-                            <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
-                                style="text-align: none;padding-right: 0;padding-left: 0;">
-                                @csrf
-                                <input type="tel" name="numero" value="{{ $nota_venta->cliente->celular }}" />
-                                <input type="text" name="mensaje" hidden="" value="" />
-                                <input type="text" hidden="" name="url"
-                                    value="{{ route('nota_venta_pdf', $nota_venta->id) }}">
-                                <input type="text" name="name_sin_cambio" hidden=""
-                                    value="PDF-DOC-{{ $nota_venta->cod_nota_venta }}-{{ $empresa->ruc }}" />
-                                <button type="submit" class="btn  btn-success" style="background: green;border-color: green;"
-                                    formtarget="_blank" data-toggle="tooltip" data-placement="bottom" title=""
-                                    data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
-                            </form>
-                        </div>
+                    </div>
+
+                    <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
+                            style="text-align: none; padding-right: 0; padding-left: 0;">
+                            @csrf
+                            <input type="tel" name="numero" value="{{ $nota_venta->cliente->celular }}" />
+                            <input type="text" name="mensaje" hidden value="" />
+                            <input type="text" hidden name="url" value="{{ route('nota_venta_pdf', $nota_venta->id) }}">
+                            <input type="text" name="name_sin_cambio" hidden
+                                value="PDF-DOC-{{ $nota_venta->cod_nota_venta }}-{{ $empresa->ruc }}" />
+                            <button type="submit"
+                                    class="btn btn-success"
+                                    style="background: green; border-color: green;"
+                                    formtarget="_blank"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    data-original-title="Enviar por Whatsapp">
+                                <i class="fa fa-send fa-lg"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -836,5 +901,21 @@
             }
         });
     </script>
+    <script>
+        function toggleBtnsNotaVenta() {
+            const slider = document.getElementById('btn-slider-nota-venta');
+            const arrow = document.getElementById('btn-arrow-nota-venta');
+            const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
 
+            if (isOpen) {
+                slider.style.width = '0';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
+            } else {
+                slider.style.width = slider.scrollWidth + 'px';
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-left');
+            }
+        }
+    </script>
 @endsection

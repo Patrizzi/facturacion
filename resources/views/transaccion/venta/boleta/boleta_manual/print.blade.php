@@ -187,8 +187,8 @@
                         </thead>
                         <tbody>
                             <span hidden="hidden">{{ $i = 1 }} </span>
-                            <tr>
-                                @foreach ($boleta_registro as $boletas_registros)
+                            @foreach ($boleta_registro as $boletas_registros)
+                                 <tr>
                                     <td style="text-align:center">{{ $i }} </td>
                                     @if (isset($boletas_registros->producto_id))
                                         <td style="text-align:center">
@@ -212,21 +212,19 @@
                                         </td>
                                     @endif
                                     <td style="text-align:center">{{ $boletas_registros->cantidad }}</td>
-                                    <td style="text-align:right">{{number_format($boletas_registros->precio,2)}}</td>
+                                    <td style="text-align:right">{{round($boletas_registros->precio,8)}}</td>
 
-                                    <td style="text-align:right">{{number_format( $boletas_registros->precio * $boletas_registros->cantidad - ($boletas_registros->precio * $boletas_registros->cantidad * $boletas_registros->descuento/100),2) }}</td>
-
-                                <td style="display: none">
-                                    {{ $sub_total =$boletas_registros->boleta_i->op_gravada + $boletas_registros->boleta_i->op_inafecta +$boletas_registros->boleta_i->op_exonerada }}
-                                    {{ $sub_total_gravado = $boletas_registros->boleta_i->op_gravada }}
-                                    {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
-                                    {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                    {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                </td>
-                            </tr>
+                                    <td style="text-align:right">{{round( $boletas_registros->precio * $boletas_registros->cantidad,8) }}</td>
+                                </tr>
                             <span hidden="hidden">{{ $i++ }}</span>
                             @endforeach
-                            </tr>
+                            
+                            <td style="display: none">
+                                {{ $sub_total =$boleta->op_gravada + $boleta->op_inafecta +$boleta->op_exonerada }}
+                                {{ $igv_p = $boleta->op_gravada * ($igv->igv_total / 100 ) }}
+                                {{ $end = $sub_total + $igv_p }}
+                                {{ $end2 = number_format(round($end, 2), 2) }}
+                            </td>
                         </tbody>
                     </table>
                 </div>

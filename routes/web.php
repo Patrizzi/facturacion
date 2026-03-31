@@ -98,6 +98,7 @@ Route::group(
         Route::post('/whatsapp', 'AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
         Route::resource('/almacen', 'AlmacenController');
         Route::resource('/apariencia', 'ConfigController');
+        Route::post("/cotizacion_manual/guardar-nota/{id}", "CotizacionManualController@guardarNotaInformativa")->name("cotizacion_manual.guardar_nota");
         Route::resource('/cotizacion_manual', 'CotizacionManualController');
         Route::post('/cotizacion_manual/update/{id}', 'CotizacionManualController@update')->name('cotizacion_manual.update');
         Route::post('/cotizacion_manual/codigo', 'CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
@@ -134,8 +135,8 @@ Route::group(
 
 
         //COTIZACION Y COTIZACION MANUAL EXPORTAR
-        Route::get('/ventas/cotizacion/exportar', [CotizacionController::class, 'exportar_cotizaciones'])->name('exportarCotizacion');
-        Route::get('/ventas/cotizacion_manual/exportar', [CotizacionManualController::class, 'exportar_cotizacionesM'])->name('exportarCotizacionM');
+        Route::post('/ventas/cotizacion/exportar', [CotizacionController::class, 'exportar_cotizaciones'])->name('exportarCotizacion');
+        Route::post('/ventas/cotizacion_manual/exportar', [CotizacionManualController::class, 'exportar_cotizacionesM'])->name('exportarCotizacionM');
 
         Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
         Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');
@@ -175,6 +176,8 @@ Route::group(
         Route::post('/cotizacion/boletear_store', 'CotizacionController@boletear_store')->name('cotizacion.boletear_store');
         Route::get('/cotizacion/print_cotizacion_servicio/{id}', 'CotizacionServiciosController@print')->name('cotizacion_servicio.print');
         Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
+
+        Route::post('/cotizacion/guardar-nota/{id}', 'CotizacionController@guardarNotaInformativa')->name('cotizacion.guardar_nota');
 
         Route::resource('/cotizacion', 'CotizacionController');
         Route::post('/cotizacion/update/{id}', 'CotizacionController@update')->name('cotizacion.update');
@@ -385,7 +388,7 @@ Route::group(
         //NOTA DE CREDITO
         Route::post('/nota-credito/motivo', 'NotaCreditoController@motivo')->name('nota-credito.motivo');
 
-        Route::post('/nota-credito-create-nc', 'NotaCreditoController@create_nota_credito')->name('nota-credito.create_nota_credito');
+        Route::post('/nota-credito-create-nc/{id}', 'NotaCreditoController@create_nota_credito')->name('nota-credito.create_nota_credito');
         Route::post('/nota-credito-create_boleta-nc/{id}', 'NotaCreditoController@create_boleta_nota_credito')->name('nota-credito.create_nota_credito_boleta');
         Route::get('/nota-credito/print/{id}', 'NotaCreditoController@print')->name('nota_credito.print');
         Route::get('/nota-credito/pdf/{id}', 'NotaCreditoController@pdf')->name('nota_credito.pdf');
@@ -1322,7 +1325,7 @@ Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::c
 Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
     ->name('renovaciones.print.multiple');
 
-Route::get('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
+Route::post('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
     ->name('exportarRenovaciones');
 
 Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])

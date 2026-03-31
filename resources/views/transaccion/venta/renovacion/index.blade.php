@@ -184,18 +184,16 @@
                 radioClass: 'iradio_square-green',
             });
 
-            // Función para obtener TODOS los IDs mediante AJAX
             function getAllIds(callback) {
                 $.ajax({
-                    url: "/ventas/renovacion/registros", // ← CAMBIA ESTO (URL directa)
+                    url: "{{ route('ventas.renovacion_registers') }}", // ← misma ruta que el datatable
                     method: "GET",
                     data: {
                         daterange: $('#data_range_filter').val(),
                         tipo_renovacion: $('#select_tipo_coti').val(),
                         value: $('#search_all_column').val(),
                         length: -1,
-                        start: 0,
-                        get_all_ids: true
+                        start: 0
                     },
                     success: function(response) {
                         var ids = [];
@@ -442,46 +440,6 @@
                 renovacion_table.ajax.reload();
             });
 
-            // Exportar renovaciones
-            $('#btn_export_renovacion').on('click', function(e) {
-                e.preventDefault();
-
-                var daterange = $('#data_range_filter').val();
-                var tipo_renovacion = $('#select_tipo_coti').val();
-                var value = $('#search_all_column').val();
-
-                if (!daterange) {
-                    swal({
-                        title: "Rango de fechas requerido",
-                        text: "Por favor selecciona un rango de fechas antes de exportar",
-                        type: "warning",
-                        confirmButtonText: "Entendido"
-                    });
-                    return;
-                }
-
-                var info = renovacion_table.page.info();
-
-                if (info.recordsTotal === 0 || info.recordsDisplay === 0) {
-                    swal({
-                        title: "No hay registros",
-                        text: "No hay registros para exportar con los filtros aplicados.",
-                        type: "warning",
-                        confirmButtonText: "Entendido"
-                    });
-                    return;
-                }
-
-                var exportUrl = '{{route("exportarCotizacionM")}}';
-                var params = new URLSearchParams({
-                    daterange: daterange,
-                    tipo_renovacion: tipo_renovacion || '',
-                    value: value || ''
-                });
-
-                window.location.href = exportUrl + '?' + params.toString();
-            });
-
             // Imprimir renovaciones seleccionadas
             $('#bnt-imprimir').on('click', function(e) {
                 e.preventDefault();
@@ -542,8 +500,6 @@
             $('#btn_export_renovacion').on('click', function(e) {
                 e.preventDefault();
 
-                console.log('IDs de renovaciones seleccionados para exportar:', allSelectedIds);
-
                 // Validar que hay renovaciones seleccionadas
                 if (allSelectedIds.length === 0) {
                     swal({
@@ -566,29 +522,29 @@
                     cancelButtonText: "Cancelar",
                     confirmButtonColor: "#1a3bb3"
                 }, function(isConfirm) {
-                    if (isConfirm) {
-                        // Construir URL con los IDs seleccionados
-                        var exportUrl = "{{ route('exportarRenovaciones') }}";
-                        var params = new URLSearchParams();
+                    if (!isConfirm) return;
+                    
+                    $('#btn_export_cotizaciones').prop('disabled', true);
 
-                        allSelectedIds.forEach(function(id) {
-                            params.append('renovacion_ids[]', id);
-                        });
-
-                        console.log('URL de exportación:', exportUrl + '?' + params.toString());
-
-                        // Redirigir para exportar
-                        window.location.href = exportUrl + '?' + params.toString();
-
-                        // Mensaje de éxito
-                        swal({
-                            title: "Procesando",
-                            text: "Las renovaciones se están exportando a Excel...",
-                            type: "success",
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                    }
+                    $.ajax({
+                        url: "{{ route('exportarRenovaciones') }}",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ renovacion_ids: allSelectedIds }),
+                        headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                        xhrFields: { responseType: 'blob' },
+                        complete: () => $('#btn_export_renovacion').prop('disabled', false),
+                        success: function (blob) {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `Renovaciones_${new Date().toISOString().slice(0, 10)}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+                        }
+                    });
                 });
             });
 

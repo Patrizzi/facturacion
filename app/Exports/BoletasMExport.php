@@ -2,6 +2,7 @@
 namespace App\Exports;
 
 use App\Boleta_m;
+use App\Igv;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\{
     FromQuery,
@@ -116,7 +117,8 @@ class BoletasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
                   + ($b->op_inafecta ?? 0)
                   + ($b->op_exonerada ?? 0);
 
-        $igv = round(($b->op_gravada ?? 0) * 0.18, 2);
+        $igv_val = Igv::first();
+        $igv = ($b->op_gravada ?? 0) * ($igv_val->igv_total / 100);
 
         return [
             $b->codigo_boleta,
@@ -136,17 +138,17 @@ class BoletasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             $b->estado ? 'Activo' : 'Inactivo',
             $b->f_electronica ? 'Emitido' : 'Pendiente',
             $b->estado_pago == 0 ? 'Sin pagar' : ($b->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
-            $b->op_gravada,
-            $b->op_inafecta,
-            $b->op_exonerada,
-            $b->op_gratuita,
+            number_format(round($b->op_gravada,2),2),
+            number_format(round($b->op_inafecta,2),2),
+            number_format(round($b->op_exonerada,2),2),
+            number_format(round($b->op_gratuita,2),2),
             $b->nota_credito,
             $b->nota_debito,
             optional($b->tipo_operacion)->informacion,
             optional($b->tipo_documento)->informacion,
-            $subtotal,
-            $igv,
-            round($subtotal + $igv, 2),
+            number_format(round($subtotal,2),2),
+            number_format(round($igv,2),2),
+            number_format(round($subtotal + $igv, 2),2),
         ];
     }
 
