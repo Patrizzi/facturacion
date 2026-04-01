@@ -1006,6 +1006,28 @@
             lector.readAsDataURL(archivo);
         }
 
+        $('#registrar_terminar').on('click', function(e){
+            var pass1 = $('#password').val();
+            var pass2 = $('#password_2').val();
+            if(pass1 != pass2){
+                toastr.warning("", 'Las contraseñas no son iguales', {
+                    timeOut: 3000
+                });
+                return;
+            }
+            $('#send_true').click();
+        });
+        $('#permisos_terminar').on('click', function(e){
+            var pass1 = $('#password').val();
+            var pass2 = $('#password_2').val();
+            if(pass1 != pass2){
+                toastr.warning("", 'Las contraseñas no son iguales', {
+                    timeOut: 3000
+                });
+                return;
+            }
+            $('#send_true').click();
+        });
         // //roles existentes
         // const roles = @json($roles);
 

@@ -12,7 +12,7 @@
                 {{-- ccccccccccccccccc --}}
                 <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
                     <h2>Agregar Nuevo Usuario</h2>
-                    <form action="{{route('usuario.create')}}" enctype="multipart/form-data" method="post">
+                    <form action="{{route('usuario.create')}}" enctype="multipart/form-data" method="post" id="form_submit_user">
                         @csrf
                         <fieldset>
                             <legend style="margin-bottom: 10px;">
@@ -66,7 +66,7 @@
                                                 <input type="password" class="form-control" name="password_2" id="password_2"
                                                 autocomplete="off" placeholder="******" required="required">
                                                 {{-- <input type="password" class="form-control" name="password" id="password"
-                                                    autocomplete="off" placeholder="******" required="required"> --}}
+               a                                     autocomplete="off" placeholder="******" required="required"> --}}
                                                 <div class="input-group-append">
                                                     <span class="input-group-addon toggle-password"
                                                         onclick="togglePassword2()">
@@ -97,8 +97,9 @@
                                         </div>
                                         <div class="col-sm-12">
                                             <br style="margin: 5px">
-                                            <button class="btn btn-primary" type="submit" id="registrar_terminar" value="0">Registrar</button>
-                                            <button class="btn btn-primary" type="submit" id="permisos_terminar" value="1" style="display: none">Configurar Permisos</button>
+                                            <button class="btn btn-primary" type="button" id="registrar_terminar" value="0">Registrar</button>
+                                            <button class="btn btn-primary" type="button" id="permisos_terminar" value="1" style="display: none">Configurar Permisos</button>
+                                            <button type="submit" id="send_true" style="display: none">Send True</button>
                                         </div>
                                     </div>
                                 </div>

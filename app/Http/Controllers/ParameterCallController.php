@@ -33,6 +33,8 @@ use Swift_Mailer;
 use Swift_TransportException;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class ParameterCallController extends Controller
 {
@@ -889,4 +891,10 @@ class ParameterCallController extends Controller
         return response()->json($data);
     }
 
+    public function getPermissionxRolData(Request $request){
+        $rol = Role::find($request->id_rol);
+        $ids = $rol->permissions()->pluck('id');
+
+        return response()->json($ids);
+    }
 }

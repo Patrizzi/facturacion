@@ -106,13 +106,46 @@ class UsuarioController extends Controller
             // Se debe crear un "Rol Personalizado, diferente de los demas " 
             return view('configuracion_general.usuario.add_permisos_user', compact('datos','almacen','personal','rol','permisos','roles'));
         }else{
+            if($request->hasfile('avatar')){
+                $image1 =$request->file('avatar');
+                $avatar =time().$image1->getClientOriginalName();
+                $destinationPath = public_path('/profile/images/');
+                $image1->move($destinationPath,$avatar);
+            }else{
+                $avatar='defecto.jpg';
+            }
 
+            $apariencia = Config::default_config();
+            $codigo = User::codigo_mensaje();
+            $user = new User();
+            $user->personal_id = $personal;
+            $user->confi_id = $apariencia->id;
+            // $user->name = $request->;
+            $user->email = $email;
+            $user->celular = $celular;
+            $user->password = bcrypt($password);
+            $user->almacen_id = $request->almacen_id ?? NULL;
+            $user->numero_validacion = $codigo;
+            $user->estado_validacion = 0;
+            $user->estado = 0;
+            $user->email_creado = 0;
+            $user->avatar = $avatar;
+            $user->save();
+            // Envio de Codigo por Correo:
+            $user = User::send_mail_register($user);
+            if($user == "200"){
+                $msg = "Se envió un código a ".$request->correo.', digitarlo para activar al usuario en el sistema';
+            }else{
+                $msg = "Hubo problema al enviar el codigo a ".$request->correo.', verificar el correo o contactar a Soporte';
+            }
+            
+            return redirect()->back()->with('warning',$msg);
         }
-        $id = $request->persona_id;
-        $personal=Personal::find($id);
-        // Funcion para enviar el correo 
-        $msg = "Se envió un código a ".$request->correo.', digitarlo para activar al usuario en el sistema';
-        return redirect()->back()->with('success',$msg)->with('id_user', $request);
+        // $id = $request->persona_id;
+        // $personal=Personal::find($id);
+        // // Funcion para enviar el correo 
+        // $msg = "Se envió un código a ".$request->correo.', digitarlo para activar al usuario en el sistema';
+        // return redirect()->back()->with('success',$msg)->with('id_user', $request);
     }
 
 
@@ -125,6 +158,7 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
        //Al no poder recibir 2 parametros,obliga a la creacion de otro controlador
+       return $request;
     }
 
     public function creacion(Request $request,$id)
@@ -144,7 +178,7 @@ class UsuarioController extends Controller
         $almacen_id=$request->get('almacen_id');
         $password=$request->get('password');
         $password_2=$request->get('password_2');
-        $numero_validacion=rand(600000000, 900000000) ;
+        
 
         if ($password_2==$password) {
             /*Apariencia de su interfaz*/
@@ -161,14 +195,7 @@ class UsuarioController extends Controller
             $apariencia->tamano_letra_perfil= "12px " ;
             $apariencia->save();
 
-            if($request->hasfile('avatar')){
-                $image1 =$request->file('avatar');
-                $avatar =time().$image1->getClientOriginalName();
-                $destinationPath = public_path('/profile/images/');
-                $image1->move($destinationPath,$avatar);
-            }else{
-                $avatar='defecto.jpg';
-            }
+            
 
             /*Creacion del Nuevo Usuario*/
             $user=new User();
@@ -196,11 +223,11 @@ class UsuarioController extends Controller
             $usuario_hora=Carbon::now()->format('Y-m-d');
 
             $nombre_personal=Personal::where('id',$id)->pluck('nombres')->first();
-            $codigo_mensaje=$numero_validacion;
-            $codigo_1 = substr($codigo_mensaje, 0, 3);
-            $codigo_2 = substr($codigo_mensaje, 3, 3);
-            $codigo_3 = substr($codigo_mensaje, 6, 3);
-            $codigo_unidos=$codigo_1.'-'.$codigo_2.'-'.$codigo_3;/*Codigo unido */
+            // $codigo_mensaje=$numero_validacion;
+            // $codigo_1 = substr($codigo_mensaje, 0, 3);
+            // $codigo_2 = substr($codigo_mensaje, 3, 3);
+            // $codigo_3 = substr($codigo_mensaje, 6, 3);
+            // $codigo_unidos=$codigo_1.'-'.$codigo_2.'-'.$codigo_3;/*Codigo unido */
             $cuerpo_mensaje  = view('email_html.email_cod_confirmacion',compact('codigo_unidos','nombre_personal','usuario_hora','empresa'));
             /* envio*/
             /* Confi*/

@@ -138,7 +138,7 @@
                                     <div class="col-sm-12" style="">
                                         <p>Seleccione un Rol predefinido para seleccionar Permisos Automaticamente</p>
                                         @foreach ($roles as $rol)
-                                            <button class="btn btn-primary btn-outline">{{$rol->name}}</button>
+                                            <button onclick="select_predef({{$rol->id}})"  class="btn btn-primary btn-outline">{{$rol->name}}</button>
                                         @endforeach
                                     </div>
                                 </div>
@@ -212,12 +212,14 @@
                                                                                                     <input type="checkbox"
                                                                                                         name="permissions[]"
                                                                                                         value="{{ $permiso->id }}"
+                                                                                                        id="{{ $permiso->id }}"
                                                                                                         class="modulo_{{$modulo}} permisos_{{$prefijo}}">
                                                                                                     {{ Str::of($accion)->replace('_', ' ')->title() }}
                                                                                                 </span>
                                                                                                 <div class="tooltip-demo"
                                                                                                     style="display: contents">
                                                                                                     <button
+                                                                                                        type="button"
                                                                                                         class="btn btn-link btn-xs"
                                                                                                         data-toggle="tooltip"
                                                                                                         data-placement="bottom"
@@ -262,7 +264,7 @@
 
 
 
-            <form action="{{ route('usuario.update', auth()->user()->id) }}" enctype="multipart/form-data"
+            {{-- <form action="{{ route('usuario.update', auth()->user()->id) }}" enctype="multipart/form-data"
                 method="post">
                 @csrf
                 @method('PATCH')
@@ -271,7 +273,6 @@
                         <div class="ibox ">
                             <div>
                                 <div class="ibox-content no-padding border-left-right">
-                                    {{-- <img  class="img-fluid" src="{{ asset('/profile/images/')}}/{{auth()->user()->avatar}}" > --}}
 
                                     <input type="file" id="archivoInput" name="avatar"
                                         onchange="return validarExt()" />
@@ -310,7 +311,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </form> --}}
 
         </div>
     </div>
@@ -476,6 +477,31 @@
                     .prop('checked', !$(this).prop('checked'))
                     .trigger('change');
             });
+        }
+        function select_predef(id_rol){
+            $('input[type="checkbox"]').prop('checked', false);
+            console.log(id_rol);
+            if(id_rol == 2){
+                // Seleccionar todas los permisos
+                $('input[type="checkbox"]').prop('checked', true);
+            }else{
+                // Llamado para el 
+                $.ajax({
+                    type: "post",
+                    url: "{{route('pa.getPermissionxRolData')}}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'id_rol': id_rol
+                    },
+                    success: function(permisos) {
+                        console.log(permisos);
+                        permisos.forEach(id => {
+                            $(`#`+id).prop('checked', true);
+                        });
+                    }
+                });
+            }
+            
         }
     </script>
     <!-- Page-Level Scripts -->

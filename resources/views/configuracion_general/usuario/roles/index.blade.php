@@ -46,9 +46,7 @@
                                     @include('configuracion_general.usuario._shared.tabs')
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        <button type="button" id="btn-nuevo-usuario" class="btn btn-primary">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
+                                        <a href="{{route('roles.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
                                     </ul>
                                 </ul>
                             </div>
@@ -110,7 +108,7 @@
                                                             <td>
                                                                 <input type="checkbox">
                                                             </td>
-                                                            <td>{{$rol->name}}</td>
+                                                            <td>{{ $rol->name }}</td>
                                                             <td></td>
                                                         </tr>
                                                     @endforeach
@@ -127,6 +125,15 @@
         </div>
     </div>
 
+    {{-- @include('configuracion_general.usuario.roles.create') --}}
+
+    <style>
+        @media (min-width: 992px) {
+            .modal-lg {
+                max-width: 90%;
+            }
+        }
+    </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -141,5 +148,45 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
+    <script>
+        function abrir_modulo(icon, item) {
+            let div = document.getElementById(`div_${item}`);
 
+            if (div.style.display === 'none' || div.style.display === '') {
+                div.style.display = 'block';
+            } else {
+                div.style.display = 'none';
+            }
+
+            // obtener el icono dentro del <a>
+            let son = icon.querySelector('i');
+
+            // cambiar icono
+            son.classList.toggle('fa-toggle-down');
+            son.classList.toggle('fa-toggle-up');
+        }
+
+        function check_modulo(check, modulo) {
+            // console.log(modulo);
+            // var permisos = document.querySelectorAll('input.'+modulo);
+            // console.log(permisos[0]);
+            // $(`input.`+modulo).prop('checked', true).trigger('change');
+
+            $(`input.modulo_` + modulo).each(function() {
+                $(this)
+                    .prop('checked', !$(this).prop('checked'))
+                    .trigger('change');
+            });
+        }
+
+        function check_submodulo(check, modulo, submodulo) {
+            // console.log(`input.modulo_`+modulo+`_permisos_`+submodulo);
+            // var permisos = document.querySelectorAll('input.'+submodulo);
+            $(`input.modulo_` + modulo + `.permisos_` + submodulo).each(function() {
+                $(this)
+                    .prop('checked', !$(this).prop('checked'))
+                    .trigger('change');
+            });
+        }
+    </script>
 @endsection

@@ -527,6 +527,7 @@ Route::group(
         Route::post('parameter_call/getPersonalVendedor', 'ParameterCallController@getPersonalVendedor')->name('pa.getPersonalVendedor');
         Route::post('parameter_call/getFormaPago', 'ParameterCallController@getFormaPago')->name('pa.getFormaPago');
         Route::post('parameter_call/getPersonalData', 'ParameterCallController@getPersonalData')->name('pa.getPersonalData');
+        Route::post('parameter_call/getPermissionxRolData', 'ParameterCallController@getPermissionxRolData')->name('pa.getPermissionxRolData');
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
