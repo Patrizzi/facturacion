@@ -17,113 +17,14 @@
     @endif
     <div class="wrapper wrapper-content">
         <div class="animated fadeInRight">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="ibox ">
-                        <div class="ibox-title">
-                            <h4>Información de usuario</h4>
-                            <div class="ibox-tools">
-                                <a class="collapse-link">
-                                    <i class="fa fa-chevron-up"></i>
-                                </a>
-                                <a class="close-link">
-                                    <i class="fa fa-times"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="ibox-content">
-                            <div class="row">
-                                <div class="col-md-3 text-center">
-                                    <div
-                                        style="margin-bottom: 10px;display:flex;align-items: center;justify-content: center;">
-                                        <div id="visorArchivo">
-                                            <img src="{{ asset('/img/logos/usuarios.svg') }}" id="previewImg"
-                                                style="width: 200px;height: 200px;border-radius: 5px">
-                                            <input type="file" id="archivoInput" name="avatar"
-                                                onchange="return validarExt()" />
-                                        </div>
-                                    </div>
-                                    <small>(Click para cambiar la imagen)</small>
-                                </div>
-                                <div class="col-md-9">
-                                    <div class="row">
-                                        <label class="col-sm-2 col-form-label">Personal:</label>
-                                        <div class="col-sm-4" style="padding-bottom: 10px">
-                                            <input type="text" class="form-control" value="{{ $personal->full_name }}"
-                                                name="" id="">
-                                        </div>
-                                        <label class="col-sm-2 col-form-label">Correo:</label>
-                                        <div class="col-sm-4" style="padding-bottom: 10px">
-                                            <input type="text" class="form-control" name="correo" id="correo"
-                                                value="{{$datos->correo}}" required="required" autocomplete="off">
-                                        </div>
-
-                                        <label class="col-sm-2 col-form-label">Contraseña:</label>
-                                        <div class="col-sm-4" style="padding-bottom: 10px">
-                                            <div class="input-group">
-                                                <input type="password" class="form-control" name="password" id="password"
-                                                    autocomplete="off" placeholder="******" required="required"
-                                                    value="{{ $datos->password }}">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-addon toggle-password"
-                                                        onclick="togglePassword()">
-                                                        <i class="fa fa-eye-slash" id="eye-icon"></i>
-                                                        <!-- Cambiado a "fa-eye-slash" -->
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <label class="col-sm-2 col-form-label">Confirmar:</label>
-                                        <div class="col-sm-4" style="padding-bottom: 10px">
-                                            <div class="input-group">
-                                                <input type="password" class="form-control" name="password_2"
-                                                    value="{{ $datos->password_2 }}" id="password_2" autocomplete="off"
-                                                    placeholder="******" required="required">
-                                                {{-- <input type="password" class="form-control" name="password" id="password"
-                                                    autocomplete="off" placeholder="******" required="required"> --}}
-                                                <div class="input-group-append">
-                                                    <span class="input-group-addon toggle-password"
-                                                        onclick="togglePassword2()">
-                                                        <i class="fa fa-eye-slash" id="eye-icon2"></i>
-                                                        <!-- Cambiado a "fa-eye-slash" -->
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <label class="col-sm-2 col-form-label">Rol:</label>
-                                        <div class="col-sm-4" style="padding-bottom: 10px">
-                                            <input type="text" class="form-control" value="{{ $rol->name }}"
-                                                name="" id="" readonly>
-                                        </div>
-                                        <label class="col-sm-2 col-form-label">Asig. Almacen:</label>
-                                        <div class="col-sm-4">
-                                            <select class="form-control" name="almacen_id">
-                                                <option value="todos">Todos</option>
-                                                @foreach ($almacen as $almacens)
-                                                    <option value="{{ $almacens->id }}">{{ $almacens->nombre }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-           {{-- <div class="checkbox checkbox-primary">
-                <input id="checkbox2" type="checkbox" >
-                <label for="checkbox2">
-                    Primary
-                </label>
-            </div> --}}
-            <div class="animated fadeInRight">
+            <form action="{{route('usuario.permiso_personalizado')}}" method="POST">
+                @csrf
+                @method('POST')
                 <div class="row">
                     <div class="col-md-12">
                         <div class="ibox ">
                             <div class="ibox-title">
-                                <h4>Permisos Personalizado del Usuario</h4>
+                                <h4>Información de usuario</h4>
                                 <div class="ibox-tools">
                                     <a class="collapse-link">
                                         <i class="fa fa-chevron-up"></i>
@@ -135,132 +36,253 @@
                             </div>
                             <div class="ibox-content">
                                 <div class="row">
-                                    <div class="col-sm-12" style="">
-                                        <p>Seleccione un Rol predefinido para seleccionar Permisos Automaticamente</p>
-                                        @foreach ($roles as $rol)
-                                            <button onclick="select_predef({{$rol->id}})"  class="btn btn-primary btn-outline">{{$rol->name}}</button>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="row">
-                                    @php $i = 0; @endphp
-                                    @foreach ($permisos as $modulo => $prefijos)
-                                        @php $moduloSlug = Str::slug($modulo); @endphp
-                                        <div class="col-lg-3 col-md-6 col-sm-12">
-                                            <div class="panel-group" id="modulo-{{ $moduloSlug }}">
-                                                <!-- NIVEL 1: MODULO -->
-                                                <div class="panel panel-default">
-                                                    <div class="panel-heading" style="display: flex">
-                                                        <div class="checkbox checkbox-primary" style="padding-left: 0px">
-                                                            <input type="checkbox" name="" id="forcheck_{{$i}}" class="" onclick="check_modulo(this,`{{$modulo}}`)">
-                                                            <label for="forcheck_{{$i}}" style="margin-bottom: 0px;margin">
-                                                                <h5 class="panel-title" style="margin-bottom: 0px;font-size:15px">
-                                                                    <a data-toggle="collapse"
-                                                                        href="#collapse-modulo-{{ $moduloSlug }}">
-                                                                        {{ Str::of($modulo)->replace('_', ' ')->title() }}
-                                                                    </a>
-                                                                </h5>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div id="collapse-modulo-{{ $moduloSlug }}"
-                                                        class="panel-collapse collapse show">
-                                                        <div class="panel-body">
-                                                            <!-- NIVEL 2: PREFIJOS -->
-                                                            <div class="panel-group" id="prefijo-{{ $moduloSlug }}">
-                                                                <div class="row">
-                                                                    @foreach ($prefijos as $prefijo => $listaPermisos)
-                                                                        {{-- {{ $i }} --}}
-                                                                        @php $prefijoSlug = Str::slug($prefijo); @endphp
-                                                                        <div class="col-6"
-                                                                            style="margin-bottom: 5px;display: flex;flex-direction: column;justify-content: space-between;"
-                                                                            id="lista_permisos">
-                                                                            <div>
-                                                                                <label for=""
-                                                                                    style="display: flex;margin-bottom: 2px;justify-content: space-between;">
-                                                                                    <input type="checkbox"
-                                                                                        name="permissions[]"
-                                                                                        value="{{ $prefijo }}" class="modulo_{{$modulo}}" onclick="check_submodulo(this,`{{$modulo}}`,`{{$prefijo}}`)">
-                                                                                        <span
-                                                                                            style="margin-left: 5px"><h4 style="margin: 0px">{{ Str::title($prefijo) }}</h4>
-                                                                                        </span>
-                                                                                    <div>
-                                                                                        <span>
-                                                                                            <a id="modulo_arrow" onclick="abrir_modulo(this,{{$i}})">
-                                                                                                <i class="fa fa-toggle-down" ></i>
-                                                                                            </a>
-                                                                                        </span>
-                                                                                    </div>
-                                                                                </label>
-                                                                                <!-- NIVEL 3: ACCIONES -->
-                                                                                <div style="margin-left: 15px ;display: none;" id="div_{{$i}}">
-                                                                                    @foreach ($listaPermisos as $permiso)
-                                                                                        @php
-                                                                                            $accion =
-                                                                                                explode(
-                                                                                                    '.',
-                                                                                                    $permiso->name,
-                                                                                                )[1] ?? '';
-                                                                                        @endphp
-                                                                                        <div class="">
-                                                                                            <span
-                                                                                                style="display: flex;align-items: center;justify-content: space-between;">
-                                                                                                <span
-                                                                                                    style="display: flex;">
-                                                                                                    <input type="checkbox"
-                                                                                                        name="permissions[]"
-                                                                                                        value="{{ $permiso->id }}"
-                                                                                                        id="{{ $permiso->id }}"
-                                                                                                        class="modulo_{{$modulo}} permisos_{{$prefijo}}">
-                                                                                                    {{ Str::of($accion)->replace('_', ' ')->title() }}
-                                                                                                </span>
-                                                                                                <div class="tooltip-demo"
-                                                                                                    style="display: contents">
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        class="btn btn-link btn-xs"
-                                                                                                        data-toggle="tooltip"
-                                                                                                        data-placement="bottom"
-                                                                                                        title="{{ $permiso->description }}">
-                                                                                                        <i style="font-size: 9px"
-                                                                                                            class="fa fa-info-circle"></i>
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            </span>
-
-                                                                                            {{-- @if ($permiso->description)
-                                                                                                <small
-                                                                                                    class="text-muted d-block">
-                                                                                                    {{ $permiso->description }}
-                                                                                                </small>
-                                                                                            @endif --}}
-                                                                                        </div>
-                                                                                    @endforeach
-                                                                                </div>
-                                                                            </div>
-                                                                            <hr style="margin:5px 0px">
-                                                                        </div>
-                                                                        @php $i++; @endphp
-                                                                    @endforeach
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                                    <div class="col-md-3 text-center">
+                                        <div
+                                            style="margin-bottom: 10px;display:flex;align-items: center;justify-content: center;">
+                                            <div id="visorArchivo">
+                                                <img src="{{ asset('/img/logos/usuarios.svg') }}" id="previewImg"
+                                                    style="width: 200px;height: 200px;border-radius: 5px">
+                                                <input type="file" id="archivoInput" name="avatar"
+                                                    onchange="return validarExt()" />
                                             </div>
                                         </div>
-                                    @endforeach
-                                    <br>
+                                        <small>(Click para cambiar la imagen)</small>
+                                    </div>
+                                    <div class="col-md-9" style="height: 100%">
+                                        <div class="row">
+                                            <label class="col-sm-2 col-form-label">Personal:</label>
+                                            <div class="col-sm-4" style="padding-bottom: 10px">
+                                                <input type="text" class="form-control"
+                                                    value="{{ $personal->full_name }}" name="" id="">
+                                            </div>
+                                            <label class="col-sm-2 col-form-label">Correo:</label>
+                                            <div class="col-sm-4" style="padding-bottom: 10px">
+                                                <input type="text" class="form-control" name="correo" id="correo"
+                                                    value="{{ $datos->correo }}" required="required" autocomplete="off">
+                                            </div>
+
+                                            <label class="col-sm-2 col-form-label">Contraseña:</label>
+                                            <div class="col-sm-4" style="padding-bottom: 10px">
+                                                <div class="input-group">
+                                                    <input type="password" class="form-control" name="password"
+                                                        id="password" autocomplete="off" placeholder="******"
+                                                        required="required" value="{{ $datos->password }}">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-addon toggle-password"
+                                                            onclick="togglePassword()">
+                                                            <i class="fa fa-eye-slash" id="eye-icon"></i>
+                                                            <!-- Cambiado a "fa-eye-slash" -->
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <label class="col-sm-2 col-form-label">Confirmar:</label>
+                                            <div class="col-sm-4" style="padding-bottom: 10px">
+                                                <div class="input-group">
+                                                    <input type="password" class="form-control" name="password_2"
+                                                        value="{{ $datos->password_2 }}" id="password_2" autocomplete="off"
+                                                        placeholder="******" required="required">
+                                                    {{-- <input type="password" class="form-control" name="password" id="password"
+                                                    autocomplete="off" placeholder="******" required="required"> --}}
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-addon toggle-password"
+                                                            onclick="togglePassword2()">
+                                                            <i class="fa fa-eye-slash" id="eye-icon2"></i>
+                                                            <!-- Cambiado a "fa-eye-slash" -->
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label class="col-sm-2 col-form-label">Rol:</label>
+                                            <div class="col-sm-4" style="padding-bottom: 10px">
+                                                <input type="text" class="form-control" value="{{ $rol->name }}"
+                                                    name="" id="" readonly>
+                                            </div>
+                                            <label class="col-sm-2 col-form-label">Asig. Almacen:</label>
+                                            <div class="col-sm-4">
+                                                <select class="form-control" name="almacen_id">
+                                                    <option value="todos">Todos</option>
+                                                    @foreach ($almacen as $almacens)
+                                                        <option value="{{ $almacens->id }}">{{ $almacens->nombre }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <butto type="submit" class="btn btn-primary btn-block">Guardar</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                {{-- <div class="checkbox checkbox-primary">
+                <input id="checkbox2" type="checkbox" >
+                <label for="checkbox2">
+                    Primary
+                </label>
+            </div> --}}
+                <div class="animated fadeInRight">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="ibox ">
+                                <div class="ibox-title">
+                                    <h4>Permisos Personalizado del Usuario</h4>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                        <a class="close-link">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="ibox-content">
+                                    <div class="row">
+                                        <div class="col-sm-12" style="">
+                                            <p>Seleccione un Rol predefinido para seleccionar Permisos Automaticamente</p>
+                                            @foreach ($roles as $rol)
+                                                <button onclick="select_predef({{ $rol->id }})"
+                                                    class="btn btn-primary btn-outline">{{ $rol->name }}</button>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        @php $i = 0; @endphp
+                                        @foreach ($permisos as $modulo => $prefijos)
+                                            @php $moduloSlug = Str::slug($modulo); @endphp
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <div class="panel-group" id="modulo-{{ $moduloSlug }}">
+                                                    <!-- NIVEL 1: MODULO -->
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading" style="display: flex">
+                                                            <div class="checkbox checkbox-primary"
+                                                                style="padding-left: 0px">
+                                                                <input type="checkbox" name=""
+                                                                    id="forcheck_{{ $i }}" class=""
+                                                                    onclick="check_modulo(this,`{{ $modulo }}`)">
+                                                                <label for="forcheck_{{ $i }}"
+                                                                    style="margin-bottom: 0px;margin">
+                                                                    <h5 class="panel-title"
+                                                                        style="margin-bottom: 0px;font-size:15px">
+                                                                        <a data-toggle="collapse"
+                                                                            href="#collapse-modulo-{{ $moduloSlug }}">
+                                                                            {{ Str::of($modulo)->replace('_', ' ')->title() }}
+                                                                        </a>
+                                                                    </h5>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div id="collapse-modulo-{{ $moduloSlug }}"
+                                                            class="panel-collapse collapse show">
+                                                            <div class="panel-body">
+                                                                <!-- NIVEL 2: PREFIJOS -->
+                                                                <div class="panel-group"
+                                                                    id="prefijo-{{ $moduloSlug }}">
+                                                                    <div class="row">
+                                                                        @foreach ($prefijos as $prefijo => $listaPermisos)
+                                                                            {{-- {{ $i }} --}}
+                                                                            @php $prefijoSlug = Str::slug($prefijo); @endphp
+                                                                            <div class="col-6"
+                                                                                style="margin-bottom: 5px;display: flex;flex-direction: column;justify-content: space-between;"
+                                                                                id="lista_permisos">
+                                                                                <div>
+                                                                                    <label for=""
+                                                                                        style="display: flex;margin-bottom: 2px;justify-content: space-between;">
+                                                                                        <input type="checkbox"
+                                                                                            name="permissions[]"
+                                                                                            value="{{ $prefijo }}"
+                                                                                            class="modulo_{{ $modulo }}"
+                                                                                            onclick="check_submodulo(this,`{{ $modulo }}`,`{{ $prefijo }}`)">
+                                                                                        <span style="margin-left: 5px">
+                                                                                            <h4 style="margin: 0px">
+                                                                                                {{ Str::title($prefijo) }}
+                                                                                            </h4>
+                                                                                        </span>
+                                                                                        <div>
+                                                                                            <span>
+                                                                                                <a id="modulo_arrow"
+                                                                                                    onclick="abrir_modulo(this,{{ $i }})">
+                                                                                                    <i
+                                                                                                        class="fa fa-toggle-down"></i>
+                                                                                                </a>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    </label>
+                                                                                    <!-- NIVEL 3: ACCIONES -->
+                                                                                    <div style="margin-left: 15px ;display: none;"
+                                                                                        id="div_{{ $i }}">
+                                                                                        @foreach ($listaPermisos as $permiso)
+                                                                                            @php
+                                                                                                $accion =
+                                                                                                    explode(
+                                                                                                        '.',
+                                                                                                        $permiso->name,
+                                                                                                    )[1] ?? '';
+                                                                                            @endphp
+                                                                                            <div class="">
+                                                                                                <span
+                                                                                                    style="display: flex;align-items: center;justify-content: space-between;">
+                                                                                                    <span
+                                                                                                        style="display: flex;">
+                                                                                                        <input
+                                                                                                            type="checkbox"
+                                                                                                            name="permissions[]"
+                                                                                                            value="{{ $permiso->id }}"
+                                                                                                            id="{{ $permiso->id }}"
+                                                                                                            class="modulo_{{ $modulo }} permisos_{{ $prefijo }} permisos_ind">
+                                                                                                        {{ Str::of($accion)->replace('_', ' ')->title() }}
+                                                                                                    </span>
+                                                                                                    <div class="tooltip-demo"
+                                                                                                        style="display: contents">
+                                                                                                        <button
+                                                                                                            type="button"
+                                                                                                            class="btn btn-link btn-xs"
+                                                                                                            data-toggle="tooltip"
+                                                                                                            data-placement="bottom"
+                                                                                                            title="{{ $permiso->description }}">
+                                                                                                            <i style="font-size: 9px"
+                                                                                                                class="fa fa-info-circle"></i>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                </span>
+
+                                                                                                {{-- @if ($permiso->description)
+                                                                                                <small
+                                                                                                    class="text-muted d-block">
+                                                                                                    {{ $permiso->description }}
+                                                                                                </small>
+                                                                                            @endif --}}
+                                                                                            </div>
+                                                                                        @endforeach
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr style="margin:5px 0px">
+                                                                            </div>
+                                                                            @php $i++; @endphp
+                                                                        @endforeach
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
 
 
@@ -351,10 +373,13 @@
         .sub_permisos {
             margin-right: 5px;
         }
-        .checkbox label::before{
+
+        .checkbox label::before {
             margin-top: 5px;
         }
-        .checkbox-primary input[type="checkbox"]:checked + label::after, .checkbox-primary input[type="radio"]:checked + label::after{
+
+        .checkbox-primary input[type="checkbox"]:checked+label::after,
+        .checkbox-primary input[type="radio"]:checked+label::after {
             margin-top: 7px;
         }
     </style>
@@ -441,7 +466,7 @@
             }
         }
 
-        function abrir_modulo(icon,item){
+        function abrir_modulo(icon, item) {
             let div = document.getElementById(`div_${item}`);
 
             if (div.style.display === 'none' || div.style.display === '') {
@@ -457,38 +482,43 @@
             son.classList.toggle('fa-toggle-down');
             son.classList.toggle('fa-toggle-up');
         }
-        function check_modulo(check,modulo){
-            // console.log(modulo);
-            // var permisos = document.querySelectorAll('input.'+modulo);
-            // console.log(permisos[0]);
-            // $(`input.`+modulo).prop('checked', true).trigger('change');
 
-            $(`input.modulo_`+modulo).each(function () {
-                $(this)
-                    .prop('checked', !$(this).prop('checked'))
-                    .trigger('change');
-            });
+        function check_modulo(check, modulo) {
+            let estado = $(check).prop('checked');
+
+            $(`input.modulo_` + modulo).prop('checked', estado);
         }
-        function check_submodulo(check,modulo,submodulo){
-            // console.log(`input.modulo_`+modulo+`_permisos_`+submodulo);
-            // var permisos = document.querySelectorAll('input.'+submodulo);
-            $(`input.modulo_`+modulo+`.permisos_`+submodulo).each(function () {
-                $(this)
-                    .prop('checked', !$(this).prop('checked'))
-                    .trigger('change');
-            });
+
+        function check_submodulo(check, modulo, submodulo) {
+            let estado = $(check).prop('checked');
+
+            $(`input.modulo_` + modulo + `.permisos_` + submodulo)
+                .prop('checked', estado);
+
+            validar_modulo(modulo);
         }
-        function select_predef(id_rol){
+
+        function validar_modulo(modulo) {
+            let total = $(`.modulo_` + modulo + `.permisos_ind`).length;
+            let checked = $(`.modulo_` + modulo + `.permisos_ind:checked`).length;
+
+            // checkbox del módulo (nivel 1)
+            let moduloCheck = $(`input[onclick="check_modulo(this,\`${modulo}\`)"]`);
+
+            moduloCheck.prop('checked', total === checked);
+        }
+
+        function select_predef(id_rol) {
             $('input[type="checkbox"]').prop('checked', false);
             console.log(id_rol);
-            if(id_rol == 2){
+            if (id_rol == 2) {
                 // Seleccionar todas los permisos
                 $('input[type="checkbox"]').prop('checked', true);
-            }else{
+            } else {
                 // Llamado para el 
                 $.ajax({
                     type: "post",
-                    url: "{{route('pa.getPermissionxRolData')}}",
+                    url: "{{ route('pa.getPermissionxRolData') }}",
                     data: {
                         '_token': $('input[name=_token]').val(),
                         'id_rol': id_rol
@@ -496,13 +526,19 @@
                     success: function(permisos) {
                         console.log(permisos);
                         permisos.forEach(id => {
-                            $(`#`+id).prop('checked', true);
+                            $(`#` + id).prop('checked', true);
                         });
                     }
                 });
             }
-            
         }
+        $(document).on('change', '.permisos_ind', function() {
+            let clases = $(this).attr('class');
+
+            let modulo = clases.match(/modulo_([^\s]+)/)[1];
+
+            validar_modulo(modulo);
+        });
     </script>
     <!-- Page-Level Scripts -->
     <script>

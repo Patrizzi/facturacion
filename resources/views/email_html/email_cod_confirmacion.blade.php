@@ -23,7 +23,7 @@
 			<div>
 				<h2 align="center"></h2>
 				<span style="text-decoration: underline;">Titular:</span> '{{$personal->full_name}}'<br><br>
-				<span style="font-weight: bold;">'{{$codigo_unidos}}</span>' es tu código de Validación para confirmar el usuario al sistema. Esta clave es confidencial, no la compartas con nadie. Solo ingrésala en el Sistema para continuar con tu confirmacion.<br><br>
+				<span style="font-weight: bold;">'{{$codigo}}</span>' es tu código de Validación para confirmar el usuario al sistema. Esta clave es confidencial, no la compartas con nadie. Solo ingrésala en el Sistema para continuar con tu confirmacion.<br><br>
             	<span style="text-decoration: underline;">Fecha y hora:</span>  '{{$usuario_hora}}'<br><br>
             	Si no has realizado esta operación o tienes cualquier duda respecto al Código de Validación, puedes comunicarte con nuestro correo de soporte <a href="mailto:desarrollo@jypsac.com">desarrollo@jypsac.com</a>.
 			</div>

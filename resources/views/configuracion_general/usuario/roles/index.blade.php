@@ -46,7 +46,8 @@
                                     @include('configuracion_general.usuario._shared.tabs')
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        <a href="{{route('roles.create')}}" class="btn btn-primary"><i class="fa fa-plus"></i></a>
+                                        <a href="{{ route('roles.create') }}" class="btn btn-primary"><i
+                                                class="fa fa-plus"></i></a>
                                     </ul>
                                 </ul>
                             </div>
@@ -134,6 +135,146 @@
             }
         }
     </style>
+    <style>
+        .table-responsive {
+            overflow: visible !important;
+        }
+
+        select.form-control:not([size]):not([multiple]) {
+            height: 100%;
+        }
+
+        .nav-tabs.dropdown-menu {
+            left: -112px !important;
+            /* padding: 10px 5px !important; */
+        }
+
+        #DataTables_Table_0_wrapper {
+            /* padding-right: 0px; */
+        }
+
+        .table {
+            width: 100% !important;
+        }
+
+        .ibox-content>.row {
+            margin: auto;
+        }
+
+        .nav-tabs-right {
+            margin-left: auto;
+        }
+
+        .search-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .tab-pane.active.show {
+            border-right: 1px;
+            border-left: 1px;
+            border-bottom: 1px;
+        }
+
+        .btn-link {
+            width: 100%;
+        }
+
+        /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+
+        .dropdown-menu {
+            left: 70px;
+            padding: 20px 0;
+        }
+
+        /* PANTALLA TABLET */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .row>.col-md-6 {
+                margin-bottom: 12px;
+            }
+        }
+
+        .slick-slider {
+            margin-bottom: 0px;
+        }
+
+        .slick-prev {
+            left: 20px;
+        }
+
+        .slick-next {
+            right: 20px;
+        }
+
+        .slick-slider>button {
+            z-index: 9999;
+        }
+
+        .slick-dots {
+            display: none !important;
+        }
+
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        #DataTables_Table_0_wrapper {
+            padding-bottom: 0px;
+        }
+
+        .column-actions {
+            /* display: inline-flex; */
+        }
+
+        .wrapper-hover {
+            position: relative;
+            display: inline-block;
+        }
+
+        .contenedor {
+            display: none;
+            position: absolute;
+            top: -80px;
+            left: 20px;
+            z-index: 20;
+        }
+
+        .wrapper-hover:hover .contenedor {
+            display: block;
+        }
+
+        .mini-overlay {
+            position: relative;
+            width: 140px;
+            background-color: #fff;
+            color: #000;
+            font-size: 12px;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .info_overlay {
+            text-decoration: underline;
+            font-weight: bold;
+        }
+    </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -149,6 +290,16 @@
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
     <script>
+        $(document).ready(function() {
+            $('.dataTables-example-usuarios').DataTable({
+                pageLength: 25,
+                responsive: true,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: []
+            });
+            $('#tab-2-tab').addClass('active');
+        });
+
         function abrir_modulo(icon, item) {
             let div = document.getElementById(`div_${item}`);
 

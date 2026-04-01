@@ -115,16 +115,23 @@ class UsuarioController extends Controller
                 $avatar='defecto.jpg';
             }
 
+            if($datos->almacen_id == "todos"){
+                // $almacen = NULL;
+            }else{
+                $almacen_selec = $datos->almacen_id;
+            }
+
             $apariencia = Config::default_config();
             $codigo = User::codigo_mensaje();
+
             $user = new User();
-            $user->personal_id = $personal;
+            $user->personal_id = $personal->id;
             $user->confi_id = $apariencia->id;
-            // $user->name = $request->;
-            $user->email = $email;
-            $user->celular = $celular;
-            $user->password = bcrypt($password);
-            $user->almacen_id = $request->almacen_id ?? NULL;
+            $user->name = $personal->full_name;
+            $user->email = $datos->correo;
+            $user->celular = $personal->celular ?? NULL;
+            $user->password = bcrypt($datos->password);
+            $user->almacen_id = $almacen_selec ?? NULL; // NULL = TODOS
             $user->numero_validacion = $codigo;
             $user->estado_validacion = 0;
             $user->estado = 0;
@@ -132,14 +139,21 @@ class UsuarioController extends Controller
             $user->avatar = $avatar;
             $user->save();
             // Envio de Codigo por Correo:
-            $user = User::send_mail_register($user);
-            if($user == "200"){
-                $msg = "Se envió un código a ".$request->correo.', digitarlo para activar al usuario en el sistema';
+            $send_mail = User::send_mail_register($user,$datos->correo);
+            User::updated_personal($personal->id);
+
+            // Asignacion de Permisos
+            $user->assignRole($datos->rol_id);
+            // return $send_mail;
+            if($send_mail == "200"){
+                $msg = "Se envió un código a ".$datos->correo.', digitarlo para activar al usuario en el sistema';
+                return redirect()->back()->with('success',$msg);
             }else{
-                $msg = "Hubo problema al enviar el codigo a ".$request->correo.', verificar el correo o contactar a Soporte';
+                $msg = "Hubo problema al enviar el codigo a ".$datos->correo.', verificar el correo o contactar a Soporte';
+                return redirect()->back()->with('warning',$msg);
             }
             
-            return redirect()->back()->with('warning',$msg);
+            
         }
         // $id = $request->persona_id;
         // $personal=Personal::find($id);
@@ -155,7 +169,7 @@ class UsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function permiso_personalizado(Request $request)
     {
        //Al no poder recibir 2 parametros,obliga a la creacion de otro controlador
        return $request;

@@ -891,6 +891,11 @@ class ParameterCallController extends Controller
         return response()->json($data);
     }
 
+    public function getUserData(Request $request){
+        $data = User::findorFail($request->id);
+        return response()->json($data);
+    }
+
     public function getPermissionxRolData(Request $request){
         $rol = Role::find($request->id_rol);
         $ids = $rol->permissions()->pluck('id');

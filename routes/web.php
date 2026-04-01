@@ -528,6 +528,8 @@ Route::group(
         Route::post('parameter_call/getFormaPago', 'ParameterCallController@getFormaPago')->name('pa.getFormaPago');
         Route::post('parameter_call/getPersonalData', 'ParameterCallController@getPersonalData')->name('pa.getPersonalData');
         Route::post('parameter_call/getPermissionxRolData', 'ParameterCallController@getPermissionxRolData')->name('pa.getPermissionxRolData');
+        Route::post('parameter_call/getUserData', 'ParameterCallController@getUserData')->name('pa.getUserData');
+        
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
@@ -910,8 +912,9 @@ Route::group(
         Route::post('usuario/permisos/asignar/{id}', 'UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
         Route::post('usuario/permisos/delegar/{id}', 'UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
         Route::resource('/usuario', 'UsuarioController')->except(['create']);
-        Route::post('usuario/crear/', 'UsuarioController@create')->name('usuario.create');
-
+        Route::post('usuario/crear', 'UsuarioController@create')->name('usuario.create');
+        Route::post('usuario/permiso_personalizado', 'UsuarioController@permiso_personalizado')->name('usuario.permiso_personalizado');
+        
         Route::get('/perfil', 'UsuarioController@perfil')->name('usuario.perfil');
         Route::resource('/venta', 'VentaController');
 

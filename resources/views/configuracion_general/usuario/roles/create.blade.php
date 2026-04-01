@@ -19,12 +19,12 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <form action="{{route('roles.store')}}" method="POST">
+                        <form action="{{ route('roles.store') }}" method="POST">
                             @csrf
                             @method('POST')
                             <div class="row">
                                 <div class="col-sm-3 text-center">
-                                    <img src="{{asset('/img/logos/usuarios.svg')}}" style="width: 200px" alt="">
+                                    <img src="{{ asset('/img/logos/usuarios.svg') }}" style="width: 200px" alt="">
                                 </div>
                                 <div class="col-sm-9">
                                     <div class="form-group">
@@ -33,7 +33,8 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="col-form-label"><strong>Tipo de Rol</strong></label>
-                                        <input type="text" class="form-control" value="Personalizado" readonly name="" id="">
+                                        <input type="text" class="form-control" value="Personalizado" readonly
+                                            name="" id="">
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-block">Guardar</button>
                                 </div>
@@ -121,8 +122,7 @@
                                                                                             </span>
                                                                                             <div class="tooltip-demo"
                                                                                                 style="display: contents">
-                                                                                                <button 
-                                                                                                    type="button"
+                                                                                                <button type="button"
                                                                                                     class="btn btn-link btn-xs"
                                                                                                     data-toggle="tooltip"
                                                                                                     data-placement="bottom"
@@ -201,10 +201,13 @@
         .sub_permisos {
             margin-right: 5px;
         }
-        .checkbox label::before{
+
+        .checkbox label::before {
             margin-top: 5px;
         }
-        .checkbox-primary input[type="checkbox"]:checked + label::after, .checkbox-primary input[type="radio"]:checked + label::after{
+
+        .checkbox-primary input[type="checkbox"]:checked+label::after,
+        .checkbox-primary input[type="radio"]:checked+label::after {
             margin-top: 7px;
         }
     </style>

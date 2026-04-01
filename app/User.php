@@ -76,7 +76,7 @@ class User extends Authenticatable
         return $codigo_final;
     }
 
-    public static function send_mail_register($user) {
+    public static function send_mail_register($user,$correo) {
 
         $personal = $user->personal;
         $codigo = User::codigo_mensaje();
@@ -90,7 +90,7 @@ class User extends Authenticatable
         $encryption = env('MAIL_ENCRYPTION');
         $yourEmail = env('MAIL_USERNAME');
         $yourPassword = env('MAIL_PASSWORD');
-        $sendto = $user->correo;
+        $sendto = $correo;
         $titulo = 'Sistema-Codigo Confirmacion';
 
         $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
@@ -101,6 +101,11 @@ class User extends Authenticatable
         }else{
             return "500";
         }
+    }
 
+    public static function updated_personal($personal_id){
+        $personal = Personal::find($personal_id);
+        $personal->usuario_registrado = 1;
+        $personal->save();
     }
 }

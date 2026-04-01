@@ -7,11 +7,11 @@
 @section('content')
 
 
-    <form method="POST" action="{{ route('usuario.asignar_permiso', 1) }}">
+    {{-- <form method="POST" action="{{ route('usuario.asignar_permiso', 1) }}">
         @csrf
         <input type="hidden" name="permisos" id="" value="Superadministrador">
         <input type="submit" class="btn btn-s-m btn-success" value="Activar" />
-    </form>
+    </form> --}}
 
     <div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom: 0px">
         <div class="row">
@@ -92,7 +92,7 @@
                                         <div class="scrooll-table-responsive">
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered dataTables-example-boleta"
+                                            <table class="table table-striped table-bordered dataTables-example-usuarios"
                                                 style="min-width: 982px">
                                                 <thead>
                                                     <tr>
@@ -105,7 +105,8 @@
                                                         <th>Correo</th>
                                                         <th>Celular</th>
                                                         <th>Almacen</th>
-                                                        <th>Acciones</th>
+                                                        <th>Ver</th>
+                                                        <th>Informacion</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -119,17 +120,44 @@
                                                             <td>{{ $usuario->getRoleNames()->first() }}</td>
                                                             <td>{{ $usuario->email }}</td>
                                                             <td>{{ $usuario->celular ?? $usuario->personal->celular }}</td>
-                                                            <td>{{ $usuario->almacen->nombre }}</td>
+                                                            <td>{{ $usuario->almacen?->nombre ?? 'Todos' }}</td>
                                                             <td>
-                                                                <button class="btn btn-primary btn-sm"><i
-                                                                        class="fa fa-eye"></i></button>
-                                                                @if ($usuario->estado == 1)
-                                                                    <button class="btn btn-sm btn-primary"><i
-                                                                            class="fa fa-check"></i></button>
+                                                                @if ($usuario->estado_validacion == 1)
+                                                                    <button class="btn btn-primary btn-sm"><i
+                                                                            class="fa fa-eye"></i></button>
                                                                 @else
-                                                                    <button class="btn btn-sm btn-danger"><i
-                                                                            class="fa fa-close"></i></button>
+                                                                    <a type="button" onclick="modal_codigo($usuario->id)" id="btn-modal_submit_codigo"
+                                                                        class="btn btn-info">
+                                                                        <i class="fa fa-plus"></i>
+                                                                    </a>
                                                                 @endif
+                                                            </td>
+                                                            <td>
+                                                                @if ($usuario->estado_validacion == 1)
+                                                                    {{-- Si está validad  --}}
+                                                                    @if ($usuario->estado == 1)
+                                                                        <button class="btn btn-info btn-circle btn-sm"
+                                                                            title="Activo"><i
+                                                                                class="fa fa-check"></i></button>
+                                                                    @else
+                                                                        <button class="btn btn-danger btn-circle btn-sm"
+                                                                            title="Inactivo"><i
+                                                                                class="fa fa-times"></i></button>
+                                                                    @endif
+                                                                @else
+                                                                    <button class="btn btn-danger btn-circle btn-sm"
+                                                                        title="Inactivo"><i
+                                                                            class="fa fa-times"></i></button>
+                                                                            
+                                                                @endif
+                                                                {{-- @if ($usuario->estado == 1)
+                                                                    <button class="btn btn-info btn-circle btn-sm"
+                                                                        title="Activo"><i class="fa fa-check"></i></button>
+                                                                @else
+                                                                    <button class="btn btn-danger btn-circle btn-sm"
+                                                                        title="Inactivo"><i
+                                                                            class="fa fa-times"></i></button>
+                                                                @endif --}}
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -148,6 +176,77 @@
 
     @include('configuracion_general.usuario.create')
 
+    <div class="modal fade" id="modal_submit_codigo" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width: 550px">
+                    <div style="padding-left: 15px;padding-right: 15px;">
+                        {{-- ccccccccccccccccc --}}
+                        <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
+
+                            <form action="{{ route('usuario.envio_codigo', $usuario->id) }}"
+                                enctype="multipart/form-data" method="post">
+                                @csrf
+                                <fieldset>
+                                    <legend style="height: 240px;">
+                                        <img src="#" id="imagen_codigo"
+                                            style="width: 200px;height: 200px;border-radius: 5px">
+                                        <br>A B
+                                        <p style="font-size: 15px">
+                                            Nombre
+                                        </p>
+                                    </legend>
+                                    <div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label">Correo:</label>
+                                                <div class="col-sm-6">
+                                                    <input type="text" class="form-control" name="correo"
+                                                        value="{{ $usuario->email }}">
+                                                </div>
+                                                <div class="col-sm-3" style="padding-bottom: 15px">
+                                                    <input type="submit" name="accion" class="btn btn-s-m btn-info"
+                                                        value="Cambiar Correo">
+                                                </div>
+                                                <label class="col-sm-3 col-form-label">Codigo
+                                                    de
+                                                    Confirmacion:</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" name="cod_1"
+                                                        maxlength="3">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" name="cod_2"
+                                                        maxlength="3">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" name="cod_3"
+                                                        maxlength="3">
+                                                </div>
+
+                                                <div class="col-sm-12">
+                                                    <p>No me ha llegado el Codigo de confirmacion
+                                                        <input type="submit" name="accion" class="reenviar"
+                                                            value="Reenviar Codigo"
+                                                            style="border: none;background: #ff000000;">
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <input type="submit" name="accion" class="btn btn-s-m btn-info"
+                                                        value="Validar">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
 
     <div class="wrapper wrapper-content animated fadeInRight">
         @if ($errors->any())
@@ -170,8 +269,6 @@
                 </div>
             </div>
         @endif
-
-
 
 
 
@@ -222,7 +319,7 @@
                                                                         <td>{{ $usuario->name }}</td>
                                                                         <td>{{ $usuario->email }}</td>
                                                                         <td>{{ $usuario->celular }}</td>
-                                                                        <td>{{ $usuario->almacen->nombre }}</td>
+                                                                        <td>{{ $usuario->almacen?->nombre }}</td>
                                                                         @if ($usuario->estado == 1)
                                                                             <td>Activo</td>
                                                                         @elseif($usuario->estado == 0)
@@ -246,7 +343,6 @@
                                                                                         <div class="modal-content">
                                                                                             <div
                                                                                                 style="padding-left: 15px;padding-right: 15px;">
-                                                                                                {{-- ccccccccccccccccc --}}
                                                                                                 <div class="ibox-content"
                                                                                                     style="padding-left: 0px;padding-right: 0px;"
                                                                                                     align="center">
@@ -287,8 +383,8 @@
                                                                                                                             class="form-control"
                                                                                                                             name="almacen_id">
                                                                                                                             <option
-                                                                                                                                value="{{ $usuario->almacen->id }}">
-                                                                                                                                {{ $usuario->almacen->nombre }}
+                                                                                                                                value="{{ $usuario->almacen?->id }}">
+                                                                                                                                {{ $usuario->almacen?->nombre }}
                                                                                                                             </option>
                                                                                                                             <option
                                                                                                                                 value=""
@@ -806,7 +902,7 @@
         .switch-button {
             display: inline-block;
             /* padding-top: 9px;
-                                            padding-right: 30px; */
+                                                        padding-right: 30px; */
             padding: 9px 40px;
         }
 
@@ -844,6 +940,146 @@
             transform: translateX(1rem);
         }
     </style>
+    <style>
+        .table-responsive {
+            overflow: visible !important;
+        }
+
+        select.form-control:not([size]):not([multiple]) {
+            height: 100%;
+        }
+
+        .nav-tabs.dropdown-menu {
+            left: -112px !important;
+            /* padding: 10px 5px !important; */
+        }
+
+        #DataTables_Table_0_wrapper {
+            /* padding-right: 0px; */
+        }
+
+        .table {
+            width: 100% !important;
+        }
+
+        .ibox-content>.row {
+            margin: auto;
+        }
+
+        .nav-tabs-right {
+            margin-left: auto;
+        }
+
+        .search-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .tab-pane.active.show {
+            border-right: 1px;
+            border-left: 1px;
+            border-bottom: 1px;
+        }
+
+        .btn-link {
+            width: 100%;
+        }
+
+        /* OCULTANDO LO DE ORGANIZAR*/
+        /* Ver (números) */
+        div.dataTables_length {
+            display: none;
+        }
+
+        /* El Buscar */
+        div.dataTables_filter {
+            display: none;
+        }
+
+        /* CSV, Excel, PDF, Print */
+        div.dt-buttons {
+            display: none;
+        }
+
+        .dropdown-menu {
+            left: 70px;
+            padding: 20px 0;
+        }
+
+        /* PANTALLA TABLET */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .row>.col-md-6 {
+                margin-bottom: 12px;
+            }
+        }
+
+        .slick-slider {
+            margin-bottom: 0px;
+        }
+
+        .slick-prev {
+            left: 20px;
+        }
+
+        .slick-next {
+            right: 20px;
+        }
+
+        .slick-slider>button {
+            z-index: 9999;
+        }
+
+        .slick-dots {
+            display: none !important;
+        }
+
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        #DataTables_Table_0_wrapper {
+            padding-bottom: 0px;
+        }
+
+        .column-actions {
+            /* display: inline-flex; */
+        }
+
+        .wrapper-hover {
+            position: relative;
+            display: inline-block;
+        }
+
+        .contenedor {
+            display: none;
+            position: absolute;
+            top: -80px;
+            left: 20px;
+            z-index: 20;
+        }
+
+        .wrapper-hover:hover .contenedor {
+            display: block;
+        }
+
+        .mini-overlay {
+            position: relative;
+            width: 140px;
+            background-color: #fff;
+            color: #000;
+            font-size: 12px;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .info_overlay {
+            text-decoration: underline;
+            font-weight: bold;
+        }
+    </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -879,12 +1115,13 @@
 
     <script>
         $(document).ready(function() {
-            $('.dataTables-usu').DataTable({
+            $('.dataTables-example-usuarios').DataTable({
                 pageLength: 25,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: []
             });
+            $('#tab-1-tab').addClass('active');
         });
         //Select2
         $(document).ready(function() {
@@ -894,6 +1131,25 @@
         $('#btn-nuevo-usuario').on('click', function() {
             $('#create_usuario').modal('show');
         });
+
+        function modal_codigo(id_user){
+            $('#modal_submit_codigo').modal('show');
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.getUserData') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'id': id_user
+                },
+                success: function(user) {
+                    console.log(user);
+                    // $('#imagen_codigo').att('src', `{{ asset('/profile/images/') }}`+user.avatar);
+                }
+            });
+            //  var imagen = 
+            
+            // 
+        }
 
         $('.select2-personal').select2({
             placeholder: "Seleccionar Personal"
@@ -1006,10 +1262,10 @@
             lector.readAsDataURL(archivo);
         }
 
-        $('#registrar_terminar').on('click', function(e){
+        $('#registrar_terminar').on('click', function(e) {
             var pass1 = $('#password').val();
             var pass2 = $('#password_2').val();
-            if(pass1 != pass2){
+            if (pass1 != pass2) {
                 toastr.warning("", 'Las contraseñas no son iguales', {
                     timeOut: 3000
                 });
@@ -1017,10 +1273,10 @@
             }
             $('#send_true').click();
         });
-        $('#permisos_terminar').on('click', function(e){
+        $('#permisos_terminar').on('click', function(e) {
             var pass1 = $('#password').val();
             var pass2 = $('#password_2').val();
-            if(pass1 != pass2){
+            if (pass1 != pass2) {
                 toastr.warning("", 'Las contraseñas no son iguales', {
                     timeOut: 3000
                 });
@@ -1138,7 +1394,6 @@
                 toastr.success("{{ session('success') }}", '', {
                     timeOut: 3000
                 });
-                
             @endif
 
             @if (session('error'))
