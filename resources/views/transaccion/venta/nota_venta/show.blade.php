@@ -80,41 +80,7 @@
                     </div>
 
                     <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null)
-                            <div class="d-flex align-items-center" style="overflow: hidden;">
-                                <div id="btn-slider-nota-venta"
-                                    style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
-
-                                    <button class="btn-editar btn btn-warning"
-                                            onclick="click_editar()"
-                                            data-toggle="tooltip"
-                                            data-placement="bottom"
-                                            data-original-title="Editar nota de venta"
-                                            style="white-space: nowrap; margin-right: 4px;">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-
-                                    <button class="btn-no-editar no_mostrar btn btn-warning"
-                                            onclick="click_cancelar_editar()"
-                                            data-toggle="tooltip"
-                                            data-placement="bottom"
-                                            data-original-title="Cancelar edición"
-                                            style="white-space: nowrap; margin-right: 4px;">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </div>
-
-                                <button type="button"
-                                        id="btn-toggle-nota-venta"
-                                        onclick="toggleBtnsNotaVenta()"
-                                        class="btn btn-default"
-                                        style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                                    <i class="fa fa-chevron-right" id="btn-arrow-nota-venta"></i>
-                                </button>
-                            </div>
-
-                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
-                        @endif
+                        
 
                         <a href="{{ route('nota_venta_pdf', $nota_venta->id) }}"
                         class="btn btn-success"
@@ -168,9 +134,27 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
+                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null)
+                            <button class="btn-editar btn btn-warning"
+                                    onclick="click_editar()"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    data-original-title="Editar nota de venta"
+                                    style="white-space: nowrap; margin-right: 4px;">
+                                <i class="fa fa-pencil"></i>
+                            </button>
 
-                    <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                            <button class="btn-no-editar no_mostrar btn btn-warning"
+                                    onclick="click_cancelar_editar()"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    data-original-title="Cancelar edición"
+                                    style="white-space: nowrap; margin-right: 4px;">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        @endif
+                    </div>
+                    <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 18px;">
                         <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                             style="text-align: none; padding-right: 0; padding-left: 0;">
                             @csrf
@@ -900,22 +884,5 @@
 
             }
         });
-    </script>
-    <script>
-        function toggleBtnsNotaVenta() {
-            const slider = document.getElementById('btn-slider-nota-venta');
-            const arrow = document.getElementById('btn-arrow-nota-venta');
-            const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
-
-            if (isOpen) {
-                slider.style.width = '0';
-                arrow.classList.remove('fa-chevron-left');
-                arrow.classList.add('fa-chevron-right');
-            } else {
-                slider.style.width = slider.scrollWidth + 'px';
-                arrow.classList.remove('fa-chevron-right');
-                arrow.classList.add('fa-chevron-left');
-            }
-        }
     </script>
 @endsection

@@ -59,7 +59,7 @@
                                 {{-- Flecha toggle --}}
                                 <button id="nc-toggle" onclick="toggleNC()" class="btn btn-default"
                                     style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                                    <i class="fa fa-chevron-right" id="nc-arrow"></i>
+                                    <i class="fa fa-chevron-left" id="nc-arrow"></i>
                                 </button>
                             </div>
                             {{-- Divisor --}}
@@ -551,12 +551,12 @@
 
             if (ncAbierto) {
                 slider.style.width = '0';
-                arrow.classList.remove('fa-chevron-left');
-                arrow.classList.add('fa-chevron-right');
-            } else {
-                slider.style.width = '42px';
                 arrow.classList.remove('fa-chevron-right');
                 arrow.classList.add('fa-chevron-left');
+            } else {
+                slider.style.width = '42px';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
             }
 
             ncAbierto = !ncAbierto;
