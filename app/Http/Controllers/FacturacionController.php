@@ -1705,12 +1705,41 @@ class FacturacionController extends Controller
         $facturacion_registro = Facturacion_registro::where('facturacion_id', $id)->get();
         $empresa = Empresa::first();
         $moneda = Moneda::where('id', $facturacion->moneda_id)->first();
+        $simbolo = $moneda->simbolo;
         $igv = Igv::first();
         $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
-        $pdf=PDF:: loadView('transaccion.venta.facturacion.ticket',
-        compact('facturacion', 'facturacion_registro', 'empresa', 'igv', 'moneda', 'textoQR', 'qrCode'))
-        ->setPaper([0,0,170.08,500], 'portrait');
+
+        // Altura dinámica según cantidad de ítems
+        $totalItems  = $facturacion_registro->count();
+        $anchoPapel  = 170;
+        $alturaItem  = 18;
+        $alturaPapel = 320 + ($totalItems * $alturaItem) + 220;
+
+
+        $pdf = PDF::loadView(
+            'transaccion.venta.facturacion.ticket',
+            compact(
+                'facturacion',
+                'facturacion_registro',
+                'empresa',
+                'igv',
+                'moneda',
+                'qrCode',
+                'textoQR',
+
+
+            )
+        )
+            ->setPaper([0, 0, $anchoPapel, $alturaPapel], 'portrait')
+            ->setOptions([
+                'dpi'                  => 96,
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'Courier',
+                'isPhpEnabled'         => true,
+            ]);
+
         return $pdf->stream('ticket-' . $facturacion->codigo_fac . '.pdf');
     }
 

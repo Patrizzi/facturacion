@@ -630,17 +630,45 @@ class FacturacionMController extends Controller
     }
     public function ticket(Request $request,$id){
 
-        $facturacion=Facturacion_m::find($id);
-        $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
-        $empresa=Empresa::first();
-        $moneda = Moneda::where('id',$facturacion->moneda_id)->first();
-        $igv=Igv::first();
-        $textoQR = $this->generarTextoQRFacturaM($facturacion, $empresa, $igv);
+        $facturacion_m = Facturacion_m::find($id);
+        $facturacion_m_registro = Facturacion_registro_m::where('facturacion_m_id', $id)->get();
+        $empresa = Empresa::first();
+        $moneda = Moneda::where('id', $facturacion_m->moneda_id)->first();
+        $simbolo = $moneda->simbolo;
+        $igv = Igv::first();
+        $textoQR = $this->generarTextoQRFactura($facturacion_m, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
-        $pdf=PDF:: loadView('transaccion.venta.facturacion.facturacion_manual.ticket',
-        compact('facturacion', 'facturacion_registro', 'empresa', 'igv', 'moneda', 'textoQR', 'qrCode'))
-        ->setPaper([0,0,170.08,500], 'portrait');
-        return $pdf->stream('ticket-' . $facturacion->codigo_fac. '.pdf');
+         // Altura dinámica según cantidad de ítems
+        $totalItems  = $facturacion_m_registro->count();
+        $anchoPapel  = 170;
+        $alturaItem  = 18;
+        $alturaPapel = 320 + ($totalItems * $alturaItem) + 220;
+
+
+        $pdf = PDF::loadView(
+            'transaccion.venta.facturacion.facturacion_manual.ticket',
+            compact(
+                'facturacion_m',
+                'facturacion_m_registro',
+                'empresa',
+                'igv',
+                'moneda',
+                'qrCode',
+                'textoQR',
+
+
+            )
+        )
+            ->setPaper([0, 0, $anchoPapel, $alturaPapel], 'portrait')
+            ->setOptions([
+                'dpi'                  => 96,
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'Courier',
+                'isPhpEnabled'         => true,
+            ]);
+
+        return $pdf->stream('ticket-' . $facturacion_m->codigo_fac . '.pdf');
     }
     public function edit($id)
     {
@@ -1225,7 +1253,7 @@ class FacturacionMController extends Controller
      * @param \App\Igv $igv
      * @return string
      */
-    private function generarTextoQRFacturaM($factura, $empresa, $igv)
+    private function generarTextoQRFactura($factura, $empresa, $igv)
     {
         try {
             $ruc = $empresa->ruc ?? '';
