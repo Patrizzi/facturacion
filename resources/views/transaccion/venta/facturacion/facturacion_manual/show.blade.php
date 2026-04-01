@@ -66,7 +66,7 @@
                                 {{-- Flecha toggle --}}
                                 <button id="nc-toggle" onclick="toggleNC()" class="btn btn-default"
                                     style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                                    <i class="fa fa-chevron-right" id="nc-arrow"></i>
+                                    <i class="fa fa-chevron-left" id="nc-arrow"></i>
                                 </button>
                             </div>
                             {{-- Divisor --}}
@@ -111,7 +111,7 @@
                             </button>
                         @endif
                     </div>
-                    <div  id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                    <div  id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 15px;">
                             <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                                 style="text-align: none;padding-right: 0;padding-left: 0;">
                                 @csrf
@@ -726,12 +726,12 @@
 
             if (ncAbierto) {
                 slider.style.width = '0';
-                arrow.classList.remove('fa-chevron-left');
-                arrow.classList.add('fa-chevron-right');
-            } else {
-                slider.style.width = '42px';
                 arrow.classList.remove('fa-chevron-right');
                 arrow.classList.add('fa-chevron-left');
+            } else {
+                slider.style.width = '42px';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
             }
 
             ncAbierto = !ncAbierto;

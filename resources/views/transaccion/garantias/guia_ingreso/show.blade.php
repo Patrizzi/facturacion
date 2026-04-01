@@ -84,30 +84,6 @@
             </div>
 
             <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                @if($garantia_guia_ingreso->estado == 1 && $garantia_guia_ingreso->egresado == 0)
-                    <div class="d-flex align-items-center" style="overflow: hidden;">
-                        <div id="btn-slider-ingreso"
-                            style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
-                            <a href="{{ route('garantia_guia_ingreso.edit', $garantia_guia_ingreso->id) }}"
-                            class="btn btn-info"
-                            data-toggle="tooltip"
-                            data-placement="bottom"
-                            data-original-title="Editar guía de ingreso"
-                            style="white-space: nowrap; margin-right: 4px;">
-                                <i class="fa fa-edit fa-lg"></i>
-                            </a>
-                        </div>
-                        <button type="button"
-                                id="btn-toggle-ingreso"
-                                onclick="toggleBtnsIngreso()"
-                                class="btn btn-default"
-                                style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                            <i class="fa fa-chevron-right" id="btn-arrow-ingreso"></i>
-                        </button>
-                        <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
-                    </div>
-                @endif
-
                 <form class="btn" style="padding: 0;" action="{{ route('pdf_ingreso' ,$garantia_guia_ingreso->id) }}">
                     <input type="text" name="archivo" hidden value="{{ $garantia_guia_ingreso->orden_servicio }}">
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
@@ -148,9 +124,20 @@
                         </a>
                     </div>
                 </div>
+
+                @if($garantia_guia_ingreso->estado == 1 && $garantia_guia_ingreso->egresado == 0)
+                    <a href="{{ route('garantia_guia_ingreso.edit', $garantia_guia_ingreso->id) }}"
+                    class="btn btn-info"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    data-original-title="Editar guía de ingreso"
+                    style="white-space: nowrap; margin-right: 4px;">
+                        <i class="fa fa-edit fa-lg"></i>
+                    </a>
+                @endif
             </div>
 
-            <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+            <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 18px;">
                 <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                     style="text-align: none;padding-right: 0;padding-left: 0;">
                     @csrf
@@ -440,12 +427,12 @@ function printExternal(url) {
 
         if (isOpen) {
             slider.style.width = '0';
-            arrow.classList.remove('fa-chevron-left');
-            arrow.classList.add('fa-chevron-right');
-        } else {
-            slider.style.width = slider.scrollWidth + 'px';
             arrow.classList.remove('fa-chevron-right');
             arrow.classList.add('fa-chevron-left');
+        } else {
+            slider.style.width = slider.scrollWidth + 'px';
+            arrow.classList.remove('fa-chevron-left');
+            arrow.classList.add('fa-chevron-right');
         }
     }
 </script>
