@@ -748,14 +748,44 @@ class BoletaMController extends Controller
     {
         //
     }
-    public function ticket(Request $request,$id){
+        public function ticket(Request $request, $id)
+    {
+        $boleta          = Boleta_m::find($id);
+        $boleta_registro = Boleta_registros_m::where('boleta_m_id', $id)->get();
+        $empresa         = Empresa::first();
+        $moneda          = Moneda::where('id', $boleta->moneda_id)->first();
+        $igv             = Igv::first();
+        $textoQR         = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+        $qrCode          = $this->generarImagenQR($textoQR);
 
-        $boleta=Boleta_m::find($id);
-        $boleta_registro= Boleta_registros_m::where('boleta_m_id',$id)->get();
-        $empresa=Empresa::first();
-        $moneda = Moneda::where('id',$boleta->moneda_id)->first();
-        $igv=Igv::first();
-        return view('transaccion.venta.boleta.boleta_manual.ticket',compact('boleta','boleta_registro','empresa','igv','moneda'));
+        // Altura dinámica según cantidad de ítems
+        $totalItems  = $boleta_registro->count();
+        $anchoPapel  = 170;
+        $alturaItem  = 18;
+        $alturaPapel = 320 + ($totalItems * $alturaItem) + 220;
+
+        $pdf = PDF::loadView(
+            'transaccion.venta.boleta.boleta_manual.ticket',
+            compact(
+                'boleta',
+                'boleta_registro',
+                'empresa',
+                'igv',
+                'moneda',
+                'qrCode',
+                'textoQR'
+            )
+        )
+            ->setPaper([0, 0, $anchoPapel, $alturaPapel], 'portrait')
+            ->setOptions([
+                'dpi'                  => 96,
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'Courier',
+                'isPhpEnabled'         => true,
+            ]);
+
+        return $pdf->stream('ticket-' . $boleta->codigo_boleta . '.pdf');
     }
 
     //FUNCION PARA COMPROBANTES

@@ -1706,7 +1706,12 @@ class FacturacionController extends Controller
         $empresa = Empresa::first();
         $moneda = Moneda::where('id', $facturacion->moneda_id)->first();
         $igv = Igv::first();
-        return view('transaccion.venta.facturacion.ticket', compact('facturacion', 'facturacion_registro', 'empresa', 'igv', 'moneda'));
+        $textoQR = $this->generarTextoQRFactura($facturacion, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
+        $pdf=PDF:: loadView('transaccion.venta.facturacion.ticket',
+        compact('facturacion', 'facturacion_registro', 'empresa', 'igv', 'moneda', 'textoQR', 'qrCode'))
+        ->setPaper([0,0,170.08,500], 'portrait');
+        return $pdf->stream('ticket-' . $facturacion->codigo_fac . '.pdf');
     }
 
     public function anulacion(Request $request)

@@ -23,6 +23,7 @@ class UsersTableSeeder extends Seeder
            'email_creado' => 0,
            'almacen_id' => 1
        ]);
+       
        //   DB::table('users')->insert([
        //     'id' => 2 ,
        //     'name' => 'Administrador',

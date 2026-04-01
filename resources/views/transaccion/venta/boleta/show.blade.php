@@ -71,7 +71,7 @@
                                 data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i></button>
                         </form>
 
-                        <a href="{{ route('boleta_manual.ticket', $boleta->id) }}" class="btn btn-info" target="_blank">
+                        <a href="{{ route('boleta.ticket', $boleta->id) }}" class="btn btn-info" target="_blank">
                             <i class="fa fa-ticket fa-lg"></i>
                         </a>
 
