@@ -1484,3 +1484,8 @@ Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoC
 
 Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.garantia_informe_tecnico.multiple');
+
+
+// Rutas para show informe tecnico de Servicio tecnico
+Route::get('/servicio-tecnico/informe-tecnico/print/{id}', 'ServicioGuiaInformeTecnicoController@print')->name('st_informe_tecnico.print');
+

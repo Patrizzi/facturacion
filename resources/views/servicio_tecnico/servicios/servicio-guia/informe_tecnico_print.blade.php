@@ -1,103 +1,13 @@
-@extends('layout')
-
-@section('title', 'Ver Informe Técnico de Servicio')
-@section('breadcrumb', 'Ver Informe Técnico de Servicio')
-@section('breadcrumb2', 'Informe Técnico')
-@section('href_accion', route('servicio-guias.index'))
-@section('value_accion', 'Atrás')
-
-@section('button2', 'Inicio')
-@section('config', route('servicio-guias.index'))
-
-@section('content')
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <!-- Encabezado -->
-        <div class="ibox">
-            <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
-                <div style="margin-top: 5px; margin-bottom: 8px; margin-left: 10px;">
-                    <button class="btn btn-link no-hover-icon" type="submit" style="cursor: pointer;">
-                        <i class="fa fa-arrow-left text-muted"></i>
-                    </button>
-                </div>
-                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
-                    <a class="collapse-link">
-                        <i class="fa fa-chevron-up text-muted"></i>
-                    </a>
-                    <a class="" href="">
-                        <!-- Agregar routes -->
-                        <i class="fa fa-times text-muted"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="ibox-content">
-                <div class="row align-items-center tooltip-demo">
-                    <div class="col-12 col-md-3">
-                        <h3 style="margin: 0;">{{ $informeTecnico->servicioGuia->nro_servicio_guia }}</h3>
-                        <strong
-                            style="margin: 0;">{{ $informeTecnico->servicioGuia->cliente->documento_identificacion ?? 'DNI' }}
-                            :</strong>{{ $informeTecnico->servicioGuia->cliente->numero_documento }}
-                    </div>
-                    <div class="col-12 col-md-4 text-center">
-                        <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
-                            INFORME TÉCNICO
-                        </h2>
-                    </div>
-                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                        <a href="" class="btn btn-secondary" target="_blank" data-toggle="tooltip"
-                            data-placement="bottom" data-original-title="Impresión Libre">
-                            <i class="fa fa-share-alt"></i>
-                        </a>
-                        <form class="btn" style="padding: 0;" action="">
-                            <input type="text" name="name" maxlength="50" hidden value="">
-                            <input type="text" hidden name="firma" value="0">
-                            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
-                                data-original-title="Descargar PDF">
-                                <i class="fa fa-file-pdf-o fa-lg"></i>
-                            </button>
-                        </form>
-<a class="btn btn-success" href="{{ route('st_informe_tecnico.print', $informeTecnico->id) }}" target="_blank" data-toggle="tooltip"
-    data-placement="bottom" data-original-title="Imprimir">
-    <i class="fa fa-print fa-lg"></i>
-</a>
-                        @if (Auth::user()->email_creado == 1)
-                            <form action="" method="post" style="padding-right: 0; padding-left: 0;" class="btn">
-                                @csrf
-                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
-                                    data-placement="bottom" formtarget="_blank" data-original-title="Enviar por correo">
-                                    <i class="fa fa-envelope fa-lg"></i>
-                                </button>
-                            </form>
-                        @endif
-                        <div style="position: relative; display: inline-block;">
-                            <div id="auto" onclick="divAuto()">
-                                <a class="btn btn-success" style="background: green; border-color: green;"
-                                    data-toggle="tooltip" data-placement="bottom" data-original-title="Enviar a">
-                                    <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
-                        <form action="" method="post" class="btn"
-                            style="text-align: none; padding-right: 0; padding-left: 0;">
-                            @csrf
-                            <input type="tel" name="numero" value="" />
-                            <input type="text" name="mensaje" id="texto_orden" hidden />
-                            <input type="text" hidden name="url" value="">
-                            <input type="text" name="name_sin_cambio" hidden value="" />
-                            <button type="submit" class="btn btn-success" style="background: green; border-color: green;"
-                                formtarget="_blank" data-toggle="tooltip" data-placement="bottom"
-                                data-original-title="Enviar por Whatsapp">
-                                <i class="fa fa-send fa-lg"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contenedor principal con cuadro blanco -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+       <!-- Contenedor principal con cuadro blanco -->
         <div class="row">
             <div class="col-lg-12" style="margin-top: -26px;">
                 <div class="ibox-content p-xl" style="margin-bottom: 2px;padding-bottom: 50px;">
@@ -256,4 +166,5 @@
         }
     </script>
 
-@endsection
+</body>
+</html>

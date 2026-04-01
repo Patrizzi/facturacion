@@ -233,7 +233,7 @@
                                 </thead>
                                 <tbody>
                                     <span hidden="hidden">{{ $i = 1 }} </span>
-                                    
+
                                         @foreach ($boleta_registro as $boletas_registros)
                                             <tr>
                                                 <td style="text-align:center">{{ $i }} </td>
@@ -269,8 +269,8 @@
                                                 <span hidden="hidden">{{ $i++ }}</span>
                                             </tr>
                                         @endforeach
-                                    
-                                    
+
+
                                         <td style="display: none">
                                             {{ $sub_total = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
                                             {{ $igv_p = $boleta->op_gravada * ($igv->igv_total / 100) }}
