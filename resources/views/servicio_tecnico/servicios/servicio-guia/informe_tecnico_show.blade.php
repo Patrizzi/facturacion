@@ -48,18 +48,19 @@
                             data-placement="bottom" data-original-title="Impresión Libre">
                             <i class="fa fa-share-alt"></i>
                         </a>
-                        <form class="btn" style="padding: 0;" action="">
-                            <input type="text" name="name" maxlength="50" hidden value="">
-                            <input type="text" hidden name="firma" value="0">
+                        <form class="btn" style="padding: 0;"
+                            action="{{ route('st_informe_tecnico.pdf', $informeTecnico->id) }}" method="GET">
+                            <input type="text" name="name" maxlength="50" hidden
+                                value="{{ $servicioGuia->nro_servicio_guia }}">
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
                                 data-original-title="Descargar PDF">
                                 <i class="fa fa-file-pdf-o fa-lg"></i>
                             </button>
                         </form>
-<a class="btn btn-success" href="{{ route('st_informe_tecnico.print', $informeTecnico->id) }}" target="_blank" data-toggle="tooltip"
-    data-placement="bottom" data-original-title="Imprimir">
-    <i class="fa fa-print fa-lg"></i>
-</a>
+                        <a class="btn btn-success" href="{{ route('st_informe_tecnico.print', $informeTecnico->id) }}"
+                            target="_blank" data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
+                            <i class="fa fa-print fa-lg"></i>
+                        </a>
                         @if (Auth::user()->email_creado == 1)
                             <form action="" method="post" style="padding-right: 0; padding-left: 0;" class="btn">
                                 @csrf
@@ -118,7 +119,7 @@
                                         <strong>Correo:</strong>&nbsp;
                                         {{ $informeTecnico->servicioGuia->cliente->email ??
                                             'No
-                                                                        especificado' }}<br>
+                                                                                                                especificado' }}<br>
                                         <strong>Dirección:</strong>&nbsp;
                                         {{ $informeTecnico->servicioGuia->cliente->direccion ?? 'No especificada' }}<br>
                                         <strong>Celular:</strong>&nbsp;
