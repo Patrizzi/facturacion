@@ -892,7 +892,7 @@ class ParameterCallController extends Controller
     }
 
     public function getUserData(Request $request){
-        $data = User::findorFail($request->id);
+        $data = User::with('personal','roles')->findorFail($request->id);
         return response()->json($data);
     }
 
@@ -901,5 +901,9 @@ class ParameterCallController extends Controller
         $ids = $rol->permissions()->pluck('id');
 
         return response()->json($ids);
+    }
+    public function getRolesXUserData(Request $request){
+        $rol = User::with('personal')->role($request->rol_id)->get();
+        return json_decode($rol);
     }
 }

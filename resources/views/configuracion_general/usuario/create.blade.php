@@ -47,14 +47,10 @@
                                             <div class="input-group">
                                                 <input type="password" class="form-control" name="password" id="password"
                                                 autocomplete="off" placeholder="******" required="required">
-                                                {{-- <input type="password" id="password" autocomplete="current-password"
-                                                    required name="password" placeholder="Ingresa tu contraseña"
-                                                    class="form-control @error('password') is-invalid @enderror"> --}}
                                                 <div class="input-group-append">
                                                     <span class="input-group-addon toggle-password"
                                                         onclick="togglePassword()">
                                                         <i class="fa fa-eye-slash" id="eye-icon"></i>
-                                                        <!-- Cambiado a "fa-eye-slash" -->
                                                     </span>
                                                 </div>
                                             </div>
@@ -65,13 +61,10 @@
                                             <div class="input-group">
                                                 <input type="password" class="form-control" name="password_2" id="password_2"
                                                 autocomplete="off" placeholder="******" required="required">
-                                                {{-- <input type="password" class="form-control" name="password" id="password"
-               a                                     autocomplete="off" placeholder="******" required="required"> --}}
                                                 <div class="input-group-append">
                                                     <span class="input-group-addon toggle-password"
                                                         onclick="togglePassword2()">
                                                         <i class="fa fa-eye-slash" id="eye-icon2"></i>
-                                                        <!-- Cambiado a "fa-eye-slash" -->
                                                     </span>
                                                 </div>
                                             </div>

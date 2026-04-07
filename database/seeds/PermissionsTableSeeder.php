@@ -374,6 +374,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'usuarios.personalizar_permisos', 'module' => 'configuracion_general', 'description' => 'Asignar Permisos Personalizados a un Usuario']);
         Permission::create(['name' => 'usuarios.editar', 'module' => 'configuracion_general', 'description' => 'Editar Datos de un Usuario']);
         Permission::create(['name' => 'usuarios.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar estado de un Usuario en el Sistema']);
+        Permission::create(['name' => 'usuarios.password', 'module' => 'configuracion_general', 'description' => 'Cambiar de contraseña a un Usuario en el Sistema']);
 
         Permission::create(['name' => 'roles.listar', 'module' => 'configuracion_general', 'description' => 'Listar Roles del Sistema']);
         Permission::create(['name' => 'roles.crear', 'module' => 'configuracion_general', 'description' => 'Crear Roles del Sistema']);
@@ -392,10 +393,10 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'alarma.estado', 'module' => 'configuracion_general', 'description' => 'Crear de Alarma para Comprobantes']);
 
         //Admin
-        $super_admin = Role::create(['name' => 'SuperAdministrador']);
-        $admin = Role::create(['name' => 'Administrador']);
-        $ventas = Role::create(['name' => 'Vendedor']);
-        $personalizado = Role::create(['name' => 'Personalizado']);
+        $super_admin = Role::create(['name' => 'SuperAdministrador','description'=>'Rol de SuperAdministrador, solo se deberia tener 1 por Sistema']);
+        $admin = Role::create(['name' => 'Administrador', 'description'=>'Rol de Administrador Total del Sistema']);
+        $ventas = Role::create(['name' => 'Vendedor', 'description'=>'Rol de Vendedor Total del Sistema']);
+        $personalizado = Role::create(['name' => 'Personalizado', 'description'=>'Rol para Personalizar en el Sistema']);
 
         $super_admin->givePermissionTo(Permission::all());
         $admin->givePermissionTo(Permission::all());

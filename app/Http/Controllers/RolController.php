@@ -16,7 +16,7 @@ class RolController extends Controller
 
     public function index(Request $request)
     {
-        $roles = Role::whereNotIn('id',[1,4])->where('type','!=', 1)->get();
+        $roles = Role::whereNotIn('id',[1])->where('type','!=', 1)->get();
 
         return view('configuracion_general.usuario.roles.index', compact('roles'));
     }
@@ -50,9 +50,27 @@ class RolController extends Controller
         // Asignarlos al rol
         $rol->syncPermissions($permisosValidos);
 
-        return $rol;
-        return $request;
+        return redirect()->back()->with('success', 'Rol y permisos asociados, creados correctamente');
     }
+
+    public function edit($id){
+        $rol = Role::findorFail($id);
+        $permisos = Permission::orderBy('id')
+            ->get()
+            ->groupBy('module') // nivel 1
+            ->map(function ($grupo) {
+                return $grupo->groupBy(function ($permiso) {
+                    return explode('.', $permiso->name)[0]; // nivel 2
+                });
+            });
+        $permisosRol = $rol->permissions->pluck('name')->toArray();
+        return view('configuracion_general.usuario.roles.edit', compact('rol','permisos','permisosRol'));
+    }
+
+    public function update(Request $request, $id){
+
+    }
+
 
     public function crearRol(Request $request)
     {

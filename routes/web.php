@@ -529,6 +529,7 @@ Route::group(
         Route::post('parameter_call/getPersonalData', 'ParameterCallController@getPersonalData')->name('pa.getPersonalData');
         Route::post('parameter_call/getPermissionxRolData', 'ParameterCallController@getPermissionxRolData')->name('pa.getPermissionxRolData');
         Route::post('parameter_call/getUserData', 'ParameterCallController@getUserData')->name('pa.getUserData');
+        Route::post('parameter_call/getRolesXUserData', 'ParameterCallController@getRolesXUserData')->name('pa.getRolesXUserData');
         
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
@@ -905,14 +906,18 @@ Route::group(
 
         //Usuarios
         Route::get('/usuario/lista', 'UsuarioController@lista')->name('usuario.lista');
-        // Route::get('usuario/crear/{id}', 'UsuarioController@crear')->name('usuario.crear');
-        Route::post('usuario/envio_codigo/{id}', 'UsuarioController@envio_codigo')->name('usuario.envio_codigo');
-        Route::post('usuario/activar/{id}', 'UsuarioController@activar')->name('usuario.activar');
+        Route::post('usuario/validar_cuenta', 'UsuarioController@validar_cuenta')->name('usuario.validar_cuenta');
+        Route::post('usuario/change_password', 'UsuarioController@change_password')->name('usuario.change_password');
+        // Route::post('usuario/activar/{id}', 'UsuarioController@activar')->name('usuario.activar');
         Route::get('usuario/permiso/{id}', 'UsuarioController@permiso')->name('usuario.permiso');
         Route::post('usuario/permisos/asignar/{id}', 'UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
         Route::post('usuario/permisos/delegar/{id}', 'UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
+
         Route::resource('/usuario', 'UsuarioController')->except(['create']);
         Route::post('usuario/crear', 'UsuarioController@create')->name('usuario.create');
+        Route::post('usuario/codigo_nuevo_correo/{id}', 'UsuarioController@codigo_nuevo_correo')->name('usuario.codigo_nuevo_correo');
+        
+        
         Route::post('usuario/permiso_personalizado', 'UsuarioController@permiso_personalizado')->name('usuario.permiso_personalizado');
         
         Route::get('/perfil', 'UsuarioController@perfil')->name('usuario.perfil');
@@ -921,8 +926,8 @@ Route::group(
         //Roles y Permisos
         Route::resource('/roles', 'RolController');
         
-        Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
-        Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
+        // Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
+        // Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
         Route::get('/gestRol/{rol_id}', [RolController::class, 'gestionarRol'])->name('roles.gestRol');
         Route::put('/gestRol/asignarPermisos/{rol_id}', [RolController::class, 'asignarPermisos'])->name('roles.asignarPermisos');
         Route::put('/gestRol/removerPermiso/{rol_id}/{permiso_id}', [RolController::class, 'removerPermiso'])->name('roles.removerPermiso');

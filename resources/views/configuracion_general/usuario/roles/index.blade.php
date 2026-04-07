@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Usuario')
+@section('title', 'Roles del Usuarios')
 @section('href_accion', route('usuario.lista'))
 @section('value_accion', 'Agregar')
 @section('button2', 'Atras')
@@ -91,7 +91,7 @@
                                         <div class="scrooll-table-responsive">
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered dataTables-example-boleta"
+                                            <table class="table table-striped table-bordered dataTables-example-roles"
                                                 style="min-width: 982px">
                                                 <thead>
                                                     <tr>
@@ -100,6 +100,7 @@
                                                         </th>
                                                         <th>Nombre del Rol</th>
                                                         <th>Usuarios Asignados</th>
+                                                        <th>Descripcion</th>
                                                         <th>Acciones</th>
                                                     </tr>
                                                 </thead>
@@ -110,7 +111,20 @@
                                                                 <input type="checkbox">
                                                             </td>
                                                             <td>{{ $rol->name }}</td>
-                                                            <td></td>
+                                                            <td>{{ $rol->users->count() }}</td>
+                                                            <td>{{ $rol->description }}</td>
+                                                            <td>
+                                                                {{-- <button class="btn btn-primary" data-target=""><i class="fa fa-pencil"></i></button> --}}
+                                                                <a
+                                                                    @if ($rol->id != 2) class="btn btn-primary"  href="{{ route('roles.edit', $rol->id) }}" @else class="btn btn-primary disabled" href="#" @endif>
+                                                                    <i st class="fa fa-pencil"></i>
+                                                                </a>
+                                                                <a href="#modal-usuarios-roles" class="btn btn-secondary modal_usuarios_rol"
+                                                                    data-toggle="modal" title="Usuarios"
+                                                                    data-ids="{{ $rol->id }}" data-name="{{ $rol->name }}">
+                                                                    <i class="fa fa-user"></i>
+                                                                </a>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
@@ -127,14 +141,37 @@
     </div>
 
     {{-- @include('configuracion_general.usuario.roles.create') --}}
+    <!-- modal - Familias -->
+    <div id="modal-usuarios-roles" class="modal fade bd-example-modal-lg" style="display: none;" aria-modal="true"
+        data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel6">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="staticBackdropLabel6">Usuarios pertenecientes al Rol: <strong
+                            id="rols_name"></strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="lista_roles" class="row">
 
-    <style>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- <style>
         @media (min-width: 992px) {
             .modal-lg {
                 max-width: 90%;
             }
         }
-    </style>
+    </style> --}}
     <style>
         .table-responsive {
             overflow: visible !important;
@@ -291,7 +328,7 @@
 
     <script>
         $(document).ready(function() {
-            $('.dataTables-example-usuarios').DataTable({
+            $('.dataTables-example-roles').DataTable({
                 pageLength: 25,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
@@ -339,5 +376,51 @@
                     .trigger('change');
             });
         }
+
+        $('.modal_usuarios_rol').on('click', function() {
+            $('#lista_roles').empty();
+            let rol_id = $(this).data('ids');
+            let rol_nam = $(this).data('name');
+            $('#rols_name').html(rol_nam);
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.getRolesXUserData') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'rol_id': rol_id
+                },
+                success: function(msg) {
+                    let html = '';
+                    if (!msg || msg.length === 0) {
+                        $('#lista_roles').html('<div class="col-sm-12"><h3 class="text-muted text-center">No hay registros</h3></div>');
+                        return;
+                    }
+
+                    msg.forEach(function(item) {
+                        html += `
+                            
+                            <div class="col-md-6 mb-12">
+                                <div class="card shadow-sm border-0 h-100">
+                                    <div class="card-body d-flex align-items-center" style="column-gap: 5px ">
+                                        <div class="me-3">
+                                            <i class="fa fa-user-circle fa-2x text-primary"></i>
+                                        </div>
+
+                                        <!-- TEXTO -->
+                                        <div>
+                                            <h4 class="mb-0">${item.personal.full_name}</h4>
+                                            <small class="text-muted">ID: ${item.id}</small>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                         `;
+                    });
+
+                    $('#lista_roles').html(html);
+                }
+            });
+        });
     </script>
 @endsection

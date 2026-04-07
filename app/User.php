@@ -103,6 +103,33 @@ class User extends Authenticatable
         }
     }
 
+    public static function send_mail_change_password($user,$correo) {
+
+        $personal = $user->personal;
+        $codigo = User::codigo_mensaje();
+        $empresa= Empresa::first();
+        $usuario_hora=Carbon::now()->format('Y-m-d');
+
+        $mensaje = view('email_html.email_send_new_password',compact('codigo','personal','usuario_hora','empresa'));
+
+        $smtpAddress = env('MAIL_HOST');
+        $port = env('MAIL_PORT');
+        $encryption = env('MAIL_ENCRYPTION');
+        $yourEmail = env('MAIL_USERNAME');
+        $yourPassword = env('MAIL_PASSWORD');
+        $sendto = $correo;
+        $titulo = 'Sistema-Cambio de Contraseña';
+
+        $transport = (new \Swift_SmtpTransport($smtpAddress, $port, $encryption)) -> setUsername($yourEmail) -> setPassword($yourPassword);
+        $mailer =new \Swift_Mailer($transport);
+        $message = (new \Swift_Message($titulo)) ->setFrom([ $yourEmail => $empresa->nombre ])->setTo([$sendto])->setBody($mensaje, 'text/html');
+        if($mailer->send($message)){
+            return "200";
+        }else{
+            return "500";
+        }
+    }
+
     public static function updated_personal($personal_id){
         $personal = Personal::find($personal_id);
         $personal->usuario_registrado = 1;

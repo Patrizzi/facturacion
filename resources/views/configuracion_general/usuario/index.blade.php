@@ -106,7 +106,7 @@
                                                         <th>Celular</th>
                                                         <th>Almacen</th>
                                                         <th>Ver</th>
-                                                        <th>Informacion</th>
+                                                        <th>Acciones</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -123,18 +123,31 @@
                                                             <td>{{ $usuario->almacen?->nombre ?? 'Todos' }}</td>
                                                             <td>
                                                                 @if ($usuario->estado_validacion == 1)
-                                                                    <button class="btn btn-primary btn-sm"><i
-                                                                            class="fa fa-eye"></i></button>
+                                                                    <a href="{{ route('usuario.show', $usuario->id) }}"
+                                                                        class="btn btn-primary btn-sm">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </a>
                                                                 @else
-                                                                    <a type="button" onclick="modal_codigo($usuario->id)" id="btn-modal_submit_codigo"
-                                                                        class="btn btn-info">
-                                                                        <i class="fa fa-plus"></i>
+                                                                    <a type="button"
+                                                                        onclick="modal_codigo({{ $usuario->id }})"
+                                                                        id="btn-modal_submit_codigo"
+                                                                        class="btn btn-info btn-sm">
+                                                                        <i class="fa fa-code" style="color: white"></i>
                                                                     </a>
                                                                 @endif
                                                             </td>
                                                             <td>
+                                                                <a href="#modal_change_password"
+                                                                    class="btn btn-info btn-sm change_password_b"
+                                                                    data-toggle="modal" title="Cambiar de contraseña"
+                                                                    data-ids="{{ $usuario->id }}"
+                                                                    data-name="{{ $usuario->personal->full_name }}"
+                                                                    data-rol="{{ $usuario->getRoleNames()->first() }}"
+                                                                    @if ($usuario->estado_validacion != 1) style="pointer-events: none; display: inline-block;" @endif>
+                                                                    <i class="fa fa-key"></i>
+                                                                </a>
                                                                 @if ($usuario->estado_validacion == 1)
-                                                                    {{-- Si está validad  --}}
+                                                                    {{-- Si está validado  --}}
                                                                     @if ($usuario->estado == 1)
                                                                         <button class="btn btn-info btn-circle btn-sm"
                                                                             title="Activo"><i
@@ -146,9 +159,8 @@
                                                                     @endif
                                                                 @else
                                                                     <button class="btn btn-danger btn-circle btn-sm"
-                                                                        title="Inactivo"><i
+                                                                        title="Desactivado" title="Desactivado"><i
                                                                             class="fa fa-times"></i></button>
-                                                                            
                                                                 @endif
                                                                 {{-- @if ($usuario->estado == 1)
                                                                     <button class="btn btn-info btn-circle btn-sm"
@@ -176,638 +188,139 @@
 
     @include('configuracion_general.usuario.create')
 
-    <div class="modal fade" id="modal_submit_codigo" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content" style="width: 550px">
+    <div class="modal fade" id="modal_submit_codigo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 550px">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Cambiar de constraseña</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
                     <div style="padding-left: 15px;padding-right: 15px;">
-                        {{-- ccccccccccccccccc --}}
-                        <div class="ibox-content" style="padding-left: 0px;padding-right: 0px;" align="center">
-
-                            <form action="{{ route('usuario.envio_codigo', $usuario->id) }}"
-                                enctype="multipart/form-data" method="post">
-                                @csrf
-                                <fieldset>
-                                    <legend style="height: 240px;">
-                                        <img src="#" id="imagen_codigo"
-                                            style="width: 200px;height: 200px;border-radius: 5px">
-                                        <br>A B
-                                        <p style="font-size: 15px">
-                                            Nombre
-                                        </p>
-                                    </legend>
-                                    <div>
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <label class="col-sm-3 col-form-label">Correo:</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" name="correo"
-                                                        value="{{ $usuario->email }}">
-                                                </div>
-                                                <div class="col-sm-3" style="padding-bottom: 15px">
-                                                    <input type="submit" name="accion" class="btn btn-s-m btn-info"
-                                                        value="Cambiar Correo">
-                                                </div>
-                                                <label class="col-sm-3 col-form-label">Codigo
-                                                    de
-                                                    Confirmacion:</label>
-                                                <div class="col-sm-3">
-                                                    <input type="text" class="form-control" name="cod_1"
-                                                        maxlength="3">
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <input type="text" class="form-control" name="cod_2"
-                                                        maxlength="3">
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <input type="text" class="form-control" name="cod_3"
-                                                        maxlength="3">
-                                                </div>
-
-                                                <div class="col-sm-12">
-                                                    <p>No me ha llegado el Codigo de confirmacion
-                                                        <input type="submit" name="accion" class="reenviar"
-                                                            value="Reenviar Codigo"
-                                                            style="border: none;background: #ff000000;">
-                                                    </p>
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <input type="submit" name="accion" class="btn btn-s-m btn-info"
-                                                        value="Validar">
-                                                </div>
-                                            </div>
-                                        </div>
+                        <form action="{{ route('usuario.validar_cuenta') }}" enctype="multipart/form-data"
+                            method="post" class="text-center">
+                            @csrf
+                            <fieldset>
+                                <legend>
+                                    <img src="#" id="imagen_codigo"
+                                        style="width: 200px;height: 200px;border-radius: 5px">
+                                    <br>
+                                    <span id="codigo_full_name">A B</span>
+                                    <h2 style="font-size: 15px" id="codigo_rol_name">
+                                        Nombre
+                                    </h2>
+                                </legend>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label">Correo:</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" name="correo" id="correo_codigo"
+                                            value="" required>
+                                        <input type="hidden" name="id_user" id="usuario_codigo_id" required>
                                     </div>
-                                </fieldset>
-                            </form>
-                        </div>
+                                    <div class="col-sm-3" style="padding-bottom: 15px">
+                                        <button type="button" id="cambiar_correo" name="cambiar_correo" disabled
+                                            class="btn btn-block btn-s-m btn-info">
+                                            Cambiar
+                                        </button>
+                                    </div>
+                                    <label class="col-sm-3 col-form-label">Codigo
+                                        de
+                                        Confirmacion:</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="cod_1" maxlength="3" required>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="cod_2" maxlength="3" required>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" name="cod_3" maxlength="3" required>
+                                    </div>
+
+                                    <div class="col-sm-8"
+                                        style="vertical-align: middle;display: flex;align-items: center;text-align: center;justify-content: center">
+                                        <span>No me ha llegado el Codigo de confirmacion
+                                    </div>
+                                    <div class="col-sm-4" style="">
+                                        <button type="button" class="btn btn-link" style="color: red; text-decoration: outline" id="reenviar_codigo">Reenviar
+                                            código</button><span>
+                                    </div>
+                                    <div class="col-sm-12" style="margin-top: 5px">
+                                        <button type="submit" class="btn btn-s-m btn-info btn-block"
+                                            style="margin: 0px 5px">Validar</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        @if ($errors->any())
-            <div style="padding-top: 20px;">
-                <div class="alert alert-danger">
-                    <a class="alert-link" href="#">
-                        @foreach ($errors->all() as $error)
-                            <li class="error">{{ $error }}</li>
-                        @endforeach
-                    </a>
+    <div class="modal fade" id="modal_change_password" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Cambiar de constraseña</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-        @endif
-        @if (isset($errores))
-            <div>
-                <div class="alert alert-danger">
-                    <div class="alert-link" href="#">
-                        <li style="color: red;">{{ $errores }}</li>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-
-
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="tabs-container">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Usuarios</a></li>
-                        <li><a class="nav-link" data-toggle="tab" href="#tab-2">Roles</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" id="tab-1" class="tab-pane active">
-                            <div class="panel-body">
-                                <div class="wrapper wrapper-content">
-                                    <div class="row animated fadeInDown">
-                                        <div class="col-lg-12">
-                                            <div class="ibox ">
-                                                <div class="ibox-content">
-                                                    <div class="row">
-                                                        <div class="col-sm-12 text-right">
-                                                            <a href="{{ route('usuario.lista') }}"
-                                                                class="btn btn-primary"><i class="fa fa-plus"> </i></a>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="table-responsive">
-                                                        <table
-                                                            class="table table-striped table-bordered table-hover dataTables-example">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID</th>
-                                                                    <th>Personal</th>
-                                                                    <th>Cargo</th>
-                                                                    <th>Correo</th>
-                                                                    <th>Celular</th>
-                                                                    <th>Almacen Asignado</th>
-                                                                    <th>Activo/desactivo</th>
-                                                                    <th>Editar</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <span hidden>{{ $i = 1 }}</span>
-                                                                @foreach ($usuarios as $usuario)
-                                                                    <tr class="gradeX">
-                                                                        <td>{{ $i++ }}</td>
-                                                                        <td>{{ $usuario->personal->nombres }}</td>
-                                                                        <td>{{ $usuario->name }}</td>
-                                                                        <td>{{ $usuario->email }}</td>
-                                                                        <td>{{ $usuario->celular }}</td>
-                                                                        <td>{{ $usuario->almacen?->nombre }}</td>
-                                                                        @if ($usuario->estado == 1)
-                                                                            <td>Activo</td>
-                                                                        @elseif($usuario->estado == 0)
-                                                                            <td>Desactivo</td>
-                                                                        @endif
-                                                                        @if ($usuario->estado_validacion == 1)
-                                                                            <td>
-                                                                                <button type="button"
-                                                                                    class="btn btn-primary"
-                                                                                    data-toggle="modal"
-                                                                                    data-target="#exampleModal{{ $usuario->id }}">Editar</button>
-                                                                                <i class="fa fa-check"
-                                                                                    aria-hidden="true"></i>
-                                                                                <div class="modal fade"
-                                                                                    id="exampleModal{{ $usuario->id }}"
-                                                                                    tabindex="-1" role="dialog"
-                                                                                    aria-labelledby="exampleModalLabel"
-                                                                                    aria-hidden="true">
-                                                                                    <div class="modal-dialog"
-                                                                                        role="document">
-                                                                                        <div class="modal-content">
-                                                                                            <div
-                                                                                                style="padding-left: 15px;padding-right: 15px;">
-                                                                                                <div class="ibox-content"
-                                                                                                    style="padding-left: 0px;padding-right: 0px;"
-                                                                                                    align="center">
-                                                                                                    <form
-                                                                                                        action="{{ route('usuario.update', $usuario->id) }}"
-                                                                                                        enctype="multipart/form-data"
-                                                                                                        method="post">
-                                                                                                        @csrf
-                                                                                                        @method('PATCH')
-                                                                                                        <img src=" {{ asset('/profile/images/') }}/{{ $usuario->avatar }}"
-                                                                                                            style="width: 200px;height: 200px;  border-radius: 5px">
-                                                                                                        <p
-                                                                                                            style="font-size: 15px">
-                                                                                                            {{ $usuario->name }}
-                                                                                                        </p>
-                                                                                                        <div>
-                                                                                                            <div
-                                                                                                                class="panel-body">
-                                                                                                                <div
-                                                                                                                    class="row">
-                                                                                                                    <label
-                                                                                                                        class="col-sm-3 col-form-label">Correo:</label>
-                                                                                                                    <div
-                                                                                                                        class="col-sm-9">
-                                                                                                                        <input
-                                                                                                                            type="text"
-                                                                                                                            class="form-control"
-                                                                                                                            name="correo"
-                                                                                                                            value="{{ $usuario->email }}">
-                                                                                                                    </div>
-
-                                                                                                                    <label
-                                                                                                                        class="col-sm-3 col-form-label">Almacen
-                                                                                                                        Asignado:</label>
-                                                                                                                    <div
-                                                                                                                        class="col-sm-4">
-                                                                                                                        <select
-                                                                                                                            class="form-control"
-                                                                                                                            name="almacen_id">
-                                                                                                                            <option
-                                                                                                                                value="{{ $usuario->almacen?->id }}">
-                                                                                                                                {{ $usuario->almacen?->nombre }}
-                                                                                                                            </option>
-                                                                                                                            <option
-                                                                                                                                value=""
-                                                                                                                                disabled="">
-                                                                                                                                -------------
-                                                                                                                            </option>
-                                                                                                                            @foreach ($almacen as $almacens)
-                                                                                                                                <option
-                                                                                                                                    value="{{ $almacens->id }}">
-                                                                                                                                    {{ $almacens->nombre }}
-                                                                                                                                </option>
-                                                                                                                            @endforeach
-                                                                                                                        </select>
-                                                                                                                    </div>
-
-                                                                                                                    <label
-                                                                                                                        class="col-sm-1 col-form-label">Desactivado</label>
-                                                                                                                    <div
-                                                                                                                        class="col-sm-2">
-                                                                                                                        @if ($usuario->estado == 1)
-                                                                                                                            <div
-                                                                                                                                class="switch-button">
-                                                                                                                                <input
-                                                                                                                                    type="checkbox"
-                                                                                                                                    name="estado"
-                                                                                                                                    id="switch-label{{ $usuario->id }}"
-                                                                                                                                    class="switch-button__checkbox"
-                                                                                                                                    checked="">
-                                                                                                                                <label
-                                                                                                                                    for="switch-label{{ $usuario->id }}"
-                                                                                                                                    class="switch-button__label"></label>
-                                                                                                                            </div>
-                                                                                                                        @else
-                                                                                                                            <div
-                                                                                                                                class="switch-button">
-                                                                                                                                <input
-                                                                                                                                    type="checkbox"
-                                                                                                                                    name="estado"
-                                                                                                                                    id="aswitch-label{{ $usuario->id }}"
-                                                                                                                                    class="switch-button__checkbox">
-                                                                                                                                <label
-                                                                                                                                    for="aswitch-label{{ $usuario->id }}"
-                                                                                                                                    class="switch-button__label"></label>
-                                                                                                                            </div>
-                                                                                                                        @endif
-
-                                                                                                                    </div>
-                                                                                                                    <label
-                                                                                                                        class="col-sm-2 col-form-label">Activado:</label>
-                                                                                                                    <div
-                                                                                                                        class="col-sm-12">
-                                                                                                                        {{-- Boton 2do modal --}}
-                                                                                                                        <button
-                                                                                                                            type="button"
-                                                                                                                            class="btn btn-primary"
-                                                                                                                            data-toggle="modal"
-                                                                                                                            data-target="#2do_modal{{ $usuario->id }}">Guardar</button>
-                                                                                                                        <div class="modal fade"
-                                                                                                                            id="2do_modal{{ $usuario->id }}"
-                                                                                                                            tabindex="-1"
-                                                                                                                            role="dialog"
-                                                                                                                            aria-labelledby="exampleModalLabel"
-                                                                                                                            aria-hidden="true">
-                                                                                                                            <div class="modal-dialog"
-                                                                                                                                role="document">
-                                                                                                                                <div
-                                                                                                                                    class="modal-content">
-                                                                                                                                    <div
-                                                                                                                                        class="modal-header">
-                                                                                                                                        <h5 class="modal-title"
-                                                                                                                                            id="exampleModalLabel">
-                                                                                                                                            Confirmar
-                                                                                                                                            Contraseña
-                                                                                                                                            para
-                                                                                                                                            Realizar
-                                                                                                                                            Cambios
-                                                                                                                                        </h5>
-                                                                                                                                        <button
-                                                                                                                                            type="button"
-                                                                                                                                            class="close"
-                                                                                                                                            data-dismiss="modal"
-                                                                                                                                            aria-label="Close">
-                                                                                                                                            <span
-                                                                                                                                                aria-hidden="true">&times;</span>
-                                                                                                                                        </button>
-                                                                                                                                    </div>
-                                                                                                                                    <div
-                                                                                                                                        style="padding-left: 15px;padding-right: 15px;">
-                                                                                                                                        {{-- ccccccccccccccccc --}}
-                                                                                                                                        <div class="ibox-content"
-                                                                                                                                            style="padding-left: 0px;padding-right: 0px;"
-                                                                                                                                            align="center">
-                                                                                                                                            <fieldset>
-                                                                                                                                                <div>
-                                                                                                                                                    <div
-                                                                                                                                                        class="panel-body">
-                                                                                                                                                        <div
-                                                                                                                                                            class="row">
-                                                                                                                                                            <label
-                                                                                                                                                                class="col-sm-3 col-form-label">Contraseña
-                                                                                                                                                                Usuario:</label>
-                                                                                                                                                            <div
-                                                                                                                                                                class="col-sm-9">
-                                                                                                                                                                <input
-                                                                                                                                                                    required="required"
-                                                                                                                                                                    type="password"
-                                                                                                                                                                    class="form-control"
-                                                                                                                                                                    name="contrasena_confirmar"
-                                                                                                                                                                    placeholder="******"
-                                                                                                                                                                    autocomplete="off">
-                                                                                                                                                                <input
-                                                                                                                                                                    type="text"
-                                                                                                                                                                    name="contrasena_adm"
-                                                                                                                                                                    value="{{ auth()->user()->password }}"
-                                                                                                                                                                    hidden="">
-                                                                                                                                                            </div>
-                                                                                                                                                        </div>
-                                                                                                                                                    </div>
-                                                                                                                                                </div>
-
-                                                                                                                                            </fieldset>
-                                                                                                                                            <button
-                                                                                                                                                class="btn btn-primary"
-                                                                                                                                                type="submit">Guardar</button>
-                                                                                                                                            {{--   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                        <!-- / Modal Create  -->
-
-
-                                                                                                                        {{--  --}}
-                                                                                                                        {{-- <button class="btn btn-primary" type="submit">Grabar</button> --}}
-                                                                                                                        <button
-                                                                                                                            type="button"
-                                                                                                                            class="btn btn-secondary"
-                                                                                                                            data-dismiss="modal">Cerrar</button>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </form>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                            </td>
-                                                                        @elseif($usuario->estado_validacion == 0)
-                                                                            <td>
-                                                                                <button type="button"
-                                                                                    class="btn btn-primary"
-                                                                                    data-toggle="modal"
-                                                                                    data-target="#exampleModal{{ $usuario->id }}">Editar</button>
-                                                                                <i class="fa fa-times"
-                                                                                    aria-hidden="true"></i>
-                                                                                <div class="modal fade"
-                                                                                    id="exampleModal{{ $usuario->id }}"
-                                                                                    tabindex="-1" role="dialog"
-                                                                                    aria-labelledby="exampleModalLabel"
-                                                                                    aria-hidden="true">
-                                                                                    <div class="modal-dialog"
-                                                                                        role="document">
-                                                                                        <div class="modal-content"
-                                                                                            style="width: 550px">
-                                                                                            <div
-                                                                                                style="padding-left: 15px;padding-right: 15px;">
-                                                                                                {{-- ccccccccccccccccc --}}
-                                                                                                <div class="ibox-content"
-                                                                                                    style="padding-left: 0px;padding-right: 0px;"
-                                                                                                    align="center">
-
-                                                                                                    <form
-                                                                                                        action="{{ route('usuario.envio_codigo', $usuario->id) }}"
-                                                                                                        enctype="multipart/form-data"
-                                                                                                        method="post">
-                                                                                                        @csrf
-                                                                                                        <fieldset>
-                                                                                                            <legend
-                                                                                                                style="height: 240px;">
-                                                                                                                <img src="
-                                                                                                    {{ asset('/profile/images/') }}/{{ $usuario->avatar }}"
-                                                                                                                    style="width: 200px;height: 200px;border-radius: 5px">
-                                                                                                                <br>{{ $usuario->personal->nombres }}
-                                                                                                                {{ $usuario->personal->apellidos }}
-                                                                                                                <p
-                                                                                                                    style="font-size: 15px">
-                                                                                                                    {{ $usuario->name }}
-                                                                                                                </p>
-                                                                                                            </legend>
-                                                                                                            <div>
-                                                                                                                <div
-                                                                                                                    class="panel-body">
-                                                                                                                    <div
-                                                                                                                        class="row">
-                                                                                                                        <label
-                                                                                                                            class="col-sm-3 col-form-label">Correo:</label>
-                                                                                                                        <div
-                                                                                                                            class="col-sm-6">
-                                                                                                                            <input
-                                                                                                                                type="text"
-                                                                                                                                class="form-control"
-                                                                                                                                name="correo"
-                                                                                                                                value="{{ $usuario->email }}">
-                                                                                                                        </div>
-                                                                                                                        <div class="col-sm-3"
-                                                                                                                            style="padding-bottom: 15px">
-                                                                                                                            <input
-                                                                                                                                type="submit"
-                                                                                                                                name="accion"
-                                                                                                                                class="btn btn-s-m btn-info"
-                                                                                                                                value="Cambiar Correo">
-                                                                                                                        </div>
-                                                                                                                        <label
-                                                                                                                            class="col-sm-3 col-form-label">Codigo
-                                                                                                                            de
-                                                                                                                            Confirmacion:</label>
-                                                                                                                        <div
-                                                                                                                            class="col-sm-3">
-                                                                                                                            <input
-                                                                                                                                type="text"
-                                                                                                                                class="form-control"
-                                                                                                                                name="cod_1"
-                                                                                                                                maxlength="3">
-                                                                                                                        </div>
-                                                                                                                        <div
-                                                                                                                            class="col-sm-3">
-                                                                                                                            <input
-                                                                                                                                type="text"
-                                                                                                                                class="form-control"
-                                                                                                                                name="cod_2"
-                                                                                                                                maxlength="3">
-                                                                                                                        </div>
-                                                                                                                        <div
-                                                                                                                            class="col-sm-3">
-                                                                                                                            <input
-                                                                                                                                type="text"
-                                                                                                                                class="form-control"
-                                                                                                                                name="cod_3"
-                                                                                                                                maxlength="3">
-                                                                                                                        </div>
-
-                                                                                                                        <div
-                                                                                                                            class="col-sm-12">
-                                                                                                                            <p>No
-                                                                                                                                me
-                                                                                                                                ha
-                                                                                                                                llegado
-                                                                                                                                el
-                                                                                                                                Codigo
-                                                                                                                                de
-                                                                                                                                confirmacion<input
-                                                                                                                                    type="submit"
-                                                                                                                                    name="accion"
-                                                                                                                                    class="reenviar"
-                                                                                                                                    value="Reenviar Codigo"
-                                                                                                                                    style="border: none;background: #ff000000;">
-                                                                                                                            </p>
-                                                                                                                        </div>
-                                                                                                                        <div
-                                                                                                                            class="col-sm-12">
-                                                                                                                            <input
-                                                                                                                                type="submit"
-                                                                                                                                name="accion"
-                                                                                                                                class="btn btn-s-m btn-info"
-                                                                                                                                value="Validar">
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </fieldset>
-                                                                                                    </form>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </td>
-                                                                        @endif
-                                                                    </tr>
-                                                                @endforeach
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                <div class="modal-body">
+                    <legend class="text-center">
+                        <img src="#" id="imagen_codigo" style="width: 200px;height: 200px;border-radius: 5px">
+                        <br>
+                        <h2 id="codigo_full_name_password">A B</h2>
+                        <small id="rol_name_password">A B</small>
+                    </legend>
+                    <form action="{{ route('usuario.change_password') }}" method="POST">
+                        @method('POST')
+                        @csrf
+                        <input type="hidden" name="id_user_change" id="id_user_change">
+                        <div class="row" id="cambio_contraseña">
+                            <label class="col-sm-3 col-form-label">Nueva Contraseña:</label>
+                            <div class="col-sm-9" style="padding-bottom: 10px">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" name="change_password"
+                                        id="change_password" autocomplete="off" placeholder="******"
+                                        required="required">
+                                    <div class="input-group-append">
+                                        <span class="input-group-addon toggle-password" onclick="changetogglePassword()">
+                                            <i class="fa fa-eye-slash" id="eye-icon"></i>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div role="tabpanel" id="tab-2" class="tab-pane">
-                            <div class="panel-body">
-                                <div class="wrapper wrapper-content">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="ibox ">
-                                                <div
-                                                    class="ibox-header d-flex justify-content-between px-3 align-items-center">
-                                                    <div>
-                                                        <h2>ROLES</h2>
-                                                    </div>
-                                                    <div>
-                                                        <button type="button" class="btn btn-success"
-                                                            data-toggle="modal" data-target="#modal_rol">Agregar</button>
-                                                        <div class="modal fade" id="modal_rol">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h2>Crear nuevo rol</h2>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <form method="POST"
-                                                                            action="{{ route('roles.crearRol') }}">
-                                                                            @csrf
-                                                                            <div class="my-3">
-                                                                                <label>Nombre:</label>
-                                                                                <input
-                                                                                    oninput="handleInputRolChange(event)"
-                                                                                    type="text" class="form-control"
-                                                                                    placeholder="Ingrese el nombre del rol"
-                                                                                    name="nombre" required
-                                                                                    autocomplete="off" />
-                                                                                <span id="spanRolError"
-                                                                                    class="text-danger" hidden></span>
-                                                                            </div>
-                                                                            <div
-                                                                                class="my-3 d-flex justify-content-center align-items-center">
-                                                                                <button id="BtnAgregarRol" disabled
-                                                                                    class="btn btn-outline-primary"
-                                                                                    type="submit">Agregar <i
-                                                                                        class="fa fa-save"></i></button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="ibox-content">
-                                                    <div class="table-responsive">
-                                                        <table
-                                                            class="table table-striped table-bordered table-hover dataTables-example">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID</th>
-                                                                    <th>Nombre</th>
-                                                                    <th>guard_name</th>
-                                                                    <th>Editar</th>
-                                                                    <th>Gestionar Permisos</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach ($roles as $rol)
-                                                                    <tr class="gradeX">
-                                                                        <td>{{ $rol->id }}</td>
-                                                                        <td>{{ $rol->name }}</td>
-                                                                        <td>{{ $rol->guard_name }}</td>
-                                                                        <td><button type="button" class="btn btn-success"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modal-edit-rol-{{ $rol->id }}">Editar
-                                                                                <i class="fa fa-edit"></i></button></td>
-                                                                        <td><a class="text-decoration-none btn btn-success"
-                                                                                href="{{ route('roles.gestRol', $rol->id) }}">Permisos
-                                                                                <i class="fa fa-tasks"></i></a></td>
-                                                                    </tr>
-                                                                    <div class="modal fade"
-                                                                        id="modal-edit-rol-{{ $rol->id }}">
-                                                                        <div class="modal-dialog">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                    <h2>Editar Rol {{ $rol->name }}</h2>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                    <form method="POST"
-                                                                                        action="{{ route('roles.editarRol', $rol->id) }}">
-                                                                                        @csrf
-                                                                                        @method('put')
-                                                                                        <div class="my-3">
-                                                                                            <label>Nombre:</label>
-                                                                                            <input
-                                                                                                oninput="handleInputRolChange(event, true,{{ $rol->id }})"
-                                                                                                value="{{ $rol->name }}"
-                                                                                                type="text"
-                                                                                                class="form-control"
-                                                                                                placeholder="Ingrese el nombre del rol"
-                                                                                                name="nombre" required
-                                                                                                autocomplete="off" />
-                                                                                            <span
-                                                                                                id="spanEditRolError{{ $rol->id }}"
-                                                                                                class="text-danger"
-                                                                                                hidden></span>
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="my-3 d-flex justify-content-center align-items-center">
-                                                                                            <button
-                                                                                                id="BtnEditRol{{ $rol->id }}"
-                                                                                                disabled
-                                                                                                class="btn btn-outline-primary"
-                                                                                                type="submit">Agregar <i
-                                                                                                    class="fa fa-save"></i></button>
-                                                                                        </div>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                @endforeach
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <label class="col-sm-3 col-form-label">Confirmar Contraseña:</label>
+                            <div class="col-sm-9" style="padding-bottom: 10px">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" name="change_password2"
+                                        id="change_password2" autocomplete="off" placeholder="******"
+                                        required="required">
+                                    <div class="input-group-append">
+                                        <span class="input-group-addon toggle-password" onclick="changetogglePassword2()">
+                                            <i class="fa fa-eye-slash" id="eye-icon"></i>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-3" style="margin-top: 5px">
+                                <input type="checkbox" class="form-control" name="enviar_correo" id="enviar_correo">
+                            </div>
+                            <div class="col-sm-9">
+                                <span class="text-bold">¿Enviar al correo del Usuario la nueva contraseña?</span>
+                            </div>
                         </div>
-                    </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary btn-block">Cambiar Contraseña</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -902,7 +415,7 @@
         .switch-button {
             display: inline-block;
             /* padding-top: 9px;
-                                                        padding-right: 30px; */
+                                                                                                                padding-right: 30px; */
             padding: 9px 40px;
         }
 
@@ -1132,8 +645,9 @@
             $('#create_usuario').modal('show');
         });
 
-        function modal_codigo(id_user){
+        function modal_codigo(id_user) {
             $('#modal_submit_codigo').modal('show');
+            $('#usuario_codigo_id').val(id_user);
             $.ajax({
                 type: "post",
                 url: "{{ route('pa.getUserData') }}",
@@ -1143,14 +657,51 @@
                 },
                 success: function(user) {
                     console.log(user);
-                    // $('#imagen_codigo').att('src', `{{ asset('/profile/images/') }}`+user.avatar);
+                    let base = "{{ asset('/profile/images') }}/";
+                    $('#imagen_codigo').attr('src', base + user.avatar);
+                    $('#codigo_full_name').html(user.personal.full_name);
+                    $('#codigo_rol_name').html(user.roles[0].name);
+                    $('#correo_codigo').val(user.email);
                 }
             });
-            //  var imagen = 
-            
-            // 
         }
 
+        $('#reenviar_codigo').on('click', function(){
+            send_codigo_correo();
+        });
+
+        function send_codigo_correo(){
+            let id_user = $('#usuario_codigo_id').val();
+            let correo = $('#correo_codigo').val();
+            $.ajax({
+                type: "post",
+                url: "{{ route('usuario.codigo_nuevo_correo', ['id' => '__ID__']) }}".replace('__ID__',
+                    id_user),
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'correo': correo
+                },
+                success: function(response) {
+
+                    // 🔔 Mostrar toastr dinámico
+                    if (response.status === 'success') {
+                        toastr.success(response.message, '', {
+                            timeOut: 3000
+                        });
+                    } else {
+                        toastr.warning(response.message, '', {
+                            timeOut: 3000
+                        });
+                    }
+
+                },
+                error: function() {
+                    toastr.error('Error en la petición AJAX', '', {
+                        timeOut: 3000
+                    });
+                }
+            });
+        }
         $('.select2-personal').select2({
             placeholder: "Seleccionar Personal"
         });
@@ -1239,6 +790,36 @@
             }
         }
 
+        function changetogglePassword() {
+            const passwordInput = document.getElementById("change_password");
+            const eyeIcon = document.getElementById("eye-icon");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            }
+        }
+
+        function changetogglePassword2() {
+            const passwordInput = document.getElementById("change_password2");
+            const eyeIcon = document.getElementById("eye-icon2");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            }
+        }
+
         function validarExt() {
             var archivoInput = document.getElementById('archivoInput');
             var archivo = archivoInput.files[0];
@@ -1284,6 +865,24 @@
             }
             $('#send_true').click();
         });
+        $('#correo_codigo').on('keydown', function(){
+            $('#cambiar_correo').attr('disabled', false);
+        });
+        $('#cambiar_correo').on('click', function() {
+            send_codigo_correo();
+        })
+
+        $('.change_password_b').on('click', function() {
+            console.log("a")
+            let id_user = $(this).data('ids');
+            let rol_name = $(this).data('ids');
+            let name_user = $(this).data('name');
+
+            $('#codigo_full_name_password').html(name_user);
+            $('#rol_name_password').html(rol_name);
+            $('#id_user_change').val(id_user);
+        });
+
         // //roles existentes
         // const roles = @json($roles);
 
