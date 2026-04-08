@@ -48,6 +48,7 @@ use App\Http\Controllers\ServicioTecnico\ProcesoServicioGuiaController;
 use App\Http\Controllers\ServicioTecnico\ServicioGuiaInformeTecnicoController;
 use App\Http\Controllers\ServicioTecnico\ServicioGuiaController;
 use App\Http\Controllers\ServicioTecnico\ServicioGuiaEntregadosController;
+
 use App\Servicios;
 
 use function Complex\rho;
@@ -1484,3 +1485,10 @@ Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoC
 
 Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.garantia_informe_tecnico.multiple');
+
+
+Route::get('/servicio-tecnico/informe-tecnico/print/{id}', [ServicioGuiaInformeTecnicoController::class, 'print'])
+    ->name('st_informe_tecnico.print');
+    
+Route::get('/servicio-tecnico/informe-tecnico/pdf/{id}', [ServicioGuiaInformeTecnicoController::class, 'pdf'])
+    ->name('st_informe_tecnico.pdf');
