@@ -1,4 +1,3 @@
-
 @extends('layout')
 
 @section('title', 'Comprobantes | Guia de Remision')
@@ -31,15 +30,18 @@
                         <div class="tabs-container">
                             <div class="tabs-scroll-top-comprobantes"></div>
                             <div class="tabs-scroll-bottom">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('transaccion.comprobantes._shared.tabs')
                                     {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                    <ul class="ml-auto d-flex"
+                                        style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
-                                        @if (auth()->user()->name == 'Administrador' && $almacen->count() != 1){{-- Condicional por tipo de user  --}}
+                                        @if (auth()->user()->name == 'Administrador' && $almacen->count() != 1)
+                                            {{-- Condicional por tipo de user  --}}
                                             <span class="dropdown">
                                                 <button class="btn btn-primary dropdown-toggle" type="button"
-                                                    id="dropdownMenuButton" data-toggle="dropdown" >
+                                                    id="dropdownMenuButton" data-toggle="dropdown">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                                 <ul class="dropdown-menu animated fadeInRight m-t-xs">
@@ -62,15 +64,16 @@
                                             <form action="{{ route('guia_remision.create') }}" enctype="multipart/form-data"
                                                 method="post" class="tooltip-demo">
                                                 @csrf
-                                                <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                    name="almacen">
+                                                <input type="text" value="{{ auth()->user()->almacen_id }}"
+                                                    hidden="hidden" name="almacen">
                                                 <button class="btn btn-primary" type="submit">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </form>
                                         @endif
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button type="button" class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
@@ -103,7 +106,8 @@
                                 </ul>
                             </div>
                             <div class="tab-content" style="margin-top: -1px">
-                                <div role="tabpanel" id="tab-5" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <div role="tabpanel" id="tab-5" class="tab-pane active show"
+                                    style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -114,7 +118,8 @@
                                                         value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
                                                         readonly="readonly" />
                                                     <span class="input-group-append">
-                                                        <button type="button" class="btn btn-secondary" id="revert_select">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            id="revert_select">
                                                             <i class="fa fa-history"></i>
                                                         </button>
                                                     </span>
@@ -142,7 +147,8 @@
                                     <div class="scrooll-table-responsive">
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-guia-remision" style="min-width: 982px">
+                                        <table class="table table-striped table-bordered dataTables-example-guia-remision"
+                                            style="min-width: 982px">
                                             <thead>
                                                 <tr>
                                                     <th>
@@ -172,9 +178,8 @@
             </div>
         </div>
     </div>
-    <form id="form-pdf-lote" method="POST"
-        action="{{ route('guia_remision.print.multiple') }}"
-        target="_blank" style="display:none;">
+    <form id="form-pdf-lote" method="POST" action="{{ route('guia_remision.print.multiple') }}" target="_blank"
+        style="display:none;">
         @csrf
     </form>
     @include('transaccion.comprobantes._shared.js_shared')
@@ -189,7 +194,9 @@
             if ($tab.length) {
                 var target = $tab[0].offsetLeft - ($bottom.innerWidth() / 2) + ($tab.outerWidth(true) / 2);
 
-                $bottom.animate({ scrollLeft: target }, 600);
+                $bottom.animate({
+                    scrollLeft: target
+                }, 600);
             }
         });
         var coti_table = $('.dataTables-example-guia-remision').DataTable({
@@ -209,7 +216,8 @@
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="' + full[0] + '" class="i-checks-boleta">';
+                        return '<input type="checkbox" name="select_row" value="' + full[0] +
+                            '" class="i-checks-boleta">';
                     }
                 },
                 {
@@ -260,19 +268,21 @@
                         const estadoSunat = parseInt(full[8]);
                         const estadoProcesado = parseInt(full[11]);
                         // Estado para Editable o no
-                        if(estadoProcesado == 0){
-                            end += `<button class="btn btn-warning btn-circle btn-ls" title="Sin Finalizar"><i class="fa fa-clock-o"></i></button> `;
+                        if (estadoProcesado == 0) {
+                            end +=
+                                `<button class="btn btn-warning btn-circle btn-ls" title="Sin Finalizar"><i class="fa fa-clock-o"></i></button> `;
                             estados[0].clase = estados[0].clase + " disabled";
                             estados[0].texto = "No se puede enviar hasta Finalizar la Factura"
-                        }else{
-                            end += `<button class="btn btn-info btn-circle btn-ls" title="Finalizado"><i class="fa fa-check-circle"></i></button> `;
+                        } else {
+                            end +=
+                                `<button class="btn btn-info btn-circle btn-ls" title="Finalizado"><i class="fa fa-check-circle"></i></button> `;
                         }
 
 
                         const e0 = estados[estadoSunat];
 
                         end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">
-                                    <img src="{{asset('sunat_blanco.png')}}" style="width:16px; height:16px;" />
+                                    <img src="{{ asset('sunat_blanco.png') }}" style="width:16px; height:16px;" />
                                 </button> `;
                         return end;
 
@@ -396,9 +406,9 @@
     </script>
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Click en Exportar
-            $(document).on('click', '#btn-exportar-guias', function (e) {
+            $(document).on('click', '#btn-exportar-guias', function(e) {
                 e.preventDefault();
 
                 // 1) Verificar que la DataTable tenga registros visibles
@@ -424,7 +434,7 @@
                 var exportUrl = "{{ route('guia_remision.exportar') }}";
                 var params = new URLSearchParams();
                 if (daterange) params.append('daterange', daterange);
-                if (value)     params.append('value', value);
+                if (value) params.append('value', value);
 
                 // 4) Disparar la descarga (por ahora abrirá la ruta; luego devolverá el Excel)
                 window.location.href = exportUrl + '?' + params.toString();
@@ -435,161 +445,199 @@
     <!-- check -->
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
-
     <script>
-    $(document).ready(function() {
-        var allSelectedIds = [];
-        var masterChecked = false;
-        var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
+        $(document).ready(function() {
+            var RemiDuplicado = @json($RemiDuplicado ?? null);
 
-        $('.i-checks').iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green',
+            if (RemiDuplicado) {
+                setTimeout(function() {
+                    cargarDatosGuia(RemiDuplicado);
+                }, 800);
+            }
         });
 
-        function hasAnySelection() {
-            return Array.isArray(allSelectedIds) && allSelectedIds.length > 0;
-        }
+        function cargarDatosGuia(data) {
+            // 1. CLIENTE
+            if (data.cliente) {
+                // igual que cotización pero con el select de cliente de guía
+            }
 
-        function closeWhatsappPanels() {
-            $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
-        }
+            // 2. MOTIVO TRASLADO
+            $('select[name="motivo_traslado"]').val(data.motivo_traslado_id).trigger('change');
 
-        function closeEmailPanels() {
-            $('.email-form').removeClass('email-fixed').css('height', '0px');
-        }
+            // 3. DIRECCIÓN DESTINO, PARTIDA, etc.
+            $('[name="direccion_destino"]').val(data.direccion_destino);
+            $('[name="direccion_partida"]').val(data.direccion_partida);
 
-        // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
-        function getAllIds(callback) {
-            $.ajax({
-                url: "{{ route('comprobantes.guiaRemision_registers') }}",
-                method: "GET",
-                data: {
-                    daterange: $('#data_range_filter').val(),
-                    tipo_comprobante: $('#select_tipo_coti').val(),
-                    value: $('#search_all_column').val(),
-                    length: -1, // -1 significa "todos los registros"
-                    start: 0,
-                    get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
-                },
-                success: function(response) {
-                    var ids = [];
-                    if (response.data && response.data.length > 0) {
-                        response.data.forEach(function(row) {
-                            if (row[0]) { // El ID está en la columna 0
-                                ids.push(row[0].toString());
-                            }
-                        });
+            // 4. VEHÍCULO / CONDUCTOR
+            $('select[name="vehiculo"]').val(data.vehiculo_id).trigger('change');
+            $('select[name="conductor"]').val(data.conductor_id).trigger('change');
+
+            // 5. REGISTROS (productos)
+            if (data.registros && data.registros.length > 0) {
+                cargarRegistrosGuia(data.registros);
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            var allSelectedIds = [];
+            var masterChecked = false;
+            var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            function hasAnySelection() {
+                return Array.isArray(allSelectedIds) && allSelectedIds.length > 0;
+            }
+
+            function closeWhatsappPanels() {
+                $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+            }
+
+            function closeEmailPanels() {
+                $('.email-form').removeClass('email-fixed').css('height', '0px');
+            }
+
+            // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+            function getAllIds(callback) {
+                $.ajax({
+                    url: "{{ route('comprobantes.guiaRemision_registers') }}",
+                    method: "GET",
+                    data: {
+                        daterange: $('#data_range_filter').val(),
+                        tipo_comprobante: $('#select_tipo_coti').val(),
+                        value: $('#search_all_column').val(),
+                        length: -1, // -1 significa "todos los registros"
+                        start: 0,
+                        get_all_ids: true // Parámetro especial para indicar que solo queremos los IDs
+                    },
+                    success: function(response) {
+                        var ids = [];
+                        if (response.data && response.data.length > 0) {
+                            response.data.forEach(function(row) {
+                                if (row[0]) { // El ID está en la columna 0
+                                    ids.push(row[0].toString());
+                                }
+                            });
+                        }
+                        console.log('getAllIds() encontró estos IDs:', ids);
+                        console.log('Total de IDs encontrados:', ids.length);
+                        callback(ids);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error obteniendo todos los IDs:', error);
+                        callback([]);
                     }
-                    console.log('getAllIds() encontró estos IDs:', ids);
-                    console.log('Total de IDs encontrados:', ids.length);
-                    callback(ids);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error obteniendo todos los IDs:', error);
-                    callback([]);
-                }
-            });
-        }
-
-        // CORRECCIÓN: Función para actualizar el master checkbox automáticamente
-        function updateMasterCheckbox() {
-            if (isUpdatingCheckboxes) return;
-
-            getAllIds(function(allIds) {
-                var allSelected = allIds.length > 0 && allIds.every(function(id) {
-                    return allSelectedIds.includes(id);
                 });
+            }
 
-                isUpdatingCheckboxes = true;
-                if (allSelected && !masterChecked) {
-                    masterChecked = true;
-                    $('thead input[type="checkbox"]').iCheck('check');
-                    console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
-                } else if (!allSelected && masterChecked) {
-                    masterChecked = false;
-                    $('thead input[type="checkbox"]').iCheck('uncheck');
-                    console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
-                }
-                isUpdatingCheckboxes = false;
-            });
-        }
+            // CORRECCIÓN: Función para actualizar el master checkbox automáticamente
+            function updateMasterCheckbox() {
+                if (isUpdatingCheckboxes) return;
 
-        // CORRECCIÓN: Checkbox del header - seleccionar/deseleccionar todos
-        $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
-            if (isUpdatingCheckboxes) return; // Evitar loops infinitos
+                getAllIds(function(allIds) {
+                    var allSelected = allIds.length > 0 && allIds.every(function(id) {
+                        return allSelectedIds.includes(id);
+                    });
 
-            closeWhatsappPanels();
-            closeEmailPanels();
-
-            if (event.type === 'ifChecked') {
-                masterChecked = true;
-                console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
-
-                getAllIds(function(ids) {
-                    allSelectedIds = [...ids]; // Crear una copia del array
-                    console.log('allSelectedIds después del master:', allSelectedIds);
-                    console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
-
-                    // Marcar todos los checkboxes visibles en la página actual
                     isUpdatingCheckboxes = true;
-                    $('.i-checks-boleta').iCheck('check');
+                    if (allSelected && !masterChecked) {
+                        masterChecked = true;
+                        $('thead input[type="checkbox"]').iCheck('check');
+                        console.log(
+                            'Master checkbox marcado automáticamente - todos los registros están seleccionados'
+                            );
+                    } else if (!allSelected && masterChecked) {
+                        masterChecked = false;
+                        $('thead input[type="checkbox"]').iCheck('uncheck');
+                        console.log(
+                            'Master checkbox desmarcado automáticamente - no todos los registros están seleccionados'
+                            );
+                    }
                     isUpdatingCheckboxes = false;
                 });
-            } else {
-                masterChecked = false;
-                allSelectedIds = [];
-                console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
-
-                isUpdatingCheckboxes = true;
-                $('.i-checks-boleta').iCheck('uncheck');
-                isUpdatingCheckboxes = false;
             }
-        });
 
-        // CORRECCIÓN: Checkboxes individuales
-        $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
-            if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
+            // CORRECCIÓN: Checkbox del header - seleccionar/deseleccionar todos
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                if (isUpdatingCheckboxes) return; // Evitar loops infinitos
 
-            closeWhatsappPanels();
-            closeEmailPanels();
-
-            var row = $(this).closest('tr');
-            var rowData = coti_table.row(row).data();
-
-            if (rowData && rowData[0]) {
-                var id = rowData[0].toString();
+                closeWhatsappPanels();
+                closeEmailPanels();
 
                 if (event.type === 'ifChecked') {
-                    // Agregar ID si no está ya seleccionado
-                    if (!allSelectedIds.includes(id)) {
-                        allSelectedIds.push(id);
-                    }
-                    console.log('Registro seleccionado:', id);
-                } else {
-                    // Remover ID de la selección
-                    allSelectedIds = allSelectedIds.filter(function(selectedId) {
-                        return selectedId !== id;
-                    });
-                    console.log('Registro deseleccionado:', id);
+                    masterChecked = true;
+                    console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
 
-                    // CORRECCIÓN: Cuando se desmarca individualmente, salir del modo master
-                    if (masterChecked) {
-                        masterChecked = false;
+                    getAllIds(function(ids) {
+                        allSelectedIds = [...ids]; // Crear una copia del array
+                        console.log('allSelectedIds después del master:', allSelectedIds);
+                        console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+
+                        // Marcar todos los checkboxes visibles en la página actual
                         isUpdatingCheckboxes = true;
-                        $('thead input[type="checkbox"]').iCheck('uncheck');
+                        $('.i-checks-boleta').iCheck('check');
                         isUpdatingCheckboxes = false;
-                        console.log('Master checkbox desmarcado por deselección individual');
+                    });
+                } else {
+                    masterChecked = false;
+                    allSelectedIds = [];
+                    console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+
+                    isUpdatingCheckboxes = true;
+                    $('.i-checks-boleta').iCheck('uncheck');
+                    isUpdatingCheckboxes = false;
+                }
+            });
+
+            // CORRECCIÓN: Checkboxes individuales
+            $(document).on('ifChecked ifUnchecked', '.i-checks-boleta', function(event) {
+                if (isUpdatingCheckboxes)
+            return; // Evitar que se ejecute cuando estamos actualizando programáticamente
+
+                closeWhatsappPanels();
+                closeEmailPanels();
+
+                var row = $(this).closest('tr');
+                var rowData = coti_table.row(row).data();
+
+                if (rowData && rowData[0]) {
+                    var id = rowData[0].toString();
+
+                    if (event.type === 'ifChecked') {
+                        // Agregar ID si no está ya seleccionado
+                        if (!allSelectedIds.includes(id)) {
+                            allSelectedIds.push(id);
+                        }
+                        console.log('Registro seleccionado:', id);
+                    } else {
+                        // Remover ID de la selección
+                        allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                            return selectedId !== id;
+                        });
+                        console.log('Registro deseleccionado:', id);
+
+                        // CORRECCIÓN: Cuando se desmarca individualmente, salir del modo master
+                        if (masterChecked) {
+                            masterChecked = false;
+                            isUpdatingCheckboxes = true;
+                            $('thead input[type="checkbox"]').iCheck('uncheck');
+                            isUpdatingCheckboxes = false;
+                            console.log('Master checkbox desmarcado por deselección individual');
+                        }
                     }
                 }
-            }
 
-            console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+                console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
 
-            // CORRECCIÓN: Verificar automáticamente si todos están seleccionados
-            setTimeout(updateMasterCheckbox, 50);
-        });
-        $('#btn-duplicar-cotizacion').on('click', function (e) {
+                // CORRECCIÓN: Verificar automáticamente si todos están seleccionados
+                setTimeout(updateMasterCheckbox, 50);
+            });
+            $('#btn-duplicar-cotizacion').on('click', function(e) {
                 e.preventDefault();
 
                 // console.log('IDs seleccionados:', allSelectedIds);
@@ -626,11 +674,11 @@
                     confirmButtonText: "Sí, duplicar",
                     confirmButtonColor: "#1a3bb3",
                     cancelButtonText: "Cancelar"
-                }, function (isConfirm) {
+                }, function(isConfirm) {
                     if (isConfirm) {
                         var form = $('<form>', {
                             'method': 'POST',
-                            'action': '{{ route("guia_remision.create") }}'
+                            'action': '{{ route('guia_remision.create') }}'
                         });
 
                         form.append($('<input>', {
@@ -644,98 +692,99 @@
                             'name': 'id',
                             'value': guiaRemisionID
                         }));
-                        console.log("guia de rimision a compias",guiaRemisionID)
+                        console.log("guia de rimision a compias", guiaRemisionID)
                         $('body').append(form);
                         form.submit();
                     }
                 });
             });
 
-        // CORRECCIÓN: Cuando se redibuje la tabla (cambio de página, filtros, etc.)
-        coti_table.on('draw', function() {
-            closeWhatsappPanels();
-            closeEmailPanels();
-            console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
-            console.log('masterChecked actual:', masterChecked);
+            // CORRECCIÓN: Cuando se redibuje la tabla (cambio de página, filtros, etc.)
+            coti_table.on('draw', function() {
+                closeWhatsappPanels();
+                closeEmailPanels();
+                console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
+                console.log('masterChecked actual:', masterChecked);
 
-            // Reinicializar checkboxes
-            $('.i-checks-boleta').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-
-            // Usar setTimeout para asegurar que iCheck esté completamente inicializado
-            setTimeout(function() {
-                isUpdatingCheckboxes = true;
-
-                // Procesar cada checkbox en la página actual
-                $('.i-checks-boleta').each(function() {
-                    var row = $(this).closest('tr');
-                    var rowData = coti_table.row(row).data();
-                    if (rowData && rowData[0]) {
-                        var id = rowData[0].toString();
-
-                        // Si este ID está en nuestra lista de seleccionados, marcarlo
-                        if (allSelectedIds.includes(id)) {
-                            $(this).iCheck('check');
-                        } else {
-                            $(this).iCheck('uncheck');
-                        }
-                    }
+                // Reinicializar checkboxes
+                $('.i-checks-boleta').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
                 });
 
-                // Actualizar el estado del master checkbox
-                if (masterChecked) {
-                    $('thead input[type="checkbox"]').iCheck('check');
-                } else {
-                    $('thead input[type="checkbox"]').iCheck('uncheck');
+                // Usar setTimeout para asegurar que iCheck esté completamente inicializado
+                setTimeout(function() {
+                    isUpdatingCheckboxes = true;
+
+                    // Procesar cada checkbox en la página actual
+                    $('.i-checks-boleta').each(function() {
+                        var row = $(this).closest('tr');
+                        var rowData = coti_table.row(row).data();
+                        if (rowData && rowData[0]) {
+                            var id = rowData[0].toString();
+
+                            // Si este ID está en nuestra lista de seleccionados, marcarlo
+                            if (allSelectedIds.includes(id)) {
+                                $(this).iCheck('check');
+                            } else {
+                                $(this).iCheck('uncheck');
+                            }
+                        }
+                    });
+
+                    // Actualizar el estado del master checkbox
+                    if (masterChecked) {
+                        $('thead input[type="checkbox"]').iCheck('check');
+                    } else {
+                        $('thead input[type="checkbox"]').iCheck('uncheck');
+                    }
+
+                    isUpdatingCheckboxes = false;
+
+                    // Verificar si necesitamos actualizar el master checkbox automáticamente
+                    setTimeout(updateMasterCheckbox, 100);
+                }, 150);
+            });
+
+            // Detectar cuando se cambia de tab
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                var activeTab = $(e.target).attr('href');
+                $(activeTab).find('.i-checks').iCheck('update');
+            });
+
+            // ============CORREO ============
+            // Fijar cuando se hace clic en el botón de correo
+            $(document).on('click', '.email-container .btn-secondary', function(e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEmailPanels();
+                    return;
                 }
 
-                isUpdatingCheckboxes = false;
-
-                // Verificar si necesitamos actualizar el master checkbox automáticamente
-                setTimeout(updateMasterCheckbox, 100);
-            }, 150);
-        });
-
-        // Detectar cuando se cambia de tab
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-            var activeTab = $(e.target).attr('href');
-            $(activeTab).find('.i-checks').iCheck('update');
-        });
-
-        // ============CORREO ============
-        // Fijar cuando se hace clic en el botón de correo
-        $(document).on('click', '.email-container .btn-secondary', function(e) {
-            if (hasAnySelection()) {
-                e.preventDefault();
                 e.stopPropagation();
-                closeEmailPanels();
-                return;
-            }
+                const form = $(this).siblings('.email-form');
+                form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
 
-            e.stopPropagation();
-            const form = $(this).siblings('.email-form');
-            form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
-        });
-
-        // Fijar también cuando se hace clic en el formulario o inputs
-        $(document).on('click', '.email-form', function(e) {
-            if (hasAnySelection()) {
-                e.preventDefault();
+            // Fijar también cuando se hace clic en el formulario o inputs
+            $(document).on('click', '.email-form', function(e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEmailPanels();
+                    return;
+                }
                 e.stopPropagation();
-                closeEmailPanels();
-                return;
-            }
-            e.stopPropagation();
-            $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
-        });
+                $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) +
+                    'px');
+            });
 
-        $(document).on('click', '.btn-agregar-email', function() {
-            const guiaId = $(this).data('id');
-            const container = $(`.emails-adicionales-${guiaId}`);
+            $(document).on('click', '.btn-agregar-email', function() {
+                const guiaId = $(this).data('id');
+                const container = $(`.emails-adicionales-${guiaId}`);
 
-            container.append(`
+                container.append(`
                 <div style="margin-bottom: 5px; position: relative;">
                     <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
                         style="width: calc(100% - 30px); padding: 5px; border: 1px solid #ccc; border-radius: 3px;" />
@@ -746,482 +795,506 @@
                 </div>
             `);
 
-            const form = $(`.email-form[data-id="${guiaId}"]`);
-            form.css('height', (form.find('form').outerHeight() + 20) + 'px');
-        });
-
-        $(document).on('click', '.btn-eliminar-email', function() {
-            const form = $(this).closest('.email-form');
-            $(this).closest('div').remove();
-            form.css('height', (form.find('form').outerHeight() + 20) + 'px');
-        });
-
-        // ============ ENVÍO DE CORREO AJAX ============
-        $(document).on('submit', '.form-enviar-email', function(e) {
-            e.preventDefault();
-
-            const form = $(this);
-            const guiaId = form.data('guia-id');
-            const button = form.find('button[type="submit"]');
-            const originalHtml = button.html();
-            const emailFormContainer = $(`.email-form[data-id="${guiaId}"]`);
-
-            // Validar que haya al menos un email
-            const emails = form.find('input[type="email"]').map(function() {
-                return $(this).val();
-            }).get().filter(email => email.trim() !== '');
-
-            if (emails.length === 0) {
-                toastr.warning('Debes ingresar al menos un correo electrónico', 'Atención');
-                return;
-            }
-
-            // Deshabilitar botón y mostrar loading
-            button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
-
-            // Mostrar toast de carga
-            toastr.info('<i class="fa fa-spinner fa-spin"></i> Enviando correo, no cierre esta pestaña...', 'Procesando', {
-                timeOut: 0,
-                extendedTimeOut: 0,
-                closeButton: false,
-                tapToDismiss: false
+                const form = $(`.email-form[data-id="${guiaId}"]`);
+                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
             });
 
-            // Preparar datos
-            const formData = new FormData(form[0]);
+            $(document).on('click', '.btn-eliminar-email', function() {
+                const form = $(this).closest('.email-form');
+                $(this).closest('div').remove();
+                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
 
-            $.ajax({
-                url: "{{ route('guiaRemision.enviar-correo-directo', '') }}/" + guiaId,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    // Limpiar todos los toasts
-                    toastr.clear();
+            // ============ ENVÍO DE CORREO AJAX ============
+            $(document).on('submit', '.form-enviar-email', function(e) {
+                e.preventDefault();
 
-                    if (response.success) {
-                        // Cerrar formulario
-                        emailFormContainer.removeClass('email-fixed').css('height', '0px');
+                const form = $(this);
+                const guiaId = form.data('guia-id');
+                const button = form.find('button[type="submit"]');
+                const originalHtml = button.html();
+                const emailFormContainer = $(`.email-form[data-id="${guiaId}"]`);
 
-                        // Resetear formulario
-                        form[0].reset();
-                        $(`.emails-adicionales-${guiaId}`).empty();
+                // Validar que haya al menos un email
+                const emails = form.find('input[type="email"]').map(function() {
+                    return $(this).val();
+                }).get().filter(email => email.trim() !== '');
 
-                        // Mostrar mensaje de éxito con Toast
-                        toastr.success(response.message, '¡Enviado!');
-                    } else {
-                        toastr.error(response.message, 'Error');
-                    }
-                },
-                error: function(xhr) {
-                    // Limpiar todos los toasts
-                    toastr.clear();
-
-                    let errorMsg = 'Error al enviar el correo';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMsg = xhr.responseJSON.message;
-                    }
-
-                    toastr.error(errorMsg, 'Error');
-                },
-                complete: function() {
-                    // Rehabilitar botón
-                    button.prop('disabled', false).html(originalHtml);
+                if (emails.length === 0) {
+                    toastr.warning('Debes ingresar al menos un correo electrónico', 'Atención');
+                    return;
                 }
-            });
-        });
 
-        // Cerrar al hacer clic fuera
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('.email-container, .email-form').length) {
-                $('.email-form').removeClass('email-fixed').css('height', '0px');
-            }
-        });
+                // Deshabilitar botón y mostrar loading
+                button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
 
-        // ============ WHATSAPP ============
-        $(document).on('click', '.wsp-container .btn-success', function(e) {
-            if (hasAnySelection()) {
-                e.preventDefault();
-                e.stopPropagation();
-                closeWhatsappPanels();
-                return;
-            }
-
-            e.stopPropagation();
-            $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
-        });
-
-        // Fijar también cuando se hace clic en el input o en cualquier parte del formulario
-        $(document).on('click', '.wsp-form', function(e) {
-            if (hasAnySelection()) {
-                e.preventDefault();
-                e.stopPropagation();
-                closeWhatsappPanels();
-                return;
-            }
-
-            e.stopPropagation();
-            $(this).addClass('wsp-fixed').css('height', '50px');
-        });
-
-        $(document).on('submit', '.wsp-form form', function() {
-            const form = $(this).closest('.wsp-form');
-            form.removeClass('wsp-fixed').css('height', '0px');
-        });
-
-        // Cerrar al hacer clic fuera
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
-                $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
-            }
-        });
-
-        // Función para imprimir guías de remisión seleccionadas
-        $('#btn-imprimir').on('click', function(e) {
-            e.preventDefault();
-
-            console.log('IDs seleccionados:', allSelectedIds);
-
-            if (allSelectedIds.length === 0) {
-                swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos una guía para imprimir.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-                return;
-            }
-
-            swal({
-                title: "Confirmar impresión",
-                text: `¿Deseas imprimir ${allSelectedIds.length} guía(s) seleccionada(s)?`,
-                type: "info",
-                showCancelButton: true,
-                confirmButtonText: "Sí, imprimir",
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#1a3bb3"
-            }, function(isConfirm) {
-                if (isConfirm) {
-                    var url = '{{ route("guia_remision.print.multiple") }}';
-                    var params = new URLSearchParams();
-
-                    allSelectedIds.forEach(function(id) {
-                        params.append('guia_ids[]', id);
+                // Mostrar toast de carga
+                toastr.info(
+                    '<i class="fa fa-spinner fa-spin"></i> Enviando correo, no cierre esta pestaña...',
+                    'Procesando', {
+                        timeOut: 0,
+                        extendedTimeOut: 0,
+                        closeButton: false,
+                        tapToDismiss: false
                     });
 
-                    console.log('URL completa:', url + '?' + params.toString());
+                // Preparar datos
+                const formData = new FormData(form[0]);
 
-                    var printWindow = window.open(
-                        url + '?' + params.toString(),
-                        '_blank'
-                    );
+                $.ajax({
+                    url: "{{ route('guiaRemision.enviar-correo-directo', '') }}/" + guiaId,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        // Limpiar todos los toasts
+                        toastr.clear();
 
-                    if (printWindow) {
-                        printWindow.focus();
-                    } else {
-                        alert('Por favor, permite ventanas emergentes para imprimir');
+                        if (response.success) {
+                            // Cerrar formulario
+                            emailFormContainer.removeClass('email-fixed').css('height', '0px');
+
+                            // Resetear formulario
+                            form[0].reset();
+                            $(`.emails-adicionales-${guiaId}`).empty();
+
+                            // Mostrar mensaje de éxito con Toast
+                            toastr.success(response.message, '¡Enviado!');
+                        } else {
+                            toastr.error(response.message, 'Error');
+                        }
+                    },
+                    error: function(xhr) {
+                        // Limpiar todos los toasts
+                        toastr.clear();
+
+                        let errorMsg = 'Error al enviar el correo';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+
+                        toastr.error(errorMsg, 'Error');
+                    },
+                    complete: function() {
+                        // Rehabilitar botón
+                        button.prop('disabled', false).html(originalHtml);
                     }
+                });
+            });
 
+            // Cerrar al hacer clic fuera
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.email-container, .email-form').length) {
+                    $('.email-form').removeClass('email-fixed').css('height', '0px');
+                }
+            });
+
+            // ============ WHATSAPP ============
+            $(document).on('click', '.wsp-container .btn-success', function(e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWhatsappPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
+            });
+
+            // Fijar también cuando se hace clic en el input o en cualquier parte del formulario
+            $(document).on('click', '.wsp-form', function(e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWhatsappPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).addClass('wsp-fixed').css('height', '50px');
+            });
+
+            $(document).on('submit', '.wsp-form form', function() {
+                const form = $(this).closest('.wsp-form');
+                form.removeClass('wsp-fixed').css('height', '0px');
+            });
+
+            // Cerrar al hacer clic fuera
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
+                    $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+                }
+            });
+
+            // Función para imprimir guías de remisión seleccionadas
+            $('#btn-imprimir').on('click', function(e) {
+                e.preventDefault();
+
+                console.log('IDs seleccionados:', allSelectedIds);
+
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una guía para imprimir.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                swal({
+                    title: "Confirmar impresión",
+                    text: `¿Deseas imprimir ${allSelectedIds.length} guía(s) seleccionada(s)?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, imprimir",
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        var url = '{{ route('guia_remision.print.multiple') }}';
+                        var params = new URLSearchParams();
+
+                        allSelectedIds.forEach(function(id) {
+                            params.append('guia_ids[]', id);
+                        });
+
+                        console.log('URL completa:', url + '?' + params.toString());
+
+                        var printWindow = window.open(
+                            url + '?' + params.toString(),
+                            '_blank'
+                        );
+
+                        if (printWindow) {
+                            printWindow.focus();
+                        } else {
+                            alert('Por favor, permite ventanas emergentes para imprimir');
+                        }
+
+                        swal({
+                            title: "Procesando",
+                            text: "Las guías de remisión se están imprimiendo...",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+
+            // Manejar click del botón de exportar
+            $('#btn-exportar-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                // Validar que hay boletas seleccionadas
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una guía de remisión para exportar.",
+                        type: "warning",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                // Confirmar acción
+                swal({
+                    title: "Confirmar exportación",
+                    text: `¿Deseas exportar ${allSelectedIds.length} guias(s) seleccionada(s) a Excel?`,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(isConfirm) {
+                    if (!isConfirm) return;
+
+                    $('#btn-exportar-filtrado').prop('disabled', true);
+
+                    $.ajax({
+                        url: "{{ route('guia_remision.exportar') }}",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            guia_ids: allSelectedIds
+                        }),
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        xhrFields: {
+                            responseType: 'blob'
+                        },
+                        complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
+                        success: function(blob) {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download =
+                                `Guías de Remisión_${new Date().toISOString().slice(0,10)}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+                        }
+                    });
+                });
+            });
+
+            // Descargar guías seleccionadas en PDF/ZIP
+            $('#btn-descargar-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                console.log('IDs seleccionados para descargar:', allSelectedIds);
+
+                // 1) Validación: debe haber selección
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una guía para descargar.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                // 2) Mensaje según cantidad
+                const mensaje = allSelectedIds.length === 1 ?
+                    "¿Deseas descargar la guía seleccionada en PDF?" :
+                    `¿Deseas descargar ${allSelectedIds.length} guías en un archivo ZIP?`;
+
+                // 3) Confirmación
+                swal({
+                    title: "Confirmar descarga",
+                    text: mensaje,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, descargar",
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(isConfirm) {
+                    if (!isConfirm) return;
+
+                    // 4) Construir la URL hacia la ruta (la crearás en el controlador/rutas)
+                    const url = '{{ route('GuiaRemision.download.multiple') }}';
+                    const params = new URLSearchParams();
+
+                    // El backend esperará el array como guia_ids[]
+                    allSelectedIds.forEach(id => params.append('guia_ids[]', id));
+
+                    console.log('URL de descarga:', url + '?' + params.toString());
+
+                    // 5) Disparar la descarga
+                    window.location.href = url + '?' + params.toString();
+
+                    // 6) Mensaje de proceso
                     swal({
                         title: "Procesando",
-                        text: "Las guías de remisión se están imprimiendo...",
+                        text: allSelectedIds.length === 1 ?
+                            "La guía se está generando y descargando..." :
+                            "Las guías se están comprimiendo y descargando...",
                         type: "success",
                         timer: 2000,
                         showConfirmButton: false
                     });
-                }
-            });
-        });
-
-        // Manejar click del botón de exportar
-        $('#btn-exportar-filtrado').on('click', function(e) {
-            e.preventDefault();
-
-            // Validar que hay boletas seleccionadas
-            if (allSelectedIds.length === 0) {
-                swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos una guía de remisión para exportar.",
-                    type: "warning",
-                    confirmButtonColor: "#1a3bb3"
                 });
-                return;
-            }
+            });
 
-            // Confirmar acción
-            swal({
-                title: "Confirmar exportación",
-                text: `¿Deseas exportar ${allSelectedIds.length} guias(s) seleccionada(s) a Excel?`,
-                type: "info",
-                showCancelButton: true,
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#1a3bb3"
-            }, function(isConfirm) {
-                if (!isConfirm) return;
+            window.clearAllSelections = function() {
+                allSelectedIds = [];
+                masterChecked = false;
+                isUpdatingCheckboxes = true;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
+                $('.i-checks-boleta').iCheck('uncheck');
+                isUpdatingCheckboxes = false;
+                console.log('Todas las selecciones limpiadas');
+            };
 
-                $('#btn-exportar-filtrado').prop('disabled', true);
+            window.getSelectedIds = function() {
+                console.log('IDs actualmente seleccionados:', allSelectedIds);
+                return allSelectedIds;
+            };
 
-                $.ajax({
-                    url: "{{ route('guia_remision.exportar') }}",
-                    method: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify({ guia_ids: allSelectedIds }),
-                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
-                    xhrFields: { responseType: 'blob' },
-                    complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
-                    success: function(blob) {
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `Guías de Remisión_${new Date().toISOString().slice(0,10)}.xlsx`;
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        window.URL.revokeObjectURL(url);
+            // Función para enviar boletas por Correo múltiple
+            $('#btn-correo-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una guía de remisión para enviar por correo.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por Correo",
+                    text: `Ingresa el correo electrónico para enviar ${allSelectedIds.length} guía(s) de remisión:`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "ejemplo@correo.com",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError(
+                        "Por favor ingresa un correo electrónico");
+
+                    // Validar formato de email
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(inputValue)) {
+                        return swal.showInputError(
+                        "Por favor ingresa un correo electrónico válido");
                     }
-                });
-            });
-        });
 
-        // Descargar guías seleccionadas en PDF/ZIP
-        $('#btn-descargar-filtrado').on('click', function(e) {
-            e.preventDefault();
+                    // Mostrar mensaje de procesando
+                    swal({
+                        title: "Enviando...",
+                        text: `Procesando ${allSelectedIds.length} guía(s) de remisión. Por favor espera...`,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
 
-            console.log('IDs seleccionados para descargar:', allSelectedIds);
-
-            // 1) Validación: debe haber selección
-            if (allSelectedIds.length === 0) {
-                swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos una guía para descargar.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-                return;
-            }
-
-            // 2) Mensaje según cantidad
-            const mensaje = allSelectedIds.length === 1
-                ? "¿Deseas descargar la guía seleccionada en PDF?"
-                : `¿Deseas descargar ${allSelectedIds.length} guías en un archivo ZIP?`;
-
-            // 3) Confirmación
-            swal({
-                title: "Confirmar descarga",
-                text: mensaje,
-                type: "info",
-                showCancelButton: true,
-                confirmButtonText: "Sí, descargar",
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#1a3bb3"
-            }, function(isConfirm) {
-                if (!isConfirm) return;
-
-                // 4) Construir la URL hacia la ruta (la crearás en el controlador/rutas)
-                const url = '{{ route("GuiaRemision.download.multiple") }}';
-                const params = new URLSearchParams();
-
-                // El backend esperará el array como guia_ids[]
-                allSelectedIds.forEach(id => params.append('guia_ids[]', id));
-
-                console.log('URL de descarga:', url + '?' + params.toString());
-
-                // 5) Disparar la descarga
-                window.location.href = url + '?' + params.toString();
-
-                // 6) Mensaje de proceso
-                swal({
-                    title: "Procesando",
-                    text: allSelectedIds.length === 1
-                        ? "La guía se está generando y descargando..."
-                        : "Las guías se están comprimiendo y descargando...",
-                    type: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            });
-        });
-
-        window.clearAllSelections = function() {
-            allSelectedIds = [];
-            masterChecked = false;
-            isUpdatingCheckboxes = true;
-            $('thead input[type="checkbox"]').iCheck('uncheck');
-            $('.i-checks-boleta').iCheck('uncheck');
-            isUpdatingCheckboxes = false;
-            console.log('Todas las selecciones limpiadas');
-        };
-
-        window.getSelectedIds = function() {
-            console.log('IDs actualmente seleccionados:', allSelectedIds);
-            return allSelectedIds;
-        };
-
-        // Función para enviar boletas por Correo múltiple
-        $('#btn-correo-filtrado').on('click', function(e) {
-            e.preventDefault();
-
-            if (allSelectedIds.length === 0) {
-                return swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos una guía de remisión para enviar por correo.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-            }
-
-            swal({
-                title: "Enviar por Correo",
-                text: `Ingresa el correo electrónico para enviar ${allSelectedIds.length} guía(s) de remisión:`,
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                confirmButtonText: "Enviar",
-                cancelButtonText: "Cancelar",
-                inputPlaceholder: "ejemplo@correo.com",
-                confirmButtonColor: "#1a3bb3"
-            }, function(inputValue) {
-                if (inputValue === false) return false;
-                if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
-
-                // Validar formato de email
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(inputValue)) {
-                    return swal.showInputError("Por favor ingresa un correo electrónico válido");
-                }
-
-                // Mostrar mensaje de procesando
-                swal({
-                    title: "Enviando...",
-                    text: `Procesando ${allSelectedIds.length} guía(s) de remisión. Por favor espera...`,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
-
-                // Enviar por AJAX
-                $.ajax({
-                    url: '{{ route('envioCorreo.guia_remision.multiple') }}',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        email: inputValue,
-                        guia_ids: allSelectedIds
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            swal({
-                                title: "¡Enviado!",
-                                text: response.message || `Se han enviado ${allSelectedIds.length} guía(s) de remisión por correo`,
-                                type: "success",
-                                timer: 3000,
-                                showConfirmButton: true,
-                                confirmButtonColor: "#1a3bb3"
-                            });
-                        } else {
+                    // Enviar por AJAX
+                    $.ajax({
+                        url: '{{ route('envioCorreo.guia_remision.multiple') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            email: inputValue,
+                            guia_ids: allSelectedIds
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                swal({
+                                    title: "¡Enviado!",
+                                    text: response.message ||
+                                        `Se han enviado ${allSelectedIds.length} guía(s) de remisión por correo`,
+                                    type: "success",
+                                    timer: 3000,
+                                    showConfirmButton: true,
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            } else {
+                                swal({
+                                    title: "Error",
+                                    text: response.message ||
+                                        "Hubo un error al enviar los correos",
+                                    type: "error",
+                                    confirmButtonText: "Entendido",
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            let errorMsg = 'Error al enviar los correos';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMsg = xhr.responseJSON.message;
+                            }
                             swal({
                                 title: "Error",
-                                text: response.message || "Hubo un error al enviar los correos",
+                                text: errorMsg,
                                 type: "error",
                                 confirmButtonText: "Entendido",
                                 confirmButtonColor: "#1a3bb3"
                             });
                         }
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Error al enviar los correos';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMsg = xhr.responseJSON.message;
-                        }
-                        swal({
-                            title: "Error",
-                            text: errorMsg,
-                            type: "error",
-                            confirmButtonText: "Entendido",
-                            confirmButtonColor: "#1a3bb3"
-                        });
-                    }
-                });
-            });
-        });
-
-        // Función para enviar guias por WhatsApp multiple
-        $('#btn-whatsapp-filtrado').on('click', function(e) {
-            e.preventDefault();
-
-            if (allSelectedIds.length === 0) {
-                return swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos una guía de remisión para enviar por WhatsApp.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-            }
-
-            swal({
-                title: "Enviar por WhatsApp",
-                text: `Ingresa el número de WhatsApp para enviar ${allSelectedIds.length} guía(s) de remisión(s):`,
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                confirmButtonText: "Enviar",
-                cancelButtonText: "Cancelar",
-                inputPlaceholder: "Ejemplo: 999999999",
-                confirmButtonColor: "#1a3bb3"
-            }, function(inputValue) {
-                if (inputValue === false) return false;
-                if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");
-                if (!/^\d+$/.test(inputValue)) return swal.showInputError("Por favor ingresa solo números");
-
-                swal.close();
-                swal({
-                    title: "Procesando...",
-                    text: "Enviando guías de remisiones por WhatsApp",
-                    type: "info",
-                    showConfirmButton: false,
-                    allowOutsideClick: false
-                });
-
-                const form = $('<form>', {
-                    action: '{{ route('envioWhatsapp.guiaRemision.multiple') }}',
-                    method: 'POST',
-                    target: '_blank',
-                    style: 'display:none;'
-                });
-
-                form.append($('<input>', {type: 'hidden', name: '_token', value: '{{ csrf_token() }}'}));
-                form.append($('<input>', {type: 'hidden', name: 'numero', value: inputValue}));
-
-                allSelectedIds.forEach(id => {
-                    form.append($('<input>', {type: 'hidden', name: 'guia_ids[]', value: id}));
-                });
-
-                $('body').append(form);
-                form.submit();
-                setTimeout(() => form.remove(), 1000);
-                setTimeout(() => {
-                    swal({
-                        title: "¡Enviado!",
-                        text: `Se han enviado ${allSelectedIds.length} guía(s) de remisión(s) por WhatsApp`,
-                        type: "success",
-                        timer: 3000,
-                        showConfirmButton: true
                     });
-                }, 500);
+                });
+            });
+
+            // Función para enviar guias por WhatsApp multiple
+            $('#btn-whatsapp-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una guía de remisión para enviar por WhatsApp.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por WhatsApp",
+                    text: `Ingresa el número de WhatsApp para enviar ${allSelectedIds.length} guía(s) de remisión(s):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "Ejemplo: 999999999",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError(
+                        "Por favor ingresa un número de WhatsApp válido");
+                    if (!/^\d+$/.test(inputValue)) return swal.showInputError(
+                        "Por favor ingresa solo números");
+
+                    swal.close();
+                    swal({
+                        title: "Procesando...",
+                        text: "Enviando guías de remisiones por WhatsApp",
+                        type: "info",
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+
+                    const form = $('<form>', {
+                        action: '{{ route('envioWhatsapp.guiaRemision.multiple') }}',
+                        method: 'POST',
+                        target: '_blank',
+                        style: 'display:none;'
+                    });
+
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: '_token',
+                        value: '{{ csrf_token() }}'
+                    }));
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: 'numero',
+                        value: inputValue
+                    }));
+
+                    allSelectedIds.forEach(id => {
+                        form.append($('<input>', {
+                            type: 'hidden',
+                            name: 'guia_ids[]',
+                            value: id
+                        }));
+                    });
+
+                    $('body').append(form);
+                    form.submit();
+                    setTimeout(() => form.remove(), 1000);
+                    setTimeout(() => {
+                        swal({
+                            title: "¡Enviado!",
+                            text: `Se han enviado ${allSelectedIds.length} guía(s) de remisión(s) por WhatsApp`,
+                            type: "success",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+                    }, 500);
+                });
             });
         });
-    });
-</script>
+    </script>
 
 @endsection
-
-
-

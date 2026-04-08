@@ -159,8 +159,8 @@ class GuiaRemisionController extends Controller
         /*Codigo*/
         //Guardado de almacen para inventario-inicial
         $id_almacen = Almacen::where('id', $almacen)->first();
-        $almacen_serie_remision = Codigo_guia_almacen::where('almacen_id', $id_almacen)->first();/*Codigo que brinda sunat a cada sucursal*/
-
+        $almacen_serie_remision = Codigo_guia_almacen::where('almacen_id', $id_almacen->id)->first();/*Codigo que brinda sunat a cada sucursal*/
+        //hasta aca todo bien falta hacer que muestre los datos recuperados
         $almacen_codigo = Codigo_guia_almacen::orderBy('serie_remision', 'DESC')->latest()->first(); // NUYMERO SERIE DE REMISIONMAS ALTO PARA EL CAMBIO
         if ($almacen_serie_remision->cod_remision == 'NN') {
             $agrupar_almacen = Guia_remision::where('almacen_id', $almacen)->get()->last();

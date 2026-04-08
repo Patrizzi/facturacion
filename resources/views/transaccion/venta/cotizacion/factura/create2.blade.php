@@ -1623,7 +1623,7 @@
                 }, 800);
             }
         });
-
+        //funcion a base para subir los datos
         function cargarDatosCotizacion(data) {
             // 1. TIPO
             let tipoCoti = '1';
@@ -1797,7 +1797,7 @@
                 }, 1000);
             }
         }
-
+        //final p
         function cargarArticulos(data) {
             let registros = data.coti_factura_registro || [];
             if (registros.length === 0) return;
