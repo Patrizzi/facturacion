@@ -70,7 +70,7 @@
                                             </form>
                                         @endif
                                         <div class="btn-group">
-                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
@@ -94,6 +94,10 @@
                                                 </button>
                                             </div>
                                         </div>
+                                        <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary"
+                                            title="Duplicar cotizaciones">
+                                            <i class="fa fa-copy"></i>
+                                        </a>
                                     </ul>
 
                                 </ul>
@@ -266,7 +270,7 @@
 
 
                         const e0 = estados[estadoSunat];
-                        
+
                         end += `<button class="btn ${e0.clase} btn-circle btn-ls" title=" ${e0.texto}">
                                     <img src="{{asset('sunat_blanco.png')}}" style="width:16px; height:16px;" />
                                 </button> `;
@@ -585,6 +589,67 @@
             // CORRECCIÓN: Verificar automáticamente si todos están seleccionados
             setTimeout(updateMasterCheckbox, 50);
         });
+        $('#btn-duplicar-cotizacion').on('click', function (e) {
+                e.preventDefault();
+
+                // console.log('IDs seleccionados:', allSelectedIds);
+
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona UNA remision para duplicar.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                if (allSelectedIds.length > 1) {
+                    swal({
+                        title: "Solo una remision",
+                        text: "Solo puedes duplicar UNA cotización a la vez. Por favor, selecciona solo una.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                var guiaRemisionID = allSelectedIds[0];
+
+                swal({
+                    title: "Confirmar duplicación",
+                    text: "¿Deseas duplicar esta guia de remision?",
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, duplicar",
+                    confirmButtonColor: "#1a3bb3",
+                    cancelButtonText: "Cancelar"
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        var form = $('<form>', {
+                            'method': 'POST',
+                            'action': '{{ route("guia_remision.create") }}'
+                        });
+
+                        form.append($('<input>', {
+                            'type': 'hidden',
+                            'name': '_token',
+                            'value': '{{ csrf_token() }}'
+                        }));
+
+                        form.append($('<input>', {
+                            'type': 'hidden',
+                            'name': 'id',
+                            'value': guiaRemisionID
+                        }));
+                        console.log("guia de rimision a compias",guiaRemisionID)
+                        $('body').append(form);
+                        form.submit();
+                    }
+                });
+            });
 
         // CORRECCIÓN: Cuando se redibuje la tabla (cambio de página, filtros, etc.)
         coti_table.on('draw', function() {
@@ -798,7 +863,7 @@
                 closeWhatsappPanels();
                 return;
             }
-            
+
             e.stopPropagation();
             $(this).addClass('wsp-fixed').css('height', '50px');
         });

@@ -42,6 +42,7 @@ use App\EmailBandejaEnviosArchivos;
 use App\EmailConfiguraciones;
 use App\Exports\GuiaRemisionExport;
 use App\GuiaRemisionMRegistros;
+use Exception;
 
 class GuiaRemisionController extends Controller
 {
@@ -75,7 +76,7 @@ class GuiaRemisionController extends Controller
         $conteo_almacen = Almacen::where('estado', 0)->count();
         $personal_conductor = Personal::where('id','!=', 1)->where('licencia', '!=', null)->get();
 
-        
+
         return view('transaccion.venta.guia_remision.index', compact('guia_remision', 'almacen', 'conteo_almacen', 'almacen_primero', 'user_login','valor_error','message','personal_conductor'));
     }
 
@@ -110,6 +111,23 @@ class GuiaRemisionController extends Controller
 
         return $data_array;
     }
+    private function duplicateGuia($id_guia){
+    try{
+        $guiaRemision = Guia_remision::with([
+            'cliente',
+            'almacen',
+            'vehiculo',
+            'personal',
+            'user_personal',
+            'vehiculo_publicos',
+            'registros'
+        ])->findOrFail($id_guia);
+        return $guiaRemision;
+    }catch (Exception $e){
+        return null;
+    }
+
+    }
     /**q
      * Show the form for creating a new resource.
      *
@@ -117,6 +135,18 @@ class GuiaRemisionController extends Controller
      */
     public function create(Request $request)
     {
+
+        $RemiDuplicado = null;
+        if($request->id && !empty($request)){
+            $RemiDuplicado= $this->duplicateGuia($request->id);
+            if ($RemiDuplicado) {
+                $almacen = $RemiDuplicado->almacen_id;
+            }else {
+                $almacen = $request->get('almacen');
+            }
+        }else{
+            $almacen = $request->get('almacen');
+        }
 
         $inventario_inicial = Kardex_entrada::first();
         if (isset($inventario_inicial)) {
@@ -128,9 +158,9 @@ class GuiaRemisionController extends Controller
         // return "a";
         /*Codigo*/
         //Guardado de almacen para inventario-inicial
-        $almacen = $request->get('almacen');
         $id_almacen = Almacen::where('id', $almacen)->first();
-        $almacen_serie_remision = Codigo_guia_almacen::where('almacen_id', $id_almacen->id)->first();/*Codigo que brinda sunat a cada sucursal*/
+        $almacen_serie_remision = Codigo_guia_almacen::where('almacen_id', $id_almacen)->first();/*Codigo que brinda sunat a cada sucursal*/
+
         $almacen_codigo = Codigo_guia_almacen::orderBy('serie_remision', 'DESC')->latest()->first(); // NUYMERO SERIE DE REMISIONMAS ALTO PARA EL CAMBIO
         if ($almacen_serie_remision->cod_remision == 'NN') {
             $agrupar_almacen = Guia_remision::where('almacen_id', $almacen)->get()->last();
@@ -172,7 +202,7 @@ class GuiaRemisionController extends Controller
         $fecha_hoy = Carbon::now();
         $fecha_1 = $fecha_hoy->format('Y-m-d');
 
-        return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico','fecha_1','id_almacen'));
+        return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico','fecha_1','id_almacen','RemiDuplicado'));
     }
 
     public function peso_stock(Request $request){
@@ -548,7 +578,7 @@ class GuiaRemisionController extends Controller
         for ($i = 0; $i < $count_articulo; $i++) {
             $kardex_entrada_v = Kardex_entrada::where('almacen_id', $almacen_producto_validacion)->get();
             $kardex_entrada_count_v = Kardex_entrada::where('almacen_id', $almacen_producto_validacion)->count();
-            
+
             //return $kardex_entrada;
             foreach ($kardex_entrada_v as $kardex_entradas_v) {
                 $kadex_entrada_id_v[] = $kardex_entradas_v->id;
@@ -575,7 +605,7 @@ class GuiaRemisionController extends Controller
         }
 
 
-        
+
         $guia_remision->cliente_id = $id_cliente;
         $guia_remision->sucursal_cliente = $request->get('sucursal_cli');
         $guia_remision->cod_postal_cliente = $request->get('postal_input');
@@ -766,7 +796,7 @@ class GuiaRemisionController extends Controller
                     'message' => 'No se pudo anular la guía'
                 ], 500);
             }
-            
+
             Guia_remision::devolucion_guia_remision($guia_remision->id);
 
             return response()->json([
