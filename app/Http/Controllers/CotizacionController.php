@@ -262,7 +262,7 @@ class CotizacionController extends Controller
         $tipo_cambio=TipoCambio::latest('created_at')->first();
         $config=ConfiguracionGuiaIngresos::where('tipo_guia','cotizacion')->get();
         // return $config;
-
+        
         // return $cotiDuplicada;
         return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','cotizacion_numero_boleta','cotizacion_numero_n_venta','config_create', 'cotiDuplicada'));
     }
@@ -1609,8 +1609,8 @@ class CotizacionController extends Controller
 
             // Si ya existía, la fecha_vencimiento anterior se convierte en el nuevo fecha_inicio
             // Si es nueva, fecha_inicio es hoy
-            $renovacion->fecha_inicio      = $renovacion->exists 
-                                                ? $renovacion->fecha_vencimiento 
+            $renovacion->fecha_inicio      = $renovacion->exists
+                                                ? $renovacion->fecha_vencimiento
                                                 : now()->toDateString();
             $renovacion->fecha_vencimiento = $request->fecha_vencimiento;
             $renovacion->estado            = 1;

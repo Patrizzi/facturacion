@@ -37,7 +37,7 @@ class Guia_remision extends Model
     }
     // public function motivo_traslado(){
     //     return $this->belongsTo(MotivoTraslado::class,'cliente_id');
-    // }   
+    // }
     public function registros()
     {
         return $this->hasMany(g_remision_registro::class, 'guia_remision_id');
@@ -217,7 +217,7 @@ class Guia_remision extends Model
                 'success' => true,
                 'message' => 'Se efectuó el re stock de los produtos en la guia de remison:',
             ], 500);
-                
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

@@ -26,8 +26,8 @@
                     <h5>Crear Guía Remisión</h5>
                 </div>
                 <div class="ibox-content">
-                    <form action="{{ route('guia_remision.store') }}" enctype="multipart/form-data"
-                        method="post" onsubmit="return valida(this)" id="form_store">
+                    <form action="{{ route('guia_remision.store') }}" enctype="multipart/form-data" method="post"
+                        onsubmit="return valida(this)" id="form_store">
                         @method('POST')
                         @csrf
                         <div class="row word-style">
@@ -362,8 +362,8 @@
         }
 
         /* .form-control {
-            border-radius: 10px;
-        } */
+                border-radius: 10px;
+            } */
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             font-size: 12px;
@@ -417,7 +417,7 @@
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-    
+
     <!-- Jquery Validate -->
     <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
@@ -461,7 +461,7 @@
         </td>";
         <td class="td_selected">
         <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i});" required></select>
-        <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
+        <textarea id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción del producto" class="form-control" style="margin-top: 5px;"></textarea>
         </td>
         <td>
         <input style="min-width: 100px" type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
@@ -815,6 +815,241 @@
                 }
             );
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            var RemiDuplicado = @json($RemiDuplicado ?? null);
+
+            if (RemiDuplicado) {
+                setTimeout(function() {
+                    cargarDatosGuia(RemiDuplicado);
+                }, 800);
+            }
+        });
+
+        function cargarDatosGuia(data) {
+
+            // 1. CLIENTE
+            if (data.cliente) {
+                setTimeout(function() {
+                    if ($('#cliente').hasClass("select2-hidden-accessible")) {
+                        $('#cliente').select2('destroy');
+                    }
+
+                    $('#cliente').empty();
+                    const clienteOption = new Option(
+                        data.cliente.nombre + ' | ' + data.cliente.numero_documento,
+                        data.cliente.id,
+                        true,
+                        true
+                    );
+                    $('#cliente').append(clienteOption);
+
+                    $(".select2_demo_client").select2({
+                        theme: "bootstrap",
+                        placeholder: "Seleccionar Cliente",
+                        ajax: {
+                            minimumInputLength: 1,
+                            url: "{{ route('pa.clients') }}",
+                            dataType: 'json',
+                            type: "POST",
+                            delay: 10,
+                            data: function(params) {
+                                return {
+                                    _token: "{{ csrf_token() }}",
+                                    search: params.term
+                                };
+                            },
+                            processResults: function(response) {
+                                return {
+                                    results: $.map(response, function(item) {
+                                        return {
+                                            id: item.id,
+                                            text: item.nombre + ' | ' + item.numero_documento
+                                        };
+                                    })
+                                };
+                            },
+                            cache: true
+                        }
+                    });
+
+                    $('#cliente').val(data.cliente.id).trigger('change');
+
+                    // Cargar sucursal del cliente después de seleccionarlo
+                    setTimeout(function() {
+                        change_cli();
+                        setTimeout(function() {
+                            if (data.sucursal_cli) {
+                                $('#sucursal_input').val(data.sucursal_cli);
+                            }
+                            if (data.cod_postal) {
+                                $('#postal_input').val(data.cod_postal);
+                            }
+                        }, 800);
+                    }, 500);
+
+                }, 400);
+            }
+
+            // 2. FECHA ENTREGA
+            if (data.fecha_entrega) {
+                $('input[name="fecha_entrega"]').val(data.fecha_entrega);
+            }
+
+            // 3. MOTIVO TRASLADO
+            if (data.motivo_traslado) {
+                $('select[name="motivo_traslado"]').val(data.motivo_traslado).trigger('change');
+            }
+
+            // 4. TIPO TRANSPORTE
+            if (data.tipo_transporte) {
+                const selectTransporte = document.getElementById('select_id');
+                $('select[name="tipo_transporte"]').val(data.tipo_transporte).trigger('change');
+                test(selectTransporte); // muestra/oculta los divs según tipo
+
+                setTimeout(function() {
+                    // 4a. Vehículo público
+                    if (data.tipo_transporte == 1 && data.vehiculo_publico) {
+                        $('#vehiculo_publico').val(data.vehiculo_publico).trigger('change');
+                    }
+                    // 4b. Vehículo privado + conductor
+                    if (data.tipo_transporte == 2) {
+                        if (data.vehiculo_id) {
+                            $('#vehiculo_privado').val(data.vehiculo_id).trigger('change');
+                        }
+                        if (data.conductor_id) {
+                            $('#conductor').val(data.conductor_id).trigger('change');
+                        }
+                    }
+                }, 300);
+            }
+
+            // 5. OBSERVACIÓN
+            if (data.observacion) {
+                $('textarea[name="observacion"]').val(data.observacion);
+            }
+
+            // 6. REGISTROS (productos)
+            setTimeout(function() {
+                if (data.registros && data.registros.length > 0) {
+                    cargarRegistrosGuia(data.registros);
+                }
+            }, 1000);
+        }
+
+        function cargarRegistrosGuia(registros) {
+            cargarRegistroSecuencial(registros, 0);
+        }
+
+        function cargarRegistroSecuencial(registros, index) {
+            if (index >= registros.length) return;
+
+            const registro = registros[index];
+
+            if (index === 0) {
+                cargarRegistroEnFila(registro, 0, function() {
+                    setTimeout(function() {
+                        cargarRegistroSecuencial(registros, index + 1);
+                    }, 400);
+                });
+            } else {
+                crearNuevaFilaGuia(index, function() {
+                    cargarRegistroEnFila(registro, index, function() {
+                        setTimeout(function() {
+                            cargarRegistroSecuencial(registros, index + 1);
+                        }, 400);
+                    });
+                });
+            }
+        }
+
+        function crearNuevaFilaGuia(index, callback) {
+           var data = `
+    <tr>
+        <td>
+            <button type='button' class='btn btn-danger btn-xs' style='margin-top: 5px; margin-left: 5px;'
+                onclick='$(this).closest("tr").remove();'>
+                <i class='fa fa-trash'></i>
+            </button>
+        </td>
+        <td class="td_selected">
+            <select class="select2_demo_productos" name="articulo[]" id="articulo${index}"
+                style="width: 100%;" onchange="ajax(${index});" required></select>
+
+            <textarea id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción del producto" class="form-control" style="margin-top: 5px;"></textarea>
+        </td>
+        <td>
+            <input style="min-width: 100px" type='text' id='stock${index}' name='stock[]'
+                readonly class="form-control" required autocomplete="off"/>
+        </td>
+        <td>
+            <input style="min-width: 100px" type='text' id='cantidad${index}' name='cantidad[]'
+                class="monto${index} form-control" required onchange="peso_cantidad(${index})"
+                autocomplete="off"/>
+        </td>
+        <td>
+            <textarea style="min-width: 250px" id='series${index}' name='series[]'
+                class="form-control" placeholder="escanear N/S"></textarea>
+        </td>
+        <td>
+            <input style="min-width: 100px" id='peso${index}' name='peso[]'
+                type="text" class="form-control" value="0" readonly>
+            <input type="hidden" id="peso_base${index}">
+        </td>
+    </tr>
+`;
+            $('table tbody:first').append(data);
+
+            setTimeout(function() {
+                articlesSelect2();
+                if (callback) callback();
+            }, 250);
+        }
+
+        function cargarRegistroEnFila(registro, index, callback) {
+
+            if (!registro.producto_id || !registro.producto) {
+                if (callback) callback();
+                return;
+            }
+
+            const prod = registro.producto;
+            const articuloTexto = `${prod.id} | ${prod.codigo_producto} | ${prod.codigo_original} | ${prod.nombre}`;
+            const selectId = index === 0 ? '#articulo' : `#articulo${index}`;
+
+            if ($(selectId).length === 0) {
+                if (callback) callback();
+                return;
+            }
+
+            const option = new Option(articuloTexto, articuloTexto, true, true);
+            $(selectId).append(option).trigger('change');
+            if(registro.descripcion){
+                $().val(registro.descripcion)
+            }
+            // Esperar que ajax() traiga peso y stock
+            setTimeout(function() {
+                //descripicon
+                $(`#descripcion${index}`).val(registro.descripcion);
+                //nro de serie
+                $(`#series${index}`).val(registro.numero_serie);
+                // CANTIDAD
+                $(`#cantidad${index}`).val(registro.cantidad);
+
+                // SERIES
+                if (registro.series) {
+                    $(`#series${index}`).val(registro.series);
+                }
+
+                // RECALCULAR PESO con la cantidad duplicada
+                peso_cantidad(index);
+
+                if (callback) {
+                    setTimeout(callback, 300);
+                }
+            }, 1500);
+        }
     </script>
     @include('transaccion.venta.clientes.modal_create')
 

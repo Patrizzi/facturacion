@@ -114,6 +114,7 @@ class GuiaRemisionController extends Controller
     private function duplicateGuia($id_guia){
     try{
         $guiaRemision = Guia_remision::with([
+            'registros.producto',
             'cliente',
             'almacen',
             'vehiculo',
@@ -201,7 +202,6 @@ class GuiaRemisionController extends Controller
         $igv = Igv::first();
         $fecha_hoy = Carbon::now();
         $fecha_1 = $fecha_hoy->format('Y-m-d');
-
         return view('transaccion.venta.guia_remision.create', compact('productos', 'clientes', 'array', 'array_cantidad', 'igv', 'array_promedio', 'empresa', 'vehiculo', 'motivo_traslado', 'codigo_guia', 'almacen', 'personal', 'transporte_publico','fecha_1','id_almacen','RemiDuplicado'));
     }
 
