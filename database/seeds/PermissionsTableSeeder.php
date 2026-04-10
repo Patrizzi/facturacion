@@ -111,7 +111,6 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'guia_remision.crear', 'module' => 'comprobantes', 'description' => 'Crear Guia de Remisión']);
         Permission::create(['name' => 'guia_remision.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Guia de Remisión']);
         Permission::create(['name' => 'guia_remision.editar', 'module' => 'comprobantes', 'description' => 'Editar Guia de Remisión']);
-        Permission::create(['name' => 'guia_remision.anular', 'module' => 'comprobantes', 'description' => 'Anular Guia de Remisión en el Sistema']);
 
         Permission::create(['name' => 'guia_remision_m.listar', 'module' => 'comprobantes', 'description' => 'Lista de Guías de Remisión Manuales']);
         Permission::create(['name' => 'guia_remision_m.crear', 'module' => 'comprobantes', 'description' => 'Crear Guia de Remisión Manual']);
@@ -140,7 +139,9 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'informe_tecnico.anular', 'module' => 'garantias', 'description' => 'Anular Informe Técnico de Garantias']);
 
         //* Inventario
-
+        
+        Permission::create(['name' => 'kardex_entrada.inicial', 'module' => 'inventario', 'description' => 'Entrada del Inventario Inicial']);
+        
         Permission::create(['name' => 'kardex_entrada.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Entrada en Kardex']);
         Permission::create(['name' => 'kardex_entrada.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Entrada en Kardex']);
         Permission::create(['name' => 'kardex_entrada.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Entrada en Kardex']);
@@ -227,10 +228,14 @@ class PermissionsTableSeeder extends Seeder
 
         //* Consultas
 
-        // Permission::create(['name' => 'servicio_tecnico.listar_servicios', 'module' => '' ] , ['description' => 'Lista de Vehiculos de Transporte Privado']);
-        // Permission::create(['name' => 'servicio_tecnico.ingreso', 'module' => '' ] , ['description' => 'Lista de Vehiculos de Transporte Privado']);
-        // Permission::create(['name' => 'servicio_tecnico.egreso', 'module' => '' ] , ['description' => 'Lista de Vehiculos de Transporte Privado']);
-        // Permission::create(['name' => 'servicio_tecnico.informe_tecnico', 'module' => '' ] , ['description' => 'Lista de Vehiculos de Transporte Privado']);
+        Permission::create(['name' => 'consultas.guia_ingreso', 'module' => 'consultas', 'description' => 'Consulta para Guias de Ingreso']);
+        Permission::create(['name' => 'consultas.guia_egreso', 'module' => 'consultas', 'description' => 'Consulta para Guias de Egreso']);
+        Permission::create(['name' => 'consultas.informe_tecnico', 'module' => 'consultas', 'description' => 'Consulta para Informe Tecnico']);
+
+        Permission::create(['name' => 'consultas.productos', 'module' => 'consultas' ] , ['description' => 'Consulta sobre Productos']);
+        Permission::create(['name' => 'consultas.servicios', 'module' => 'consultas' ] , ['description' => 'Consulta sobre Servicios']);
+        
+        Permission::create(['name' => 'consultas.reporte_comprobantes', 'module' => 'consultas' ] , ['description' => 'Consulta para los Comprobantes']);
 
         //* Registro Sunat
 
@@ -246,6 +251,8 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'factura_m.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Factura Manual Emitida']);
         Permission::create(['name' => 'factura_m.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Factura Manual Emitida']);
 
+        Permission::create(['name' => 'detraccion_factura.listar', 'module' => 'registro_sunat', 'description' => 'Lista de Facturas con Detraccions']);
+
         Permission::create(['name' => 'boleta.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Boletas a Emitir']);
         Permission::create(['name' => 'boleta.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Boleta a Sunat']);
         Permission::create(['name' => 'boleta.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Boletas Emitidas']);
@@ -257,6 +264,13 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'boleta_m.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Boletas Manuales Emitidas']);
         Permission::create(['name' => 'boleta_m.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Boleta Manual Emitida']);
         Permission::create(['name' => 'boleta_m.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Boleta Manual Emitida']);
+
+        Permission::create(['name' => 'guia_remision.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Guias Electronicas a Emitir']);
+        Permission::create(['name' => 'guia_remision.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Guia Electronica a Sunat']);
+        Permission::create(['name' => 'guia_remision.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Guias Electronicass Emitidas']);
+        Permission::create(['name' => 'guia_remision.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Guia Electronica Emitida']);
+        Permission::create(['name' => 'guia_remision.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Guia Electronica Emitida']);
+        Permission::create(['name' => 'guia_remision.anular', 'module' => 'registro_sunat', 'description' => 'Anular Guia Electronica Emitida']);
 
         Permission::create(['name' => 'nota_credito.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Notas de Crédito a Emitir']);
         Permission::create(['name' => 'nota_credito.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Notas de Crédito a Sunat']);
@@ -287,7 +301,27 @@ class PermissionsTableSeeder extends Seeder
 
         //* Proyecto PBM
 
+        Permission::create(['name' => 'proyectos_pmb.listar', 'module' => 'proyectos_pmb', 'description' => 'Lista de Proyectos']);
+        Permission::create(['name' => 'proyectos_pmb.crear', 'module' => 'proyectos_pmb', 'description' => 'Crear Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.ver', 'module' => 'proyectos_pmb', 'description' => 'Ver el detalle de un Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.editar', 'module' => 'proyectos_pmb', 'description' => 'Editar un Proyecto']);
 
+        Permission::create(['name' => 'proyectos_pmb.listar_act', 'module' => 'proyectos_pmb', 'description' => 'Ver las actividades de un Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.crear_act', 'module' => 'proyectos_pmb', 'description' => 'Crear las actividades de un Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.editar_act', 'module' => 'proyectos_pmb', 'description' => 'Crear las actividades de un Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.borrar_act', 'module' => 'proyectos_pmb', 'description' => 'Borrar actividades de un Proyecto']);
+
+        Permission::create(['name' => 'proyectos_pmb.listar_tareas', 'module' => 'proyectos_pmb', 'description' => 'Listar tareas para una actividad']);
+        Permission::create(['name' => 'proyectos_pmb.ver_tareas', 'module' => 'proyectos_pmb', 'description' => 'Ver tareas para una actividad']);
+        Permission::create(['name' => 'proyectos_pmb.crear_tarea', 'module' => 'proyectos_pmb', 'description' => 'Crear tareas para una actividad']);
+        Permission::create(['name' => 'proyectos_pmb.editar_tarea', 'module' => 'proyectos_pmb', 'description' => 'Editar tareas para una actividad']);
+        Permission::create(['name' => 'proyectos_pmb.borrar_tarea', 'module' => 'proyectos_pmb', 'description' => 'Crear las actividades de un Proyecto']);
+
+        Permission::create(['name' => 'proyectos_pmb.crear_comentario', 'module' => 'proyectos_pmb', 'description' => 'Crear comentario a las tareas de una actividades de un Proyecto']);
+
+        Permission::create(['name' => 'proyectos_pmb.reporte', 'module' => 'proyectos_pmb', 'description' => 'Ver el Reporte General']);
+
+        Permission::create(['name' => 'proyectos_pmb.gantt', 'module' => 'proyectos_pmb', 'description' => 'Ver en Gráfico Gantt un Proyectos']);
 
         //* Correo
 

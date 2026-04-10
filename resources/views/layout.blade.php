@@ -50,9 +50,7 @@
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu"
                     style="height:90vh !important; overflow-y: auto;  display: block; top: 0px">
-                    {{-- <div style="position: fixed; z-index: 9999;"> --}}
                     <li class="first-element" style="background-color: white;width: 100% !important;">
-                        {{-- <div class="dropdown profile-element" style="transform: translateX(-25px);"> --}}
                         <a href="{{ route('usuario.index') }}" class="head-nav-logo" style=" padding: 20px 0px;">
                             <img alt="image" class="rounded-circle"
                                 src="{{ asset('/archivos/imagenes/layout/Leonosoft.png') }}"
@@ -61,106 +59,116 @@
                                 style="color: #2641f8; font-size: 18px; font-weight: bold;">LEONO</span><span
                                 style="color: gray; font-size: 18px; font-weight: bold;">SOFT</span>
                         </a>
-                        {{-- </div> --}}
-                        {{-- <div class="dropdown profile-element" style="transform: translateX(-18px);">
-                                <a class="nav-label" href="{{ route('usuario.index') }}">
-                                    <span class="block m-t-xs font-bold"
-                                        style="color:black; font-size: 15px; margin-top: 20px;">@yield('nombre', auth()->user()->nombre)</span>
-                                </a>
-                            </div> --}}
                     </li>
-                    {{-- </div> --}}
-                    {{-- INICIO --}}
                     @can('inicio')
                         <li style=""><a href="{{ route('inicio') }}"><i class="fa fa-home fa-lg text-white"></i><span
                                     class="nav-label text-white">Inicio</span></a></li>
                     @endcan
 
-                    {{-- MENU DESPELEGABLE NUEVO --}}
-
-                    @canany(['cotizacion.listar', 'cotizacion_m.listar'])
-                    <li><a href="{{ route('ventas.cotizacion') }}"><i class="fa fa-tags fa-lg text-white"></i><span
+                    @canany(['cotizacion.listar', 'cotizacion_m.listar', 'nota_venta.listar', 'clientes.listar','coti_renovacion.listar'])
+                        <li><a href="{{ route('ventas.cotizacion') }}"><i class="fa fa-tags fa-lg text-white"></i><span
                                 class="nav-label text-white">Ventas</span></a></li>
                     @endcan
-                    <li><a href="{{ route('caja_chica.index') }}">
+
+                    @canany(['caja-chica.abrir_caja', 'caja-chica.cerrar_caja', 'caja-chica.depositar', 'caja-chica.pagar'])
+                        <li><a href="{{ route('caja_chica.index') }}">
                             <i class="fa fa-money fa-lg text-white"></i><span
                                 class="nav-label text-white">Tesorería</span></a></li>
+                    @endcan
 
-                    {{-- <li><a href="#"><i class="fa fa-shopping-cart fa-lg text-white"></i><span
-                                class="nav-label text-white">Compras</span></a></li> --}}
-
-                    <li><a href="{{ route('comprobantes.index_factura') }}"><i
+                    @canany(['factura.listar', 'factura_m.listar', 'boleta.listar', 'boleta_m.listar', 'nota_credito.listar', 'nota_debito.listar', 'guia_remision.listar', 'nota_credito.listar','nota_debito.listar', 'guia_remision.listar', 'guia_remision_m.listar'])
+                        <li><a href="{{ route('comprobantes.index_factura') }}"><i
                                 class="fa fas fa-file fa-lg text-white"></i><span
                                 class="nav-label text-white">Comprobantes</span></a></li>
+                    @endcan
 
+                    @canany(['guia_ingreso.listar', 'guia_egreso.listar', 'informe_tecnico.listar'])
                     <li><a href="{{ route('garantia_guia_ingreso.index') }}"><i
                                 class="fa fa-check fa-lg text-white"></i><span
                                 class="nav-label text-white">Garantias</span></a></li>
+                    @endcan
 
-                    <li>
-                        @if (empty($inventario_inicial))
-                            <a href="{{ route('kardex-entrada.create') }}"><i
-                                    class="fa fa-archive fa-lg text-white"></i>
-                                <span class="nav-label">Inventario Inicial</span></a>
-                        @elseif($inventario_inicial->estado == 1)
-                            <a href="{{ route('kardex-entrada.show', $inventario_inicial->id) }}"><i
-                                    class="fa fa-archive fa-lg text-white"></i>
-                                <span class="nav-label">Inventario Inicial</span></a>
-                        @else
-                            @can('inventario')
-                        <li>
-                            <a href="#"><i class="fa fa-archive fa-lg text-white"></i><span
-                                    class="nav-label">Inventario</span></a>
-                            <ul class="nav nav-second-level collapse">
-                                @can('inventario-productos_kardex')
-                                    <li>
-                                        <a href="#"><span>Kardex-Producto</span></a>
-                                        <ul class="nav nav-third-level">
-                                            @can('inventario-productos_kardex-entrada_producto.index')
-                                                <li><a href="{{ route('kardex-entrada.index') }}"><span>Entrada
+                    @if (empty($inventario_inicial))
+                        @can('kardex_entrada.inicial')
+                            <li>
+                                <a href="{{ (!empty($inventario_inicial) && $inventario_inicial->estado == 1)
+                                    ? route('kardex-entrada.show', $inventario_inicial->id)
+                                    : route('kardex-entrada.create') }}">
+                                    <i class="fa fa-archive fa-lg text-white"></i>
+                                    <span class="nav-label">Inventario Inicial</span>
+                                </a>
+                            </li>
+                        @endcan
+                    @else
+                        @canany(['kardex_entrada.listar', 'kardex_distribución.listar', 'kardex_traslado.listar', 'kardex_salida.listar', 'inventario.consulta', 'cierre_periodo.lista', 'inventario.movimiento'])
+                            <li>
+                                <a href="#"><i class="fa fa-archive fa-lg text-white"></i><span
+                                        class="nav-label">Inventario</span></a>
+                                <ul class="nav nav-second-level collapse">
+                                    @canany(['kardex_entrada.listar', 'kardex_distribución.listar', 'kardex_traslado.listar', 'kardex_salida.listar'])
+                                        <li>
+                                            <a href="#"><span>Kardex-Producto</span></a>
+                                            <ul class="nav nav-third-level">
+                                                @can('kardex_entrada.listar')
+                                                    <li><a href="{{ route('kardex-entrada.index') }}"><span>Entrada
+                                                                Producto</span></a></li>
+                                                @endcan
+                                                @can('kardex_distribución.listar')
+                                                    <li><a href="{{ route('kardex-entrada-Distribucion.index') }}"><span>Distribución
                                                             Producto</span></a></li>
-                                            @endcan
-                                            <li><a href="{{ route('kardex-entrada-Distribucion.index') }}"><span>Distribución
-                                                        Producto</span></a></li>
-                                            <li><a href="{{ route('kardex-entrada-Traslado-almacen.index') }}"><span>Traslado
-                                                        de Almacén </span></a></li>
-                                            @can('inventario-productos_kardex-salida_producto.index')
-                                                <li><a href="{{ route('kardex-salida.index') }}"><span>Salida
-                                                            Producto</span></a></li>
-                                            @endcan
+                                                @endcan
+                                                @can('kardex_traslado.listar')
+                                                    <li><a href="{{ route('kardex-entrada-Traslado-almacen.index') }}"><span>Traslado
+                                                            de Almacén </span></a></li>
+                                                @endcan
+                                                @can('kardex_salida.listar')
+                                                    <li><a href="{{ route('kardex-salida.index') }}"><span>Salida
+                                                                Producto</span></a></li>
+                                                @endcan
 
-                                        </ul>
-                                    </li>
-                                    {{-- DEBE IR A OTRO LADO --}}
-                                    @can('inventario-toma_de_inventario.index')
+                                            </ul>
+                                        </li>
+                                    @endcan
+                                    @can('inventario.consulta')
                                         <li><a href="{{ route('periodo-consulta.index') }}"><span>Consultas de
                                                     inventario</span></a></li>
-                                        <!-- Periodo Consulta -->
                                     @endcan
-
-                                    <li><a href="{{ route('cierre-periodo.index') }}"><span>Cierre Periodo</span></a></li>
-                                    <li><a href="{{ route('movimiento-consulta.index') }}"><span>Movimiento
+                                    @can('cierre_periodo.listar')
+                                        <li><a href="{{ route('cierre-periodo.index') }}"><span>Cierre Periodo</span></a></li>
+                                    @endcan
+                                    @can('inventario.movimiento')
+                                        <li><a href="{{ route('movimiento-consulta.index') }}"><span>Movimiento
                                                 Consulta</span></a></li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                    @endif
+                    
+                    @canany('factura.listar_por_pagar', 'factura.listar_pagadas', 'factura_m.listar_por_pagar', 'factura_m.listar_pagadas', 'boleta.listar_por_pagar', 'boleta.listar_pagadas', 'boleta_m.listar_por_pagar', 'boleta_m.listar_pagadas', 'nota_venta.listar_por_pagar', 'nota_venta.listar_pagadas')
+                        <li><a href="#"><i class="fa fa-credit-card fa-lg text-white"></i><span
+                                    class="nav-label text-white">Creditos y Cobranzas</span></a>
+                            <ul class="nav nav-second-level collapse">
+                                @can('factura.listar_por_pagar', 'factura.listar_pagadas', )
+                                    <li><a href="{{ route('cobranzas.index_factura') }}">Facturas</a></li>
+                                @endcan
+                                @can('factura_m.listar_por_pagar', 'factura_m.listar_pagadas')
+                                    <li><a href="{{ route('cobranzas.index_facturas_m') }}">Facturas M.</a></li>
+                                @endcan
+                                @can('boleta.listar_por_pagar', 'boleta.listar_pagadas')
+                                    <li><a href="{{ route('cobranzas.index_boletas') }}">Boletas</a></li>
+                                @endcan
+                                @can('boleta_m.listar_por_pagar', 'boleta_m.listar_pagadas')
+                                    <li><a href="{{ route('cobranzas.index_boletas_manual') }}">Boletas M.</a></li>
+                                @endcan
+                                @can('nota_venta.listar_por_pagar', 'nota_venta.listar_pagadas')
+                                    <li><a href="{{ route('cobranzas.index_nota_venta') }}">Nota de Venta</a></li>
                                 @endcan
                             </ul>
                         </li>
                     @endcan
 
-                    @endif
-                    </li>
-
-                    <li><a href="#"><i class="fa fa-credit-card fa-lg text-white"></i><span
-                                class="nav-label text-white">Creditos y Cobranzas</span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('cobranzas.index_factura') }}">Facturas</a></li>
-                            <li><a href="{{ route('cobranzas.index_facturas_m') }}">Facturas M.</a></li>
-                            <li><a href="{{ route('cobranzas.index_boletas') }}">Boletas</a></li>
-                            <li><a href="{{ route('cobranzas.index_boletas_manual') }}">Boletas M.</a></li>
-                            <li><a href="{{ route('cobranzas.index_nota_venta') }}">Nota de Venta</a></li>
-                        </ul>
-                    </li>
-
-                    {{-- servicio tecnico --}}
+                    {{-- Falta validación --}}
                     <li>
                         <a href="{{ route('servicio-guias.index') }}">
                             <i class="fa fa-wrench fa-lg text-white" aria-hidden="true"></i>
@@ -168,398 +176,147 @@
                                 Servicio Técnico
                             </span>
                         </a>
-                        {{-- <a href="{{ route('sGuias.index') }}"><i class="fa fa-credit-card fa-lg text-white"></i><span
-                                class="nav-label text-white">Servicio Técnico</span></a> --}}
-                        {{-- <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('sGuias.index') }}">Servicios</a></li>
-                            <li><a href="{{ route('indexServicio.index') }}">Cotización Orden Servicio</a></li>
-                            <li><a href="{{ route('servicio.ordenServicio') }}">Orden de Servicio</a></li>
-                        </ul> --}}
-
                     </li>
 
-                    {{-- <li><a href="#"><i class="fa fa-server fa-lg text-white"></i><span
-                                class="nav-label text-white">Sire - Sunat</span></a></li> --}}
+                    {{-- PROXIMAMENTE --}}
+                    {{-- <li><a href="#"><i class="fa fa-server fa-lg text-white"></i><span class="nav-label text-white">Sire - Sunat</span></a></li> --}}
 
-                    <li><a href="#"><i class="fa fa-table fa-lg text-white"></i><span
-                                class="nav-label text-white">Planilla</span></a>
-
-                        <ul class="nav nav-second-level collapse">
-                            @can('planilla-datos_generales.index')
-                                <li><a href="{{ route('personal.index') }}"><span>Personal</span></a></li>
-                            @endcan
-                            @can('planilla-vendedores.index')
-                                <li><a href="{{ route('vendedores.index') }}"><span>Vendedores</span></a></li>
-                            @endcan
-                            <li><a href="{{ route('vehiculo.index') }}"><span>Vehículos</span></a></li>
-
-                        </ul>
-                    </li>
-                    <li><a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span
-                                class="nav-label text-white">Consultas</span></a>
-                        <ul class="nav nav-second-level collapse">
-                            @can('consultas-garantias')
-                                <li>
-                                    <a href="#"><span>Garantias</span></a>
-                                    <ul class="nav nav-third-level">
-                                        @can('consultas-garantias-guia_ingreso.index')
-                                            <li><a href="{{ route('consultas.garantias.guias_ingreso') }}"><span>Guía
-                                                        Ingreso</span></a></li>
-                                        @endcan
-                                        @can('consultas-garantias-guia_egreso.index')
-                                            <li><a href="{{ route('consultas.garantias.guias_egreso') }}"><span>Guía
-                                                        Egreso</span></a></li>
-                                        @endcan
-                                        @can('consultas-garantias-informe_tecnico.index')
-                                            <li><a href="{{ route('consultas.garantias.informe_tecnico') }}"><span>Informe
-                                                        Técnico</span></a></li>
-                                        @endcan
-                                    </ul>
-                                </li>
-                            @endcan
-                            {{-- @can('consulta.cantidad_precio.index') --}}
-                            <li><a href="{{ route('cantidad_precio.index') }}"><span>Productos</span></a></li>
-                            <li><a href="{{ route('cantidad_precio.index_servicio') }}"><span>Servicios</span></a>
-                            </li>
-                            <li><a href="{{ route('reportes.index') }}"><span>Reportes</span></a></li>
-                            {{-- @endcan --}}
-                        </ul>
-                    </li>
-                    <li><a href="#"><i class="fa fa-registered fa-lg text-white"></i><span
-                                class="nav-label text-white">Registros Sunat</span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('facturacion_electronica.index') }}"><span>Facturas</span></a></li>
-                            <li><a href="{{ route('boletas_electronicas.index_boleta') }}"><span>Boletas</span></a>
-                            </li>
-                            <li><a href="{{ route('guias_electronicas.index_guia_remision') }}"><span>Guía
-                                        Remisión</span></a></li>
-                            <li><a href="{{ route('facturacion_electronica.index_nota_credito') }}"><span>Nota de
-                                        créditos</span></a></li>
-                            <li><a href="{{ route('facturacion_electronica.index_nota_debito') }}"><span>Nota de
-                                        débitos</span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span
-                                class="nav-label text-white">Productos y Servicios</span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('productos.index') }}"><span>Productos</span></a></li>
-                            <li><a href="{{ route('servicios.index') }}"><span>Servicios</span></a></li>
-
-                        </ul>
-                    </li>
-                    <li><a href="{{ route('project_managers.index') }}"><i
-                                class="fa fa-th-large fa-lg text-white"></i><span
-                                class="nav-label text-white">Proyectos PMB</span></a></li>
-                    {{-- <li><a href="{{ route('estadisticas.index') }}"><i
-                                class="fa fa-database fa-lg text-white"></i><span
-                                class="nav-label text-white">Estadistica KPIs</span></a></li> --}}
-
-                    {{-- <li> <a href="{{ route('indexServicio.index') }}"><span
-                                        class="nav-label">Cotizacion Orden Servicio</span></a> </li>
-                    <li><a href="{{ route('servicio.ordenServicio') }}"><span>Orden de Servicio</span></a></li>
-                    <li> <a href="{{ route('sGuias.index') }}">
-                                <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
-                                <span class="nav-label">Servicios</span>
-                            </a>
-                    </li> --}}
-
-                    {{-- <li>
-                            <a href="{{ route('garantia_guia_ingreso.index') }}">
-                                <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
-                                <span class="nav-label">Garantia</span>
-                            </a>
-                        </li> --}}
-                    {{--  FIN MENU DESPELEGABLE NUEVO --}}
-
-                    {{--  MENU DESPELEGABLE ANTIGUO no --}}
-
-                    @can('inicio')
-                        {{-- <li><a href="{{ route('inicio') }}"><img
-                                    src="{{ asset('/archivos/imagenes/layout/inicio.svg') }}" class="iconos"> <span
-                                    class="nav-label">Inicio</span></a></li> --}}
-                    @endcan
-                    {{-- REGLA PHP PARA LLAMADA DE KARDEX ENTRADA PARA CONDICIONAL PASADO A APPSERVICEPROVIDERS --}}
-                    {{-- {{$inventario_inicial->estado}} --}}
-                    @can('transacciones')
-                        {{-- <li>
-                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/comercializacion.svg') }}"
-                                    class="iconos"> <span class="nav-label">Comercialización</span></a>
+                    @canany('personal.listar', 'vendedores.listar', 'transporte_publico.listar', 'transporte_privado.listar')
+                        <li><a href="#"><i class="fa fa-table fa-lg text-white"></i><span
+                                    class="nav-label text-white">Planilla</span></a>
                             <ul class="nav nav-second-level collapse">
-                                @if (empty($inventario_inicial)) --}}
-                        {{-- @if ($conteo_almacen == 1) --}}
-                        {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
-                                        class="nav-label">Cotizacion</span></a> </li> --}}
-                        {{-- @if ($conteo_almacen == 1) --}}
-
-                        {{-- <li> <a href="{{ route('cotizacion.index') }}"><span
-                                                class="nav-label">Cotizaciones</span></a> </li>
-                                    <li><a href="{{ route('cotizacion_manual.index') }}"><span
-                                                class="nav-label">Cotizaciones M.</span></a> </li>
-                                    <li><a href="{{ route('indexServicio.index') }}"><span
-                                                    class="nav-label">Cotizaciones M. Servicios</span></a> </li>
-                                    <li><a href="{{ route('facturacion.index') }}"><span>Facturación</span></a></li>
-                                    <li><a href="{{ route('facturacion_manual.index') }}"><span>Facturación M.</span></a>
-                                    </li>
-                                    <li><a href="{{ route('boleta.index') }}"><span>Boleta</span></a></li>
-                                    <li><a href="{{ route('boleta_manual.index') }}"><span>Boleta M.</span></a></li>
-                                    <li><a href="{{ route('nota_venta.index') }}"><span>Nota Venta</span></a></li>
-                                    <li><a href="{{ route('nota-credito.index') }}"><span>Nota Crédito</span></a></li> --}}
-
-
-                        {{-- @endif --}}
-                        {{-- @elseif($inventario_inicial->estado==1)
-                                <li><a href="{{route('facturacion.index')}}">Facturación Servicio</a></li>
-                                <li><a href="{{route('boleta.index')}}">Boleta Servicio</a></li> --}}
-                        {{-- @else
-                                    <li> <a href="{{ route('cotizacion.index') }}"><span
-                                                class="nav-label">Cotizaciones</span></a> </li>
-                                    <li><a href="{{ route('cotizacion_manual.index') }}"><span
-                                                class="nav-label">Cotizaciones M.</span></a> </li>
-                                    <li><a href="{{ route('indexServicio.index') }}"><span
-                                                    class="nav-label">Cotizaciones M. Servicios</span></a> </li>
-                                    <li><a href="{{ route('boleta.index') }}"><span>Boleta</span></a></li>
-                                    <li><a href="{{ route('boleta_manual.index') }}"><span>Boleta M.</span></a></li>
-                                    <li><a href="{{ route('facturacion.index') }}"><span>Facturación</span></a></li>
-                                    <li><a href="{{ route('facturacion_manual.index') }}"><span>Facturación M.</span></a>
-                                    </li>
-                                    <li><a href="{{ route('guia_remision.index') }}"><span>Guía Remisión</span></a></li>
-                                    <li><a href="{{ route('guia_remision_manual.index') }}"><span>Guía Remisión
-                                                M.</span></a></li>
-                                    <li><a href="{{ route('nota_venta.index') }}"><span>Nota Venta</span></a></li>
-                                    <li><a href="{{ route('nota-credito.index') }}"><span>Nota Crédito</span></a></li>
-                                    <li><a href="{{ route('nota-debito.index') }}"><span>Nota Débito</span></a></li> --}}
-                        {{-- @else --}}
-                        {{-- @endif --}}
-                        {{-- @endif
-                            </ul>
-                        </li> --}}
-                    @endcan
-
-                    <li>
-
-                        {{-- <a href="{{ route('clientes.index') }}">
-                          <img src="{{ asset('/archivos/imagenes/layout/servicio_tecnico.png') }}" class="iconos">
-                          <span class="nav-label">Servicio Técnico</span>
-                        </a> --}}
-
-
-
-
-                    </li>
-
-
-
-                    {{-- <li>
-                        @if (empty($inventario_inicial))
-                            <a href="{{ route('kardex-entrada.create') }}"><img
-                                    src="{{ asset('/archivos/imagenes/layout/inventario.svg') }}" class="iconos">
-                                <span class="nav-label">Inventario Inicial</span></a>
-                        @elseif($inventario_inicial->estado == 1)
-                            <a href="{{ route('kardex-entrada.show', $inventario_inicial->id) }}"><img
-                                    src="{{ asset('/archivos/imagenes/layout/inventario.svg') }}" class="iconos">
-                                <span class="nav-label">Inventario Inicial</span></a>
-                        @else
-
-                            @can('inventario')
-                                <li>
-                                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/inventario.svg') }}"
-                                            class="iconos"> <span class="nav-label">Inventario</span></a>
-                                    <ul class="nav nav-second-level collapse">
-                                        @can('inventario-productos_kardex')
-                                            <li>
-                                                <a href="#"><span>Kardex-Producto</span></a>
-                                                <ul class="nav nav-third-level">
-                                                    @can('inventario-productos_kardex-entrada_producto.index')
-                                                        <li><a href="{{ route('kardex-entrada.index') }}"><span>Entrada
-                                                                    Producto</span></a></li>
-                                                    @endcan
-                                                    <li><a href="{{ route('kardex-entrada-Distribucion.index') }}"><span>Distribución
-                                                                Producto</span></a></li>
-                                                    <li><a href="{{ route('kardex-entrada-Traslado-almacen.index') }}"><span>Traslado
-                                                                de Almacén </span></a></li>
-                                                    @can('inventario-productos_kardex-salida_producto.index')
-                                                        <li><a href="{{ route('kardex-salida.index') }}"><span>Salida
-                                                                    Producto</span></a></li>
-                                                    @endcan
-
-                                                </ul>
-                                            </li>
-                                            @can('inventario-toma_de_inventario.index')
-                                                <li><a href="{{ route('periodo-consulta.index') }}"><span>Consultas de inventario</span></a></li>
-                                                <!-- Periodo Consulta -->
-                                            @endcan
-
-                                            <li><a href="{{ route('cierre-periodo.index') }}"><span>Cierre Periodo</span></a></li>
-                                            <li><a href="{{ route('movimiento-consulta.index') }}"><span>Movimiento Consulta</span></a></li>
-                                            @endcan
-                                    </ul>
-                                </li>
-                            @endcan
-
-                        @endif
-                    </li> --}}
-
-                    {{-- <li>
-                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/payment.png') }}"
-                                class="iconos"> <span class="nav-label">Créditos</span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('pagos.view_facturas') }}">Facturas</a></li>
-                            <li><a href="{{ route('pagos.view_facturas_m') }}">Facturas M.</a></li>
-                            <li><a href="{{ route('pagos.view_boletas') }}">Boletas</a></li>
-                            <li><a href="{{ route('pagos.view_boletas_m') }}">Boletas M.</a></li>
-                            <li><a href="{{ route('pagos.view_nota_venta') }}">Nota de Venta</a></li>
-                        </ul>
-                    </li> --}}
-
-                    @can('planilla')
-                        {{-- <li>
-                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/planilla.svg') }}"
-                                    class="iconos"> <span class="nav-label">Planilla</span></a>
-                            <ul class="nav nav-second-level collapse">
-                                @can('planilla-datos_generales.index')
+                                @can('personal.listar')
                                     <li><a href="{{ route('personal.index') }}"><span>Personal</span></a></li>
                                 @endcan
-                                @can('planilla-vendedores.index')
+                                @can('vendedores.listar')
                                     <li><a href="{{ route('vendedores.index') }}"><span>Vendedores</span></a></li>
                                 @endcan
-                                <li><a href="{{ route('vehiculo.index') }}"><span>Vehículos</span></a></li>
-
-                    </ul>
-                </li>
-                @endcan
-                @can('consultas')
-                <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/consultas.svg')}}" class="iconos"><span class="nav-label">Consultas</span></a>
-                    <ul class="nav nav-second-level collapse">
-                        @can('consultas-garantias')
-                        <li>
-                            <a href="#"><span>Garantias</span></a>
-                            <ul class="nav nav-third-level">
-                                @can('consultas-garantias-guia_ingreso.index')
-                                <li><a href="{{route('consultas.garantias.guias_ingreso')}}"><span>Guía Ingreso</span></a></li>
-                                @endcan
-                                @can('consultas-garantias-guia_egreso.index')
-                                <li><a href="{{route('consultas.garantias.guias_egreso')}}"><span>Guía Egreso</span></a></li>
-                                @endcan
-                                @can('consultas-garantias-informe_tecnico.index')
-                                <li><a href="{{route('consultas.garantias.informe_tecnico')}}"><span>Informe Técnico</span></a></li>
+                                @canany(['transporte_publico.listar', 'transporte_privado.listar'])
+                                    <li><a href="{{ route('vehiculo.index') }}"><span>Vehículos</span></a></li>
                                 @endcan
                             </ul>
                         </li>
-                        @endcan
-                        {{-- @can('consulta.cantidad_precio.index') --}}
-                        {{-- <li><a href="{{route('cantidad_precio.index')}}"><span>Productos</span></a></li>
-                        <li><a href="{{route('cantidad_precio.index_servicio')}}"><span>Servicios</span></a></li> --}}
-
-                        {{-- @endcan --}}
-                        {{-- </ul>
-                </li> --}}
                     @endcan
-                    <li>
-                        {{-- <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a> --}}
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('facturacion_electronica.index') }}"><span>Facturas</span></a></li>
-                            <li><a href="{{ route('facturacion_electronica.index_boleta') }}"><span>Boletas</span></a>
-                            </li>
-                            <li><a href="{{ route('facturacion_electronica.index_guia_remision') }}"><span>Guía
-                                        Remisión</span></a></li>
-                            <li><a href="{{ route('facturacion_electronica.index_nota_credito') }}"><span>Nota de
-                                        créditos</span></a></li>
-                            <li><a href="{{ route('facturacion_electronica.index_nota_debito') }}"><span>Nota de
-                                        débitos</span></a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg') }}"
-                                class="iconos"> <span class="nav-label">Correo </span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li><a href="{{ route('email.index') }}"><span>Bandeja de Entrada</span></a></li>
-                            <li><a href="{{ route('configuracion_email.index') }}"><span>Configuración</span></a></li>
-                            <li><a href="{{ route('email.trash') }}"><span>Papelera</span></a></li>
 
-                        </ul>
-                    </li>
-                    {{-- <li><a href="{{ route('eventos.user_indes') }}">
-                            <img src="{{ asset('/archivos/imagenes/layout/calendario.png') }}" class="iconos"> <span
-                                class="nav-label">Calendario&nbsp;&nbsp;&nbsp;</span>
-                            @if ($count_eventos > 0)
-                                <span class="label label-warning">{{ $count_eventos }}</span>
-                            @endif
+                    @canany(['consultas.guia_ingreso', 'consultas.guia_egreso', 'consultas.informe_tecnico', 'consultas.productos', 'consultas.servicios' ,'consultas.reporte_comprobantes'])
+                        <li><a href="#"><i class="fa fa-comments-o fa-lg text-white"></i><span
+                                    class="nav-label text-white">Consultas</span></a>
+                            <ul class="nav nav-second-level collapse">
+                                @canany(['consultas.guia_ingreso', 'consultas.guia_egreso', 'consultas.informe_tecnico'])
+                                    <li>
+                                        <a href="#"><span>Garantias</span></a>
+                                        <ul class="nav nav-third-level">
+                                            @can('consultas.guia_ingreso')
+                                                <li><a href="{{ route('consultas.garantias.guias_ingreso') }}"><span>Guía
+                                                            Ingreso</span></a></li>
+                                            @endcan
+                                            @can('consultas.guia_egreso')
+                                                <li><a href="{{ route('consultas.garantias.guias_egreso') }}"><span>Guía
+                                                            Egreso</span></a></li>
+                                            @endcan
+                                            @can('consultas.informe_tecnico')
+                                                <li><a href="{{ route('consultas.garantias.informe_tecnico') }}"><span>Informe
+                                                            Técnico</span></a></li>
+                                            @endcan
+                                        </ul>
+                                    </li>
+                                @endcan
+                                @can('consultas.productos')
+                                    <li><a href="{{ route('cantidad_precio.index') }}"><span>Productos</span></a></li>
+                                @endcan
+                                @can('consultas.servicios')
+                                    <li><a href="{{ route('cantidad_precio.index_servicio') }}"><span>Servicios</span></a></li>
+                                @endcan
+                                @can('consultas.reporte_comprobantes')
+                                    <li><a href="{{ route('reportes.index') }}"><span>Reportes</span></a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcan
 
-                        </a>
-                    </li> --}}
-                    @can('auxiliares')
+                    @canany(['factura.listar_por_emitir','factura.listar_emitidas', 'factura_m.listar_por_emitir', 'factura_m.listar_emitidas', 'detraccion_factura.listar', 'boleta.listar_por_emitir','boleta.listar_emitidas', 'boleta_m.listar_por_emitir', 'boleta_m.listar_emitidas', 'nota_credito.listar_por_emitir', 'nota_credito.lista_emitidas', 'nota_debito.listar_por_emitir', 'nota_debito.lista_emitidas'])
+                        <li><a href="#"><i class="fa fa-registered fa-lg text-white"></i><span
+                                    class="nav-label text-white">Registros Sunat</span></a>
+                            <ul class="nav nav-second-level collapse">
+                                @canany(['factura.listar_por_emitir','factura.listar_emitidas', 'factura_m.listar_por_emitir', 'factura_m.listar_emitidas', 'detraccion_factura.listar'])
+                                    <li><a href="{{ route('facturacion_electronica.index') }}"><span>Facturas</span></a></li>
+                                @endcan
+                                @canany(['boleta.listar_por_emitir','boleta.listar_emitidas', 'boleta_m.listar_por_emitir', 'boleta_m.listar_emitidas'])
+                                    <li><a href="{{ route('boletas_electronicas.index_boleta') }}"><span>Boletas</span></a></li>
+                                @endcan
+                                @canany(['guia_remision.listar_por_emitir', 'guia_remision.listar_emitidas'])
+                                    <li><a href="{{ route('guias_electronicas.index_guia_remision') }}"><span>Guía
+                                            Remisión</span></a></li>
+                                            @endcan
+                                @canany(['nota_credito.listar_por_emitir', 'nota_credito.lista_emitidas'])
+                                    <li><a href="{{ route('facturacion_electronica.index_nota_credito') }}"><span>Nota de
+                                            créditos</span></a></li>
+                                @endcan
+                                @canany(['nota_debito.listar_por_emitir', 'nota_debito.lista_emitidas'])
+                                    <li><a href="{{ route('facturacion_electronica.index_nota_debito') }}"><span>Nota de
+                                            débitos</span></a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcan
+
+                    @canany(['productos.listar', 'servicios.listar'])
+                        <li><a href="#"><i class="fa fa-shopping-bag fa-lg text-white"></i><span
+                                    class="nav-label text-white">Productos y Servicios</span></a>
+                            <ul class="nav nav-second-level collapse">
+                                @can('productos.listar')
+                                    <li><a href="{{ route('productos.index') }}"><span>Productos</span></a></li>
+                                @endcan
+                                @can('servicios.listar')
+                                    <li><a href="{{ route('servicios.index') }}"><span>Servicios</span></a></li>
+                                @endcan
+                            </ul>
+                        </li>
+                    @endcan
+                    
+                    @canany(['proyectos_pmb.listar', 'proyectos_pmb.gantt' , 'proyectos_pmb.listar_act', 'proyectos_pmb.listar_tareas' , 'proyectos_pmb.gantt'])
+                        <li><a href="{{ route('project_managers.index') }}"><i
+                                class="fa fa-th-large fa-lg text-white"></i><span
+                                class="nav-label text-white">Proyectos PMB</span></a>
+                        </li>
+                    @endcan
+                    
+                    @canany(['correo.listar_enviados', 'correo.configuracion', 'correo.papelera'])
+                        <li>
+                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/correo.svg') }}"
+                                    class="iconos"> <span class="nav-label">Correo </span></a>
+                            <ul class="nav nav-second-level collapse">
+                                @can('correo.listar_enviados')
+                                    <li><a href="{{ route('email.index') }}"><span>Bandeja de Entrada</span></a></li>
+                                @endcan
+                                @can('correo.configuracion')
+                                    <li><a href="{{ route('configuracion_email.index') }}"><span>Configuración</span></a></li>
+                                @endcan
+                                @can('correo.papelera')
+                                    <li><a href="{{ route('email.trash') }}"><span>Papelera</span></a></li>
+                                @endcan
+
+                            </ul>
+                        </li>
+                    @endcan
+                    
+                    @canany(['clientes.listar','proveedor.listar'])
                         <li>
                             <a href="#"><img src="{{ asset('/archivos/imagenes/layout/auxiliar.svg') }}"
                                     class="iconos"><span class="nav-label">Auxiliares</span></a>
                             <ul class="nav nav-second-level collapse">
-                                @can('auxiliares-clientes.index')
+                                @can('clientes.listar')
                                     <li><a href="{{ route('ventas.clientes') }}"><span>Clientes</span></a></li>
                                 @endcan
-                                @can('auxiliares-provedores.index')
+                                @can('proveedor.listar')
                                     <li><a href="{{ route('provedor.index') }}"><span>Proveedores</span></a></li>
                                 @endcan
                             </ul>
                         </li>
                     @endcan
-                    {{-- @can('consulta.cantidad_precio.index') --}}
-                    {{-- @endcan --}}
-
-                    </li>
-                    {{-- <li>
-                    <a href="#"><img src="{{ asset('/archivos/imagenes/layout/logo_sunat.png')}}" class="iconos"> <span class="nav-label">Registros Sunat</span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li><a href="{{route('facturacion_electronica.index')}}"><span>Facturas</span></a></li>
-                        <li><a href="{{route('boletas_electronicas.index_boleta')}}"><span>Boletas</span></a></li>
-                        <li><a href="{{route('guias_electronicas.index_guia_remision')}}"><span>Guía Remisión</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_nota_credito')}}"><span>Nota de créditos</span></a></li>
-                        <li><a href="{{route('facturacion_electronica.index_nota_debito')}}"><span>Nota de débitos</span></a></li>
-                    </ul>
-                </li> --}}
-                    <li>
-                        @can('maestro')
-                            {{-- <li>
-                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/productos.svg') }}"
-                                    class="iconos"><span class="nav-label">Productos y Servicios</span></a>
-                            <ul class="nav nav-second-level collapse">
-                                <li><a href="{{ route('productos.index') }}"><span>Productos</span></a></li>
-                                <li><a href="{{ route('servicios.index') }}"><span>Servicios</span></a></li>
-                            </ul>
-                        </li> --}}
-                            {{-- <li>
-                            <a href="#"><img src="{{ asset('/archivos/imagenes/layout/configuracion.svg') }}"
-                                    class="iconos"><span class="nav-label">Configuración </span></a>
-                            <ul class="nav nav-second-level collapse">
-                                @can('maestro-catalogo-clasificacion')
-                                    <li><a href="{{ route('Configuracion') }}"><span>Configuración del Sistema</span></a>
-                                    </li>
-                                @endcan
-                                @can('maestro-configuracion_general.mi_empresa.index')
-                                    <li><a href="{{ route('empresa.index') }}"><span>Mi Empresa</span></a></li>
-                                @endcan
-                            </ul>
-                        </li> --}}
-                            {{-- <li>
-                            <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <img src="{{ asset('/archivos/imagenes/layout/logout.png') }}" class="iconos">
-                                <span class="nav-label"> Cerrar Sección
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        style="display: none;">
-                                        @csrf
-                                    </form>
-                            </a>
-                        </li> --}}
-                        @endcan
-
-                        {{-- FIN MENU DESPELEGABLE ANTIGUO --}}
                 </ul>
-                <style>
-                    /* .nav-last-footer:active img {
-                        transform: translateY(-20px);
-                    } */
-                </style>
                 <div style="padding:15px; position: fixed; bottom: 0px; height: 10vh;" class="nav-last-footer">
+                    
                     <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;"
                         class="nav-footer-user">
                         <a class="nav-label" style="display: flex; align-items: center;" {{-- href="{{route('usuario.index')}}" --}}>
@@ -578,15 +335,21 @@
                                 <!-- Menú desplegable -->
                                 <div id="dropdownMenu"
                                     style="display: none; position: absolute; bottom: 50px; right: 0; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 5px; padding: 10px; width: 150px;">
-                                    <a href="{{ route('usuario.perfil') }}" class="dropdown-item"
-                                        style="display: block; color: black; padding: 8px; text-decoration: none;">
-                                        <i class="fa fa-user-circle-o fa-lg"></i> Mi perfil</a>
-                                    <a href="{{ route('empresa.index') }}" class="dropdown-item"
-                                        style="display: block; color: black; padding: 8px; text-decoration: none;">
-                                        <i class="fa fa-university "></i> Mi Empresa</a>
-                                    <a href="{{ route('Configuracion') }}" class="dropdown-item"
-                                        style="display: block; color: black; padding: 8px; text-decoration: none;">
-                                        <i class="fa fa-cog fa-lg"></i> Configuración</a>
+                                    @canany(['perfil_usuario.ver', 'perfil_usuario.editar'])
+                                        <a href="{{ route('usuario.perfil') }}" class="dropdown-item"
+                                            style="display: block; color: black; padding: 8px; text-decoration: none;">
+                                            <i class="fa fa-user-circle-o fa-lg"></i> Mi perfil</a>
+                                    @endcan
+                                    @canany(['empresa.ver','empresa.editar'])
+                                        <a href="{{ route('empresa.index') }}" class="dropdown-item"
+                                            style="display: block; color: black; padding: 8px; text-decoration: none;">
+                                            <i class="fa fa-university "></i> Mi Empresa</a>
+                                    @endcan
+                                    @canany(['almacen.listar','apariencia.ver','familia.listar','subfamilia.ver', 'garantia_doc.listar', 'marcas.listar', 'motivos.listar', 'tipo_cambio.listar', 'unidad_m.listar', 'usuarios.listar', 'roles.listar','validez.listar', 'validez.crear', 'alarma.listar'])
+                                        <a href="{{ route('configuracion.general') }}" class="dropdown-item"
+                                            style="display: block; color: black; padding: 8px; text-decoration: none;">
+                                            <i class="fa fa-cog fa-lg"></i> Configuración</a>
+                                    @endcan
                                     <a href="{{ route('logout') }}" class="dropdown-item"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                         style="display: block; color: black; padding: 8px; text-decoration: none;">

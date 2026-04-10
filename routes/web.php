@@ -939,7 +939,7 @@ Route::group(
         Route::resource('/cantidad_precio', 'CantidadPrecioController');
 
         //* CONFIGURACION GENERAL
-        Route::view('/configuracion_general', 'configuracion_general.configuracion_general')->name('Configuracion');
+        Route::view('/configuracion_general', 'configuracion_general.configuracion_general')->name('configuracion.general');
 
         //* GARANTIAS
         Route::resource('/garantia', 'GarantiaController');
