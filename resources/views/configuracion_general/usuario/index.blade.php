@@ -148,7 +148,12 @@
                                                                     data-toggle="modal" title="Cambiar de contraseña"
                                                                     data-ids="{{ $usuario->id }}"
                                                                     data-name="{{ $usuario->personal->full_name }}"
-                                                                    data-rol="{{ $usuario->getRoleNames()->first() }}"
+                                                                    @if($usuario->roles->first()?->type != 1)
+                                                                        data-rol="{{ $usuario->getRoleNames()->first() }}"
+                                                                    @else   
+                                                                        data-rol="Personalizado"
+                                                                    @endif
+                                                                    
                                                                     @if ($usuario->estado_validacion != 1) style="pointer-events: none; display: inline-block;" @endif>
                                                                     <i class="fa fa-key"></i>
                                                                 </a>
@@ -884,7 +889,7 @@
         $('.change_password_b').on('click', function() {
             console.log("a")
             let id_user = $(this).data('ids');
-            let rol_name = $(this).data('ids');
+            let rol_name = $(this).data('rol');
             let name_user = $(this).data('name');
 
             $('#codigo_full_name_password').html(name_user);
