@@ -38,6 +38,11 @@
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="row">
+        @if ($boleta->b_electronica != 0 || ($boleta->nota_credito == 1 && $boleta->motivo == "01"))
+            <div id="watermark">
+                <p>Anulado</p>
+            </div>
+        @endif
         <div class="col-lg-12" style="margin-top: -5px;">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row" style="align-items: center; justify-content: center">
@@ -253,6 +258,27 @@
             font-size: 12px;
             color: #999;
             text-align: center;
+        }
+        #watermark {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+
+        #watermark p {
+            position: absolute;
+            color: rgba(120, 120, 120, 0.31);
+            font-weight: bolder;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: 95px;
+            pointer-events: none;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            top: 15%;
+            right: 40%;
+            z-index: 9999;
+            font-size: 90px !important; 
         }
     </style>
     <!-- Mainly scripts -->

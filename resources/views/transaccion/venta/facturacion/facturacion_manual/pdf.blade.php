@@ -42,7 +42,7 @@
         </tr>
     </table>
     <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
-        @if ($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
+        @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->nota_credito_register->motivo == "01"))
             <div id="watermark">
                 <p>Anulado</p>
             </div>
@@ -135,9 +135,9 @@
                                     {{ $facturacion_registros->descripcion_item }}
                             @endif
                             <td style="text-align:center;">{{ $facturacion_registros->cantidad }}</td>
-                            <td style="text-align: right;">{{ round($facturacion_registros->precio, 8) }}</td>
+                            <td style="text-align: right;">{{ number_format(round($facturacion_registros->precio, 2),2) }}</td>
                             <td style="text-align: right;">
-                                {{ round($facturacion_registros->precio * $facturacion_registros->cantidad, 8) }}
+                                {{ number_format(round($facturacion_registros->precio * $facturacion_registros->cantidad, 2) ,2)}}
                             </td>
                             @php
                                 $sub_total = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada;
@@ -153,8 +153,8 @@
         <footer style="padding-top: 120px">
             <table style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
                 <tr>
-                    <td style="width: 50%;border: none">
-                        <h3 align="left">
+                    <td style="width: 50%;border: none;padding-top: 0px;padding-bottom: 0px">
+                        <h3 align="left" style="margin: 0px;" >
                             <?php use Luecano\NumeroALetras\NumeroALetras;
                             $v = new NumeroALetras();
                             $letra = $v->toInvoice($end, 2);
@@ -177,7 +177,7 @@
                             Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
                         </small>
                     </td>
-                    <td style="width: 14%;border: none;padding-right: 25px;padding-top: 0px !important;">
+                    <td class="qr-container">
                         <div class="qr-box">
                             @if(!empty($qrCode))
                                 <img src="{{ $qrCode }}" alt="Código QR" style="max-width: 100%;">
@@ -346,17 +346,20 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    border: none;
+                    padding-top: 0px;
+                    padding-bottom: 0px
                 }
 
                 .qr-box {
-                    width: 100%;
-                    /* height: 120px; */
+                    width: 70px;
+                    height: 70px;
                     border: 2px solid #3D3D3D;
                     border-radius: 10px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 5px;
+                    padding: 3px;
                     background: white;
                 }
 

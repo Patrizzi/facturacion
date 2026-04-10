@@ -38,21 +38,32 @@
             </div>
 
             <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                <div class="d-flex align-items-center">
-                    @if($garantias_guias_egreso->estado == 1 and $garantias_guias_egreso->egresado == 0)
-                        <a href="{{ route('garantia_guia_ingreso.edit', $garantias_guias_egreso->garantia_ingreso_i->id) }}"
-                           class="btn btn-success">
-                            <i class="fa fa-edit fa-lg"></i>
-                        </a>
-                    @endif
-
-                    <a href="#form_egreso" onclick="Formulario_edit()" id="click" class="btn btn-info">
-                        <i class="fa fa-edit fa-lg"></i>
-                    </a>
-                </div>
-
-                <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
-
+                @if($garantias_guias_egreso->estado == 1 && $garantias_guias_egreso->informe_tecnico == 0)
+                    <div class="d-flex align-items-center" style="overflow: hidden;">
+                        <div id="btn-slider-egreso"
+                            style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+                            <a href="#form_egreso"
+                            onclick="Formulario_edit()"
+                            id="click"
+                            class="btn btn-info"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            data-original-title="Editar guía de egreso"
+                            style="white-space: nowrap; margin-right: 4px;">
+                                <i class="fa fa-edit fa-lg"></i>
+                            </a>
+                        </div>
+                        <button type="button"
+                                id="btn-toggle-egreso"
+                                onclick="toggleBtnsEgreso()"
+                                class="btn btn-default"
+                                style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                            <i class="fa fa-chevron-right" id="btn-arrow-egreso"></i>
+                        </button>
+                    </div>
+                    <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+                @endif
+                
                 <form class="btn" style="padding: 0;" action="{{ route('pdf_egreso', $garantias_guias_egreso->id) }}">
                     <input type="text" name="archivo" hidden
                            value="{{ $garantias_guias_egreso->garantia_ingreso_i->orden_servicio }}">
@@ -347,5 +358,21 @@
 
 }
 </script>
+<script>
+    function toggleBtnsEgreso() {
+        const slider = document.getElementById('btn-slider-egreso');
+        const arrow = document.getElementById('btn-arrow-egreso');
+        const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
 
+        if (isOpen) {
+            slider.style.width = '0';
+            arrow.classList.remove('fa-chevron-left');
+            arrow.classList.add('fa-chevron-right');
+        } else {
+            slider.style.width = slider.scrollWidth + 'px';
+            arrow.classList.remove('fa-chevron-right');
+            arrow.classList.add('fa-chevron-left');
+        }
+    }
+</script>
 @endsection

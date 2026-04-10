@@ -117,7 +117,7 @@ class LoginController extends Controller
                 'email' => $email,
                 'password' => $password
             ]);
-            if (! Auth::attempt($newRequest->only('email', 'password'))) {
+            if (! Auth::validate($newRequest->only('email', 'password'))) {
                 $access = false;
             }
             return response()->json(["status" => 200,"access" => $access]);

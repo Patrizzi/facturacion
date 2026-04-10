@@ -357,14 +357,17 @@
                                     <th style="width:12%" class="tac">CÓDIGO</th>
                                     <th style="width:12%" class="tac">MARCA</th>
                                     <th>DESCRIPCIÓN</th>
-                                    <th style="width:13%" class="tac">UNIDAD</th>
-                                    <th style="width:13%" class="tac">CANTIDAD</th>
-                                    <th style="width:13%" class="tac">PESO</th>
+                                    <th style="width:10%" class="tac">UNIDAD</th>
+                                    <th style="width:10%" class="tac">CANTIDAD</th>
+                                    <th style="width:10%" class="tac">PESO U.</th>
+                                    <th style="width:10%" class="tac">PESO T.</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php($i = 1)
                                 @foreach ($guia_registro as $guia_registros)
+                                    @php($pesoItem = ($guia_registros->cantidad * $guia_registros->peso))
+                                    @php($tota[] = $pesoItem)
                                     <tr>
                                         <td class="tac">{{ $i++ }}</td>
                                         <td class="tac">{{ $guia_registros->producto->codigo_original ?? '-' }}</td>
@@ -387,11 +390,12 @@
                                             {{ $guia_registros->producto->unidad_i_producto->medida ?? 'NIU' }}</td>
                                         <td class="tac">{{ $guia_registros->cantidad }}</td>
                                         <td class="tac">{{ $guia_registros->peso }}</td>
+                                        <td class="tac">{{ number_format($pesoItem,2) }}</td>
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="6" class="tar"><b>Peso Total:</b></td>
-                                    <td class="tac"><b>{{ $guia_registro->sum('peso') }} kg</b></td>
+                                    <td colspan="7" class="tar"><b>Peso Total:</b></td>
+                                    <td class="tac"><b>{{ number_format(array_sum($tota),2) }} kg</b></td>
                                 </tr>
                             </tbody>
                         </table>

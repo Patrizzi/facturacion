@@ -331,37 +331,47 @@
             <table>
                 <thead>
                 <tr>
-                    <th style="width:28px" class="tac">N°</th>
-                    <th style="width:110px" class="tac">CÓDIGO</th>
-                    <th style="width:80px"  class="tac">CÓDIGO SUNAT</th>
+                    <th style="width:5%" class="tac">N°</th>
+                    <th style="width:11%" class="tac">CÓDIGO</th>
+                    <th style="width:10%" class="tac">MARCA</th>
                     <th>DESCRIPCIÓN</th>
-                    <th style="width:60px"  class="tac">UNIDAD</th>
-                    <th style="width:60px"  class="tac">CANTIDAD</th>
+                    <th style="width:10%" class="tac">UNIDAD</th>
+                    <th style="width:10%" class="tac">CANTIDAD</th>
+                    <th style="width:10%" class="tac">PESO U.</th>
+                    <th style="width:10%" class="tac">PESO T.</th>
                 </tr>
                 </thead>
                 <tbody>
                 @php($i=1)
                 @forelse($items as $it)
                     @php($prod = optional($it->producto))
+                    @php($pesoItem = ($it->cantidad * $it->peso))
+                    @php($tota[] = $pesoItem)
                     <tr>
-                    <td class="tac">{{ $i++ }}</td>
-                    <td class="tac">{{ $prod->codigo_producto ?? '-' }}</td>
-                    <td class="tac">{{ $prod->codigo_sunat ?? '-' }}</td>
-                    <td>
-                        {{ $prod->nombre ?? $it->descripcion }}
-                        @if(!empty($it->numero_serie) || !empty($it->descripcion))
-                        <div class="desc-small">
-                            {{ $it->numero_serie }}
-                            @if(!empty($it->descripcion)) — {{ $it->descripcion }} @endif
-                        </div>
-                        @endif
-                    </td>
-                    <td class="tac">{{ optional($prod->unidad_i_producto)->medida ?? 'NIU' }}</td>
-                    <td class="tac">{{ $it->cantidad }}</td>
+                      <td class="tac">{{ $i++ }}</td>
+                      <td class="tac">{{ $prod->codigo_producto ?? '-' }}</td>
+                      <td class="tac">{{ $prod->codigo_sunat ?? '-' }}</td>
+                      <td>
+                          {{ $prod->nombre ?? $it->descripcion }}
+                          @if(!empty($it->numero_serie) || !empty($it->descripcion))
+                          <div class="desc-small">
+                              {{ $it->numero_serie }}
+                              @if(!empty($it->descripcion)) — {{ $it->descripcion }} @endif
+                          </div>
+                          @endif
+                      </td>
+                      <td class="tac">{{ optional($prod->unidad_i_producto)->medida ?? 'NIU' }}</td>
+                      <td class="tac">{{ $it->cantidad }}</td>
+                      <td class="tac">{{ number_format($it->peso,2)  }}</td>
+                      <td class="tac">{{ number_format($pesoItem,2)  }}</td>
                     </tr>
                 @empty
                     <tr><td colspan="6" class="tac">Sin ítems.</td></tr>
                 @endforelse
+                <tr>
+                    <td colspan="7" class="tar"><b>Peso Total:</b></td>
+                    <td class="tac"><b>{{ number_format(array_sum($tota),2) }} kg</b></td>
+                </tr>
                 </tbody>
             </table>
         </div>

@@ -417,12 +417,28 @@
             let primerCampoVacio = null;
             camposRequeridos.forEach(function(selector) {
                 const campo = $(selector);
-                if (campo.val().trim() === '' && primerCampoVacio === null) {
+                const valor = campo.val();
+
+                if (
+                    campo.length &&
+                    (
+                        valor.trim() === '' || // vacío
+
+                        (
+                            selector === '#numero_ruc_cli' &&
+                            (
+                                valor.includes(' ') || // tiene espacios
+                                !/^\d{8}$|^\d{11}$|^\d{12}$/.test(valor) // 8, 11 o 12 dígitos
+                            )
+                        )
+                    ) &&
+                    primerCampoVacio === null
+                ) {
                     primerCampoVacio = campo;
                 }
             });
             if (primerCampoVacio) {
-                toastr.error('Por favor, complete los campos requeridos.', 'Error', {
+                toastr.error('Por favor, revise los campos llenados.', 'Error', {
                     timeOut: 3000
                 });
                 primerCampoVacio.focus();

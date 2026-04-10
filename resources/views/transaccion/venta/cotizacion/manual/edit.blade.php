@@ -51,7 +51,7 @@
             <div class="form-group row">
                 <label class="col-form-label col-md-2"><strong>T. Operación:</strong></label>
                 <div class="col-md-10">
-                    <select class="select2_tipo_op" name="tipo_operacion">
+                    <select class="form-control select2_tipo_op" name="tipo_operacion">
                         @foreach ($tipo_operacion as $t_op)
                             <option id="{{ $t_op->id }}" @if ($cotizacion->tipo_operacion_id == $t_op->id) selected @endif>
                                 {{ $t_op->codigo }} -
@@ -74,7 +74,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4"><strong>Moneda:</strong></label>
                         <div class="col-md-8">
-                            <select class="select2_moneda" name="moneda" required="required" onchange="changeMoney()">
+                            <select class="form-control select2_moneda" name="moneda" required="required" onchange="changeMoney()">
                                 @foreach ($moneda as $monedas)
                                     <option value="{{ $monedas->nombre }}"
                                         @if ($cotizacion->moneda_id == $monedas->id) selected @endif>
@@ -133,46 +133,28 @@
                         <div class="col-sm-2">
                             <div class="switch-container">
                                 <label class="switch">
-                                    <input type="checkbox" id="estado_renovacion" name="estado_renovacion"
-                                        value="1" {{ $cotizacion->estado_renovacion == 1 ? 'checked' : '' }}>
+                                    <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
                                     <span class="slider"></span>
                                 </label>
                             </div>
                         </div>
                         <div class="col">
-                            <div id="renovacion_container"
-                                style="display: {{ $cotizacion->estado_renovacion == 1 ? 'block' : 'none' }};">
+                            <div id="renovacion_container" style="display: none;">
                                 <div class="row" style="margin: 0;">
-                                    <div class="col-sm-6" style="padding-right: 5px; padding-left: 0;">
-                                        <select class="form-control form-control-sm" name="select_fecha"
-                                            id="select_fecha" autocomplete="off">
-                                            <option value="">Frecuencia</option>
-                                            <option value="Mensual"
-                                                {{ $cotizacion->frecuencia_renovacion == 'Mensual' ? 'selected' : '' }}>
-                                                Mensual</option>
-                                            <option value="Anual"
-                                                {{ $cotizacion->frecuencia_renovacion == 'Anual' ? 'selected' : '' }}>
-                                                Anual</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-6" style="padding-left: 5px; padding-right: 0;"
-                                        id="extra_selects">
+                                    <div class="col-sm-6" style="padding-left: 0;">
+                                        <input
+                                            type="date"
+                                            id="fecha_vencimiento"
+                                            name="fecha_vencimiento"
+                                            class="form-control form-control-sm"
+                                            min="{{ $renovacion ? $renovacion->fecha_vencimiento->format('Y-m-d') : now()->addDay()->format('Y-m-d') }}"
+                                        >
+                                        <span id="dias_restantes_preview" style="font-size:11px; margin-top:3px; display:block;"></span>
                                     </div>
                                 </div>
-                                <!-- Inputs ocultos para guardar los valores -->
-                                <input type="hidden" name="dia_mensual" id="dia_mensual_hidden"
-                                    value="{{ $cotizacion->dia_mensual ?? '' }}">
-                                <input type="hidden" name="dia_anual" id="dia_anual_hidden"
-                                    value="{{ $cotizacion->dia_anual ?? '' }}">
-                                <input type="hidden" name="mes_anual" id="mes_anual_hidden"
-                                    value="{{ $cotizacion->mes_anual ?? '' }}">
-                                <input type="hidden" name="anio_anual" id="anio_anual_hidden"
-                                    value="{{ $cotizacion->anio_anual ?? '' }}">
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -211,7 +193,7 @@
                                 autocomplete="off">
                                 @if (isset($cotizacion_m_regs->producto->id))
                                     <option
-                                        value="{{ $cotizacion_m_regs->producto->id }} | {{ $cotizacion_m_regs->producto->codigo_producto }} | {{ $cotizacion_m_regs->producto->codigo_original }} | {{ $cotizacion_m_regs->producto->nombre }}">
+                                        value="{{ $cotizacion_m_regs->producto->id }} | {{ $cotizacion_m_regs->producto->codigo_producto }} | {{ $cotizacion_m_regs->producto->codigo_original }} | {{ $cotizacion_m_regs->producto->nombre }}" selected>
                                         {{ $cotizacion_m_regs->producto->id }} |
                                         {{ $cotizacion_m_regs->producto->codigo_producto }} |
                                         {{ $cotizacion_m_regs->producto->codigo_original }} |
@@ -222,6 +204,14 @@
                                         }else{
                                             $precio_sug = $cotizacion_m_regs->producto->calcularPreciosSugerido()['precio_extranjero'];
                                         }
+                                        $input_prod =
+                                            $cotizacion_m_regs->producto->id .
+                                            ' | ' .
+                                            $cotizacion_m_regs->producto->codigo_producto .
+                                            ' | ' .
+                                            $cotizacion_m_regs->producto->codigo_original .
+                                            ' | ' .
+                                            $cotizacion_m_regs->producto->nombre;
                                         $afect = explode(
                                             ' - ',
                                             $cotizacion_m_regs->producto->tipo_afec_i_producto->informacion,
@@ -229,25 +219,33 @@
                                     @endphp
                                 @else
                                     <option
-                                        value="{{ $cotizacion_m_regs->servicio->id }} | {{ $cotizacion_m_regs->servicio->codigo_servicio }} | {{ $cotizacion_m_regs->servicio->codigo_original }} | {{ $cotizacion_m_regs->servicio->nombre }}">
+                                        value="{{ $cotizacion_m_regs->servicio->id }} | {{ $cotizacion_m_regs->servicio->codigo_servicio }} | {{ $cotizacion_m_regs->servicio->codigo_original }} | {{ $cotizacion_m_regs->servicio->nombre }}" selected>
                                         {{ $cotizacion_m_regs->servicio->id }} |
                                         {{ $cotizacion_m_regs->servicio->codigo_servicio }} |
                                         {{ $cotizacion_m_regs->servicio->codigo_original }} |
                                         {{ $cotizacion_m_regs->servicio->nombre }}</option>
                                     @php
                                         $precio_sug = 1000;
-                                        $afect = explode(
+                                        $input_prod =
+                                            $cotizacion_m_regs->servicio->id .
+                                            ' | ' .
+                                            $cotizacion_m_regs->servicio->codigo_servicio .
+                                            ' | ' .
+                                            $cotizacion_m_regs->servicio->codigo_original .
+                                            ' | ' .
+                                            $cotizacion_m_regs->servicio->nombre;
+                                    $afect = explode(
                                             ' - ',
                                             $cotizacion_m_regs->servicio->tipo_afec_i_serv->informacion,
                                         )[0];
                                     @endphp
                                 @endif
                             </select>
-                            {{$cotizacion->moneda_id}}
+                            {{--{{$cotizacion->moneda_id}} --}}
                             <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item"
                                 class="form-control txt-limp" autocomplete="off" style="margin-top: 5px;">{{ $cotizacion_m_regs->descripcion_item }}</textarea>
-                            <input hidden="hidden" class="celda" name="articulo[]"
-                                id="input_prod{{ $h }}">
+                            <input type="hidden" class="celda" name="articulo[]"
+                                id="input_prod{{ $h }}" value="{{$input_prod}}">
                         </td>
                         <td>
                             <input type='number' min="1"

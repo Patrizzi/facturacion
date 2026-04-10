@@ -135,8 +135,8 @@ Route::group(
 
 
         //COTIZACION Y COTIZACION MANUAL EXPORTAR
-        Route::get('/ventas/cotizacion/exportar', [CotizacionController::class, 'exportar_cotizaciones'])->name('exportarCotizacion');
-        Route::get('/ventas/cotizacion_manual/exportar', [CotizacionManualController::class, 'exportar_cotizacionesM'])->name('exportarCotizacionM');
+        Route::post('/ventas/cotizacion/exportar', [CotizacionController::class, 'exportar_cotizaciones'])->name('exportarCotizacion');
+        Route::post('/ventas/cotizacion_manual/exportar', [CotizacionManualController::class, 'exportar_cotizacionesM'])->name('exportarCotizacionM');
 
         Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
         Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');
@@ -1339,7 +1339,7 @@ Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::c
 Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
     ->name('renovaciones.print.multiple');
 
-Route::get('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
+Route::post('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
     ->name('exportarRenovaciones');
 
 Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])

@@ -25,6 +25,25 @@
             size: A4;
             font-size: 55% !important;
         }
+        #watermark {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+        #watermark p {
+            position: absolute;
+            color:   rgba(120, 120, 120, 0.31);
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+            font-weight: bolder;
+            font-size: 95px;
+            pointer-events: none;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            top: 25%;
+            right: 35%;
+            z-index: 99999;
+        }
     </style>
 </head>
 
@@ -42,6 +61,11 @@
         </tr>
     </table>
     <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -40px ">
+        @if ($boleta->b_electronica == 2 || ($boleta->nota_credito == 1 || $boleta->nota_credito == 2 && $boleta->motivo == "01"))
+            <div id="watermark">
+                <p>Anulado</p>
+            </div>
+        @endif
         <table style="width: 100%;border-collapse:separate;margin-top: -20px">
             <tr>
                 <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto;">

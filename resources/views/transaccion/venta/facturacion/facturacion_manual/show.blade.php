@@ -73,7 +73,7 @@
                             <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
                         @endif
                         <!-- PDF -->
-                        <form class="btn" style="padding: 0;" action="{{ route('pdf_fac', $facturacion->id) }}">
+                        <form class="btn" style="padding: 0;" action="{{ route('pdf_fac_m', $facturacion->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $facturacion->codigo_fac }}">
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
                                 data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i></button>
@@ -133,7 +133,7 @@
         <div class="mostrar" id="show_factura">
             <div class="row">
                 <div class="col-lg-12" style="margin-top: -26px;">
-                    @if ($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
+                    @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->nota_credito_register->motivo == "01"))
                         <div id="watermark">
                             <p>Anulado</p>
                         </div>
@@ -618,7 +618,7 @@
             -moz-transform: rotate(-45deg);
             top: 45%;
             right: 40%;
-            z-index: 0;
+            z-index: 99999999;
         }
 
         /* .form-control {
