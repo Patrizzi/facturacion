@@ -411,22 +411,47 @@
                     url = url.replace(':id', full[
                         0]); // Reemplazar el placeholder con el valor dinámico
 
+                    var iconoRenovacion = '';
+                    if (full[13] == 1) {
+                        iconoRenovacion = `<button type="button" class="btn" style="background-color:#1ab394; border-color:#1ab394; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovación activa">
+                            <i class="fa fa-refresh"></i>
+                        </button>`;
+                    } else if (full[13] == 2) {
+                        iconoRenovacion = `<button type="button" class="btn" style="background-color:#e8572a; border-color:#e8572a; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Próxima a vencer">
+                            <i class="fa fa-refresh"></i>
+                        </button>`;
+                    } else if (full[13] == 3) {
+                        iconoRenovacion = `<button type="button" class="btn" style="background-color:#1c84c6; border-color:#1c84c6; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovada">
+                            <i class="fa fa-refresh"></i>
+                        </button>`;
+                    }   
+
                     if (full[9] == '0') {
                         return `
-                                            <div class="tooltip-demo">
-                                                <a href="${url}">
-                                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
-                                                </a>
-                                                <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado"><i class="fa fa-clock-o"></i></button>
-                                            </div>`;
+                        <div class="tooltip-demo">
+                            <a href="${url}">
+                                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </a>
+                            <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado">
+                                <i class="fa fa-clock-o"></i>
+                            </button>
+                            ${iconoRenovacion}
+                        </div>`;
                     } else {
                         return `
-                                            <div class="tooltip-demo">
-                                                <a href="${url}">
-                                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
-                                                </a>
-                                                <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar"><i class="fa fa-check-circle"></i></button>
-                                            </div>`;
+                        <div class="tooltip-demo">
+                            <a href="${url}">
+                                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </a>
+                            <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar">
+                                <i class="fa fa-check-circle"></i>
+                            </button>
+                            ${iconoRenovacion}
+                        </div>`;
                     }
                 }
             },
@@ -440,63 +465,63 @@
                     const emailCliente = full[11] || '';
 
                     return `
-                                        <div style="display: inline-block; white-space: nowrap;">
-                                            <!-- Contenedor Correo -->
-                                            <div class="email-container" data-id="${cotizacionId}"
-                                                style="display: inline-block; position: relative; vertical-align: top; margin-right: 5px;">
-                                                <button type="button" class="btn btn-secondary" style="cursor: pointer;">
-                                                    <i class="fa fa-envelope fa-lg"></i>
-                                                </button>
-                                                <div class="email-form" data-id="${cotizacionId}"
-                                                    style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
-                                                    overflow: hidden; transition: height .4s; background: white;
-                                                    box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
-                                                    z-index: 9999; white-space: nowrap; min-width: 250px;">
-                                                    <form class="form-enviar-email" data-cotizacion-id="${cotizacionId}" style="padding: 10px;">
-                                                        @csrf
-                                                        <div style="margin-bottom: 5px;">
-                                                            <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
-                                                                value="${emailCliente}"
-                                                                style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
-                                                        </div>
-                                                        <div class="emails-adicionales-${cotizacionId}"></div>
-                                                        <button type="button" class="btn-agregar-email btn btn-info btn-xs" data-id="${cotizacionId}"
-                                                                style="padding: 3px 8px; margin-bottom: 5px; font-size: 11px;">
-                                                            <i class="fa fa-plus"></i> Agregar correo
-                                                        </button>
-                                                        <button type="submit" class="btn btn-secondary" style="padding: 5px 10px; float: right;">
-                                                            <i class="fa fa-send fa-lg"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                            <!-- Contenedor WhatsApp -->
-                                            <div class="wsp-container" data-id="${cotizacionId}"
-                                                style="display: inline-block; position: relative; vertical-align: top;">
-                                                <a class="btn btn-success" style="background: green; border-color: green; cursor: pointer;">
-                                                    <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
-                                                </a>
-                                                <div class="wsp-form" data-id="${cotizacionId}"
-                                                    style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
-                                                    overflow: hidden; transition: height .4s; background: white;
-                                                    box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
-                                                    z-index: 9999; white-space: nowrap;">
-                                                    <form action="{{ route('agregado.whatsapp_send') }}" method="post" target="_blank" style="padding: 10px;">
-                                                        @csrf
-                                                        <input type="tel" name="numero" placeholder="999999999" value="${celularCliente}"
-                                                            style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
-                                                        <input type="text" name="mensaje" hidden />
-                                                        <input type="hidden" name="url" value="{{ route('pdf_cotizacion', '') }}/${cotizacionId}?archivo=" />
-                                                        <input type="hidden" name="name_sin_cambio" value="Cotización_${codigoCotizacion}" />
-                                                        <button type="submit" class="btn btn-success"
-                                                            style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
-                                                            <i class="fa fa-send fa-lg"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
+                    <div style="display: inline-block; white-space: nowrap;">
+                        <!-- Contenedor Correo -->
+                        <div class="email-container" data-id="${cotizacionId}"
+                            style="display: inline-block; position: relative; vertical-align: top; margin-right: 5px;">
+                            <button type="button" class="btn btn-secondary" style="cursor: pointer;">
+                                <i class="fa fa-envelope fa-lg"></i>
+                            </button>
+                            <div class="email-form" data-id="${cotizacionId}"
+                                style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                overflow: hidden; transition: height .4s; background: white;
+                                box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                z-index: 9999; white-space: nowrap; min-width: 250px;">
+                                <form class="form-enviar-email" data-cotizacion-id="${cotizacionId}" style="padding: 10px;">
+                                    @csrf
+                                    <div style="margin-bottom: 5px;">
+                                        <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
+                                            value="${emailCliente}"
+                                            style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                    </div>
+                                    <div class="emails-adicionales-${cotizacionId}"></div>
+                                    <button type="button" class="btn-agregar-email btn btn-info btn-xs" data-id="${cotizacionId}"
+                                            style="padding: 3px 8px; margin-bottom: 5px; font-size: 11px;">
+                                        <i class="fa fa-plus"></i> Agregar correo
+                                    </button>
+                                    <button type="submit" class="btn btn-secondary" style="padding: 5px 10px; float: right;">
+                                        <i class="fa fa-send fa-lg"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Contenedor WhatsApp -->
+                        <div class="wsp-container" data-id="${cotizacionId}"
+                            style="display: inline-block; position: relative; vertical-align: top;">
+                            <a class="btn btn-success" style="background: green; border-color: green; cursor: pointer;">
+                                <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                            </a>
+                            <div class="wsp-form" data-id="${cotizacionId}"
+                                style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                overflow: hidden; transition: height .4s; background: white;
+                                box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                z-index: 9999; white-space: nowrap;">
+                                <form action="{{ route('agregado.whatsapp_send') }}" method="post" target="_blank" style="padding: 10px;">
+                                    @csrf
+                                    <input type="tel" name="numero" placeholder="999999999" value="${celularCliente}"
+                                        style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                    <input type="text" name="mensaje" hidden />
+                                    <input type="hidden" name="url" value="{{ route('pdf_cotizacion', '') }}/${cotizacionId}?archivo=" />
+                                    <input type="hidden" name="name_sin_cambio" value="Cotización_${codigoCotizacion}" />
+                                    <button type="submit" class="btn btn-success"
+                                        style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
+                                        <i class="fa fa-send fa-lg"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                `;
                 }
             }
             ],

@@ -52,6 +52,10 @@ class Cotizacion extends Model
     public function tipo_documento(){
         return $this->belongsTo(Tipo_documento_sunat::class,'tipo_documento_id');
     }
+    public function renovacionVentas()
+    {
+        return $this->hasOne(\App\RenovacionVentas::class, 'cotizacion_id', 'id');
+    }
     public static function count_mes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"

@@ -194,6 +194,23 @@ class Ventas_registroController extends Controller
         // Bucle de llamada para el llenado del datatable
         foreach ($cotizaciones as $cotizacion) {
             $total_columna += $cotizacion->total_conv;
+            $renovacion = RenovacionVentas::where('cotizacion_id', $cotizacion->id)
+                ->where('estado', 1)
+                ->first();
+
+$estadoRenovacion = 0;
+
+if ($renovacion) {
+    $diasRestantes = Carbon::now()->startOfDay()->diffInDays($renovacion->fecha_vencimiento, false);
+    
+    if ($renovacion->fecha_inicio->toDateString() > $renovacion->created_at->toDateString()) {
+        $estadoRenovacion = 3; // ya fue renovada
+    } elseif ($diasRestantes <= 7) {
+        $estadoRenovacion = 2; // próxima a vencer
+    } else {
+        $estadoRenovacion = 1; // activa y vigente
+    }
+}
             $json['data'][] = [
                 $cotizacion->id,
                 $cotizacion->id,
@@ -207,7 +224,8 @@ class Ventas_registroController extends Controller
                 $cotizacion->estado,
                 $cotizacion->cliente->celular,
                 $cotizacion->cliente->email,
-                $cotizacion->nota_informativa
+                $cotizacion->nota_informativa,
+                $estadoRenovacion,
 
             ];
         }
