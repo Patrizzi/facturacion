@@ -32,9 +32,9 @@
                                         <input type="text" class="form-control" name="name" id="">
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-form-label"><strong>Tipo de Rol</strong></label>
-                                        <input type="text" class="form-control" value="Personalizado" readonly
-                                            name="" id="">
+                                        <label class="col-form-label"><strong>Descripcion</strong></label>
+                                        <input type="text" class="form-control" value=""
+                                            name="descripcion" id="descripcion">
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-block">Guardar</button>
                                 </div>

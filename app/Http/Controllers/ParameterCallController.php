@@ -903,7 +903,16 @@ class ParameterCallController extends Controller
         return response()->json($ids);
     }
     public function getRolesXUserData(Request $request){
-        $rol = User::with('personal')->role($request->rol_id)->get();
-        return json_decode($rol);
+        
+        if($request->rol_id == 4){
+            $users = User::with('personal')
+                ->whereHas('roles', function ($q) {
+                    $q->where('type', 1);
+                })
+                ->get();
+        }else{
+            $users = User::with('personal')->role($request->rol_id)->get();   
+        }
+        return json_decode($users);
     }
 }

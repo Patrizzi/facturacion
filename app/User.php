@@ -79,7 +79,7 @@ class User extends Authenticatable
     public static function send_mail_register($user,$correo) {
 
         $personal = $user->personal;
-        $codigo = User::codigo_mensaje();
+        $codigo = $user->numero_validacion;
         $empresa= Empresa::first();
         $usuario_hora=Carbon::now()->format('Y-m-d');
 

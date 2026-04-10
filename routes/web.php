@@ -913,8 +913,9 @@ Route::group(
         Route::post('usuario/permisos/asignar/{id}', 'UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
         Route::post('usuario/permisos/delegar/{id}', 'UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
 
-        Route::resource('/usuario', 'UsuarioController')->except(['create']);
+        Route::resource('/usuario', 'UsuarioController')->except(['create','update']);
         Route::post('usuario/crear', 'UsuarioController@create')->name('usuario.create');
+        Route::post('usuario/update/{id}', 'UsuarioController@update')->name('usuario.update');
         Route::post('usuario/codigo_nuevo_correo/{id}', 'UsuarioController@codigo_nuevo_correo')->name('usuario.codigo_nuevo_correo');
         
         

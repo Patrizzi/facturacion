@@ -144,7 +144,7 @@
                                         <div class="col-sm-12" style="">
                                             <p>Seleccione un Rol predefinido para seleccionar Permisos Automaticamente</p>
                                             @foreach ($roles as $rol)
-                                                <button onclick="select_predef({{ $rol->id }})"
+                                                <button onclick="select_predef({{ $rol->id }})" type="button"
                                                     class="btn btn-primary btn-outline">{{ $rol->name }}</button>
                                             @endforeach
                                         </div>

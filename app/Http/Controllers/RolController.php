@@ -17,8 +17,9 @@ class RolController extends Controller
     public function index(Request $request)
     {
         $roles = Role::whereNotIn('id',[1])->where('type','!=', 1)->get();
+        $count_perso = Role::where('type', 1)->count();
 
-        return view('configuracion_general.usuario.roles.index', compact('roles'));
+        return view('configuracion_general.usuario.roles.index', compact('roles','count_perso'));
     }
 
     public function create(Request $request)
@@ -68,7 +69,14 @@ class RolController extends Controller
     }
 
     public function update(Request $request, $id){
-
+        
+        // return $request;
+        $rol = Role::findById($id);
+        $rol->name = $request->name;
+        $rol->description = $request->description;
+        $rol->save();
+        $rol->syncPermissions($request->permissions);
+        return redirect()->back()->with('success', "El Rol se modificó correctamente");
     }
 
 

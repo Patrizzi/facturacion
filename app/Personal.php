@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Personal extends Model
@@ -41,5 +42,23 @@ class Personal extends Model
 	public function getFullNameAttribute()
 	{
 		return $this->nombres . ' ' . $this->apellidos;
+	}
+
+	public function getFechaNacimientoAttribute()
+	{
+		$fecha_nacimiento = Carbon::parse($this->attributes['fecha_nacimiento'])->format('d-m-Y');
+        return $fecha_nacimiento;
+	}
+	public function getGeneroAttribute(){
+		$genero = ucwords($this->attributes['genero']);
+        return $genero;
+	}
+	public function getFechaVinculacionAttribute(){
+		$fecha_nacimiento = Carbon::parse($this->attributes['fecha_vinculacion'])->format('d-m-Y');
+        return $fecha_nacimiento;
+	}
+	public function getFechaRetiroAttribute(){
+		$fecha_nacimiento = Carbon::parse($this->attributes['fecha_retiro'])->format('d-m-Y');
+        return $fecha_nacimiento;
 	}
 }

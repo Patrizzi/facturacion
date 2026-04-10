@@ -111,12 +111,18 @@
                                                                 <input type="checkbox">
                                                             </td>
                                                             <td>{{ $rol->name }}</td>
-                                                            <td>{{ $rol->users->count() }}</td>
+                                                            <td>
+                                                                @if($rol->id == 4)
+                                                                    {{$count_perso}}
+                                                                @else
+                                                                    {{ $rol->users->count() }}
+                                                                @endif
+                                                            </td>
                                                             <td>{{ $rol->description }}</td>
                                                             <td>
                                                                 {{-- <button class="btn btn-primary" data-target=""><i class="fa fa-pencil"></i></button> --}}
                                                                 <a
-                                                                    @if ($rol->id != 2) class="btn btn-primary"  href="{{ route('roles.edit', $rol->id) }}" @else class="btn btn-primary disabled" href="#" @endif>
+                                                                    @if ($rol->id != 2 && $rol->id != 4 ) class="btn btn-primary"  href="{{ route('roles.edit', $rol->id) }}" @else class="btn btn-primary disabled" href="#" @endif>
                                                                     <i st class="fa fa-pencil"></i>
                                                                 </a>
                                                                 <a href="#modal-usuarios-roles" class="btn btn-secondary modal_usuarios_rol"
@@ -421,6 +427,33 @@
                     $('#lista_roles').html(html);
                 }
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
         });
     </script>
 @endsection

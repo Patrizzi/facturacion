@@ -117,7 +117,13 @@
                                                             </td>
                                                             <td>{{ $usuario->nombre ?? $usuario->personal->full_name }}</td>
                                                             <td>{{ $usuario->personal->numero_documento }}</td>
-                                                            <td>{{ $usuario->getRoleNames()->first() }}</td>
+                                                            <td>
+                                                                @if($usuario->roles->first()?->type != 1)
+                                                                    {{$usuario->getRoleNames()->first()}}
+                                                                @else   
+                                                                    Personalizado
+                                                                @endif
+                                                            </td>
                                                             <td>{{ $usuario->email }}</td>
                                                             <td>{{ $usuario->celular ?? $usuario->personal->celular }}</td>
                                                             <td>{{ $usuario->almacen?->nombre ?? 'Todos' }}</td>
@@ -193,7 +199,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 550px">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Cambiar de constraseña</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Activar Usuario del Sistema</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -265,7 +271,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Cambiar de constraseña</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Cambiar de Contraseña</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -741,11 +747,14 @@
         $('.select2-rol').on('select2:select', function(e) {
             // var palabra = "Personalizado";
             var data = e.params.data;
-            var text = data.text;
-            if (text.includes("Personalizado")) {
+            // console.log(data);
+            var id_rol = data.id;
+            if (id_rol == 4) {
+                console.log("Personalizado");
                 $('#registrar_terminar').css('display', 'none');
                 $('#permisos_terminar').css('display', 'flex');
             } else {
+                console.log("Normal");
                 $('#permisos_terminar').css('display', 'none');
                 $('#registrar_terminar').css('display', 'flex');
             }

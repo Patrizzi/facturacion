@@ -33,9 +33,9 @@
                                             value="{{ $rol->name }}">
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-form-label"><strong>Tipo de Rol</strong></label>
-                                        <input type="text" class="form-control" value="Personalizado" readonly
-                                            name="" id="">
+                                        <label class="col-form-label"><strong>Descripcion</strong></label>
+                                        <input type="text" class="form-control" value="{{$rol->descripcion}}"
+                                            name="descripcion" id="descripcion" >
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-block">Guardar</button>
                                 </div>
@@ -44,20 +44,18 @@
                             <div class="row">
                                 @php $i = 0; @endphp
                                 @foreach ($permisos as $modulo => $prefijos)
-                                    @php $moduloSlug = Str::slug($modulo); @endphp
-
+                                    @php
+                                        $moduloSlug = Str::slug($modulo);
+                                    @endphp
                                     <div class="col-lg-3 col-md-6 col-sm-12">
                                         <div class="panel-group">
-
-                                            <!-- NIVEL 1: MODULO -->
                                             <div class="panel panel-default">
                                                 <div class="panel-heading" style="display: flex">
-
                                                     <div class="checkbox checkbox-primary" style="padding-left: 0px">
-
                                                         <input type="checkbox" class="check-modulo"
                                                             id="modulo_{{ $moduloSlug }}"
-                                                            data-modulo="{{ $modulo }}">
+                                                            data-modulo="{{ $moduloSlug }}"
+                                                            onclick="check_modulo(this, '{{ $moduloSlug }}')">
 
                                                         <label for="modulo_{{ $moduloSlug }}" style="margin-bottom: 0px;">
                                                             <h5 class="panel-title"
@@ -68,54 +66,46 @@
                                                                 </a>
                                                             </h5>
                                                         </label>
-
                                                     </div>
                                                 </div>
 
                                                 <div id="collapse-modulo-{{ $moduloSlug }}"
-                                                    class="panel-collapse collapse show">
-
+                                                    class="panel-collapse collapse">
                                                     <div class="panel-body">
-
-                                                        <!-- NIVEL 2: PREFIJOS -->
                                                         <div class="row">
-
                                                             @foreach ($prefijos as $prefijo => $listaPermisos)
-                                                                @php $prefijoSlug = Str::slug($prefijo); @endphp
+                                                                @php
+                                                                    $prefijoSlug = Str::slug($prefijo);
+                                                                    $uniqueId = $moduloSlug . '_' . $prefijoSlug;
+                                                                @endphp
 
                                                                 <div class="col-6" style="margin-bottom:10px">
 
-                                                                    <!-- PREFIJO -->
                                                                     <div
                                                                         style="display:flex; justify-content:space-between; align-items:center">
-
                                                                         <div style="display:flex; align-items:center">
-
                                                                             <input type="checkbox"
-                                                                                class="check-prefijo modulo_{{ $modulo }}"
-                                                                                data-modulo="{{ $modulo }}"
-                                                                                data-prefijo="{{ $prefijo }}"
-                                                                                id="prefijo_{{ $moduloSlug }}_{{ $prefijoSlug }}">
+                                                                                class="check-prefijo modulo_{{ $moduloSlug }}"
+                                                                                data-modulo="{{ $moduloSlug }}"
+                                                                                data-prefijo="{{ $prefijoSlug }}"
+                                                                                onclick="check_submodulo(this, '{{ $moduloSlug }}', '{{ $prefijoSlug }}')"
+                                                                                id="prefijo_{{ $uniqueId }}">
 
-                                                                            <label
-                                                                                for="prefijo_{{ $moduloSlug }}_{{ $prefijoSlug }}"
+                                                                            <label for="prefijo_{{ $uniqueId }}"
                                                                                 style="margin-left:5px; margin-bottom:0">
                                                                                 <strong>
                                                                                     {{ Str::title($prefijo) }}
                                                                                 </strong>
                                                                             </label>
-
                                                                         </div>
 
                                                                         <a class="modulo_arrow"
-                                                                            onclick="abrir_modulo(this, {{ $i }})">
+                                                                            onclick="abrir_modulo(this, '{{ $uniqueId }}')">
                                                                             <i class="fa fa-toggle-down"></i>
                                                                         </a>
-
                                                                     </div>
 
-                                                                    <!-- NIVEL 3: PERMISOS -->
-                                                                    <div id="div_{{ $i }}"
+                                                                    <div id="div_{{ $uniqueId }}"
                                                                         style="margin-left:15px; display:none;">
 
                                                                         @foreach ($listaPermisos as $permiso)
@@ -134,18 +124,17 @@
                                                                                     <input type="checkbox"
                                                                                         name="permissions[]"
                                                                                         value="{{ $permiso->name }}"
-                                                                                        class="check-permiso modulo_{{ $modulo }} permisos_{{ $prefijo }}"
-                                                                                        data-modulo="{{ $modulo }}"
-                                                                                        data-prefijo="{{ $prefijo }}"
-                                                                                        id="permiso_{{ $i }}"
+                                                                                        class="check-permiso modulo_{{ $moduloSlug }} permisos_{{ $prefijoSlug }}"
+                                                                                        data-modulo="{{ $moduloSlug }}"
+                                                                                        data-prefijo="{{ $prefijoSlug }}"
+                                                                                        id="permiso_{{ $permiso->id }}"
                                                                                         {{ in_array($permiso->name, $permisosRol) ? 'checked' : '' }}>
 
                                                                                     <label
-                                                                                        for="permiso_{{ $i }}"
+                                                                                        for="permiso_{{ $permiso->id }}"
                                                                                         style="margin-left:5px; margin-bottom:0">
                                                                                         {{ Str::of($accion)->replace('_', ' ')->title() }}
                                                                                     </label>
-
                                                                                 </div>
 
                                                                                 @if ($permiso->description)
@@ -166,16 +155,11 @@
                                                                     <hr style="margin:8px 0">
 
                                                                 </div>
-
-                                                                @php $i++; @endphp
                                                             @endforeach
-
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 @endforeach
@@ -246,7 +230,6 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -254,32 +237,25 @@
             actualizar_modulos();
         });
 
-        function abrir_modulo(icon, item) {
-            let div = document.getElementById(`div_${item}`);
-            let icono = icon.querySelector('i');
-
-            if (div.style.display === 'none' || div.style.display === '') {
-                div.style.display = 'block';
-                icono.classList.remove('fa-toggle-down');
-                icono.classList.add('fa-toggle-up');
-            } else {
-                div.style.display = 'none';
-                icono.classList.remove('fa-toggle-up');
-                icono.classList.add('fa-toggle-down');
-            }
-        }
-
         function check_modulo(el, modulo) {
             let estado = el.checked;
 
-            $(`.modulo_${modulo}`).prop('checked', estado);
+            let hijos = $(`.modulo_${modulo}:not(.check-modulo)`);
+            hijos.prop('checked', estado);
+
+            actualizar_prefijos();
+            actualizar_modulos();
         }
 
         function check_submodulo(el, modulo, prefijo) {
             let estado = el.checked;
-            $(`.modulo_${modulo}.permisos_${prefijo}`).prop('checked', estado);
-        }
 
+            let hijos = $(`.modulo_${modulo}.permisos_${prefijo}`);
+            hijos.prop('checked', estado);
+
+            actualizar_prefijos();
+            actualizar_modulos();
+        }
 
         function actualizar_prefijos() {
             $('.check-prefijo').each(function() {
@@ -309,7 +285,8 @@
             $('.check-modulo').each(function() {
 
                 let modulo = $(this).data('modulo');
-                let hijos = $(`.modulo_${modulo}`);
+
+                let hijos = $(`.modulo_${modulo}:not(.check-modulo)`);
 
                 let total = hijos.length;
                 let checked = hijos.filter(':checked').length;
@@ -327,7 +304,23 @@
             });
         }
 
-        // sincronización en tiempo real
+        function abrir_modulo(icon, item) {
+            let div = document.getElementById(`div_${item}`);
+
+            if (div.style.display === 'none' || div.style.display === '') {
+                div.style.display = 'block';
+            } else {
+                div.style.display = 'none';
+            }
+
+            // obtener el icono dentro del <a>
+            let son = icon.querySelector('i');
+
+            // cambiar icono
+            son.classList.toggle('fa-toggle-down');
+            son.classList.toggle('fa-toggle-up');
+        }
+
         $('input[type="checkbox"]').on('change', function() {
             actualizar_prefijos();
             actualizar_modulos();
