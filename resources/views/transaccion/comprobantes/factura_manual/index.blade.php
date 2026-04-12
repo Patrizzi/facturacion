@@ -195,7 +195,7 @@
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="' + full[2] +
+                        return '<input type="checkbox" name="select_row" value="' + full[0] +
                             '" class="i-checks-factura">';
                     }
                 },
@@ -299,7 +299,7 @@
                         if (pago) {
                             var end = `
                                 <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls" 
+                                    <button class="btn ${e3.clase} btn-circle btn-ls"
                                             title="Pago: ${e3.texto}">
                                         <i style="font-weight:700" class="fa fa-dollar"></i>
                                     </button>
@@ -319,7 +319,7 @@
                                     <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
                                         data-id="${full[0]}"
                                         data-estado="${full[14]}"
-                                        title="Pago: ${e3.texto}">  
+                                        title="Pago: ${e3.texto}">
                                     <i style="font-weight:700" class="fa fa-dollar"></i>
                                     </button>
                                 </div>
@@ -524,7 +524,7 @@
                         });
                         $(`.select_2_multipl_` + index + ``).on('select2:select', function(e) {
                             var data = e.params.data;
-                            
+
                             var ant = $(`#total_cuotas_` + index + ``).val();
                             if (ant == "") {
                                 ant = 0;
@@ -548,7 +548,7 @@
                             var igual = $("#simbolor_label").html();
                             console.log("igual" + igual);
                             console.log("row.factura_simbolo" + row.factura_simbolo);
-                            
+
                             if (igual === row.factura_simbolo) {
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
@@ -998,7 +998,7 @@
                 closeWhatsappPanels();
                 return;
             }
-            
+
             e.stopPropagation();
             $(this).addClass('wsp-fixed').css('height', '50px');
         });

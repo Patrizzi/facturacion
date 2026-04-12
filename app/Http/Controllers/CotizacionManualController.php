@@ -1753,7 +1753,7 @@ public function update(Request $request, $id)
             $end2 = number_format(round($end, 2), 2);
 
             // VERIFICAR SI EXISTE RENOVACIÓN
-            $renovacion = RenovacionVentas::where('cotizacion_manual_id', $id)
+            $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacionId)
                 ->where('estado', 1)
                 ->first();
 
