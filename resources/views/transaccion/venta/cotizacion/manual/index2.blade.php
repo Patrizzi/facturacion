@@ -354,18 +354,47 @@
                     'targets': [4]
                 },
                 {
-                    'targets': [8], // Configuración para otra columna (como la de acciones)
+                    'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        // Generar la URL de forma dinámica usando la función route con un placeholder
                         var url = '{{ route('cotizacion_manual.show', ':id') }}';
-                        url = url.replace(':id', full[
-                            0]); // Reemplazar el placeholder con el valor dinámico
+                        url = url.replace(':id', full[0]);
+
+                        var iconoRenovacion = '';
+                        if (full[13] == 1) {
+                            iconoRenovacion = `<button type="button" class="btn" style="background-color:#1ab394; border-color:#1ab394; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovación activa"><i class="fa fa-refresh"></i></button>`;
+                        } else if (full[13] == 2) {
+                            iconoRenovacion = `<button type="button" class="btn" style="background-color:#e8572a; border-color:#e8572a; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Próxima a vencer"><i class="fa fa-refresh"></i></button>`;
+                        } else if (full[13] == 3) {
+                            iconoRenovacion = `<button type="button" class="btn" style="background-color:#1c84c6; border-color:#1c84c6; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovada"><i class="fa fa-refresh"></i></button>`;
+                        }
 
                         if (full[9] == '0') {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
+                            return `
+                            <div class="tooltip-demo">
+                                <a href="${url}">
+                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" data-original-title="Ver">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
+                                <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" data-original-title="Procesado">
+                                    <i class="fa fa-clock-o"></i>
+                                </button>
+                                ${iconoRenovacion}
+                            </div>`;
                         } else {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
+                            return `
+                            <div class="tooltip-demo">
+                                <a href="${url}">
+                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" data-original-title="Ver">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
+                                <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" data-original-title="Sin Procesar">
+                                    <i class="fa fa-check-circle"></i>
+                                </button>
+                                ${iconoRenovacion}
+                            </div>`;
                         }
                     }
                 },
