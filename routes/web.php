@@ -915,6 +915,7 @@ Route::group(
 
         Route::resource('/usuario', 'UsuarioController')->except(['create','update']);
         Route::post('usuario/crear', 'UsuarioController@create')->name('usuario.create');
+        // Route::post('usuario/perfil', 'UsuarioController@create')->name('usuario.create');
         Route::post('usuario/update/{id}', 'UsuarioController@update')->name('usuario.update');
         Route::post('usuario/codigo_nuevo_correo/{id}', 'UsuarioController@codigo_nuevo_correo')->name('usuario.codigo_nuevo_correo');
         

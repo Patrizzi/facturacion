@@ -315,23 +315,23 @@
                         </li>
                     @endcan
                 </ul>
-                <div style="padding:15px; position: fixed; bottom: 0px; height: 10vh;" class="nav-last-footer">
-                    
-                    <div style="display: flex; align-items: center; margin-bottom: 1rem;height: 100%;"
-                        class="nav-footer-user">
-                        <a class="nav-label" style="display: flex; align-items: center;" {{-- href="{{route('usuario.index')}}" --}}>
-                            <img alt="image" class="rounded-circle"
-                                src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
-                                style="width: 46px; height: 46px; border: 1px solid black;background-color: white" />
-                            <div class="nav-label" style="margin-left: 20px;">
-                                <span class="block m-t-xs font-bold spans"
-                                    style="font-size: 14px;color: white">{{$empresa->nombre}}</span>
-                                <span class="block m-t-xs text-white font-bold mr-3">@yield('area', auth()->user()->name)</span>
-                            </div>
-                            <div class="nav-label" style="margin-left: 10px; position: relative;">
+                <div style="max-height: 70px;" class="nav-last-footer">
+                    <div 
+                        class="" style="width: 100%">
+                        <div class="nav-label"  style="display: flex;flex-direction: row;align-items: center;white-space: initial !important;justify-content: space-between;">
+                            <a href="{{route('usuario.perfil')}}" style="display: flex;flex-direction: row;align-items: center;" >
+                                <img alt="image" class="rounded-circle"
+                                    src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
+                                    style="border: 1px solid black;background-color: white;height:45px;width: 45px" />
+                                <div class="nav-label" style="margin-left: 10px;">
+                                    <span class="block m-t-xs font-bold spans"
+                                        style="font-size: 14px;color: white">{{$empresa->nombre}}</span>
+                                    <span class="block m-t-xs text-white font-bold mr-3">@yield('area', auth()->user()->name)</span>
+                                </div>
+                            </a>
+                            <div class="nav-label" style="">
                                 <i class="fa fa-ellipsis-v" id="menuIcon"
                                     style="color: white; font-size: 19px; margin-right: 15px; cursor: pointer;"></i>
-
                                 <!-- Menú desplegable -->
                                 <div id="dropdownMenu"
                                     style="display: none; position: absolute; bottom: 50px; right: 0; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 5px; padding: 10px; width: 150px;">
@@ -350,7 +350,7 @@
                                             style="display: block; color: black; padding: 8px; text-decoration: none;">
                                             <i class="fa fa-cog fa-lg"></i> Configuración</a>
                                     @endcan
-                                    <a href="{{ route('logout') }}" class="dropdown-item"
+                                    <a href="#" class="dropdown-item"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                         style="display: block; color: black; padding: 8px; text-decoration: none;">
                                         <i class="fa fa-sign-out fa-lg"></i> Cerrar Sesión
@@ -361,7 +361,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     </div>
                 </div>
 
