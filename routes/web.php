@@ -486,6 +486,7 @@ Route::group(
         Route::post('/guia_remision/create', 'GuiaRemisionController@create')->name('guia_remision.create');
         // Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
         Route::post('/guia_remision/peso_stock', 'GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
+        Route::post('/guia_remision/guardar-nota/{id}', 'GuiaRemisionController@guardarNotaInformativa')->name('guia_remision.guardar_nota');
         Route::post('/guia_remision/anular', 'GuiaRemisionController@destroy')->name('guia_remision.anular');
         Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
 
@@ -495,6 +496,7 @@ Route::group(
         // Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
         Route::post('/guia_remision_manual/peso', 'GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
         Route::post('/guia_remision_manual/almacen_guia', 'GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
+        Route::post('/guia_remision_manual/guardar-nota/{id}', 'GuiaRemisionManualController@guardarNotaInformativa')->name('remision_m.guardar_nota');
         Route::post('/guia_remision_manual/anular', 'GuiaRemisionManualController@destroy')->name('remision_m.anular');
         Route::get('/guia_remision_manual/print/{id}', 'GuiaRemisionManualController@print')->name('remision_m.print');
 
