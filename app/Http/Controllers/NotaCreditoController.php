@@ -554,7 +554,7 @@ class NotaCreditoController extends Controller
 
             $saldo_pendiente = $nuevo_total - $total_pagado;
             if ($saldo_pendiente <= 0) {
-                return "a";
+                return "Saldo Pendiente Error";
             }
 
             $total_original_pendiente = $cuotas_pendientes->sum('monto');
