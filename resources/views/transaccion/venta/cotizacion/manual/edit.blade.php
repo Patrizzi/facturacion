@@ -193,7 +193,7 @@
                                 autocomplete="off">
                                 @if (isset($cotizacion_m_regs->producto->id))
                                     <option
-                                        value="{{ $cotizacion_m_regs->producto->id }} | {{ $cotizacion_m_regs->producto->codigo_producto }} | {{ $cotizacion_m_regs->producto->codigo_original }} | {{ $cotizacion_m_regs->producto->nombre }}">
+                                        value="{{ $cotizacion_m_regs->producto->id }} | {{ $cotizacion_m_regs->producto->codigo_producto }} | {{ $cotizacion_m_regs->producto->codigo_original }} | {{ $cotizacion_m_regs->producto->nombre }}" selected>
                                         {{ $cotizacion_m_regs->producto->id }} |
                                         {{ $cotizacion_m_regs->producto->codigo_producto }} |
                                         {{ $cotizacion_m_regs->producto->codigo_original }} |
@@ -204,6 +204,14 @@
                                         }else{
                                             $precio_sug = $cotizacion_m_regs->producto->calcularPreciosSugerido()['precio_extranjero'];
                                         }
+                                        $input_prod =
+                                            $cotizacion_m_regs->producto->id .
+                                            ' | ' .
+                                            $cotizacion_m_regs->producto->codigo_producto .
+                                            ' | ' .
+                                            $cotizacion_m_regs->producto->codigo_original .
+                                            ' | ' .
+                                            $cotizacion_m_regs->producto->nombre;
                                         $afect = explode(
                                             ' - ',
                                             $cotizacion_m_regs->producto->tipo_afec_i_producto->informacion,
@@ -211,14 +219,22 @@
                                     @endphp
                                 @else
                                     <option
-                                        value="{{ $cotizacion_m_regs->servicio->id }} | {{ $cotizacion_m_regs->servicio->codigo_servicio }} | {{ $cotizacion_m_regs->servicio->codigo_original }} | {{ $cotizacion_m_regs->servicio->nombre }}">
+                                        value="{{ $cotizacion_m_regs->servicio->id }} | {{ $cotizacion_m_regs->servicio->codigo_servicio }} | {{ $cotizacion_m_regs->servicio->codigo_original }} | {{ $cotizacion_m_regs->servicio->nombre }}" selected>
                                         {{ $cotizacion_m_regs->servicio->id }} |
                                         {{ $cotizacion_m_regs->servicio->codigo_servicio }} |
                                         {{ $cotizacion_m_regs->servicio->codigo_original }} |
                                         {{ $cotizacion_m_regs->servicio->nombre }}</option>
                                     @php
                                         $precio_sug = 1000;
-                                        $afect = explode(
+                                        $input_prod =
+                                            $cotizacion_m_regs->servicio->id .
+                                            ' | ' .
+                                            $cotizacion_m_regs->servicio->codigo_servicio .
+                                            ' | ' .
+                                            $cotizacion_m_regs->servicio->codigo_original .
+                                            ' | ' .
+                                            $cotizacion_m_regs->servicio->nombre;
+                                    $afect = explode(
                                             ' - ',
                                             $cotizacion_m_regs->servicio->tipo_afec_i_serv->informacion,
                                         )[0];
@@ -228,8 +244,8 @@
                             {{--{{$cotizacion->moneda_id}} --}}
                             <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item"
                                 class="form-control txt-limp" autocomplete="off" style="margin-top: 5px;">{{ $cotizacion_m_regs->descripcion_item }}</textarea>
-                            <input hidden="hidden" class="celda" name="articulo[]"
-                                id="input_prod{{ $h }}">
+                            <input type="hidden" class="celda" name="articulo[]"
+                                id="input_prod{{ $h }}" value="{{$input_prod}}">
                         </td>
                         <td>
                             <input type='number' min="1"

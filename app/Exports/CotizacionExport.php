@@ -82,6 +82,7 @@ class CotizacionExport implements FromQuery, WithHeadings, WithMapping, WithEven
         return [
             'Código cotizacion',
             'Almacén',
+            'Doc. Cliente',
             'Cliente',
             'Moneda',
             'Forma de pago',
@@ -162,6 +163,7 @@ class CotizacionExport implements FromQuery, WithHeadings, WithMapping, WithEven
         return [
             $cotizacion->cod_cotizacion,
             optional($cotizacion->almacen)->nombre,
+            optional($cotizacion->cliente)->numero_documento,
             optional($cotizacion->cliente)->nombre,
             optional($cotizacion->moneda)->nombre,
             optional($cotizacion->forma_pago)->nombre,

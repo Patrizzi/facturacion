@@ -372,7 +372,7 @@ class FacturacionElectronicaController extends Controller
         $factura->f_electronica=1;
         $factura->save();
         //
-        // $array = explode(" ",$msg);
+        // dd($msg);
         return $msg;
 
     }
@@ -420,7 +420,7 @@ class FacturacionElectronicaController extends Controller
         //cambio de factura electronica - en caso sea todo exitoso
         $factura->f_electronica=1;
         // $factura->save();
-
+        // dd($mensaje );
         return redirect()->route('facturacion_electronica.index')->with('successMsg',$mensaje);
 
     }
@@ -491,16 +491,18 @@ class FacturacionElectronicaController extends Controller
         }
 
 
-        if(strlen($valor_pas) == 12){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
+        if(stripos($msg_r, 'aceptad') !== false){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
             $retorno =  "Aceptada por Sunat";
-        }elseif (strpos($msg_r,'Codigo Error: ') !== false) {
+        }elseif (stripos($msg_r,'Codigo Error: ') !== false || stripos($msg_r, 'RECHAZADA') !== false) {
             $document->f_electronica = 2; //ESTADO ANULADO
             $document->save();
             $retorno =  "Rechazado por Sunat";
-        }elseif(strpos($msg_r,'OBSERVACIONES') !== false){ //OBSERVACIONES PERO ENVIADOS
+        }elseif(stripos($msg_r,'OBSERVACIONES') !== false){ //OBSERVACIONES PERO ENVIADOS
             $retorno =  "Aceptada con Observaciones";
-        }elseif(strpos($msg_r,'HTTP') !== false){
+        }elseif(stripos($msg_r,'HTTP') !== false){
             $retorno =  "Error en Servidores de Sunat, volver a intentar en 10 minutos";
+            $document->f_electronica = 0; //PARA VOLVER A ENVIAR
+            $document->save();
         }else{
             $retorno =  "Contactar con Soporte para ver el   estado del Comprobande";
         }
@@ -624,16 +626,18 @@ class FacturacionElectronicaController extends Controller
         }
 
 
-        if(strlen($valor_pas) == 12){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
+        if(stripos($msg_r, 'aceptad') !== false){ //* 12 = ACEPTADA --------- 13 = RECHAZADA
             $retorno =  "Aceptada por Sunat";
-        }elseif (strpos($msg_r,'Codigo Error: ') !== false) {
+        }elseif (stripos($msg_r,'Codigo Error: ') !== false || stripos($msg_r, 'RECHAZADA') !== false) {
             $document->b_electronica = 2; //ESTADO ANULADO
             $document->save();
             $retorno =  "Rechazado por Sunat";
-        }elseif(strpos($msg_r,'OBSERVACIONES') !== false){ //OBSERVACIONES PERO ENVIADOS
+        }elseif(stripos($msg_r,'OBSERVACIONES') !== false){ //OBSERVACIONES PERO ENVIADOS
             $retorno =  "Aceptada con Observaciones";
-        }elseif(strpos($msg_r,'HTTP') !== false){
+        }elseif(stripos($msg_r,'HTTP') !== false){
             $retorno =  "Error en Servidores de Sunat, volver a intentar en 10 minutos";
+            $document->b_electronica = 0; //PARA VOLVER A ENVIAR
+            $document->save();
         }else{
             $retorno =  "Contactar con Soporte para ver el   estado del Comprobande";
         }

@@ -20,7 +20,7 @@
             print-color-adjust: exact;
             background: #fff;
             margin: 0;
-            padding: 20px;
+            /* padding: 20px; */
         }
 
         .row {
@@ -360,14 +360,14 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width:28px" class="tac">N°</th>
-                                    <th style="width:90px" class="tac">CÓDIGO</th>
-                                    <th style="width:90px" class="tac">CÓDIGO SUNAT</th>
+                                    <th style="width:5%" class="tac">N°</th>
+                                    <th style="width:12%" class="tac">CÓDIGO</th>
+                                    {{-- <th style="width:12%" class="tac">C. SUNAT</th> --}}
                                     <th>DESCRIPCIÓN</th>
-                                    <th style="width:60px" class="tac">UNIDAD</th>
-                                    <th style="width:60px" class="tac">CANTIDAD</th>
-                                    <th style="width:60px" class="tac">PESO U.</th>
-                                    <th style="width:60px" class="tac">PESO TOT</th>
+                                    <th style="width:11%" class="tac">UNIDAD</th>
+                                    <th style="width:11%" class="tac">CANTIDAD</th>
+                                    <th style="width:12%" class="tac">PESO U.</th>
+                                    <th style="width:12%" class="tac">PESO TOT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -376,7 +376,7 @@
                                     <tr>
                                         <td class="tac">{{ $i++ }}</td>
                                         <td class="tac">{{ $guia_registros->producto->codigo_producto ?? '-' }}</td>
-                                        <td class="tac">{{ $guia_registros->producto->codigo_sunat ?? '-' }}</td>
+                                        {{-- <td class="tac">{{ $guia_registros->producto->codigo_sunat ?? '-' }}</td> --}}
                                         <td>
                                             {{ $guia_registros->producto->marcas_i_producto->nombre ?? '' }} /
                                             {{ $guia_registros->producto->nombre ?? '' }} /
@@ -395,7 +395,7 @@
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="7" class="tar"><b>Peso Total:</b></td>
+                                    <td colspan="6" class="tar"><b>Peso Total:</b></td>
                                     <td class="tac"><b>{{ array_sum($tota) }} KGM</b></td>
                                 </tr>
                             </tbody>

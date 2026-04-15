@@ -211,7 +211,7 @@
                                         <tr>
                                             <td>
                                                 {{-- <input type='checkbox' class="case"> --}}
-                                                <button type="button" class="btn btn-sm btn-danger"><i
+                                                <button type="button" class="btn btn-sm btn-danger" onclick='$(this).closest("tr").remove();' ><i
                                                         class="fa fa-trash"></i></button>
                                             </td>
                                             <td class="td_selected">

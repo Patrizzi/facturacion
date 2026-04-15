@@ -1,4 +1,4 @@
-@extends('layout')
+    @extends('layout')
 @section('title', 'Cotizacion Manual Facturar')
 @section('breadcrumb', 'Cotizacion Manual Facturar')
 @section('breadcrumb2', 'Cotizacion Manual Facturar')
@@ -231,7 +231,7 @@
                                         <input type="text" value="{{ $end }}" hidden="hidden" name="precio_final_igv">
                                         <span style="display: block;float: left"> Importe Total: </span>
                                         <span style="display: block;float: right">{{ $cotizacion->moneda->simbolo }} {{ number_format($end, 2) }}</span>
-                                        <input type="text" value="{{ number_format($end, 2) }}" hidden="hidden"
+                                        <input type="text" value="{{ round($end, 2) }}" hidden="hidden"
                                             name="precio_final_igv" id="total">
                                         <br>
                                     </div>

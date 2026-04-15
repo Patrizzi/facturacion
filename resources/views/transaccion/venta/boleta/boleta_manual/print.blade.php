@@ -68,11 +68,35 @@
         color: #999;
         text-align: center;
     }
+    #watermark {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 0;
+    }
+    #watermark p {
+        position: absolute;
+        color:   rgba(120, 120, 120, 0.31);
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+        font-weight: bolder;
+        font-size: 95px;
+        pointer-events: none;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        top: 35%;
+        right: 35%;
+        z-index: 99999;
+    }
     </style>
 
 </head>
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="row">
+        @if ($boleta->b_electronica == 2 || ($boleta->nota_credito == 1 || $boleta->nota_credito == 2 && $boleta->motivo == "01"))
+            <div id="watermark">
+                <p>Anulado</p>
+            </div>
+        @endif
         <div class="col-lg-12" style="margin-top: -5px;">
             <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row" style="align-items: center; justify-content: center">

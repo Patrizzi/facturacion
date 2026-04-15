@@ -216,17 +216,27 @@
                 justify-content: center;
                 align-items: center;
                 border: none;
+<<<<<<< HEAD
+                padding-top: 0px;
+                padding-bottom: 0px
+            }
+
+            .qr-box {
+                width: 70px;
+                height: 70px;
+=======
             }
 
             .qr-box {
                 width: 80px;
                 height: 80px;
+>>>>>>> DevMarlo
                 border: 2px solid #3D3D3D;
                 border-radius: 10px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 5px;
+                padding: 3px;
                 background: white;
             }
 

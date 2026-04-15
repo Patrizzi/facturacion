@@ -1526,4 +1526,13 @@ class GuiaRemisionController extends Controller
         } catch (\Exception $e) {
         }
     }
+
+    public function guardarNotaInformativa(Request $request, $id)
+    {
+        $guia = Guia_remision::findOrFail($id);
+        $guia->nota_informativa = $request->input('nota_informativa');
+        $guia->save();
+
+        return response()->json(['success' => true]);
+    }
 }

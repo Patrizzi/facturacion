@@ -102,8 +102,8 @@
                             </td>
                         @endif
                         <td style="text-align: center">{{$cotizacion_registros->cantidad}}</td>
-                        <td style="text-align: right">{{round($cotizacion_registros->precio,8)}}</td>
-                        <td style="text-align: right">{{round($cotizacion_registros->cantidad*$cotizacion_registros->precio,8)}}</td>
+                        <td style="text-align: right">{{number_format(round($cotizacion_registros->precio,2),2)}}</td>
+                        <td style="text-align: right">{{number_format(round($cotizacion_registros->cantidad*$cotizacion_registros->precio,2),2)}}</td>
                     </tr>
                     @endforeach
                 </tbody>

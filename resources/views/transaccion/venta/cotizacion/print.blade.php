@@ -130,8 +130,8 @@
                 <td>{{$cotizacion_registros->producto->codigo_producto}}</td>
                 <td>{{$cotizacion_registros->producto->nombre}} <br>{{$cotizacion_registros->producto->descripcion}}</span></td>
                 <td>{{$cotizacion_registros->cantidad}}</td>
-                <td>{{$cotizacion_registros->precio_unitario_comi}}</td>
-                <td>{{$cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi}}</td>
+                <td>{{number_format(round($cotizacion_registros->precio_unitario_comi,2),2)}}</td>
+                <td>{{number_format(round($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi,2),2)}}</td>
             </tr>
             @endforeach
         </tbody>
@@ -173,11 +173,11 @@
         <span style="display: block;float: right;"> {{$simbologia=$cotizacion->moneda->simbolo}}. {{number_format($sub_total, 2)}}</span>
         <br>
         <span style="display: block;float: left"> Op. Agravada: </span>
-        <span style="display: block;float: right">{{$simbologia}}. {{number_format($cotizacion->op_gravada,2)}}</span><br>
+        <span style="display: block;float: right">{{$simbologia}}. {{number_format(round($cotizacion->op_gravada,2),2)}}</span><br>
         <span style="display: block;float: left"> Op. Inafecta: </span>
-        <span style="display: block;float: right">{{$simbologia}} {{ number_format($cotizacion->op_inafecta,2)}}</span><br>
+        <span style="display: block;float: right">{{$simbologia}} {{ number_format(round($cotizacion->op_inafecta,2),2)}}</span><br>
         <span style="display: block;float: left"> Op. Exonerada: </span>
-        <span style="display: block;float: right">{{$simbologia}}. {{number_format($cotizacion->op_exonerada,2)}} </span><br>
+        <span style="display: block;float: right">{{$simbologia}}. {{number_format(round($cotizacion->op_exonerada,2),2)}} </span><br>
         <span style="display: block;float: left"> I.G.V.: </span>
         <span style="display: block;float: right">@if ($regla=="factura"){{$cotizacion->moneda->simbolo}}.{{number_format(round($igv_p, 2),2)}} @else  {{$cotizacion->moneda->simbolo}}.00 @endif</span><br>
         <span style="display: block;float: left"> Importe Total: </span>

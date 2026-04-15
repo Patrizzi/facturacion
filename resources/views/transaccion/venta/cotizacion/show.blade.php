@@ -182,9 +182,9 @@
                 <td>{{$cotizacion_registros->cantidad}}</td>
                 <td>{{$cotizacion_registros->descuento}}%</td>
                 <td>{{$cotizacion_registros->precio_unitario_desc}}</td>
-                <td>{{$cotizacion_registros->comision}}%</td>
-                <td>{{$cotizacion_registros->precio_unitario_comi}}</td>
-                <td>{{$cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi}}</td>
+                <td>{{round($cotizacion_registros->comision,8)}}%</td>
+                <td>{{round($cotizacion_registros->precio_unitario_comi,8)}}</td>
+                <td>{{round($cotizacion_registros->precio_unitario_comi *$cotizacion_registros->cantidad, 8)}}</td>
             </tr>
             @endforeach
         </tbody>

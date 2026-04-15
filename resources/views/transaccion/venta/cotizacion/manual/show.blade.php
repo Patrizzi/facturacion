@@ -771,6 +771,8 @@
         // BOTONES
         $('.btn-no-editar').removeClass('no_mostrar');
         $('.btn-editar').addClass('no_mostrar');
+
+        $('#button_edit').addClass('no_mostrar');
     }
     function click_cancelar_editar(){
         // OCULTAR INPUTS
@@ -782,6 +784,9 @@
 
         $('.btn-editar').removeClass('no_mostrar');
         $('.btn-no-editar').addClass('no_mostrar');
+
+        $('#button_edit').removeClass('no_mostrar');
+        $('#button_edit').addClass('mostrar');
     }
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
