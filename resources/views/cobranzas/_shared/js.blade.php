@@ -38,16 +38,15 @@
                 var monto_convertido = monto_total * tipo_cambio;
                 $('#cheque_monto').val(monto_convertido.toFixed(2));
             } else {
-                $('#cheque_monto').val(monto_total.toFixed(2));
+                var monto_convertido = monto_total / tipo_cambio;
+                $('#cheque_monto').val(monto_convertido.toFixed(2));
             }
         } else {
             if (moneda_select == '$') { // Si la moneda no es sol
                 $('#cheque_monto').val(monto_total.toFixed(2));
             } else {
-                var monto_convertido = monto_total * tipo_cambio;
-                $('#cheque_monto').val(monto_convertido.toFixed(2));
+                $('#cheque_monto').val(monto_total.toFixed(2));
             }
-
             $('#tipo_cambio_cheque').attr('readonly', true);
         }
     }
@@ -164,16 +163,15 @@
                 var monto_convertido = monto_total * tipo_cambio;
                 $('#tarjeta_monto').val(monto_convertido.toFixed(2));
             } else {
-                $('#tarjeta_monto').val(monto_total.toFixed(2));
+                var monto_convertido = monto_total / tipo_cambio;
+                $('#tarjeta_monto').val(monto_convertido.toFixed(2));
             }
         } else {
             if (moneda_select == '$') {
                 $('#tarjeta_monto').val(monto_total.toFixed(2));
             } else {
-                var monto_convertido = monto_total * tipo_cambio;
-                $('#tarjeta_monto').val(monto_convertido.toFixed(2));
+                $('#tarjeta_monto').val(monto_total.toFixed(2));
             }
-
             $('#tipo_cambio_tarjeta').attr('readonly', true);
         }
     }
@@ -291,15 +289,14 @@
                 var monto_convertido = monto_total * tipo_cambio;
                 $('#efectivo_monto').val(monto_convertido.toFixed(2));
             } else {
-                $('#efectivo_monto').val(monto_total.toFixed(2));
+                var monto_convertido = monto_total / tipo_cambio;
+                $('#efectivo_monto').val(monto_convertido.toFixed(2));
             }
         } else {
-
             if (moneda_select == '$') {
                 $('#efectivo_monto').val(monto_total.toFixed(2));
             } else {
-                var monto_convertido = monto_total * tipo_cambio;
-                $('#efectivo_monto').val(monto_convertido.toFixed(2));
+                $('#efectivo_monto').val(monto_total.toFixed(2));
             }
             $('#tipo_cambio_efectivo').attr('readonly', true);
         }
@@ -418,14 +415,14 @@
                 var monto_convertido = monto_total * tipo_cambio;
                 $('#transferencia_monto').val(monto_convertido.toFixed(2));
             } else {
-                $('#transferencia_monto').val(monto_total.toFixed(2));
+                var monto_convertido = monto_total / tipo_cambio;
+                $('#transferencia_monto').val(monto_convertido.toFixed(2));
             }
         } else {
             if (moneda_select == '$') {
                 $('#transferencia_monto').val(monto_total.toFixed(2));
             } else {
-                var monto_convertido = monto_total * tipo_cambio;
-                $('#transferencia_monto').val(monto_convertido.toFixed(2));
+                $('#transferencia_monto').val(monto_total.toFixed(2));
             }
             $('#tipo_cambio_transferencia').attr('readonly', true);
         }
