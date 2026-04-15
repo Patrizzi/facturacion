@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center;">
                             @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
@@ -90,18 +90,17 @@
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        {{-- Almacen --}}
-                                        <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                            <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
-                                                    class="fa fa-plus"></i></a>
-                                            {{-- ALMACEN --}}
-                                            {{-- <button class="btn btn-primary" type="button">
-                                                <i class="fa fa-upload"></i>
-                                            </button> --}}
-                                        </ul>
-                                        <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar cotizaciones">
-                                            <i class="fa fa-copy"></i>
-                                        </a>
+                                        @can('cotizacion_m.crear')
+                                            <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                                <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
+                                                        class="fa fa-plus"></i></a>
+                                            </ul>
+                                        @endcan
+                                        @can('cotizacion_m.duplicar')
+                                            <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar cotizaciones">
+                                                <i class="fa fa-copy"></i>
+                                            </a>
+                                        @endcan
                                         <div class="btn-group">
                                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
@@ -253,6 +252,7 @@
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-2-tab').addClass('active');
         });
+        let crear_permiso = false;
         var coti_table = $('.dataTables-example-cotizacion_manual').DataTable({
             "lengthChange": false,
             "responsive": true,
@@ -281,6 +281,7 @@
                     $('.dataTables-example-cotizacion_manual tfoot th.total-total').html('Total  G.: ' +
                         total_table);
 
+                    crear_permiso = json.crear_permiso;
                     // Retorna los datos de la tabla para que Datatables los procese
                     return json.data;
                 }
@@ -361,11 +362,15 @@
                         var url = '{{ route('cotizacion_manual.show', ':id') }}';
                         url = url.replace(':id', full[
                             0]); // Reemplazar el placeholder con el valor dinámico
+                        let objet = ``;
+                        if(crear_permiso){
+                            objet = `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> `;
+                        }    
 
                         if (full[9] == '0') {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
+                            return objet+`<button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
                         } else {
-                            return `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
+                            return objet+`<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
                         }
                     }
                 },

@@ -76,14 +76,14 @@
                                 class="nav-label text-white">Tesorería</span></a></li>
                     @endcan
 
-                    @canany(['factura.listar', 'factura_m.listar', 'boleta.listar', 'boleta_m.listar', 'nota_credito.listar', 'nota_debito.listar', 'guia_remision.listar', 'nota_credito.listar','nota_debito.listar', 'guia_remision.listar', 'guia_remision_m.listar'])
+                    @canany(['factura.listar', 'factura_m.listar', 'boleta.listar', 'boleta_m.listar', 'nota_credito.listar', 'nota_debito.listar', 'guia_remision.listar', 'guia_remision_m.listar'])
                         <li><a href="{{ route('comprobantes.index_factura') }}"><i
                                 class="fa fas fa-file fa-lg text-white"></i><span
                                 class="nav-label text-white">Comprobantes</span></a></li>
                     @endcan
 
                     @canany(['guia_ingreso.listar', 'guia_egreso.listar', 'informe_tecnico.listar'])
-                    <li><a href="{{ route('garantia_guia_ingreso.index') }}"><i
+                        <li><a href="{{ route('garantia_guia_ingreso.index') }}"><i
                                 class="fa fa-check fa-lg text-white"></i><span
                                 class="nav-label text-white">Garantias</span></a></li>
                     @endcan
@@ -314,6 +314,52 @@
                             </ul>
                         </li>
                     @endcan
+                    <hr>
+                    @foreach($menus as $menu)
+                        @if($menu['type'] === 'single')
+                            <li>
+                                <a href="{{ $menu['route'] }}">
+                                    <i class="{{ $menu['icon'] }} fa-lg text-white"></i>
+                                    <span class="nav-label">{{ $menu['label'] }}</span>
+                                </a>
+                            </li>
+                        @endif
+
+                        @if($menu['type'] === 'tree')
+                            <li>
+                                <a href="#">
+                                    <i class="{{ $menu['icon'] }}"></i>
+                                    <span class="nav-label">{{ $menu['label'] }}</span>
+                                </a>
+
+                                <ul class="nav nav-second-level">
+                                    @foreach($menu['children'] as $child)
+                                        @if(isset($child['children']))
+                                            <li>
+                                                <a href="#">{{ $child['label'] }}</a>
+                                                <ul class="nav nav-third-level">
+                                                    @foreach($child['children'] as $sub)
+                                                        <li>
+                                                            <a href="{{ $sub['route'] }}">
+                                                                {{ $sub['label'] }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </li>
+                                        @else
+                                            <li>
+                                                <a href="{{ $child['route'] }}">
+                                                    {{ $child['label'] }}
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                            </li>
+                        @endif
+
+                    @endforeach
                 </ul>
                 <div style="max-height: 70px;" class="nav-last-footer">
                     <div 

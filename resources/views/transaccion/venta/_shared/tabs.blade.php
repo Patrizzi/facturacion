@@ -15,22 +15,22 @@
         </a>
     </li>
     @endcan
-    {{-- @can('cotizacion.listar') --}}
+    @can('nota_venta.listar')
     <li class="nav-item">
         <a class="nav-link"href="{{route('ventas.nota_venta')}}" id="tab-3-tab">
             <span class="badge badge-success" style="background-color: red;">{{$count_all_ventas['nota_venta_day_count']}}</span> Nota de
             Venta
         </a>
     </li>
-    {{-- @endcan --}}
-    {{-- @can('cotizacion.listar') --}}
+    @endcan
+    @can('clientes.listar')
     <li class="nav-item">
         <a class="nav-link" href="{{route('ventas.clientes')}}"  id="tab-4-tab">
             <span class="badge badge-success" style="background-color: blue;">{{$count_all_ventas['cliente_day_count']}}</span> Clientes
         </a>
     </li>
-    {{-- @endcan --}}
-    {{-- @can('cotizacion.listar') --}}
+    @endcan
+    @can('coti_renovacion.listar')
     <li class="nav-item">
         <a class="nav-link" href="{{ route('ventas.renovacion.index') }}" id="tab-5-tab">
             <span class="badge badge-success" style="background-color: grey;">
@@ -39,5 +39,5 @@
         Renovación
         </a>
     </li>
-     {{-- @endcan   --}}
+     @endcan  
 </div>
