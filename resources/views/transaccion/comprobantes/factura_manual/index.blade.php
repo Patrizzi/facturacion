@@ -295,7 +295,6 @@
                         const e3 = estado_pago[estadoPago];
 
                         let pago = full[16];
-                        console.log(full[15]);
                         switch (full[15]) {
                             case 0:
                                 var end = `

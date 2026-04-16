@@ -39,7 +39,7 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter" value="" readonly="readonly" />
+                                                        id="data_range_filter" value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -48,16 +48,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
-                                                {{-- <div class="input-group" style="flex-wrap: nowrap;max-width: 90% !important"> --}}
-                                                    <select class="select2_demo_client" name="cliente" id="cliente"
+                                                <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
-                                                    {{-- <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span> --}}
-                                                {{-- </div> --}}
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
@@ -367,8 +359,6 @@
                         var base_otros = '';
                         if (full[11] == "2") {
                             base_otros += `<span class="label label-success">NC</span> `;
-                        }else{
-                            base_otros +=``;
                         }
                         return base_otros;
                     }

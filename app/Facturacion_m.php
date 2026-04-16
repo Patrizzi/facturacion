@@ -484,7 +484,7 @@ class Facturacion_m extends Model
             $cuotas = Cuotas_credito::where('facturacion_m_id', $this->id)->where('estado', '!=',  0)->get();
             foreach ($cuotas as $cuota) {
                 // if ($cuota->estado == 2 ) {
-                $suma_cuota = $suma_cuota - $cuota->monto_nuevo;
+                $suma_cuota = $suma_cuota - $cuota->nuevo_monto;
                 // }
             }
             $cuotas_total += $suma_cuota;

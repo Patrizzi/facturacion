@@ -1830,6 +1830,7 @@ class ApiController extends Controller
             $detalle->tipo_pago =  ucwords($detalle->tipo_pago);
             $detalle->monto_pago = $detalle->precio_principal . ' - ' . $detalle->precio_secundario;
             $detalle->monto_pagado_format = $detalle->calcularMontoPagadoFormat();
+            $detalle->monto_desc_format = $detalle->calcularMontoPagadoFormat();
             // $detalle->fecha_pago = Carbon::parse($detalle->fechas_inputs)->format('d-m-Y');
             return $detalle;
         });

@@ -40,7 +40,7 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter" value="" readonly="readonly" />
+                                                        id="data_range_filter" value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -52,17 +52,11 @@
                                                 <div class="input-group" style="flex-wrap: nowrap;">
                                                     <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_estado" name="" id="select_estado">
+                                                    <select class="select_2_estado" name="estado_pago" id="select_estado">
                                                         <option value="">Seleccionar Estado de Pago</option>
                                                         <option value="0">Sin Pagar</option>
                                                         <option value="1">Pagado Parcial</option>
@@ -71,7 +65,7 @@
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_tipo_pago" name="" id="select_tipo_pago">
+                                                    <select class="select_2_tipo_pago" name="forma_pago_id" id="tipo_forma_pago">
                                                         <option value="">Seleccionar Forma de Pago</option>
                                                         <option value="1">Contado</option>
                                                         <option value="2">Credito</option>
@@ -276,8 +270,8 @@
                 data: function(d) {
                     d.datarange = $('#data_range_filter').val();
                     d.cliente_id = $("#cliente option:selected").val();
-                    d.estado_pago = $('#select_estado').val();
-                    d.tipo = $('#select_estado').val();
+                    d.select_estado = $('#select_estado').val();
+                    d.tipo_forma_pago = $('#tipo_forma_pago').val();
                 }
             },
             "drawCallback": function(settings) {
@@ -359,10 +353,8 @@
                     'render': function(data, type, full, meta) {
                     //  console.log(full[10]['nota_credito']);
                         var base_otros = '';
-                        if (full[11] == 1) {
+                        if (full[11] == "2") {
                             base_otros += `<span class="label label-success">NC</span> `;
-                        }else{
-                        base_otros +=``;
                         }
                         return base_otros;
                     }

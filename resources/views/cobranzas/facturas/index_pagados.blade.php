@@ -40,9 +40,7 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                        readonly="readonly" />
+                                                        id="data_range_filter" value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -54,37 +52,30 @@
                                                 <div class="input-group" style="flex-wrap: nowrap;">
                                                     <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
+                                            {{-- <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_estado" name="" id="select_estado">
+                                                    <select class="select_2_estado" name="estado_pago" id="select_estado">
                                                         <option value="">Seleccionar Estado de Pago</option>
                                                         <option value="0">Sin Pagar</option>
                                                         <option value="1">Pagado Parcial</option>
                                                     </select>
                                                 </div>
                                             </div> --}}
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <div class="input-group" style="align-items: center">
-                                                    Contado: &nbsp;<input type="checkbox" class="form-control tipo_check"
-                                                        name="" id="contad_check">&nbsp;&nbsp;
-                                                    Credito: &nbsp;<input type="checkbox" class="form-control tipo_check"
-                                                        name="" id="credit_check">
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select_estado()" style="visibility: hidden">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <select class="select_2_tipo_pago" name="forma_pago_id" id="tipo_forma_pago">
+                                                        <option value="">Seleccionar Forma de Pago</option>
+                                                        <option value="1">Contado</option>
+                                                        <option value="2">Credito</option>
+                                                    </select>
                                                 </div>
-                                            </div> --}}
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <button type="button" class="btn btn-primary btn-block"
+                                                    id="button_filtros">Buscar</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <br>
@@ -265,7 +256,38 @@
 
     <script>
         $('#tab-2-tab').addClass('active');
-
+        $(".select2_demo_client").select2({
+            placeholder: "Seleccionar Cliente",
+            allowClear: true,
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.clients') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 10,
+                data: function(params) {
+                    var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term, // search term
+                        tipo_coti: tipo_coti
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nombre + ' | ' + item.numero_documento,
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+        $('.select_2_estado').select2();
+        $('.select_2_tipo_pago').select2();
         // FUNCION DE DATATABLE FACTURA M
         var fact_m_table = $('.dataTables-example-facturas_pagados').DataTable({
             "serverSide": true,
@@ -274,6 +296,9 @@
                 method: "get",
                 data: function(d) {
                     d.datarange = $('#data_range_filter').val();
+                    d.cliente_id = $("#cliente option:selected").val();
+                    d.estado_pago = $('#select_estado').val();
+                    d.tipo = $('#select_tipo_pago').val();
                 }
             },
             "drawCallback": function(settings) {
@@ -366,6 +391,43 @@
                 //     'targets': [10],
                 // },
             ],
-        })
+        });
+        $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "separator": " | ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
+        $(`#button_filtros`).on('click', function() {
+            fact_m_table.ajax.reload();
+        });
     </script>
 @endsection

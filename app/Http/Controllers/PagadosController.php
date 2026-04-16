@@ -744,22 +744,54 @@ class PagadosController extends Controller
         }
         $facturas = Facturacion::WhereIn('id', $var)->get();
         foreach ($facturas as $key => $factura) {
+            $precio_desc = $factura->total_precio_desc_sin_forma;
+            $precio_tota = $factura->total_precio_sin_forma;
+            $factor =  $precio_desc / $precio_tota;
+            $total_esperado = round($precio_desc, 2);
             $monto_adl = CreditosAdelantos::where('factura_id', $factura->id)->first();
             if ($factura->forma_pago_id == 2) {
                 $cuotas = Cuotas_credito::where('facturacion_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar
+                $array_cuot = [];
+                $montos = [];
+                $montos_redondeados = [];
+                $total_esperado = round($precio_desc, 2);
+                $adelanto_total = isset($monto_adl) ? $monto_adl->precio_adelanto : 0;
                 foreach ($cuotas as $llave => $cuota) {
-                    $new_monto = round($cuota->monto, 2);
-                    if (isset($monto_adl)) {
-                        $new_monto = round($cuota->monto - $monto_adl->precio_adelanto, 2);
+                    // Aplicar factor (NC)
+                    $new_monto = $cuota->monto * $factor;
+                    if ($adelanto_total > 0) {
+                        $proporcion = $cuota->monto / $precio_tota;
+                        $adelanto_cuota = $adelanto_total * $proporcion;
+                        $new_monto -= $adelanto_cuota;
                     }
 
-                    $array_cuot[$llave] = array(
+                    $montos[$llave] = $new_monto; // sin redondear
+                }
+                $monto_tor = 0;
+                foreach ($montos as $llave => $monto) {
+                    $rounded = round($monto, 2);
+                    $montos_redondeados[$llave] = $rounded;
+                    $monto_tor += $rounded;
+                }
+                $diferencia = round($total_esperado - $monto_tor, 2);
+                if ($diferencia != 0) {
+                    $lastIndex = array_key_last($montos_redondeados);
+                    $montos_redondeados[$lastIndex] += $diferencia;
+                }
+                $monto_tor = 0;
+
+                foreach ($cuotas as $llave => $cuota) {
+                    $new_monto = $montos_redondeados[$llave];
+
+                    $array_cuot[$llave] = [
                         'id_cuota' => $cuota->id,
                         'cuota_n' => $cuota->numero_cuota,
                         'monto' => $new_monto,
                         'fecha_pago' => $cuota->fecha_pago,
-                        'estado' =>  $cuota->estado
-                    );
+                        'estado' => $cuota->estado
+                    ];
+
+                   $pago_tot = round($monto_tor, 2);
                 }
                 $pago_tot = round($cuotas->sum('monto'), 2);
             } else {

@@ -279,6 +279,9 @@
                                                         <label for=""><strong>Monto Total</strong></label>
                                                         <p class="form-control" id="total_cuota_{{ $cuota->id }}"
                                                             style="margin-bottom: 0px">{{ $cuota->monto_total_format }}
+                                                            @if($factura_m->nota_credito != 0)
+                                                                <small class="text-muted"><s> {{ $factura_m->moneda->simbolo }} {{ number_format($cuota->monto, 2) }}</s></small>
+                                                            @endif
                                                         </p>
                                                     </div>
                                                 </div>
