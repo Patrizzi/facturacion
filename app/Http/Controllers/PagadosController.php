@@ -107,6 +107,7 @@ class PagadosController extends Controller
                 $id_cuota = $id_x_monto[0];
                 $monto = $id_x_monto[1];
                 $cuota_id = null;
+                
                 //? Solo credito o tambien contado, eso no se pensó bien
                 if ($factura_db->forma_pago_id == 2) { //Si es crédito
                     // Se cambia el estado de la cuota a "Pagado" total en tabla cuotas, en el observer
@@ -118,11 +119,16 @@ class PagadosController extends Controller
                 }
                 // else{ //Si es contado
                 // }
+
+                // En caso tiene Nota Credito
+                // if($factura_db->nota_credito == 1){
+                //     $monto = $cuota->nuevo_monto
+                // }
                 // Crear Registros x cuota pagada
                 $registros_comp = new ComprobantesPagosRegistros();
                 $registros_comp->comprobante_pago_id = $comprobante_header->id;
                 $registros_comp->id_cuota_credito = $cuota_id; //Cuota para credito
-                $registros_comp->monto_total = $cuota_credito->monto ?? $monto; //monto total de la cuota
+                $registros_comp->monto_total = $cuota_credito->nuevo_monto ?? $monto; //monto total de la cuota
                 $registros_comp->monto_pago = $monto; //monto del pago 
                 $registros_comp->fecha_pago = $fecha_registro;
                 $registros_comp->save();
@@ -990,31 +996,64 @@ class PagadosController extends Controller
         }
         $facturas = Facturacion_m::WhereIn('id', $var)->get();
         foreach ($facturas as $key => $factura) {
+            $precio_desc = $factura->total_precio_desc_sin_forma;
+            $precio_tota = $factura->total_precio_sin_forma;
+            $factor =  $precio_desc / $precio_tota;
+            $total_esperado = round($precio_desc, 2);
+            // dd($factor);
             $monto_adl = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
             if ($factura->forma_pago_id == 2) {
-                $cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get(); //* Codicional el estado de los cuales falta pagar
+                $cuotas = Cuotas_credito::where('facturacion_m_id', $factura->id)->get();
+                $array_cuot = [];
+                $montos = [];
+                $montos_redondeados = [];
+                $total_esperado = round($precio_desc, 2);
+                $adelanto_total = isset($monto_adl) ? $monto_adl->precio_adelanto : 0;
                 foreach ($cuotas as $llave => $cuota) {
-                    // $monto_adl_cuota = CreditosAdelantosRegistros::where('cuota_cred_id', $cuota->id)->sum('montos_input');
-                    $new_monto =  round($cuota->monto, 2);
-                    if (isset($monto_adl)) {
-                        $new_monto =  round($cuota->monto - $monto_adl->precio_adelanto, 2);
+                    // Aplicar factor (NC)
+                    $new_monto = $cuota->monto * $factor;
+                    if ($adelanto_total > 0) {
+                        $proporcion = $cuota->monto / $precio_tota;
+                        $adelanto_cuota = $adelanto_total * $proporcion;
+                        $new_monto -= $adelanto_cuota;
                     }
 
-                    $array_cuot[$llave] = array(
+                    $montos[$llave] = $new_monto; // sin redondear
+                }
+                $monto_tor = 0;
+                foreach ($montos as $llave => $monto) {
+                    $rounded = round($monto, 2);
+                    $montos_redondeados[$llave] = $rounded;
+                    $monto_tor += $rounded;
+                }
+                $diferencia = round($total_esperado - $monto_tor, 2);
+                if ($diferencia != 0) {
+                    $lastIndex = array_key_last($montos_redondeados);
+                    $montos_redondeados[$lastIndex] += $diferencia;
+                }
+                $monto_tor = 0;
+
+                foreach ($cuotas as $llave => $cuota) {
+
+                    $new_monto = $montos_redondeados[$llave];
+
+                    $array_cuot[$llave] = [
                         'id_cuota' => $cuota->id,
                         'cuota_n' => $cuota->numero_cuota,
-                        'monto' => $new_monto,  //monto = cuota - adelanto
+                        'monto' => $new_monto,
                         'fecha_pago' => $cuota->fecha_pago,
-                        'estado' =>  $cuota->estado
-                    );
+                        'estado' => $cuota->estado
+                    ];
+
+                    $monto_tor += $new_monto;
                 }
-                $pago_tot = round($cuotas->sum('monto'), 2);
+
+                $pago_tot = round($monto_tor, 2);
             } else {
                 $array_cuot = [];
                 // $adle_header = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
                 // return $adle_header;
-                $subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada;
-                $pago_tot = round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2);
+                $pago_tot = round($precio_desc);
                 if (isset($monto_adl)) {
                     $pago_tot = $pago_tot - $monto_adl->precio_adelanto;
                 }

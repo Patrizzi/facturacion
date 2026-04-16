@@ -311,13 +311,8 @@ class CobranzasComprobantesController extends Controller
             } else {
                 $factura_m->n_cuotas = "Pago Único";
             }
-            // Documento Adicional )NC - ND)
-            if($factura_m->nota_credito != "0"){
-                $factura_m->doc_adicional = 1;    
-
-            }else{
-                $factura_m->doc_adicional = 0;
-            }
+            // Documento Adicional - NC
+            $factura_m->doc_adicional = $factura_m->nota_credito;    
             return $factura_m;
         });
 

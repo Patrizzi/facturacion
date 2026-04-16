@@ -365,10 +365,10 @@
                     'render': function(data, type, full, meta) {
                     //  console.log(full[10]['nota_credito']);
                         var base_otros = '';
-                        if (full[10] == 1) {
+                        if (full[11] == "2") {
                             base_otros += `<span class="label label-success">NC</span> `;
                         }else{
-                        base_otros +=``;
+                            base_otros +=``;
                         }
                         return base_otros;
                     }
@@ -387,10 +387,10 @@
                             <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
-                                <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
+                                
                             </ul>
                         </div>`;
-
+                        // // <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
                         // var view +=  ``;
 
                         return view;

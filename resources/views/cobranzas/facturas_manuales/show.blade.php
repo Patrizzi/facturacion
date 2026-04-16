@@ -79,8 +79,30 @@
                                             </div>
                                         </div>
                                     @else
+                                        {{-- {{$factura_m->cuotas_credito}} --}}
                                         <h3>Lista de Cuotas</h3>
                                         <div>
+                                            @php
+                                                $cuotasCollection = $factura_m->cuotas_credito->values();
+
+                                                $total_esperado = round($factura_m->total_precio_desc_sin_forma, 2);
+
+                                                $montos = [];
+                                                $suma = 0;
+
+                                                foreach ($cuotasCollection as $i => $cuota) {
+                                                    $monto = round($cuota->nuevo_monto, 2);
+                                                    $montos[$i] = $monto;
+                                                    $suma += $monto;
+                                                }
+
+                                                $diferencia = round($total_esperado - $suma, 2);
+
+                                                if ($diferencia != 0 && count($montos) > 0) {
+                                                    $lastIndex = array_key_last($montos);
+                                                    $montos[$lastIndex] += $diferencia;
+                                                }
+                                            @endphp
                                             @foreach ($factura_m->cuotas_credito as $i => $cuotas)
                                                 <div style="margin-top: 10px;margin-bottom: 10px">
                                                     <div style="cursor: pointer;" class="form-control box-detalle"
@@ -119,8 +141,11 @@
                                                                 @endif
                                                             </div>
                                                             <div class="text-right">
+                                                                @if($factura_m->nota_credito != 0)
+                                                                    <small class="text-muted"><s> {{ $factura_m->moneda->simbolo }} {{ number_format($cuotas->monto, 2) }}</s></small>
+                                                                @endif
                                                                 {{ $factura_m->moneda->simbolo }}
-                                                                {{ number_format($cuotas->monto, 2) }}
+                                                                <span>{{ number_format(round($montos[$i],2), 2) }} </span>
                                                             </div>
                                                         </div>
                                                     </div>

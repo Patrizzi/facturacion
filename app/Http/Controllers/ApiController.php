@@ -1770,7 +1770,7 @@ class ApiController extends Controller
             $pagado = Cuotas_credito::monto_pagado_convertido_cuota($comprobante->id, $moneda_comprobante->id, $tipo_cambio);
             $restante = Cuotas_credito::restante_pago_convertido_cuota($comprobante->id, $moneda_comprobante->id);
             $comprobante->fecha_pago = Carbon::parse($comprobante->fecha_pago)->format('d-m-Y');
-            $comprobante->monto_total =  $moneda_comprobante->simbolo . ' ' . number_format(round($comprobante->monto, 2), 2);
+            $comprobante->monto_total =  $moneda_comprobante->simbolo . ' ' . number_format(round($comprobante->nuevo_monto, 2), 2);
             $comprobante->pagado = $pagado;
             $comprobante->restante = $restante['moneda'] . ' ' . number_format($restante['saldo_pendiente'],2);
             // $comprobante->tipo_cambio = $comprobante->tipo_cambio;
