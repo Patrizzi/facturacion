@@ -305,34 +305,60 @@
 
                         let pago = full[16];
 
-                        if (pago) {
-                            var end = `
-                                <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls" 
-                                            title="Pago: ${e3.texto}">
+                        switch (full[15]) {
+                            case 0:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
+                                            data-id="${full[0]}"
+                                            data-estado="${full[14]}"
+                                            title="Pago: ${e3.texto}">  
                                         <i style="font-weight:700" class="fa fa-dollar"></i>
-                                    </button>
-                                    <div class="contenedor">
-                                        <div class="mini-overlay">
-                                            <span class="info_overlay">Info. Pago</span><br>
-                                            <b>Monto: </b>${pago.monto_pagado}<br>
-                                            <b>Fecha: </b>${pago.fecha_pago}<br>
-                                            <b>Tipo: </b>${pago.tipo_pago}<br>
-                                            <b>Dato: </b>${pago.detalle_pago}
+                                        </button>
+                                    </div>
+                                `;
+                                break;
+                            case 1:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
+                                            data-id="${full[0]}"
+                                            data-estado="${full[14]}"
+                                            title="Pago: ${e3.texto}" 
+                                            title="Pago: ${e3.texto}">
+                                            <i style="font-weight:700" class="fa fa-dollar"></i>
+                                        </button>
+                                        <div class="contenedor">
+                                            <div class="mini-overlay">
+                                                <span class="info_overlay">Info. Ult. Pago</span><br>
+                                                <b>Monto: </b>${pago.monto_pagado}<br>
+                                                <b>Fecha: </b>${pago.fecha_pago}<br>
+                                                <b>Tipo: </b>${pago.tipo_pago}<br>
+                                                <b>Dato: </b>${pago.detalle_pago}
+                                            </div>
                                         </div>
-                                    </div></div>
-                            `;
-                        } else {
-                            var end = `
-                                <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
-                                        data-id="${full[0]}"
-                                        data-estado="${full[14]}"
-                                        title="Pago: ${e3.texto}">  
-                                    <i style="font-weight:700" class="fa fa-dollar"></i>
-                                    </button>
-                                </div>
-                            `;
+                                    </div>
+                                `;    
+                                break;
+                            case 2:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls"
+                                            title="Pago: ${e3.texto}">
+                                            <i style="font-weight:700" class="fa fa-dollar"></i>
+                                        </button>
+                                        <div class="contenedor">
+                                            <div class="mini-overlay">
+                                                <span class="info_overlay">Info. Ult. Pago</span><br>
+                                                <b>Monto: </b>${pago.monto_pagado}<br>
+                                                <b>Fecha: </b>${pago.fecha_pago}<br>
+                                                <b>Tipo: </b>${pago.tipo_pago}<br>
+                                                <b>Dato: </b>${pago.detalle_pago}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `; 
+                            break;
                         }
 
                         return end;

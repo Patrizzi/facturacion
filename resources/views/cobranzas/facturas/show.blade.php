@@ -74,6 +74,9 @@
                                                     @endif
                                                 </div>
                                                 <div class="text-right">
+                                                    @if($factura->nota_credito != 0)
+                                                        <small class="text-muted"><s> {{ $factura->moneda->simbolo }} {{ number_format($factura->total_precio__sin_forma, 2) }}</s></small>
+                                                    @endif
                                                     {{ $factura->total_precio }}
                                                 </div>
                                             </div>
@@ -183,7 +186,12 @@
                                                 <div class="form-group">
                                                     <label for=""><strong>Monto Total</strong></label>
                                                     <p class="form-control" id="total_contado_{{ $factura->id }}"
-                                                        style="margin-bottom: 0px">{{ $factura->total_precio }}</p>
+                                                        style="margin-bottom: 0px">
+                                                        @if($factura->nota_credito != 0)
+                                                            <small class="text-muted"><s> {{ $factura->moneda->simbolo }} {{ number_format($factura->total_precio__sin_forma, 2) }}</s></small>
+                                                        @endif
+                                                        {{ $factura->total_precio }}
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
