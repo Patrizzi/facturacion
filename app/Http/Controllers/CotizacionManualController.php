@@ -895,7 +895,7 @@ public function update(Request $request, $id)
                     $cotizacion_m->save();
                 }
 
-            }else{            
+            }else{
                 $cotizacion_r_upd_new = new CotizacionManual_registros;
                 $cotizacion_r_upd_new->cotizacion_m_id = $cotizacion->id;
                 if(isset($producto)){
@@ -1816,7 +1816,7 @@ public function update(Request $request, $id)
             if ($cotizacionM) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'cotizacion_manual'), 0,22);
 
-                $pdfUrl = url("cotizacion/share/{$codigo}");
+                $pdfUrl = url("cotizacion_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }

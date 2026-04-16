@@ -424,7 +424,9 @@
                         iconoRenovacion = `<button type="button" class="btn" style="background-color:#1c84c6; border-color:#1c84c6; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovada">
                             <i class="fa fa-refresh"></i>
                         </button>`;
-                    }   
+                    } else if (full[13] == 4) {
+                        iconoRenovacion = `<button type="button" class="btn" style="background-color:#ed5565; border-color:#ed5565; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovación vencida"><i class="fa fa-refresh"></i></button>`;
+                    }
 
                     if (full[9] == '0') {
                         return `
@@ -1321,7 +1323,7 @@
             };
         });
 
-// Función para gestionar nota usando un Modal Bootstrap estilizado e Inspinia-like
+        // Función para gestionar nota usando un Modal Bootstrap estilizado e Inspinia-like
         function gestionarNota(id, notaActual) {
             // Cerrar popovers primero para que no estorben
             $('[data-toggle="popover"]').popover('hide');

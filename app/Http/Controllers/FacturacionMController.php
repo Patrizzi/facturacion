@@ -1350,7 +1350,7 @@ class FacturacionMController extends Controller
             if ($factura) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'factura_manual'), 0, 22);
 
-                $pdfUrl = url("factura/share/{$codigo}");
+                $pdfUrl = url("factura_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }

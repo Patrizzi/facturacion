@@ -198,19 +198,22 @@ class Ventas_registroController extends Controller
                 ->where('estado', 1)
                 ->first();
 
-$estadoRenovacion = 0;
+            $estadoRenovacion = 0;
 
-if ($renovacion) {
-    $diasRestantes = Carbon::now()->startOfDay()->diffInDays($renovacion->fecha_vencimiento, false);
+            if ($renovacion) {
+                $diasRestantes = Carbon::now()->startOfDay()->diffInDays($renovacion->fecha_vencimiento, false);
 
-    if ($renovacion->fecha_inicio->toDateString() > $renovacion->created_at->toDateString()) {
-        $estadoRenovacion = 3; // ya fue renovada
-    } elseif ($diasRestantes <= 7) {
-        $estadoRenovacion = 2; // próxima a vencer
-    } else {
-        $estadoRenovacion = 1; // activa y vigente
-    }
-}
+                if ($renovacion->fecha_inicio->toDateString() > $renovacion->created_at->toDateString()) {
+                    $estadoRenovacion = 3; // ya fue renovada
+                } elseif ($diasRestantes < 0) {
+                    $estadoRenovacion = 4; // vencida
+                } elseif ($diasRestantes <= 7) {
+                    $estadoRenovacion = 2; // próxima a vencer
+                } else {
+                    $estadoRenovacion = 1; // activa y vigente
+                }
+            }
+
             $json['data'][] = [
                 $cotizacion->id,
                 $cotizacion->id,
@@ -349,12 +352,15 @@ if ($renovacion) {
 
                 if ($renovacion->fecha_inicio->toDateString() > $renovacion->created_at->toDateString()) {
                     $estadoRenovacion = 3; // ya fue renovada
+                } elseif ($diasRestantes < 0) {
+                    $estadoRenovacion = 4; // vencida
                 } elseif ($diasRestantes <= 7) {
                     $estadoRenovacion = 2; // próxima a vencer
                 } else {
                     $estadoRenovacion = 1; // activa y vigente
                 }
             }
+
             $json['data'][] = [
                 $cotizacion_manual->id,
                 $cotizacion_manual->id,

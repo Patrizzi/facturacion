@@ -1148,7 +1148,7 @@ class BoletaMController extends Controller
             if ($boleta) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'boleta_manual'), 0, 22);
 
-                $pdfUrl = url("boleta/share/{$codigo}");
+                $pdfUrl = url("boleta_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
