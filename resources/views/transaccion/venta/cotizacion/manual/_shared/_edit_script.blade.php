@@ -2,6 +2,9 @@
     //*Condicional para el tipo de factura
     var tipo_coti = $('#tipo_coti').val();
     var cliente_default = $('#cliente_id').val();
+    $(".select2_tipo_op").select2();
+    $(".select2_moneda").select2();
+    
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
         ajax: {
@@ -84,7 +87,7 @@
         });
     }
 
-    var i = {{ $h }};
+    var i = {{ $cotizacion_m_reg->count() }};
     $(".addmore").on('click', function() {
         console.log(i)
         var data = `[
@@ -101,20 +104,20 @@
                 <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
             </td>
             <td>
-                <input type='number' min='1' style="width: 76px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                <input type='number' min='1' style="min-width: 100px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
             </td>
             <td class="full-height-scroll tooltip-demo">
-                <input type='text' style="width: 76px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                <input type='text' style="min-width: 100px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
             </td>
             <td>
-                <input style="width: 76px" type='text' id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input style="min-width: 100px" type='text' id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
                 <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="form-control precio_s_igv_float" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
             </td>
             <td>
-                <input style="width: 76px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                <input style="min-width: 100px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
             </td>
             <td>
-                <input type='text' id='total${i}'  style="width: 76px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                <input type='text' id='total${i}'  style="min-width: 100px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
             </td>
         </tr>
         `;
@@ -226,16 +229,26 @@
                 'moneda': moneda
             },
             success: function(msg) {
+                const $input = $(`#cantidad${a}`);
+
                 if (msg.price == 0 && msg.amount == 0) {
                     // $(`#precio${a}`).val(0);
-                    $(`#cantidad${a}`).val(1);
+                    if ($input.val() > 1) {
+                        $input.val($input.val());
+                    } else if ($input.length) {
+                        $input.val(1);
+                    }
                     // $(`#cantidad${a}`).attr('max', msg.amount );
                     // $(`#cantidad`).attr('max', msg.amount );
                     $(`#precio_oficial${a}`).val(msg.price)
                 } else {
                     // $(`#precio${a}`).val(1);
                     $(`#precio_oficial${a}`).val(msg.price)
-                    $(`#cantidad${a}`).val(1);
+                    if ($input.val() > 1) {
+                        $input.val($input.val());
+                    } else if ($input.length) {
+                        $input.val(1);
+                    }
                     // $(`#cantidad${a}`).attr('max', msg.amount );
                     // $(`#cantidad`).attr('max', msg.amount );
                 }

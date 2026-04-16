@@ -182,7 +182,7 @@
         });
 
         // DataTable
-        var table = $('#table_cliente').DataTable({
+        var table_cliente = $('#table_cliente').DataTable({
             pageLength: 15,
             lengthChange: false,
             responsive: true,
@@ -225,21 +225,7 @@
                     }
                 }
             ]
-        });
-
-        // INIT iCheck header
-        $('#table_cliente thead .i-checks').iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green'
-        });
-
-        // INIT iCheck en filas en cada draw
-        table.on('draw.dt', function(){
-            $('#table_cliente tbody .i-checks-row').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
-        }).trigger('draw'); // forzar primera vez
+        })
 
         // Seleccionar / deseleccionar todos (afecta página actual)
         $('#table_cliente thead .i-checks').on('ifChecked ifUnchecked', function(e){
@@ -266,9 +252,9 @@
         let mostrarToast = false;
         $('#filter_buttons').on('click', function(){
             mostrarToast = true;
-            table.ajax.reload();
+            table_cliente.ajax.reload();
         });
-        table.on('xhr.dt', function(){
+        table_cliente.on('xhr.dt', function(){
             if (mostrarToast){
                 toastr.success('Se han aplicado los filtros correctamente', ' ', { timeOut: 3000 });
                 mostrarToast = false;
@@ -277,9 +263,24 @@
         $('#revert_select').on('click', function(){
             $('input[name="daterange"]').val('').trigger('change');
             mostrarToast = true;
-            table.ajax.reload();
+            table_cliente.ajax.reload();
         });
 
+
+                // INIT iCheck header
+        $('#table_cliente thead .i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+        // INIT iCheck en filas en cada draw
+        table_cliente.on('draw.dt', function(){
+            $('#table_cliente tbody .i-checks-row').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+        }).trigger('draw'); // forzar primera vez
+        
         // Scroll a la pestaña Clientes
         var $bottom = $('.tabs-scroll-bottom');
         var $nav = $bottom.find('.nav-custom');

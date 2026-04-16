@@ -1149,9 +1149,10 @@ class ComprobantesVentasController extends Controller
                 $guia_r->fecha_entrega_formatted,     // 6 - Entrega
                 $guia_r->id,                          // 7 - Ver (para link)
                 $guia_r->estado_proceso,              // 8 - Estado
-                $guia_r->cliente->celular ?? '',
-                $guia_r->cliente->email ?? '',
-                $guia_r->estado,
+                $guia_r->cliente->celular ?? '',      // 9
+                $guia_r->cliente->email ?? '',        // 10
+                $guia_r->estado,                      // 11
+                $guia_r->nota_informativa,            // 12 - Nota
             ];
         }
 
@@ -1323,9 +1324,10 @@ class ComprobantesVentasController extends Controller
                 $row->fecha_entrega_formatted,         // 6 - Entrega
                 $row->id,                              // 7 - Ver (para link)
                 $row->estado_proceso,                  // 8 - Estado SUNAT (0/1/2)
-                $row->cliente->celular ?? '',
-                $row->cliente->email ?? '',
-                $row->estado,
+                $row->cliente->celular ?? '',          // 9
+                $row->cliente->email ?? '',            // 10
+                $row->estado,                          // 11
+                $row->nota_informativa,                // 12 - Nota
             ];
         }
 

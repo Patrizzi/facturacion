@@ -19,10 +19,10 @@
             transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
             width: 100%;
         }
-        /*@page {
+        @page {
             size: A4;
             font-size: 55%;
-        }*/
+        }
     </style>
     <body class="white-bg">
         <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
@@ -41,7 +41,7 @@
             </tr>
         </table>
         <div class="wrapper wrapper-content animated fadeIn" style="margin-top: -10px ">
-            @if($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
+            @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->nota_credito_register->motivo == "01"))
                 <div id="watermark">
                     <p>Anulado</p>
                 </div>
@@ -140,8 +140,8 @@
 
             <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
             <tr>
-                <td style="width: 70%;border: none">
-                        <h3 align="left">
+                <td style="width: 50%;border: none">
+                        <h3 align="left" style="margin: 0px;">
                             <?php  use Luecano\NumeroALetras\NumeroALetras;
                             $v=new NumeroALetras() ;
                             $letra=($v->toInvoice($end, 2));
@@ -162,7 +162,7 @@
                             Autorizado mediante Resolución de Intendencia N° 0180050001374/SUNAT
                         </small>
                     </td>
-                    <td class="col-sm-4 qr-container">
+                    <td class="qr-container">
                         <div class="qr-box">
                             @if(!empty($qrCode))
                                 <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
@@ -307,7 +307,7 @@
             -moz-transform: rotate(-45deg);
             top: 35%;
             right: 35%;
-            z-index: 0;
+            z-index: 99999;
         }
         .form-control {
             background-color: transparent !important;
@@ -320,17 +320,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            border: none;
+            padding-top: 0px;
+            padding-bottom: 0px
         }
 
         .qr-box {
-            width: 120px;
-            height: 120px;
+            width: 70px;
+            height: 70px;
             border: 2px solid #3D3D3D;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5px;
+            padding: 3px;
             background: white;
         }
 

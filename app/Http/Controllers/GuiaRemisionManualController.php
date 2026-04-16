@@ -328,6 +328,10 @@ class GuiaRemisionManualController extends Controller
         $textoQR = $this->generarTextoQRGuiaRemisionManual($guia_remision_m, $id);
         $qrCode  = $this->generarImagenQR($textoQR);
 
+        // return View(
+        //     'transaccion.venta.guia_remision.guia_manual.pdf',
+        //     compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota','textoQR','qrCode')
+        // );
         $pdf = \PDF::loadView(
             'transaccion.venta.guia_remision.guia_manual.pdf',
             compact('empresa', 'guia_remision_m', 'guia_remision_m_reg', 'i', 'tota','textoQR','qrCode')
@@ -1310,5 +1314,14 @@ class GuiaRemisionManualController extends Controller
 
         } catch (\Exception $e) {
         }
+    }
+
+    public function guardarNotaInformativa(Request $request, $id)
+    {
+        $guia_m = GuiaRemisionManual::findOrFail($id);
+        $guia_m->nota_informativa = $request->input('nota_informativa');
+        $guia_m->save();
+
+        return response()->json(['success' => true]);
     }
 }

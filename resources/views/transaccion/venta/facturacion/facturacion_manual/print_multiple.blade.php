@@ -174,7 +174,7 @@
 
     <div class="row" @if($index> 0) style="page-break-before: always;" @endif>
         <div class="col-lg-12" style="margin-top: -5px;">
-            @if ($factura->f_electronica == 2 || $factura->nota_credito == 1)
+            @if ($factura->f_electronica == 2 || ($factura->nota_credito == 1 || $factura->nota_credito == 2 && $factura->nota_credito_register->motivo == "01"))
             <div id="watermark">
                 <p>Anulado</p>
             </div>
@@ -246,8 +246,8 @@
                                     <td>{{$factura_registros->servicio->nombre}} {{$factura_registros->descripcion_item}}</td>
                                     @endif
                                     <td style="text-align:center">{{$factura_registros->cantidad}}</td>
-                                    <td style="text-align:right">{{round($factura_registros->precio,8)}}</td>
-                                    <td style="text-align:right">{{round($factura_registros->precio * $factura_registros->cantidad, 8)}}</td>
+                                    <td style="text-align:right">{{number_format(round($factura_registros->precio,2),2)}}</td>
+                                    <td style="text-align:right">{{number_format(round($factura_registros->precio * $factura_registros->cantidad, 2),2)}}</td>
                                 </tr>
                                 @php $i++; @endphp
                             @endforeach

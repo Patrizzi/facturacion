@@ -80,7 +80,7 @@
 
         <div class="row">
             <div class="col-lg-12" style="margin-top: -5px;">
-                @if ($facturacion->f_electronica == 2 || $facturacion->nota_credito == 1)
+                @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->nota_credito_register->motivo == "01"))
                     <div id="watermark">
                         <p>Anulado</p>
                     </div>
@@ -192,13 +192,12 @@
                                                     {{ $facturacion_registros->descripcion_item }}
                                             @endif
                                             <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
-                                            <td style="text-align:right">{{ round($facturacion_registros->precio, 8) }}
+                                            <td style="text-align:right">{{ number_format(round($facturacion_registros->precio, 2),2) }}
                                             </td>
 
                                             <td style="text-align:right">
-                                                {{ round($facturacion_registros->precio * $facturacion_registros->cantidad, 8) }}
+                                                {{ number_format(round($facturacion_registros->precio * $facturacion_registros->cantidad, 2),2) }}
                                             </td>
-
                                         </tr>
                                         <span hidden="hidden">{{ $i++ }}</span>
                                     @endforeach

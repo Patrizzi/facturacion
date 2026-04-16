@@ -858,6 +858,7 @@ public function update(Request $request, $id)
                 $cotizacion_r_upd_new = CotizacionManual_registros::find($request->get('elem_delete')[$h]);
                 if(isset($producto)){
                     $cotizacion_r_upd_new->producto_id= $producto->id;
+                    $cotizacion_r_upd_new->servicio_id= null;
                     $cotizacion_r_upd_new->descripcion_item = $request->get('descripcion_item')[$h];
                     $cotizacion_r_upd_new->cantidad= $request->get('cantidad')[$h];
                     $cotizacion_r_upd_new->precio= $request->get('precio_s_igv')[$h];
@@ -875,6 +876,7 @@ public function update(Request $request, $id)
                     }
                     $cotizacion_m->save();
                 }else{
+                    $cotizacion_r_upd_new->producto_id= null;
                     $cotizacion_r_upd_new->servicio_id = $servicio->id;
                     $cotizacion_r_upd_new->descripcion_item = $request->get('descripcion_item')[$h];
                     $cotizacion_r_upd_new->cantidad= $request->get('cantidad')[$h];
@@ -893,7 +895,7 @@ public function update(Request $request, $id)
                     $cotizacion_m->save();
                 }
 
-            }else{
+            }else{            
                 $cotizacion_r_upd_new = new CotizacionManual_registros;
                 $cotizacion_r_upd_new->cotizacion_m_id = $cotizacion->id;
                 if(isset($producto)){

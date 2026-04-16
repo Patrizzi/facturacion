@@ -17,8 +17,8 @@ class UpdateRenovacionVentasTable extends Migration
             $table->dropColumn(['nota_venta_id', 'frecuencia', 'dia_mensual', 'dia_anual', 'mes_anual', 'anio_anual']);
 
             // Agregar nuevos campos (después de cotizacion_manual_id)
-            $table->date('fecha_inicio')->after('cotizacion_manual_id');
-            $table->date('fecha_vencimiento')->after('fecha_inicio');
+            $table->date('fecha_inicio')->nullable()->after('cotizacion_manual_id');
+            $table->date('fecha_vencimiento')->nullable()->after('fecha_inicio');
         });
     }
 

@@ -177,7 +177,7 @@
                                         <div class="col-md-2" id="credito_pago" style="display: none;">
                                             <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
                                                 data-toggle="modal" data-target="#cuotas_modal"><i
-                                                    class="fa fa-dollar"></i></button>
+                                                    class="fa fa-calendar"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -658,6 +658,7 @@
                             return {
                                 id: item.id,
                                 text: item.nombre + ' | ' + item.numero_documento,
+                                tipo_pago: item.tipo_pago_id
                             };
                         })
                     };
@@ -670,7 +671,11 @@
             $('#nombre_cliente').html(text[0]);
             $('#rucdni_cliente').html(text[1]);
         });
-
+        $('.select2_demo_client').on('select2:select', function(e) {
+            var data = e.params.data;
+            // Si el tipo de pago es desde cliente cambiar
+            $('select[name="forma_pago"]').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
+        });
         function valida(f) {
             var boton = document.getElementById("boton");
             var completo = true;
