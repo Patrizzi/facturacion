@@ -160,7 +160,29 @@ class MenuService
                 continue;
             }
 
-            // children
+            // routes dinámicas (IMPORTANTE)
+            if (isset($item['routes'])) {
+
+                $route = null;
+
+                foreach ($item['routes'] as $permission => $routeName) {
+                    if ($user->can($permission)) {
+                        $route = route($routeName);
+                        break;
+                    }
+                }
+
+                if ($route) {
+                    $result[] = [
+                        'label' => $item['label'],
+                        'route' => $route,
+                    ];
+                }
+
+                continue;
+            }
+
+            // children (recursivo)
             if (isset($item['children'])) {
 
                 $children = $this->buildItems($user, $item['children']);
@@ -183,7 +205,7 @@ class MenuService
                 continue;
             }
 
-            // final
+            // route simple
             if (isset($item['route'])) {
                 $result[] = [
                     'label' => $item['label'],

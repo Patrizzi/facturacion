@@ -4,7 +4,7 @@
 @section('href_accion', '#exampleModal')
 @section('value_accion', 'Editar')
 @section('atributo_actu', 'hidden')
-@section('config', route('Configuracion'))
+{{-- @section('config', route('Configuracion')) --}}
 
 @section('content')
 

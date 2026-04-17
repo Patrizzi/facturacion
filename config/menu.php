@@ -7,7 +7,7 @@ return [
         'icon' => 'fa fa-home',
         'label' => 'Inicio',
         'route' => 'inicio',
-        'permission' => 'inicio',
+        'permission' => 'inicio.inicio',
 
     ],
     'ventas' => [
@@ -35,8 +35,8 @@ return [
         ],
     ],
     'comprobantes' => [
-        'icon' => 'fa fa-tags',
-        'label' => 'Ventas',
+        'icon' => 'fa fa-file',
+        'label' => 'Comprobantes',
         'routes' => [
             'factura.listar' => 'comprobantes.index_factura',
             'factura_m.listar' => 'comprobantes.index_factura_manual',
@@ -183,7 +183,7 @@ return [
             'servicio_tecnico.cotizacion_listar',
             'servicio_tecnico.o_servicio_listar',
             'servicio_tecnico.o_servicio_entregados_listar',
-        ]
+        ],
     ],
 
     'planilla' => [
@@ -319,40 +319,84 @@ return [
 
         ]
     ],
-    [
-        'productos_servicios' => [
-            'icon' => 'fa-shopping-bag',
-            'label' => 'Productos Y Servicios',
-            'items' => [
-                'label' => 'Productos',
-                'route' => 'productos.index',
+    'productos_servicios' => [
+        'icon' => 'fa fa-shopping-bag',
+        'label' => 'Productos Y Servicios',
+        'items' => [
+            'label' => 'Productos',
+            'route' => 'productos.index',
+            'permission_any' => [
+                'productos.listar'
+            ],
+        ],
+        [
+            'label' => 'Servicios',
+            'route' => 'cantidad_precio.index',
+            'permission_any' => [
+                'servicios.index'
+            ],
+        ]
+    ],
+    'proyectos_pmb' => [
+        'icon' => 'fa fa-th-large',
+        'label' => 'Proyectos PMB',
+        'route' => 'project_managers.index',
+        'permission_any' => [
+            'proyectos_pmb.listar',
+            'proyectos_pmb.gantt',
+            'proyectos_pmb.listar_act',
+            'proyectos_pmb.listar_tareas',
+            'proyectos_pmb.gantt'
+        ]
+    ],
+    'correo' => [
+        'icon' => 'fa fa-envelope',
+        'label' => 'Correo',
+        'items' => [
+            [
+                'label' => 'Bandeja',
+                'route' => 'email.index',
                 'permission_any' => [
-                    'productos.listar'
+                    'correo.listar_enviados'
                 ],
             ],
             [
-                'label' => 'Servicios',
-                'route' => 'cantidad_precio.index',
+                'label' => 'Borradores',
+                'route' => 'configuracion_email.index',
                 'permission_any' => [
-                    'servicios.index'
+                    'correo.configuracion'
                 ],
+            ],
+            [
+                'label' => 'Papelera',
+                'route' => 'email.trash',
+                'permission_any' => [
+                    'correo.papelera'
+                ],
+            ]
+        ],
+
+    ],
+    'auxiliar' => [
+        'icon' => 'fa fa-group',
+        'label' => 'Auxiliar',
+        'items' => [
+            [
+                'label' => 'Clientes',
+                'route' => 'ventas.clientes',
+                'permission_any' => [
+                    'clientes.listar'
+                ]
+            ],
+            [
+                'label' => 'Proveedores',
+                'route' => 'provedor.index',
+                'permission_any' => [
+                    'proveedor.listar'
+                ]
             ]
         ]
     ],
-    [
-        'proyectos_pmb' => [
-            'icon' => 'fa fa-tags',
-            'label' => 'Ventas',
-            'routes' => [
-                'factura.listar' => 'comprobantes.index_factura',
-                'factura_m.listar' => 'comprobantes.index_factura_manual',
-                'boleta.listar' => 'comprobantes.index_boleta',
-                'boleta_m.listar' => 'comprobantes.index_boleta_manual',
-                'nota_credito.listar' => 'comprobantes.index_nota_credito',
-                'nota_debito.listar' => 'comprobantes.index_nota_debito',
-                'guia_remision.listar' => 'comprobantes.index_guia_remision',
-                'guia_remision_m.listar' => 'comprobantes.index_guia_remision_manual',
-            ],
-        ]
-    ]
+
+
 ];

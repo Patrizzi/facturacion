@@ -3,7 +3,7 @@
 @section('href_accion', route('usuario.lista'))
 @section('value_accion', 'Agregar')
 @section('button2', 'Atras')
-@section('config', route('Configuracion'))
+{{-- @section('config', route('Configuracion')) --}}
 @section('content')
 
 

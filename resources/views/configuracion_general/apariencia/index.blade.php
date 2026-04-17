@@ -4,7 +4,7 @@
 @section('breadcrumb', 'Apariencia')
 @section('breadcrumb2', 'Apariencia')
 @section('button2', 'Inicio')
-@section('config', route('Configuracion'))
+{{-- @section('config', route('Configuracion')) --}}
 
 @section('content')
     <!--
