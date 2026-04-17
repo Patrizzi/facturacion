@@ -169,6 +169,9 @@
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
         $(document).ready(function() {
+            var allSelectedIds = [];
+            var masterChecked = false;
+            var isUpdatingCheckboxes = false;
             // Función para enviar boletas por Correo múltiple
             $('#btn-correo-filtrado').on('click', function (e) {
                 e.preventDefault();
