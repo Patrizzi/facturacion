@@ -236,7 +236,7 @@ class PagadosController extends Controller
 
     public function store_boleta(Request $request)
     {
-        return $request;
+        // return $request;
         // Se escoge el tipo de pago
         $tipo_pago = $request->get('input_pago');
         switch ($tipo_pago) {
@@ -796,8 +796,10 @@ class PagadosController extends Controller
                 $pago_tot = round($cuotas->sum('monto'), 2);
             } else {
 
-                $subtotal = $factura->op_gravada + $factura->op_inafecta + $factura->op_exonerada;
-                $pago_tot = round($subtotal + ($factura->op_gravada * $igv->renta) / 100, 2);
+                $array_cuot = [];
+                // $adle_header = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
+                // return $adle_header;
+                $pago_tot = round($precio_desc,2);
                 if (isset($monto_adl)) {
                     $pago_tot = $pago_tot - $monto_adl->precio_adelanto;
                 }
@@ -1085,7 +1087,7 @@ class PagadosController extends Controller
                 $array_cuot = [];
                 // $adle_header = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
                 // return $adle_header;
-                $pago_tot = round($precio_desc);
+                $pago_tot = round($precio_desc,2);
                 if (isset($monto_adl)) {
                     $pago_tot = $pago_tot - $monto_adl->precio_adelanto;
                 }
@@ -1594,27 +1596,66 @@ class PagadosController extends Controller
         }
         $boletas = Boleta_m::WhereIn('id', $var)->get();
         foreach ($boletas as $key => $boleta) {
-            // $array_cuot = [];
+            $precio_desc = $boleta->total_precio_desc_sin_forma;
+            $precio_tota = $boleta->total_precio_sin_forma;
+            $factor =  $precio_desc / $precio_tota;
+            $total_esperado = round($precio_desc, 2);
+            $monto_adl = CreditosAdelantos::where('boleta_m_id', $boleta->id)->first();
             if ($boleta->forma_pago_id == 2) {
                 $cuotas = Cuotas_credito::where('boleta_m_id', $boleta->id)->get(); //* Codicional el estado de los cuales falta pagar
+                $array_cuot = [];
+                $montos = [];
+                $montos_redondeados = [];
+                $total_esperado = round($precio_desc, 2);
+                $adelanto_total = isset($monto_adl) ? $monto_adl->precio_adelanto : 0;
                 foreach ($cuotas as $llave => $cuota) {
+                    // Aplicar factor (NC)
+                    $new_monto = $cuota->monto * $factor;
+                    if ($adelanto_total > 0) {
+                        $proporcion = $cuota->monto / $precio_tota;
+                        $adelanto_cuota = $adelanto_total * $proporcion;
+                        $new_monto -= $adelanto_cuota;
+                    }
+
+                    $montos[$llave] = $new_monto; // sin redondear
+                }
+                $monto_tor = 0;
+                foreach ($montos as $llave => $monto) {
+                    $rounded = round($monto, 2);
+                    $montos_redondeados[$llave] = $rounded;
+                    $monto_tor += $rounded;
+                }
+                $diferencia = round($total_esperado - $monto_tor, 2);
+                if ($diferencia != 0) {
+                    $lastIndex = array_key_last($montos_redondeados);
+                    $montos_redondeados[$lastIndex] += $diferencia;
+                }
+                $monto_tor = 0;
+                foreach ($cuotas as $llave => $cuota) {
+                    $new_monto = $montos_redondeados[$llave];
                     $array_cuot[$llave] = array(
                         'id_cuota' => $cuota->id,
                         'cuota_n' => $cuota->numero_cuota,
-                        'monto' => $cuota->monto,
+                        'monto' => $new_monto,
                         'fecha_pago' => $cuota->fecha_pago,
                         'estado' =>  $cuota->estado
                     );
+                    $monto_tor += $new_monto;
                 }
-                $pago_tot = round($cuotas->sum('monto'), 2);
+                $pago_tot = round($monto_tor, 2);
             } else {
-                $subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada;
-                $pago_tot = round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2);
+                $array_cuot = [];
+                // $adle_header = CreditosAdelantos::where('factura_m_id', $factura->id)->first();
+                // return $adle_header;
+                $pago_tot = round($precio_desc,2);
+                if (isset($monto_adl)) {
+                    $pago_tot = $pago_tot - $monto_adl->precio_adelanto;
+                }
 
                 $array_cuot[0] = array(
                     'id_cuota' => '1',
                     'cuota_n' => '1',
-                    'monto' => $pago_tot,
+                    'monto' => round($pago_tot,2),
                     'fecha_pago' => $boleta->fecha_vencimiento,
                     'estado' =>  '0'
                 );
@@ -1627,7 +1668,7 @@ class PagadosController extends Controller
                 'cliente_nombre' => $boleta->cliente->nombre,
                 'factura_moneda' => $boleta->moneda->nombre,
                 'factura_simbolo' => $boleta->moneda->simbolo,
-                'total_factura' => $pago_tot,
+                'total_factura' => round($pago_tot,2),
                 'cuotas_array' => $array_cuot
             );
         }

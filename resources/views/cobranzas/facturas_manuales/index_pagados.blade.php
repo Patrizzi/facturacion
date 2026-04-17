@@ -52,16 +52,7 @@
                                                 <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
                                             </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-12">
-                                                <div class="input-group">
-                                                    <select class="select_2_estado" name="select_estado" id="select_estado">
-                                                        <option value="">Seleccionar Estado de Pago</option>
-                                                        <option value="0">Sin Pagar</option>
-                                                        <option value="1">Pagado Parcial</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <select class="select_2_tipo_pago" name="select_tipo_pago" id="select_tipo_pago">
                                                         <option value="">Seleccionar Forma de Pago</option>
@@ -70,7 +61,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <button type="button" class="btn btn-primary btn-block"
                                                     id="button_filtros">Buscar</button>
                                             </div>

@@ -407,7 +407,7 @@ class Facturacion_m extends Model
             // Reduccion por nota de crédito
             $motivo = Facturacion_m::search_motivo_nc($this->attributes['id']);
             // dd($motivo);
-            if ($motivo == "Devolucion por Item") {
+            if ($motivo == "Devolucion por Item" || $motivo == "07") {
                 $nota_c = Nota_Credito::where('facturacion_m_id', $this->attributes['id'])->first();
                 //    dd($nota_c);
                 $total = $total - $nota_c->total_precio;
@@ -449,7 +449,7 @@ class Facturacion_m extends Model
             // Reduccion por nota de crédito
             $motivo = Facturacion_m::search_motivo_nc($this->attributes['id']);
             // dd($motivo);
-            if ($motivo == "Devolucion por Item") {
+            if ($motivo == "Devolucion por Item" || $motivo == "07") {
                 $nota_c = Nota_Credito::where('facturacion_m_id', $this->attributes['id'])->first();
                 //    dd($nota_c);
                 $total = $total - $nota_c->total_precio;

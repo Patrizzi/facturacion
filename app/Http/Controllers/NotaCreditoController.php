@@ -842,11 +842,64 @@ class NotaCreditoController extends Controller
         if ($request->motivo == "01" || $request->motivo == "02" || $request->motivo == "06") {
             $boleta->nota_credito = 1;
         } else {
-            $boleta->nota_credito = 3;
+            $boleta->nota_credito = 2;
         }
         $boleta->save();
 
-        // return "exito";
+        // / Cambio en las cuotas para el nuevo pago
+
+        if ($boleta->forma_pago_id == 2 && $request->motivo == "07") { //Si es credito y el motivo es 7
+            if ($request->get('tipo') == "boleta_origi") {
+                $cuotas = Cuotas_credito::where('boleta_id', $boleta->id)
+                    ->orderBy('fecha_pago')
+                    ->get();
+            } else {
+                $cuotas = Cuotas_credito::where('boleta_m_id', $boleta->id)
+                    ->orderBy('fecha_pago')
+                    ->get();
+            }
+
+            // Separar cuotas
+            $cuotas_pendientes = $cuotas->where('estado', 0);
+            // return $tipo;
+            $cuotas_pagadas = $cuotas->where('estado', '!=', 0);
+
+            $total_pagado = $cuotas_pagadas->sum(function ($c) {
+                return $c->monto_pagado ?? $c->monto; // Ajusta según tu estructura
+            });
+
+            $nuevo_total = $boleta->total_precio_sin_forma;
+
+            $saldo_pendiente = $nuevo_total - $total_pagado;
+            if ($saldo_pendiente <= 0) {
+                return "Saldo Pendiente Error";
+            }
+
+            $total_original_pendiente = $cuotas_pendientes->sum('monto');
+            if ($total_original_pendiente <= 0) {
+                return $total_original_pendiente;
+            }
+            $acumulado = 0;
+            $cantidad = $cuotas_pendientes->count();
+            $index = 1;
+            foreach ($cuotas_pendientes as $cuota) {
+                $porcentaje = $cuota->monto / $total_original_pendiente;
+
+                if ($index < $cantidad) {
+                    $nuevo_monto = round($saldo_pendiente * $porcentaje, 2);
+                    $acumulado += $nuevo_monto;
+                } else {
+                    $nuevo_monto = round($saldo_pendiente - $acumulado, 2);
+                }
+
+                $cuota->monto = $nuevo_monto;
+                $cuota->save();
+
+                $index++;
+            }
+            // dd($cuotas_pendientes);
+        }
+
         return redirect()->route('nota-credito.show', $nota_credito->id);
         // return redirect()->route('nota-credito.index');
     }

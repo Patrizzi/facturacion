@@ -329,8 +329,11 @@
                                 </div> --}}
                                 <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
                                     type="button">Guardar</button>
-                                <button data-style="zoom-out" class="btn btn-primary float-right button-lada" style="margin-left: 10px;"
+                                <button data-style="zoom-out" class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
+                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
+                                    data-style="zoom-out">
+                                </button>
                                 <button type="submit" id="button_submit" hidden name="button_submit" value="0" ></button>
                             </div>
                         </div>
@@ -611,6 +614,9 @@
 
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
+
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <script type="text/javascript">
         $(".select2_demo_almacen").select2({
@@ -1112,7 +1118,7 @@
             console.log(monto_c);
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             // se usta el total real de la boleta manual, mas no el dinamico
-            var total = parseFloat(document.getElementById('total_final').value) || 0;
+            var total = parseFloat(document.getElementById('total_final_view').value) || 0;
             console.log(total);
 
             var fin = 0;
@@ -1158,7 +1164,7 @@
             $(`.delete_modal${x}`).remove();
             var monto_c = document.getElementsByClassName('monto_pago');
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total = document.getElementById('total_final').value;
+            var total = document.getElementById('total_final_view').value;
             var multiplier2 = 100;
             for (var i = 0; i < inp_mont; i++) {
                 var monto = monto_c[i].id;
@@ -1178,6 +1184,7 @@
         };
 
         $("#boton").on("click", function(event) {
+            $('#button_submit').val('0');
             event.preventDefault();
 
             var l = Ladda.create(document.querySelector('.button-lada'));
@@ -1266,93 +1273,92 @@
                 }
             }
         });
-         $("#finalizar").on("click", function(event) {
-            event.preventDefault();
-
-            var l = Ladda.create(document.querySelector('.button-lada'));
+        $("#finalizar").on("click", function(buton) {
+            $('#button_submit').val('1');
+            var l = Ladda.create(this);
             var forma_pago = $("#forma_pago option:selected").val();
-
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-
-                var total = parseFloat(document.getElementById('total_final').value) || 0;
-
+                var total = parseFloat(document.getElementById('total_final_view').value) || 0;
                 var fin = 0.00;
-
+                var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
-                    var valor = parseFloat(monto_c[i].value) || 0;
-                    fin = fin + valor;
+                    fin = parseFloat(fin) + parseFloat(monto_c[i].value);
                 }
                 var fin_r = Math.round(fin * 100) / 100;
-                var total_r = Math.round(total * 100) / 100;
-
-                var camposVacios = false;
                 for (var i = 0; i < inp_mont; i++) {
                     var fecha = monto_fc[i].id;
                     var monto = monto_c[i].id;
-
                     var input_text = document.getElementById(`${monto}`).value;
                     var date_text = document.getElementById(`${fecha}`).value;
-
                     if (input_text.length == 0 || date_text.length == 0) {
-                        camposVacios = true;
                         $('#cuotas_modal').modal('show');
                         document.getElementById('alert_campos').style.display = "flex";
                         setTimeout(mostrarMensaje, 3000);
-                        break;
+                        return;
                     }
                 }
-
-                if (camposVacios) {
-                    return;
-                }
-
-                if (fin_r != total_r) {
-                    // console.log('Las sumas no coinciden:', 'Calculada:', fin_r, 'Esperada:', total_r);
+                if (fin_r != total) {
                     $('#cuotas_modal').modal('show');
                     document.getElementById('suma_campos').style.display = "flex";
                     setTimeout(mostrarMensaje, 3000);
-                    return;
-                }
-
-                var form = document.getElementById('form_store');
-                if (form && !form.checkValidity()) {
-                    form.reportValidity();
-                    return;
-                }
-
-                l.start();
-
-                if (form) {
-                    $("finalizar").off("click");
-                    form.submit();
                 } else {
-                    var submitBtn = document.getElementById('button_submit');
-                    if (submitBtn) {
-                        submitBtn.click();
+                    var form = document.getElementById('form_store');
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return;
                     }
+                    swal({
+                            title: "¿Estás seguro que deseas Finalizar?",
+                            text: "Una vez Finalizado, no podrás modificar esta Boleta",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Si, Finalizar",
+                            confirmButtonColor: "#1a3bb3",
+                            cancelButtonText: "Cancelar",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                swal("Finalizado", "La Boleta ha sido finalizado correctamente", "success");
+                                l.start();
+                                document.getElementById('button_submit').click();
+                            } else {
+                                swal("Cancelado", "Se canceló la finalización", "error");
+                            }
+                        }
+                    );
                 }
-
             } else {
                 var form = document.getElementById('form_store');
-                if (form && !form.checkValidity()) {
+                if (!form.checkValidity()) {
                     form.reportValidity();
                     return;
                 }
-
-                l.start();
-
-                if (form) {
-                    $("#finalizar").off("click");
-                    form.submit();
-                } else {
-                    var submitBtn = document.getElementById('button_submit');
-                    if (submitBtn) {
-                        submitBtn.click();
+                swal({
+                        title: "¿Estás seguro que deseas Finalizar?",
+                        text: "Una vez Finalizado, no podrás modificar esta Boleta",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, Finalizar",
+                        confirmButtonColor: "#1a3bb3",
+                        cancelButtonText: "Cancelar",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            swal("Finalizado", "La Boleta ha sido finalizado correctamente", "success");
+                            l.start();
+                            document.getElementById('button_submit').click();
+                        } else {
+                            swal("Cancelado", "Se canceló la finalización", "error");
+                        }
                     }
-                }
+                );
             }
         });
         // TODO Script para cambiar por moneda

@@ -1479,4 +1479,32 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+        });
+    </script>
+    @include('cobranzas._shared.js')
 @endsection
