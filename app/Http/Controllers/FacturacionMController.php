@@ -636,7 +636,7 @@ class FacturacionMController extends Controller
         $moneda = Moneda::where('id', $facturacion_m->moneda_id)->first();
         $simbolo = $moneda->simbolo;
         $igv = Igv::first();
-        $textoQR = $this->generarTextoQRFactura($facturacion_m, $empresa, $igv);
+        $textoQR = $this->generarTextoQRFacturaM($facturacion_m, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
          // Altura dinámica según cantidad de ítems
         $totalItems  = $facturacion_m_registro->count();
@@ -1253,7 +1253,7 @@ class FacturacionMController extends Controller
      * @param \App\Igv $igv
      * @return string
      */
-    private function generarTextoQRFactura($factura, $empresa, $igv)
+    private function generarTextoQRFacturaM($factura, $empresa, $igv)
     {
         try {
             $ruc = $empresa->ruc ?? '';
