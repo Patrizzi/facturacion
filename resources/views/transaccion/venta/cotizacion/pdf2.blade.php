@@ -16,19 +16,6 @@
             padding: 20px;
         }
 
-        .form-control,
-        .single-line {
-            background-color: #FFFFFF;
-            background-image: none;
-            border: 1px solid #e5e6e7;
-            border-radius: 1px;
-            color: inherit;
-            display: block;
-            padding: 6px 12px;
-            transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-            width: 100%;
-        }
-
         @page {
             size: A4;
             margin: 15mm;
@@ -60,38 +47,29 @@
             padding: 10px;
         }
 
-        .text-center {
-            text-align: center;
-        }
+        .text-center { text-align: center; }
+        .text-right  { text-align: right; }
+        .text-left   { text-align: left; }
 
-        .text-right {
-            text-align: right;
-        }
+        h2, h3, h4 { margin: 5px 0; }
 
-        .text-left {
-            text-align: left;
-        }
+        footer { margin-top: 20px; }
 
-        h2, h3, h4 {
-            margin: 5px 0;
-        }
+        small { font-size: 10px; }
 
-        footer {
-            margin-top: 20px;
-        }
-
-        small {
-            font-size: 10px;
-        }
+        {{-- Estilos para el badge de renovación --}}
+        .badge-vencido  { color: #fff; background-color: #e74c3c; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
+        .badge-hoy      { color: #fff; background-color: #e67e22; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
+        .badge-vigente  { color: #fff; background-color: #27ae60; padding: 3px 8px; border-radius: 4px; font-size: 11px; }
     </style>
 </head>
 
 <body>
+
+    {{-- CABECERA --}}
     <table style="margin-bottom: 20px;">
         <tr>
-            {{-- Cabecera izquierda: Logo y datos empresa --}}
             <td style="width: 70%; padding-right: 10px;">
-                {{-- Si tienes logo, usa: <img src="{{ public_path('images/logo.png') }}" width="150"> --}}
                 <h3>{{ $empresa->razon_social ?? 'NOMBRE EMPRESA' }}</h3>
                 <p>
                     <strong>Dirección:</strong> {{ $empresa->direccion ?? '' }}<br>
@@ -100,7 +78,6 @@
                 </p>
             </td>
 
-            {{-- Cabecera derecha: Datos cotización --}}
             <td style="width: 30%;" class="border-box text-center">
                 <h3 style="margin-top: 0;">R.U.C {{ $empresa->ruc }}</h3>
                 <h2 style="margin: 4px 0;">COTIZACIÓN ELECTRÓNICA</h2>
@@ -109,7 +86,7 @@
         </tr>
     </table>
 
-    {{-- Datos del Cliente y Condiciones --}}
+    {{-- DATOS CLIENTE + CONDICIONES --}}
     <table style="margin-bottom: 15px;">
         <tr>
             <td style="width: 48%;" class="border-box">
@@ -118,7 +95,7 @@
                 <strong>{{ $cotizacion->cliente->documento_identificacion }}:</strong> {{ $cotizacion->cliente->numero_documento }}<br>
                 <strong>Dirección:</strong> {{ $cotizacion->cliente->direccion }}<br>
                 <strong>N° Contacto:</strong> {{ $cotizacion->cliente->celular }}
-                @if (isset($cotizacion->cliente->telefono))
+                @if(isset($cotizacion->cliente->telefono))
                     / {{ $cotizacion->cliente->telefono }}
                 @endif
                 <br>
@@ -130,14 +107,47 @@
 
             <td style="width: 48%;" class="border-box">
                 <strong style="display: block; text-align: center; margin-bottom: 10px;">Condiciones Generales</strong>
-                <strong>Fecha:</strong> {{ $cotizacion->created_at }}<br>
+                <strong>Fecha:</strong> {{ \Carbon\Carbon::parse($cotizacion->created_at)->format('d/m/Y') }}<br>
                 <strong>Validez:</strong> {{ $cotizacion->validez }}<br>
                 <strong>Garantía:</strong> {{ $cotizacion->garantia }}
             </td>
         </tr>
     </table>
 
-    {{-- Observaciones --}}
+    {{-- RENOVACIÓN (solo si existe) --}}
+    @if($renovacion)
+    <table style="margin-bottom: 15px;">
+        <tr>
+            <td class="border-box">
+                <strong style="display: block; text-align: center; margin-bottom: 8px;">Datos de Renovación</strong>
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 33%;">
+                            <strong>Fecha Inicio:</strong><br>
+                            {{ $fecha_inicio }}
+                        </td>
+                        <td style="width: 33%;">
+                            <strong>Fecha Vencimiento:</strong><br>
+                            {{ \Carbon\Carbon::parse($renovacion->fecha_vencimiento)->format('d/m/Y') }}
+                        </td>
+                        <td style="width: 33%; text-align: center;">
+                            <strong>Estado:</strong><br>
+                            @if($dias_restantes_numero < 0)
+                                <span class="badge-vencido">⚠ {{ $dias_restantes_texto }}</span>
+                            @elseif($dias_restantes_numero == 0)
+                                <span class="badge-hoy">⚠ {{ $dias_restantes_texto }}</span>
+                            @else
+                                <span class="badge-vigente">✔ {{ $dias_restantes_texto }}</span>
+                            @endif
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    @endif
+
+    {{-- OBSERVACIONES --}}
     @if($cotizacion->observacion)
     <table style="margin-bottom: 15px;">
         <tr>
@@ -148,28 +158,29 @@
     </table>
     @endif
 
-    {{-- Tabla de productos/servicios --}}
+    {{-- TABLA DE PRODUCTOS/SERVICIOS --}}
     <table class="table" style="margin-top: 15px;">
         <thead>
             <tr style="font-weight: bold;">
-                <th style="width: 5%; text-align: center;">ITEM</th>
+                <th style="width: 5%;  text-align: center;">ITEM</th>
                 <th style="width: 13%; text-align: center;">CÓDIGO</th>
                 <th style="text-align: left;">DESCRIPCIÓN</th>
                 <th style="width: 11%; text-align: center;">CANT.</th>
-                <th style="width: 8%; text-align: right;">P. UNIT.</th>
-                <th style="width: 8%; text-align: right;">TOTAL</th>
+                <th style="width: 8%;  text-align: right;">P. UNIT.</th>
+                <th style="width: 8%;  text-align: right;">TOTAL</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($cotizacion_registro as $cotizacion_registros)
                 <tr style="font-size: 11px;">
                     <td class="text-center">{{ $i++ }}</td>
-                    @if (isset($cotizacion_registros->producto_id))
+
+                    @if(isset($cotizacion_registros->producto_id))
                         <td class="text-center">{{ $cotizacion_registros->producto->codigo_producto }}</td>
                         <td>
                             {{ $cotizacion_registros->producto->nombre }}
                             @if($cotizacion_registros->descripcion_item)
-                                <br>{{ $cotizacion_registros->descripcion_item }}
+                                <br><small>{{ $cotizacion_registros->descripcion_item }}</small>
                             @endif
                         </td>
                     @else
@@ -177,10 +188,11 @@
                         <td>
                             {{ $cotizacion_registros->servicio->nombre }}
                             @if($cotizacion_registros->descripcion_item)
-                                <br>{{ $cotizacion_registros->descripcion_item }}
+                                <br><small>{{ $cotizacion_registros->descripcion_item }}</small>
                             @endif
                         </td>
                     @endif
+
                     <td class="text-center">{{ $cotizacion_registros->cantidad }}</td>
                     <td class="text-right">{{ number_format($cotizacion_registros->precio_unitario_comi, 2) }}</td>
                     <td class="text-right">
@@ -191,15 +203,15 @@
         </tbody>
     </table>
 
-    {{-- Cálculos --}}
+    {{-- CÁLCULOS --}}
     @php
         use Luecano\NumeroALetras\NumeroALetras;
-        $v = new NumeroALetras();
-        $letra = $v->toInvoice($end, 2);
+        $v      = new NumeroALetras();
+        $letra  = $v->toInvoice($end, 2);
         $simbologia = $cotizacion->moneda->simbolo;
     @endphp
 
-    {{-- Footer con totales --}}
+    {{-- FOOTER --}}
     <footer>
         <table style="margin-top: 30px;">
             <tr>
@@ -241,7 +253,7 @@
             </tr>
         </table>
 
-        {{-- Bancos --}}
+        {{-- BANCOS --}}
         @if($banco_count > 0)
         <table style="margin-top: 15px;" class="border-box">
             <tr>
@@ -259,7 +271,7 @@
         </table>
         @endif
 
-        {{-- Firma digital si existe --}}
+        {{-- FIRMA DIGITAL --}}
         @if(isset($firma) && $firma)
         <table style="margin-top: 15px;">
             <tr>
@@ -269,6 +281,7 @@
             </tr>
         </table>
         @endif
+
     </footer>
 </body>
 </html>

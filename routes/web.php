@@ -1468,11 +1468,14 @@ Route::post('/guia_remision/enviar-correo-multiple', [GuiaRemisionController::cl
 Route::post('/guia_remision_manual/enviar-correo-multiple', [GuiaRemisionManualController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.guia_remisionM.multiple');
 
-// Rutas para envio multiple de correo para ventas
+// Rutas para envio multiple de correo de renocavion
 Route::post('/cotizacion/enviar-correo-multiple', [CotizacionController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.cotizacion.multiple');
+//seccion de renovacion de correo multiple
+Route::post('/cotizacion-renovacion/enviar-correo-multiple', [RenovacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.renovacion.multiple');
 
-Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
+    Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.cotizacionM.multiple');
 
 Route::post('/nota_venta/enviar-correo-multiple', [NotaVentaController::class, 'enviarCorreoMultiple'])
@@ -1491,6 +1494,6 @@ Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInforme
 
 Route::get('/servicio-tecnico/informe-tecnico/print/{id}', [ServicioGuiaInformeTecnicoController::class, 'print'])
     ->name('st_informe_tecnico.print');
-    
+
 Route::get('/servicio-tecnico/informe-tecnico/pdf/{id}', [ServicioGuiaInformeTecnicoController::class, 'pdf'])
     ->name('st_informe_tecnico.pdf');

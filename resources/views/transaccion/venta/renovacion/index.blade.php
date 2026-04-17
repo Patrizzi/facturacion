@@ -54,12 +54,12 @@
                                             <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
                                                 <i class="fa fa-file-pdf-o"></i> PDF
                                             </button>
-                                            {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                            <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                 <i class="fa fa-envelope"></i> Correo
                                             </button>
                                             <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                 <i class="fa fa-whatsapp"></i> Whatsapp
-                                            </button>--}}
+                                            </button>
                                         </div>
                                     </div>
                                 </ul>
@@ -169,6 +169,94 @@
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
         $(document).ready(function() {
+            // Función para enviar boletas por Correo múltiple
+            $('#btn-correo-filtrado').on('click', function (e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una cotización para enviar por correo.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por Correo",
+                    text: `Ingresa el correo electrónico para enviar ${allSelectedIds.length} cotizacion(es):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "ejemplo@correo.com",
+                    confirmButtonColor: "#1a3bb3"
+                }, function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
+
+                    // Validar formato de email
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(inputValue)) {
+                        return swal.showInputError("Por favor ingresa un correo electrónico válido");
+                    }
+
+                    // Mostrar mensaje de procesando
+                    swal({
+                        title: "Enviando...",
+                        text: `Procesando ${allSelectedIds.length} cotizacion(es). Por favor espera...`,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+
+                    // Enviar por AJAX
+                    $.ajax({
+                        url: '{{ route('envioCorreo.renovacion.multiple') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            email: inputValue,
+                            cotizacion_ids: allSelectedIds
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                swal({
+                                    title: "¡Enviado!",
+                                    text: response.message || `Se han enviado ${allSelectedIds.length} cotizacion(es) por correo`,
+                                    type: "success",
+                                    timer: 3000,
+                                    showConfirmButton: true,
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            } else {
+                                swal({
+                                    title: "Error",
+                                    text: response.message || "Hubo un error al enviar los correos",
+                                    type: "error",
+                                    confirmButtonText: "Entendido",
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            }
+                        },
+                        error: function (xhr) {
+                            let errorMsg = 'Error al enviar los correos';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMsg = xhr.responseJSON.message;
+                            }
+                            swal({
+                                title: "Error",
+                                text: errorMsg,
+                                type: "error",
+                                confirmButtonText: "Entendido",
+                                confirmButtonColor: "#1a3bb3"
+                            });
+                        }
+                    });
+                });
+            });
             // "ACTIVA EL TAB DE RENOVACIÓN"
             $('#tab-renovacion').addClass('active');
 
