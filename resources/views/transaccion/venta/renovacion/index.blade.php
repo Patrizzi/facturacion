@@ -57,9 +57,10 @@
                                             {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                 <i class="fa fa-envelope"></i> Correo
                                             </button>
+                                            --}}
                                             <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                 <i class="fa fa-whatsapp"></i> Whatsapp
-                                            </button>--}}
+                                            </button>
                                         </div>
                                     </div>
                                 </ul>
@@ -496,6 +497,74 @@
                 });
             });
 
+            //=========== ENVÍO POR WHATSAPP DE RENOVACIONES SELECCIONADAS ===========//
+            $('#btn-whatsapp-filtrado').on('click', function (e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una cotización para enviar por WhatsApp.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por WhatsApp",
+                    text: `Ingresa el número de WhatsApp para enviar ${allSelectedIds.length} cotización(es):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "Ejemplo: 999999999",
+                    confirmButtonColor: "#1a3bb3"
+                }, function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");
+                    if (!/^\d+$/.test(inputValue)) return swal.showInputError("Por favor ingresa solo números");
+
+                    swal.close();
+                    swal({
+                        title: "Procesando...",
+                        text: "Enviando cotizaciones por WhatsApp",
+                        type: "info",
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+
+                    const form = $('<form>', {
+                        action: '{{ route('envioWhatsapp.cotizacion.multiple') }}',
+                        method: 'POST',
+                        target: '_blank',
+                        style: 'display:none;'
+                    });
+
+                    form.append($('<input>', { type: 'hidden', name: '_token', value: '{{ csrf_token() }}' }));
+                    form.append($('<input>', { type: 'hidden', name: 'numero', value: inputValue }));
+
+                    allSelectedIds.forEach(id => {
+                        form.append($('<input>', { type: 'hidden', name: 'cotizacion_ids[]', value: id }));
+                    });
+
+                    $('body').append(form);
+                    form.submit();
+                    setTimeout(() => form.remove(), 1000);
+                    setTimeout(() => {
+                        swal({
+                            title: "¡Enviado!",
+                            text: `Se han enviado ${allSelectedIds.length} cotizacion(es) por WhatsApp`,
+                            type: "success",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+                    }, 500);
+                });
+            });
+
+
             // Manejar click del botón de exportar renovaciones
             $('#btn_export_renovacion').on('click', function(e) {
                 e.preventDefault();
@@ -523,7 +592,7 @@
                     confirmButtonColor: "#1a3bb3"
                 }, function(isConfirm) {
                     if (!isConfirm) return;
-                    
+
                     $('#btn_export_cotizaciones').prop('disabled', true);
 
                     $.ajax({
