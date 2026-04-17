@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Renovacion;
 use Illuminate\Http\Request;
 use App\ComprobantesVentas;
@@ -28,6 +29,7 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use mikehaertl\wkhtmlto\Pdf as WkhtmltoPdf;
 use ZipArchive;
+
 class RenovacionController extends Controller
 {
     /**
@@ -37,15 +39,15 @@ class RenovacionController extends Controller
      */
 
 
-public function index()
-{
-    $mes_año = Carbon::now()->format('d-m-Y');
-    $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
-    $almacen = Almacen::get(); // Si lo necesitas
-    $count_all_ventas = ComprobantesVentas::count_day_ventas();
+    public function index()
+    {
+        $mes_año = Carbon::now()->format('d-m-Y');
+        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+        $almacen = Almacen::get(); // Si lo necesitas
+        $count_all_ventas = ComprobantesVentas::count_day_ventas();
 
-    return view('transaccion.venta.renovacion.index', compact('count_month_ventas', 'almacen', 'count_all_ventas'));
-}
+        return view('transaccion.venta.renovacion.index', compact('count_month_ventas', 'almacen', 'count_all_ventas'));
+    }
 
 
 
@@ -190,7 +192,6 @@ public function index()
                 'j',
                 'igvModel'
             ));
-
         } catch (\Exception $e) {
             return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
         }
@@ -297,12 +298,11 @@ public function index()
                         'renovacion'           => $renovacion,
                         'fecha_vencimiento'    => $fecha_vencimiento,
                         'dias_restantes_texto' => $dias_restantes_texto,
-                        'dias_restantes_numero'=> $dias_restantes_numero
+                        'dias_restantes_numero' => $dias_restantes_numero
                     ]);
 
                     $codigoCotizacion = preg_replace('/[^a-zA-Z0-9_-]/', '_', $cotizacion->cod_cotizacion);
                     $zip->addFromString('Renovacion_' . $codigoCotizacion . '.pdf', $pdf->output());
-
                 } catch (\Exception $e) {
                     continue;
                 }
@@ -321,7 +321,6 @@ public function index()
                 'Renovaciones_' . date('Y-m-d_H-i-s') . '.zip',
                 ['Content-Type' => 'application/zip']
             );
-
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar renovaciones: ' . $e->getMessage());
         }
@@ -392,7 +391,6 @@ public function index()
             ]);
 
             return $pdf->download('Renovacion_' . $cotizacion->cod_cotizacion . '.pdf');
-
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar el PDF: ' . $e->getMessage());
         }
@@ -402,12 +400,11 @@ public function index()
     {
         try {
             $email = $request->get('email');
-            $cotizacion_ids = $request->get('cotizacion_ids', []);
-
-            if (empty($cotizacion_ids)) {
+            $renovacion_ids = $request->get('cotizacion_ids', []);
+            if (empty($renovacion_ids)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'No se seleccionaron cotizaciones para enviar.'
+                    'message' => 'No se seleccionaron renovaciones para enviar.'
                 ], 400);
             }
 
@@ -437,22 +434,19 @@ public function index()
             $empresa     = Empresa::first();
             $igv         = Igv::first();
 
-            // Configuración de email
-            $yourEmail  = $config_email->email;
-            $firma      = $config_email->firma_digital;
+            $yourEmail   = $config_email->email;
+            $firma       = $config_email->firma_digital;
             $firma_email = $config_email->firma;
-            $alto       = $config_email->alto_firma;
-            $ancho      = $config_email->ancho_firma;
+            $alto        = $config_email->alto_firma;
+            $ancho       = $config_email->ancho_firma;
 
-            $titulo       = "Cotizaciones - " . count($cotizacion_ids) . " documento(s)";
-            $mensaje_html = "Estimado cliente, adjuntamos las cotizaciones solicitadas.";
+            $titulo       = "Renovaciones - " . count($renovacion_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las renovaciones solicitadas.";
             $mensaje      = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma_email', 'alto', 'ancho', 'firma'));
 
-            // Agregar email backup si existe
             $correos_envios = [$email, $config_email->email_backup];
             $mails_array    = array_filter($correos_envios);
 
-            // Configurar transporte de email
             $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
                 ->setUsername($config_email->email)
                 ->setPassword($config_email->password);
@@ -467,55 +461,39 @@ public function index()
 
             $archivos_temporales = [];
 
-            foreach ($cotizacion_ids as $cotizacion_id) {
-
-                $cotizacion = Cotizacion::find($cotizacion_id);
+            foreach ($renovacion_ids as $renovacion_id) {
+                $renovacion = RenovacionVentas::find($renovacion_id);
+                if (!$renovacion) continue;
+                $cotizacion = $renovacion->cotizacion ?? $renovacion->cotizacionManual;
                 if (!$cotizacion) continue;
-
-                // Trae el detalle de la cotización
+                $cotizacion_id = $cotizacion->id;
                 $cotizacion_registro = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion_id)->get();
 
-                // Calcular totales
                 $sub_total = $cotizacion->op_gravada + $cotizacion->op_exonerada + $cotizacion->op_inafecta;
                 $igv_p     = round($cotizacion->op_gravada, 2) * $igv->igv_total / 100;
                 $end       = round($sub_total, 2) + round($igv_p, 2);
                 $end2      = number_format($end, 2);
 
-                $firma  = EmailConfiguraciones::where('id_usuario', $cotizacion->user_id)->pluck('firma_digital')->first();
-                $sum    = 0;
-                $i      = 1;
-                $regla  = $cotizacion->tipo;
+                $firma = EmailConfiguraciones::where('id_usuario', $cotizacion->user_id)->pluck('firma_digital')->first();
+                $sum   = 0;
+                $i     = 1;
+                $regla = $cotizacion->tipo;
 
-                // Verificar si existe renovación
-                $renovacion = RenovacionVentas::where('cotizacion_id', $cotizacion_id)
-                                            ->where('estado', 1)
-                                            ->first();
+                $fecha_inicio          = Carbon::parse($renovacion->fecha_inicio)->format('d/m/Y');
+                $fecha_actual          = Carbon::now()->startOfDay();
+                $fecha_vencimiento     = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
+                $diff                  = $fecha_actual->diffInDays($fecha_vencimiento, false);
+                $dias_restantes_numero = $diff;
 
-                $fecha_inicio          = null;
-                $fecha_vencimiento     = null;
-                $dias_restantes_texto  = null;
-                $dias_restantes_numero = null;
-
-                if ($renovacion) {
-                    $fecha_inicio      = Carbon::parse($renovacion->fecha_inicio)->format('d/m/Y');
-                    $fecha_actual      = Carbon::now()->startOfDay();
-                    $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
-                    $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
-
-                    $dias_restantes_numero = $diff;
-
-                    if ($diff < 0) {
-                        $dias_restantes_texto = abs($diff) . ' días vencido';
-                    } elseif ($diff == 0) {
-                        $dias_restantes_texto = 'Vence hoy';
-                    } elseif ($diff == 1) {
-                        $dias_restantes_texto = '1 día';
-                    } else {
-                        $dias_restantes_texto = $diff . ' días';
-                    }
+                if ($diff < 0) {
+                    $dias_restantes_texto = abs($diff) . ' días vencido';
+                } elseif ($diff == 0) {
+                    $dias_restantes_texto = 'Vence hoy';
+                } elseif ($diff == 1) {
+                    $dias_restantes_texto = '1 día';
+                } else {
+                    $dias_restantes_texto = $diff . ' días';
                 }
-
-                // Generar PDF
                 $archivo = 'PDF-DOC-' . $cotizacion->cod_cotizacion . '-' . $empresa->ruc . ".pdf";
                 $pdf = PDF::loadView('transaccion.venta.cotizacion.pdf2', compact(
                     'cotizacion',
@@ -538,22 +516,16 @@ public function index()
                     'dias_restantes_texto',
                     'dias_restantes_numero'
                 ));
-
                 $content = $pdf->download();
                 $especif = $date . $archivo;
                 Storage::disk('mailbox')->put($especif, $content);
-
                 $pdfile = public_path() . '/archivos/' . $especif;
                 $message->attach(\Swift_Attachment::fromPath($pdfile));
-
                 $archivos_temporales[] = $especif;
             }
 
-            // Enviar correo
             if ($mailer->send($message)) {
                 $texto = strip_tags($mensaje_html);
-
-                // Guardar en bandeja de envíos
                 $mail                   = new EmailBandejaEnvios;
                 $mail->id_usuario       = auth()->user()->id;
                 $mail->destinatario     = $yourEmail;
@@ -564,33 +536,26 @@ public function index()
                 $mail->estado           = '0';
                 $mail->fecha_hora       = Carbon::now();
                 $mail->save();
-
                 foreach ($archivos_temporales as $archivo_temp) {
-                    $archivo_pdf                  = new EmailBandejaEnviosArchivos;
+                    $archivo_pdf                    = new EmailBandejaEnviosArchivos;
                     $archivo_pdf->id_bandeja_envios = $mail->id;
-                    $archivo_pdf->archivo         = $archivo_temp;
-                    $archivo_pdf->fecha_hora      = $date;
+                    $archivo_pdf->archivo           = $archivo_temp;
+                    $archivo_pdf->fecha_hora        = $date;
                     $archivo_pdf->save();
                 }
-
                 $this->limpiarArchivosViejos(2880);
-
                 return response()->json([
                     'success' => true,
-                    'message' => 'Se enviaron ' . count($cotizacion_ids) . ' cotización(es) exitosamente a: ' . $email
+                    'message' => 'Se enviaron ' . count($renovacion_ids) . ' renovación(es) exitosamente a: ' . $email
                 ]);
             }
-
-            // Si falla el envío, limpiar archivos
             foreach ($archivos_temporales as $archivo_temp) {
                 Storage::disk('mailbox')->delete($archivo_temp);
             }
-
             return response()->json([
                 'success' => false,
                 'message' => 'Error al enviar el correo. Verifica tu configuración.'
             ], 500);
-
         } catch (\Exception $e) {
             if (isset($archivos_temporales) && !empty($archivos_temporales)) {
                 foreach ($archivos_temporales as $archivo_temp) {
@@ -619,7 +584,6 @@ public function index()
                     }
                 }
             }
-
         } catch (\Exception $e) {
         }
     }
