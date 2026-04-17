@@ -523,7 +523,7 @@
                     confirmButtonColor: "#1a3bb3"
                 }, function(isConfirm) {
                     if (!isConfirm) return;
-                    
+
                     $('#btn_export_cotizaciones').prop('disabled', true);
 
                     $.ajax({

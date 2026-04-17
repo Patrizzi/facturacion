@@ -19,6 +19,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use App\Exports\RenovacionExport;
+use Exception;
+use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 class RenovacionController extends Controller
 {
@@ -387,6 +389,34 @@ public function index()
 
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar el PDF: ' . $e->getMessage());
+        }
+    }
+
+    public function enviarCorreoMultiple(Request $request){
+        try{
+            
+        }catch(Exception $e){
+
+        }
+    }
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
         }
     }
 }
