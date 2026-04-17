@@ -280,6 +280,13 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'guia_remision.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Guia Electronica Emitida']);
         Permission::create(['name' => 'guia_remision.anular', 'module' => 'registro_sunat', 'description' => 'Anular Guia Electronica Emitida']);
 
+        Permission::create(['name' => 'guia_remision_m.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Guias Electronicas M a Emitir']);
+        Permission::create(['name' => 'guia_remision_m.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Guia Electronica a Sunat']);
+        Permission::create(['name' => 'guia_remision_m.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Guias Electronicas M. Emitidas']);
+        Permission::create(['name' => 'guia_remision_m.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Guia Electronica M. Emitida']);
+        Permission::create(['name' => 'guia_remision_m.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Guia Electronica M. Emitida']);
+        // Permission::create(['name' => 'guia_remision_m.anular', 'module' => 'registro_sunat', 'description' => 'Anular Guia Electronica M. Emitida']);
+
         Permission::create(['name' => 'nota_credito.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Notas de Crédito a Emitir']);
         Permission::create(['name' => 'nota_credito.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Notas de Crédito a Sunat']);
         Permission::create(['name' => 'nota_credito.lista_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Notas de Crédito Emitidas']);

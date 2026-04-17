@@ -173,4 +173,186 @@ return [
 
         ],
     ],
+
+    'servicio_tecnico' => [
+        'icon' => 'fa fa-wrench',
+        'label' => 'Servicio Técnico',
+        'route' => 'servicio-guias.index',
+        'permission_any' => [
+            'servicio_tecnico.servicios_listar',
+            'servicio_tecnico.cotizacion_listar',
+            'servicio_tecnico.o_servicio_listar',
+            'servicio_tecnico.o_servicio_entregados_listar',
+        ]
+    ],
+
+    'planilla' => [
+        'icon' => 'fa fa-table',
+        'label' => 'Planilla',
+        'items' => [
+            [
+                'label' => 'Personal',
+                'route' => 'personal.index',
+                'permission_any' => [
+                    'personal.listar'
+                ],
+            ],
+            [
+                'label' => 'Vendedores',
+                'route' => 'vendedores.index',
+                'permission_any' => [
+                    'vendedores.listar'
+                ],
+            ],
+            [
+                'label' => 'Vehiculos',
+                'route' => 'vehiculo.index',
+                'permission_any' => [
+                    'transporte_publico.listar',
+                    'transporte_privado.listar'
+                ],
+            ],
+        ]
+    ],
+
+    'consultas' => [
+        'icon' => 'fa fa-comments-o',
+        'label' => 'Consultas',
+        'items' => [
+            [
+                'label' => 'Garantías',
+                'permission_any' => [
+                    'consultas.guia_ingreso',
+                    'consultas.guia_egreso',
+                    'consultas.informe_tecnico',
+                    'consultas.productos',
+                    'consultas.servicios',
+                    'consultas.reporte_comprobantes'
+                ],
+                'children' => [
+
+                    [
+                        'permission' => 'consultas.guia_ingreso',
+                        'label' => 'Guía Ingreso',
+                        'route' => 'consultas.garantias.guias_ingreso',
+                    ],
+
+                    [
+                        'permission' => 'consultas.guia_egreso',
+                        'label' => 'Guía Egreso',
+                        'route' => 'consultas.garantias.guias_egreso',
+                    ],
+
+                    [
+                        'permission' => 'consultas.informe_tecnico',
+                        'label' => 'Informe Técnica',
+                        'route' => 'consultas.garantias.informe_tecnico',
+                    ],
+
+                ],
+            ],
+            [
+                'label' => 'Productos',
+                'route' => 'cantidad_precio.index',
+                'permission_any' => [
+                    'consultas.productos'
+                ],
+            ],
+            [
+                'label' => 'Servicios',
+                'route' => 'cantidad_precio.index_servicio',
+                'permission_any' => [
+                    'consultas.servicios',
+                ],
+            ],
+            [
+                'label' => 'Reporte Comp',
+                'route' => 'consultas.servicios',
+                'permission_any' => [
+                    'reportes.index'
+                ],
+            ],
+        ]
+    ],
+
+    'registro_sunat' => [
+        'icon' => 'fa fa-registered',
+        'label' => 'R. Sunat',
+        'items' => [
+            [
+                'label' => 'Facturas',
+                'routes' => [
+                    'factura.listar_por_emitir' => 'facturacion_electronica.index',
+                    'factura.listar_emitidas' => 'facturacion_electronica.facturas_enviadas_list',
+                    'factura_m.listar_por_emitir' => 'facturacion_electronica.index_facturas_manual',
+                    'factura_m.listar_emitidas' => 'facturacion_electronica.facturas_manual_enviadas',
+                    'detraccion_factura.listar' => 'facturacion_electronica.facturas_detracciones'
+                ],
+            ],
+            [
+                'label' => 'Boletas',
+                'routes' => [
+                    'boleta.listar_por_emitir' => 'boletas_electronicas.index_boleta',
+                    'boleta.listar_emitidas' => 'boletas_electronicas.boletas_enviadas_list',
+                    'boleta_m.listar_por_emitir' => 'boletas_electronicas.index_boleta_manual',
+                    'boleta_m.listar_emitidas' => 'boletas_electronicas.boletas_enviadas_m'
+                ],
+            ],
+            [
+                'label' => 'Guias Remision',
+                'routes' => [
+                    'guia_remision.listar_por_emitir' => 'guias_electronicas.index_guia_remision',
+                    'guia_remision.lista_emitidas' => 'guias_electronicas.remision_enviadas',
+                    'guia_remision_m.listar_por_emitir' => 'guias_electronicas.index_guia_remision_manual',
+                    'guia_remision_m.listar_emitidas' => 'guias_electronicas.remision_m_envidas'
+                ],
+            ],
+            [
+                'label' => 'Notas Electrónicas',
+                'routes' => [
+                    'nota_credito.listar_por_emitir' => 'facturacion_electronica.index_nota_credito',
+                    'nota_credito.lista_emitidas' => 'facturacion_electronica.nota_credito_env',
+                    'nota_debito.listar_por_emitir' => 'facturacion_electronica.index_nota_debito',
+                    'nota_debito.lista_emitidas' => 'facturacion_electronica.nota_debito_env'
+                ],
+            ],
+
+        ]
+    ],
+    [
+        'productos_servicios' => [
+            'icon' => 'fa-shopping-bag',
+            'label' => 'Productos Y Servicios',
+            'items' => [
+                'label' => 'Productos',
+                'route' => 'productos.index',
+                'permission_any' => [
+                    'productos.listar'
+                ],
+            ],
+            [
+                'label' => 'Servicios',
+                'route' => 'cantidad_precio.index',
+                'permission_any' => [
+                    'servicios.index'
+                ],
+            ]
+        ]
+    ],
+    [
+        'proyectos_pmb' => [
+            'icon' => 'fa fa-tags',
+            'label' => 'Ventas',
+            'routes' => [
+                'factura.listar' => 'comprobantes.index_factura',
+                'factura_m.listar' => 'comprobantes.index_factura_manual',
+                'boleta.listar' => 'comprobantes.index_boleta',
+                'boleta_m.listar' => 'comprobantes.index_boleta_manual',
+                'nota_credito.listar' => 'comprobantes.index_nota_credito',
+                'nota_debito.listar' => 'comprobantes.index_nota_debito',
+                'guia_remision.listar' => 'comprobantes.index_guia_remision',
+                'guia_remision_m.listar' => 'comprobantes.index_guia_remision_manual',
+            ],
+        ]
+    ]
 ];

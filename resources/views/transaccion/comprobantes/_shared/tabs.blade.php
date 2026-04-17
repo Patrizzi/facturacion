@@ -1,5 +1,5 @@
 <div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
-    @can()
+    @can('boleta.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_boleta') }}" id="tab-1-tab">
                 <span class="badge badge-success"
@@ -8,7 +8,7 @@
             </a>
         </li>
     @endcan
-    @can()
+    @can('boleta_m.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_boleta_manual') }}" id="tab-2-tab">
                 <span class="badge badge-success"
@@ -17,7 +17,7 @@
             </a>
         </li>
     @endcan
-    @can()
+    @can('factura.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_factura') }}" id="tab-3-tab">
                 <span class="badge badge-success"
@@ -26,7 +26,7 @@
             </a>
         </li>
     @endcan
-    @can()
+    @can('factura_m.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_factura_manual') }}" id="tab-4-tab">
                 <span class="badge badge-success"
@@ -36,7 +36,7 @@
             </a>
         </li>
     @endcan
-    @can()
+    @can('nota_credito.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_nota_credito') }}" id="tab-5-tab">
                 <span class="badge badge-success"
@@ -46,7 +46,7 @@
             </a>
         </li>
     @endcan
-    @can()
+    @can('nota_debito.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_nota_debito') }}" id="tab-6-tab">
                 <span class="badge badge-success"
@@ -56,7 +56,7 @@
             </a>
         </li>
     @endcan
-    @can()
+    @can('guia_remision.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_guia_remision') }}" id="tab-7-tab">
                 <span class="badge badge-success"
@@ -65,7 +65,7 @@
             </a>
         </li>
     @endcan
-    @can()
+    @can('guia_remision_m.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_guia_remision_manual') }}" id="tab-8-tab">
                 <span class="badge badge-success"
@@ -75,3 +75,4 @@
             </a>
         </li>
     </div>
+    @endcan
