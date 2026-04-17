@@ -407,7 +407,7 @@ class Facturacion_m extends Model
             // Reduccion por nota de crédito
             $motivo = Facturacion_m::search_motivo_nc($this->attributes['id']);
             // dd($motivo);
-            if ($motivo == "Devolucion por Item") {
+            if ($motivo == "Devolucion por Item" || $motivo == "07") {
                 $nota_c = Nota_Credito::where('facturacion_m_id', $this->attributes['id'])->first();
                 //    dd($nota_c);
                 $total = $total - $nota_c->total_precio;
@@ -449,7 +449,7 @@ class Facturacion_m extends Model
             // Reduccion por nota de crédito
             $motivo = Facturacion_m::search_motivo_nc($this->attributes['id']);
             // dd($motivo);
-            if ($motivo == "Devolucion por Item") {
+            if ($motivo == "Devolucion por Item" || $motivo == "07") {
                 $nota_c = Nota_Credito::where('facturacion_m_id', $this->attributes['id'])->first();
                 //    dd($nota_c);
                 $total = $total - $nota_c->total_precio;
@@ -476,7 +476,7 @@ class Facturacion_m extends Model
     public function getSaldoPendienteAttribute()
     {
         // return $this->forma_pago_id;
-        $suma_cuota = $this->total_precio_sin_forma;
+        $suma_cuota = $this->total_precio_desc_sin_forma;
         if ($this->forma_pago_id == 2) { // credito
             $saldo_pendiente = 0;
             $cuotas_total = 0;
@@ -484,7 +484,7 @@ class Facturacion_m extends Model
             $cuotas = Cuotas_credito::where('facturacion_m_id', $this->id)->where('estado', '!=',  0)->get();
             foreach ($cuotas as $cuota) {
                 // if ($cuota->estado == 2 ) {
-                $suma_cuota = $suma_cuota - $cuota->monto;
+                $suma_cuota = $suma_cuota - $cuota->nuevo_monto;
                 // }
             }
             $cuotas_total += $suma_cuota;
@@ -503,6 +503,11 @@ class Facturacion_m extends Model
 
         // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
         return $saldo_pendiente;
+    }
+    public function getUltimaMontoPagoAttribute()
+    {
+        $ultimo_pago =  ComprobantesPagos::where('factuacion_m_id', $this->id)->latest()->first();
+        return $ultimo_pago->monto_pago ?? 0.00;
     }
 
     public function getUltimaFechaPagoAttribute()

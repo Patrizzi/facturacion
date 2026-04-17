@@ -13,7 +13,7 @@ class Cuotas_credito extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['monto_total_format', 'moneda_comprobante', 'estado_format', 'fecha_pago_format'];
+    protected $appends = ['monto_total_format', 'moneda_comprobante', 'estado_format', 'fecha_pago_format','nuevo_monto'];
 
     public function factura_ids()
     {
@@ -71,7 +71,7 @@ class Cuotas_credito extends Model
     public function getMontoTotalFormatAttribute()
     {
         // $monto = $this->moneda_comprobante . ' ' . number_format(round($this->monto, 2), 2);
-        return $this->moneda_comprobante . ' ' . number_format(round($this->monto, 2), 2);
+        return $this->moneda_comprobante . ' ' . number_format(round($this->nuevo_monto, 2), 2);
         // return $monto;
     }
     public function getFechaPagoFormatAttribute()
@@ -103,22 +103,22 @@ class Cuotas_credito extends Model
         foreach ($monedas as $moneda) {
             // Moneda igual → no convertir
             if ($moneda->id == $moneda_comprobante->id) {
-                $monto["igual"] = $moneda->simbolo . " " . $cuota->monto;
+                $monto["igual"] = $moneda->simbolo . " " . $cuota->nuevo_monto;
                 $monto["moneda_igual"] = $moneda->simbolo;
-                $monto["igual_neto"] = round($cuota->monto, 2);
+                $monto["igual_neto"] = round($cuota->nuevo_monto, 2);
                 // continue;
             } else {
 
                 // Si comprobante NO está en soles → convertir a soles
                 if ($moneda_comprobante->simbolo != "S/") {
-                    $monto["diferente"] = $moneda->simbolo . " " . round($cuota->monto * $tipo_cambio, 2);
+                    $monto["diferente"] = $moneda->simbolo . " " . round($cuota->nuevo_monto * $tipo_cambio, 2);
                     $monto["moneda_diff"] = $moneda->simbolo;
-                    $monto["diferente_neto"] = round($cuota->monto * $tipo_cambio, 2);
+                    $monto["diferente_neto"] = round($cuota->nuevo_monto * $tipo_cambio, 2);
                 } else {
                     // Convertir a dólares
-                    $monto["diferente"] = $moneda->simbolo . " " . round($cuota->monto / $tipo_cambio, 2);
+                    $monto["diferente"] = $moneda->simbolo . " " . round($cuota->nuevo_monto / $tipo_cambio, 2);
                     $monto["moneda_diff"] = $moneda->simbolo;
-                    $monto["diferente_neto"] = round($cuota->monto / $tipo_cambio, 2);
+                    $monto["diferente_neto"] = round($cuota->nuevo_monto / $tipo_cambio, 2);
                 }
             }
         }
@@ -192,7 +192,7 @@ class Cuotas_credito extends Model
                 $totalPagado += round($monto / $det->tipo_cambio, 2);
             }
         }
-        $saldoPendiente = round($cuota->monto - $totalPagado, 2);
+        $saldoPendiente = round($cuota->nuevo_monto - $totalPagado, 2);
 
         return [
             'total_cuota'     => round($cuota->importe_total, 2),
@@ -259,6 +259,31 @@ class Cuotas_credito extends Model
         $modelo->save();
     }
 
+    public function getNuevoMontoAttribute()
+    {
+
+        // Busqueda de Tipo de comproabntes
+        if($this->attributes['facturacion_id'] != null){
+            $precio_desc = $this->factura_ids->total_precio_desc_sin_forma;
+            $precio_total = $this->factura_ids->total_precio_sin_forma;
+        }
+        if($this->attributes['facturacion_m_id'] != null){
+            $precio_desc = $this->factura_m_ids->total_precio_desc_sin_forma;
+            $precio_total = $this->factura_m_ids->total_precio_sin_forma;
+        }
+        if($this->attributes['boleta_id'] != null){
+            $precio_desc = $this->boleta_ids->total_precio_desc_sin_forma;
+            $precio_total = $this->boleta_ids->total_precio_sin_forma;
+        }
+        if($this->attributes['boleta_m_id'] != null){
+            $precio_desc = $this->boleta_m_ids->total_precio_desc_sin_forma;
+            $precio_total = $this->boleta_m_ids->total_precio_sin_forma;
+        }
+        $factor = $precio_desc / $precio_total;
+        $monto_new = $this->monto * $factor;
+
+        return $monto_new;
+    }
 
     // public function getMontoProcesadoAttribute()
     // {

@@ -284,7 +284,7 @@ class ComprobantesVentasController extends Controller
             // Array Estado Pago
             if($boleta->estado_pago != 0){ //Si es contado
                 $boleta->pago_detalle = [
-                    'monto_pagado' => $boleta->moneda->simbolo.' '.number_format($boleta->total_precio_sin_forma - $boleta->saldo_pendiente_sin_forma, 2),
+                    'monto_pagado' => $boleta->moneda->simbolo.' '.number_format($boleta->ultima_monto_pago, 2),
                     'fecha_pago' => $boleta->ultima_fecha_pago,
                     'detalle_pago' => $boleta->ultimo_dato_pago,
                     'tipo_pago' => ucfirst($boleta->ultimo_tipo_pago),
@@ -437,7 +437,7 @@ class ComprobantesVentasController extends Controller
             // Array Estado Pago
             if($factura->estado_pago != 0){ //Si es contado
                 $factura->pago_detalle = [
-                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->total_precio_sin_forma - $factura->saldo_pendiente_sin_forma, 2),
+                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->ultima_monto_pago, 2),
                     'fecha_pago' => $factura->ultima_fecha_pago,
                     'detalle_pago' => $factura->ultimo_dato_pago,
                     'tipo_pago' => ucfirst($factura->ultimo_tipo_pago),
@@ -591,7 +591,7 @@ class ComprobantesVentasController extends Controller
             // Array Estado Pago
             if($factura->estado_pago != 0){ //Si es contado
                 $factura->pago_detalle = [
-                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->total_precio_sin_forma - $factura->saldo_pendiente_sin_forma, 2),
+                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->ultima_monto_pago, 2),
                     'fecha_pago' => $factura->ultima_fecha_pago,
                     'detalle_pago' => $factura->ultimo_dato_pago,
                     'tipo_pago' => ucfirst($factura->ultimo_tipo_pago),

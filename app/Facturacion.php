@@ -490,7 +490,7 @@ class Facturacion extends Model
     public function getSaldoPendienteAttribute()
     {
         // return $this->forma_pago_id;
-        $suma_cuota = $this->total_precio_sin_forma;
+        $suma_cuota = $this->total_precio_desc_sin_forma;
         if ($this->forma_pago_id == 2) { // credito
             $saldo_pendiente = 0;
             $cuotas_total = 0;
@@ -498,7 +498,7 @@ class Facturacion extends Model
             $cuotas = Cuotas_credito::where('facturacion_id', $this->id)->where('estado', '!=',  0)->get();
             foreach ($cuotas as $cuota) {
                 // if ($cuota->estado == 2 ) {
-                $suma_cuota = $suma_cuota - $cuota->monto;
+                $suma_cuota = $suma_cuota - $cuota->nuevo_monto;
                 // }
             }
             $cuotas_total += $suma_cuota;
@@ -530,7 +530,7 @@ class Facturacion extends Model
             $cuotas = Cuotas_credito::where('facturacion_id', $this->id)->where('estado', '!=',  0)->get();
             foreach ($cuotas as $cuota) {
                 // if ($cuota->estado == 2 ) {
-                $suma_cuota = $suma_cuota - $cuota->monto;
+                $suma_cuota = $suma_cuota - $cuota->monto_nuevo;
                 // }
             }
             $cuotas_total += $suma_cuota;
@@ -549,6 +549,12 @@ class Facturacion extends Model
 
         // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
         return $saldo_pendiente;
+    }
+    
+    public function getUltimaMontoPagoAttribute()
+    {
+        $ultimo_pago =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
+        return $ultimo_pago->monto_pago ?? 0.00;
     }
 
     public function getUltimaFechaPagoAttribute()

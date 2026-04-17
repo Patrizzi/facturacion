@@ -76,7 +76,7 @@ class ComprobantesPagosDetalle extends Model
     }
     public function getFormaPagoAttribute()
     {
-        if ($this->comprobante_pago_registros->monto_total == $this->comprobante_pago_registros->monto_pago) {
+        if (round($this->comprobante_pago_registros->monto_total,2) == round($this->comprobante_pago_registros->monto_pago,2)) {
             return 0;
         } else {
             return 1;
