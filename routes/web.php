@@ -1491,6 +1491,13 @@ Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInforme
 
 Route::get('/servicio-tecnico/informe-tecnico/print/{id}', [ServicioGuiaInformeTecnicoController::class, 'print'])
     ->name('st_informe_tecnico.print');
-    
+
 Route::get('/servicio-tecnico/informe-tecnico/pdf/{id}', [ServicioGuiaInformeTecnicoController::class, 'pdf'])
     ->name('st_informe_tecnico.pdf');
+
+Route::get('/renovacion/pdf/{id}', 'RenovacionController@pdf')->name('renovacion.pdf');
+Route::get('/renovacion/share/{codigo}', 'RenovacionController@descargarPorCodigo')->name('renovacion_codificada');
+Route::post('/renovacion/whatsapp/send-multiple', 'RenovacionController@whatsappSendMultiple')
+    ->name('envioWhatsapp.renovacion.multiple');
+Route::post('/renovacion/enviar-correo-directo/{id}', 'RenovacionController@enviarCorreoDirecto')
+    ->name('renovacion.enviar-correo-directo');

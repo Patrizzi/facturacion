@@ -557,19 +557,21 @@ class Ventas_registroController extends Controller
                 $tipo = $renovacion->cotizacion ? 'normal' : 'manual';
 
                 $json['data'][] = [
-                    $renovacion->id,                                    // 0 - ID renovación
-                    $cotizacion->id,                                    // 1 - ID cotización
-                    $cotizacion->cod_cotizacion,                        // 2 - N°
-                    $cotizacion->cliente->numero_documento,             // 3 - RUC-DNI
-                    $cotizacion->cliente->nombre,                       // 4 - Cliente
-                    $cotizacion->fecha_emision,                         // 5 - Fecha Emisión
-                    $renovacion->fecha_vencimiento_fmt,                 // 6 - Fecha Vencimiento
-                    $renovacion->dias_vencimiento,                      // 7 - Tiempo Vencimiento
-                    $cotizacion->forma_pago->nombre,                    // 8 - Forma Pago
-                    $renovacion->total,                                 // 9 - Importe Total
-                    $renovacion->id,                                    // 10 - ID para acciones
-                    $cotizacion->estado,                                // 11 - Estado
-                    $tipo                                               // 12 - Tipo (normal/manual)
+                    $renovacion->id,                        // 0 - ID de la renovación
+                    $cotizacion->id,                        // 1 - ID de la cotización asociada
+                    $cotizacion->cod_cotizacion,            // 2 - Código/Número de cotización
+                    $cotizacion->cliente->numero_documento, // 3 - RUC o DNI del cliente
+                    $cotizacion->cliente->nombre,           // 4 - Nombre del cliente
+                    $cotizacion->fecha_emision,             // 5 - Fecha de emisión de la cotización
+                    $renovacion->fecha_vencimiento_fmt,     // 6 - Fecha de vencimiento de la renovación
+                    $renovacion->dias_vencimiento,          // 7 - Tiempo restante o vencido de la renovación
+                    $cotizacion->forma_pago->nombre,        // 8 - Forma de pago
+                    $renovacion->total,                     // 9 - Importe total mostrado
+                    $renovacion->id,                        // 10 - ID de renovación para acciones
+                    $cotizacion->estado,                    // 11 - Estado de la cotización
+                    $tipo,                                  // 12 - Tipo de cotización: normal o manual
+                    $cotizacion->cliente->celular,          // 13 - Celular del cliente para WhatsApp
+                    $cotizacion->cliente->email,            // 14 - Correo del cliente para envío por email
                 ];
             }
         }
