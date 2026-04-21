@@ -27,22 +27,14 @@
     <div class="ibox">
         <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
             <div style="margin-top: 5px; margin-bottom: 8px; margin-left: 10px;">
-                @php
-                    $dropdownCotizacionFactura = 'dropdownCotizacionFactura_' . uniqid();
-                    $isAdminCot = auth()->check() && auth()->user()->name === 'Administrador';
-                    $hasManyAlmCot = (isset($almacenes_list) && is_countable($almacenes_list)) ? count($almacenes_list) > 1 : false;
-
-                    $showDropdownCot = $isAdminCot && $hasManyAlmCot;
-                @endphp
-
-                @if ($showDropdownCot)
+                @if (auth()->user()->almacen_id == NULL)
                     <span class="dropdown">
-                        <a id="{{ $dropdownCotizacionFactura }}" class="no-hover-icon" data-toggle="dropdown"
+                        <a id="" class="no-hover-icon" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
                             <i class="fa fa-arrow-left text-muted"></i>
                         </a>
 
-                        <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="{{ $dropdownCotizacionFactura }}">
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="" style="margin: 5px 3px">
                             <li style="padding: 3px 12px;"><b>Almacenes:</b></li>
 
                             @foreach ((isset($almacenes_list) && is_iterable($almacenes_list)) ? $almacenes_list : [] as $almacens)
@@ -96,8 +88,8 @@
                         <div class="d-flex align-items-center" style="overflow: hidden;">
                             <div id="btn-slider-cotizacion"
                                 style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
-
-                                <button type="button"
+                                @can('cotizacion.editar')
+                                    <button type="button"
                                         class="btn btn-warning btn-editar"
                                         id="edit"
                                         onclick="click_editar()"
@@ -105,18 +97,19 @@
                                         data-placement="bottom"
                                         data-original-title="Editar cotización"
                                         style="white-space: nowrap; margin-right: 4px;">
-                                    <i class="fa fa-pencil"></i>
-                                </button>
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
 
-                                <button type="button"
-                                        class="btn-no-editar no_mostrar btn btn-warning"
-                                        onclick="click_cancelar_editar()"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        data-original-title="Cancelar edición"
-                                        style="white-space: nowrap; margin-right: 4px;">
-                                    <i class="fa fa-times"></i>
-                                </button>
+                                    <button type="button"
+                                            class="btn-no-editar no_mostrar btn btn-warning"
+                                            onclick="click_cancelar_editar()"
+                                            data-toggle="tooltip"
+                                            data-placement="bottom"
+                                            data-original-title="Cancelar edición"
+                                            style="white-space: nowrap; margin-right: 4px;">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                @endcan
                                 @if($cotizacion->estado == '1')
                                     @if($cotizacion->tipo=='factura')
                                         <a class="btn btn-default procesado"
@@ -147,58 +140,61 @@
                                         </a>
                                     @endif
                                 @else
-                                    @if($cotizacion->tipo=='factura')
-                                        <form action="{{ route('cotizacion.facturar', $cotizacion->id) }}" method="post" enctype="multipart/form-data" style="padding: 0;" class="btn">
-                                            @csrf
-                                            <input type="hidden" name="almacen" value="{{ $almacen }}" />
-                                            <button type="submit"
-                                                    class="btn btn-info"
-                                                    data-toggle="tooltip"
-                                                    data-placement="bottom"
-                                                    data-original-title="Facturar">
-                                                <i class="fa fa-file-text-o fa-lg"></i>
-                                            </button>
-                                        </form>
-                                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
-                                    @elseif($cotizacion->tipo=='boleta')
-                                        <form action="{{ route('cotizacion.boletear', $cotizacion->id) }}" method="post" enctype="multipart/form-data" style="padding: 0;" class="btn">
-                                            @csrf
-                                            <input type="hidden" name="almacen" value="{{ $almacen }}" />
-                                            <button type="submit"
-                                                    class="btn btn-info"
-                                                    data-toggle="tooltip"
-                                                    data-placement="bottom"
-                                                    data-original-title="Boletear">
-                                                <i class="fa fa-file-text-o fa-lg"></i>
-                                            </button>
-                                        </form>
-                                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
-                                    @else
-                                        <form action="{{ route('cotizacion.nota_venta', $cotizacion->id) }}" method="post" enctype="multipart/form-data" style="padding: 0;" class="btn">
-                                            @csrf
-                                            <input type="hidden" name="almacen" value="{{ $almacen }}" />
-                                            <button type="submit"
-                                                    class="btn btn-info"
-                                                    data-toggle="tooltip"
-                                                    data-placement="bottom"
-                                                    data-original-title="Generar Nota de Venta">
-                                                <i class="fa fa-file-text-o fa-lg"></i>
-                                            </button>
-                                        </form>
-                                        <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
-                                    @endif
+                                    @can('cotizacion.procesar')
+                                        @if($cotizacion->tipo=='factura')
+                                            <form action="{{ route('cotizacion.facturar', $cotizacion->id) }}" method="post" enctype="multipart/form-data" style="padding: 0;" class="btn">
+                                                @csrf
+                                                <input type="hidden" name="almacen" value="{{ $almacen }}" />
+                                                <button type="submit"
+                                                        class="btn btn-info"
+                                                        data-toggle="tooltip"
+                                                        data-placement="bottom"
+                                                        data-original-title="Facturar">
+                                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                                </button>
+                                            </form>
+                                            <input type="hidden" name="tipo_coti" id="tipo_coti" value="1">
+                                        @elseif($cotizacion->tipo=='boleta')
+                                            <form action="{{ route('cotizacion.boletear', $cotizacion->id) }}" method="post" enctype="multipart/form-data" style="padding: 0;" class="btn">
+                                                @csrf
+                                                <input type="hidden" name="almacen" value="{{ $almacen }}" />
+                                                <button type="submit"
+                                                        class="btn btn-info"
+                                                        data-toggle="tooltip"
+                                                        data-placement="bottom"
+                                                        data-original-title="Boletear">
+                                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                                </button>
+                                            </form>
+                                            <input type="hidden" name="tipo_coti" id="tipo_coti" value="0">
+                                        @else
+                                            <form action="{{ route('cotizacion.nota_venta', $cotizacion->id) }}" method="post" enctype="multipart/form-data" style="padding: 0;" class="btn">
+                                                @csrf
+                                                <input type="hidden" name="almacen" value="{{ $almacen }}" />
+                                                <button type="submit"
+                                                        class="btn btn-info"
+                                                        data-toggle="tooltip"
+                                                        data-placement="bottom"
+                                                        data-original-title="Generar Nota de Venta">
+                                                    <i class="fa fa-file-text-o fa-lg"></i>
+                                                </button>
+                                            </form>
+                                            <input type="hidden" name="tipo_coti" id="tipo_coti" value="3">
+                                        @endif
+                                    @endcan
                                 @endif
                             </div>
 
-                            <button type="button"
-                                    id="btn-toggle-cotizacion"
-                                    onclick="toggleBtnsCotizacion()"
-                                    class="btn btn-default"
-                                    style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                                <i class="fa fa-chevron-right" id="btn-arrow-cotizacion"></i>
-                            </button>
+                            @canany(['cotizacion.editar','cotizacion.procesar'])
+                                <button type="button"
+                                        id="btn-toggle-cotizacion"
+                                        onclick="toggleBtnsCotizacion()"
+                                        class="btn btn-default"
+                                        style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                    <i class="fa fa-chevron-right" id="btn-arrow-cotizacion"></i>
+                                </button>
+                            @endcan
                         </div>
-
                         <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
                     @endif
 
@@ -311,7 +307,7 @@
                             <div class="form-control" >
                                 <h3>Condiciones Generales</h3>
                                 <div align="left">
-                                    <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{$cotizacion->updated_at}}<br>
+                                    <strong>Forma De Pago:</strong> &nbsp;{{$cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong> &nbsp;{{ \Carbon\Carbon::parse($cotizacion->updated_at)->format('d-m-Y H:i:s') }}<br>
                                     <strong>Validez :</strong> &nbsp;{{$cotizacion->validez}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
                                     <strong>Garantía:</strong> &nbsp;{{$cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                     <strong>Tipo de Moneda:</strong> &nbsp;{{$cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>

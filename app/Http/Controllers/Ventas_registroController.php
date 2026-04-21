@@ -214,7 +214,7 @@ class Ventas_registroController extends Controller
         $total_table = Cotizacion::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
-        $json['crear_permiso'] =  auth()->user()->can('cotizacion.ver');
+        $json['ver_permiso'] =  auth()->user()->can('cotizacion.ver');
         return response()->json($json);
     }
 
@@ -344,7 +344,7 @@ class Ventas_registroController extends Controller
         $total_table = CotizacionManual::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
-        $json['crear_permiso'] =  auth()->user()->can('cotizacion_m.ver');
+        $json['ver_permiso'] =  auth()->user()->can('cotizacion_m.ver');
         return response()->json($json);
     }
 
@@ -681,7 +681,7 @@ class Ventas_registroController extends Controller
                 $n_venta->forma_pago,
                 $n_venta->total,
                 $n_venta->id,
-                $n_venta->estado,
+                $n_venta->estado_vigente,
                 $n_venta->cliente->celular,
                 $n_venta->cliente->email
             ];
@@ -690,6 +690,7 @@ class Ventas_registroController extends Controller
         $total_table = NotaVenta::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        $json['ver_permiso'] =  auth()->user()->can('nota_venta.ver');        
         return response()->json($json);
     }
 
@@ -770,10 +771,11 @@ class Ventas_registroController extends Controller
                 $cliente->email,
                 $cliente->celular,
                 $cliente->fecha_ingreso,
-                $cliente->id
+                $cliente->id,
+                $cliente->estado
             ];
         }
-
+        $json['ver_permiso'] =  auth()->user()->can('clientes.ver');        
         return response()->json($json);
     }
 }

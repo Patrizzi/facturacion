@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center;">
                             @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
                                         @can('cotizacion.crear') 
-                                            @if (auth()->user()->almacen_id == null)
+                                            @if (auth()->user()->almacen_id == NULL)
                                                 {{-- Condicional por tipo de user --}}
                                                 <span class="dropdown">
                                                     <button class="btn btn-primary dropdown-toggle" type="button"
@@ -291,6 +291,7 @@
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-1-tab').addClass('active');
         });
+        let permiso_ver = false;
         var coti_table = $('.dataTables-example-cotizacion').DataTable({
             "lengthChange": false,
             "responsive": true,
@@ -317,7 +318,7 @@
                     $('.dataTables-example-cotizacion tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-cotizacion tfoot th.total-total').html('Total  G.: ' + total_table);
 
-                    // Retorna los datos de la tabla para que Datatables los procese
+                    permiso_ver = json.ver_permiso;
                     return json.data;
                 }
             },
@@ -414,23 +415,25 @@
                     var url = '{{ route('cotizacion.show', ':id') }}';
                     url = url.replace(':id', full[
                         0]); // Reemplazar el placeholder con el valor dinámico
+                    let button_show = ``;
+                    if(permiso_ver){
+                        button_show = `<a href="${url}">
+                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
+                        </a>`;
+                    }
 
                     if (full[9] == '0') {
                         return `
-                                            <div class="tooltip-demo">
-                                                <a href="${url}">
-                                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
-                                                </a>
-                                                <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado"><i class="fa fa-clock-o"></i></button>
-                                            </div>`;
+                            <div class="tooltip-demo">
+                                `+button_show +`
+                                <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado"><i class="fa fa-clock-o"></i></button>
+                            </div>`;
                     } else {
                         return `
-                                            <div class="tooltip-demo">
-                                                <a href="${url}">
-                                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
-                                                </a>
-                                                <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar"><i class="fa fa-check-circle"></i></button>
-                                            </div>`;
+                            <div class="tooltip-demo">
+                                `+button_show+`
+                                <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar"><i class="fa fa-check-circle"></i></button>
+                            </div>`;
                     }
                 }
             },

@@ -190,9 +190,11 @@
                         </div>
                         <div class="col-md-12">
                             <div class="tooltip-demo" align="right">
-                                <button id="btn_guardar" class="ladda-button btn btn-primary btn-outline" type="button" data-style="zoom-out">
-                                    Guardar
-                                </button>
+                                @can('nota_venta.editar')
+                                    <button id="btn_guardar" class="ladda-button btn btn-primary btn-outline" type="button" data-style="zoom-out">
+                                        Guardar
+                                    </button>
+                                @endcan
                                 <button id="btn_guardar_finalizar" class="btn btn-primary float-right" style="margin-left: 10px;" type="button">
                                     Guardar y Finalizar
                                 </button>

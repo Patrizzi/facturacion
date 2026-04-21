@@ -1422,7 +1422,7 @@ public function update(Request $request, $id)
         $nota_venta->fecha_emision=$request->fecha_emision;
         $nota_venta->observacion=$request->observacion;
         $nota_venta->user_registrado=auth()->user()->id;
-        $nota_venta->estado_vigente = 0;
+        $nota_venta->estado_vigente = 1;
         $nota_venta->save();
 
         $cotizacion=CotizacionManual::where('id',$cotizacion->id)->first();

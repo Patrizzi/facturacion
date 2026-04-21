@@ -127,7 +127,7 @@
                                     </ul>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <!-- COTIZACION MANUAL-->
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -252,7 +252,7 @@
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-2-tab').addClass('active');
         });
-        let crear_permiso = false;
+        let ver_permiso = false;
         var coti_table = $('.dataTables-example-cotizacion_manual').DataTable({
             "lengthChange": false,
             "responsive": true,
@@ -281,7 +281,7 @@
                     $('.dataTables-example-cotizacion_manual tfoot th.total-total').html('Total  G.: ' +
                         total_table);
 
-                    crear_permiso = json.crear_permiso;
+                    ver_permiso = json.ver_permiso;
                     // Retorna los datos de la tabla para que Datatables los procese
                     return json.data;
                 }
@@ -363,14 +363,14 @@
                         url = url.replace(':id', full[
                             0]); // Reemplazar el placeholder con el valor dinámico
                         let objet = ``;
-                        if(crear_permiso){
+                        if(ver_permiso){
                             objet = `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> `;
                         }    
 
                         if (full[9] == '0') {
                             return objet+`<button type="button" class="btn btn-warning"><i class="fa fa-clock-o"></i></button>`;
                         } else {
-                            return objet+`<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> <button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
+                            return objet+`<button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
                         }
                     }
                 },

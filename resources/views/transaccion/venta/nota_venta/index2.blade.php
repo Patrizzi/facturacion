@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
@@ -36,40 +36,42 @@
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
-                                        @if (auth()->user()->name == 'Administrador')
-                                            {{-- Condicional por tipo de user  --}}
-                                            <span class="dropdown">
-                                                <button class="btn btn-primary dropdown-toggle" type="button"
-                                                    id="dropdownMenuButton" data-toggle="dropdown">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                    <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                    @foreach ($almacen as $almacens)
-                                                        <li>
-                                                            <form action="{{ route('nota_venta.create') }}"
-                                                                enctype="multipart/form-data" method="post">
-                                                                @csrf
-                                                                <input type="text" value="{{ $almacens->id }}"
-                                                                    hidden="hidden" name="almacen">
-                                                                <button class="btn btn-w-m btn-link"
-                                                                    type="submit">{{ $almacens->nombre }}</button>
-                                                            </form>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </span>
-                                        @else
-                                            <form action="{{ route('nota_venta.create') }}" enctype="multipart/form-data"
-                                                method="post" class="tooltip-demo">
-                                                @csrf
-                                                <input type="text" value="{{ auth()->user()->almacen_id }}"
-                                                    hidden="hidden" name="almacen">
-                                                <button class="btn btn-primary" type="submit">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </form>
-                                        @endif
+                                        @can('nota_venta.crear')
+                                             @if (auth()->user()->almacen_id == NULL)
+                                                {{-- Condicional por tipo de user  --}}
+                                                <span class="dropdown">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                        <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                                                        @foreach ($almacen as $almacens)
+                                                            <li>
+                                                                <form action="{{ route('nota_venta.create') }}"
+                                                                    enctype="multipart/form-data" method="post">
+                                                                    @csrf
+                                                                    <input type="text" value="{{ $almacens->id }}"
+                                                                        hidden="hidden" name="almacen">
+                                                                    <button class="btn btn-w-m btn-link"
+                                                                        type="submit">{{ $almacens->nombre }}</button>
+                                                                </form>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </span>
+                                            @else
+                                                <form action="{{ route('nota_venta.create') }}" enctype="multipart/form-data"
+                                                    method="post" class="tooltip-demo">
+                                                    @csrf
+                                                    <input type="text" value="{{ auth()->user()->almacen_id }}"
+                                                        hidden="hidden" name="almacen">
+                                                    <button class="btn btn-primary" type="submit">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endcan
                                         <div class="btn-group">
                                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
@@ -101,7 +103,7 @@
                                 </ul>
                             </div>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <!-- NOTA DE VENTA-->
                                 <div role="tabpanel" id="tab-3" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -247,7 +249,7 @@
         var allSelectedIds = [];
         var masterChecked = false;
         var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
-
+        let crear_permiso = false;
         var coti_table = $('.dataTables-example-nota_venta').DataTable({
             "lengthChange": false,
             "responsive": true,
@@ -270,7 +272,7 @@
 
                 $('.dataTables-example-nota_venta tfoot th.total-columna').html('Total: ' + total_columna);
                 $('.dataTables-example-nota_venta tfoot th.total-total').html('Total G.: ' + total_table);
-
+                ver_permiso = json.ver_permiso;
                 return json.data;
             }
         },
@@ -293,22 +295,17 @@
                 'render': function(data, type, full, meta) {
                     var url = '{{ route('nota_venta.show', ':id') }}';
                     url = url.replace(':id', full[0]);
+                    let objet = ``;
+                    if(ver_permiso){
+                        objet = `<a href="${url}"> <button type="button" class="btn btn-primary"> <i class="fa fa-eye"></i> </button> </a> `;
+                    }
 
-                    if (full[9] == '1') {
-                        return `<a href="${url}">
-                                    <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </a>
-                                <button type="button" class="btn btn-warning">
+                    if (full[9] == "0") {
+                        return objet+`<button type="button" class="btn btn-warning">
                                     <i class="fa fa-clock-o"></i>
                                 </button>`;
                     } else {
-                        return `<a href="${url}">
-                                    <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </a>
+                        return objet+`
                                 <button type="button" class="btn btn-info">
                                     <i class="fa fa-check-circle"></i>
                                 </button>`;

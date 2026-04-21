@@ -375,8 +375,8 @@
                             @can('cotizacion.editar')
                                 <button data-style="expand-right" class="guardar ladda-button btn btn-primary btn-outline"
                                 type="submit">
-                                <span class="ladda-label">Guardar</span>
-                            </button>
+                                    <span class="ladda-label">Guardar</span>
+                                </button>
                             @endcan
                             <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;"
                                 id="btn-finalizar" type="button">Guardar y Finalizar</button>

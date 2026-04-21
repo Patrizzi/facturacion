@@ -345,13 +345,13 @@ class UsuarioController extends Controller
     {
         // return $request;
         // Se editan los datos del perfil y el rol asignado
-
+        $almacen_id = ($request->almacen_id === 'todos') ? null : $request->almacen_id;
         $user = User::findOrFail($id);
         $user->update([
             'name'        => $request->user_name,
             'email'       => $request->correo,
             'celular'     => $request->celular,
-            'almacen_id'  => $request->almacen_id != "todos" ? $request->almacen_id : null,
+            'almacen_id'  => $almacen_id,
             'email_user'  => $request->correo_legal,
             'nombre'      => $request->nombre_legal,
             'estado'      => $request->estado === 'on' ? 1 : 0,
