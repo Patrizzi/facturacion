@@ -364,7 +364,7 @@
                         if (full[13] == 1) {
                             iconoRenovacion = `<button type="button" class="btn" style="background-color:#1ab394; border-color:#1ab394; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovación activa"><i class="fa fa-refresh"></i></button>`;
                         } else if (full[13] == 2) {
-                            iconoRenovacion = `<button type="button" class="btn" style="background-color:#e8572a; border-color:#e8572a; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Próxima a vencer"><i class="fa fa-refresh"></i></button>`;
+                            iconoRenovacion = `<button type="button" class="btn" style="background-color:#f8ac59; border-color:#f8ac59; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Próxima a vencer"><i class="fa fa-refresh"></i></button>`;
                         } else if (full[13] == 3) {
                             iconoRenovacion = `<button type="button" class="btn" style="background-color:#1c84c6; border-color:#1c84c6; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovada"><i class="fa fa-refresh"></i></button>`;
                         } else if (full[13] == 4) {
