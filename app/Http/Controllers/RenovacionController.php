@@ -306,7 +306,7 @@ class RenovacionController extends Controller
                     ]);
 
                     $codigoCotizacion = preg_replace('/[^a-zA-Z0-9_-]/', '_', $cotizacion->cod_cotizacion);
-                    $zip->addFromString('Renovacion_' . $codigoCotizacion . '.pdf', $pdf->output());
+                    $zip->addFromString('Cotizacion' . $codigoCotizacion . '.pdf', $pdf->output());
                 } catch (\Exception $e) {
                     continue;
                 }
