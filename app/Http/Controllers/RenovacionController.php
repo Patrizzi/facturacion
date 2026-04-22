@@ -1,22 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Renovacion;
 use Illuminate\Http\Request;
 use App\ComprobantesVentas;
 use Carbon\Carbon;
 use App\RenovacionVentas;
-use App\CotizacionManual;
 use App\Almacen;
 use App\Igv;
 use App\CotizacionManual_registros;
 use App\Cotizacion_factura_registro;
 use App\Banco;
-use App\Cotizacion;
-use App\EmailBandejaEnvios;
-use App\EmailBandejaEnviosArchivos;
-use App\EmailConfiguraciones;
 use App\Empresa;
 use PDF;
 use Maatwebsite\Excel\Concerns\FromArray;
@@ -24,11 +18,12 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use App\Exports\RenovacionExport;
-use Barryvdh\DomPDF\PDF as DomPDFPDF;
+use ZipArchive;
+use App\EmailBandejaEnvios;
+use App\EmailBandejaEnviosArchivos;
+use App\EmailConfiguraciones;
 use Exception;
 use Illuminate\Support\Facades\Storage;
-use mikehaertl\wkhtmlto\Pdf as WkhtmltoPdf;
-use ZipArchive;
 
 class RenovacionController extends Controller
 {
