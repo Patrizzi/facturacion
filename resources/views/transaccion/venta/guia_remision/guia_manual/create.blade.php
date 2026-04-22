@@ -37,9 +37,13 @@
                                 <div class="col-md-10">
                                     <select class="select2_demo_almacen" name="almacen" autocomplete="off"
                                         onchange="test(this)" id="almacen" required>
-                                        @foreach ($almacen as $almacens)
-                                            <option value="{{ $almacens->id }}">{{ $almacens->nombre }}</option>
-                                        @endforeach
+                                        @if(auth()->user()->almacen_id == NULL)
+                                            @foreach ($almacen as $almacens)
+                                                <option value="{{ $almacens->id }}">{{ $almacens->nombre }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="{{auth()->user()->almacen_id}}">{{ auth()->user()->almacen->nombre }}</option>
+                                        @endif
                                     </select>
                                 </div>
                             </div>
@@ -244,13 +248,14 @@
                                     </tbody>
                                 </table>
                                 <div class="d-flex justify-content-end mt-4">
-                                    <button data-style="zoom-out" id="guardar" name="boton"
-                                        class="guardar button-lada-guardar btn btn-primary btn-outline"
-                                        type="button">Guardar</button>
+                                    @can('guia_remision_m.editar')
+                                        <button data-style="zoom-out" id="guardar" name="boton"
+                                            class="guardar button-lada-guardar btn btn-primary btn-outline"
+                                            type="button">Guardar</button>
+                                    @endcan
                                     <button class="btn btn-primary float-right button-lada-finalizar"
                                         style="margin-left: 10px;" type="button" id="finalizar">Guardar y
                                         Finalizar</button>
-
                                     <button type="submit" id="button_submit" hidden name="button_submit"
                                         value="0"></button>
                                 </div>

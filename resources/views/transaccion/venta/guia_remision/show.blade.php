@@ -9,88 +9,6 @@
 @section('content')
 
     <!-- modal -->
-    {{-- <div class="row">
-        <div class="col-lg-12">
-            <div id="modal-form" class="modal fade" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="row" align="center">
-                                <div class="col-sm-12 b-r">
-                                    <h3 class="m-t-none m-b">Crear Guia Remision</h3>
-                                </div>
-                                <div class="col-sm-6">
-                                    <a href="{{ route('guia_remision.seleccionar') }}"><button class="btn btn-sm btn-info"
-                                            type="submit"><strong>Ver Aprobadas</strong></button></a>
-                                </div>
-                                <div class="col-sm-6">
-                                    @if ($conteo_almacen == 1 and $user_login->name == 'Administrador')
-                                        <form action="{{ route('guia_remision.create') }}" enctype="multipart/form-data">
-                                            @csrf
-                                            <input type="text" value="{{ $almacen_primero->id }}" hidden="hidden"
-                                                name="almacen">
-                                            <input class="btn btn-sm btn-info" type="submit" value="Crear una nueva Guia">
-                                        </form>
-                                    @elseif($conteo_almacen == 1 and $user_login->almacen->estado == 1 and $user_login->name == 'Colaborador')
-                                        <input id="auto" onclick="divAuto()" type="submit" class="btn btn-sm btn-info"
-                                            value="Crear una Nueva Guia">
-                                        <div id="div-mostrar" style="color: black">
-                                            <div id="texto"
-                                                style="opacity:0;transition: .4s ;text-align: center;padding-top: 10px;">
-                                                Almacen Asignado esta Desactivado, Activelo o cambie de Almacen.</div>
-                                        </div>
-                                    @elseif($conteo_almacen == 1 and $user_login->almacen->estado == 0 and $user_login->name == 'Colaborador')
-                                        <form action="{{ route('guia_remision.create') }}" enctype="multipart/form-data">
-                                            @csrf
-                                            <input type="text" value="{{ $user_login->almacen_id }}" hidden="hidden"
-                                                name="almacen">
-                                            <input class="btn btn-sm btn-info" type="submit" value="Crear una nueva Guia">
-                                        </form>
-                                    @elseif($conteo_almacen > 1 and $user_login->name == 'Administrador')
-                                        <div class="dropdown">
-                                            <button class="btn btn-sm btn-info" type="button" id="dropdownMenuButton"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Crear una
-                                                Nueva Guia</button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <form
-                                                    action="{{ route('guia_remision.create') }}"enctype="multipart/form-data">
-                                                    @csrf
-                                                    @foreach ($almacen as $almacens)
-                                                        <input type="submit" class="dropdown-item" name="almacen"
-                                                            value="{{ $almacens->id }} - {{ $almacens->nombre }}">
-                                                    @endforeach
-                                                </form>
-                                            </div>
-                                        </div>
-                                    @elseif($conteo_almacen > 1 and $user_login->name == 'Colaborador')
-                                        @if ($user_login->almacen->estado == 1)
-                                            <input id="auto" onclick="divAuto()" type="submit"
-                                                class="btn btn-sm btn-info" value="Crear una Nueva Guia">
-                                            <div id="div-mostrar" style="color: black">
-                                                <div id="texto"
-                                                    style="opacity:0;transition: .4s ;text-align: center;padding-top: 10px;">
-                                                    Almacen Asignado esta Desactivado, Activelo o cambie de Almacen.</div>
-                                            </div>
-                                        @elseif($user_login->almacen->estado == 0)
-                                            <form action="{{ route('guia_remision.create') }}"
-                                                enctype="multipart/form-data">
-                                                @csrf
-                                                <input type="text" value="{{ $user_login->almacen_id }}" hidden="hidden"
-                                                    name="almacen">
-                                                <input class="btn btn-sm btn-info" type="submit"
-                                                    value="Crear una nueva Guia">
-                                            </form>
-                                        @endif
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    {{-- fimodal --}}
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
@@ -152,12 +70,14 @@
                         </div>
 
                         @if ($guia_remision->estado == 0)
-                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
-                                <i class="fa fa-times"></i>
-                            </button>
+                            @can('guia_remision.editar')
+                                <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endcan
                         @endif
 
                         <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
@@ -358,7 +278,9 @@
             </div>
             <div class="no_mostrar" id="edicion_guias">
                 @if ($guia_remision->estado == 0)
-                    @include('transaccion.venta.guia_remision.edit')
+                    @can('guia_remision.editar')
+                        @include('transaccion.venta.guia_remision.edit')
+                    @endcan
                 @endif
             </div>
         </div>

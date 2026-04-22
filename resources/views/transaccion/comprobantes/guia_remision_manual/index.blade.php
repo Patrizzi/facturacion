@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -38,8 +38,10 @@
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
-                                        <a class="btn btn-primary" href="{{ route('guia_remision_manual.create') }}"><i
+                                        @can('guia_remision_m.crear')
+                                            <a class="btn btn-primary" href="{{ route('guia_remision_manual.create') }}"><i
                                                 class="fa fa-plus"></i></a>
+                                        @endcan
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-primary dropdown-toggle"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -70,7 +72,7 @@
                                     </ul>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <div role="tabpanel" id="tab-5" class="tab-pane active show"
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -124,7 +126,7 @@
                                                     <th>Cliente</th>
                                                     <th>Emisión</th>
                                                     <th>Entrega</th>
-                                                    <th>Ver</th>
+                                                    <th>@can('guia_remision_m.ver') Ver @endcan</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                     <th>Compartir R.</th>
                                                 </tr>
@@ -175,6 +177,8 @@
         /* =========================
          *  DataTable
          * ========================= */
+        let permiso_ver = false;
+        let permiso_anular = false;
         var coti_table = $('.dataTables-example-guia-remision').DataTable({
             pageLength: 15,
             serverSide: true,
@@ -185,6 +189,11 @@
                     d.daterange = $('#data_range_filter').val();
                     d.estado_s = $('#select_estado_sunat').val();
                     d.value = $('#search_all_column').val();
+                },
+                dataSrc: function(json) {
+                    permiso_ver = json.permiso_ver;
+                    permiso_anular = json.permiso_anular;
+                    return json.data;
                 }
             },
             columnDefs: [{
@@ -201,8 +210,12 @@
                     orderable: false,
                     render: function(data, type, full) {
                         var url = "{{ url('guia_remision_manual') }}/" + full[0];
-                        return '<a href="' + url +
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = '<a href="' + url +
                             '"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>';
+                        }
+                        return button_show;
                     }
                 }, {
                     targets: [8],

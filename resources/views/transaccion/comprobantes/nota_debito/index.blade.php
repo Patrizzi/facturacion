@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -36,25 +36,27 @@
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
-                                        {{-- <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
-                                                class="fa fa-plus"></i></a> --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
-                                                {{-- <button class="btn btn-w-m btn-link"
-                                                    type="submit"></button> --}}
-                                                <a class="btn btn-w-m btn-link"
-                                                    href="{{route('nota-debito.create')}}">Factura</a>
-                                                <a class="btn btn-w-m btn-link"
-                                                    href="{{route('nota-debito.create_boleta')}}">Boleta</a>
-                                            </ul>
-                                        </span>
-                                         <div class="btn-group">
-                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        @canany(['nota_debito.crear_factura','nota_debito.crear_factura_m','nota_debito.crear_boleta','nota_debito.crear_boleta_m'])
+                                            <span class="dropdown">
+                                                <button class="btn btn-primary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton" data-toggle="dropdown">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                    <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
+                                                    @canany(['nota_debito.crear_factura','nota_debito.crear_factura_m'])
+                                                        <a class="btn btn-w-m btn-link"
+                                                            href="{{route('nota-debito.create')}}">Factura</a>
+                                                    @endcan
+                                                    @canany(['nota_debito.crear_boleta','nota_debito.crear_boleta_m'])
+                                                        <a class="btn btn-w-m btn-link"
+                                                            href="{{route('nota-debito.create_boleta')}}">Boleta</a>
+                                                    @endcan
+                                                </ul>
+                                            </span>
+                                        @endcan
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
@@ -82,7 +84,7 @@
 
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <div role="tabpanel" id="tab-6" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
@@ -172,6 +174,8 @@
                 $bottom.animate({ scrollLeft: target }, 600);
             }
         });
+        let permiso_ver = false;
+        let permiso_anular = false;
         var coti_table = $('.dataTables-example-nota-debito').DataTable({
             "pageLength": 15,
             "serverSide": true,
@@ -182,6 +186,11 @@
                     d.daterange = $('#data_range_filter').val();
                     d.tipo_comprobante = $('#select_tipo_coti').val();
                     d.value = $('#search_all_column').val();
+                },
+                dataSrc: function(json) {
+                    permiso_ver = json.permiso_ver;
+                    permiso_anular = json.permiso_anular;
+                    return json.data;
                 }
             },
             "columnDefs": [{
@@ -208,11 +217,15 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('nota-debito.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </a> `;
+                        }
+                        return button_show;
                     }
                 },
                 {

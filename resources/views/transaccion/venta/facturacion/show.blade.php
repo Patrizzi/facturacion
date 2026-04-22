@@ -72,13 +72,15 @@
 
                                     {{-- Botón Anular --}}
                                     @if ($showAnular)
-                                        <span data-toggle="tooltip" data-placement="bottom"
-                                            data-original-title="Anular La Factura"
-                                            style="display: inline-flex; animation: circleScale 3s infinite; margin-right: 4px;">
-                                            <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modal_anular">
-                                                <i class="fa fa-ban fa-xl"></i>
-                                            </button>
-                                        </span>
+                                        @can('factura.anular')
+                                            <span data-toggle="tooltip" data-placement="bottom"
+                                                data-original-title="Anular La Factura"
+                                                style="display: inline-flex; animation: circleScale 3s infinite; margin-right: 4px;">
+                                                <button class="btn btn-danger btn-circle" data-toggle="modal" data-target="#modal_anular">
+                                                    <i class="fa fa-ban fa-xl"></i>
+                                                </button>
+                                            </span>
+                                        @endcan
                                     @endif
 
                                     {{-- Botón Nota de Crédito --}}
@@ -140,12 +142,14 @@
                         </div>
 
                         @if ($facturacion->estado == 0)
-                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
-                                <i class="fa fa-times"></i>
-                            </button>
+                            @can('factura.editar')
+                                <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endcan
                         @endif
                     </div>
                     <div  id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">

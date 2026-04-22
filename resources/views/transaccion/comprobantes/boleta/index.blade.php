@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -39,40 +39,42 @@
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
-                                        @if (auth()->user()->name == 'Administrador')
-                                            {{-- Condicional por tipo de user  --}}
-                                            <span class="dropdown">
-                                                <button class="btn btn-primary dropdown-toggle" type="button"
-                                                    id="dropdownMenuButton" data-toggle="dropdown">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                    <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                    @foreach ($almacen as $almacens)
-                                                        <li>
-                                                            <form action="{{ route('boleta.create') }}"
-                                                                enctype="multipart/form-data" method="post">
-                                                                @csrf
-                                                                <input type="text" value="{{ $almacens->id }}"
-                                                                    hidden="hidden" name="almacen">
-                                                                <button class="btn btn-w-m btn-link"
-                                                                    type="submit">{{ $almacens->nombre }}</button>
-                                                            </form>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </span>
-                                        @else
-                                            <form action="{{ route('boleta.create') }}" enctype="multipart/form-data"
-                                                method="post" class="tooltip-demo">
-                                                @csrf
-                                                <input type="text" value="{{ auth()->user()->almacen_id }}"
-                                                    hidden="hidden" name="almacen">
-                                                <button class="btn btn-primary" type="submit">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </form>
-                                        @endif
+                                        @can('boleta.crear')
+                                            @if (auth()->user()->almacen_id == NULL)
+                                                {{-- Condicional por tipo de user  --}}
+                                                <span class="dropdown">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                        <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                                                        @foreach ($almacen as $almacens)
+                                                            <li>
+                                                                <form action="{{ route('boleta.create') }}"
+                                                                    enctype="multipart/form-data" method="post">
+                                                                    @csrf
+                                                                    <input type="text" value="{{ $almacens->id }}"
+                                                                        hidden="hidden" name="almacen">
+                                                                    <button class="btn btn-w-m btn-link"
+                                                                        type="submit">{{ $almacens->nombre }}</button>
+                                                                </form>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </span>
+                                            @else
+                                                <form action="{{ route('boleta.create') }}" enctype="multipart/form-data"
+                                                    method="post" class="tooltip-demo">
+                                                    @csrf
+                                                    <input type="text" value="{{ auth()->user()->almacen_id }}"
+                                                        hidden="hidden" name="almacen">
+                                                    <button class="btn btn-primary" type="submit">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endcan
                                         <div class="btn-group">
                                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
@@ -101,7 +103,7 @@
                                     </ul>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 {{-- BOLETA --}}
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show"
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
@@ -157,7 +159,7 @@
                                                     <th>Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
-                                                    <th>Ver</th>
+                                                    <th>@can('boleta.ver') Ver @endcan</th>
                                                     <th style="width: 0.5vmax !important">Información</th>
                                                     <th>Pago</th>
                                                     <th>Compartir R.</th>
@@ -196,7 +198,8 @@
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
-
+        let permiso_ver = false;
+        let permiso_pagar = false;
         var coti_table = $('.dataTables-example-boleta').DataTable({
             "pageLength": 15,
             "serverSide": true,
@@ -214,7 +217,8 @@
 
                     $('.dataTables-example-boleta tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-boleta tfoot th.total-total').html('Total  G.: ' + total_table);
-
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
                     return json.data;
                 }
             },
@@ -238,11 +242,15 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('boleta.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </a> `;
+                        }
+                        return button_show;
                     }
                 },
                 {
@@ -324,7 +332,10 @@
                         const e3 = estado_pago[estadoPago];
 
                         let pago = full[16];
-                        
+                        let class_pago = ``;
+                        if(permiso_pagar){
+                            class_pago = `button_hover_pago`;
+                        }
                         if (pago) {
                             var end = `
                                 <div class="wrapper-hover">
@@ -345,7 +356,7 @@
                         }else{
                             var end = `
                                 <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
+                                    <button class="btn ${e3.clase} btn-circle btn-ls `+class_pago+`"
                                         data-id="${full[0]}"
                                         data-estado="${full[14]}"
                                         title="Pago: ${e3.texto}">  

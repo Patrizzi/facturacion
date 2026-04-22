@@ -173,6 +173,8 @@ class ComprobantesVentasController extends Controller
         $total_table = Boleta::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        $json['permiso_ver'] = auth()->user()->can('boleta.ver');
+        $json['permiso_pagar'] = auth()->user()->can('boleta.pagar_solo');
         return response()->json($json);
     }
 
@@ -321,6 +323,8 @@ class ComprobantesVentasController extends Controller
         $total_table = Boleta_m::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        $json['permiso_ver'] = auth()->user()->can('boleta_m.ver');
+        $json['permiso_pagar'] = auth()->user()->can('boleta_m.pagar_solo');
         return response()->json($json);
     }
 
@@ -474,6 +478,8 @@ class ComprobantesVentasController extends Controller
         $total_table = Facturacion::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        $json['permiso_ver'] = auth()->user()->can('factura.ver');
+        $json['permiso_pagar'] = auth()->user()->can('factura.pagar_solo');
         return response()->json($json);
     }
 
@@ -630,6 +636,8 @@ class ComprobantesVentasController extends Controller
         $total_table = Facturacion_m::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        $json['permiso_ver'] = auth()->user()->can('factura_m.ver');
+        $json['permiso_pagar'] = auth()->user()->can('factura_m.pagar_solo');
         return response()->json($json);
     }
 
@@ -814,6 +822,8 @@ class ComprobantesVentasController extends Controller
                 $email,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('nota_credito.ver');
+        $json['permiso_anular'] = auth()->user()->can('nota_credito.anular');
         return response()->json($json);
     }
 
@@ -999,6 +1009,8 @@ class ComprobantesVentasController extends Controller
                 $email,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('nota_debito.ver');
+        $json['permiso_anular'] = auth()->user()->can('nota_debito.anular');
         return response()->json($json);
     }
 
@@ -1154,7 +1166,8 @@ class ComprobantesVentasController extends Controller
                 $guia_r->estado,
             ];
         }
-
+        $json['permiso_ver'] = auth()->user()->can('guia_remision.ver');
+        $json['permiso_anular'] = auth()->user()->can('guia_remision.anular');
         return response()->json($json);
     }
 
@@ -1328,7 +1341,8 @@ class ComprobantesVentasController extends Controller
                 $row->estado,
             ];
         }
-
+        $json['permiso_ver'] = auth()->user()->can('guia_remision_m.ver');
+        $json['permiso_anular'] = auth()->user()->can('guia_remision_m.anular');
         return response()->json($json);
     }
 }

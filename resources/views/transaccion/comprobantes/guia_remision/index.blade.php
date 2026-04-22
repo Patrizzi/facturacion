@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -36,39 +36,41 @@
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
-                                        @if (auth()->user()->name == 'Administrador' && $almacen->count() != 1){{-- Condicional por tipo de user  --}}
-                                            <span class="dropdown">
-                                                <button class="btn btn-primary dropdown-toggle" type="button"
-                                                    id="dropdownMenuButton" data-toggle="dropdown" >
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                                <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                    <span style="margin-left:12px;"><b>Almacenes:</b></span>
-                                                    @foreach ($almacen as $almacens)
-                                                        <li>
-                                                            <form action="{{ route('guia_remision.create') }}"
-                                                                enctype="multipart/form-data" method="post">
-                                                                @csrf
-                                                                <input type="text" value="{{ $almacens->id }}"
-                                                                    hidden="hidden" name="almacen">
-                                                                <button class="btn btn-w-m btn-link"
-                                                                    type="submit">{{ $almacens->nombre }}</button>
-                                                            </form>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </span>
-                                        @else
-                                            <form action="{{ route('guia_remision.create') }}" enctype="multipart/form-data"
-                                                method="post" class="tooltip-demo">
-                                                @csrf
-                                                <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
-                                                    name="almacen">
-                                                <button class="btn btn-primary" type="submit">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </form>
-                                        @endif
+                                        @can('guia_remision.crear')
+                                            @if (auth()->user()->almacen_ud == NULL){{-- Condicional por tipo de user  --}}
+                                                <span class="dropdown">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown" >
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                        <span style="margin-left:12px;"><b>Almacenes:</b></span>
+                                                        @foreach ($almacen as $almacens)
+                                                            <li>
+                                                                <form action="{{ route('guia_remision.create') }}"
+                                                                    enctype="multipart/form-data" method="post">
+                                                                    @csrf
+                                                                    <input type="text" value="{{ $almacens->id }}"
+                                                                        hidden="hidden" name="almacen">
+                                                                    <button class="btn btn-w-m btn-link"
+                                                                        type="submit">{{ $almacens->nombre }}</button>
+                                                                </form>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </span>
+                                            @else
+                                                <form action="{{ route('guia_remision.create') }}" enctype="multipart/form-data"
+                                                    method="post" class="tooltip-demo">
+                                                    @csrf
+                                                    <input type="text" value="{{ auth()->user()->almacen_id }}" hidden="hidden"
+                                                        name="almacen">
+                                                    <button class="btn btn-primary" type="submit">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @endcan
                                         <div class="btn-group">
                                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
@@ -98,7 +100,7 @@
 
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <div role="tabpanel" id="tab-5" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
@@ -150,7 +152,7 @@
                                                     <th>Cliente</th>
                                                     <th>Emisión</th>
                                                     <th>Entrega</th>
-                                                    <th>Ver</th>
+                                                    <th>@can('guia_remision.ver') Ver @endcan</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                     <th>Compartir R.</th>
                                                 </tr>
@@ -188,6 +190,8 @@
                 $bottom.animate({ scrollLeft: target }, 600);
             }
         });
+        let permiso_ver = false;
+        let permiso_anular = false;
         var coti_table = $('.dataTables-example-guia-remision').DataTable({
             "pageLength": 15,
             "serverSide": true,
@@ -198,6 +202,11 @@
                     d.daterange = $('#data_range_filter').val();
                     d.estado_s = $('#select_estado_sunat').val();
                     d.value = $('#search_all_column').val();
+                },
+                dataSrc: function(json) {
+                    permiso_ver = json.permiso_ver;
+                    permiso_anular = json.permiso_anular;
+                    return json.data;
                 }
             },
             "columnDefs": [{
@@ -220,11 +229,15 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('guia_remision.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </a> `;
+                        }
+                        return button_show;
                     }
                 },
                 {

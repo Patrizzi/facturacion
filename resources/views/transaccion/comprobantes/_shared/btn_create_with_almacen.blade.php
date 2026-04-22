@@ -5,7 +5,7 @@
     $useAlmacen = $useAlmacen ?? true;
     $asLink = $asLink ?? false;
     $label = $label ?? 'Almacenes:';
-    $isAdmin = auth()->check() && auth()->user()->name === 'Administrador';
+    $isAdmin = auth()->check() && auth()->user()->almacen_id == NULL;
     $almacenCount = (isset($almacen) && is_countable($almacen)) ? count($almacen) : 0;
     $hasManyAlmacenes = $almacenCount > 1;
     $showDropdown = $useAlmacen && $isAdmin && (!$hideDropdownIfSingle || $hasManyAlmacenes);

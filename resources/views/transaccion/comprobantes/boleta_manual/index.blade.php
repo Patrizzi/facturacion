@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -36,8 +36,10 @@
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        <a class="btn btn-primary" href="{{ route('boleta_manual.create') }}"><i
+                                        @can('boleta_m.crear')
+                                            <a class="btn btn-primary" href="{{ route('boleta_manual.create') }}"><i
                                                 class="fa fa-plus"></i></a>
+                                        @endcan
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-primary dropdown-toggle"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -66,7 +68,7 @@
                                     </ul>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 {{-- BOLETA --}}
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show"
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
@@ -122,7 +124,7 @@
                                                     <th>Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
-                                                    <th>Ver</th>
+                                                    <th>@can('boleta_m.ver') Ver @endcan</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                     <th>Pago</th>
                                                     <th>Compartir R.</th>
@@ -165,7 +167,8 @@
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
-
+        let permiso_ver = false;
+        let permiso_pagar = false;
         var coti_table = $('.dataTables-example-boleta').DataTable({
             "pageLength": 15,
             "serverSide": true,
@@ -183,7 +186,8 @@
 
                     $('.dataTables-example-boleta tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-boleta tfoot th.total-total').html('Total  G.: ' + total_table);
-
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
                     return json.data;
                 }
             },
@@ -207,11 +211,15 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('boleta_manual.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </a> `;
+                        }
+                        return button_show;
                     }
                 },
                 {

@@ -18,172 +18,186 @@
                             <div class="panel-heading text-center">
                                 <h2><strong>Listado de Nota de Débito</strong></h2>
                             </div>
+                            @php $activeSet = false; @endphp
                             <div class="panel-body">
                                 <div class="tabs-container">
                                     <ul class="nav nav-tabs" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" data-toggle="tab" href="#tab-3">Boleta</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" data-toggle="tab" href="#tab-4">Boleta Manual</a>
-                                        </li>
+                                        @can('nota_debito.crear_boleta')
+                                            <li class="nav-item">
+                                                <a class="nav-link {{ !$activeSet ? 'active' : '' }}" data-toggle="tab" href="#tab-3">Boleta</a>
+                                            </li>
+                                            @php $activeSet = true; @endphp
+                                        @endcan
+                                        @can('nota_debito.crear_boleta_m')
+                                            <li class="nav-item">
+                                                <a class="nav-link {{ !$activeSet ? 'active' : '' }}" data-toggle="tab" href="#tab-4">Boleta Manual</a>
+                                            </li>
+                                            @php $activeSet = true; @endphp
+                                        @endcan
                                     </ul>
+                                    @php $activeSet = false; @endphp
                                     <div class="tab-content">
-                                        <div id="tab-3" class="tab-pane active">
-                                            <div class="panel-body">
-                                                <!-- Filtros -->
-                                                <div class="search-responsive mb-4">
-                                                    <div class="row">
-                                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                                            <div class="input-group">
-                                                                <input class="form-control" type="text" name="daterange"
-                                                                    id="data_range_filter"
-                                                                    value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                                    readonly="readonly" />
-                                                                <span class="input-group-append">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        id="revert_select">
-                                                                        <i class="fa fa-history"></i>
-                                                                    </button>
-                                                                </span>
+                                        @can('nota_debito.crear_boleta')
+                                            <div id="tab-3" class="tab-pane active">
+                                                <div class="panel-body">
+                                                    <!-- Filtros -->
+                                                    <div class="search-responsive mb-4">
+                                                        <div class="row">
+                                                            <div class="col-lg-5 col-md-6 col-sm-12">
+                                                                <div class="input-group">
+                                                                    <input class="form-control" type="text" name="daterange"
+                                                                        id="data_range_filter"
+                                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                                        readonly="readonly" />
+                                                                    <span class="input-group-append">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            id="revert_select">
+                                                                            <i class="fa fa-history"></i>
+                                                                        </button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-5 col-md-6 col-sm-12">
+                                                                <input type="search" class="form-control" placeholder="Buscar:"
+                                                                    id="search_all_column">
+                                                            </div>
+                                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                                <button type="button" class="btn btn-block btn-primary"
+                                                                    id="filter_buttons">Buscar</button>
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                                            <input type="search" class="form-control" placeholder="Buscar:"
-                                                                id="search_all_column">
-                                                        </div>
-                                                        <div class="col-lg-2 col-md-6 col-sm-12">
-                                                            <button type="button" class="btn btn-block btn-primary"
-                                                                id="filter_buttons">Buscar</button>
-                                                        </div>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table
+                                                            class="table table-striped table-bordered dataTables-example-boleta">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>Código</th>
+                                                                    <th>RUC/DNI</th>
+                                                                    <th>Fecha</th>
+                                                                    <th>Cliente</th>
+                                                                    <th>Importe Total</th>
+                                                                    <th>Acción</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($boletas as $boleta)
+                                                                    <tr class="gradeX">
+                                                                        <td>{{ $boleta->id }}</td>
+                                                                        <td>{{ $boleta->codigo_boleta }}</td>
+                                                                        <td>{{ $boleta->cliente->numero_documento }}</td>
+                                                                        <td>{{ $boleta->fecha_emision }}</td>
+                                                                        <td>{{ $boleta->cliente->nombre }}</td>
+                                                                        <span
+                                                                            hidden>{{ $subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
+                                                                        </span>
+                                                                        <td>{{ $boleta->moneda->simbolo }}
+                                                                            {{ number_format(round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <form method="POST"
+                                                                                action="{{ route('nota-debito.create_nota_debito_boleta') }}">
+                                                                                @csrf
+                                                                                <input type="hidden" name="tipo"
+                                                                                    value="normal">
+                                                                                <input type="hidden" name="boleta_id"
+                                                                                    value="{{ $boleta->id }}">
+                                                                                <button type="submit"
+                                                                                    class="btn btn-warning btn-sm"><i
+                                                                                        class="fa fa-edit"></i></button>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
-                                                <div class="table-responsive">
-                                                    <table
-                                                        class="table table-striped table-bordered dataTables-example-boleta">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>Código</th>
-                                                                <th>RUC/DNI</th>
-                                                                <th>Fecha</th>
-                                                                <th>Cliente</th>
-                                                                <th>Importe Total</th>
-                                                                <th>Acción</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($boletas as $boleta)
-                                                                <tr class="gradeX">
-                                                                    <td>{{ $boleta->id }}</td>
-                                                                    <td>{{ $boleta->codigo_boleta }}</td>
-                                                                    <td>{{ $boleta->cliente->numero_documento }}</td>
-                                                                    <td>{{ $boleta->fecha_emision }}</td>
-                                                                    <td>{{ $boleta->cliente->nombre }}</td>
-                                                                    <span
-                                                                        hidden>{{ $subtotal = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
-                                                                    </span>
-                                                                    <td>{{ $boleta->moneda->simbolo }}
-                                                                        {{ number_format(round($subtotal + ($boleta->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                                                    </td>
-                                                                    <td>
-                                                                        <form method="POST"
-                                                                            action="{{ route('nota-debito.create_nota_debito_boleta') }}">
-                                                                            @csrf
-                                                                            <input type="hidden" name="tipo"
-                                                                                value="normal">
-                                                                            <input type="hidden" name="boleta_id"
-                                                                                value="{{ $boleta->id }}">
-                                                                            <button type="submit"
-                                                                                class="btn btn-warning btn-sm"><i
-                                                                                    class="fa fa-edit"></i></button>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                        </tbody>
-                                                    </table>
-                                                </div>
                                             </div>
-                                        </div>
+                                            @php $activeSet = true; @endphp
+                                        @endcan
                                         <!-- Tab 2 -->
-                                        <div id="tab-4" class="tab-pane">
-                                            <div class="panel-body">
-                                                <div class="search-responsive mb-4">
-                                                    <div class="row">
-                                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                                            <div class="input-group">
-                                                                <input class="form-control" type="text"
-                                                                    name="daterange" id="data_range_filter2"
-                                                                    value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                                    readonly="readonly" />
-                                                                <span class="input-group-append">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        id="revert_select2">
-                                                                        <i class="fa fa-history"></i>
-                                                                    </button>
-                                                                </span>
+                                        @can('nota_debito.crear_boleta_m')
+                                            <div id="tab-4" class="tab-pane">
+                                                <div class="panel-body">
+                                                    <div class="search-responsive mb-4">
+                                                        <div class="row">
+                                                            <div class="col-lg-5 col-md-6 col-sm-12">
+                                                                <div class="input-group">
+                                                                    <input class="form-control" type="text"
+                                                                        name="daterange" id="data_range_filter2"
+                                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
+                                                                        readonly="readonly" />
+                                                                    <span class="input-group-append">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            id="revert_select2">
+                                                                            <i class="fa fa-history"></i>
+                                                                        </button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-5 col-md-6 col-sm-12">
+                                                                <input type="search" class="form-control"
+                                                                    placeholder="Buscar:" id="search_all_column2">
+                                                            </div>
+                                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                                <button type="button" class="btn btn-block btn-primary"
+                                                                    id="filter_buttons2">Buscar</button>
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-5 col-md-6 col-sm-12">
-                                                            <input type="search" class="form-control"
-                                                                placeholder="Buscar:" id="search_all_column2">
-                                                        </div>
-                                                        <div class="col-lg-2 col-md-6 col-sm-12">
-                                                            <button type="button" class="btn btn-block btn-primary"
-                                                                id="filter_buttons2">Buscar</button>
-                                                        </div>
+                                                    </div>
+                                                    <div class="table-responsive">
+                                                        <table
+                                                            class="table table-striped table-bordered dataTables-example-boletam">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>Código</th>
+                                                                    <th>RUC/DNI</th>
+                                                                    <th>Fecha</th>
+                                                                    <th>Cliente</th>
+                                                                    <th>Importe Total</th>
+                                                                    <th>Acción</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach ($boleta_manual as $boletam)
+                                                                    <tr class="gradeX">
+                                                                        <td>{{ $boletam->id }}</td>
+                                                                        <td>{{ $boletam->codigo_boleta }}</td>
+                                                                        <td>{{ $boletam->cliente->numero_documento }}</td>
+                                                                        <td>{{ $boletam->fecha_emision }}</td>
+                                                                        <td>{{ $boletam->cliente->nombre }}</td>
+                                                                        <span
+                                                                            hidden>{{ $subtotal = $boletam->op_gravada + $boletam->op_inafecta + $boletam->op_exonerada }}
+                                                                        </span>
+                                                                        <td>{{ $boletam->moneda->simbolo }}
+                                                                            {{ number_format(round($subtotal + ($boletam->op_gravada * $igv->renta) / 100, 2), 2) }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <form method="POST"
+                                                                                action="{{ route('nota-debito.create_nota_debito_boleta') }}">
+                                                                                @csrf
+                                                                                <input type="hidden" name="tipo"
+                                                                                    value="manual">
+                                                                                <input type="hidden" name="boleta_id"
+                                                                                    value="{{ $boletam->id }}">
+                                                                                <button type="submit"
+                                                                                    class="btn btn-warning btn-sm"><i
+                                                                                        class="fa fa-edit"></i></button>
+                                                                            </form>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
-                                                <div class="table-responsive">
-                                                    <table
-                                                        class="table table-striped table-bordered dataTables-example-boletam">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>ID</th>
-                                                                <th>Código</th>
-                                                                <th>RUC/DNI</th>
-                                                                <th>Fecha</th>
-                                                                <th>Cliente</th>
-                                                                <th>Importe Total</th>
-                                                                <th>Acción</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach ($boleta_manual as $boletam)
-                                                                <tr class="gradeX">
-                                                                    <td>{{ $boletam->id }}</td>
-                                                                    <td>{{ $boletam->codigo_boleta }}</td>
-                                                                    <td>{{ $boletam->cliente->numero_documento }}</td>
-                                                                    <td>{{ $boletam->fecha_emision }}</td>
-                                                                    <td>{{ $boletam->cliente->nombre }}</td>
-                                                                    <span
-                                                                        hidden>{{ $subtotal = $boletam->op_gravada + $boletam->op_inafecta + $boletam->op_exonerada }}
-                                                                    </span>
-                                                                    <td>{{ $boletam->moneda->simbolo }}
-                                                                        {{ number_format(round($subtotal + ($boletam->op_gravada * $igv->renta) / 100, 2), 2) }}
-                                                                    </td>
-                                                                    <td>
-                                                                        <form method="POST"
-                                                                            action="{{ route('nota-debito.create_nota_debito_boleta') }}">
-                                                                            @csrf
-                                                                            <input type="hidden" name="tipo"
-                                                                                value="manual">
-                                                                            <input type="hidden" name="boleta_id"
-                                                                                value="{{ $boletam->id }}">
-                                                                            <button type="submit"
-                                                                                class="btn btn-warning btn-sm"><i
-                                                                                    class="fa fa-edit"></i></button>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
                                             </div>
-                                        </div>
+                                            @php $activeSet = true; @endphp
+                                        @endcan
                                     </div>
                                 </div>
                             </div>

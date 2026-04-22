@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -36,10 +36,12 @@
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         {{-- ALMACEN --}}
-                                        <a class="btn btn-primary" href="{{ route('facturacion_manual.create') }}"><i
+                                        @can('factura_m.crear')
+                                            <a class="btn btn-primary" href="{{ route('facturacion_manual.create') }}"><i
                                                 class="fa fa-plus"></i></a>
-                                         <div class="btn-group">
-                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        @endcan
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
@@ -66,7 +68,7 @@
                                     </ul>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <!-- Factura-->
                                 <div role="tabpanel" id="tab-4" class="tab-pane active show"  style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -120,7 +122,7 @@
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
-                                                    <th>Ver</th>
+                                                    <th>@can('factura_m.ver') Ver @endcan</th>
                                                     <th style="width: 0.5vmax !important">Información</th>
                                                     <th>Pago</th>
                                                     <th>Compartir R.</th>
@@ -168,7 +170,8 @@
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
-
+        let permiso_ver = false;
+        let permiso_pagar = false;
         var coti_table = $('.dataTables-example-factura').DataTable({
             "pageLength": 15,
             "serverSide": true,
@@ -183,10 +186,10 @@
                 dataSrc: function(json) {
                     var total_columna = json.total_columna;
                     var total_table = json.total_table;
-
                     $('.dataTables-example-factura tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-factura tfoot th.total-total').html('Total  G.: ' + total_table);
-
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
                     return json.data;
                 }
             },
@@ -210,11 +213,15 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('facturacion_manual.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </a> `;
+                        }
+                        return button_show;
                     }
                 },
                 {
@@ -295,7 +302,10 @@
                         const e3 = estado_pago[estadoPago];
 
                         let pago = full[16];
-
+                        let class_pago = ``;
+                        if(permiso_pagar){
+                            class_pago = `button_hover_pago`;
+                        }
                         if (pago) {
                             var end = `
                                 <div class="wrapper-hover">
@@ -316,7 +326,7 @@
                         }else{
                             var end = `
                                 <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
+                                    <button class="btn ${e3.clase} btn-circle btn-ls"
                                         data-id="${full[0]}"
                                         data-estado="${full[14]}"
                                         title="Pago: ${e3.texto}">  

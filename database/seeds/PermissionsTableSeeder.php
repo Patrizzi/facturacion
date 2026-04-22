@@ -77,33 +77,44 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'factura.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Factura']);
         Permission::create(['name' => 'factura.editar', 'module' => 'comprobantes', 'description' => 'Editar Factura']);
         Permission::create(['name' => 'factura.anular', 'module' => 'comprobantes', 'description' => 'Anular Factura en el Sistema']);
+        Permission::create(['name' => 'factura.pagar_solo', 'module' => 'comprobantes', 'description' => 'Pagar Factura en Comprobantes']);
 
         Permission::create(['name' => 'factura_m.listar', 'module' => 'comprobantes', 'description' => 'Lista de Facturas Manuales']);
         Permission::create(['name' => 'factura_m.crear', 'module' => 'comprobantes', 'description' => 'Crear Factura Manual']);
         Permission::create(['name' => 'factura_m.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Factura Manual']);
         Permission::create(['name' => 'factura_m.editar', 'module' => 'comprobantes', 'description' => 'Editar Factura Manual']);
         Permission::create(['name' => 'factura_m.anular', 'module' => 'comprobantes', 'description' => 'Anular Factura Manual en el Sistema']);
+        Permission::create(['name' => 'factura_m.pagar_solo', 'module' => 'comprobantes', 'description' => 'Pagar Factura Manual en Comprobantes']);
 
         Permission::create(['name' => 'boleta.listar', 'module' => 'comprobantes', 'description' => 'Lista de Boletas']);
         Permission::create(['name' => 'boleta.crear', 'module' => 'comprobantes', 'description' => 'Crear Boleta']);
         Permission::create(['name' => 'boleta.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Boleta']);
         Permission::create(['name' => 'boleta.editar', 'module' => 'comprobantes', 'description' => 'Editar Boleta']);
         Permission::create(['name' => 'boleta.anular', 'module' => 'comprobantes', 'description' => 'Anular Boleta en el Sistema']);
+        Permission::create(['name' => 'boleta.pagar_solo', 'module' => 'comprobantes', 'description' => 'Pagar Boleta en Comprobantes']);
 
         Permission::create(['name' => 'boleta_m.listar', 'module' => 'comprobantes', 'description' => 'Lista de Boletas Manuales']);
         Permission::create(['name' => 'boleta_m.crear', 'module' => 'comprobantes', 'description' => 'Crear Boleta Manual']);
         Permission::create(['name' => 'boleta_m.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Boleta Manual']);
         Permission::create(['name' => 'boleta_m.editar', 'module' => 'comprobantes', 'description' => 'Editar Boleta Manual']);
         Permission::create(['name' => 'boleta_m.anular', 'module' => 'comprobantes', 'description' => 'Anular Boleta Manual en el Sistema']);
+        Permission::create(['name' => 'boleta_m.pagar_solo', 'module' => 'comprobantes', 'description' => 'Pagar Boleta en Comprobantes']);
+
 
         Permission::create(['name' => 'nota_credito.listar', 'module' => 'comprobantes', 'description' => 'Lista de Notas de Crédito']);
-        Permission::create(['name' => 'nota_credito.crear', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito']);
+        Permission::create(['name' => 'nota_credito.crear_factura', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito para Factura']);
+        Permission::create(['name' => 'nota_credito.crear_factura_m', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito para Factura MN']);
+        Permission::create(['name' => 'nota_credito.crear_boleta', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito']);
+        Permission::create(['name' => 'nota_credito.crear_boleta_m', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito']);
         Permission::create(['name' => 'nota_credito.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Nota de Crédito']);
         Permission::create(['name' => 'nota_credito.editar', 'module' => 'comprobantes', 'description' => 'Editar Nota de Crédito']);
         Permission::create(['name' => 'nota_credito.anular', 'module' => 'comprobantes', 'description' => 'Anular Nota de Crédito en el Sistema']);
 
         Permission::create(['name' => 'nota_debito.listar', 'module' => 'comprobantes', 'description' => 'Lista de Notas de Débito']);
-        Permission::create(['name' => 'nota_debito.crear', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.crear_factura', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.crear_factura_m', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.crear_boleta', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.crear_boleta_m', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
         Permission::create(['name' => 'nota_debito.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Nota de Débito']);
         Permission::create(['name' => 'nota_debito.editar', 'module' => 'comprobantes', 'description' => 'Editar Nota de Débito']);
         Permission::create(['name' => 'nota_debito.anular', 'module' => 'comprobantes', 'description' => 'Anular Nota de Débito en el Sistema']);
