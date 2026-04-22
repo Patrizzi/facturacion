@@ -332,6 +332,7 @@
                 'orderable': false
             },
             {
+                'width': '15%',
                 'targets': [2],
                 'orderable': false,
                 'render': function (data, type, full, meta) {
@@ -386,7 +387,7 @@
                 'orderable': false
             },
             {
-                'width': '30%',
+                'width': '25%',
                 'targets': [4],
                 'orderable': false
             },

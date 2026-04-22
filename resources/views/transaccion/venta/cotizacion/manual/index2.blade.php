@@ -300,6 +300,7 @@
                     'orderable': false
                 },
                 {
+                    'width': '15%',
                     'targets': [2],
                     'orderable': false,
                     'render': function (data, type, full, meta) {
@@ -350,10 +351,11 @@
                     }
                 },
                 {
-                    'width': '30%',
+                    'width': '25%',
                     'targets': [4]
                 },
                 {
+                    'width': '12%',
                     'targets': [8],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
