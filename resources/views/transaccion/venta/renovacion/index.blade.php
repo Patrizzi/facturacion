@@ -116,12 +116,13 @@
                                                 <th>N°</th>
                                                 <th>RUC-DNI</th>
                                                 <th>Cliente</th>
-                                                <th>Fecha de Emisión</th>
-                                                <th>Fecha de Vencimiento</th>
-                                                <th>Tiempo de Vencimiento</th>
+                                                <th>Emisión</th>
+                                                <th>Vencimiento</th>
+                                                <th>Dias</th>
                                                 <th>Forma</th>
                                                 <th>Importe T.</th>
                                                 <th style="width: 0.5vmax !important">Acciones</th>
+                                                <th>Compartir R.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -132,6 +133,7 @@
                                                 <th colspan="9"></th>
                                                 <th class="total-columna">Total: 0</th>
                                                 <th class="total-total">Total G: 0</th>
+                                                <th></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -268,6 +270,18 @@
             var allSelectedIds = [];
             var masterChecked = false;
             var isUpdatingCheckboxes = false;
+
+            function hasAnySelection() {
+                return Array.isArray(allSelectedIds) && allSelectedIds.length > 0;
+            }
+
+            function closeWhatsappPanels() {
+                $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+            }
+
+            function closeEmailPanels() {
+                $('.email-form').removeClass('email-fixed').css('height', '0px');
+            }
 
             // Inicializar iCheck
             $('.i-checks').iCheck({
@@ -441,23 +455,93 @@
 
                         if (full[11] == '0') {
                             return `<a href="${url}">
-                                        <button type="button" class="btn btn-primary btn-sm">
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver">
                                             <i class="fa fa-eye"></i>
                                         </button>
                                     </a>
-                                    <button type="button" class="btn btn-warning btn-sm">
+                                    <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado">
                                         <i class="fa fa-clock-o"></i>
                                     </button>`;
                         } else {
                             return `<a href="${url}">
-                                        <button type="button" class="btn btn-primary btn-sm">
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver">
                                             <i class="fa fa-eye"></i>
                                         </button>
                                     </a>
-                                    <button type="button" class="btn btn-info btn-sm">
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar">
                                         <i class="fa fa-check-circle"></i>
                                     </button>`;
                         }
+                    }
+                },
+                {
+                    'targets': [11], // Compartir R.
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        const renovacionId = full[0];
+                        const codigoRenovacion = full[2];
+                        const celularCliente = full[13] || '';
+                        const emailCliente = full[14] || '';
+
+                        return `
+                            <div style="display: inline-block; white-space: nowrap;">
+                                <!-- Contenedor Correo -->
+                                <div class="email-container" data-id="${renovacionId}"
+                                    style="display: inline-block; position: relative; vertical-align: top; margin-right: 5px;">
+                                    <button type="button" class="btn btn-secondary" style="cursor: pointer;">
+                                        <i class="fa fa-envelope fa-lg"></i>
+                                    </button>
+                                    <div class="email-form" data-id="${renovacionId}"
+                                        style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                        overflow: hidden; transition: height .4s; background: white;
+                                        box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                        z-index: 9999; white-space: nowrap; min-width: 250px;">
+                                        <form class="form-enviar-email-renovacion" data-renovacion-id="${renovacionId}" style="padding: 10px;">
+                                            @csrf
+                                            <div style="margin-bottom: 5px;">
+                                                <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
+                                                    value="${emailCliente}"
+                                                    style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                            </div>
+                                            <div class="emails-adicionales-renovacion-${renovacionId}"></div>
+                                            <button type="button" class="btn-agregar-email-renovacion btn btn-info btn-xs" data-id="${renovacionId}"
+                                                    style="padding: 3px 8px; margin-bottom: 5px; font-size: 11px;">
+                                                <i class="fa fa-plus"></i> Agregar correo
+                                            </button>
+                                            <button type="submit" class="btn btn-secondary" style="padding: 5px 10px; float: right;">
+                                                <i class="fa fa-send fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Contenedor WhatsApp -->
+                                <div class="wsp-container" data-id="${renovacionId}"
+                                    style="display: inline-block; position: relative; vertical-align: top;">
+                                    <a class="btn btn-success" style="background: green; border-color: green; cursor: pointer;">
+                                        <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                                    </a>
+                                    <div class="wsp-form" data-id="${renovacionId}"
+                                        style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                        overflow: hidden; transition: height .4s; background: white;
+                                        box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                        z-index: 9999; white-space: nowrap;">
+                                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" target="_blank" style="padding: 10px;">
+                                            @csrf
+                                            <input type="tel" name="numero" placeholder="999999999" value="${celularCliente}"
+                                                style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                            <input type="text" name="mensaje" hidden />
+                                            <input type="hidden" name="url" value="{{ url('renovacion/pdf') }}/${renovacionId}">
+                                            <input type="hidden" name="name_sin_cambio" value="Renovacion_${codigoRenovacion}" />
+                                            <button type="submit" class="btn btn-success"
+                                                style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
+                                                <i class="fa fa-send fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        `.replace(':id', renovacionId);
                     }
                 }
             ],
@@ -710,6 +794,166 @@
                 console.log('IDs actualmente seleccionados:', allSelectedIds);
                 return allSelectedIds;
             };
+
+            // ============ WHATSAPP ============
+            $(document).on('click', '.wsp-container .btn-success', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWhatsappPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
+            });
+
+            // Fijar también cuando se hace clic dentro del formulario
+            $(document).on('click', '.wsp-form', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWhatsappPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).addClass('wsp-fixed').css('height', '50px');
+            });
+
+            $(document).on('submit', '.wsp-form form', function () {
+                const form = $(this).closest('.wsp-form');
+                form.removeClass('wsp-fixed').css('height', '0px');
+            });
+
+            // Cerrar al hacer clic fuera
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
+                    $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+                }
+            });
+
+            // ============ CORREO ============
+            $(document).on('click', '.email-container .btn-secondary', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEmailPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                const form = $(this).siblings('.email-form');
+                form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+
+            $(document).on('click', '.email-form', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEmailPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
+            });
+
+            // Cerrar al hacer clic fuera
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.email-container, .email-form').length) {
+                    $('.email-form').removeClass('email-fixed').css('height', '0px');
+                }
+            });
+
+            $(document).on('click', '.btn-agregar-email-renovacion', function () {
+                const renovacionId = $(this).data('id');
+                const container = $(`.emails-adicionales-renovacion-${renovacionId}`);
+
+                container.append(`
+                    <div style="margin-bottom: 5px; position: relative;">
+                        <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
+                            style="width: calc(100% - 30px); padding: 5px; border: 1px solid #ccc; border-radius: 3px;" />
+                        <button type="button" class="btn-eliminar-email-renovacion btn btn-danger btn-xs"
+                            style="padding: 3px 6px; position: absolute; right: 0; top: 0; height: 100%;">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                `);
+
+                const form = $(`.email-form[data-id="${renovacionId}"]`);
+                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+
+            $(document).on('click', '.btn-eliminar-email-renovacion', function () {
+                const form = $(this).closest('.email-form');
+                $(this).closest('div').remove();
+                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+            
+            $(document).on('submit', '.form-enviar-email-renovacion', function (e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const renovacionId = form.data('renovacion-id');
+                const button = form.find('button[type="submit"]');
+                const originalHtml = button.html();
+                const emailFormContainer = $(`.email-form[data-id="${renovacionId}"]`);
+
+                const emails = form.find('input[type="email"]').map(function () {
+                    return $(this).val();
+                }).get().filter(email => email.trim() !== '');
+
+                if (emails.length === 0) {
+                    toastr.warning('Debes ingresar al menos un correo electrónico', 'Atención');
+                    return;
+                }
+
+                button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+
+                toastr.info('<i class="fa fa-spinner fa-spin"></i> Preparando envío...', 'Procesando', {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    closeButton: false,
+                    tapToDismiss: false
+                });
+
+                const formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: "{{ route('renovacion.enviar-correo-directo', '') }}/" + renovacionId,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        toastr.clear();
+
+                        if (response.success) {
+                            emailFormContainer.removeClass('email-fixed').css('height', '0px');
+                            toastr.success(response.message, 'Correcto');
+                        } else {
+                            toastr.error(response.message || 'No se pudo procesar la solicitud', 'Error');
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.clear();
+
+                        let errorMsg = 'Error al procesar el correo';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+
+                        toastr.error(errorMsg, 'Error');
+                    },
+                    complete: function () {
+                        button.prop('disabled', false).html(originalHtml);
+                    }
+                });
+            });
         });
     </script>
 

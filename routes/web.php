@@ -1471,11 +1471,8 @@ Route::post('/guia_remision_manual/enviar-correo-multiple', [GuiaRemisionManualC
 // Rutas para envio multiple de correo de renocavion
 Route::post('/cotizacion/enviar-correo-multiple', [CotizacionController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.cotizacion.multiple');
-//seccion de renovacion de correo multiple
-Route::post('/cotizacion-renovacion/enviar-correo-multiple', [RenovacionController::class, 'enviarCorreoMultiple'])
-    ->name('envioCorreo.renovacion.multiple');
 
-    Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
+Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.cotizacionM.multiple');
 
 Route::post('/nota_venta/enviar-correo-multiple', [NotaVentaController::class, 'enviarCorreoMultiple'])
@@ -1491,9 +1488,22 @@ Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoC
 Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
     ->name('envioCorreo.garantia_informe_tecnico.multiple');
 
-
 Route::get('/servicio-tecnico/informe-tecnico/print/{id}', [ServicioGuiaInformeTecnicoController::class, 'print'])
     ->name('st_informe_tecnico.print');
 
 Route::get('/servicio-tecnico/informe-tecnico/pdf/{id}', [ServicioGuiaInformeTecnicoController::class, 'pdf'])
     ->name('st_informe_tecnico.pdf');
+
+//seccion de renovacion de correo multiple
+Route::post('/cotizacion-renovacion/enviar-correo-multiple', [RenovacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.renovacion.multiple');
+
+//seccion de compartir rapido para renovaciones
+Route::get('/renovacion/pdf/{id}', 'RenovacionController@pdf')
+    ->name('renovacion.pdf');
+Route::get('/renovacion/share/{codigo}', 'RenovacionController@descargarPorCodigo')
+    ->name('renovacion_codificada');
+Route::post('/renovacion/whatsapp/send-multiple', 'RenovacionController@whatsappSendMultiple')
+    ->name('envioWhatsapp.renovacion.multiple');
+Route::post('/renovacion/enviar-correo-directo/{id}', 'RenovacionController@enviarCorreoDirecto')
+    ->name('renovacion.enviar-correo-directo');

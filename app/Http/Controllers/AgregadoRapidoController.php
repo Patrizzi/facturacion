@@ -188,6 +188,7 @@ public function send_whatsapp(Request $request){
         'garantia_guia_ingreso' => '/garantia_guia_ingreso\/pdf\/(\d+)/',
         'garantia_guia_egreso' => '/garantia_guia_egreso\/pdf\/(\d+)/',
         'garantia_informe_tecnico' => '/garantia_informe_tecnico\/pdf\/(\d+)/',
+        'renovacion' => '/renovacion\/pdf\/(\d+)/',
     ];
 
     // Buscar tipo de documento y generar URL compartible
