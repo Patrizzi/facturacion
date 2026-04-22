@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row" style="justify-content: center;">>
+                        <div class="row" style="justify-content: center;">
                            @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>

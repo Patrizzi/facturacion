@@ -13,11 +13,12 @@
     </div>
 @endcan
 @canany(['cotizacion_m.listar','coti_renovacion.listar'])
+    @php $activeSet = false; @endphp
     <div class="col-lg-3 col-md-6 col-sm-6 slick_demo_1">
         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 @can('cotizacion_m.listar')
-                    <div class="carousel-item active">
+                    <div class="carousel-item {{ !$activeSet ? 'active' : '' }}">
                         <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                             <div
                                 style="border: 2px solid orange; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
@@ -30,9 +31,10 @@
                                 {{ $count_month_ventas['cotizacion_m_month_count']['total'] }}</p>
                         </div>
                     </div>
+                    @php $activeSet = true; @endphp
                 @endcan
                 @can('coti_renovacion.listar')
-                    <div class="carousel-item">
+                    <div class="carousel-item {{ !$activeSet ? 'active' : '' }}">
                         <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                             <div
                                 style="border: 2px solid gray; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">
@@ -45,16 +47,21 @@
                                 {{ $count_month_ventas['renovacion_month_count']['total'] ?? 'S/ 0.00' }}</p>
                         </div>
                     </div>
+                    @php $activeSet = true; @endphp
                 @endcan
             </div>
-            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
+            @can('cotizacion_m.listar')
+                @can('coti_renovacion.listar')
+                    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                @endcan
+            @endcan
         </div>
     </div>
 @endcan

@@ -387,12 +387,17 @@ class Ventas_registroController extends Controller
                 'cotizacion.cliente',
                 'cotizacion.moneda',
                 'cotizacion.forma_pago'
-            ])
-            ->where(function($q) {
-                $q->whereHas('cotizacionManual')
-                ->orWhereHas('cotizacion');
-            })
-            ->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate])
+            ]);
+        $query->where(function ($q) {
+            if (auth()->user()->can('cotizacion_m.listar')) {
+                $q->orWhereHas('cotizacionManual');
+            }
+
+            if (auth()->user()->can('cotizacion.listar')) {
+                $q->orWhereHas('cotizacion');
+            }
+        });
+        $query->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate])
             ->orderBy('renovacion_ventas.created_at', 'desc');
 
         // FILTROS
