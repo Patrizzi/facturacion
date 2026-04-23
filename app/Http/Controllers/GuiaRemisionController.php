@@ -399,6 +399,7 @@ class GuiaRemisionController extends Controller
                 $guia_remision_registro->descripcion = $request->get('descripcion')[$i];
                 $guia_remision_registro->guia_remision_id = $guia_remision->id;
                 $guia_remision_registro->estado = 1;
+                // Este peso es el total (cantidad x peso del front)
                 $guia_remision_registro->peso = $request->get('peso')[$i];
                 $guia_remision_registro->save();
 
