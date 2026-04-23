@@ -5,7 +5,6 @@
                 <div class="ibox-title" style="display: flex; align-items: center;">
                     <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
                 </div>
-
                 <div class="ibox-content">
                     {{-- Acá iria el tema del contenido --}}
                     <div class="card-group">
@@ -14,7 +13,7 @@
                                 <div class="d-flex justify-content-center align-items-center card-img-top">
                                     <div class="bg-primary rounded-circle d-flex justify-content-center align-items-center"
                                         style="width: 80px; height: 80px; font-size: 3rem;">
-                                        <i class="bi bi-cloud-arrow-down-fill text-white"></i>
+                                        <i class="fa fa-cloud text-white"></i>
                                     </div>
                                 </div>
                                 <div class="card-body text-center">
@@ -32,7 +31,7 @@
                                 <div class="d-flex justify-content-center align-items-center card-img-top">
                                     <div class="bg-success rounded-circle d-flex justify-content-center align-items-center"
                                         style="width: 80px; height: 80px; font-size: 3rem;">
-                                        <i class="bi bi-cloud-check-fill text-white"></i>
+                                        <i class="fa fa-cloud text-white"></i>
                                     </div>
                                 </div>
                                 <div class="card-body text-center">
@@ -50,7 +49,7 @@
                                 <div class="d-flex justify-content-center align-items-center card-img-top">
                                     <div class="bg-warning rounded-circle d-flex justify-content-center align-items-center"
                                         style="width: 80px; height: 80px; font-size: 3rem;">
-                                        <i class="bi bi-clipboard2-data-fill text-white"></i>
+                                        <i class="fa fa-paperclip text-white"></i>
                                     </div>
                                 </div>
                                 <div class="card-body text-center">

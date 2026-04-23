@@ -117,14 +117,15 @@
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
                                                     <th>Código Interno</th>
+                                                    <th>RUC</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha de Compra</th>
                                                     <th>Equipo</th>
                                                     <th>Marca</th>
                                                     <th>Serie</th>
-                                                    <th>Cliente</th>
-                                                    <th>RUC</th>
-                                                    <th>Fecha</th>
-                                                    <th>Ver</th>
-                                                    <th>Estado</th>
+                                                    <th>@can('guia_egreso.ver') Ver @endcan</th>
+                                                    <th>@canany(['guia_egreso.anular','guia_egreso.procesar']) Acciones @endcan</th>
+                                                    <th>Información</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -137,7 +138,26 @@
             </div>
         </div>
     </div>
-
+    <div id="modal-anular" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row" align="center">
+                            <div class="col-sm-12 b-r">
+                                <h3 class="m-t-none m-b">¿Seguro que desea anular la guía <strong><span
+                                            id="valor_ind"></span></strong>?</h3>
+                                <p>Esta guía se anulará inmediatamente. Esta acción no se puede deshacer</p>
+                                <form id="formulario_anular" action=" {{ route('garantia_guia_egreso.update', ':id') }} "
+                                    enctype="multipart/form-data" method="post">
+                                    @csrf @method('PATCH')
+                                    <center><button type="submit" class="btn btn-w-m btn-danger">Anular</button></center>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     <style>
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
@@ -222,7 +242,9 @@
     });
 
     $('#tab-2').addClass('active');
-
+    let permiso_ver = false;
+    let permiso_anular = false;
+    let permiso_procesar = false;
     var coti_table = $('.dataTables-egreso').DataTable({
         "serverSide": true,
         "ajax": {
@@ -233,6 +255,12 @@
                 d.marca = $('#marcas_filter').val();
                 d.procesado = $('#procesado_filter').val();
                 d.value = $('#search_all_column').val();
+            },
+            dataSrc: function(json) {
+                permiso_ver = json.permiso_ver;
+                permiso_anular = json.permiso_anular;
+                permiso_procesar = json.permiso_procesar;
+                return json.data;
             }
         },
         "drawCallback": function(settings) {
@@ -242,7 +270,7 @@
             updateSelectionCounter();
         },
         "columnDefs": [{
-                'width': '1vmax',
+                'width': '1%',
                 'targets': [0],
                 'orderable': false,
                 'render': function(data, type, full, meta) {
@@ -250,31 +278,35 @@
                 }
             },
             {
-                'width': '5%',
+                'width': '2%',
                 'targets': [1],
             },
             {
-                'width': '10%',
+                'width': '7%',
                 'targets': [2],
             },
             {
+                'width': '5%',
                 'targets': [3],
             },
             {
+                'width': '17%',
                 'targets': [4],
             },
             {
+                'width': '8%',
                 'targets': [5],
             },
             {
+                'width': '14%',
                 'targets': [6],
             },
-            {
-                'width': '25%',
+            {   
+                'width': '8%',
                 'targets': [7],
             },
             {
-                'width': '25%',
+                'width': '15%',
                 'targets': [8],
             },
             {
@@ -284,13 +316,17 @@
                 'render': function(data, type, full, meta) {
                     var url = '{{ route('garantia_guia_egreso.show', ':id') }}';
                     url = url.replace(':id', full[0]);
-                    return `<div class="tooltip-demo">
-                        <a href="${url}">
-                            <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
-                                <i class="fa fa-eye"></i>
-                            </button>
-                        </a>
-                    </div>`;
+                    let button_show = ``;
+                    if(permiso_ver){
+                        button_show = `<div class="tooltip-demo">
+                                <a href="${url}">
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ver">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
+                            </div>`;
+                    }
+                    return button_show;
                 }
             },
             {
@@ -298,20 +334,43 @@
                 'orderable': false,
                 'width': '5%',
                 'render': function(data, type, full, meta) {
-                    if (full[9] == 1) {
-                        return `
-                        <button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>
-
-                        `;
-                    } else {
-                        var url = '{{ route('garantia_informe_tecnico.create_tecnico', ':id') }}';
-                        url = url.replace(':id', full[0]);
-                        return `
-                        <div class="d-flex justify-content-center align-items-center">
-                            <button class="btn btn-warning btn-circle btn-ls"><i class="fa fa-exclamation-circle" style="color:white;font-size: 110%"></i></button>
-                            <a href="${url}"><button type="button" class="btn btn-info"><i class="fa fa-sign-in"></i></button></a>
-                        </div>
-                        `;
+                        var html_fin = ``;
+                        // Accion de Eliminar
+                        html_fin += `<div style="display: flex;column-gap: 10px;">`
+                        if(permiso_anular){
+                            if(full[11] == 1 && full[12] == 0){
+                                html_fin += `<a data-toggle="modal" class="btn btn-danger btn-circle btn-sm" onclick="anular_guia(` + full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                            }else{
+                                html_fin += `<a data-toggle="modal" class="btn btn-default btn-circle btn-sm disabled" style="background-color:gray;"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                            }
+                        }
+                        if(permiso_procesar){
+                        // Accion de Procesar
+                            if(full[10] == 1 && full[12] == 0 ){
+                                var url = '{{ route('garantia_informe_tecnico.create_tecnico', ':id') }}'
+                                url = url.replace(':id', full[0]);
+                                html_fin += `<a href="${url}"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-sign-in"></i></button>`;
+                            }else{
+                                html_fin += `<a href="#"><button type="button" class="btn btn-default btn-sm disabled" style="background-color:gray;"><i class="fa fa-sign-in"></i></button>`;
+                            }
+                        }
+                        html_fin += `</div>`
+                        return html_fin;
+                    }
+            },
+            {
+                'targets': [11],
+                'orderable': false,
+                'width': '5%',
+                'render': function(data, type, full, meta) {
+                    if(full[12] == 1){
+                        return `<button class="btn btn-success btn-circle btn-sm" title="Guia Procesada"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`
+                    }else{
+                        if(full[10] == 1){
+                            return `<button class="btn btn-warning btn-circle btn-sm" title="Guia sin Procesar"><i class="fa fa-clock-o" style="color:white;font-size: 110%"></i></button>`
+                        }else{
+                            return `<button class="btn btn-danger btn-circle btn-sm" title="Guia Anulada"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`
+                        }
                     }
                 }
             }

@@ -981,8 +981,6 @@ class ApiController extends Controller
                 $value->id,
                 $value->id,
                 $value->codigo_interno,
-                // $value->motivo,
-                // $value->asunto,
                 $value->nombre_equipo,
                 $value->marcas_i->nombre,
                 $value->numero_serie,
@@ -994,7 +992,9 @@ class ApiController extends Controller
                 $value->egresado,
             ];
         }
-
+        $json['permiso_ver'] = auth()->user()->can('guia_ingreso.ver');
+        $json['permiso_anular'] = auth()->user()->can('guia_ingreso.anular');
+        $json['permiso_procesar'] = auth()->user()->can('guia_ingreso.procesar');
         return response()->json($json);
     }
 
@@ -1148,16 +1148,21 @@ class ApiController extends Controller
                 $value->id, // [0]
                 $value->id, // [1]
                 $value->cod_interno, // [2]
-                $value->equipo, // [3]
-                $value->marca, // [4]
-                $value->serie, // [5]
-                $value->cliente, // [6]
-                $value->ruc, // [7]
-                $value->fecha, // [8]
+                $value->ruc, // [3]
+                $value->cliente, // [5]
+                $value->fecha, // [5]
+                $value->equipo, // [6]
+                $value->marca, // [7]
+                $value->serie, // [8]
                 $value->id, // [9]
-                $value->informe_tecnico, // [10]
+                $value->estado, // [10]
+                $value->egresado, // [11]
+                $value->informe_tecnico, // [12]
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('guia_egreso.ver');
+        $json['permiso_anular'] = auth()->user()->can('guia_egreso.anular');
+        $json['permiso_procesar'] = auth()->user()->can('guia_egreso.procesar');
 
         return response()->json($json);
     }

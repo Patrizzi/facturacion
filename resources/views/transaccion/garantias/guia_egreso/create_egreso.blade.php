@@ -7,205 +7,205 @@
 @section('value_accion', 'Atras')
 
 @section('content')
-<style>
-    .form-control{margin-top: 10px;}
-</style>
-<div class="wrapper wrapper-content animated fadeInRight">
-    <form action="{{route('garantia_guia_egreso.store')}}"  enctype="multipart/form-data" method="post">
-    @csrf
-    <div class="ibox-title">
-        {{-- <strong class="col-auto" style="font-size: 16px; margin-left: 9px;">GUÍA DE EGRESO</strong>
-        <strong class="col-auto" style="font-size: 16px;">{{$garantias_guias_ingresos->orden_servicio}}</strong> --}}
-        <h3 class="col-auto">GUÍA DE EGRESO {{$garantias_guias_ingresos->orden_servicio}}</h3>
-        <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
-            <a class="" href="{{ route('garantia_guia_ingreso.index') }}">
-                <i class="fa fa-times"></i>
-            </a>
-        </div>
-    </div>
-    <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
-    {{-- <br> --}}
-      {{-- <div class="row" style="height: 120px">
-        <div class="col-sm-4 text-left" align="left">
-            <div class="form-control" align="center" style="height: 79%;" align="left">
-                <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="height: 70px;width: 90%;margin-top: 5px">
-            </div>
-        </div>
-        <div class="col-sm-4" align="center">
-            <div class="form-control" align="center" style="height: 79%;" align="center"  >
-                <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantias_guias_ingresos->marcas_i->imagen)}}" style="height: 70px;width: 90%;margin-top: 5px">
-            </div>
-        </div>
-        <div class="col-sm-4" align="right" >
-            <div class="form-control" align="center" style="height: 79%;"align="right">
-                <h3 style="">R.U.C {{$empresa->ruc}}</h3>
-                <h2 style="font-size: 19px">GUIA DE EGRESO</h2>
-                <h5>{{$garantias_guias_ingresos->orden_servicio}}</h5>
-            </div>
-        </div>
-    </div> --}}
-    {{-- <br> --}}
-    <div class="row">
-       <div class="col-sm-6" align="center" >
-        <div class="form-control">
-            <h3>Datos Generales </h3>
-            <br>
-            <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-              <label class="col-sm-2 col-form-label">Asunto:</label>
-              <div class="col-sm-4">
-               <input type="text" class="form-control" value="{{$garantias_guias_ingresos->asunto}}" disabled="disabled">
-           </div>
-           <label class="col-sm-2 col-form-label">Técnico Asignado:</label>
-           <div class="col-sm-4">
-            <input type="text" class="form-control" disabled="disabled"value="{{$garantias_guias_ingresos->personal_laborales->nombres}}">
-        </div>
-        <label class="col-sm-2 col-form-label">Motivo:</label>
-        <div class="col-sm-4">
-         <input type="text" class="form-control" value="{{$garantias_guias_ingresos->motivo}}" disabled="disabled">
-     </div>
-     <label class="col-sm-2 col-form-label">Fecha:</label>
-     <div class="col-sm-4">
-      <input type="text" class="form-control"  value="{{date('Y-m-d')}}" disabled="disabled">
-  </div>
-</div>
-<br>
-</div>
-</div>
-<div class="col-sm-6" align="center">
-  <div class="form-control">
-   <h3>Datos del Cliente</h3>
-   <br>
-   <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-    <label class="col-sm-2 col-form-label">Nombre:</label>
-    <div class="col-sm-4">
-        <input type="text" class="form-control" value="{{$garantias_guias_ingresos->clientes_i->nombre}}" disabled="disabled">
-    </div>
-    <label class="col-sm-2 col-form-label">Teléfono:</label>
-    <div class="col-sm-4">
-     <input type="text" class="form-control" value="{{$garantias_guias_ingresos->clientes_i->telefono}}" disabled="disabled">
- </div>
- <label class="col-sm-2 col-form-label">Correo:</label>
- <div class="col-sm-10">
-   <input type="text" class="form-control" value="{{$garantias_guias_ingresos->clientes_i->email}}" disabled="disabled">
-</div>
-</div>
-<br>
-</div>
-</div>
-<div class="col-sm-12" align="center">
-  <br>
-  <div class="form-control">
-   <h3>Datos del Equipo</h3>
-   <br>
-   <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-    <label class="col-sm-2 col-form-label">Modelo:</label>
-    <div class="col-sm-4">
-     <input type="text" class="form-control" value="{{$garantias_guias_ingresos->nombre_equipo}}" disabled="disabled">
-     <input type="hidden" name="id" value="{{$id}}" readonly="" hidden="hidden">
- </div>
- <label class="col-sm-2 col-form-label"> Nro. Serie:</label>
- <div class="col-sm-4">
-     <input type="text" class="form-control" value="{{$garantias_guias_ingresos->numero_serie}}" disabled="disabled">
- </div>
- <label class="col-sm-2 col-form-label">Código Interno:</label>
- <div class="col-sm-4">
-     <input type="text" class="form-control" value="{{$garantias_guias_ingresos->codigo_interno}}" disabled="disabled">
- </div>
- <label class="col-sm-2 col-form-label">Fecha Compra:</label>
- <div class="col-sm-4">
-   <input type="text" class="form-control" value="{{$garantias_guias_ingresos->fecha_compra}}" disabled="disabled">
-</div>
-</div>
-<br>
-</div>
-</div>
+    <style>
+        .form-control {
+            margin-top: 10px;
+        }
+    </style>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <form action="{{ route('garantia_guia_egreso.store') }}" enctype="multipart/form-data" method="post">
+            @csrf
+            <div class="ibox-title">
 
-<div class="col-sm-12" align="center">
-  <br>
-  <div class="form-control">
-     <h3>Informe del Problema</h3>
-     <br>
-
-     <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-        <div class="col-lg-12">
-            <div class="tabs-container">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripción del Problema</a></li>
-                    <li><a class="nav-link" data-toggle="tab" href="#tab-2">Diagnóstico y Solucion</a></li>
-                    <li><a class="nav-link" data-toggle="tab" href="#tab-3">Recomendaciones</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div role="tabpanel" id="tab-1" class="tab-pane active">
-                        <div class="panel-body">
-                            <textarea class="form-control" rows="10" placeholder="Escribir aqui Descripcion Del Problema" name="descripcion_problema" maxlength="1230" required ></textarea>
+                <h3 class="col-auto">GUÍA DE EGRESO {{ $garantias_guias_ingresos->orden_servicio }}</h3>
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="" href="{{ route('garantia_guia_ingreso.index') }}">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content p-xl" style=" margin-bottom: 2px;padding-bottom: 50px;">
+                <div class="row">
+                    <div class="col-sm-6" align="center">
+                        <div class="form-control">
+                            <h3>Datos Generales </h3>
+                            <br>
+                            <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
+                                <label class="col-sm-2 col-form-label">Asunto:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->asunto }}" disabled="disabled">
+                                </div>
+                                <label class="col-sm-2 col-form-label">Técnico Asignado:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        disabled="disabled"value="{{ $garantias_guias_ingresos->personal_laborales->nombres }}">
+                                </div>
+                                <label class="col-sm-2 col-form-label">Motivo:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->motivo }}" disabled="disabled">
+                                </div>
+                                <label class="col-sm-2 col-form-label">Fecha:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" value="{{ date('Y-m-d') }}"
+                                        disabled="disabled">
+                                </div>
+                            </div>
+                            <br>
                         </div>
                     </div>
-                    <div role="tabpanel" id="tab-2" class="tab-pane">
-                        <div class="panel-body">
-                            <textarea class="form-control" rows="10" placeholder="Escribir aqui Diagnostico y Solucion" name="diagnostico_solucion" maxlength="1230" required ></textarea>
+                    <div class="col-sm-6" align="center">
+                        <div class="form-control">
+                            <h3>Datos del Cliente</h3>
+                            <br>
+                            <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
+                                <label class="col-sm-2 col-form-label">Nombre:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->clientes_i->nombre }}" disabled="disabled">
+                                </div>
+                                <label class="col-sm-2 col-form-label">Teléfono:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->clientes_i->telefono }}" disabled="disabled">
+                                </div>
+                                <label class="col-sm-2 col-form-label">Correo:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->clientes_i->email }}" disabled="disabled">
+                                </div>
+                            </div>
+                            <br>
                         </div>
                     </div>
-                    <div role="tabpanel" id="tab-3" class="tab-pane">
-                        <div class="panel-body">
-                            <textarea class="form-control" rows="10" placeholder="Escribir aqui las recomendaciones" name="recomendaciones" maxlength="1230" required></textarea>
+                    <div class="col-sm-12" align="center">
+                        <br>
+                        <div class="form-control">
+                            <h3>Datos del Equipo</h3>
+                            <br>
+                            <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
+                                <label class="col-sm-2 col-form-label">Modelo:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->nombre_equipo }}" disabled="disabled">
+                                    <input type="hidden" name="id" value="{{ $id }}" readonly=""
+                                        hidden="hidden">
+                                </div>
+                                <label class="col-sm-2 col-form-label"> Nro. Serie:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->numero_serie }}" disabled="disabled">
+                                </div>
+                                <label class="col-sm-2 col-form-label">Código Interno:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->codigo_interno }}" disabled="disabled">
+                                </div>
+                                <label class="col-sm-2 col-form-label">Fecha Compra:</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control"
+                                        value="{{ $garantias_guias_ingresos->fecha_compra }}" disabled="disabled">
+                                </div>
+                            </div>
+                            <br>
                         </div>
+                    </div>
+
+                    <div class="col-sm-12" align="center">
+                        <br>
+                        <div class="form-control">
+                            <h3>Informe del Problema</h3>
+                            <br>
+
+                            <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
+                                <div class="col-lg-12">
+                                    <div class="tabs-container">
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Descripción
+                                                    del Problema</a></li>
+                                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">Diagnóstico y
+                                                    Solucion</a></li>
+                                            <li><a class="nav-link" data-toggle="tab" href="#tab-3">Recomendaciones</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div role="tabpanel" id="tab-1" class="tab-pane active">
+                                                <div class="panel-body">
+                                                    <textarea class="form-control" rows="10" placeholder="Escribir aqui Descripcion Del Problema"
+                                                        name="descripcion_problema" maxlength="1230" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" id="tab-2" class="tab-pane">
+                                                <div class="panel-body">
+                                                    <textarea class="form-control" rows="10" placeholder="Escribir aqui Diagnostico y Solucion"
+                                                        name="diagnostico_solucion" maxlength="1230" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div role="tabpanel" id="tab-3" class="tab-pane">
+                                                <div class="panel-body">
+                                                    <textarea class="form-control" rows="10" placeholder="Escribir aqui las recomendaciones" name="recomendaciones"
+                                                        maxlength="1230" required></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <button id="btn_grabar_egreso" class="btn btn-xl btn-primary float-right m-t-n-xs"
+                            type="button">
+                            <strong>Grabar</strong>
+                        </button>
+                        <button type="submit" id="submit_hidden_egreso" hidden></button>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</div>
-<br>
-<button id="btn_grabar_egreso" class="btn btn-xl btn-primary float-right m-t-n-xs" type="button">
-    <strong>Grabar</strong>
-</button>
-<button type="submit" id="submit_hidden_egreso" hidden></button></div>
-</div>
-</div>
-</form>
-</div>
 
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
-<!-- Custom and plugin javascript -->
-<script src="{{ asset('js/inspinia.js') }}"></script>
-<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-<script>
-    let enviandoEgreso = false;
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script>
+        let enviandoEgreso = false;
 
-    $('#btn_grabar_egreso').on('click', function () {
-        if (enviandoEgreso) return;
+        $('#btn_grabar_egreso').on('click', function() {
+            if (enviandoEgreso) return;
 
-        const form = this.closest('form');
+            const form = this.closest('form');
 
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
 
-        enviandoEgreso = true;
+            enviandoEgreso = true;
 
-        $(this).prop('disabled', true);
-        $(this).html('<strong>Guardando...</strong>');
+            $(this).prop('disabled', true);
+            $(this).html('<strong>Guardando...</strong>');
 
-        $('#submit_hidden_egreso').click();
-    });
+            $('#submit_hidden_egreso').click();
+        });
 
-    window.addEventListener('pageshow', function () {
-        enviandoEgreso = false;
-        $('#btn_grabar_egreso').prop('disabled', false).html('<strong>Grabar</strong>');
-    });
+        window.addEventListener('pageshow', function() {
+            enviandoEgreso = false;
+            $('#btn_grabar_egreso').prop('disabled', false).html('<strong>Grabar</strong>');
+        });
 
-    $('form').on('keydown', function(e){
-        if(e.key === 'Enter'){
-            e.preventDefault();
-            return false;
-        }
-    });
-</script>
+        $('form').on('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
 
 @stop
