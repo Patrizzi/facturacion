@@ -239,25 +239,27 @@
                         </div>
                     </div>
 
-                    <button type="button"
-                            class="btn btn-warning btn-editar"
-                            id="edit"
-                            onclick="click_editar()"
-                            data-toggle="tooltip"
-                            data-placement="bottom"
-                            data-original-title="Editar cotización"
-                            style="white-space: nowrap;">
-                        <i class="fa fa-pencil"></i>
-                    </button>
-                    <button type="button"
-                            class="btn-no-editar no_mostrar btn btn-warning"
-                            onclick="click_cancelar_editar()"
-                            data-toggle="tooltip"
-                            data-placement="bottom"
-                            data-original-title="Cancelar edición"
-                            style="white-space: nowrap;">
-                        <i class="fa fa-times"></i>
-                    </button>
+                    @if(is_null($factura))
+    <button type="button"
+            class="btn btn-warning btn-editar"
+            id="edit"
+            onclick="click_editar()"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            data-original-title="Editar cotización"
+            style="white-space: nowrap;">
+        <i class="fa fa-pencil"></i>
+    </button>
+    <button type="button"
+            class="btn-no-editar no_mostrar btn btn-warning"
+            onclick="click_cancelar_editar()"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            data-original-title="Cancelar edición"
+            style="white-space: nowrap;">
+        <i class="fa fa-times"></i>
+    </button>
+@endif
                 </div>
 
                 <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 15px;">
@@ -498,10 +500,10 @@
                                                     <div class="row" style="margin: 0;">
                                                         <div class="col-sm-7" style="padding-left: 0;">
                                                             <label style="font-size:11px; color:#676a6c; margin-bottom:3px;">Nueva Fecha de Renovación</label>
-                                                            <input 
-                                                                type="date" 
-                                                                id="fecha_vencimiento" 
-                                                                name="fecha_vencimiento" 
+                                                            <input
+                                                                type="date"
+                                                                id="fecha_vencimiento"
+                                                                name="fecha_vencimiento"
                                                                 class="form-control form-control-sm"
                                                                 min="{{ $renovacion ? $renovacion->fecha_vencimiento->format('Y-m-d') : now()->addDay()->format('Y-m-d') }}"
                                                             >
