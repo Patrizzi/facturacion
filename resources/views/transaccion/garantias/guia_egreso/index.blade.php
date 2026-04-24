@@ -348,7 +348,7 @@
                             // Accion de Eliminar
                             html_fin += `<div style="display: flex;column-gap: 10px;">`
                             if (permiso_anular) {
-                                if (full[11] == 1 && full[12] == 0) {
+                                if (full[11] == 1 && full[10] == 1 && full[12] == 0  ) {
                                     html_fin +=
                                         `<a data-toggle="modal" class="btn btn-danger btn-circle btn-sm" onclick="anular_guia(` +
                                         full[0] + `, '` + full[2] +

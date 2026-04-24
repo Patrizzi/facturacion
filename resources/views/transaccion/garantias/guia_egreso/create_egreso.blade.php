@@ -31,24 +31,24 @@
                             <h3>Datos Generales </h3>
                             <br>
                             <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-                                <label class="col-sm-2 col-form-label">Asunto:</label>
+                                <label class="col-sm-2 col-form-label"><strong>Asunto: </strong></label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->asunto }}" disabled="disabled">
                                 </div>
-                                <label class="col-sm-2 col-form-label">Técnico Asignado:</label>
+                                <label class="col-sm-2 col-form-label"><strong>Técnico Asignado: </strong></label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         disabled="disabled"value="{{ $garantias_guias_ingresos->personal_laborales->nombres }}">
                                 </div>
-                                <label class="col-sm-2 col-form-label">Motivo:</label>
+                                <label class="col-sm-2 col-form-label"><strong>Motivo: </strong></label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->motivo }}" disabled="disabled">
                                 </div>
-                                <label class="col-sm-2 col-form-label">Fecha:</label>
+                                <label class="col-sm-2 col-form-label"><strong>Fecha: </strong></label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control" value="{{ date('Y-m-d') }}"
+                                    <input type="text" class="form-control" value="{{ date('d-m-Y') }}"
                                         disabled="disabled">
                                 </div>
                             </div>
@@ -60,17 +60,17 @@
                             <h3>Datos del Cliente</h3>
                             <br>
                             <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-                                <label class="col-sm-2 col-form-label">Nombre:</label>
+                                <label class="col-sm-2 col-form-label"><strong>Nombre: </strong></label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->clientes_i->nombre }}" disabled="disabled">
                                 </div>
-                                <label class="col-sm-2 col-form-label">Teléfono:</label>
+                                <label class="col-sm-2 col-form-label"><strong>Teléfono: </strong></label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->clientes_i->telefono }}" disabled="disabled">
                                 </div>
-                                <label class="col-sm-2 col-form-label">Correo:</label>
+                                <label class="col-sm-2 col-form-label"><strong>Correo: </strong></label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->clientes_i->email }}" disabled="disabled">
@@ -85,24 +85,24 @@
                             <h3>Datos del Equipo</h3>
                             <br>
                             <div align="left" class="row" style="padding-right:10px; padding-left: 10px;">
-                                <label class="col-sm-2 col-form-label">Modelo:</label>
+                                <label class="col-sm-2 col-form-label"> <strong>Modelo: </strong> </label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->nombre_equipo }}" disabled="disabled">
                                     <input type="hidden" name="id" value="{{ $id }}" readonly=""
                                         hidden="hidden">
                                 </div>
-                                <label class="col-sm-2 col-form-label"> Nro. Serie:</label>
+                                <label class="col-sm-2 col-form-label"> <strong> Nro. Serie: </strong> </label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->numero_serie }}" disabled="disabled">
                                 </div>
-                                <label class="col-sm-2 col-form-label">Código Interno:</label>
+                                <label class="col-sm-2 col-form-label"> <strong>Código Interno: </strong> </label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->codigo_interno }}" disabled="disabled">
                                 </div>
-                                <label class="col-sm-2 col-form-label">Fecha Compra:</label>
+                                <label class="col-sm-2 col-form-label"> <strong>Fecha Compra: </strong> </label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control"
                                         value="{{ $garantias_guias_ingresos->fecha_compra }}" disabled="disabled">

@@ -146,6 +146,7 @@ class GarantiaGuiaIngresoController extends Controller
 
     public function store(Request $request)
     {
+        // return $request;
         // Cod-Guia
         $marca_id = $request->input('marca_id');
         $marca_cantidad = GarantiaGuiaIngreso::where("marca_id", "=", $marca_id)->count();
