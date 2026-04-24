@@ -154,16 +154,19 @@ class PermissionsTableSeeder extends Seeder
         
         Permission::create(['name' => 'kardex_entrada.inicial', 'module' => 'inventario', 'description' => 'Entrada del Inventario Inicial']);
         
+        // ALMACEN 1
         Permission::create(['name' => 'kardex_entrada.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Entrada en Kardex']);
         Permission::create(['name' => 'kardex_entrada.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Entrada en Kardex']);
         Permission::create(['name' => 'kardex_entrada.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Entrada en Kardex']);
         Permission::create(['name' => 'kardex_entrada.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Entrada en Kardex']);
 
+        // ALMACEN 1 A X
         Permission::create(['name' => 'kardex_distribución.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Distribución en Kardex']);
         Permission::create(['name' => 'kardex_distribución.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Distribución en Kardex']);
         Permission::create(['name' => 'kardex_distribución.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Distribución en Kardex']);
         Permission::create(['name' => 'kardex_distribución.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Distribución en Kardex']);
 
+        // ALMACEN X A X
         Permission::create(['name' => 'kardex_traslado.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Traslado en Kardex']);
         Permission::create(['name' => 'kardex_traslado.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Traslado en Kardex']);
         Permission::create(['name' => 'kardex_traslado.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Traslado en Kardex']);

@@ -1,6 +1,11 @@
-<li class="nav-item nav-custom">
-    <a class="nav-link" href="{{ route('kardex-entrada.index') }}" id="tab-1">
-        <span style="color: white; background-color: var(--primary);font-size: 90%" class="px-1">0</span>
-        Entradas
-    </a>
-</li>
+<div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
+    @can('kardex_entrada.crear')
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('comprobantes.index_boleta') }}" id="tab-1-tab">
+                <span class="badge badge-success"
+                    style="background-color : var(--primary);">0</span>
+                Kardex Entrada
+            </a>
+        </li>
+    @endcan
+</div>

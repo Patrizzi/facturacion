@@ -76,7 +76,7 @@
                                             @endif
                                         @endcan
                                         <div class="btn-group">
-                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">

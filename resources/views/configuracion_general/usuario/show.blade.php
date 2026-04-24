@@ -84,7 +84,7 @@
                                                     id="celular">
                                             </div>
                                             <label class="col-sm-2 col-form-label"><strong>Asig. Almacen:</strong></label>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-3">
                                                 <select class="form-control" name="almacen_id" id="almacen_id">
                                                     <option value="todos">Todos</option>
                                                     @foreach ($almacen as $almacens)
@@ -96,8 +96,6 @@
                                             </div>
                                             <label class="col-sm-2 col-form-label"><strong>Rol Actual:</strong></label>
                                             <div class="col-sm-4" style="padding-bottom: 10px">
-                                                {{-- <input type="text" class="form-control" value="{{$user->getRoleNames()->first()}}"
-                                                    name="" id="" readonly> --}}
                                                 <select name="rol_actual" id="rol_actual" class="form-control">
                                                     @foreach ($roles as $rol)
                                                         <option value="{{ $rol->id }}"
@@ -119,7 +117,27 @@
                                                 </div>
                                                 <small>Activo</small>
                                             </div>
-                                            <div class="col-sm-12" id="div_button_save"
+                                            {{-- Control total de Inventario --}}
+                                            <label class="col-sm-2 col-form-label" id="control_total_label" style="display: none"><strong>Subida de Productos en Kardex:</strong></label>
+                                            <div class="col-sm-3"
+                                                style="display: none;align-items: center;column-gap: 17px;" id="control_total_div">
+                                                <small>Desactivado</small>
+                                                <div class="switch-button">
+                                                    <input type="checkbox" name="check_kardex_total" id="switch-label2"
+                                                        class="switch-button__checkbox"
+                                                        @if ($user->check_kardex_total == 1) checked="" @endif>
+                                                    <label for="switch-label2" class="switch-button__label"></label>
+                                                </div>
+                                                <small>Activo</small>
+                                            </div>
+                                            <div class="col-sm-1" id="info_kardex_especifico" style="display: none">
+                                                <div class="tooltip-demo text-center">
+                                                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Si esta opcion está activa, el usuario va a tener ">
+                                                        <i class="fa fa-info-circle"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col" id="div_button_save"
                                                 @if ($user->roles->first()?->type == 1) style="display: none" @endif>
                                                 <button type="submit" class="btn btn-primary btn-block"
                                                     style="width: 50%;margin: auto;margin-top: 8px">Guardar</button>
@@ -668,6 +686,21 @@
             });
         });
 
+        $('#almacen_id').on('change', function(){
+            console.log($(this).val());
+
+            if( $(this).val() == 1 || $(this).val() == "todos" ){
+                $('#info_kardex_especifico').css('display', 'none');
+                $('#control_total_label').css('display', 'none');
+                $('#control_total_div').css('display', 'none');
+            }else{
+                $('#info_kardex_especifico').css('display', 'flex');
+                $('#control_total_label').css('display', 'flex');
+                $('#control_total_div').css('display', 'flex');
+                
+            }
+        });
+        
         function check_modulo(el, modulo) {
             let estado = el.checked;
 
