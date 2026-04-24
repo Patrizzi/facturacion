@@ -1716,6 +1716,7 @@ class CotizacionController extends Controller
         // $ruta = "transaccion.venta.cotizacion.pdf2";
         // $compact = "' ','cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'";
         // return $pdf;
+
         return view('transaccion.venta.cotizacion.show2', compact('cotizacion', 'almacenes_list','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2','garantia','validez','nota_venta','forma_pagos','renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero'));
     }
 
