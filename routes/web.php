@@ -684,6 +684,8 @@ Route::group(
         Route::resource('/garantia_informe_tecnico', 'GarantiaInformeTecnicoController')->except(['create', 'edit', 'destroy']);
         Route::get('garantia_informe_tecnico/create_tecnico/{id}', 'GarantiaInformeTecnicoController@create_tecnico')
             ->name('garantia_informe_tecnico.create_tecnico');
+        Route::post('garantia_informe_tecnico/anular/{id}', 'GarantiaInformeTecnicoController@anular_informe_tecnico')->name('garantia_informe_tecnico.anular_informe_tecnico');
+
         //Consultas
         Route::get('consultas/garantias-guias-ingreso', 'ConsultasController@garantias_guias_ingreso')->name('consultas.garantias.guias_ingreso');
         Route::get('consultas/garantias-guias-egreso', 'ConsultasController@garantias_guias_egreso')->name('consultas.garantias.guias_egreso');

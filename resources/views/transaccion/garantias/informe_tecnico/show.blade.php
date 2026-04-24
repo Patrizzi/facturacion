@@ -39,22 +39,24 @@
                     </div>
 
                     <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                        <div class="d-flex align-items-center" style="overflow: hidden;">
-                            <div id="btn-slider-informe"
-                                style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
-                                <a href="#punto" onclick="Formulario_edit()" id="click" class="btn btn-info"
-                                    data-toggle="tooltip" data-placement="bottom"
-                                    data-original-title="Editar informe técnico"
-                                    style="white-space: nowrap; margin-right: 4px;">
-                                    <i class="fa fa-edit fa-lg"></i>
-                                </a>
+                        @can('informe_tecnico.editar')
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
+                                <div id="btn-slider-informe"
+                                    style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+                                    <a href="#punto" onclick="Formulario_edit()" id="click" class="btn btn-info"
+                                        data-toggle="tooltip" data-placement="bottom"
+                                        data-original-title="Editar informe técnico"
+                                        style="white-space: nowrap; margin-right: 4px;">
+                                        <i class="fa fa-edit fa-lg"></i>
+                                    </a>
+                                </div>
+                                <button type="button" id="btn-toggle-informe" onclick="toggleBtnsInforme()"
+                                    class="btn btn-default"
+                                    style="background-color: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                    <i class="fa fa-chevron-right" id="btn-arrow-informe"></i>
+                                </button>
                             </div>
-                            <button type="button" id="btn-toggle-informe" onclick="toggleBtnsInforme()"
-                                class="btn btn-default"
-                                style="background-color: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                                <i class="fa fa-chevron-right" id="btn-arrow-informe"></i>
-                            </button>
-                        </div>
+                        @endcan
 
                         <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
 

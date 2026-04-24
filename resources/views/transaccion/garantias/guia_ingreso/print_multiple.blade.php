@@ -49,7 +49,7 @@
         <div class="animated fadeInRight" @if ($index > 0) style="page-break-before: always;" @endif>
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="ibox-content p-xl" style="margin-bottom: 20px;padding-bottom: 50px;">
+                    <div class="ibox-content" style="margin-bottom: 20px;padding-bottom: 50px;">
                         <div class="row" style="height: auto;">
                             <div class="col-sm-4 text-left" align="left">
                                 <div class="form-control" align="center" style="height: 100%;" align="left">

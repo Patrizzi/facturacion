@@ -347,7 +347,7 @@
                     }
                 },
                 {
-                    'width': '5%',
+                    'width': '1%',
                     'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {

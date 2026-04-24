@@ -321,7 +321,7 @@
                     },
                     {
                         'targets': [9],
-                        'width': '5%',
+                        'width': '1%',
                         'orderable': false,
                         'render': function(data, type, full, meta) {
                             var url = '{{ route('garantia_guia_egreso.show', ':id') }}';

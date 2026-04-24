@@ -207,9 +207,13 @@ class GarantiaInformeTecnicoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function anular_informe_tecnico(Request $request, $id)
     {
-        //
+        $informe_tecnico = GarantiaInformeTecnico::find($id);
+        $informe_tecnico->estado = 0;
+        $informe_tecnico->save();
+
+        return redirect()->back()->with('success', 'Informe Técnico anulado correctamente');
     }
 
     public function guias()

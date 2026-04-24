@@ -39,24 +39,26 @@
 
                     <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
                         @if ($garantias_guias_egreso->estado == 1 && $garantias_guias_egreso->informe_tecnico == 0)
-                            <div class="d-flex align-items-center" style="overflow: hidden;">
-                                <div id="btn-slider-egreso"
-                                    style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
-                                    <a href="#form_egreso" onclick="Formulario_edit()" id="click" class="btn btn-info"
-                                        data-toggle="tooltip" data-placement="bottom"
-                                        data-original-title="Editar guía de egreso"
-                                        style="white-space: nowrap; margin-right: 4px;">
-                                        <i class="fa fa-edit fa-lg"></i>
-                                    </a>
+                            @can('guia_egreso.editar')
+                                <div class="d-flex align-items-center" style="overflow: hidden;">
+                                    <div id="btn-slider-egreso"
+                                        style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+                                        <a href="#form_egreso" onclick="Formulario_edit()" id="click" class="btn btn-info"
+                                            data-toggle="tooltip" data-placement="bottom"
+                                            data-original-title="Editar guía de egreso"
+                                            style="white-space: nowrap; margin-right: 4px;">
+                                            <i class="fa fa-edit fa-lg"></i>
+                                        </a>
+                                    </div>
+                                    <button type="button" id="btn-toggle-egreso" onclick="toggleBtnsEgreso()"
+                                        class="btn btn-default"
+                                        style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                        <i class="fa fa-chevron-right" id="btn-arrow-egreso"></i>
+                                    </button>
                                 </div>
-                                <button type="button" id="btn-toggle-egreso" onclick="toggleBtnsEgreso()"
-                                    class="btn btn-default"
-                                    style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                                    <i class="fa fa-chevron-right" id="btn-arrow-egreso"></i>
-                                </button>
-                            </div>
-                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+                            @endcan    
                         @endif
+                        <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
 
                         <form class="btn" style="padding: 0;"
                             action="{{ route('pdf_egreso', $garantias_guias_egreso->id) }}">

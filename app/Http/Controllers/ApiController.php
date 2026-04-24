@@ -1277,7 +1277,7 @@ class ApiController extends Controller
                 });
             });
         }
-
+        $query->orderBy('created_at', 'desc');
         // Filtro por marca
         if (!empty($marca)) {
             $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($marca) {
@@ -1328,18 +1328,18 @@ class ApiController extends Controller
                 $value->id, // [0]
                 $value->id, // [1]
                 $value->garantia_egreso_i->garantia_ingreso_i->codigo_interno ?? '', // [2]
-                $value->garantia_egreso_i->garantia_ingreso_i->nombre_equipo ?? '', // [3]
-                $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '', // [4]
-                $value->garantia_egreso_i->garantia_ingreso_i->numero_serie ?? '', // [5]
-                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '', // [6]
-                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento ?? '', // [7]
-                Carbon::parse($value->fecha)->format('d/m/Y'), // [8]
+                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento ?? '', // [3]
+                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '', // [4]
+                Carbon::parse($value->fecha)->format('d/m/Y'), // [5]   
+                $value->garantia_egreso_i->garantia_ingreso_i->nombre_equipo ?? '', // [6]
+                $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '', // [7]
+                $value->garantia_egreso_i->garantia_ingreso_i->numero_serie ?? '', // [8]
                 $value->id, // [9]
-                // $value->informe_tecnico ?? '', // [10]
-                // $value->egresado, // Añadido para la columna 11 que se usa en el frontend [11]
+                $value->estado, // [10]
             ];
         }
-
+        $json['permiso_ver'] = auth()->user()->can('informe_tecnico.ver');
+        $json['permiso_anular'] = auth()->user()->can('informe_tecnico.anular');
         return response()->json($json);
     }
     public function getPersonalTable(Request $request)
