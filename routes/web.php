@@ -672,6 +672,7 @@ Route::group(
         Route::get('garantia_guia_egreso/impresionEgreso/{id}', 'GarantiaGuiaEgresoController@print')->name('impresiones_egreso');
         Route::get('garantia_guia_egreso/guias', 'GarantiaGuiaEgresoController@guias')->name('garantia_guia_egreso.guias');
         Route::resource('/garantia_guia_egreso', 'GarantiaGuiaEgresoController')->except(['create', 'edit', 'destroy']);
+        Route::post('garantia_guia_egreso/anular/{id}', 'GarantiaGuiaEgresoController@anular_guia_egreso')->name('garantia_guia_egreso.anular_guia_egreso');
 
         Route::get('garantia_guia_egreso/create_egreso/{id}', 'GarantiaGuiaEgresoController@create_egreso')->name('garantia_guia_egreso.create_egreso');
 
