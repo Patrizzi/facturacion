@@ -416,7 +416,7 @@ class Ventas_registroController extends Controller
 
         $tipo = $request->tipo_renovacion;
 
-        // QUERY PRINCIPAL - Cargar AMBAS relaciones
+        // QUERY PRINCIPAL
         $query = RenovacionVentas::with([
                 'cotizacionManual.cliente',
                 'cotizacionManual.moneda',
@@ -432,12 +432,11 @@ class Ventas_registroController extends Controller
             ->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate])
             ->orderBy('renovacion_ventas.created_at', 'desc');
 
-        // FILTROS
+        // FILTRO: búsqueda de texto
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
                 $q->where('renovacion_ventas.id', 'like', '%' . $filter . '%');
 
-                // Buscar en cotizaciones manuales
                 $q->orWhereHas('cotizacionManual', function ($q2) use ($filter) {
                     $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
                 });
@@ -451,7 +450,6 @@ class Ventas_registroController extends Controller
                     $q2->where('nombre', 'like', '%' . $filter . '%');
                 });
 
-                // Buscar en cotizaciones normales
                 $q->orWhereHas('cotizacion', function ($q2) use ($filter) {
                     $q2->where('cod_cotizacion', 'like', '%' . $filter . '%');
                 });
@@ -467,6 +465,7 @@ class Ventas_registroController extends Controller
             });
         }
 
+        // FILTRO: tipo de cotización
         if ($tipo !== null && $tipo !== '') {
             $query->where(function($q) use ($tipo) {
                 $q->whereHas('cotizacionManual', function($q2) use ($tipo) {
@@ -478,9 +477,37 @@ class Ventas_registroController extends Controller
             });
         }
 
+        // FILTRO: estado de renovación ← AHORA EN EL LUGAR CORRECTO
+        $estadoFiltro = $request->get('estado_renovacion');
+
+        if ($estadoFiltro !== null && $estadoFiltro !== '') {
+            $hoy = Carbon::now()->startOfDay();
+
+            $query->where(function($q) use ($estadoFiltro, $hoy) {
+                switch ((int) $estadoFiltro) {
+                    case 1: // Activa y vigente
+                        $q->where('renovacion_ventas.fecha_vencimiento', '>', $hoy->copy()->addDays(7));
+                        break;
+                    
+                    case 2: // Próxima a vencer
+                        $q->where('renovacion_ventas.fecha_vencimiento', '>=', $hoy->toDateString())
+                        ->where('renovacion_ventas.fecha_vencimiento', '<=', $hoy->copy()->addDays(7)->toDateString());
+                        break;
+
+                    /*case 3: // Ya renovada
+                        $q->whereRaw('DATE(renovacion_ventas.fecha_inicio) > DATE(renovacion_ventas.created_at)');
+                        break;*/
+
+                    case 4: // Vencida
+                        $q->where('renovacion_ventas.fecha_vencimiento', '<', $hoy->toDateString());
+                        break;
+                }
+            });
+        }
+
+        // COUNT Y PAGINACIÓN
         $recordsTotal = $query->count();
 
-        // PAGINACIÓN
         if ($length == -1) {
             $renovaciones = $query->get();
         } else {
@@ -515,7 +542,6 @@ class Ventas_registroController extends Controller
                 $renovacion->estado_proceso = $modelo::estado_proceso($cotizacion->id);
                 $renovacion->cotizacion_data = $cotizacion;
 
-                // ── Fecha vencimiento y días restantes ────────────────
                 $fecha_vencimiento = Carbon::parse($renovacion->fecha_vencimiento)->startOfDay();
                 $diff              = $fecha_actual->diffInDays($fecha_vencimiento, false);
 
@@ -553,25 +579,24 @@ class Ventas_registroController extends Controller
             $cotizacion = $renovacion->cotizacion_data;
 
             if ($cotizacion) {
-                // Determinar el tipo
                 $tipo = $renovacion->cotizacion ? 'normal' : 'manual';
 
                 $json['data'][] = [
-                    $renovacion->id,                        // 0 - ID de la renovación
-                    $cotizacion->id,                        // 1 - ID de la cotización asociada
-                    $cotizacion->cod_cotizacion,            // 2 - Código/Número de cotización
-                    $cotizacion->cliente->numero_documento, // 3 - RUC o DNI del cliente
-                    $cotizacion->cliente->nombre,           // 4 - Nombre del cliente
-                    $cotizacion->fecha_emision,             // 5 - Fecha de emisión de la cotización
-                    $renovacion->fecha_vencimiento_fmt,     // 6 - Fecha de vencimiento de la renovación
-                    $renovacion->dias_vencimiento,          // 7 - Tiempo restante o vencido de la renovación
-                    $cotizacion->forma_pago->nombre,        // 8 - Forma de pago
-                    $renovacion->total,                     // 9 - Importe total mostrado
-                    $renovacion->id,                        // 10 - ID de renovación para acciones
-                    $cotizacion->estado,                    // 11 - Estado de la cotización
-                    $tipo,                                  // 12 - Tipo de cotización: normal o manual
-                    $cotizacion->cliente->celular,          // 13 - Celular del cliente para WhatsApp
-                    $cotizacion->cliente->email,            // 14 - Correo del cliente para envío por email
+                    $renovacion->id,
+                    $cotizacion->id,
+                    $cotizacion->cod_cotizacion,
+                    $cotizacion->cliente->numero_documento,
+                    $cotizacion->cliente->nombre,
+                    $cotizacion->fecha_emision,
+                    $renovacion->fecha_vencimiento_fmt,
+                    $renovacion->dias_vencimiento,
+                    $cotizacion->forma_pago->nombre,
+                    $renovacion->total,
+                    $renovacion->id,
+                    $cotizacion->estado,
+                    $tipo,
+                    $cotizacion->cliente->celular,
+                    $cotizacion->cliente->email,
                 ];
             }
         }

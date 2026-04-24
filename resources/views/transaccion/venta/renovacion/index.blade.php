@@ -85,12 +85,24 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-6 col-sm-12">
-                                            <select class="form-control" name="" id="select_tipo_coti">
-                                                <option value="" selected>Todos los comprobantes</option>
-                                                <option value="factura">Factura</option>
-                                                <option value="boleta">Boleta</option>
-                                                <option value="nota_venta">Nota de Venta</option>
-                                            </select>
+                                            <div class="row">
+                                                <div class="col-6 pr-1">
+                                                    <select class="form-control" id="select_tipo_coti">
+                                                        <option value="" selected>Comprobantes</option>
+                                                        <option value="factura">Factura</option>
+                                                        <option value="boleta">Boleta</option>
+                                                        <option value="nota_venta">Nota de Venta</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6 pl-1">
+                                                    <select id="select_estado_renovacion" class="form-control">
+                                                        <option value="">Estados</option>
+                                                        <option value="1">Activa</option>
+                                                        <option value="2">Por vencer</option>
+                                                        <option value="4">Vencida</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-lg-3 col-md-6 col-sm-12">
                                             <input type="search" class="form-control" placeholder="Buscar:"
@@ -297,6 +309,7 @@
                         daterange: $('#data_range_filter').val(),
                         tipo_renovacion: $('#select_tipo_coti').val(),
                         value: $('#search_all_column').val(),
+                        estado_renovacion: $('#select_estado_renovacion').val(),
                         length: -1,
                         start: 0
                     },
@@ -409,6 +422,7 @@
                         d.daterange = $('#data_range_filter').val();
                         d.tipo_renovacion = $('#select_tipo_coti').val();
                         d.value = $('#search_all_column').val();
+                        d.estado_renovacion = $('#select_estado_renovacion').val();
                     },
                     dataSrc: function(json) {
                         var total_columna = json.total_columna;
