@@ -581,7 +581,7 @@ class RenovacionController extends Controller
             ], 500);
         }
     }
-    
+
     private function prepararDatosPdfRenovacion(RenovacionVentas $renovacion)
     {
         $cotizacion = $renovacion->cotizacionManual ?? $renovacion->cotizacion;
@@ -704,7 +704,11 @@ class RenovacionController extends Controller
             $pdf = PDF::loadView($vista_pdf, $data);
 
             $cotizacion = $renovacion->cotizacionManual ?? $renovacion->cotizacion;
-            return $pdf->stream('Renovacion_' . $cotizacion->cod_cotizacion . '.pdf');
+            $tipoDocumento = $renovacion->cotizacionManual
+                ? 'Cotizacion_Manual_'
+                : 'Cotizacion_';
+            $nombreArchivo = $tipoDocumento . $cotizacion->cod_cotizacion . '.pdf';
+            return $pdf->stream($nombreArchivo);
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
         }
@@ -740,7 +744,12 @@ class RenovacionController extends Controller
             $renovacion = RenovacionVentas::find($id);
             if ($renovacion) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'renovacion'), 0, 22);
-                $pdfUrl = url("renovacion/share/{$codigo}");
+                $esManual = $renovacion->cotizacionManual ? true : false;
+                if ($esManual) {
+                    $pdfUrl = url("cotizacion-manual/share/{$codigo}");
+                } else {
+                    $pdfUrl = url("cotizacion/share/{$codigo}");
+                }
                 $mensaje .= "{$pdfUrl}\n";
             }
         }
@@ -807,8 +816,17 @@ class RenovacionController extends Controller
                 ->values()
                 ->toArray();
 
-            $titulo = 'Renovación ' . $cotizacion->cod_cotizacion;
-            $mensaje_html = 'Estimado cliente, adjuntamos el documento de renovación correspondiente.';
+            $tipoDocumento = $renovacion->cotizacionManual
+                ? 'Cotizacion Manual'
+                : 'Cotizacion';
+
+            $tipoArchivo = $renovacion->cotizacionManual
+                ? 'Cotizacion_Manual_'
+                : 'Cotizacion_';
+
+            $titulo = $tipoDocumento . ' ' . $cotizacion->cod_cotizacion;
+
+            $mensaje_html = 'Estimado cliente, adjuntamos el documento correspondiente.';
             $texto = strip_tags($mensaje_html);
 
             $mensaje = view('email_html.email_send_layout', compact(
@@ -826,7 +844,7 @@ class RenovacionController extends Controller
 
             $pdf = PDF::loadView($vista_pdf, $data);
 
-            $archivo = 'Renovacion_' . $cotizacion->cod_cotizacion . '.pdf';
+            $archivo = $tipoArchivo . $cotizacion->cod_cotizacion . '.pdf';
             $especif = $date . '_' . $archivo;
 
             Storage::disk('mailbox')->put($especif, $pdf->output());
@@ -838,6 +856,7 @@ class RenovacionController extends Controller
             $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
                 ->setUsername($config_email->email)
                 ->setPassword($config_email->password);
+
             $mailer = new \Swift_Mailer($transport);
             $mailer->getTransport()->start();
 
@@ -853,7 +872,7 @@ class RenovacionController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Error al enviar el correo. Verifica tu configuraciÃ³n.'
+                    'message' => 'Error al enviar el correo. Verifica tu configuración.'
                 ], 500);
             }
 

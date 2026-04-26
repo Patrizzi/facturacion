@@ -1507,3 +1507,10 @@ Route::post('/renovacion/whatsapp/send-multiple', 'RenovacionController@whatsapp
     ->name('envioWhatsapp.renovacion.multiple');
 Route::post('/renovacion/enviar-correo-directo/{id}', 'RenovacionController@enviarCorreoDirecto')
     ->name('renovacion.enviar-correo-directo');
+
+
+Route::get('/cotizacion/share/{codigo}', 'RenovacionController@descargarPorCodigo')
+    ->name('cotizacion_renovacion_codificada');
+
+Route::get('/cotizacion-manual/share/{codigo}', 'RenovacionController@descargarPorCodigo')
+    ->name('cotizacion_manual_renovacion_codificada');

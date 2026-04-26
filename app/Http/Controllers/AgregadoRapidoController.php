@@ -199,7 +199,19 @@ public function send_whatsapp(Request $request){
             $documentoId = $matches[1];
             $codigo = substr(md5($documentoId . env('APP_KEY') . $tipo), 0, 22);
 
-            $pdfUrl = url("{$tipo}/share/{$codigo}");
+            if ($tipo === 'renovacion') {
+                $renovacion = \App\RenovacionVentas::with(['cotizacion', 'cotizacionManual'])
+                    ->find($documentoId);
+
+                if ($renovacion && $renovacion->cotizacionManual) {
+                    $pdfUrl = url("cotizacion-manual/share/{$codigo}");
+                } else {
+                    $pdfUrl = url("cotizacion/share/{$codigo}");
+                }
+            } else {
+                $pdfUrl = url("{$tipo}/share/{$codigo}");
+            }
+
             break;
         }
     }

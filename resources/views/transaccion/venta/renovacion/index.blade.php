@@ -496,6 +496,10 @@
                         const codigoRenovacion = full[2];
                         const celularCliente = full[13] || '';
                         const emailCliente = full[14] || '';
+                        const tipoCotizacion = full[12] || '';
+                        const nombreArchivo = tipoCotizacion === 'manual'
+                            ? `Cotizacion_Manual_${codigoRenovacion}`
+                            : `Cotizacion_${codigoRenovacion}`;
 
                         return `
                             <div style="display: inline-block; white-space: nowrap;">
@@ -546,7 +550,7 @@
                                                 style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
                                             <input type="text" name="mensaje" hidden />
                                             <input type="hidden" name="url" value="{{ url('renovacion/pdf') }}/${renovacionId}">
-                                            <input type="hidden" name="name_sin_cambio" value="Renovacion_${codigoRenovacion}" />
+                                            <input type="hidden" name="name_sin_cambio" value="${nombreArchivo}" />
                                             <button type="submit" class="btn btn-success"
                                                 style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
                                                 <i class="fa fa-send fa-lg"></i>
@@ -555,7 +559,7 @@
                                     </div>
                                 </div>
                             </div>
-                        `.replace(':id', renovacionId);
+                        `;
                     }
                 }
             ],
@@ -904,7 +908,7 @@
                 $(this).closest('div').remove();
                 form.css('height', (form.find('form').outerHeight() + 20) + 'px');
             });
-            
+
             $(document).on('submit', '.form-enviar-email-renovacion', function (e) {
                 e.preventDefault();
 
