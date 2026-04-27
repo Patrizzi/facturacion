@@ -234,6 +234,8 @@ public function index()
 
             $igv_config = Igv::first();
             $empresa    = Empresa::first();
+            $banco      = Banco::where('estado', '0')->get();
+            $banco_count = Banco::where('estado', '0')->count();
             $fecha_actual = Carbon::now()->startOfDay();
 
             foreach ($renovaciones as $renovacion) {
@@ -242,19 +244,21 @@ public function index()
                     if (!$cotizacion) continue;
 
                     if ($renovacion->cotizacionManual) {
-                        $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get(); // ✅
-                        $vista_pdf = 'transaccion.venta.cotizacion.manual.pdf';
+                        $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+                        $vista_pdf = 'transaccion.venta.cotizacion.pdf2';
                     } else {
-                        $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get(); // ✅
-                        $vista_pdf = 'transaccion.venta.cotizacion.pdf';
+                        $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get();
+                        $vista_pdf = 'transaccion.venta.cotizacion.pdf2';
                     }
 
                     $sum       = 0;
-                    $j         = 1;
+                    $i         = 1;
+                    $regla     = $cotizacion->tipo;
                     $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
                     $igv       = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
+                    $igv_p    = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
                     $end       = round($sub_total, 2) + round($igv, 2);
-                    $end2      = number_format($end, 2);
+                    $end2      = number_format(round($sub_total, 2) + round($igv_p, 2), 2);
 
                     $fecha_vencimiento       = null;
                     $dias_restantes_texto    = null;
@@ -277,19 +281,23 @@ public function index()
                     }
 
                     $pdf = PDF::loadView($vista_pdf, [
-                        'j'                    => $j,
                         'cotizacion'           => $cotizacion,
                         'empresa'              => $empresa,
-                        'cotizacion_m_reg'     => $cotizacion_reg,
+                        'cotizacion_registro'  => $cotizacion_reg,
+                        'regla'                => $regla,
                         'sum'                  => $sum,
-                        'igv'                  => $igv,
+                        'igv'                  => $igv_config,
                         'sub_total'            => $sub_total,
+                        'banco'               => $banco,
+                        'i'                   => $i,
                         'end'                  => $end,
+                        'igv_p'               => $igv_p,
+                        'banco_count'          => $banco_count,
                         'end2'                 => $end2,
                         'renovacion'           => $renovacion,
                         'fecha_vencimiento'    => $fecha_vencimiento,
                         'dias_restantes_texto' => $dias_restantes_texto,
-                        'dias_restantes_numero'=> $dias_restantes_numero
+                        'dias_restantes_numero' => $dias_restantes_numero
                     ]);
 
                     $codigoCotizacion = preg_replace('/[^a-zA-Z0-9_-]/', '_', $cotizacion->cod_cotizacion);
@@ -330,21 +338,24 @@ public function index()
             }
 
             if ($renovacion->cotizacionManual) {
-                $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get(); // ✅
-                $vista_pdf = 'transaccion.venta.cotizacion.manual.pdf';
+                $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+                $vista_pdf = 'transaccion.venta.cotizacion.pdf2';
             } else {
-                $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get(); // ✅
-                $vista_pdf = 'transaccion.venta.cotizacion.pdf';
+                $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get();
+                $vista_pdf = 'transaccion.venta.cotizacion.pdf2';
             }
 
             $empresa    = Empresa::first();
-            $igv_config = Igv::first();
-            $sum        = 0;
-            $j          = 1;
-            $sub_total  = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
-            $igv        = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
-            $end        = round($sub_total, 2) + round($igv, 2);
-            $end2       = number_format($end, 2);
+            $igv       = Igv::first();
+            $banco      = Banco::where('estado', '0')->get();
+            $banco_count = Banco::where('estado', '0')->count();
+            $sum       = 0;
+            $i         = 1;
+            $regla     = $cotizacion->tipo;
+            $sub_total = $cotizacion->op_gravada + $cotizacion->op_inafecta + $cotizacion->op_exonerada;
+            $igv_p    = round($cotizacion->op_gravada, 2) * $igv->igv_total / 100;
+            $end      = round($sub_total, 2) + round($igv_p, 2);
+            $end2     = number_format(round($sub_total, 2) + round($igv_p, 2), 2);
 
             $fecha_vencimiento       = null;
             $dias_restantes_texto    = null;
@@ -368,18 +379,22 @@ public function index()
             }
 
             $pdf = PDF::loadView($vista_pdf, [
-                'j'                     => $j,
                 'cotizacion'            => $cotizacion,
                 'empresa'               => $empresa,
-                'cotizacion_m_reg'      => $cotizacion_reg,
-                'sum'                   => $sum,
-                'igv'                   => $igv,
-                'sub_total'             => $sub_total,
-                'end'                   => $end,
-                'end2'                  => $end2,
-                'renovacion'            => $renovacion,
-                'fecha_vencimiento'     => $fecha_vencimiento,
-                'dias_restantes_texto'  => $dias_restantes_texto,
+                'cotizacion_registro'    => $cotizacion_reg,
+                'regla'                => $regla,
+                'sum'                 => $sum,
+                'igv'                 => $igv,
+                'sub_total'            => $sub_total,
+                'banco'               => $banco,
+                'i'                  => $i,
+                'end'                 => $end,
+                'igv_p'               => $igv_p,
+                'banco_count'         => $banco_count,
+                'end2'               => $end2,
+                'renovacion'          => $renovacion,
+                'fecha_vencimiento'    => $fecha_vencimiento,
+                'dias_restantes_texto' => $dias_restantes_texto,
                 'dias_restantes_numero' => $dias_restantes_numero
             ]);
 
@@ -388,5 +403,45 @@ public function index()
         } catch (\Exception $e) {
             return back()->with('error', 'Error al descargar el PDF: ' . $e->getMessage());
         }
+    }
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $renovacionIds = $request->cotizacion_ids;
+
+        $mensaje = "";
+
+        foreach ($renovacionIds as $id) {
+            $renovacion = RenovacionVentas::find($id);
+            if ($renovacion) {
+                $codigo = substr(md5($id . env('APP_KEY') . 'renovacion'), 0, 22);
+
+                $pdfUrl = url("renovacion/share/{$codigo}");
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
+    public function pdf(Request $request, $id)
+    {
+        return $this->downloadSinglePDF($id);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $cotizaciones = RenovacionVentas::all();
+
+        foreach ($cotizaciones as $cot) {
+            if (substr(md5($cot->id . env('APP_KEY') . 'renovacion'), 0, 22) === $codigo) {
+                return redirect()->route('pdf_renovacion', $cot->id);
+            }
+        }
+
+        abort(404);
     }
 }

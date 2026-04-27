@@ -536,7 +536,7 @@
                     });
 
                     const form = $('<form>', {
-                        action: '{{ route('envioWhatsapp.cotizacion.multiple') }}',
+                        action: '{{ route('envioWhatsapp.renovacion.multiple') }}',
                         method: 'POST',
                         target: '_blank',
                         style: 'display:none;'

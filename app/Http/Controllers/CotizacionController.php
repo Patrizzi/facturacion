@@ -262,7 +262,7 @@ class CotizacionController extends Controller
         $tipo_cambio=TipoCambio::latest('created_at')->first();
         $config=ConfiguracionGuiaIngresos::where('tipo_guia','cotizacion')->get();
         // return $config;
-        
+
         // return $cotiDuplicada;
         return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','cotizacion_numero_boleta','cotizacion_numero_n_venta','config_create', 'cotiDuplicada'));
     }

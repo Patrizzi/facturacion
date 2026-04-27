@@ -1132,6 +1132,7 @@ Route::get('garantia_guia_ingreso/pdf/{id}', 'GarantiaGuiaIngresoController@pdf'
 Route::get('garantia_guia_egreso/pdf/{id}', 'GarantiaGuiaEgresoController@pdf')->name('pdf_egreso');
 Route::get('garantia_informe_tecnico/pdf/{id}', 'GarantiaInformeTecnicoController@pdf')->name('pdf_informe');
 Route::get('cotizacion/pdf/{id}', 'CotizacionController@pdf')->name('pdf_cotizacion');
+Route::get('renovacion/pdf/{id}', 'RenovacionController@pdf')->name('pdf_renovacion');
 Route::get('cotizacion_servicio/pdf/{id}', 'CotizacionServiciosController@pdf')->name('pdf_cotizacion_servicio');
 Route::get('guia_remision/pdf/{id}', 'GuiaRemisionController@pdf')->name('pdf_guia');
 Route::get('facturacion/pdf/{id}', 'FacturacionController@pdf')->name('pdf_fac');
@@ -1335,6 +1336,7 @@ Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class,
     ->name('renovaciones.download.multiple');
 
 
+
 // Mandar multiples pdf por wsp en comprobantes
 Route::get('boleta/share/{codigo}', [BoletaController::class, 'descargarPorCodigo'])
     ->name('boleta_codificada');
@@ -1391,6 +1393,11 @@ Route::get('nota_venta/share/{codigo}', [NotaVentaController::class, 'descargarP
     ->name('nota_venta_codificada');
 Route::post('/ventas/nota_venta/whatsapp/send-multiple', [NotaVentaController::class, 'whatsappSendMultiple'])
     ->name('envioWhatsapp.notaVenta.multiple');
+
+Route::get('renovacion/share/{codigo}', [RenovacionController::class, 'descargarPorCodigo'])
+    ->name('renovacion_codificada');
+Route::post('/ventas/renovacion/whatsapp/send-multiple', [RenovacionController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.renovacion.multiple');
 
 // Mandar multiples pdf por wsp en garantias
 Route::get('garantia_guia_ingreso/share/{codigo}', [GarantiaGuiaIngresoController::class, 'descargarPorCodigo'])
@@ -1491,6 +1498,6 @@ Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInforme
 
 Route::get('/servicio-tecnico/informe-tecnico/print/{id}', [ServicioGuiaInformeTecnicoController::class, 'print'])
     ->name('st_informe_tecnico.print');
-    
+
 Route::get('/servicio-tecnico/informe-tecnico/pdf/{id}', [ServicioGuiaInformeTecnicoController::class, 'pdf'])
     ->name('st_informe_tecnico.pdf');
