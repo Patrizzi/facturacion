@@ -230,7 +230,7 @@ class PagadosController extends Controller
 
     public function store_boleta(Request $request)
     {
-        return $request;
+        // return $request;
         // Se escoge el tipo de pago
         $tipo_pago = $request->get('input_pago');
         switch ($tipo_pago) {

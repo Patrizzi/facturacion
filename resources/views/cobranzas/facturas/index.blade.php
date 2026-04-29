@@ -15,9 +15,11 @@
         </div>
     @endif
 
-    {{-- @include('cobranzas.facturas._shared.statitics') --}}
-
+    
     <div class="wrapper wrapper-content animated fadeInRight">
+
+        @include('cobranzas.facturas._shared.statistics')
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
@@ -27,13 +29,16 @@
                                 style="align-items: center;border-bottom: 0px !important;">
                                 @include('cobranzas.facturas._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
+                                    @can('factura.pagar')
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
                                             class="fa fa-money"></i></button>
+                                    @endcan
                                 </ul>
                             </ul>
                             <div class="tab-content" style="margin-top: -1px">
                                 <div class="tab-pane active show" role="tabpanel" id="tab-1"
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
@@ -267,6 +272,8 @@
         $('.chosen-select').chosen({
             width: "100%"
         });
+        let permiso_ver = false;
+        let permiso_pagar = false;
         // FUNCION DE DATATABLE FACTURA 
         var fact_table = $('.dataTables-example-facturas').DataTable({
             "serverSide": true,
@@ -278,6 +285,12 @@
                     d.cliente_id = $("#cliente option:selected").val();
                     d.estado_pago = $('#select_estado').val();
                     d.tipo = $('#select_estado').val();
+                },
+                dataSrc: function(json){
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
+
+                    return json.data
                 }
             },
             "drawCallback": function(settings) {
@@ -374,20 +387,22 @@
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
-                        var view =
-                            `<a class="btn btn-primary btn-sm btn-ls"
-                        href=" ` + url_view + `"><i class="fa fa-eye"></i></a>
-                            <div class="btn-group">
-                            <button data-toggle="dropdown" class="btn btn-primary btn-sm btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
-                                <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
-                            </ul>
-                        </div>`;
-
-                        // var view +=  ``;
-
-                        return view;
+                        var buttons = ``;
+                        if(permiso_ver){
+                            buttons += `<a class="btn btn-primary btn-ls"
+                            href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
+                        }
+                        buttons += `<span style="margin:0px 5px"></span>`;
+                        if(permiso_pagar){
+                            buttons += `<div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
+                                    <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
+                                </ul>
+                            </div>`;
+                        }
+                        return buttons;
                     }
                 },
                 // {

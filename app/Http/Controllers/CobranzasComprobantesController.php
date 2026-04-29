@@ -119,6 +119,8 @@ class CobranzasComprobantesController extends Controller
                 $value->doc_adicional,
             ];
         }
+        $json['permiso_pagar'] = auth()->user()->can('factura.pagar');
+        $json['permiso_ver'] = auth()->user()->can('factura.detalle_pago');
         return response()->json($json);
     }
 
