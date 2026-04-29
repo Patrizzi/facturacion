@@ -319,10 +319,10 @@ class BoletaMController extends Controller
         $boleta->cambio=$cambio->paralelo;
         $boleta->observacion=$request->get('observacion');
         $boleta->user_id =auth()->user()->id;
-        if($request->get('button_submit') == 0){
-            $boleta->estado='0';
+        if($request->button_submit == 0){
+            $boleta->estado = '0'; //! Si se puede seguir editando
         }else{
-            $boleta->estado='1';
+            $boleta->estado = '1'; //! Si ya no se puede editar
         }
         $boleta->tipo_operacion_id= $busca_ope->id;
         $boleta->tipo_documento_id = 2;
@@ -748,14 +748,44 @@ class BoletaMController extends Controller
     {
         //
     }
-    public function ticket(Request $request,$id){
+        public function ticket(Request $request, $id)
+    {
+        $boleta          = Boleta_m::find($id);
+        $boleta_registro = Boleta_registros_m::where('boleta_m_id', $id)->get();
+        $empresa         = Empresa::first();
+        $moneda          = Moneda::where('id', $boleta->moneda_id)->first();
+        $igv             = Igv::first();
+        $textoQR         = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
+        $qrCode          = $this->generarImagenQR($textoQR);
 
-        $boleta=Boleta_m::find($id);
-        $boleta_registro= Boleta_registros_m::where('boleta_m_id',$id)->get();
-        $empresa=Empresa::first();
-        $moneda = Moneda::where('id',$boleta->moneda_id)->first();
-        $igv=Igv::first();
-        return view('transaccion.venta.boleta.boleta_manual.ticket',compact('boleta','boleta_registro','empresa','igv','moneda'));
+        // Altura dinámica según cantidad de ítems
+        $totalItems  = $boleta_registro->count();
+        $anchoPapel  = 170;
+        $alturaItem  = 18;
+        $alturaPapel = 320 + ($totalItems * $alturaItem) + 220;
+
+        $pdf = PDF::loadView(
+            'transaccion.venta.boleta.boleta_manual.ticket',
+            compact(
+                'boleta',
+                'boleta_registro',
+                'empresa',
+                'igv',
+                'moneda',
+                'qrCode',
+                'textoQR'
+            )
+        )
+            ->setPaper([0, 0, $anchoPapel, $alturaPapel], 'portrait')
+            ->setOptions([
+                'dpi'                  => 96,
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'Courier',
+                'isPhpEnabled'         => true,
+            ]);
+
+        return $pdf->stream('ticket-' . $boleta->codigo_boleta . '.pdf');
     }
 
     //FUNCION PARA COMPROBANTES
@@ -1118,7 +1148,7 @@ class BoletaMController extends Controller
             if ($boleta) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'boleta_manual'), 0, 22);
 
-                $pdfUrl = url("boleta/share/{$codigo}");
+                $pdfUrl = url("boleta_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }

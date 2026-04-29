@@ -409,9 +409,9 @@ class Facturacion extends Model
             //    dd($nota_c);
                $total = $total - $nota_c->total_precio;
             //    return $nota_c;
-            } 
+            }
         }
-        
+
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
@@ -432,7 +432,7 @@ class Facturacion extends Model
 
         return round($sub_igv, 2);
     }
-            
+
     public function getTotalPrecioSinFormaAttribute()
     {
         // $boleta = Boleta::find($this->attributes['id']);
@@ -448,7 +448,7 @@ class Facturacion extends Model
         $total_igv = round($total, 2);
         return $total_igv;
     }
-    
+
     public function getTotalPrecioDescSinFormaAttribute()
     {
         // $boleta = Boleta::find($this->attributes['id']);
@@ -468,7 +468,7 @@ class Facturacion extends Model
             //    dd($nota_c);
                $total = $total - $nota_c->total_precio;
             //    return $nota_c;
-            } 
+            }
         }
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
@@ -490,7 +490,7 @@ class Facturacion extends Model
     public function getSaldoPendienteAttribute()
     {
         // return $this->forma_pago_id;
-        $suma_cuota = $this->total_precio_sin_forma;
+        $suma_cuota = $this->total_precio_desc_sin_forma;
         if ($this->forma_pago_id == 2) { // credito
             $saldo_pendiente = 0;
             $cuotas_total = 0;
@@ -498,7 +498,7 @@ class Facturacion extends Model
             $cuotas = Cuotas_credito::where('facturacion_id', $this->id)->where('estado', '!=',  0)->get();
             foreach ($cuotas as $cuota) {
                 // if ($cuota->estado == 2 ) {
-                $suma_cuota = $suma_cuota - $cuota->monto;
+                $suma_cuota = $suma_cuota - $cuota->nuevo_monto;
                 // }
             }
             $cuotas_total += $suma_cuota;
@@ -530,7 +530,7 @@ class Facturacion extends Model
             $cuotas = Cuotas_credito::where('facturacion_id', $this->id)->where('estado', '!=',  0)->get();
             foreach ($cuotas as $cuota) {
                 // if ($cuota->estado == 2 ) {
-                $suma_cuota = $suma_cuota - $cuota->monto;
+                $suma_cuota = $suma_cuota - $cuota->monto_nuevo;
                 // }
             }
             $cuotas_total += $suma_cuota;
@@ -550,13 +550,19 @@ class Facturacion extends Model
         // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
         return $saldo_pendiente;
     }
+    
+    public function getUltimaMontoPagoAttribute()
+    {
+        $ultimo_pago =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
+        return $ultimo_pago->monto_pago ?? 0.00;
+    }
 
     public function getUltimaFechaPagoAttribute()
     {
         $ultimo_pago =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
         return $ultimo_pago ? Carbon::parse($ultimo_pago->fecha_registro)->format('d-m-Y') : "Sin Pago Asociado";
     }
-    
+
     public function getUltimoTipoPagoAttribute(){
         $ultimo_tipo =  ComprobantesPagos::where('factuacion_id', $this->id)->latest()->first();
         return $ultimo_tipo ? $ultimo_tipo->tipo_pago : "Sin Pago Asociado";

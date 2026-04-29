@@ -515,7 +515,7 @@ class FacturacionMController extends Controller
         $banco=Banco::where('estado',0)->get();
         $j = 1;
 
-        // Datos para el update 
+        // Datos para el update
         // Tipo de operación
         $forma_pagos = Forma_pago::get();
         $remisiones = Guia_remision::select('id', 'cod_guia')
@@ -630,12 +630,45 @@ class FacturacionMController extends Controller
     }
     public function ticket(Request $request,$id){
 
-        $facturacion=Facturacion_m::find($id);
-        $facturacion_registro=Facturacion_registro_m::where('facturacion_m_id',$id)->get();
-        $empresa=Empresa::first();
-        $moneda = Moneda::where('id',$facturacion->moneda_id)->first();
-        $igv=Igv::first();
-        return view('transaccion.venta.facturacion.facturacion_manual.ticket',compact('facturacion','facturacion_registro','empresa','igv','moneda'));
+        $facturacion_m = Facturacion_m::find($id);
+        $facturacion_m_registro = Facturacion_registro_m::where('facturacion_m_id', $id)->get();
+        $empresa = Empresa::first();
+        $moneda = Moneda::where('id', $facturacion_m->moneda_id)->first();
+        $simbolo = $moneda->simbolo;
+        $igv = Igv::first();
+        $textoQR = $this->generarTextoQRFacturaM($facturacion_m, $empresa, $igv);
+        $qrCode  = $this->generarImagenQR($textoQR);
+         // Altura dinámica según cantidad de ítems
+        $totalItems  = $facturacion_m_registro->count();
+        $anchoPapel  = 170;
+        $alturaItem  = 18;
+        $alturaPapel = 320 + ($totalItems * $alturaItem) + 220;
+
+
+        $pdf = PDF::loadView(
+            'transaccion.venta.facturacion.facturacion_manual.ticket',
+            compact(
+                'facturacion_m',
+                'facturacion_m_registro',
+                'empresa',
+                'igv',
+                'moneda',
+                'qrCode',
+                'textoQR',
+
+
+            )
+        )
+            ->setPaper([0, 0, $anchoPapel, $alturaPapel], 'portrait')
+            ->setOptions([
+                'dpi'                  => 96,
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled'      => true,
+                'defaultFont'          => 'Courier',
+                'isPhpEnabled'         => true,
+            ]);
+
+        return $pdf->stream('ticket-' . $facturacion_m->codigo_fac . '.pdf');
     }
     public function edit($id)
     {
@@ -683,7 +716,7 @@ class FacturacionMController extends Controller
                 $fecha_vencimiento = date('d-m-Y', strtotime(($val)));
                 $create_cuotas = 1;
             }
-            
+
         }else{ // Si el editado es credito
             if($request->get('forma_pago') == $factura->forma_pago_id){ //Si sigue siendo credito
                 $fecha_pago_forma = $request->input('fecha_pago');
@@ -705,7 +738,7 @@ class FacturacionMController extends Controller
         // $nombre = strstr($operacion, '-', true);
         // $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
 
-        
+
         $factura->cliente_id = $request->get('cliente_id');
         $factura->almacen_id = $request->get('almacen');
         $factura->orden_compra = $request->get('ord_compra');
@@ -785,7 +818,7 @@ class FacturacionMController extends Controller
                 $fact_detra->save();
             }
         }
-        
+
         //  $registros_count = count($factura->registros);
         $count_art = count($request->get('cantidad'));
         // OBTENCION DE PRODUCTOS O SERVICIOS
@@ -858,10 +891,10 @@ class FacturacionMController extends Controller
                     $edit_reg->save();
                 }
             }
-        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear 
+        }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear
             // Eliminar registros anteriores
             $eliminar_registros = Facturacion_registro_m::where('facturacion_m_id', $id)->delete();
-            for ($i = 0; $i < $count_art ; $i++) { 
+            for ($i = 0; $i < $count_art ; $i++) {
                 $producto = Producto::where('codigo_producto', $producto_id[$i])->first();
                 if(isset($producto)){
                     $new_reg = new Facturacion_registro_m();
@@ -1317,7 +1350,7 @@ class FacturacionMController extends Controller
             if ($factura) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'factura_manual'), 0, 22);
 
-                $pdfUrl = url("factura/share/{$codigo}");
+                $pdfUrl = url("factura_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }

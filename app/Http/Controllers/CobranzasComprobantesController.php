@@ -29,8 +29,8 @@ class CobranzasComprobantesController extends Controller
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
         $cliente = $request->get('cliente_id');
-        $estado_pago = $request->get('estado_pago');
-        $tipo = $request->get('tipo');
+        $estado_pago = $request->get('select_estado');
+        $tipo_forma_pago = $request->get('tipo_forma_pago');
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -61,10 +61,8 @@ class CobranzasComprobantesController extends Controller
         } else {
             $query->whereIn('estado_pago', [0, 1]);
         }
-        if (!empty($tipo)) {
-            $query->where('forma_pago_id', $tipo);
-        } else {
-            $query->whereIn('forma_pago_id', [1, 2]);
+        if ($tipo_forma_pago != null) {
+            $query->where('forma_pago_id', (int)$request->tipo);
         }
 
         $recordsTotal = $query->count();
@@ -94,11 +92,8 @@ class CobranzasComprobantesController extends Controller
                 $factura->n_cuotas = "Pago Único";
             }
             // Documento Adicional )NC - ND)
-            if($factura->nota_credito != "0"){
-                $factura->doc_adicional = 1;    
-            }else{
-                $factura->doc_adicional = 0;
-            }
+            $factura->doc_adicional = $factura->nota_credito ;    
+
             return $factura;
         });
 
@@ -134,6 +129,9 @@ class CobranzasComprobantesController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $cliente = $request->get('cliente_id');
+        $tipo_forma_pago = $request->get('tipo_forma_pago');
+
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -155,7 +153,14 @@ class CobranzasComprobantesController extends Controller
         } else {
             $query = Facturacion::orderBy('id', 'desc');
         }
-
+        if($cliente != null){
+            $query->where('cliente_id', $cliente);
+        }
+        // return $query->where('estado_pago', 0)->get();
+        // return $query->get();
+        if ($tipo_forma_pago != null) {
+            $query->where('forma_pago_id', (int)$request->tipo_forma_pago);
+        }
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
                 $q->where('nombre', 'like', '%' . $filter . '%')
@@ -229,7 +234,7 @@ class CobranzasComprobantesController extends Controller
         $filter = $request->get('value');
         $cliente = $request->get('cliente_id');
         $estado_pago = $request->get('estado_pago');
-        $tipo = $request->get('tipo');
+        $tipo_forma_pago = $request->get('tipo');
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -267,8 +272,8 @@ class CobranzasComprobantesController extends Controller
             $query->whereIn('estado_pago', [0, 1]);
         }
         // return $query->get();
-        if ($request->filled('forma_pago_id')) {
-            $query->where('forma_pago_id', (int)$request->forma_pago_id);
+        if ($tipo_forma_pago != null) {
+            $query->where('forma_pago_id', (int)$request->tipo);
         }
         // dd(
         //     $query->toSql(),
@@ -313,13 +318,8 @@ class CobranzasComprobantesController extends Controller
             } else {
                 $factura_m->n_cuotas = "Pago Único";
             }
-            // Documento Adicional )NC - ND)
-            if($factura_m->nota_credito != "0"){
-                $factura_m->doc_adicional = 1;    
-
-            }else{
-                $factura_m->doc_adicional = 0;
-            }
+            // Documento Adicional - NC
+            $factura_m->doc_adicional = $factura_m->nota_credito;    
             return $factura_m;
         });
 
@@ -353,6 +353,9 @@ class CobranzasComprobantesController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $cliente = $request->get('cliente_id');
+        $estado_pago = $request->get('estado_pago');
+        $tipo_forma_pago = $request->get('tipo');
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -366,15 +369,20 @@ class CobranzasComprobantesController extends Controller
             9 => 'id'
         ];
 
-        if ($request->daterange != null) {
-            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        if ($request->datarange !== null && $request->datarange !== "") {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[1])->endOfDay();
 
             $query = Facturacion_m::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {
             $query = Facturacion_m::orderBy('id', 'desc');
         }
-
+        if($cliente != null){
+            $query->where('cliente_id', $cliente);
+        }
+        if ($tipo_forma_pago != null) {
+            $query->where('forma_pago_id', (int)$request->tipo);
+        }
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
                 $q->where('nombre', 'like', '%' . $filter . '%')
@@ -633,7 +641,7 @@ class CobranzasComprobantesController extends Controller
         $filter = $request->get('value');
         $cliente = $request->get('cliente_id');
         $estado_pago = $request->get('estado_pago');
-        $tipo = $request->get('tipo');
+        $tipo_forma_pago = $request->get('tipo');
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -664,10 +672,8 @@ class CobranzasComprobantesController extends Controller
         } else {
             $query->whereIn('estado_pago', [0, 1]);
         }
-         if ($tipo != null) {
-            $query->where('forma_pago_id', $tipo);
-        } else {
-            $query->whereIn('estado_pago', [0, 1]);
+        if ($tipo_forma_pago != null) {
+            $query->where('forma_pago_id', (int)$request->tipo);
         }
 
         $recordsTotal = $query->count();
@@ -684,21 +690,22 @@ class CobranzasComprobantesController extends Controller
             'recordsFiltered' => $recordsTotal,
             'data' => [],
         ];
-
-        $boleta_m->transform(function ($factura_m) use ($igv) {
-            if ($factura_m->forma_pago_id == 2) {
-                $cuotas = Cuotas_credito::where('boleta_id', $factura_m->id)->count();
+        
+        $boleta_m->transform(function ($boleta) use ($igv) {
+            if ($boleta->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('boleta_m_id', $boleta->id)->count();
                 if ($cuotas == 0 || $cuotas == 1) {
-                    $factura_m->n_cuotas = "Pago Único";
+                    $boleta->n_cuotas = "Pago Único";
                 } else {
-                    $factura_m->n_cuotas = $cuotas . " Cuotas";
+                    $boleta->n_cuotas = $cuotas . " Cuotas";
                 }
             } else {
-                $factura_m->n_cuotas = "Pago Único";
+                $boleta->n_cuotas = "Pago Único";
             }
-            return $factura_m;
+            $boleta->doc_adicional = $boleta->nota_credito;    
+            return $boleta;
         });
-
+        
         foreach ($boleta_m as $value) {
             $json['data'][] = [
                 $value->id,
@@ -706,12 +713,14 @@ class CobranzasComprobantesController extends Controller
                 $value->codigo_boleta,
                 $value->cliente->nombre,
                 $value->fecha_emision,
-                // $value->forma_pago_id,
+                // // $value->forma_pago_id,
                 $value->total_precio ?? 'S/' . '0',
                 $value->n_cuotas ?? "Error",
                 $value->saldo_pendiente ?? "---",
                 $value->fecha_vencimiento,
                 $value->id,
+                $value->total_precio_desc_sin_forma,
+                $value->doc_adicional,
             ];
         }
         return response()->json($json);
@@ -727,6 +736,9 @@ class CobranzasComprobantesController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $cliente = $request->get('cliente_id');
+        $estado_pago = $request->get('estado_pago');
+        $tipo_forma_pago = $request->get('tipo');
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -748,7 +760,12 @@ class CobranzasComprobantesController extends Controller
         } else {
             $query = Boleta_m::orderBy('id', 'desc');
         }
-
+        if($cliente != null){
+            $query->where('cliente_id', $cliente);
+        }
+        if ($tipo_forma_pago != null) {
+            $query->where('forma_pago_id', (int)$request->tipo);
+        }
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
                 $q->where('nombre', 'like', '%' . $filter . '%')

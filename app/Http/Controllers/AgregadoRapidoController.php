@@ -198,10 +198,7 @@ public function send_whatsapp(Request $request){
             $documentoId = $matches[1];
             $codigo = substr(md5($documentoId . env('APP_KEY') . $tipo), 0, 22);
 
-            // Eliminar '_manual' del tipo para la URL
-            $tipoLimpio = str_replace('_manual', '', $tipo);
-
-            $pdfUrl = url("{$tipoLimpio}/share/{$codigo}");
+            $pdfUrl = url("{$tipo}/share/{$codigo}");
             break;
         }
     }

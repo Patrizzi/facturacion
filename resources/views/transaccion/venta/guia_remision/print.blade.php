@@ -347,8 +347,8 @@
                 <tbody>
                 @php($i = 1)
                 @foreach($guia_registro as $guia_registros)
-                    @php($pesoItem = ($guia_registros->cantidad * $guia_registros->peso))
-                    @php($tota[] = $pesoItem)
+                    @php($pesoItem = ($guia_registros->peso / $guia_registros->cantidad))
+                    @php($tota[] = $guia_registros->peso)
                     <tr>
                         <td class="tac">{{ $i++ }}</td>
                         <td class="tac">{{ $guia_registros->producto->codigo_original ?? '-' }}</td>
@@ -368,8 +368,8 @@
                         </td>
                         <td class="tac">{{ $guia_registros->producto->unidad_i_producto->medida ?? 'NIU' }}</td>
                         <td class="tac">{{ $guia_registros->cantidad }}</td>
-                        <td class="tac">{{ $guia_registros->peso }}</td>
                         <td class="tac">{{ number_format( $pesoItem ,2)  }}</td>
+                        <td class="tac">{{ number_format($guia_registros->peso, 2) }}</td>
                     </tr>
                 @endforeach
                 <tr>

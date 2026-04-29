@@ -11,139 +11,250 @@
 
 @section('content')
 
-    <!-- Contenedor principal con cuadro blanco -->
-    <div class="row">
-        <div class="col-lg-12" style="margin-top: 20px">
-            <div class="ibox-content p-xl" style="margin-bottom: 2px;padding-bottom: 50px;">
-
-                <!-- Información del cliente y condiciones generales -->
-                <div class="row" align="center" style="margin-top: 40px; padding-bottom: 5px";>
-                    <div class="col-sm-6" align="center">
-                        <div class="form-control" style="height: 90%">
-                            <h3>Contacto Cliente</h3>
-                            @if($informeTecnico)
-                                <div align="left">
-                                    <strong>Señor(es):</strong> &nbsp;{{$informeTecnico->servicioGuia->cliente->nombre}}<br>
-                                    <strong>{{$informeTecnico->servicioGuia->cliente->documento_identificacion ?? 'DNI'}} :</strong> &nbsp;{{$informeTecnico->servicioGuia->cliente->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <strong>Teléfono:</strong>&nbsp;{{$informeTecnico->servicioGuia->cliente->telefono ?? '00000'}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <strong>Correo:</strong>&nbsp; {{$informeTecnico->servicioGuia->cliente->email ?? 'No especificado'}}<br>
-                                    <strong>Dirección:</strong>&nbsp; {{$informeTecnico->servicioGuia->cliente->direccion ?? 'No especificada'}}<br>
-                                    <strong>Celular:</strong>&nbsp; {{$informeTecnico->servicioGuia->cliente->celular ?? '0000000'}}<br>
-                                </div>
-                            @else
-                                <div align="left">
-                                    <em>No hay información del cliente disponible</em>
-                                </div>
-                            @endif
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <!-- Encabezado -->
+        <div class="ibox">
+            <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+                <div style="margin-top: 5px; margin-bottom: 8px; margin-left: 10px;">
+                    <button class="btn btn-link no-hover-icon" type="submit" style="cursor: pointer;">
+                        <i class="fa fa-arrow-left text-muted"></i>
+                    </button>
+                </div>
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up text-muted"></i>
+                    </a>
+                    <a class="" href="">
+                        <!-- Agregar routes -->
+                        <i class="fa fa-times text-muted"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row align-items-center tooltip-demo">
+                    <div class="col-12 col-md-3">
+                        <h3 style="margin: 0;">{{ $informeTecnico->servicioGuia->nro_servicio_guia }}</h3>
+                        <strong
+                            style="margin: 0;">{{ $informeTecnico->servicioGuia->cliente->documento_identificacion ?? 'DNI' }}
+                            :</strong>{{ $informeTecnico->servicioGuia->cliente->numero_documento }}
+                    </div>
+                    <div class="col-12 col-md-4 text-center">
+                        <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
+                            INFORME TÉCNICO
+                        </h2>
+                    </div>
+                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                        <a href="" class="btn btn-secondary" target="_blank" data-toggle="tooltip"
+                            data-placement="bottom" data-original-title="Impresión Libre">
+                            <i class="fa fa-share-alt"></i>
+                        </a>
+                        <form class="btn" style="padding: 0;"
+                            action="{{ route('st_informe_tecnico.pdf', $informeTecnico->id) }}" method="GET">
+                            <input type="text" name="name" maxlength="50" hidden
+                                value="{{ $servicioGuia->nro_servicio_guia }}">
+                            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
+                                data-original-title="Descargar PDF">
+                                <i class="fa fa-file-pdf-o fa-lg"></i>
+                            </button>
+                        </form>
+                        <a class="btn btn-success" href="{{ route('st_informe_tecnico.print', $informeTecnico->id) }}"
+                            target="_blank" data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
+                            <i class="fa fa-print fa-lg"></i>
+                        </a>
+                        @if (Auth::user()->email_creado == 1)
+                            <form action="" method="post" style="padding-right: 0; padding-left: 0;" class="btn">
+                                @csrf
+                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
+                                    data-placement="bottom" formtarget="_blank" data-original-title="Enviar por correo">
+                                    <i class="fa fa-envelope fa-lg"></i>
+                                </button>
+                            </form>
+                        @endif
+                        <div style="position: relative; display: inline-block;">
+                            <div id="auto" onclick="divAuto()">
+                                <a class="btn btn-success" style="background: green; border-color: green;"
+                                    data-toggle="tooltip" data-placement="bottom" data-original-title="Enviar a">
+                                    <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6" align="center">
-                        <div class="form-control" style="height: 90%">
-                            <h3>Condiciones Generales</h3>
-                            @if($informeTecnico)
-                                <div align="left">
-                                    <strong>Servicio Técnico:</strong>&nbsp;{{$informeTecnico->servicioGuia->nro_servicio_guia}}<br>
-                                    <strong>Orden de Servicio:</strong>&nbsp;{{$informeTecnico->servicioGuia->orden_servicio}}<br>
-                                    <strong>Fecha Registro:</strong>&nbsp;{{date("d/m/Y", strtotime($informeTecnico->servicioGuia->fecha_creacion))}}<br>
-                                </div>
-                            @else
-                                <div align="left">
-                                    <em>No hay información de condiciones disponible</em>
-                                </div>
-                            @endif
-                        </div>
+                    <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                        <form action="" method="post" class="btn"
+                            style="text-align: none; padding-right: 0; padding-left: 0;">
+                            @csrf
+                            <input type="tel" name="numero" value="" />
+                            <input type="text" name="mensaje" id="texto_orden" hidden />
+                            <input type="text" hidden name="url" value="">
+                            <input type="text" name="name_sin_cambio" hidden value="" />
+                            <button type="submit" class="btn btn-success" style="background: green; border-color: green;"
+                                formtarget="_blank" data-toggle="tooltip" data-placement="bottom"
+                                data-original-title="Enviar por Whatsapp">
+                                <i class="fa fa-send fa-lg"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
-                <br>
+            </div>
+        </div>
 
-                <!-- Nueva tabla de egresos -->
-                <table id="egresos-detalle" class="table table-bordered table-striped table-hover mt-4">
-                    <thead class="bg-white">
-                        <tr>
-                            <th>Nombre del Equipo</th>
-                            <th>Número del Serie</th>
-                            <th>Observación</th>
-                            <th>Fecha Inicio Reparación</th>
-                            <th>Fecha Fin Reparación</th>
-                            <th>Diagnóstico</th>
-                            <th>Descripción OS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if($informeTecnico)
-                            @foreach($informeTecnico->servicioGuia->servicioGuiaIngreso as $ingreso)
-                                @foreach($ingreso->servicioGuiaEgreso as $egreso)
-                                    <tr>
-                                        <td>{{ $ingreso->nombre_equipo}}</td>
-                                        <td>{{ $ingreso->nro_serie}}</td>
-                                        <td>{{ $ingreso->observacion}}</td>
-                                        <td>{{ $egreso->fecha_inicio_reparacion ?? '—' }}</td>
-                                        <td>{{ $egreso->fecha_fin_reparacion ?? '—' }}</td>
-                                        <td>{{ $egreso->diagnostico ?? '—' }}</td>
-                                        <td>{{ $egreso->descripcion_os ?? '—' }}</td>
-                                    </tr>
+        <!-- Contenedor principal con cuadro blanco -->
+        <div class="row">
+            <div class="col-lg-12" style="margin-top: -26px;">
+                <div class="ibox-content p-xl" style="margin-bottom: 2px;padding-bottom: 50px;">
+
+                    <!-- Información del cliente y condiciones generales -->
+                    <div class="row" align="center" style="margin-top: 40px; padding-bottom: 5px" ;>
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control" style="height: 90%">
+                                <h3>Contacto Cliente</h3>
+                                @if ($informeTecnico)
+                                    <div align="left">
+                                        <strong>Señor(es):</strong>
+                                        &nbsp;{{ $informeTecnico->servicioGuia->cliente->nombre }}<br>
+                                        <strong>{{ $informeTecnico->servicioGuia->cliente->documento_identificacion ?? 'DNI' }}
+                                            :</strong>
+                                        &nbsp;{{ $informeTecnico->servicioGuia->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Teléfono:</strong>&nbsp;{{ $informeTecnico->servicioGuia->cliente->telefono ?? '00000' }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <strong>Correo:</strong>&nbsp;
+                                        {{ $informeTecnico->servicioGuia->cliente->email ??
+                                            'No
+                                                                                                                especificado' }}<br>
+                                        <strong>Dirección:</strong>&nbsp;
+                                        {{ $informeTecnico->servicioGuia->cliente->direccion ?? 'No especificada' }}<br>
+                                        <strong>Celular:</strong>&nbsp;
+                                        {{ $informeTecnico->servicioGuia->cliente->celular ?? '0000000' }}<br>
+                                    </div>
+                                @else
+                                    <div align="left">
+                                        <em>No hay información del cliente disponible</em>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control" style="height: 90%">
+                                <h3>Condiciones Generales</h3>
+                                @if ($informeTecnico)
+                                    <div align="left">
+                                        <strong>Servicio
+                                            Técnico:</strong>&nbsp;{{ $informeTecnico->servicioGuia->nro_servicio_guia }}<br>
+                                        <strong>Orden de
+                                            Servicio:</strong>&nbsp;{{ $informeTecnico->servicioGuia->orden_servicio }}<br>
+                                        <strong>Fecha
+                                            Registro:</strong>&nbsp;{{ date('d/m/Y', strtotime($informeTecnico->servicioGuia->fecha_creacion)) }}<br>
+                                    </div>
+                                @else
+                                    <div align="left">
+                                        <em>No hay información de condiciones disponible</em>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <!-- Nueva tabla de egresos -->
+                    <table id="egresos-detalle" class="table table-bordered table-striped table-hover mt-4">
+                        <thead class="bg-white">
+                            <tr>
+                                <th>Nombre del Equipo</th>
+                                <th>Número del Serie</th>
+                                <th>Observación</th>
+                                <th>Fecha Inicio Reparación</th>
+                                <th>Fecha Fin Reparación</th>
+                                <th>Diagnóstico</th>
+                                <th>Descripción OS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($informeTecnico)
+                                @foreach ($informeTecnico->servicioGuia->servicioGuiaIngreso as $ingreso)
+                                    @foreach ($ingreso->servicioGuiaEgreso as $egreso)
+                                        <tr>
+                                            <td>{{ $ingreso->nombre_equipo }}</td>
+                                            <td>{{ $ingreso->nro_serie }}</td>
+                                            <td>{{ $ingreso->observacion }}</td>
+                                            <td>{{ $egreso->fecha_inicio_reparacion ?? '—' }}</td>
+                                            <td>{{ $egreso->fecha_fin_reparacion ?? '—' }}</td>
+                                            <td>{{ $egreso->diagnostico ?? '—' }}</td>
+                                            <td>{{ $egreso->descripcion_os ?? '—' }}</td>
+                                        </tr>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
-                        @endif
-                    </tbody>
-                </table>
-
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+    <style>
+        #auto {
+            cursor: pointer;
+            box-shadow: 0px 0px 1px #000;
+            display: inline-block;
+        }
 
-<style>
-#auto {
-    cursor: pointer;
-    box-shadow: 0px 0px 1px #000;
-    display: inline-block;
-}
+        #auto:hover {
+            opacity: .8;
+        }
 
-#auto:hover {
-    opacity: .8;
-}
+        #div-mostrar {
+            margin: auto;
+            height: 0px;
+            transition: height .4s;
+            color: white;
+            text-align: right;
+        }
 
-#div-mostrar {
-    margin: auto;
-    height: 0px;
-    transition: height .4s;
-    color: white;
-    text-align: right;
-}
+        #auto:hover+#div-mostrar {
+            height: 50px;
+        }
 
-#auto:hover + #div-mostrar {
-    height: 50px;
-}
+        .ibox-content {
+            background-color: #ffffff;
+            border: 1px solid #e7eaec;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+        }
 
-.ibox-content {
-    background-color: #ffffff;
-    border: 1px solid #e7eaec;
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0,0,0,.05);
-}
+        .form-control {
+            background-color: #ffffff;
+            border: 1px solid #e5e6e7;
+            border-radius: 1px;
+            color: #676a6c;
+            display: block;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 40px 20px;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
 
-.form-control {
-    background-color: #ffffff;
-    border: 1px solid #e5e6e7;
-    border-radius: 1px;
-    color: #676a6c;
-    display: block;
-    font-size: 14px;
-    line-height: 1.5;
-    padding: 40px 20px;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    width: 100%;
-    box-sizing: border-box;
-}
-</style>
+    <!-- Scripts necesarios -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
-<!-- Scripts necesarios -->
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-<script src="{{ asset('js/inspinia.js') }}"></script>
-<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <script>
+        var clic = 1;
+
+        function divAuto() {
+            if (clic == 1) {
+                document.getElementById("div-mostrar").style.height = "50px";
+                clic = clic + 1;
+            } else {
+                document.getElementById("div-mostrar").style.height = "0px";
+                clic = 1;
+            }
+        }
+    </script>
 
 @endsection

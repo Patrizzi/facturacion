@@ -194,6 +194,26 @@ class Ventas_registroController extends Controller
         // Bucle de llamada para el llenado del datatable
         foreach ($cotizaciones as $cotizacion) {
             $total_columna += $cotizacion->total_conv;
+            $renovacion = RenovacionVentas::where('cotizacion_id', $cotizacion->id)
+                ->where('estado', 1)
+                ->first();
+
+            $estadoRenovacion = 0;
+
+            if ($renovacion) {
+                $diasRestantes = Carbon::now()->startOfDay()->diffInDays($renovacion->fecha_vencimiento, false);
+
+                if ($renovacion->fecha_inicio->toDateString() > $renovacion->created_at->toDateString()) {
+                    $estadoRenovacion = 3; // ya fue renovada
+                } elseif ($diasRestantes < 0) {
+                    $estadoRenovacion = 4; // vencida
+                } elseif ($diasRestantes <= 7) {
+                    $estadoRenovacion = 2; // próxima a vencer
+                } else {
+                    $estadoRenovacion = 1; // activa y vigente
+                }
+            }
+
             $json['data'][] = [
                 $cotizacion->id,
                 $cotizacion->id,
@@ -208,6 +228,7 @@ class Ventas_registroController extends Controller
                 $cotizacion->cliente->celular,
                 $cotizacion->cliente->email,
                 $cotizacion->nota_informativa,
+                $estadoRenovacion,
             ];
         }
         // Llamado para la suma total
@@ -324,6 +345,27 @@ class Ventas_registroController extends Controller
         // Bucle de llamada para el llenado del datatable
         foreach ($cotizaciones as $cotizacion_manual) {
             $total_columna += $cotizacion_manual->total_conv;
+
+            $renovacion = RenovacionVentas::where('cotizacion_manual_id', $cotizacion_manual->id)
+                    ->where('estado', 1)
+                    ->first();
+
+            $estadoRenovacion = 0;
+
+            if ($renovacion) {
+                $diasRestantes = Carbon::now()->startOfDay()->diffInDays($renovacion->fecha_vencimiento, false);
+
+                if ($renovacion->fecha_inicio->toDateString() > $renovacion->created_at->toDateString()) {
+                    $estadoRenovacion = 3; // ya fue renovada
+                } elseif ($diasRestantes < 0) {
+                    $estadoRenovacion = 4; // vencida
+                } elseif ($diasRestantes <= 7) {
+                    $estadoRenovacion = 2; // próxima a vencer
+                } else {
+                    $estadoRenovacion = 1; // activa y vigente
+                }
+            }
+
             $json['data'][] = [
                 $cotizacion_manual->id,
                 $cotizacion_manual->id,
@@ -338,6 +380,7 @@ class Ventas_registroController extends Controller
                 $cotizacion_manual->cliente->celular,
                 $cotizacion_manual->cliente->email,
                 $cotizacion_manual->nota_informativa,
+                $estadoRenovacion
             ];
         }
         // Llamado para la suma total

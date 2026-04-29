@@ -286,7 +286,7 @@ class ComprobantesVentasController extends Controller
             // Array Estado Pago
             if($boleta->estado_pago != 0){ //Si es contado
                 $boleta->pago_detalle = [
-                    'monto_pagado' => $boleta->moneda->simbolo.' '.number_format($boleta->total_precio_sin_forma - $boleta->saldo_pendiente_sin_forma, 2),
+                    'monto_pagado' => $boleta->moneda->simbolo.' '.number_format($boleta->ultima_monto_pago, 2),
                     'fecha_pago' => $boleta->ultima_fecha_pago,
                     'detalle_pago' => $boleta->ultimo_dato_pago,
                     'tipo_pago' => ucfirst($boleta->ultimo_tipo_pago),
@@ -441,7 +441,7 @@ class ComprobantesVentasController extends Controller
             // Array Estado Pago
             if($factura->estado_pago != 0){ //Si es contado
                 $factura->pago_detalle = [
-                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->total_precio_sin_forma - $factura->saldo_pendiente_sin_forma, 2),
+                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->ultima_monto_pago, 2),
                     'fecha_pago' => $factura->ultima_fecha_pago,
                     'detalle_pago' => $factura->ultimo_dato_pago,
                     'tipo_pago' => ucfirst($factura->ultimo_tipo_pago),
@@ -597,7 +597,7 @@ class ComprobantesVentasController extends Controller
             // Array Estado Pago
             if($factura->estado_pago != 0){ //Si es contado
                 $factura->pago_detalle = [
-                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->total_precio_sin_forma - $factura->saldo_pendiente_sin_forma, 2),
+                    'monto_pagado' => $factura->moneda->simbolo.' '.number_format($factura->ultima_monto_pago, 2),
                     'fecha_pago' => $factura->ultima_fecha_pago,
                     'detalle_pago' => $factura->ultimo_dato_pago,
                     'tipo_pago' => ucfirst($factura->ultimo_tipo_pago),
@@ -1161,9 +1161,10 @@ class ComprobantesVentasController extends Controller
                 $guia_r->fecha_entrega_formatted,     // 6 - Entrega
                 $guia_r->id,                          // 7 - Ver (para link)
                 $guia_r->estado_proceso,              // 8 - Estado
-                $guia_r->cliente->celular ?? '',
-                $guia_r->cliente->email ?? '',
-                $guia_r->estado,
+                $guia_r->cliente->celular ?? '',      // 9
+                $guia_r->cliente->email ?? '',        // 10
+                $guia_r->estado,                      // 11
+                $guia_r->nota_informativa,            // 12 - Nota
             ];
         }
         $json['permiso_ver'] = auth()->user()->can('guia_remision.ver');
@@ -1336,9 +1337,10 @@ class ComprobantesVentasController extends Controller
                 $row->fecha_entrega_formatted,         // 6 - Entrega
                 $row->id,                              // 7 - Ver (para link)
                 $row->estado_proceso,                  // 8 - Estado SUNAT (0/1/2)
-                $row->cliente->celular ?? '',
-                $row->cliente->email ?? '',
-                $row->estado,
+                $row->cliente->celular ?? '',          // 9
+                $row->cliente->email ?? '',            // 10
+                $row->estado,                          // 11
+                $row->nota_informativa,                // 12 - Nota
             ];
         }
         $json['permiso_ver'] = auth()->user()->can('guia_remision_m.ver');

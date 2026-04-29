@@ -198,7 +198,7 @@
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="' + full[2] +
+                        return '<input type="checkbox" name="select_row" value="' + full[0] +
                             '" class="i-checks-factura">';
                     }
                 },
@@ -306,38 +306,61 @@
                         if(permiso_pagar){
                             class_pago = `button_hover_pago`;
                         }
-                        if (pago) {
-                            var end = `
-                                <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls" 
-                                            title="Pago: ${e3.texto}">
+                        switch (full[15]) {
+                            case 0:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls `+class_pago+`"
+                                            data-id="${full[0]}"
+                                            data-estado="${full[14]}"
+                                            title="Pago: ${e3.texto}">  
                                         <i style="font-weight:700" class="fa fa-dollar"></i>
-                                    </button>
-                                    <div class="contenedor">
-                                        <div class="mini-overlay">
-                                            <span class="info_overlay">Info. Pago</span><br>
-                                            <b>Monto: </b>${pago.monto_pagado}<br>
-                                            <b>Fecha: </b>${pago.fecha_pago}<br>
-                                            <b>Tipo: </b>${pago.tipo_pago}<br>
-                                            <b>Dato: </b>${pago.detalle_pago}
+                                        </button>
+                                    </div>
+                                `;
+                                break;
+                            case 1:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls `+class_pago+`"
+                                            data-id="${full[0]}"
+                                            data-estado="${full[14]}"
+                                            title="Pago: ${e3.texto}" 
+                                            title="Pago: ${e3.texto}">
+                                            <i style="font-weight:700" class="fa fa-dollar"></i>
+                                        </button>
+                                        <div class="contenedor">
+                                            <div class="mini-overlay">
+                                                <span class="info_overlay">Info. Ult. Pago</span><br>
+                                                <b>Monto: </b>${pago.monto_pagado}<br>
+                                                <b>Fecha: </b>${pago.fecha_pago}<br>
+                                                <b>Tipo: </b>${pago.tipo_pago}<br>
+                                                <b>Dato: </b>${pago.detalle_pago}
+                                            </div>
                                         </div>
-                                    </div></div>
-                            `;
-                        }else{
-                            var end = `
-                                <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls"
-                                        data-id="${full[0]}"
-                                        data-estado="${full[14]}"
-                                        title="Pago: ${e3.texto}">  
-                                    <i style="font-weight:700" class="fa fa-dollar"></i>
-                                    </button>
-                                </div>
-                            `;
+                                    </div>
+                                `;    
+                                break;
+                            case 2:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls"
+                                            title="Pago: ${e3.texto}">
+                                            <i style="font-weight:700" class="fa fa-dollar"></i>
+                                        </button>
+                                        <div class="contenedor">
+                                            <div class="mini-overlay">
+                                                <span class="info_overlay">Info. Ult. Pago</span><br>
+                                                <b>Monto: </b>${pago.monto_pagado}<br>
+                                                <b>Fecha: </b>${pago.fecha_pago}<br>
+                                                <b>Tipo: </b>${pago.tipo_pago}<br>
+                                                <b>Dato: </b>${pago.detalle_pago}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `; 
+                            break;
                         }
-
-                        // end += `</div>`;
-
                         return end;
                     }
                 },
@@ -534,7 +557,7 @@
                         });
                         $(`.select_2_multipl_` + index + ``).on('select2:select', function(e) {
                             var data = e.params.data;
-                            
+
                             var ant = $(`#total_cuotas_` + index + ``).val();
                             if (ant == "") {
                                 ant = 0;
@@ -558,7 +581,7 @@
                             var igual = $("#simbolor_label").html();
                             console.log("igual" + igual);
                             console.log("row.factura_simbolo" + row.factura_simbolo);
-                            
+
                             if (igual === row.factura_simbolo) {
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
@@ -1008,7 +1031,7 @@
                 closeWhatsappPanels();
                 return;
             }
-            
+
             e.stopPropagation();
             $(this).addClass('wsp-fixed').css('height', '50px');
         });

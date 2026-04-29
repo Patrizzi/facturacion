@@ -4,20 +4,8 @@
 @section('breadcrumb2', 'Guia Remision')
 @section('href_accion', route('guia_remision.index'))
 @section('value_accion', 'Atras')
-{{-- @extends('layout_agregado_rapido') --}}
 
-{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
-{{-- <script type="text/javascript">
-
-</script> --}}
 @section('content')
-
-
-    {{-- @section('form_action_modal_cliente', route('agregado_rapido.cliente_cotizado'))
-@section('ruta_retorno', 'guia_remision')
-<div class="social-bar">
-    <a class="icon icon-facebook" target="_blank" data-toggle="modal" data-target="#ModalCliente"><i class="fa fa-user-o" aria-hidden="true"></i>cliente </a>
-</div> --}}
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
@@ -26,8 +14,8 @@
                     <h5>Crear Guía Remisión</h5>
                 </div>
                 <div class="ibox-content">
-                    <form action="{{ route('guia_remision.store') }}" enctype="multipart/form-data"
-                        method="post" onsubmit="return valida(this)" id="form_store">
+                    <form action="{{ route('guia_remision.store') }}" enctype="multipart/form-data" method="post"
+                        onsubmit="return valida(this)" id="form_store">
                         @method('POST')
                         @csrf
                         <div class="row word-style">
@@ -89,7 +77,6 @@
                                                     title="Sucursal" required onchange="select_sucursal()"
                                                     style="width: 65%" autocomplete="off">
                                                 <datalist id="sucursal_list">
-                                                    {{-- <option value=""></option> --}}
                                                 </datalist>
                                                 <input id="postal_input" class="form-control" name="postal_input"
                                                     style="width: 25%" data-toggle="tooltip" data-placement="top"
@@ -121,7 +108,6 @@
                                         <select class="form-control" name="tipo_transporte" autocomplete="off"
                                             onchange="test(this)" id="select_id" required>
                                             <option value="">Escoge el tipo de transporte</option>
-                                            {{-- <option value="0">Sin Transporte</option> --}}
                                             <option value="1">Transporte Público</option>
                                             <option value="2">Transaporte Privado</option>
                                         </select>
@@ -195,10 +181,9 @@
                                         <thead>
                                             <tr>
                                                 <th style="width: 10px">
-                                                    {{-- <input class='check_all' type='checkbox'
-                                                        onclick="select_all()" /> --}}
-                                                    <button type="button" class='addmore btn btn-sm btn-success'> <i
-                                                            class="fa fa-plus-square" aria-hidden="true"></i> </button>
+                                                    <button type="button" class='addmore btn btn-sm btn-success'>
+                                                        <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                                    </button>
                                                 </th>
                                                 <th style="width: 600px">Artículo</th>
                                                 <th style="width: 100px">Stock</th>
@@ -210,15 +195,18 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    {{-- <input type='checkbox' class="case"> --}}
-                                                    <button type="button" class="btn btn-sm btn-danger"><i
-                                                            class="fa fa-trash"></i></button>
+                                                    <button type="button" class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
                                                 </td>
                                                 <td class="td_selected">
                                                     <select class="select2_demo_productos" name="articulo[]"
                                                         id="articulo" style="width: 100%;" onchange="ajax(0);"
                                                         required></select>
-                                                    <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id=""
+                                                    {{-- ✅ CORREGIDO: id="descripcion0" agregado --}}
+                                                    <textarea class="form-control" name="descripcion[]"
+                                                        id="descripcion0"
+                                                        placeholder="Detalle del Producto"
                                                         rows="1" style="margin-top: 5px"></textarea>
                                                 </td>
                                                 <td>
@@ -234,7 +222,8 @@
                                                         onchange="peso_cantidad(0)" />
                                                 </td>
                                                 <td>
-                                                    <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control prod_text"
+                                                    <textarea style="min-width: 250px" name="series[]" id="series0"
+                                                        class="form-control prod_text"
                                                         placeholder="escanear N/S"></textarea>
                                                 </td>
                                                 <td>
@@ -243,12 +232,9 @@
                                                         readonly="readonly">
                                                     <input type="hidden" id="peso_base0">
                                                 </td>
-
                                                 <span id="spTotal"></span>
                                             </tr>
-
                                         </tbody><br>
-
                                     </table>
                                 </div>
                                 <div class="d-flex justify-content-end mt-4">
@@ -269,111 +255,33 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
-
-    {{-- <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-
-        .word-style select,
-        .word-style input,
-        .word-style span,
-        .word-style label {
-            font-family: 'Outfit', sans-serif;
-            font-size: 11px;
-        }
-
-        .required {
-            color: red;
-            margin-left: 2px;
-        }
-    </style> --}}
-
-    {{-- <script>
-        function mostrarTransporte() {
-            const tipo = document.getElementById("select_transporte").value;
-            const grupoVehiculo = document.getElementById("grupo_vehiculo");
-            const labelVehiculo = document.getElementById("label_vehiculo");
-            const contenedorVehiculo = document.getElementById("contenedor_vehiculo");
-            const grupoConductor = document.getElementById("grupo_conductor");
-
-            contenedorVehiculo.innerHTML = '';
-            grupoVehiculo.style.display = 'none';
-            grupoConductor.style.display = 'none';
-
-            if (tipo === '1') { // Público
-                grupoVehiculo.style.display = 'flex';
-                labelVehiculo.textContent = 'Vehículo';
-
-                const select = document.createElement("select");
-                select.className = "form-control";
-                select.name = "vehiculo_publico";
-                select.innerHTML = `
-        <option value="">Ningún Vehículo</option>
-        @foreach ($transporte_publico as $transporte_publicos)
-        <option value="{{ $transporte_publicos->id }}">{{ $transporte_publicos->nombre }} / {{ $transporte_publicos->ruc }}</option>
-        @endforeach
-      `;
-                contenedorVehiculo.appendChild(select);
-            } else if (tipo === '2') { // Privado
-                grupoVehiculo.style.display = 'flex';
-                grupoConductor.style.display = 'flex';
-                labelVehiculo.textContent = 'Vehículo';
-
-                const select = document.createElement("select");
-                select.className = "form-control";
-                select.name = "vehiculo_privado";
-                select.innerHTML = `
-        <option value="">Ningún Vehículo</option>
-        @foreach ($vehiculo as $vehiculos)
-        <option value="{{ $vehiculos->id }}">{{ $vehiculos->placa }} / {{ $vehiculos->marca }}</option>
-        @endforeach
-      `;
-                contenedorVehiculo.appendChild(select);
-            }
-        }
-    </script> --}}
-
-
 
     <style type="text/css">
         .input-group>.select2-container--bootstrap {
             width: auto;
             flex: 1 1 auto;
         }
-
         .input-group>.select2-container--bootstrap .select2-selection--single {
             height: 100%;
             line-height: inherit;
             padding: 0.5rem 1rem;
             border: 1px solid #e5e6e7;
         }
-
         .select2-results__option.select2-results__option--highlighted {
             background-color: #1c84c6 !important;
             color: white !important;
         }
-
         .ruc {
             border-radius: 10px;
             height: 150px;
         }
-
-        /* .form-control {
-            border-radius: 10px;
-        } */
-
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             font-size: 12px;
         }
-
         .select2-container--default .select2-selection--single {
             border: none;
         }
-
         span.select2.select2-container.select2-container--default {
             max-width: 100% !important;
             width: 700px !important;
@@ -384,24 +292,21 @@
             padding: 3px 12px;
             border: 1px solid #e5e6e7;
         }
-
         .select2-hidden-accessible {
             width: auto !important;
-
         }
-
         input[type=date],
         input[type=datetime-local],
         input[type=month],
         input[type=time] {
             font-size: 12px;
         }
-
         @media only screen and (max-width: 1497px) {
             .td_selected>span.select2.select2-container.select2-container--default {
                 min-width: 376px !important;
             }
         }
+        .a { color: red }
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -409,23 +314,16 @@
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
-    <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
-    <!-- Steps -->
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-    
-    <!-- Jquery Validate -->
     <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-    {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+
+    {{-- Validar Formulario --}}
     <script>
         $(document).ready(function() {
             $(".prod_text").keypress(function(e) {
@@ -437,7 +335,6 @@
                 }
             });
             articlesSelect2();
-            // $('.select2_demo_almacen').select2();
         });
 
         function valida(f) {
@@ -451,38 +348,41 @@
             }
         }
     </script>
-    {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+
+    {{-- Agregar más filas --}}
     <script>
         var i = 2;
         $(".addmore").on('click', function() {
-            var data = `[
+            var data = `
         <tr>
         <td>
         <button type='button' class='btn btn-danger btn-xs' style='margin-top: 5px; margin-left: 5px;' onclick='$(this).closest("tr").remove();'><i class='fa fa-trash'></i></button>
-        </td>";
+        </td>
         <td class="td_selected">
         <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i});" required></select>
-        <textarea class="form-control" name="descripcion[]" placeholder="Detalle del Producto" id="" rows="1" style="margin-top: 5px"></textarea>
+        <textarea class="form-control" id="descripcion${i}" name="descripcion[]" placeholder="Detalle del Producto" rows="1" style="margin-top: 5px"></textarea>
         </td>
         <td>
-        <input style="min-width: 100px" type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required  autocomplete="off"/>
+        <input style="min-width: 100px" type='text' id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required autocomplete="off"/>
         </td>
         <td>
-        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control prod_text"  required  onchange="peso_cantidad(${i})" autocomplete="off" data-placement="top" title="No se puede procesar productos con stock '0'"/>
+        <input style="min-width: 100px" type='text' id='cantidad${i}' name='cantidad[]' class="monto${i} form-control prod_text" required onchange="peso_cantidad(${i})" autocomplete="off" data-placement="top" title="No se puede procesar productos con stock '0'"/>
         </td>
         <td>
         <textarea style="min-width: 250px" id='series${i}' name='series[]' class="form-control" placeholder="escanear N/S"></textarea>
         </td>
         <td>
-        <input style="min-width: 100px" id='peso${i}' name='peso[]' type="text" class="form-control" value="0"  readonly="readonly">
+        <input style="min-width: 100px" id='peso${i}' name='peso[]' type="text" class="form-control" value="0" readonly="readonly">
         <input type="hidden" id="peso_base${i}">
         </td>
         </tr>`;
-            $('table').append(data);
+            $('table tbody:first').append(data);
             articlesSelect2();
             i++;
         });
     </script>
+
+    {{-- Select2 cliente y productos --}}
     <script>
         $(".select2_demo_client").select2({
             theme: "bootstrap",
@@ -496,7 +396,7 @@
                 data: function(params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        search: params.term // search term
+                        search: params.term
                     };
                 },
                 processResults: function(data) {
@@ -521,23 +421,19 @@
                     url: "{{ route('pa.ajax_remision') }}",
                     dataType: 'json',
                     type: "POST",
-                    // delay: 1500,
                     data: function(params) {
                         return {
                             _token: "{{ csrf_token() }}",
                             id: params.id,
-                            search: params.term // search term
-
+                            search: params.term
                         };
                     },
                     processResults: function(data) {
                         return {
                             results: $.map(data, function(item) {
                                 return {
-                                    id: item.id + " | " + item.cod_prod + " | " + item.cod_origi +
-                                        " | " + item.nombre,
-                                    text: item.id + " | " + item.cod_prod + " | " + item.cod_origi +
-                                        " | " + item.nombre,
+                                    id: item.id + " | " + item.cod_prod + " | " + item.cod_origi + " | " + item.nombre,
+                                    text: item.id + " | " + item.cod_prod + " | " + item.cod_origi + " | " + item.nombre,
                                 };
                             })
                         };
@@ -546,7 +442,6 @@
                     passive: true
                 }
             });
-
         }
 
         function ajax(a) {
@@ -571,16 +466,13 @@
                     $(`#cantidad${a}`).attr('max', msg.stock);
                     if (msg.stock == 0) {
                         $(`#cantidad${a}`).on('keydown paste focus mousedown', function(e) {
-                            if (e.keyCode != 9) // ignore tab
-                                e.preventDefault();
+                            if (e.keyCode != 9) e.preventDefault();
                         });
                         $(`#cantidad${a}`).attr('data-toggle', 'tooltip');
                     } else {
                         $(`#cantidad${a}`).off('keydown paste focus mousedown');
                         $(`#cantidad${a}`).attr('data-toggle', '');
-
                     }
-                    // sum_total();
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
@@ -589,7 +481,6 @@
                 },
                 cache: true
             });
-
         }
 
         function peso_cantidad(b) {
@@ -598,40 +489,19 @@
             } else {
                 var articulo = document.getElementById(`articulo${b}`).value;
             }
-
             var cantidad = $(`#cantidad${b}`).val();
             var peso = $(`#peso_base${b}`).val();
-
             var total = parseFloat(cantidad) * parseFloat(peso);
-            console.log(total)
             $(`#peso${b}`).val(Math.round(total * 100) / 100);
-
         }
     </script>
+
+    {{-- Delete, select_all, iCheck --}}
     <script>
         $(".delete").on('click', function() {
             $('.case:checkbox:checked').parents("tr").remove();
-            var totalInp = $('[name="total"]');
-            var total_t = 0;
-
-            totalInp.each(function() {
-                total_t += parseFloat($(this).val());
-            });
-            $('#sub_total').val(total_t);
-
-            var igv_valor = {{ $igv->renta }};
-            var subtotal = document.querySelector(`#sub_total`).value;
-            var igv = parseFloat(subtotal) * igv_valor / 100;
-            var end = parseFloat(igv) + parseFloat(subtotal);
-
-            // console.log(typeof igv);
-            // console.log(typeof end);
-            document.getElementById("igv").value = igv;
-            document.getElementById("total_final").value = end;
         });
-    </script>
 
-    <script>
         function select_all() {
             $('input[class=case]:checkbox').each(function() {
                 if ($('input[class=check_all]:checkbox:checked').length == 0) {
@@ -645,11 +515,7 @@
         function Clear(elem) {
             elem.value = '';
         }
-    </script>
 
-    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-
-    <script>
         $(document).ready(function() {
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
@@ -657,11 +523,8 @@
             });
         });
     </script>
-    <style type="text/css">
-        .a {
-            color: red
-        }
-    </style>
+
+    {{-- Sucursal y transporte --}}
     <script>
         function change_cli() {
             var cliente = $('#cliente').val();
@@ -676,12 +539,9 @@
                     'cliente': cliente
                 },
                 success: function(msg) {
-
                     let cod_co = msg.cod_postal;
                     let msg_length = cod_co.length;
-                    // console.log(msg_length)
                     var list = document.getElementById('sucursal_list');
-                    var p_list = document.getElementById('postal_cod_list');
 
                     if (msg_length == 1) {
                         $('#sucursal_input').val(msg.sucursal[0]);
@@ -697,15 +557,8 @@
                             list.appendChild(option);
                             document.getElementById('input_post_array').value = msg.cod_postal;
                             document.getElementById('input_suc_array').value = msg.sucursal;
-
-                            // var option2 = document.createElement('option');
-                            // option2.value = msg.cod_postal[i];
-                            // p_list.appendChild(option2);
                         }
                     }
-
-                    // sum_total();
-
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
@@ -720,57 +573,47 @@
             var valor_input = $('#sucursal_input').val();
             var all_suc = document.getElementById('input_suc_array').value;
             var all_postal = document.getElementById('input_post_array').value;
-            // CODIGO PARA SEPARAR LAS SUCURSALES
             const split_suc = all_suc.split(',');
-            // CODIGO PARA SEPARAR LASA SUCURSALES
             const split_post = all_postal.split(',');
             for (let i_suc = 0; i_suc < split_suc.length; i_suc++) {
                 var el_suc = split_suc[i_suc];
-                console.log(el_suc);
                 if (el_suc == valor_input) {
                     $('#postal_input').val(split_post[i_suc]);
                 }
-
             }
         }
-    </script>
-    <script>
+
         function test(a) {
-            var x = (a.value || a.options[a.selectedIndex].value); //crossbrowser solution =)
-            if (x == 2) /*Transaporte Privado*/ {
+            var x = (a.value || a.options[a.selectedIndex].value);
+            if (x == 2) {
                 document.getElementById("transporte_privado").removeAttribute("hidden");
                 document.getElementById("transporte_publico").setAttribute("hidden", "hidden");
-
                 document.getElementById("vehiculo_privado").setAttribute("required", "required");
                 document.getElementById("conductor").setAttribute("required", "required");
                 document.getElementById("vehiculo_publico").removeAttribute("required");
-
-
             }
-            if (x == 0) /*Sin Transporte*/ {
+            if (x == 0) {
                 document.getElementById("transporte_privado").setAttribute("hidden", "hidden");
                 document.getElementById("transporte_publico").setAttribute("hidden", "hidden");
-
                 document.getElementById("vehiculo_publico").removeAttribute("required");
                 document.getElementById("vehiculo_privado").removeAttribute("required");
                 document.getElementById("conductor").removeAttribute("required");
-
-
             }
-            if (x == 1) /*Transporte Público*/ {
+            if (x == 1) {
                 document.getElementById("transporte_publico").removeAttribute("hidden");
                 document.getElementById("transporte_privado").setAttribute("hidden", "hidden");
-
                 document.getElementById("vehiculo_publico").setAttribute("required", "required");
                 document.getElementById("vehiculo_privado").removeAttribute("required");
                 document.getElementById("conductor").removeAttribute("required");
             }
         }
 
-        function delete_guion(string) { //solo letras y numeros
+        function delete_guion(string) {
             return string.replace(/-/g, "");
         }
     </script>
+
+    {{-- Guardar / Finalizar --}}
     <script>
         $('#guardar').on('click', function() {
             $('#button_submit').val('0');
@@ -790,7 +633,6 @@
                 form.reportValidity();
                 return;
             }
-
             swal({
                     title: "¿Estás seguro que deseas Finalizar?",
                     text: "Una vez Finalizado, no podrás modificar la Guía de Remisión",
@@ -817,6 +659,240 @@
             );
         });
     </script>
+
+    {{-- ✅ DUPLICADO: Carga de datos --}}
+    <script>
+        $(document).ready(function() {
+            var RemiDuplicado = @json($RemiDuplicado ?? null);
+
+            if (RemiDuplicado) {
+                setTimeout(function() {
+                    cargarDatosGuia(RemiDuplicado);
+                }, 800);
+            }
+        });
+
+        function cargarDatosGuia(data) {
+
+            // 1. CLIENTE
+            if (data.cliente) {
+                setTimeout(function() {
+                    if ($('#cliente').hasClass("select2-hidden-accessible")) {
+                        $('#cliente').select2('destroy');
+                    }
+
+                    $('#cliente').empty();
+                    const clienteOption = new Option(
+                        data.cliente.nombre + ' | ' + data.cliente.numero_documento,
+                        data.cliente.id,
+                        true,
+                        true
+                    );
+                    $('#cliente').append(clienteOption);
+
+                    $(".select2_demo_client").select2({
+                        theme: "bootstrap",
+                        placeholder: "Seleccionar Cliente",
+                        ajax: {
+                            minimumInputLength: 1,
+                            url: "{{ route('pa.clients') }}",
+                            dataType: 'json',
+                            type: "POST",
+                            delay: 10,
+                            data: function(params) {
+                                return {
+                                    _token: "{{ csrf_token() }}",
+                                    search: params.term
+                                };
+                            },
+                            processResults: function(response) {
+                                return {
+                                    results: $.map(response, function(item) {
+                                        return {
+                                            id: item.id,
+                                            text: item.nombre + ' | ' + item.numero_documento
+                                        };
+                                    })
+                                };
+                            },
+                            cache: true
+                        }
+                    });
+
+                    $('#cliente').val(data.cliente.id).trigger('change');
+
+                    // Cargar sucursal después de seleccionar cliente
+                    setTimeout(function() {
+                        change_cli();
+                        setTimeout(function() {
+                            if (data.sucursal_cli) {
+                                $('#sucursal_input').val(data.sucursal_cli);
+                            }
+                            if (data.cod_postal) {
+                                $('#postal_input').val(data.cod_postal);
+                            }
+                        }, 800);
+                    }, 500);
+
+                }, 400);
+            }
+
+            // 2. FECHA ENTREGA
+            if (data.fecha_entrega) {
+                $('input[name="fecha_entrega"]').val(data.fecha_entrega);
+            }
+
+            // 3. MOTIVO TRASLADO
+            if (data.motivo_traslado) {
+                $('select[name="motivo_traslado"]').val(data.motivo_traslado).trigger('change');
+            }
+
+            // 4. TIPO TRANSPORTE
+            if (data.tipo_transporte) {
+                $('select[name="tipo_transporte"]').val(data.tipo_transporte).trigger('change');
+                test(document.getElementById('select_id')); // muestra/oculta divs
+
+                setTimeout(function() {
+                    if (data.tipo_transporte == 1 && data.vehiculo_publico) {
+                        $('#vehiculo_publico').val(data.vehiculo_publico).trigger('change');
+                    }
+                    if (data.tipo_transporte == 2) {
+                        if (data.vehiculo_id) {
+                            $('#vehiculo_privado').val(data.vehiculo_id).trigger('change');
+                        }
+                        if (data.conductor_id) {
+                            $('#conductor').val(data.conductor_id).trigger('change');
+                        }
+                    }
+                }, 300);
+            }
+
+            // 5. OBSERVACIÓN
+            if (data.observacion) {
+                $('textarea[name="observacion"]').val(data.observacion);
+            }
+
+            // 6. REGISTROS
+            setTimeout(function() {
+                if (data.registros && data.registros.length > 0) {
+                    cargarRegistrosGuia(data.registros);
+                }
+            }, 1000);
+        }
+
+        function cargarRegistrosGuia(registros) {
+            cargarRegistroSecuencial(registros, 0);
+        }
+
+        function cargarRegistroSecuencial(registros, index) {
+            if (index >= registros.length) return;
+
+            const registro = registros[index];
+
+            if (index === 0) {
+                cargarRegistroEnFila(registro, 0, function() {
+                    setTimeout(function() {
+                        cargarRegistroSecuencial(registros, index + 1);
+                    }, 400);
+                });
+            } else {
+                crearNuevaFilaGuia(index, function() {
+                    cargarRegistroEnFila(registro, index, function() {
+                        setTimeout(function() {
+                            cargarRegistroSecuencial(registros, index + 1);
+                        }, 400);
+                    });
+                });
+            }
+        }
+
+        function crearNuevaFilaGuia(index, callback) {
+            var fila = `
+                <tr>
+                    <td>
+                        <button type='button' class='btn btn-danger btn-xs'
+                            style='margin-top: 5px; margin-left: 5px;'
+                            onclick='$(this).closest("tr").remove();'>
+                            <i class='fa fa-trash'></i>
+                        </button>
+                    </td>
+                    <td class="td_selected">
+                        <select class="select2_demo_productos" name="articulo[]" id="articulo${index}"
+                            style="width: 100%;" onchange="ajax(${index});" required></select>
+                        <textarea class="form-control" id="descripcion${index}" name="descripcion[]"
+                            placeholder="Detalle del Producto" rows="1" style="margin-top: 5px"></textarea>
+                    </td>
+                    <td>
+                        <input style="min-width: 100px" type='text' id='stock${index}' name='stock[]'
+                            readonly class="form-control" required autocomplete="off"/>
+                    </td>
+                    <td>
+                        <input style="min-width: 100px" type='text' id='cantidad${index}' name='cantidad[]'
+                            class="monto${index} form-control" required onchange="peso_cantidad(${index})"
+                            autocomplete="off"/>
+                    </td>
+                    <td>
+                        <textarea style="min-width: 250px" id='series${index}' name='series[]'
+                            class="form-control" placeholder="escanear N/S"></textarea>
+                    </td>
+                    <td>
+                        <input style="min-width: 100px" id='peso${index}' name='peso[]'
+                            type="text" class="form-control" value="0" readonly>
+                        <input type="hidden" id="peso_base${index}">
+                    </td>
+                </tr>
+            `;
+
+            $('table tbody:first').append(fila);
+
+            setTimeout(function() {
+                articlesSelect2();
+                if (callback) callback();
+            }, 250);
+        }
+
+        function cargarRegistroEnFila(registro, index, callback) {
+
+            if (!registro.producto_id || !registro.producto) {
+                if (callback) callback();
+                return;
+            }
+
+            const prod = registro.producto;
+            const articuloTexto = `${prod.id} | ${prod.codigo_producto} | ${prod.codigo_original} | ${prod.nombre}`;
+            const selectId = index === 0 ? '#articulo' : `#articulo${index}`;
+
+            if ($(selectId).length === 0) {
+                if (callback) callback();
+                return;
+            }
+
+            const option = new Option(articuloTexto, articuloTexto, true, true);
+            $(selectId).append(option).trigger('change');
+
+            // Esperar que ajax() traiga peso y stock del servidor
+            setTimeout(function() {
+
+                // ✅ DESCRIPCIÓN - ahora funciona para index 0 y el resto
+                $(`#descripcion${index}`).val(registro.descripcion || '');
+
+                // ✅ SERIES / NÚMERO DE SERIE
+                $(`#series${index}`).val(registro.numero_serie || registro.series || '');
+
+                // ✅ CANTIDAD
+                $(`#cantidad${index}`).val(registro.cantidad);
+
+                // ✅ RECALCULAR PESO con la cantidad duplicada
+                peso_cantidad(index);
+
+                if (callback) {
+                    setTimeout(callback, 300);
+                }
+
+            }, 1500);
+        }
+    </script>
+
     @include('transaccion.venta.clientes.modal_create')
 
 @endsection

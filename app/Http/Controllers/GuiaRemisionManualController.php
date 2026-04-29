@@ -387,7 +387,7 @@ class GuiaRemisionManualController extends Controller
         $guia_remi_m->cod_postal_cliente = $request->get('postal_input');
         $guia_remi_m->fecha_entrega = $fecha_entrega;
         $guia_remi_m->tipo_transporte = $tipo_transporte;
-        if ($tipo_transporte==1) { 
+        if ($tipo_transporte==1) {
             // Transporte Público
             $guia_remi_m->vehiculo_publico=$request->get('vehiculo_publico');
             // Transpor Privado en null
@@ -467,7 +467,7 @@ class GuiaRemisionManualController extends Controller
             $guia_remision->estado_anulado = 1;
             $guia_remision->motivo_anulacion = $request->motivo;
             $guia_remision->g_electronica = 2;
-            
+
 
             if (!$guia_remision->save()) {
                 return response()->json([
@@ -475,7 +475,7 @@ class GuiaRemisionManualController extends Controller
                     'message' => 'No se pudo anular la guía'
                 ], 500);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Guía anulada correctamente',
@@ -977,7 +977,7 @@ class GuiaRemisionManualController extends Controller
             if ($guia_r_m) {
                 $codigo = substr(md5($id . env('APP_KEY') . 'guia_remision_manual'), 0, 22);
 
-                $pdfUrl = url("guia_remision/share/{$codigo}");
+                $pdfUrl = url("guia_remision_manual/share/{$codigo}");
 
                 $mensaje .= "{$pdfUrl}\n";
             }
@@ -1314,5 +1314,14 @@ class GuiaRemisionManualController extends Controller
 
         } catch (\Exception $e) {
         }
+    }
+
+    public function guardarNotaInformativa(Request $request, $id)
+    {
+        $guia_m = GuiaRemisionManual::findOrFail($id);
+        $guia_m->nota_informativa = $request->input('nota_informativa');
+        $guia_m->save();
+
+        return response()->json(['success' => true]);
     }
 }

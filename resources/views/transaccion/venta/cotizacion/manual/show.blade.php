@@ -45,30 +45,6 @@
                     <div class="d-flex align-items-center" style="overflow: hidden;">
                         <div id="btn-slider-cotizacion-manual"
                             style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
-
-                            @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
-                                <button type="button"
-                                        class="btn btn-warning btn-editar"
-                                        id="edit"
-                                        onclick="click_editar()"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        data-original-title="Editar cotización manual"
-                                        style="white-space: nowrap; margin-right: 4px;">
-                                    <i class="fa fa-pencil"></i>
-                                </button>
-
-                                <button type="button"
-                                        class="btn-no-editar no_mostrar btn btn-warning"
-                                        onclick="click_cancelar_editar()"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        data-original-title="Cancelar edición"
-                                        style="white-space: nowrap; margin-right: 4px;">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            @endif
-
                             @if ($cotizacion->tipo == 'factura' && $cotizacion->estado == 0)
                                 <a class="btn btn-success"
                                 href="{{ route('cotizacion_manual.facturar', $cotizacion->id) }}"
@@ -146,7 +122,7 @@
                                 onclick="toggleBtnsCotizacionManual()"
                                 class="btn btn-default"
                                 style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                            <i class="fa fa-chevron-right" id="btn-arrow-cotizacion-manual"></i>
+                            <i class="fa fa-chevron-left" id="btn-arrow-cotizacion-manual"></i>
                         </button>
                     </div>
 
@@ -207,9 +183,31 @@
                             </a>
                         </div>
                     </div>
+                    @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
+                        <button type="button"
+                                class="btn btn-warning btn-editar"
+                                id="edit"
+                                onclick="click_editar()"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Editar cotización manual"
+                                style="white-space: nowrap; margin-right: 4px;">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+
+                        <button type="button"
+                                class="btn-no-editar no_mostrar btn btn-warning"
+                                onclick="click_cancelar_editar()"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                data-original-title="Cancelar edición"
+                                style="white-space: nowrap; margin-right: 4px;">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    @endif
                 </div>
 
-                <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
+                <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 17px;">
                     <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn" style="text-align: none; padding-right: 0; padding-left: 0;">
                         @csrf
                         <input type="tel" name="numero" value="{{ $cotizacion->cliente->celular }}" />
@@ -861,12 +859,12 @@
 
         if (isOpen) {
             slider.style.width = '0';
-            arrow.classList.remove('fa-chevron-left');
-            arrow.classList.add('fa-chevron-right');
-        } else {
-            slider.style.width = slider.scrollWidth + 'px';
             arrow.classList.remove('fa-chevron-right');
             arrow.classList.add('fa-chevron-left');
+        } else {
+            slider.style.width = slider.scrollWidth + 'px';
+            arrow.classList.remove('fa-chevron-left');
+            arrow.classList.add('fa-chevron-right');
         }
     }
 </script>
