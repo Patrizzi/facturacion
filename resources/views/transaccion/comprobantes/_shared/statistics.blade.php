@@ -173,7 +173,7 @@
                     @php $activeSet = true; @endphp
                 @endcan
                 @can('guia_remision_m.listar')
-                    <div class="carousel-item active {{ !$activeSet ? 'active' : '' }}">
+                    <div class="carousel-item {{ !$activeSet ? 'active' : '' }}">
                         <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                             <div
                                 style="border: 2px solid blue; border-radius: 50%; padding: 30px; display: flex; justify-content: center; align-items: center;">

@@ -35,4 +35,8 @@ class Kardex_entrada extends Model
         return $this->belongsTo(kardex_entrada_registro::class,'kardex_entrada_id');
     }
 
+    public function registros(){
+        return $this->hasMany(kardex_entrada_registro::class);
+    }
+
 }

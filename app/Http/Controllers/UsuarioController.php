@@ -355,8 +355,8 @@ class UsuarioController extends Controller
             'email_user'  => $request->correo_legal,
             'nombre'      => $request->nombre_legal,
             'estado'      => $request->estado === 'on' ? 1 : 0,
+            'check_kardex'  => $request->check_kardex_total === 'on' ? 1 : 0,
         ]);
-
         $rolActualNombre = $user->getRoleNames()->first();
         $rolActual = $rolActualNombre ? Role::findByName($rolActualNombre) : null;
         $user->syncRoles([]);
@@ -389,7 +389,57 @@ class UsuarioController extends Controller
                 $user->assignRole($rolNuevo->name);
             }
         }
-
+        // // Permiso especial para el Acceso total
+        // if($request->check_kardex_total == 'on'){
+        //     $permisos = [
+        //         'kardex_entrada.listar',
+        //         'kardex_entrada.crear',
+        //         'kardex_entrada.ver',
+        //         'kardex_entrada.anular',
+        //         'kardex_distribucion.listar',
+        //         'kardex_distribucion.crear',
+        //         'kardex_distribucion.ver',
+        //         'kardex_distribucion.anular',
+        //         'kardex_traslado.listar',
+        //         'kardex_traslado.crear',
+        //         'kardex_traslado.ver',
+        //         'kardex_traslado.anular',
+        //         'kardex_salida.listar',
+        //         'kardex_salida.crear',
+        //         'kardex_salida.ver',
+        //         'kardex_salida.anular',
+        //     ];
+        //     foreach ($permisos as $permiso) {
+        //         if (!$user->hasPermissionTo($permiso)) {
+        //             $user->givePermissionTo($permiso);
+        //         }
+        //     }
+        // }else{
+        //     $permisos = [
+        //         'kardex_entrada.listar',
+        //         'kardex_entrada.crear',
+        //         'kardex_entrada.ver',
+        //         'kardex_entrada.anular',
+        //         'kardex_distribucion.listar',
+        //         'kardex_distribucion.crear',
+        //         'kardex_distribucion.ver',
+        //         'kardex_distribucion.anular',
+        //         'kardex_traslado.listar',
+        //         'kardex_traslado.crear',
+        //         'kardex_traslado.ver',
+        //         'kardex_traslado.anular',
+        //         'kardex_salida.listar',
+        //         'kardex_salida.crear',
+        //         'kardex_salida.ver',
+        //         'kardex_salida.anular',
+        //     ];
+        //     foreach ($permisos as $permiso) {
+        //         if ($user->hasPermissionTo($permiso)) {
+        //             $user->revokePermissionTo($permiso);
+        //         }
+        //     }
+        // }
+        
         return redirect()->back()->with('success', "El Usuario se modificó correctamente");
 
         $btn = $request->get('btn');
@@ -426,6 +476,7 @@ class UsuarioController extends Controller
 
         $password_new = $request->get('password_new');
         $contrasena_adm = $request->get('contrasena_adm');
+        $almacen_id = $request->get('almacen_id');
         $almacen_id = $request->get('almacen_id');
         $estado = $request->get('estado');
         if ($estado == 'on') {
@@ -507,6 +558,7 @@ class UsuarioController extends Controller
                 $user = User::find($id);
                 $user->almacen_id = $almacen_id;
                 $user->estado = $estado_numero;
+                $user->check_kardex = $check_kardex;
                 $user->save();
                 return redirect()->route('usuarios.index');
             }

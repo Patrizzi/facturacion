@@ -49,16 +49,13 @@
                                                 <i class="fa fa-plus"></i>
                                             </a>
                                         @endcan
-                                        {{-- <button class="btn btn-primary" id="openUploadModal">
-                                            <i class="fa fa-upload text-secondary"
-                                                style="cursor: pointer;color: white !important"></i>
-                                        </button> --}}
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button type="button" class="btn btn-primary dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <button type="button"  onclick="exportarTodo(event)" class="dropdown-item">
+                                                <button type="button" onclick="exportarTodo(event)" class="dropdown-item">
                                                     <i class="fa fa-file-pdf"></i> Exportar Todo
                                                 </button>
                                                 <button type="button" id="exportSelected" class="dropdown-item">
@@ -90,13 +87,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
-                                            <select class="form-control" name="" id="estado_anular">
-                                                <option value="" selected>Todos los Estados</option>
-                                                <option value="0">En Circualción</option>
-                                                <option value="1">Pendientes</option>
-                                                <option value="2">Anulados</option>
-                                            </select>
-                                        </div>
+                                                <select class="form-control" name="" id="estado_anular">
+                                                    <option value="" selected>Todos los Estados</option>
+                                                    <option value="0">En Circualción</option>
+                                                    <option value="1">Pendientes</option>
+                                                    <option value="2">Anulados</option>
+                                                </select>
+                                            </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
@@ -122,8 +119,16 @@
                                                     <th>Fecha Subida</th>
                                                     <th>N° de G. Remisión</th>
                                                     <th>N° de Factura</th>
-                                                    <th>Ver</th>
-                                                    <th>Anular</th>
+                                                    <th>
+                                                        @can('kardex_entrada.ver')
+                                                            Ver
+                                                        @endcan
+                                                    </th>
+                                                    <th> @can('kardex_entrada.ver')
+                                                            Acciones
+                                                        @endcan
+                                                    </th>
+                                                    <th>Estado</th>
                                                 </tr>
                                             </thead>
                                             <tbody><span hidden="hidden">{{ $i = 0 }}</span>
@@ -137,18 +142,33 @@
                                                         <td>{{ $primer_registro->codigo_guia }}</td>
                                                         <td>{{ $primer_registro->codigo_guia }}</td>
                                                         <td>
-                                                            <center><a
-                                                                    href="{{ route('kardex-entrada.show', $primer_registro->id) }}"><button
-                                                                        type="button"
-                                                                        class="btn btn-s-m btn-primary">VER</button></a>
-                                                            </center>
+                                                            @can('kardex_entrada.ver')
+                                                                <a
+                                                                    href="{{ route('kardex-entrada.show', $primer_registro->id) }}">
+                                                                    <button type="button" class="btn btn-sm btn-primary"><i
+                                                                            class="fa fa-eye"></i></button>
+                                                                </a>
+                                                            @endcan
                                                         </td>
-                                                        <td></td>
+
+                                                        <td>
+                                                            @can('kardex_entrada.anular')
+                                                                <button type="button" class="btn btn-s-m btn-secondary">
+                                                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                                </button>
+                                                            @endcan
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-info btn-circle btn-ls"
+                                                                title="Guia en Circulacion">
+                                                                <i class="fa fa-history"></i>
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 @endif
                                                 @foreach ($kardex_entradas as $value => $kardex_entrada)
                                                     <tr class="gradeX">
-                                                        <td> {{ $i = $i + 1 }}</td>
+                                                        <td> {{ $kardex_entrada->id }}</td>
                                                         <td>{{ $kardex_entrada->codigo_guia }}</td>
                                                         <td>{{ $kardex_entrada->motivo->nombre }}</td>
                                                         <td>{{ $kardex_entrada->provedor->empresa }}</td>
@@ -156,38 +176,59 @@
                                                         <td>{{ $kardex_entrada->guia_remision }}</td>
                                                         <td>{{ $kardex_entrada->factura }}</td>
                                                         <td>
-                                                            <center><a
-                                                                    href="{{ route('kardex-entrada.show', $kardex_entrada->id) }}"><button
-                                                                        type="button"
-                                                                        class="btn btn-s-m btn-primary">VER</button></a>
-                                                            </center>
+                                                            @can('kardex_entrada.ver')
+                                                                <a
+                                                                    href="{{ route('kardex-entrada.show', $kardex_entrada->id) }}">
+                                                                    <button type="button" class="btn btn-primary"><i
+                                                                            class="fa fa-eye"></i></button>
+                                                                </a>
+                                                            @endcan
                                                         </td>
                                                         <td>
-                                                            <center>
+                                                            @can('kardex_entrada.anular')
                                                                 @if ($array_final[$value] == 1)
                                                                     @if ($kardex_entrada->estado == 1)
-                                                                        {{-- BUSCADOR CON UN FILTRADO --}}
-                                                                        <input type="hidden"
-                                                                            name="kardex_nombre_{{ $kardex_entrada->id }}"
-                                                                            id="kardex_nombre_{{ $kardex_entrada->id }}"
-                                                                            value="{{ $kardex_entrada->codigo_guia }}" />
-                                                                        <button type="button"
-                                                                            class="btn btn-s-m btn-danger"
+                                                                        <button type="button" class="btn btn-danger"
+                                                                            title="Anular"
                                                                             onclick="abrir_modal( {{ $kardex_entrada->id }} )">
-                                                                            <i class="fa fa-trash-o"
-                                                                                aria-hidden="true"></i>
-                                                                            Anular
+                                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                                         </button>
-                                                                        {{-- @endif --}}
                                                                     @else
-                                                                        <button
-                                                                            class="btn btn-s-m btn-secondary">Anulado</button>
+                                                                        <button type="button"
+                                                                            class="btn btn-secondary" disabled>
+                                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                                        </button>
                                                                     @endif
                                                                 @else
-                                                                    <button class="btn btn-s-m btn-info">Guía en
-                                                                        circulación</button>
+                                                                    <button class="btn btn-secondary" disabled><i
+                                                                            class="fa fa-trash-o"
+                                                                            aria-hidden="true"></i></button>
                                                                 @endif
-                                                            </center>
+                                                            @endcan
+                                                        </td>
+                                                        <td>
+                                                            @if ($array_final[$value] == 1)
+                                                                @if ($kardex_entrada->estado == 1)
+                                                                    <input type="hidden"
+                                                                        name="kardex_nombre_{{ $kardex_entrada->id }}"
+                                                                        id="kardex_nombre_{{ $kardex_entrada->id }}"
+                                                                        value="{{ $kardex_entrada->codigo_guia }}" />
+                                                                    <button class="btn btn-default btn-circle btn-ls"
+                                                                        title="Guia En Espera">
+                                                                        <i class="fa fa-clock-o"></i>
+                                                                    </button>
+                                                                @else
+                                                                    <button class="btn btn-danger btn-circle btn-ls"
+                                                                        title="Guia Anulada">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </button>
+                                                                @endif
+                                                            @else
+                                                                <button class="btn btn-info btn-circle btn-ls"
+                                                                    title="Guia en Circulacion">
+                                                                    <i class="fa fa-history"></i>
+                                                                </button>
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -315,12 +356,6 @@
             transition: transform 0.3s ease-in-out;
         }
 
-        .btn-circle {
-            width: 25px;
-            height: 25px;
-            padding: 3px 0;
-        }
-
         .icon-estado {
             text-align: center;
         }
@@ -346,6 +381,9 @@
                 pageLength: 25,
                 responsive: true,
                 dom: '<"html5buttons"B>lTfgitp',
+                order: [
+                    [0, 'desc']
+                ],
                 buttons: [{
                     customize: function(win) {
                         $(win.document.body).addClass('white-bg');

@@ -84,7 +84,7 @@
                                                     id="celular">
                                             </div>
                                             <label class="col-sm-2 col-form-label"><strong>Asig. Almacen:</strong></label>
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-4">
                                                 <select class="form-control" name="almacen_id" id="almacen_id">
                                                     <option value="todos">Todos</option>
                                                     @foreach ($almacen as $almacens)
@@ -118,21 +118,21 @@
                                                 <small>Activo</small>
                                             </div>
                                             {{-- Control total de Inventario --}}
-                                            <label class="col-sm-2 col-form-label" id="control_total_label" style="display: none"><strong>Subida de Productos en Kardex:</strong></label>
-                                            <div class="col-sm-3"
-                                                style="display: none;align-items: center;column-gap: 17px;" id="control_total_div">
+                                            <label class="col-sm-2 col-form-label" id="control_total_label" @if($user->almacen_id == NULL || $user->almacen_id == 1 ) style="display: none" @endif><strong>Subida de Productos en Kardex:</strong></label>
+                                            <div class="col-sm-3" @if($user->almacen_id == NULL || $user->almacen_id == 1 ) style="display: none;align-items: center;column-gap: 17px;" @else style="display: flex;align-items: center;column-gap: 17px;"  @endif
+                                                id="control_total_div">
                                                 <small>Desactivado</small>
                                                 <div class="switch-button">
-                                                    <input type="checkbox" name="check_kardex_total" id="switch-label2"
+                                                    <input type="checkbox" name="check_kardex_total" id="switch-label3"
                                                         class="switch-button__checkbox"
-                                                        @if ($user->check_kardex_total == 1) checked="" @endif>
-                                                    <label for="switch-label2" class="switch-button__label"></label>
+                                                        @if ($user->check_kardex == 1) checked="" @endif>
+                                                    <label for="switch-label3" class="switch-button__label"></label>
                                                 </div>
                                                 <small>Activo</small>
                                             </div>
-                                            <div class="col-sm-1" id="info_kardex_especifico" style="display: none">
+                                            <div class="col-sm-1" id="info_kardex_especifico" @if($user->almacen_id == NULL || $user->almacen_id == 1 ) style="display: none;justify-content: flex-end;" @else  style="display: flex;justify-content: flex-end;" @endif >
                                                 <div class="tooltip-demo text-center">
-                                                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Si esta opcion está activa, el usuario va a tener ">
+                                                    <button type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Si esta opcion está activa, el usuario va a tener acceso a subir productos y derivar a su almacen">
                                                         <i class="fa fa-info-circle"></i>
                                                     </button>
                                                 </div>
@@ -670,6 +670,16 @@
         $(document).ready(function() {
             actualizar_prefijos();
             actualizar_modulos();
+            
+            var chequeado = $('#switch-label3').prop('checked');
+            if(!chequeado){
+                for (let index = 94; index < 99; index++) {
+                    const element = $(`#permiso_${index}`);
+                    element.prop('disabled', true);
+                    element.prop('checked', false);
+                }
+                $('#prefijo_inventario_kardex-entrada').prop('disabled', true);
+            }
         });
 
         $(document).ready(function() {
@@ -687,7 +697,7 @@
         });
 
         $('#almacen_id').on('change', function(){
-            console.log($(this).val());
+            togglePermisosKardex();
 
             if( $(this).val() == 1 || $(this).val() == "todos" ){
                 $('#info_kardex_especifico').css('display', 'none');
@@ -701,6 +711,37 @@
             }
         });
         
+        // function almacen_to_kardex(){
+        //     var almacen = $('#almacen_id').val();
+        //     if(almacen == "todos" || almacen == '1'){
+        //         if($('#modulo_inventario').prop('checked')){
+        //            $('#prefijo_inventario_kardex-entrada').prop('checked', true);
+        //            for (let index = 94; index < 99; index++) {
+        //                 const element = $(`#permiso_${index}`);
+        //                 element.prop('checked', true);
+        //             }
+        //         }
+        //         // Se desabilitan los permisos si están activos
+        //         $('#prefijo_inventario_kardex-entrada').attr('disabled', false);
+        //         for (let index = 94; index < 99; index++) {
+        //             const element = $(`#permiso_${index}`);
+        //             element.prop('disabled', false);
+        //         }
+        //     }else{
+        //         console.log("b");
+        //         if($('#prefijo_inventario_kardex-entrada').prop('checked')){
+        //             $('#prefijo_inventario_kardex-entrada').prop('checked', false);
+        //         }
+        //         $('#prefijo_inventario_kardex-entrada').attr('disabled', true);
+        //         for (let index = 94; index < 99; index++) {
+        //             const element = $(`#permiso_${index}`);
+        //             element.prop('checked', false);
+        //             element.prop('disabled', true);
+        //         }
+
+        //     }
+        // }
+
         function check_modulo(el, modulo) {
             let estado = el.checked;
 
@@ -911,7 +952,51 @@
                 $('#rol_personalizado').css('display', 'none');
                 $('#div_button_save').css('display', 'block');
             }
+            togglePermisosKardex();
         });
+        function togglePermisosKardex() {
+            var chequeado = $('#switch-label3').prop('checked');
+            var almacen = $('#almacen_id').val();
+
+            // Corrección lógica
+            if (almacen != "todos" && almacen != '1') {
+
+                for (let index = 94; index < 99; index++) {
+                    const element = $(`#permiso_${index}`);
+                    element.prop('disabled', !chequeado);
+                    element.prop('checked', chequeado);
+                }
+
+                $('#prefijo_inventario_kardex-entrada')
+                    .prop('checked', chequeado)
+                    .prop('disabled', !chequeado);
+            }
+        }
+        $('#switch-label3').on('change', function(){
+            var chequeado = $(this).prop('checked');
+            console.log(chequeado);
+            var almacen = $('#almacen_id').val();
+            if(almacen != "todos" && almacen != '1'){
+                if(chequeado){
+                    console.log("true");
+                    for (let index = 94; index < 99; index++) {
+                        const element = $(`#permiso_${index}`); 
+                        element.prop('disabled', false);
+                        element.prop('checked', true);
+                    }
+                    $('#prefijo_inventario_kardex-entrada').prop('checked', true);
+                    $('#prefijo_inventario_kardex-entrada').prop('disabled', false);    
+                }else{
+                    for (let index = 94; index < 99; index++) {
+                        const element = $(`#permiso_${index}`); 
+                        element.prop('disabled', true);
+                        element.prop('checked', false);
+                    }
+                    $('#prefijo_inventario_kardex-entrada').prop('checked', false);
+                    $('#prefijo_inventario_kardex-entrada').prop('disabled', true);
+                }
+            }
+        })
     </script>
     <!-- Page-Level Scripts -->
     <script>

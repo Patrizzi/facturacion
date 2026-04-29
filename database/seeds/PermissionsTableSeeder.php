@@ -161,16 +161,18 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'kardex_entrada.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Entrada en Kardex']);
 
         // ALMACEN 1 A X
-        Permission::create(['name' => 'kardex_distribución.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Distribución en Kardex']);
-        Permission::create(['name' => 'kardex_distribución.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Distribución en Kardex']);
-        Permission::create(['name' => 'kardex_distribución.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Distribución en Kardex']);
-        Permission::create(['name' => 'kardex_distribución.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.gen_remision', 'module' => 'inventario', 'description' => 'Generar Guia de Remision para Guía de Distribución en Kardex']);
 
         // ALMACEN X A X
         Permission::create(['name' => 'kardex_traslado.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Traslado en Kardex']);
         Permission::create(['name' => 'kardex_traslado.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Traslado en Kardex']);
         Permission::create(['name' => 'kardex_traslado.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Traslado en Kardex']);
         Permission::create(['name' => 'kardex_traslado.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Traslado en Kardex']);
+        Permission::create(['name' => 'kardex_traslado.gen_remision', 'module' => 'inventario', 'description' => 'Generar Guia de Remision para Guía de Traslado en Kardex']);
 
         Permission::create(['name' => 'kardex_salida.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Salida en Kardex']);
         Permission::create(['name' => 'kardex_salida.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Salida en Kardex']);

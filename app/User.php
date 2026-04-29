@@ -26,7 +26,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'almacen_id'
+        'almacen_id',
+        'estado',
+        'check_kardex'
     ];
 
     /**

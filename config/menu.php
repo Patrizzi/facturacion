@@ -73,7 +73,7 @@ return [
 
                 'permission_any' => [
                     'kardex_entrada.listar',
-                    'kardex_distribución.listar',
+                    'kardex_distribucion.listar',
                     'kardex_traslado.listar',
                     'kardex_salida.listar',
                 ],
@@ -87,7 +87,7 @@ return [
                     ],
 
                     [
-                        'permission' => 'kardex_distribución.listar',
+                        'permission' => 'kardex_distribucion.listar',
                         'label' => 'Distribución Producto',
                         'route' => 'kardex-entrada-Distribucion.index',
                     ],
@@ -323,18 +323,20 @@ return [
         'icon' => 'fa fa-shopping-bag',
         'label' => 'Productos Y Servicios',
         'items' => [
-            'label' => 'Productos',
-            'route' => 'productos.index',
-            'permission_any' => [
-                'productos.listar'
+            [
+                'label' => 'Productos',
+                'route' => 'productos.index',
+                'permission_any' => [
+                    'productos.listar'
+                ],
             ],
-        ],
-        [
-            'label' => 'Servicios',
-            'route' => 'cantidad_precio.index',
-            'permission_any' => [
-                'servicios.index'
-            ],
+            [
+                'label' => 'Servicios',
+                'route' => 'servicios.index',
+                'permission_any' => [
+                    'servicios.listar'
+                ],
+            ]
         ]
     ],
     'proyectos_pmb' => [
