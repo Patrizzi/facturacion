@@ -240,6 +240,8 @@ class RenovacionController extends Controller
             $empresa    = Empresa::first();
             $banco      = Banco::where('estado', '0')->get();
             $banco_count = Banco::where('estado', '0')->count();
+            $banco      = Banco::where('estado', '0')->get();
+            $banco_count = Banco::where('estado', '0')->count();
             $fecha_actual = Carbon::now()->startOfDay();
 
             foreach ($renovaciones as $renovacion) {
@@ -248,8 +250,8 @@ class RenovacionController extends Controller
                     if (!$cotizacion) continue;
 
                     if ($renovacion->cotizacionManual) {
-                        $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get(); // ✅
-                        $vista_pdf = 'transaccion.venta.cotizacion.manual.pdf';
+                        $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+                        $vista_pdf = 'transaccion.venta.cotizacion.pdf2';
                     } else {
                         $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get(); // ✅
                         $vista_pdf = 'transaccion.venta.cotizacion.pdf2';
@@ -262,7 +264,7 @@ class RenovacionController extends Controller
                     $igv       = round($cotizacion->op_gravada, 2) * $igv_config->igv_total / 100;
                     $igv_p     = $igv;
                     $end       = round($sub_total, 2) + round($igv, 2);
-                    $end2      = number_format($end, 2);
+                    $end2      = number_format(round($sub_total, 2) + round($igv_p, 2), 2);
 
                     $fecha_vencimiento       = null;
                     $dias_restantes_texto    = null;
@@ -298,6 +300,8 @@ class RenovacionController extends Controller
                         'banco'                => $banco,
                         'banco_count'          => $banco_count,
                         'end'                  => $end,
+                        'igv_p'               => $igv_p,
+                        'banco_count'          => $banco_count,
                         'end2'                 => $end2,
                         'renovacion'           => $renovacion,
                         'fecha_vencimiento'    => $fecha_vencimiento,
@@ -341,8 +345,8 @@ class RenovacionController extends Controller
             }
 
             if ($renovacion->cotizacionManual) {
-                $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get(); // ✅
-                $vista_pdf = 'transaccion.venta.cotizacion.manual.pdf';
+                $cotizacion_reg = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
+                $vista_pdf = 'transaccion.venta.cotizacion.pdf2';
             } else {
                 $cotizacion_reg = Cotizacion_factura_registro::where('cotizacion_id', $cotizacion->id)->get(); // ✅
                         $vista_pdf = 'transaccion.venta.cotizacion.pdf2';

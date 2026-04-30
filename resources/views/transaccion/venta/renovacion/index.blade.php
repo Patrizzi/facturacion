@@ -57,6 +57,7 @@
                                             <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                 <i class="fa fa-envelope"></i> Correo
                                             </button>
+
                                             <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                 <i class="fa fa-whatsapp"></i> Whatsapp
                                             </button>
@@ -186,94 +187,7 @@
             var allSelectedIds = [];
             var masterChecked = false;
             var isUpdatingCheckboxes = false;
-            // Función para enviar boletas por Correo múltiple
-            $('#btn-correo-filtrado').on('click', function (e) {
-                e.preventDefault();
 
-                if (allSelectedIds.length === 0) {
-                    return swal({
-                        title: "Sin selección",
-                        text: "Por favor, selecciona al menos una cotización para enviar por correo.",
-                        type: "warning",
-                        confirmButtonText: "Entendido",
-                        confirmButtonColor: "#1a3bb3"
-                    });
-                }
-
-                swal({
-                    title: "Enviar por Correo",
-                    text: `Ingresa el correo electrónico para enviar ${allSelectedIds.length} cotizacion(es):`,
-                    type: "input",
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                    confirmButtonText: "Enviar",
-                    cancelButtonText: "Cancelar",
-                    inputPlaceholder: "ejemplo@correo.com",
-                    confirmButtonColor: "#1a3bb3"
-                }, function (inputValue) {
-                    if (inputValue === false) return false;
-                    if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
-
-                    // Validar formato de email
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(inputValue)) {
-                        return swal.showInputError("Por favor ingresa un correo electrónico válido");
-                    }
-
-                    // Mostrar mensaje de procesando
-                    swal({
-                        title: "Enviando...",
-                        text: `Procesando ${allSelectedIds.length} cotizacion(es). Por favor espera...`,
-                        showConfirmButton: false,
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    });
-
-                    // Enviar por AJAX
-                    $.ajax({
-                        url: '{{ route('envioCorreo.renovacion.multiple') }}',
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            email: inputValue,
-                            cotizacion_ids: allSelectedIds
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                swal({
-                                    title: "¡Enviado!",
-                                    text: response.message || `Se han enviado ${allSelectedIds.length} cotizacion(es) por correo`,
-                                    type: "success",
-                                    timer: 3000,
-                                    showConfirmButton: true,
-                                    confirmButtonColor: "#1a3bb3"
-                                });
-                            } else {
-                                swal({
-                                    title: "Error",
-                                    text: response.message || "Hubo un error al enviar los correos",
-                                    type: "error",
-                                    confirmButtonText: "Entendido",
-                                    confirmButtonColor: "#1a3bb3"
-                                });
-                            }
-                        },
-                        error: function (xhr) {
-                            let errorMsg = 'Error al enviar los correos';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                errorMsg = xhr.responseJSON.message;
-                            }
-                            swal({
-                                title: "Error",
-                                text: errorMsg,
-                                type: "error",
-                                confirmButtonText: "Entendido",
-                                confirmButtonColor: "#1a3bb3"
-                            });
-                        }
-                    });
-                });
-            });
             // "ACTIVA EL TAB DE RENOVACIÓN"
             $('#tab-renovacion').addClass('active');
 
@@ -633,6 +547,166 @@
                 renovacion_table.ajax.reload();
             });
 
+            // ============ WHATSAPP ============
+            $(document).on('click', '.wsp-container .btn-success', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWhatsappPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
+            });
+
+            // Fijar también cuando se hace clic dentro del formulario
+            $(document).on('click', '.wsp-form', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWhatsappPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).addClass('wsp-fixed').css('height', '50px');
+            });
+
+            $(document).on('submit', '.wsp-form form', function () {
+                const form = $(this).closest('.wsp-form');
+                form.removeClass('wsp-fixed').css('height', '0px');
+            });
+
+            // Cerrar al hacer clic fuera
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
+                    $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+                }
+            });
+
+            // ============ CORREO ============
+            $(document).on('click', '.email-container .btn-secondary', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEmailPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                const form = $(this).siblings('.email-form');
+                form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+
+            $(document).on('click', '.email-form', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEmailPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
+            });
+
+            // Cerrar al hacer clic fuera
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.email-container, .email-form').length) {
+                    $('.email-form').removeClass('email-fixed').css('height', '0px');
+                }
+            });
+
+            $(document).on('click', '.btn-agregar-email-renovacion', function () {
+                const renovacionId = $(this).data('id');
+                const container = $(`.emails-adicionales-renovacion-${renovacionId}`);
+
+                container.append(`
+                    <div style="margin-bottom: 5px; position: relative;">
+                        <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
+                            style="width: calc(100% - 30px); padding: 5px; border: 1px solid #ccc; border-radius: 3px;" />
+                        <button type="button" class="btn-eliminar-email-renovacion btn btn-danger btn-xs"
+                            style="padding: 3px 6px; position: absolute; right: 0; top: 0; height: 100%;">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                `);
+
+                const form = $(`.email-form[data-id="${renovacionId}"]`);
+                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+
+            $(document).on('click', '.btn-eliminar-email-renovacion', function () {
+                const form = $(this).closest('.email-form');
+                $(this).closest('div').remove();
+                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+
+            $(document).on('submit', '.form-enviar-email-renovacion', function (e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const renovacionId = form.data('renovacion-id');
+                const button = form.find('button[type="submit"]');
+                const originalHtml = button.html();
+                const emailFormContainer = $(`.email-form[data-id="${renovacionId}"]`);
+
+                const emails = form.find('input[type="email"]').map(function () {
+                    return $(this).val();
+                }).get().filter(email => email.trim() !== '');
+
+                if (emails.length === 0) {
+                    toastr.warning('Debes ingresar al menos un correo electrónico', 'Atención');
+                    return;
+                }
+
+                button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+
+                toastr.info('<i class="fa fa-spinner fa-spin"></i> Preparando envío...', 'Procesando', {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    closeButton: false,
+                    tapToDismiss: false
+                });
+
+                const formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: "{{ route('renovacion.enviar-correo-directo', '') }}/" + renovacionId,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        toastr.clear();
+
+                        if (response.success) {
+                            emailFormContainer.removeClass('email-fixed').css('height', '0px');
+                            toastr.success(response.message, 'Correcto');
+                        } else {
+                            toastr.error(response.message || 'No se pudo procesar la solicitud', 'Error');
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.clear();
+
+                        let errorMsg = 'Error al procesar el correo';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+
+                        toastr.error(errorMsg, 'Error');
+                    },
+                    complete: function () {
+                        button.prop('disabled', false).html(originalHtml);
+                    }
+                });
+            });
+
             // Imprimir renovaciones seleccionadas
             $('#bnt-imprimir').on('click', function(e) {
                 e.preventDefault();
@@ -797,6 +871,162 @@
                 });
             });
 
+            // Función para enviar boletas por Correo múltiple
+            $('#btn-correo-filtrado').on('click', function (e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una cotización para enviar por correo.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por Correo",
+                    text: `Ingresa el correo electrónico para enviar ${allSelectedIds.length} cotizacion(es):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "ejemplo@correo.com",
+                    confirmButtonColor: "#1a3bb3"
+                }, function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
+
+                    // Validar formato de email
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(inputValue)) {
+                        return swal.showInputError("Por favor ingresa un correo electrónico válido");
+                    }
+
+                    // Mostrar mensaje de procesando
+                    swal({
+                        title: "Enviando...",
+                        text: `Procesando ${allSelectedIds.length} cotizacion(es). Por favor espera...`,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+
+                    // Enviar por AJAX
+                    $.ajax({
+                        url: '{{ route('envioCorreo.renovacion.multiple') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            email: inputValue,
+                            cotizacion_ids: allSelectedIds
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                swal({
+                                    title: "¡Enviado!",
+                                    text: response.message || `Se han enviado ${allSelectedIds.length} cotizacion(es) por correo`,
+                                    type: "success",
+                                    timer: 3000,
+                                    showConfirmButton: true,
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            } else {
+                                swal({
+                                    title: "Error",
+                                    text: response.message || "Hubo un error al enviar los correos",
+                                    type: "error",
+                                    confirmButtonText: "Entendido",
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            }
+                        },
+                        error: function (xhr) {
+                            let errorMsg = 'Error al enviar los correos';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMsg = xhr.responseJSON.message;
+                            }
+                            swal({
+                                title: "Error",
+                                text: errorMsg,
+                                type: "error",
+                                confirmButtonText: "Entendido",
+                                confirmButtonColor: "#1a3bb3"
+                            });
+                        }
+                    });
+                });
+            });
+
+            //=========== ENVÍO POR WHATSAPP DE RENOVACIONES SELECCIONADAS ===========//
+            $('#btn-whatsapp-filtrado').on('click', function (e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una cotización para enviar por WhatsApp.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por WhatsApp",
+                    text: `Ingresa el número de WhatsApp para enviar ${allSelectedIds.length} cotización(es):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "Ejemplo: 999999999",
+                    confirmButtonColor: "#1a3bb3"
+                }, function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");
+                    if (!/^\d+$/.test(inputValue)) return swal.showInputError("Por favor ingresa solo números");
+
+                    swal.close();
+                    swal({
+                        title: "Procesando...",
+                        text: "Enviando cotizaciones por WhatsApp",
+                        type: "info",
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+
+                    const form = $('<form>', {
+                        action: '{{ route('envioWhatsapp.renovacion.multiple') }}',
+                        method: 'POST',
+                        target: '_blank',
+                        style: 'display:none;'
+                    });
+
+                    form.append($('<input>', { type: 'hidden', name: '_token', value: '{{ csrf_token() }}' }));
+                    form.append($('<input>', { type: 'hidden', name: 'numero', value: inputValue }));
+
+                    allSelectedIds.forEach(id => {
+                        form.append($('<input>', { type: 'hidden', name: 'cotizacion_ids[]', value: id }));
+                    });
+
+                    $('body').append(form);
+                    form.submit();
+                    setTimeout(() => form.remove(), 1000);
+                    setTimeout(() => {
+                        swal({
+                            title: "¡Enviado!",
+                            text: `Se han enviado ${allSelectedIds.length} cotizacion(es) por WhatsApp`,
+                            type: "success",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+                    }, 500);
+                });
+            });
+
             // Funciones helper
             window.clearAllSelections = function() {
                 allSelectedIds = [];
@@ -812,166 +1042,6 @@
                 console.log('IDs actualmente seleccionados:', allSelectedIds);
                 return allSelectedIds;
             };
-
-            // ============ WHATSAPP ============
-            $(document).on('click', '.wsp-container .btn-success', function (e) {
-                if (hasAnySelection()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeWhatsappPanels();
-                    return;
-                }
-
-                e.stopPropagation();
-                $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
-            });
-
-            // Fijar también cuando se hace clic dentro del formulario
-            $(document).on('click', '.wsp-form', function (e) {
-                if (hasAnySelection()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeWhatsappPanels();
-                    return;
-                }
-
-                e.stopPropagation();
-                $(this).addClass('wsp-fixed').css('height', '50px');
-            });
-
-            $(document).on('submit', '.wsp-form form', function () {
-                const form = $(this).closest('.wsp-form');
-                form.removeClass('wsp-fixed').css('height', '0px');
-            });
-
-            // Cerrar al hacer clic fuera
-            $(document).on('click', function (e) {
-                if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
-                    $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
-                }
-            });
-
-            // ============ CORREO ============
-            $(document).on('click', '.email-container .btn-secondary', function (e) {
-                if (hasAnySelection()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeEmailPanels();
-                    return;
-                }
-
-                e.stopPropagation();
-                const form = $(this).siblings('.email-form');
-                form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
-            });
-
-            $(document).on('click', '.email-form', function (e) {
-                if (hasAnySelection()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeEmailPanels();
-                    return;
-                }
-
-                e.stopPropagation();
-                $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
-            });
-
-            // Cerrar al hacer clic fuera
-            $(document).on('click', function (e) {
-                if (!$(e.target).closest('.email-container, .email-form').length) {
-                    $('.email-form').removeClass('email-fixed').css('height', '0px');
-                }
-            });
-
-            $(document).on('click', '.btn-agregar-email-renovacion', function () {
-                const renovacionId = $(this).data('id');
-                const container = $(`.emails-adicionales-renovacion-${renovacionId}`);
-
-                container.append(`
-                    <div style="margin-bottom: 5px; position: relative;">
-                        <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
-                            style="width: calc(100% - 30px); padding: 5px; border: 1px solid #ccc; border-radius: 3px;" />
-                        <button type="button" class="btn-eliminar-email-renovacion btn btn-danger btn-xs"
-                            style="padding: 3px 6px; position: absolute; right: 0; top: 0; height: 100%;">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                `);
-
-                const form = $(`.email-form[data-id="${renovacionId}"]`);
-                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
-            });
-
-            $(document).on('click', '.btn-eliminar-email-renovacion', function () {
-                const form = $(this).closest('.email-form');
-                $(this).closest('div').remove();
-                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
-            });
-
-            $(document).on('submit', '.form-enviar-email-renovacion', function (e) {
-                e.preventDefault();
-
-                const form = $(this);
-                const renovacionId = form.data('renovacion-id');
-                const button = form.find('button[type="submit"]');
-                const originalHtml = button.html();
-                const emailFormContainer = $(`.email-form[data-id="${renovacionId}"]`);
-
-                const emails = form.find('input[type="email"]').map(function () {
-                    return $(this).val();
-                }).get().filter(email => email.trim() !== '');
-
-                if (emails.length === 0) {
-                    toastr.warning('Debes ingresar al menos un correo electrónico', 'Atención');
-                    return;
-                }
-
-                button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
-
-                toastr.info('<i class="fa fa-spinner fa-spin"></i> Preparando envío...', 'Procesando', {
-                    timeOut: 0,
-                    extendedTimeOut: 0,
-                    closeButton: false,
-                    tapToDismiss: false
-                });
-
-                const formData = new FormData(form[0]);
-
-                $.ajax({
-                    url: "{{ route('renovacion.enviar-correo-directo', '') }}/" + renovacionId,
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        toastr.clear();
-
-                        if (response.success) {
-                            emailFormContainer.removeClass('email-fixed').css('height', '0px');
-                            toastr.success(response.message, 'Correcto');
-                        } else {
-                            toastr.error(response.message || 'No se pudo procesar la solicitud', 'Error');
-                        }
-                    },
-                    error: function (xhr) {
-                        toastr.clear();
-
-                        let errorMsg = 'Error al procesar el correo';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMsg = xhr.responseJSON.message;
-                        }
-
-                        toastr.error(errorMsg, 'Error');
-                    },
-                    complete: function () {
-                        button.prop('disabled', false).html(originalHtml);
-                    }
-                });
-            });
         });
     </script>
 
