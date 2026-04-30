@@ -39,6 +39,10 @@ class Personal extends Model
 		return $this->hasOne(Personal_datos_laborales::class, 'personal_id');
 	}
 
+	public function users(){
+		return $this->belongsTo(User::class);
+	}
+
 	public function getFullNameAttribute()
 	{
 		return $this->nombres . ' ' . $this->apellidos;
@@ -60,5 +64,12 @@ class Personal extends Model
 	public function getFechaRetiroAttribute(){
 		$fecha_nacimiento = Carbon::parse($this->attributes['fecha_retiro'])->format('d-m-Y');
         return $fecha_nacimiento;
+	}
+	public function getUserCreateAttribute(){
+		if($this->users){
+			return "1";
+		}else{
+			return "2";
+		}
 	}
 }

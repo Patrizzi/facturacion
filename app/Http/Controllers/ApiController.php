@@ -1431,8 +1431,10 @@ class ApiController extends Controller
                 $value->datos_laborales->categoria_ocupacional ?? 'Sin Categoria',
                 $value->id,
                 $value->id,
+                $value->user_create,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('personal.ver');
         return response()->json($json);
     }
 
