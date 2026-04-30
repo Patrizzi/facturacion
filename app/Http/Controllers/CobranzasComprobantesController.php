@@ -216,6 +216,7 @@ class CobranzasComprobantesController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('factura.detalle_pago');
         return response()->json($json);
     }
 
@@ -340,6 +341,8 @@ class CobranzasComprobantesController extends Controller
                 $value->doc_adicional,
             ];
         }
+        $json['permiso_pagar'] = auth()->user()->can('factura_m.pagar');
+        $json['permiso_ver'] = auth()->user()->can('factura_m.detalle_pago');
         return response()->json($json);
     }
 
@@ -438,6 +441,7 @@ class CobranzasComprobantesController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('factura_m.detalle_pago');
         return response()->json($json);
     }
 
@@ -469,7 +473,7 @@ class CobranzasComprobantesController extends Controller
             9 => 'id'
         ];
 
-        if ($request->datarange != null) {
+        if ($request->datarange !== null && $request->datarange !== "") {
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[1])->endOfDay();
 
@@ -535,6 +539,8 @@ class CobranzasComprobantesController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_pagar'] = auth()->user()->can('boleta.pagar');
+        $json['permiso_ver'] = auth()->user()->can('boleta.detalle_pago');
         return response()->json($json);
     }
 
@@ -548,6 +554,9 @@ class CobranzasComprobantesController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $cliente = $request->get('cliente_id');
+        $estado_pago = $request->get('estado_pago');
+        $tipo_forma_pago = $request->get('tipo');
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -560,20 +569,26 @@ class CobranzasComprobantesController extends Controller
             8 => 'ultima_fecha_cancelado',
             9 => 'id'
         ];
+        
+        if ($request->datarange !== null && $request->datarange !== "") {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[1])->endOfDay();
 
-        if ($request->daterange != null) {
-            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
-
-            $query = Boleta_m::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+            $query = Boleta::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {
-            $query = Boleta_m::orderBy('id', 'desc');
+            $query = Boleta::orderBy('id', 'desc');
         }
-
+        
+        if($cliente != null){
+            $query->where('cliente_id', $cliente);
+        }
+        if ($tipo_forma_pago != null) {
+            $query->where('forma_pago_id', (int)$request->tipo);
+        }
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
                 $q->where('nombre', 'like', '%' . $filter . '%')
-                    ->orWhere('codigo_boleta', 'like', '%' . $filter . '%')
+                    ->orWhere('codigo_fac', 'like', '%' . $filter . '%')
                     ->orWhereHas('cliente', function ($q, $request) use ($filter) {
                         $q->where('id', 'like', '%' . $request->cliente_id . '%');
                     });
@@ -586,8 +601,7 @@ class CobranzasComprobantesController extends Controller
             ->take($length)
             ->skip($start);
 
-        $facturas_m = $query->get();
-
+        $boleta = $query->get();
         $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
@@ -595,21 +609,21 @@ class CobranzasComprobantesController extends Controller
             'data' => [],
         ];
 
-        $facturas_m->transform(function ($factura_m) use ($igv) {
-            if ($factura_m->forma_pago_id == 2) {
-                $cuotas = Cuotas_credito::where('boleta_id', $factura_m->id)->count();
+        $boleta->transform(function ($boletas) use ($igv) {
+            if ($boletas->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('boleta_id', $boletas->id)->count();
                 if ($cuotas == 0 || $cuotas == 1) {
-                    $factura_m->n_cuotas = "Pago Único";
+                    $boletas->n_cuotas = "Pago Único";
                 } else {
-                    $factura_m->n_cuotas = $cuotas . " Cuotas";
+                    $boletas->n_cuotas = $cuotas . " Cuotas";
                 }
             } else {
-                $factura_m->n_cuotas = "Pago Único";
+                $boletas->n_cuotas = "Pago Único";
             }
-            return $factura_m;
+            return $boletas;
         });
 
-        foreach ($facturas_m as $value) {
+        foreach ($boleta as $value) {
             $json['data'][] = [
                 $value->id,
                 $value->estado_pago_text,
@@ -625,6 +639,7 @@ class CobranzasComprobantesController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('boleta.detalle_pago');
         return response()->json($json);
     }
 
@@ -723,6 +738,8 @@ class CobranzasComprobantesController extends Controller
                 $value->doc_adicional,
             ];
         }
+        $json['permiso_pagar'] = auth()->user()->can('boleta_m.pagar');
+        $json['permiso_ver'] = auth()->user()->can('boleta_m.detalle_pago');
         return response()->json($json);
     }
 
@@ -821,6 +838,7 @@ class CobranzasComprobantesController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('boleta_m.detalle_pago');
         return response()->json($json);
     }
 

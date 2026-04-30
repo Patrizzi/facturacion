@@ -82,7 +82,7 @@
                                                     <th>N° Cuotas</th>
                                                     <th>Total</th>
                                                     <th>Fecha Cancelado</th>
-                                                    <th>Acciones</th>
+                                                    <th>@can('factura_m.detalle_pago') Acciones @endcan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -278,6 +278,7 @@
         $('.select_2_estado').select2();
         $('.select_2_tipo_pago').select2();
         // FUNCION DE DATATABLE FACTURA M
+        var permiso_ver = false;
         var fact_m_table = $('.dataTables-example-facturas_manual_pagados').DataTable({
             "serverSide": true,
             "ajax": {
@@ -288,6 +289,10 @@
                     d.cliente_id = $("#cliente option:selected").val();
                     d.estado_pago = $('#select_estado').val();
                     d.tipo = $('#select_tipo_pago').val();
+                },
+                dataSrc: function(json){
+                    permiso_ver = json.permiso_ver;
+                    return json.data
                 }
             },
             "drawCallback": function(settings) {
@@ -366,11 +371,12 @@
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas_m', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
-                        var view =
-                            `<a class="btn btn-primary btn-ls"
-                                href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
+                        var view =``;
 
-                        // var view +=  ``;
+                        if(permiso_ver){
+                            view += `<a class="btn btn-primary btn-ls"
+                                href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
+                        }
 
                         return view;
                     }

@@ -99,7 +99,7 @@
                                                     <th>Saldo</th>
                                                     <th>Fecha V.</th>
                                                     <th>Obs.</th>
-                                                    <th>Acciones</th>
+                                                    <th>@canany(['factura.pagar', 'factura.detalle_pago']) Acciones @endcan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -283,9 +283,6 @@
                 dataSrc: function(json){
                     permiso_ver = json.permiso_ver;
                     permiso_pagar = json.permiso_pagar;
-
-                    d.select_estado = $('#select_estado').val();
-                    d.tipo_forma_pago = $('#tipo_forma_pago').val();
                     return json.data
                 }
             },
