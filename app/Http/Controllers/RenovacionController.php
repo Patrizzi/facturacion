@@ -457,7 +457,7 @@ class RenovacionController extends Controller
             $alto        = $config_email->alto_firma;
             $ancho       = $config_email->ancho_firma;
 
-            $titulo       = "Renovaciones - " . count($renovacion_ids) . " documento(s)";
+            $titulo       = "Cotizaciones - " . count($renovacion_ids) . " documento(s)";
             $mensaje_html = "Estimado cliente, adjuntamos las renovaciones solicitadas.";
             $mensaje      = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma_email', 'alto', 'ancho', 'firma'));
 
