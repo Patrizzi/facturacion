@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <div class="wrapper wrapper-content animated fadeInRight">+
+    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
@@ -33,7 +33,7 @@
                                 @include('planilla._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     @can('personal.listar')
-                                        <a href="{{route('personal.create')}}" class="btn btn-success">
+                                        <a href="{{ route('personal.create') }}" class="btn btn-success">
                                             <i class="fa fa-plus"></i>
                                         </a>
                                     @endcan
@@ -62,6 +62,8 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <select class="form-control" name="" id="select_tipo_coti">
                                                     <option value="" selected>Todos</option>
+                                                    <option value="Activo">Activo</option>
+                                                    <option value="Desactivado">Desactivado</option>
                                                 </select>
                                             </div>
 
@@ -85,9 +87,9 @@
                                                     <th>Celular</th>
                                                     <th>Fecha de Vinculación</th>
                                                     <th>Cargo Ocupacional</th>
-                                                    <td>Usuario</td>
-                                                    <td>Ver</td>
-                                                    {{-- <td>Acciones</td> --}}
+                                                    <td>@can('personal.ver') Ver @endcan</td>
+                                                    <td>@can('personal.estado')Acciones @endcan</td>
+                                                    <td>Informacion</td>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -118,60 +120,42 @@
             </div>
         </div>
     </div>
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox ">
-                    <div class="ibox-content">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTables-example">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
-                                        <th>N° Documento</th>
-                                        <th>Celular</th>
-                                        <th>Correo</th>
-                                        <th>Estado</th>
-                                        <th>Foto</th>
-                                        <th>Ver</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($personales as $index => $personal)
-                                        <tr class="gradeX">
-                                            <td>{{ $index }}</td>
-                                            <td>{{ $personal->nombres }}</td>
-                                            <td>{{ $personal->apellidos }}</td>
-                                            <td>{{ $personal->numero_documento }}</td>
-                                            <td>{{ $personal->celular }}</td>
-                                            <td>{{ $personal->email }}</td>
-                                            <td>{{ $personal->estado_trabajador_laboral }}</td>
-                                            <td><img src="
-                                                        {{ asset('/profile/images/') }}/{{ $personal->foto }}"
-                                                    style="width: 45px;">
-                                            </td>
-                                            <td>
-                                                <center><a href="{{ route('personal.show', $personal->id) }}"><button
-                                                            type="button" class="btn btn-s-m btn-primary">VER</button></a>
-                                                </center>
-                                            </td>
-                                                    <td><center><a href="{{ route('personal.edit', $personal->id) }}" ><button type="button" class="btn btn-s-m btn-success">Editar</button></a></center></td>
-     <td>
-                                                        <center>
-                                                            <form action="{{ route('personal.destroy', $personal->id)}}" method="POST">
-                                                                @csrf
-                                                                @method('delete')
-                                                                <button type="submit" class="btn btn-s-m btn-danger">Eliminar</button>
-                                                            </form>
-                                                        </center>
-                                                    </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+    {{-- Modal para Desactivar el personal --}}
+    <div id="modal-anular" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row" align="center">
+                        <div class="col-sm-12 b-r">
+                            <h3 class="m-t-none m-b">¿Seguro que desea anular el Personal&nbsp;<strong><span
+                                        id="valor_ind_elim"></span></strong>?</h3>
+                            <p>Este personal está registrado como usuario en el sistema o como personal de Venta, se va a desactivar el Personal</p>
+                            <form id="formulario_anular" action=" {{ route('personal.desactivar_pe', ':id') }} "
+                                enctype="multipart/form-data" method="post">
+                                @csrf @method('POST')
+                                <center><button type="submit" class="btn btn-w-m btn-danger">Anular</button></center>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- Modal para ELIMINAR un personal --}}
+    <div id="modal-eliminar" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row" align="center">
+                        <div class="col-sm-12 b-r">
+                            <h3 class="m-t-none m-b">¿Seguro que desea eliminar el Personal&nbsp;<strong><span
+                                        id="valor_ind"></span></strong>?</h3>
+                            <p>El usuario será eliminado del sistema</p>
+                            <form id="formulario_eliminar" action=" {{ route('personal.destroy', ':id') }} "
+                                enctype="multipart/form-data" method="post">
+                                @csrf @method('DELETE')
+                                <center><button type="submit" class="btn btn-w-m btn-danger">Eliminar</button></center>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -190,8 +174,34 @@
 
     <!-- Page-Level Scripts -->
     <script>
+        function eliminar_pers(id, valor) {
+            console.log(id);
+            let form = document.getElementById('formulario_eliminar');
+            let action = form.getAttribute('action');
+            action = action.replace(':id', id);
+            form.setAttribute('action', action);
+            $('#valor_ind_elim').text(valor);
+            $('#modal-eliminar').modal('show');
+        }
+
+        function desactivar_user(id, valor) {
+            console.log(id);
+            let form = document.getElementById('formulario_anular');
+            let action = form.getAttribute('action');
+            action = action.replace(':id', id);
+            form.setAttribute('action', action);
+            $('#valor_ind').text(valor);
+            $('#modal-anular').modal('show');
+        }
+
+        // Hacer la función global
+        window.desactivar_user = desactivar_user;
+        window.eliminar_pers = eliminar_pers;
+
         $(document).ready(function() {
             $('#tab-1-tab').addClass('active');
+            var permiso_ver = false;
+            var permiso_estado = false;
             var table = $('.dataTables-personal').DataTable({
                 "serverSide": true,
                 "processing": false,
@@ -203,7 +213,12 @@
                         // d._token = "{{ csrf_token() }}";
                         d.daterange = $('#data_range_filter').val();
                         d.value = $('#search_all_column').val();
-                        d.estado = 1
+                        d.estado = $('#select_tipo_coti').val();
+                    },
+                    dataSrc: function(json) {
+                        permiso_ver = json.permiso_ver;
+                        permiso_estado = json.permiso_estado;
+                        return json.data;
                     }
                 },
                 "columnDefs": [{
@@ -214,45 +229,92 @@
                             return '<input type="checkbox" name="select_row" value="' + full[2] +
                                 '" class="i-checks-boleta">';
                         }
-                    }, {
-                        // 'width': '0.5vmax',
+                    },
+                    { // 'width': '0.5vmax',
                         'targets': [8],
                         'orderable': false,
                         'render': function(data, type, full, meta) {
                             var url = '{{ route('personal.show', ':id') }}';
                             url = url.replace(':id', full[0]);
-                            return `<a href="${url}">
+                            var button_view = ``;
+                            if (permiso_ver) {
+                                button_view += `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
-                                </a> `;
+                                </a>`;
+                            }
+                            return button_view;
                         }
                     },
-                    {   // 'width': '0.5vmax',
+                    {
                         'targets': [9],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var button = ``;
+                            if(permiso_estado){
+                                if(full[11] != "Activo"){
+                                    var attr_dis =  `disabled`;
+                                }
+                                if (full[10] || full[12] == 1) {
+                                    button += `<a data-toggle="modal" class="btn btn-danger `+ attr_dis +`"  onclick="desactivar_user(` +
+                                        full[0] + `, '` + full[2] +
+                                        `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                                } else {
+                                    button += `<a data-toggle="modal" class="btn btn-danger `+ attr_dis +`"  onclick="eliminar_pers(` +
+                                        full[0] + `, '` + full[2] +
+                                        `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                                }
+                            }
+
+                            return button;
+                        }
+                    },
+                    {
+                        // 'width': '0.5vmax',
+                        'targets': [10],
                         'orderable': false,
                         'render': function(data, type, full, meta) {
                             var url = '{{ route('personal.show', ':id') }}';
                             url = url.replace(':id', full[0]);
-                            return `<a href="${url}">
-                                    <button type="button" class="btn btn-primary">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </a> `;
+                            // Estado de Usario Registrado
+                            var buttons = ``;
+                            if (full[11] == "Activo") {
+                                buttons += `
+                                    <button type="button" class="btn btn-circle btn-info" title="Activo" disabled>
+                                        <i class="fa fa-check"></i>
+                                    </button>`;
+                            } else {
+                                buttons += `
+                                    <button type="button" class="btn btn-circle btn-danger" title="Anulado" disabled>
+                                        <i class="fa fa-times"></i>
+                                    </button>`;
+                            }
+                            if (full[10]) {
+                                buttons += `
+                                    <button type="button" class="btn btn-circle btn-info" title="Usuario Creado" disabled>
+                                        <i class="fa fa-user"></i>
+                                    </button>`;
+                            } else {
+                                buttons += `
+                                    <button type="button" class="btn btn-circle btn-danger" disabled>
+                                        <i class="fa fa-user"></i>
+                                    </button>`;
+                            }
+                            if (full[12] == 1) {
+                                buttons += `
+                                    <button type="button" class="btn btn-circle btn-info" title="Personal de Venta Activo" disabled>
+                                        <i class="fa fa-reply-all"></i>
+                                    </button>`;
+                            } else {
+                                buttons += `
+                                    <button type="button" class="btn btn-circle btn-danger"  disabled>
+                                        <i class="fa fa-reply-all"></i>
+                                    </button>`;
+                            }
+                            return buttons;
                         }
                     }
-                    // {
-                    //     'targets': [9],
-                    //     'orderable': false,
-                    //     'render': function(data, type, full, meta) {
-                    //         var url = '{{ route('personal.edit', ':id') }}';
-                    //         url = url.replace(':id', full[0]);
-                    //         return `<a href="${url}">
-                //                     <button type0="button" class="btn btn-success">
-                //                         <i class="fa fa-edit"></i>
-                //                     </button>`;
-                    //     }
-                    // }
                 ],
                 drawCallback: function() {
                     // $('[data-toggle="tooltip"]').tooltip();
@@ -341,12 +403,29 @@
 
     <script>
         $(document).ready(function() {
-            // $('.dataTables-personal').DataTable({
-            //     pageLength: 5,
-            //     responsive: true,
-            //     dom: '<"html5buttons"B>lTfgitp',
-            //     buttons: []
-            // });
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
         });
     </script>
 @endsection

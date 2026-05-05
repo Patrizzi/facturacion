@@ -1371,12 +1371,21 @@ class ApiController extends Controller
             $query = Personal::query();
         }
 
-        if ($estado == 1) {
-            $query->where('estado_trabajador_laboral', 'Activo'); // Activo
+        switch ($request->estado) {
+            case '1':
+                $query->where('estado_trabajador_laboral', 'Activo'); // Activo
+                break;
+            
+            case '0':
+                $query->where('estado_trabajador_laboral', 'Desactivo'); // Activo
+                break;
         }
-        if ($estado == 0) {
-            $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
-        }
+        // if ($estado == 1) {
+        //     $query->where('estado_trabajador_laboral', 'Activo'); // Activo
+        // }
+        // if ($estado == 0) {
+        //     $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
+        // }
 
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
@@ -1431,10 +1440,13 @@ class ApiController extends Controller
                 $value->datos_laborales->categoria_ocupacional ?? 'Sin Categoria',
                 $value->id,
                 $value->id,
-                $value->user_create,
+                $value->usuario_registrado,
+                $value->estado_trabajador_laboral,
+                $value->personal_venta,
             ];
         }
         $json['permiso_ver'] = auth()->user()->can('personal.ver');
+        $json['permiso_estado'] = auth()->user()->can('personal.estado');
         return response()->json($json);
     }
 

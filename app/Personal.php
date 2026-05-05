@@ -33,14 +33,10 @@ class Personal extends Model
 
 	protected $guarded = [];
 
-	protected $appends = ['full_name'];
+	protected $appends = ['full_name','personal_venta'];
 
 	public function datos_laborales(){
 		return $this->hasOne(Personal_datos_laborales::class, 'personal_id');
-	}
-
-	public function users(){
-		return $this->belongsTo(User::class);
 	}
 
 	public function getFullNameAttribute()
@@ -65,11 +61,13 @@ class Personal extends Model
 		$fecha_nacimiento = Carbon::parse($this->attributes['fecha_retiro'])->format('d-m-Y');
         return $fecha_nacimiento;
 	}
-	public function getUserCreateAttribute(){
-		if($this->users){
-			return "1";
+
+	public function getPersonalVentaAttribute(){
+		// $personal_dl = Personal_datos_laborales::where('personal_id', $this->attributes['id'])->first();
+		if($this->datos_laborales->personal_venta){
+			return 1;
 		}else{
-			return "2";
+			return 0;
 		}
 	}
 }

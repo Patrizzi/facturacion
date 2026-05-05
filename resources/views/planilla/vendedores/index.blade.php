@@ -30,7 +30,8 @@
     <button class="btn btn-success" data-toggle="modal" data-target="#create">Agregar</button>
 
     <!-- Vendedor Modal -->
-    <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 550px">
                 <div class="modal-header">
@@ -94,9 +95,9 @@
                             <div class="fh-column">
                                 <div class="full-height-scroll">
                                     <ul class="list-group elements-list">
-                                        @foreach ($vendedores as $vendedor)
+                                        @foreach ($vendedores as $index0 =>  $vendedor)
                                             <li class="list-group-item">
-                                                <a onclick="myFunction{{ $vendedor->id }}()" class="nav-link active show"
+                                                <a @if($index0 == 0) class="nav-link active show" @else class="nav-link" @endif
                                                     data-toggle="tab" href="#tab-{{ $vendedor->id }}"
                                                     style="padding-top: 5px;padding-bottom: 5px;">
                                                     <strong style="font-size: 10px">{{ $vendedor->cod_vendedor }}-
@@ -124,8 +125,9 @@
                                 <div class="full-height-scroll white-bg border-left">
                                     <div>
                                         <div class="tab-content">
-                                            @foreach ($vendedores as $index =>  $vendedor)
-                                                <div id="tab-{{ $vendedor->id }}" @if ($index == 0) class="tab-pane active show" @else class="tab-pane" @endif>
+                                            @foreach ($vendedores as $index => $vendedor)
+                                                <div id="tab-{{ $vendedor->id }}"
+                                                    @if ($index == 0) class="tab-pane active show" @else class="tab-pane" @endif>
                                                     {{-- tabla de vendedor --}}
                                                     <div>
                                                         <div class="row">
@@ -348,7 +350,7 @@
                                                                                                 </td>
                                                                                             </tr>
                                                                                             {{-- Calculo de precios de comisiones --}}
-                                                                                            <span
+                                                                                            {{-- <span
                                                                                                 hidden="hidden">{{ $monto_moneda_extranjera = $lista->where('comisionista', '=', $listas->comisionista)->where('tipo_moneda', '=', 2)->where('estado_pagado', '=', 0)->sum('monto_comision') }}
                                                                                             </span>
 
@@ -356,13 +358,13 @@
                                                                                                 hidden="hidden">{{ $monto_moneda_nacional = $lista->where('comisionista', '=', $listas->comisionista)->where('tipo_moneda', '=', 1)->where('estado_pagado', '=', 0)->sum('monto_comision') }}
                                                                                             </span>
                                                                                             <script>
-                                                                                                function myFunction{{ $vendedor->id }}() {
+                                                                                                function myFunction{{$vendedor->id }}() {
                                                                                                     document.getElementById("extranjera{{ $vendedor->id }}").innerHTML =
                                                                                                         "{{ $moneda_extranjera->simbolo }}{{ round($monto_moneda_extranjera, 1) }}";
                                                                                                     document.getElementById("nacional{{ $vendedor->id }}").innerHTML =
                                                                                                         "{{ $moneda_nacional->simbolo }}{{ round($monto_moneda_nacional, 1) }}";
                                                                                                 }
-                                                                                            </script>
+                                                                                            </script> --}}
                                                                                             {{-- Calculo de precios de comisiones --}}
                                                                                         @endif
                                                                                     @endforeach

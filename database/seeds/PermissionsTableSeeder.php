@@ -256,10 +256,10 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'consultas.guia_egreso', 'module' => 'consultas', 'description' => 'Consulta para Guias de Egreso']);
         Permission::create(['name' => 'consultas.informe_tecnico', 'module' => 'consultas', 'description' => 'Consulta para Informe Tecnico']);
 
-        Permission::create(['name' => 'consultas.productos', 'module' => 'consultas' ] , ['description' => 'Consulta sobre Productos']);
-        Permission::create(['name' => 'consultas.servicios', 'module' => 'consultas' ] , ['description' => 'Consulta sobre Servicios']);
+        Permission::create(['name' => 'consultas.productos', 'module' => 'consultas', 'description' => 'Consulta sobre Productos']);
+        Permission::create(['name' => 'consultas.servicios', 'module' => 'consultas', 'description' => 'Consulta sobre Servicios']);
         
-        Permission::create(['name' => 'consultas.reporte_comprobantes', 'module' => 'consultas' ] , ['description' => 'Consulta para los Comprobantes']);
+        Permission::create(['name' => 'consultas.reporte_comprobantes', 'module' => 'consultas', 'description' => 'Consulta para los Comprobantes']);
 
         //* Registro Sunat
 

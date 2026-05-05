@@ -6,6 +6,8 @@ use App\Empresa;
 use App\Pais;
 use App\Personal;
 use App\Personal_datos_laborales;
+use App\Personal_venta;
+use App\User;
 use Illuminate\Http\Request;
 
 class PersonalController extends Controller
@@ -197,12 +199,33 @@ class PersonalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function desactivar_personal(Request $request, $id){
+        // return $request;
+        $personal = Personal::findOrFail($id);
+        $personal->estado_trabajador_laboral = "Desactivo";
+        $personal->save();
+
+        if($personal->usuario_registrado){
+            $user = User::where('personal_id', $personal->id)->first();
+            $user->estado = 0;
+            $user->save();
+        }
+        // return $personal->datos_laborales->personal_venta->id;
+        if($personal->datos_laborales->personal_venta){
+            $venta = Personal_venta::where('id_personal', $personal->datos_laborales->id)->first();
+            // return $venta;
+            $venta->estado = 1;
+            $venta->save();
+        }
+
+        return redirect()->route('personal.index')->with('success', 'Personal desactivado correctamente');
+    }
     public function destroy($id)
     {
         $personal = Personal::findOrFail($id);
         $personal->delete();
 
-        return redirect()->route('personal.index');
+        return redirect()->route('personal.index')->with('success', 'Personal eliminado correctamente');
     }
 
 
