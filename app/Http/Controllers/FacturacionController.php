@@ -559,6 +559,7 @@ class FacturacionController extends Controller
             $comision_id = $comisionista_buscador->id;
 
         }
+        // return $comision_id;
         // return $comi_valor;
         //Convertir nombre del cliente a id
         $cliente_nombre = $request->get('cliente');
@@ -713,6 +714,7 @@ class FacturacionController extends Controller
             $comisionista->estado_anular_fac_bol = '0';
             $comisionista->monto_final_fac_bol = $precio_final_igv;
             $porcentaje = 100 + $comisionista_porcentaje->comision;
+            // return $comisionista_porcentaje->;
             $comisionista->monto_comision = (100 * $sub_total_sin_igv / $porcentaje) * $comisionista_porcentaje->comision / 100;
             // $comisionista->id_coti_produc=$cotizador;
             $comisionista->id_fac = $facturacion->id;
