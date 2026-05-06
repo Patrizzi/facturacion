@@ -467,7 +467,8 @@ class ComprobantesVentasController extends Controller
                 $factura->cliente->email ?? '',
                 $factura->estado,
                 $factura->estado_pago,
-                $factura->pago_detalle
+                $factura->pago_detalle,
+                $factura->nota_informativa,
             ];
         }
         // Llamado para la suma total
