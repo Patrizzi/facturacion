@@ -54,12 +54,13 @@
                                             <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
                                                 <i class="fa fa-file-pdf-o"></i> PDF
                                             </button>
-                                            {{--  <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                            <button type="button" id="btn-correo-filtrado" class="dropdown-item">
                                                 <i class="fa fa-envelope"></i> Correo
                                             </button>
+
                                             <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
                                                 <i class="fa fa-whatsapp"></i> Whatsapp
-                                            </button>--}}
+                                            </button>
                                         </div>
                                     </div>
                                 </ul>
@@ -85,12 +86,24 @@
                                             </div>
                                         </div>
                                         <div class="col-lg-3 col-md-6 col-sm-12">
-                                            <select class="form-control" name="" id="select_tipo_coti">
-                                                <option value="" selected>Todos los comprobantes</option>
-                                                <option value="factura">Factura</option>
-                                                <option value="boleta">Boleta</option>
-                                                <option value="nota_venta">Nota de Venta</option>
-                                            </select>
+                                            <div class="row">
+                                                <div class="col-6 pr-1">
+                                                    <select class="form-control" id="select_tipo_coti">
+                                                        <option value="" selected>Comprobantes</option>
+                                                        <option value="factura">Factura</option>
+                                                        <option value="boleta">Boleta</option>
+                                                        <option value="nota_venta">Nota de Venta</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6 pl-1">
+                                                    <select id="select_estado_renovacion" class="form-control">
+                                                        <option value="">Estados</option>
+                                                        <option value="1">Activa</option>
+                                                        <option value="2">Por vencer</option>
+                                                        <option value="4">Vencida</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-lg-3 col-md-6 col-sm-12">
                                             <input type="search" class="form-control" placeholder="Buscar:"
@@ -116,12 +129,13 @@
                                                 <th>N°</th>
                                                 <th>RUC-DNI</th>
                                                 <th>Cliente</th>
-                                                <th>Fecha de Emisión</th>
-                                                <th>Fecha de Vencimiento</th>
-                                                <th>Tiempo de Vencimiento</th>
+                                                <th>Emisión</th>
+                                                <th>Vencimiento</th>
+                                                <th>Dias</th>
                                                 <th>Forma</th>
                                                 <th>Importe T.</th>
                                                 <th style="width: 0.5vmax !important">Acciones</th>
+                                                <th>Compartir R.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -132,6 +146,7 @@
                                                 <th colspan="9"></th>
                                                 <th class="total-columna">Total: 0</th>
                                                 <th class="total-total">Total G: 0</th>
+                                                <th></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -169,6 +184,10 @@
     {{-- SCRIPTS PARA DATATABLE --}}
     <script>
         $(document).ready(function() {
+            var allSelectedIds = [];
+            var masterChecked = false;
+            var isUpdatingCheckboxes = false;
+
             // "ACTIVA EL TAB DE RENOVACIÓN"
             $('#tab-renovacion').addClass('active');
 
@@ -177,6 +196,18 @@
             var allSelectedIds = [];
             var masterChecked = false;
             var isUpdatingCheckboxes = false;
+
+            function hasAnySelection() {
+                return Array.isArray(allSelectedIds) && allSelectedIds.length > 0;
+            }
+
+            function closeWhatsappPanels() {
+                $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+            }
+
+            function closeEmailPanels() {
+                $('.email-form').removeClass('email-fixed').css('height', '0px');
+            }
 
             // Inicializar iCheck
             $('.i-checks').iCheck({
@@ -192,6 +223,7 @@
                         daterange: $('#data_range_filter').val(),
                         tipo_renovacion: $('#select_tipo_coti').val(),
                         value: $('#search_all_column').val(),
+                        estado_renovacion: $('#select_estado_renovacion').val(),
                         length: -1,
                         start: 0
                     },
@@ -304,6 +336,7 @@
                         d.daterange = $('#data_range_filter').val();
                         d.tipo_renovacion = $('#select_tipo_coti').val();
                         d.value = $('#search_all_column').val();
+                        d.estado_renovacion = $('#select_estado_renovacion').val();
                     },
                     dataSrc: function(json) {
                         var total_columna = json.total_columna;
@@ -350,23 +383,97 @@
 
                         if (full[11] == '0') {
                             return `<a href="${url}">
-                                        <button type="button" class="btn btn-primary btn-sm">
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver">
                                             <i class="fa fa-eye"></i>
                                         </button>
                                     </a>
-                                    <button type="button" class="btn btn-warning btn-sm">
+                                    <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado">
                                         <i class="fa fa-clock-o"></i>
                                     </button>`;
                         } else {
                             return `<a href="${url}">
-                                        <button type="button" class="btn btn-primary btn-sm">
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver">
                                             <i class="fa fa-eye"></i>
                                         </button>
                                     </a>
-                                    <button type="button" class="btn btn-info btn-sm">
+                                    <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar">
                                         <i class="fa fa-check-circle"></i>
                                     </button>`;
                         }
+                    }
+                },
+                {
+                    'targets': [11], // Compartir R.
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        const renovacionId = full[0];
+                        const codigoRenovacion = full[2];
+                        const celularCliente = full[13] || '';
+                        const emailCliente = full[14] || '';
+                        const tipoCotizacion = full[12] || '';
+                        const nombreArchivo = tipoCotizacion === 'manual'
+                            ? `Cotizacion_Manual_${codigoRenovacion}`
+                            : `Cotizacion_${codigoRenovacion}`;
+
+                        return `
+                            <div style="display: inline-block; white-space: nowrap;">
+                                <!-- Contenedor Correo -->
+                                <div class="email-container" data-id="${renovacionId}"
+                                    style="display: inline-block; position: relative; vertical-align: top; margin-right: 5px;">
+                                    <button type="button" class="btn btn-secondary" style="cursor: pointer;">
+                                        <i class="fa fa-envelope fa-lg"></i>
+                                    </button>
+                                    <div class="email-form" data-id="${renovacionId}"
+                                        style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                        overflow: hidden; transition: height .4s; background: white;
+                                        box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                        z-index: 9999; white-space: nowrap; min-width: 250px;">
+                                        <form class="form-enviar-email-renovacion" data-renovacion-id="${renovacionId}" style="padding: 10px;">
+                                            @csrf
+                                            <div style="margin-bottom: 5px;">
+                                                <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
+                                                    value="${emailCliente}"
+                                                    style="width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                            </div>
+                                            <div class="emails-adicionales-renovacion-${renovacionId}"></div>
+                                            <button type="button" class="btn-agregar-email-renovacion btn btn-info btn-xs" data-id="${renovacionId}"
+                                                    style="padding: 3px 8px; margin-bottom: 5px; font-size: 11px;">
+                                                <i class="fa fa-plus"></i> Agregar correo
+                                            </button>
+                                            <button type="submit" class="btn btn-secondary" style="padding: 5px 10px; float: right;">
+                                                <i class="fa fa-send fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Contenedor WhatsApp -->
+                                <div class="wsp-container" data-id="${renovacionId}"
+                                    style="display: inline-block; position: relative; vertical-align: top;">
+                                    <a class="btn btn-success" style="background: green; border-color: green; cursor: pointer;">
+                                        <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
+                                    </a>
+                                    <div class="wsp-form" data-id="${renovacionId}"
+                                        style="position: absolute; top: 100%; right: 0; margin-top: 5px; height: 0px;
+                                        overflow: hidden; transition: height .4s; background: white;
+                                        box-shadow: 0px 0px 5px rgba(0,0,0,0.3); border-radius: 4px;
+                                        z-index: 9999; white-space: nowrap;">
+                                        <form action="{{ route('agregado.whatsapp_send') }}" method="post" target="_blank" style="padding: 10px;">
+                                            @csrf
+                                            <input type="tel" name="numero" placeholder="999999999" value="${celularCliente}"
+                                                style="width: 130px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;" required />
+                                            <input type="text" name="mensaje" hidden />
+                                            <input type="hidden" name="url" value="{{ url('renovacion/pdf') }}/${renovacionId}">
+                                            <input type="hidden" name="name_sin_cambio" value="${nombreArchivo}" />
+                                            <button type="submit" class="btn btn-success"
+                                                style="background: green; border-color: green; padding: 5px 10px; margin-left: 5px;">
+                                                <i class="fa fa-send fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
                     }
                 }
             ],
@@ -438,6 +545,166 @@
                 $('input[name="daterange"]').val("{{ date('01/m/Y') }} - {{ date('t/m/Y') }}").trigger('change');
                 mostrarToast = true;
                 renovacion_table.ajax.reload();
+            });
+
+            // ============ WHATSAPP ============
+            $(document).on('click', '.wsp-container .btn-success', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWhatsappPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).siblings('.wsp-form').addClass('wsp-fixed').css('height', '50px');
+            });
+
+            // Fijar también cuando se hace clic dentro del formulario
+            $(document).on('click', '.wsp-form', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeWhatsappPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).addClass('wsp-fixed').css('height', '50px');
+            });
+
+            $(document).on('submit', '.wsp-form form', function () {
+                const form = $(this).closest('.wsp-form');
+                form.removeClass('wsp-fixed').css('height', '0px');
+            });
+
+            // Cerrar al hacer clic fuera
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
+                    $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+                }
+            });
+
+            // ============ CORREO ============
+            $(document).on('click', '.email-container .btn-secondary', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEmailPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                const form = $(this).siblings('.email-form');
+                form.addClass('email-fixed').css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+
+            $(document).on('click', '.email-form', function (e) {
+                if (hasAnySelection()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeEmailPanels();
+                    return;
+                }
+
+                e.stopPropagation();
+                $(this).addClass('email-fixed').css('height', ($(this).find('form').outerHeight() + 20) + 'px');
+            });
+
+            // Cerrar al hacer clic fuera
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.email-container, .email-form').length) {
+                    $('.email-form').removeClass('email-fixed').css('height', '0px');
+                }
+            });
+
+            $(document).on('click', '.btn-agregar-email-renovacion', function () {
+                const renovacionId = $(this).data('id');
+                const container = $(`.emails-adicionales-renovacion-${renovacionId}`);
+
+                container.append(`
+                    <div style="margin-bottom: 5px; position: relative;">
+                        <input type="email" name="emails[]" placeholder="correo@ejemplo.com"
+                            style="width: calc(100% - 30px); padding: 5px; border: 1px solid #ccc; border-radius: 3px;" />
+                        <button type="button" class="btn-eliminar-email-renovacion btn btn-danger btn-xs"
+                            style="padding: 3px 6px; position: absolute; right: 0; top: 0; height: 100%;">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                `);
+
+                const form = $(`.email-form[data-id="${renovacionId}"]`);
+                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+
+            $(document).on('click', '.btn-eliminar-email-renovacion', function () {
+                const form = $(this).closest('.email-form');
+                $(this).closest('div').remove();
+                form.css('height', (form.find('form').outerHeight() + 20) + 'px');
+            });
+
+            $(document).on('submit', '.form-enviar-email-renovacion', function (e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const renovacionId = form.data('renovacion-id');
+                const button = form.find('button[type="submit"]');
+                const originalHtml = button.html();
+                const emailFormContainer = $(`.email-form[data-id="${renovacionId}"]`);
+
+                const emails = form.find('input[type="email"]').map(function () {
+                    return $(this).val();
+                }).get().filter(email => email.trim() !== '');
+
+                if (emails.length === 0) {
+                    toastr.warning('Debes ingresar al menos un correo electrónico', 'Atención');
+                    return;
+                }
+
+                button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
+
+                toastr.info('<i class="fa fa-spinner fa-spin"></i> Preparando envío...', 'Procesando', {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    closeButton: false,
+                    tapToDismiss: false
+                });
+
+                const formData = new FormData(form[0]);
+
+                $.ajax({
+                    url: "{{ route('renovacion.enviar-correo-directo', '') }}/" + renovacionId,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        toastr.clear();
+
+                        if (response.success) {
+                            emailFormContainer.removeClass('email-fixed').css('height', '0px');
+                            toastr.success(response.message, 'Correcto');
+                        } else {
+                            toastr.error(response.message || 'No se pudo procesar la solicitud', 'Error');
+                        }
+                    },
+                    error: function (xhr) {
+                        toastr.clear();
+
+                        let errorMsg = 'Error al procesar el correo';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+
+                        toastr.error(errorMsg, 'Error');
+                    },
+                    complete: function () {
+                        button.prop('disabled', false).html(originalHtml);
+                    }
+                });
             });
 
             // Imprimir renovaciones seleccionadas
@@ -523,7 +790,7 @@
                     confirmButtonColor: "#1a3bb3"
                 }, function(isConfirm) {
                     if (!isConfirm) return;
-                    
+
                     $('#btn_export_cotizaciones').prop('disabled', true);
 
                     $.ajax({
@@ -601,6 +868,162 @@
                             showConfirmButton: false
                         });
                     }
+                });
+            });
+
+            // Función para enviar boletas por Correo múltiple
+            $('#btn-correo-filtrado').on('click', function (e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una cotización para enviar por correo.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por Correo",
+                    text: `Ingresa el correo electrónico para enviar ${allSelectedIds.length} cotizacion(es):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "ejemplo@correo.com",
+                    confirmButtonColor: "#1a3bb3"
+                }, function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
+
+                    // Validar formato de email
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(inputValue)) {
+                        return swal.showInputError("Por favor ingresa un correo electrónico válido");
+                    }
+
+                    // Mostrar mensaje de procesando
+                    swal({
+                        title: "Enviando...",
+                        text: `Procesando ${allSelectedIds.length} cotizacion(es). Por favor espera...`,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+
+                    // Enviar por AJAX
+                    $.ajax({
+                        url: '{{ route('envioCorreo.renovacion.multiple') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            email: inputValue,
+                            cotizacion_ids: allSelectedIds
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                swal({
+                                    title: "¡Enviado!",
+                                    text: response.message || `Se han enviado ${allSelectedIds.length} cotizacion(es) por correo`,
+                                    type: "success",
+                                    timer: 3000,
+                                    showConfirmButton: true,
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            } else {
+                                swal({
+                                    title: "Error",
+                                    text: response.message || "Hubo un error al enviar los correos",
+                                    type: "error",
+                                    confirmButtonText: "Entendido",
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            }
+                        },
+                        error: function (xhr) {
+                            let errorMsg = 'Error al enviar los correos';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMsg = xhr.responseJSON.message;
+                            }
+                            swal({
+                                title: "Error",
+                                text: errorMsg,
+                                type: "error",
+                                confirmButtonText: "Entendido",
+                                confirmButtonColor: "#1a3bb3"
+                            });
+                        }
+                    });
+                });
+            });
+
+            //=========== ENVÍO POR WHATSAPP DE RENOVACIONES SELECCIONADAS ===========//
+            $('#btn-whatsapp-filtrado').on('click', function (e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una cotización para enviar por WhatsApp.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por WhatsApp",
+                    text: `Ingresa el número de WhatsApp para enviar ${allSelectedIds.length} cotización(es):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "Ejemplo: 999999999",
+                    confirmButtonColor: "#1a3bb3"
+                }, function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");
+                    if (!/^\d+$/.test(inputValue)) return swal.showInputError("Por favor ingresa solo números");
+
+                    swal.close();
+                    swal({
+                        title: "Procesando...",
+                        text: "Enviando cotizaciones por WhatsApp",
+                        type: "info",
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+
+                    const form = $('<form>', {
+                        action: '{{ route('envioWhatsapp.renovacion.multiple') }}',
+                        method: 'POST',
+                        target: '_blank',
+                        style: 'display:none;'
+                    });
+
+                    form.append($('<input>', { type: 'hidden', name: '_token', value: '{{ csrf_token() }}' }));
+                    form.append($('<input>', { type: 'hidden', name: 'numero', value: inputValue }));
+
+                    allSelectedIds.forEach(id => {
+                        form.append($('<input>', { type: 'hidden', name: 'cotizacion_ids[]', value: id }));
+                    });
+
+                    $('body').append(form);
+                    form.submit();
+                    setTimeout(() => form.remove(), 1000);
+                    setTimeout(() => {
+                        swal({
+                            title: "¡Enviado!",
+                            text: `Se han enviado ${allSelectedIds.length} cotizacion(es) por WhatsApp`,
+                            type: "success",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+                    }, 500);
                 });
             });
 

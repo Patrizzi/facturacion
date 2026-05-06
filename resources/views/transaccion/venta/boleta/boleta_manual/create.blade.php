@@ -1361,6 +1361,7 @@
                 );
             }
         });
+        
         // TODO Script para cambiar por moneda
         let status = 0;
 

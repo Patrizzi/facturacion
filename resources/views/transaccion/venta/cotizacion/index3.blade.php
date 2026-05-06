@@ -332,6 +332,7 @@
                 'orderable': false
             },
             {
+                'width': '15%',
                 'targets': [2],
                 'orderable': false,
                 'render': function (data, type, full, meta) {
@@ -386,7 +387,7 @@
                 'orderable': false
             },
             {
-                'width': '30%',
+                'width': '25%',
                 'targets': [4],
                 'orderable': false
             },
@@ -417,7 +418,7 @@
                             <i class="fa fa-refresh"></i>
                         </button>`;
                     } else if (full[13] == 2) {
-                        iconoRenovacion = `<button type="button" class="btn" style="background-color:#e8572a; border-color:#e8572a; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Próxima a vencer">
+                        iconoRenovacion = `<button type="button" class="btn" style="background-color:#f8ac59; border-color:#f8ac59; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Próxima a vencer">
                             <i class="fa fa-refresh"></i>
                         </button>`;
                     } else if (full[13] == 3) {
