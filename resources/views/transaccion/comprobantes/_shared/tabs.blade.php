@@ -76,3 +76,4 @@
         </li>
     </div>
     @endcan
+</div>

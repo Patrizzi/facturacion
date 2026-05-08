@@ -2,9 +2,9 @@
 
 @section('title', 'Vendedores')
 @section('breadcrumb', 'Vendedores')
-@section('breadcrumb2', 'Vendedores')
+{{-- @section('breadcrumb2', 'Vendedores')
 @section('data-toggle', 'modal')
-@section('href_accion', '#create')
+@section('href_accion', '#create') --}}
 @section('value_accion', 'Agregar')
 
 @section('content')
@@ -27,7 +27,7 @@
         }
     </style>
 
-    <button class="btn btn-success" data-toggle="modal" data-target="#create">Agregar</button>
+    {{-- <button class="btn btn-success" data-toggle="modal" data-target="#create">Agregar</button> --}}
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -51,10 +51,13 @@
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
                                 @include('planilla.vendedores._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    @can('vendedores.listar')
-                                        <a href="{{ route('vendedores.create') }}" class="btn btn-success">
+                                    @can('vendedores.crear')
+                                        {{-- <a href="{{ route('vendedores.create') }}" class="btn btn-success">
                                             <i class="fa fa-plus"></i>
-                                        </a>
+                                        </a> --}}
+                                        <button class="btn btn-success" data-toggle="modal" data-target="#create">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
                                     @endcan
                                 </ul>
                             </ul>
@@ -158,12 +161,14 @@
                                                                                             <div class="col-sm-6"
                                                                                                 align="right">
                                                                                                 <!-- Vendedor modal -->
-                                                                                                <button aling='lefth'
-                                                                                                    type="button"
-                                                                                                    class="btn btn-info"
-                                                                                                    data-toggle="modal"
-                                                                                                    data-target="#exampleModal{{ $vendedor->id }}">Editar
-                                                                                                    Vendedor</button>
+                                                                                                @can('vendedores.editar')
+                                                                                                    <button aling='lefth'
+                                                                                                        type="button"
+                                                                                                        class="btn btn-info"
+                                                                                                        data-toggle="modal"
+                                                                                                        data-target="#exampleModal{{ $vendedor->id }}">Editar
+                                                                                                        Vendedor</button>
+                                                                                                @endcan
 
                                                                                                 <!-- Vendedor Modal -->
                                                                                                 <div class="modal fade"
