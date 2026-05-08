@@ -48,11 +48,12 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.factura.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
@@ -67,31 +68,25 @@
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-7" class="tab-pane active show">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_factura">
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-7" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <div class="row">
+                                    <div class="col-lg-12" id="alert_factura">
 
-                                        </div>
                                     </div>
-                                    <hr />
+                                </div>
+                                <hr style="margin-left: 15px;margin-right: 15px;" />
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="dateranger_factura"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    value="" readonly />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select_factura()">
                                                         <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select_factura()">
-                                                        <i class="fa fa-eraser"></i>
                                                     </button>
                                                 </span>
                                             </div>
@@ -109,8 +104,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
-                                    <!-- CONTENIDO DENTRO DEL TAB  3 -->
+                                <!-- CONTENIDO DENTRO DEL TAB  3 -->
+                                <div class="table-responsive">
                                     <table class="table table-striped dataTables-fact_manual">
                                         <thead>
                                             <tr>
@@ -195,6 +190,16 @@
         #alert_one_factura {
             margin-bottom: 0px !important;
         }
+         .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
     </style>
 
     <!-- scripts -->
@@ -228,7 +233,9 @@
             });
             // {{-- Datatable Facturas --}}
             table_factura = $('.dataTables-fact_manual').DataTable({
+                info: false,
                 pageLength: 15,
+                responsive: true,
                 order: [
                     [0, "desc"]
                 ],

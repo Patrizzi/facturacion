@@ -1494,6 +1494,8 @@ class FacturacionElectronicaController extends Controller
                 $facturas->nota_debito
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('factura.xml');
+        $json['permiso_cdr'] = auth()->user()->can('factura.cdr');
         return response()->json($json);
     }
 
@@ -1581,6 +1583,8 @@ class FacturacionElectronicaController extends Controller
                 $facturas->nota_debito
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('factura_m.xml');
+        $json['permiso_cdr'] = auth()->user()->can('factura_m.cdr');
         return response()->json($json);
     }
 
