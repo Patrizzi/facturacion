@@ -1523,3 +1523,6 @@ Route::get('/cotizacion-manual/share/{codigo}', 'RenovacionController@descargarP
 //Rutas para guardar notas informativas para comprobantes
 Route::post('/factura/guardar-nota/{id}', 'FacturacionController@guardarNotaInformativa')
     ->name('facturacion.guardar_nota');
+
+Route::post('/factura_manual/guardar-nota/{id}', 'FacturacionMController@guardarNotaInformativa')
+    ->name('facturacionM.guardar_nota');

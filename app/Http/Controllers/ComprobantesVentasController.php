@@ -34,8 +34,8 @@ class ComprobantesVentasController extends Controller
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // return $count_month_comprobantes;
@@ -184,8 +184,8 @@ class ComprobantesVentasController extends Controller
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
          // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         return view('transaccion.comprobantes.boleta_manual.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes','fecha_hoy','monedas','tipo_cambio','bancos'));
@@ -336,8 +336,8 @@ class ComprobantesVentasController extends Controller
         $igv = Igv::first();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Facturacion::cambio_estado_facturas();
@@ -490,8 +490,8 @@ class ComprobantesVentasController extends Controller
         $igv = Igv::first();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Facturacion_m::cambio_estado_facturasM();
@@ -623,7 +623,8 @@ class ComprobantesVentasController extends Controller
                 $factura->cliente->email ?? '',
                 $factura->estado,
                 $factura->estado_pago,
-                $factura->pago_detalle
+                $factura->pago_detalle,
+                $factura->nota_informativa,
 
             ];
         }
