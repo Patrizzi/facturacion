@@ -384,7 +384,7 @@
                             }
                             // No incluimos 99 porque no queremos que aparezca
                         };
-                        
+
 
                         let end = "";
 
@@ -441,11 +441,11 @@
                         const e3 = estado_pago[estadoPago];
 
                         let pago = full[16];
-                        
+
                         if (pago) {
                             var end = `
                                 <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls" 
+                                    <button class="btn ${e3.clase} btn-circle btn-ls"
                                             title="Pago: ${e3.texto}">
                                         <i style="font-weight:700" class="fa fa-dollar"></i>
                                     </button>
@@ -465,7 +465,7 @@
                                     <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
                                         data-id="${full[0]}"
                                         data-estado="${full[14]}"
-                                        title="Pago: ${e3.texto}">  
+                                        title="Pago: ${e3.texto}">
                                     <i style="font-weight:700" class="fa fa-dollar"></i>
                                     </button>
                                 </div>
@@ -551,6 +551,11 @@
                 $('.i-checks-factura').iCheck({
                     checkboxClass: 'icheckbox_square-green',
                     radioClass: 'iradio_square-green',
+                });
+
+                $('[data-toggle="popover"]').popover({
+                    trigger: 'hover',
+                    container: 'body'
                 });
             }
         });
@@ -668,7 +673,7 @@
                         });
                         $(`.select_2_multipl_` + index + ``).on('select2:select', function(e) {
                             var data = e.params.data;
-                            
+
                             var ant = $(`#total_cuotas_` + index + ``).val();
                             if (ant == "") {
                                 ant = 0;
@@ -692,7 +697,7 @@
                             var igual = $("#simbolor_label").html();
                             console.log("igual" + igual);
                             console.log("row.factura_simbolo" + row.factura_simbolo);
-                            
+
                             if (igual === row.factura_simbolo) {
                                 var tot_math = Math.round((parseFloat(tota_tot) + parseFloat(
                                     data_cuota)) * 100) / 100;
@@ -1146,7 +1151,7 @@
                 closeWhatsappPanels();
                 return;
             }
-            
+
             e.stopPropagation();
             $(this).addClass('wsp-fixed').css('height', '50px');
         });
@@ -1678,7 +1683,12 @@
                             toastr.success(response.message, 'Éxito');
                         }
                         // Recargar tabla
-                        $('.dataTables-example-cotizacion').DataTable().ajax.reload(null, false);
+                        $('.dataTables-example-factura').DataTable().ajax.reload(function() {
+                            $('[data-toggle="popover"]').popover({
+                                trigger: 'hover',
+                                container: 'body'
+                            });
+                        }, false);
                     }else{
                         toastr.error(response.message, "Error");
                         $('#modalGestionarNota').find('.btn').prop('disabled', false);
