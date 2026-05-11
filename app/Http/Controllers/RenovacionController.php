@@ -457,8 +457,8 @@ class RenovacionController extends Controller
             $alto        = $config_email->alto_firma;
             $ancho       = $config_email->ancho_firma;
 
-            $titulo       = "Renovaciones - " . count($renovacion_ids) . " documento(s)";
-            $mensaje_html = "Estimado cliente, adjuntamos las renovaciones solicitadas.";
+            $titulo       = "Cotizaciones - " . count($renovacion_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las cotizaciones con renovaciones solicitadas.";
             $mensaje      = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma_email', 'alto', 'ancho', 'firma'));
 
             $correos_envios = [$email, $config_email->email_backup];
@@ -687,7 +687,7 @@ class RenovacionController extends Controller
         ];
     }
 
-    public function pdf($id)
+    public function pdf($id, $descargar = false)
     {
         try {
             $renovacion = RenovacionVentas::with([
@@ -708,10 +708,17 @@ class RenovacionController extends Controller
             $pdf = PDF::loadView($vista_pdf, $data);
 
             $cotizacion = $renovacion->cotizacionManual ?? $renovacion->cotizacion;
+
             $tipoDocumento = $renovacion->cotizacionManual
                 ? 'Cotizacion_Manual_'
                 : 'Cotizacion_';
+
             $nombreArchivo = $tipoDocumento . $cotizacion->cod_cotizacion . '.pdf';
+
+            if ($descargar) {
+                return $pdf->download($nombreArchivo);
+            }
+
             return $pdf->stream($nombreArchivo);
         } catch (\Exception $e) {
             return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
@@ -727,7 +734,7 @@ class RenovacionController extends Controller
                 $codigoGenerado = substr(md5($renovacion->id . env('APP_KEY') . 'renovacion'), 0, 22);
 
                 if ($codigoGenerado === $codigo) {
-                    return $this->pdf($renovacion->id);
+                    return $this->pdf($renovacion->id, true);
                 }
             }
 

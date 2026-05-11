@@ -1519,3 +1519,16 @@ Route::get('/cotizacion/share/{codigo}', 'RenovacionController@descargarPorCodig
 
 Route::get('/cotizacion-manual/share/{codigo}', 'RenovacionController@descargarPorCodigo')
     ->name('cotizacion_manual_renovacion_codificada');
+
+//Rutas para guardar notas informativas para comprobantes
+Route::post('/boleta/guardar-nota/{id}', 'BoletaController@guardarNotaInformativa')
+    ->name('boleta.guardar_nota');
+
+Route::post('/boleta_manual/guardar-nota/{id}', 'BoletaMController@guardarNotaInformativa')
+    ->name('boleta_manual.guardar_nota');
+
+Route::post('/factura/guardar-nota/{id}', 'FacturacionController@guardarNotaInformativa')
+    ->name('facturacion.guardar_nota');
+
+Route::post('/factura_manual/guardar-nota/{id}', 'FacturacionMController@guardarNotaInformativa')
+    ->name('facturacionM.guardar_nota');

@@ -1378,7 +1378,7 @@ function confirmarEliminarNota(id) {
             text: "Esta acción no se puede deshacer.",
             type: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#ed5565",
+            confirmButtonColor: "#1a3bb3",
             confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
             closeOnConfirm: true

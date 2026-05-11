@@ -2264,4 +2264,23 @@ class BoletaController extends Controller
         } catch (\Exception $e) {
         }
     }
+
+    public function guardarNotaInformativa(Request $request, $id)
+    {
+        try {
+            $boleta = Boleta::findOrFail($id);
+            $boleta->nota_informativa = $request->input('nota_informativa');
+            $boleta->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Nota guardada correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar la nota: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

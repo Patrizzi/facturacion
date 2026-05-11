@@ -1749,4 +1749,23 @@ class FacturacionMController extends Controller
         } catch (\Exception $e) {
         }
     }
+
+    public function guardarNotaInformativa(Request $request, $id)
+    {
+        try {
+            $facturacion = Facturacion_m::findOrFail($id);
+            $facturacion->nota_informativa = $request->input('nota_informativa');
+            $facturacion->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Nota guardada correctamente.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar la nota: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

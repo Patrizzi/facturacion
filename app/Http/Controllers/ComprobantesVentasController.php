@@ -34,8 +34,8 @@ class ComprobantesVentasController extends Controller
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // return $count_month_comprobantes;
@@ -150,23 +150,24 @@ class ComprobantesVentasController extends Controller
         foreach ($boletas as $boleta) {
             $total_columna += $boleta->total_conv;
             $json['data'][] = [
-                $boleta->id,
-                $boleta->id,
-                $boleta->codigo_boleta,
-                $boleta->cliente->numero_documento,
-                $boleta->cliente->nombre,
-                $boleta->fecha_emision,
-                $boleta->forma_pago->nombre,
-                $boleta->total,
-                $boleta->id,
-                $boleta->estado_proceso,
-                $boleta->estado_nota_credito,
-                $boleta->estado_nota_debito,
-                $boleta->cliente->celular ?? '',
-                $boleta->cliente->email ?? '',
-                $boleta->estado,
-                $boleta->estado_pago,
-                $boleta->pago_detalle
+                $boleta->id,                         // 0
+                $boleta->id,                         // 1
+                $boleta->codigo_boleta,              // 2
+                $boleta->cliente->numero_documento,  // 3
+                $boleta->cliente->nombre,            // 4
+                $boleta->fecha_emision,              // 5
+                $boleta->forma_pago->nombre,         // 6
+                $boleta->total,                      // 7
+                $boleta->id,                         // 8
+                $boleta->estado_proceso,             // 9
+                $boleta->estado_nota_credito,        // 10
+                $boleta->estado_nota_debito,         // 11
+                $boleta->cliente->celular ?? '',     // 12
+                $boleta->cliente->email ?? '',       // 13
+                $boleta->estado,                     // 14
+                $boleta->estado_pago,                // 15
+                $boleta->pago_detalle,               // 16
+                $boleta->nota_informativa            // 17
             ];
         }
         // Llamado para la suma total
@@ -184,8 +185,8 @@ class ComprobantesVentasController extends Controller
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
          // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         return view('transaccion.comprobantes.boleta_manual.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes','fecha_hoy','monedas','tipo_cambio','bancos'));
@@ -298,23 +299,24 @@ class ComprobantesVentasController extends Controller
         foreach ($boletas as $boleta) {
             $total_columna += $boleta->total_conv;
             $json['data'][] = [
-                $boleta->id,
-                $boleta->id,
-                $boleta->codigo_boleta,
-                $boleta->cliente->numero_documento,
-                $boleta->cliente->nombre,
-                $boleta->fecha_emision,
-                $boleta->forma_pago->nombre,
-                $boleta->total,
-                $boleta->id,
-                $boleta->estado_proceso,
-                $boleta->estado_nota_credito,
-                $boleta->estado_nota_debito,
-                $boleta->cliente->celular ?? '',
-                $boleta->cliente->email ?? '',
-                $boleta->estado,
-                $boleta->estado_pago,
-                $boleta->pago_detalle
+                $boleta->id,                         // 0
+                $boleta->id,                         // 1
+                $boleta->codigo_boleta,              // 2
+                $boleta->cliente->numero_documento,  // 3
+                $boleta->cliente->nombre,            // 4
+                $boleta->fecha_emision,              // 5
+                $boleta->forma_pago->nombre,         // 6
+                $boleta->total,                      // 7
+                $boleta->id,                         // 8
+                $boleta->estado_proceso,             // 9
+                $boleta->estado_nota_credito,        // 10
+                $boleta->estado_nota_debito,         // 11
+                $boleta->cliente->celular ?? '',     // 12
+                $boleta->cliente->email ?? '',       // 13
+                $boleta->estado,                     // 14
+                $boleta->estado_pago,                // 15
+                $boleta->pago_detalle,               // 16
+                $boleta->nota_informativa            // 17
             ];
         }
         // Llamado para la suma total
@@ -336,8 +338,8 @@ class ComprobantesVentasController extends Controller
         $igv = Igv::first();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Facturacion::cambio_estado_facturas();
@@ -467,7 +469,8 @@ class ComprobantesVentasController extends Controller
                 $factura->cliente->email ?? '',
                 $factura->estado,
                 $factura->estado_pago,
-                $factura->pago_detalle
+                $factura->pago_detalle,
+                $factura->nota_informativa,
             ];
         }
         // Llamado para la suma total
@@ -489,8 +492,8 @@ class ComprobantesVentasController extends Controller
         $igv = Igv::first();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Facturacion_m::cambio_estado_facturasM();
@@ -622,7 +625,8 @@ class ComprobantesVentasController extends Controller
                 $factura->cliente->email ?? '',
                 $factura->estado,
                 $factura->estado_pago,
-                $factura->pago_detalle
+                $factura->pago_detalle,
+                $factura->nota_informativa,
 
             ];
         }

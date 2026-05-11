@@ -3,6 +3,54 @@
 @section('title', 'Comprobantes | Boleta Manual')
 
 @section('content')
+<style>
+    /* Ajustes para el popover de la nota informativa */
+    .popover {
+        max-width: 400px;
+    }
+
+    .popover-body {
+        font-weight: normal !important;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        color: #333;
+    }
+
+    /* Botón sin fondo ni borde para mostrar solo el ícono */
+    .info-icon {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        transition: none;
+        color: inherit;
+    }
+
+    .info-icon i {
+        transition: color 0.3s, transform 0.2s;
+    }
+
+    .info-icon:hover i {
+        color: #0056b3;
+        transform: scale(1.1);
+    }
+
+    .info-icon:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .popover-header {
+        background-color: #2641f8;
+        color: white;
+        font-weight: normal !important;
+    }
+
+    .popover-body {
+        background-color: white;
+        color: black;
+        font-weight: normal !important;
+    }
+</style>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
@@ -194,6 +242,59 @@
                     'render': function(data, type, full, meta) {
                         return '<input type="checkbox" name="select_row" value="' + full[2] +
                             '" class="i-checks-boletaM">';
+                    }
+                },
+                {
+                    'width': '15%',
+                    'targets': [2],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        const boletaId = full[0];
+                        const codigoBoleta = full[2];
+                        const notaInformativa = full[17];
+
+                        let tieneNota = notaInformativa !== null && notaInformativa !== '';
+                        let contenidoBoton = '';
+
+                        if (tieneNota) {
+                            let escapedNota = notaInformativa
+                                .replace(/'/g, '&#39;')
+                                .replace(/"/g, '&quot;');
+
+                            let jsEscapedNota = notaInformativa
+                                .replace(/'/g, "\\'")
+                                .replace(/"/g, '&quot;')
+                                .replace(/\n/g, '\\n');
+
+                            contenidoBoton = `
+                                <button type="button" class="btn btn-sm info-icon"
+                                        data-trigger="hover"
+                                        data-placement="top"
+                                        data-toggle="popover"
+                                        title="Nota Informativa"
+                                        data-content="${escapedNota}"
+                                        onclick="gestionarNotaBoletaManual(${boletaId}, '${jsEscapedNota}')">
+                                    <i class="fa fa-info-circle"></i>
+                                </button>
+                            `;
+                        } else {
+                            contenidoBoton = `
+                                <button type="button" class="btn btn-sm info-icon text-muted"
+                                        title="Añadir Nota"
+                                        onclick="gestionarNotaBoletaManual(${boletaId}, '')">
+                                    <i class="fa fa-plus-square-o"></i>
+                                </button>
+                            `;
+                        }
+
+                        return `
+                            <div class="d-flex align-items-center">
+                                <span class="mr-2 text-secondary-emphasis">
+                                    ${codigoBoleta}
+                                </span>
+                                ${contenidoBoton}
+                            </div>
+                        `;
                     }
                 },
                 {
@@ -437,6 +538,8 @@
             ],
             drawCallback: function() {
                 $('[data-toggle="tooltip"]').tooltip();
+                $('[data-toggle="popover"]').popover();
+
                 $('.i-checks-boletaM').iCheck({
                     checkboxClass: 'icheckbox_square-green',
                     radioClass: 'iradio_square-green',
@@ -833,6 +936,7 @@
 
             // Cuando se redibuje la tabla (cambio de página, filtros, etc.)
             coti_table.on('draw', function() {
+                $('[data-toggle="popover"]').popover();
                 closeWhatsappPanels();
                 closeEmailPanels();
                 console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
@@ -1478,6 +1582,141 @@
                 });
             });
         });
+        $('body').on('click', function(e) {
+            $('[data-toggle="popover"]').each(function() {
+                if (
+                    !$(this).is(e.target) &&
+                    $(this).has(e.target).length === 0 &&
+                    $('.popover').has(e.target).length === 0
+                ) {
+                    $(this).popover('hide');
+                }
+            });
+        });
+        
+        function gestionarNotaBoletaManual(id, notaActual) {
+            $('[data-toggle="popover"]').popover('hide');
+            $('#modalGestionarNotaBoletaManual').remove();
+
+            let title = notaActual ? 'Editar Nota Informativa' : 'Agregar Nota Informativa';
+
+            let deleteBtn = notaActual
+                ? `<button type="button" class="btn btn-danger" onclick="confirmarEliminarNotaBoletaManual(${id})">
+                        <i class="fa fa-trash"></i> Eliminar
+                </button>`
+                : '';
+
+            let saveBtnText = notaActual ? 'Actualizar' : 'Guardar';
+
+            let modalHTML = `
+                <div class="modal fade" id="modalGestionarNotaBoletaManual" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content border-0 shadow" style="border-radius: 6px; overflow: hidden;">
+                            <div class="modal-header" style="background-color: #1a3bb3; color: white;">
+                                <h5 class="modal-title">${title}</h5>
+                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body bg-light">
+                                <label class="font-weight-bold text-muted mb-2">Contenido de la nota:</label>
+                                <textarea id="input-modal-nota-boleta-manual" class="form-control" rows="4" placeholder="Escriba aquí la nota informativa."></textarea>
+                            </div>
+
+                            <div class="modal-footer bg-white d-flex justify-content-between">
+                                <div>
+                                    ${deleteBtn}
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" onclick="guardarDesdeModalBoletaManual(${id})">
+                                        ${saveBtnText}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            $('body').append(modalHTML);
+            $('#input-modal-nota-boleta-manual').val(notaActual);
+
+            $('#modalGestionarNotaBoletaManual').on('shown.bs.modal', function() {
+                $('#input-modal-nota-boleta-manual').focus();
+            });
+
+            $('#modalGestionarNotaBoletaManual').modal('show');
+        }
+
+        function guardarDesdeModalBoletaManual(id) {
+            let nota = $('#input-modal-nota-boleta-manual').val().trim();
+
+            if (!nota) {
+                toastr.warning('La nota no puede estar vacía al guardar. Si desea borrarla, use el botón rojo de "Eliminar".');
+                $('#input-modal-nota-boleta-manual').focus();
+                return;
+            }
+
+            enviarNotaBoletaManualAjax(id, nota, false);
+        }
+
+        function confirmarEliminarNotaBoletaManual(id) {
+            $('#modalGestionarNotaBoletaManual').modal('hide');
+
+            setTimeout(function() {
+                swal({
+                    title: "¿Eliminar nota?",
+                    text: "Esta acción no se puede deshacer.",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#ed5565",
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                    closeOnConfirm: true
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        enviarNotaBoletaManualAjax(id, '', true);
+                    } else {
+                        $('#modalGestionarNotaBoletaManual').modal('show');
+                    }
+                });
+            }, 300);
+        }
+
+        function enviarNotaBoletaManualAjax(id, nota, isDelete = false) {
+            $('#modalGestionarNotaBoletaManual').find('.btn').prop('disabled', true);
+
+            $.ajax({
+                url: "{{ route('boleta_manual.guardar_nota', ':id') }}".replace(':id', id),
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    nota_informativa: nota
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#modalGestionarNotaBoletaManual').modal('hide');
+
+                        if (isDelete) {
+                            toastr.success('Nota eliminada correctamente', 'Éxito');
+                        } else {
+                            toastr.success(response.message, 'Éxito');
+                        }
+
+                        $('.dataTables-example-boleta').DataTable().ajax.reload(null, false);
+                    } else {
+                        toastr.error(response.message, "Error");
+                        $('#modalGestionarNotaBoletaManual').find('.btn').prop('disabled', false);
+                    }
+                },
+                error: function() {
+                    toastr.error("Error al procesar la nota.", "Error");
+                    $('#modalGestionarNotaBoletaManual').find('.btn').prop('disabled', false);
+                }
+            });
+        }
     </script>
     <script>
         $(document).ready(function() {
