@@ -93,7 +93,7 @@
                                 <br>
                                 <!-- CONTENIDO DENTRO DEL TAB  2 -->
                                 <div class="table-responsive">
-                                    <table class="table table-hover dataTables-fact_enviadas">
+                                    <table class="table table-striped table-bordered dataTables-fact_enviadas">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-facturas_env_all" name="input[]">
@@ -149,7 +149,7 @@
             text-align: center;
         }
 
-         .tab-pane.active.show {
+        .tab-pane.active.show {
             border-right: 1px solid #e7eaec;
             border-left: 1px solid #e7eaec;
             border-bottom: 1px solid #e7eaec;
@@ -208,6 +208,8 @@
                     d.value = $('#inputBuscar').val();
                 },
                 dataSrc: function(json) {
+                    permiso_xml = json.permiso_xml;
+                    permiso_cdr = json.permiso_cdr;
                     return json.data;
                 }
             },

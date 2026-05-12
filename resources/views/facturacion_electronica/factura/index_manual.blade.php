@@ -104,9 +104,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br>
+                                <br>
                                 <!-- CONTENIDO DENTRO DEL TAB  3 -->
                                 <div class="table-responsive">
-                                    <table class="table table-striped dataTables-fact_manual">
+                                    <table class="table table-hover dataTables-fact_manual">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-facturas-man-head"
@@ -143,7 +145,7 @@
                                                     @endif
                                                     <td>{{ $facturaciones_m->fecha_emision }}</td>
                                                     <td style="text-align: center"><button type="button"
-                                                            class="btn btn-success btn-circle btn-ls factura_ind"
+                                                            class="btn btn-success btn-ls factura_ind"
                                                             id="factura_ind" value="{{ $facturaciones_m->codigo_fac }}"
                                                             onclick="envio_factura_manual(this)"><i
                                                                 class="fa fa-cloud-upload"></i></button></td>

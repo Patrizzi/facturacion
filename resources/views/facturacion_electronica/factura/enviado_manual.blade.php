@@ -21,11 +21,12 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.factura.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-defaultdropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
@@ -40,16 +41,12 @@
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
+                        <div class="tab-content" style="margin-top: -2px">
                             {{-- TAB 5 PARA LA FACTURAS NORMALES --}}
-                            <div role="tabpanel" id="tab-6" class="tab-pane active">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_factura">
-
-                                        </div>
-                                    </div>
-                                    <hr />
+                            <div role="tabpanel" id="tab-6" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <br>
+                                <br>
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
@@ -84,9 +81,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <br>
+                                <br>
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped dataTables-fact_enviadas">
+                                    <table class="table table-striped table-bordered dataTables-fact_enviadas">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-facturas_env_all" name="input[]">
@@ -99,8 +98,8 @@
                                                 <th>Precio Total</th>
                                                 <th style="text-align:center;color: #0073c1"><img
                                                         src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
-                                                <th>XML</th>
-                                                <th>CDR</th>
+                                                <th>@can('factura_m.xml')XML @endcan</th>
+                                                <th>@can('factura_m.cdr')CDR @endcan</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -158,6 +157,16 @@
         .td_status {
             text-align: center;
         }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px !important;
+            padding-left: 15px !important;
+        }
     </style>
 
     <!-- scripts -->
@@ -189,6 +198,8 @@
             });
 
             // {{-- Datatable Facturas Enviadas  --}}
+            var permiso_xml = false;
+            var permiso_cdr = false;
             var table_factura_enviada = $('.dataTables-fact_enviadas').DataTable({
                 "serverSide": true,
                 "ajax": {
@@ -201,6 +212,8 @@
                         d.value = $('#inputBuscar').val();
                     },
                     dataSrc: function(json) {
+                        permiso_xml = json.permiso_xml;
+                        permiso_cdr = json.permiso_cdr;
                         return json.data;
                     }
                 },
@@ -265,7 +278,11 @@
                         'render': function(data, type, full, meta) {
                             var url =
                                 `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.xml`;
-                            return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                            var button = ``;
+                            if(permiso_xml){
+                                button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
                         }
                     },
                     {
@@ -274,7 +291,11 @@
                         'render': function(data, type, full, meta) {
                             var url =
                                 `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-01-${full[2]}.zip`;
-                            return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            var button = ``;
+                            if(permiso_cdr){
+                                button = `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
                         }
                     }
                 ],

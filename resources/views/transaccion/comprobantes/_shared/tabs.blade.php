@@ -1,4 +1,4 @@
-<div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
+
     @can('boleta.listar')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('comprobantes.index_boleta') }}" id="tab-1-tab">
@@ -76,4 +76,3 @@
         </li>
     </div>
     @endcan
-</div>

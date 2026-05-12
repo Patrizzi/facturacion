@@ -32,40 +32,42 @@
                             <div class="tabs-scroll-bottom">
                                 <ul class="nav nav-tabs" role="tablist"
                                     style="align-items: center;border-bottom: 0px !important;">
-                                    @include('transaccion.comprobantes._shared.tabs')
-                                    {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex"
-                                        style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        @can('boleta_m.crear')
-                                            <a class="btn btn-primary" href="{{ route('boleta_manual.create') }}"><i
-                                                class="fa fa-plus"></i></a>
-                                        @endcan
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-download"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <button type="button" id="btn-imprimir" class="dropdown-item">
-                                                    <i class="fa fa-print"></i> Imprimir
+                                    <div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
+                                        @include('transaccion.comprobantes._shared.tabs')
+                                        {{-- Almacen --}}
+                                        <ul class="ml-auto d-flex"
+                                            style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                            @can('boleta_m.crear')
+                                                <a class="btn btn-primary" href="{{ route('boleta_manual.create') }}"><i
+                                                    class="fa fa-plus"></i></a>
+                                            @endcan
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-download"></i>
                                                 </button>
-                                                <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-file-excel-o"></i> Excel
-                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <button type="button" id="btn-imprimir" class="dropdown-item">
+                                                        <i class="fa fa-print"></i> Imprimir
+                                                    </button>
+                                                    <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-file-excel-o"></i> Excel
+                                                    </button>
 
-                                                <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-file-pdf-o"></i> PDF
-                                                </button>
+                                                    <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-file-pdf-o"></i> PDF
+                                                    </button>
 
-                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-envelope"></i> Correo
-                                                </button>
+                                                    <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-envelope"></i> Correo
+                                                    </button>
 
-                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-whatsapp"></i> Whatsapp
-                                                </button>
-                                            </div>
-                                    </ul>
+                                                    <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-whatsapp"></i> Whatsapp
+                                                    </button>
+                                                </div>
+                                        </ul>
+                                    </div>
                                 </ul>
                             </div>
                             <div class="tab-content" style="margin-top: -2px">

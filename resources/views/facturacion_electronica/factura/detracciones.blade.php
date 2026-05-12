@@ -21,11 +21,12 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.factura.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
@@ -39,15 +40,12 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-5" class="tab-pane active show">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_factura">
-
-                                        </div>
-                                    </div>
-                                    <hr />
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-5" class="tab-pane active show"
+                                style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <br>
+                                <br>
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
@@ -81,13 +79,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <br>
+                                <br>
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped dataTables-detraccion">
+                                    <table class="table table-striped table-bordered dataTables-detraccion">
                                         <thead>
                                             <tr>
-                                                <th><input type="checkbox" class="i-checks-detraccion"
-                                                        name="input_detraccion[]"></th>
+                                                <th>
+                                                    <input type="checkbox" class="i-checks-detraccion"
+                                                        name="input_detraccion[]">
+                                                </th>
                                                 <th>ID</th>
                                                 <th>N° de Doc</th>
                                                 <th>Tipo</th>
@@ -100,162 +102,105 @@
                                                     aria-label="SUNAT: activate to sort column ascending"><img
                                                         src="{{ asset('sunat.png') }}" width="15px">SUNAT
                                                 </th>
-                                                <th>Acciones</th>
+                                                <th class="text-center">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($detraccion_facturas as $fact_det)
+                                                @php
+                                                    $factura = $fact_det->factura_id ? $fact_det->factura : $fact_det->factura_m;
+                                                    $tipo = $fact_det->factura_id ? 'Factura' : 'Factura M.';
+                                                    $codigo = $factura->codigo_fac;
+                                                    $ruta = $empresa->ruc . '-01-' . $codigo;
+                                                @endphp
                                                 <tr>
-                                                    <td><input type="checkbox" class="i-checks-detraccion" name="input[]"
-                                                            value="{{ $fact_det->codigo_fac }}"></td>
-                                                    @if ($fact_det->factura_id != null)
-                                                        <td>{{ $fact_det->id }}</td>
-                                                        <td>{{ $fact_det->factura->codigo_fac }}</td>
-                                                        <td>Factura</td>
-                                                        <td>{{ Carbon\Carbon::parse($fact_det->factura->fecha_emision)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>{{ $fact_det->factura->moneda->simbolo }}
-                                                            {{ $fact_det->monto_total_factura }} </td>
-                                                        <td>S/. {{ $fact_det->monto_detraccion }}</td>
-                                                        <td style="text-align: center;" class="tooltip-demo">
-                                                            @if ($fact_det->factura->f_electronica == 1)
-                                                                <button type="button"
-                                                                    class="btn btn-info btn-circle btn-ls"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    title="Aceptada"><i
-                                                                        class="fa fa-check-circle"></i></button>
-                                                            @else
-                                                                <button type="button"
-                                                                    class="btn btn-danger btn-circle btn-ls"><i
-                                                                        class="fa fa-times-circle" data-toggle="tooltip"
-                                                                        data-placement="top" title="Anulada"></i></button>
-                                                            @endif
-                                                            @if ($fact_det->factura->nota_credito != 0)
-                                                                @if ($fact_det->factura->nota_credito == 1)
-                                                                    <button class="btn btn-info btn-circle btn-ls"
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Nota de Credito:  Aceptada"><i
-                                                                            style="font-weight: 700">NC</i></button>
-                                                                @else
-                                                                    <button class="btn btn-warning btn-circle btn-ls "
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Nota de Credito: En  Espera"><i
-                                                                            style="font-weight: 700">NC</i></button>
-                                                                @endif
-                                                            @endif
-                                                            @if ($fact_det->factura->nota_debito != 0)
-                                                                @if ($fact_det->factura->nota_debito == 1)
-                                                                    <button class="btn btn-info btn-circle btn-ls "
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Nota de Debito:  Aceptada"><i
-                                                                            style="font-weight: 700">ND</i></button>
-                                                                @else
-                                                                    <button class="btn btn-warning btn-circle btn-ls "
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Nota de Debito: En Espera"><i
-                                                                            style="font-weight: 700">ND</i></button>
-                                                                @endif
-                                                            @endif
-                                                        </td>
-                                                        <td align="center" class="tooltip-demo">
-                                                            <form class="btn"
-                                                                action="{{ route('pdf_fac', $fact_det->factura->id) }}"
-                                                                method="GET">
-                                                                @csrf
-                                                                <input type="hidden" name="name" maxlength="50"
-                                                                    value="{{ $fact_det->factura->codigo_fac }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-link p-0 border-0 bg-transparent"
-                                                                    data-toggle="tooltip" data-placement="bottom"
-                                                                    title="Descargar PDF">
-                                                                    <img src="{{ asset('pdf/icon.png') }}" width="30px"
-                                                                        alt="Descargar PDF">
+                                                    <td>
+                                                        <input type="checkbox" class="i-checks-detraccion" name="input[]"
+                                                            value="{{ $codigo }}">
+                                                    </td>
+                                                    <td>{{ $fact_det->id }}</td>
+                                                    <td>{{ $codigo }}</td>
+                                                    <td>{{ $tipo }}</td>
+                                                    <td>
+                                                        {{ Carbon\Carbon::parse($factura->fecha_emision)->format('d-m-Y') }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $factura->moneda->simbolo }}
+                                                        {{ $fact_det->monto_total_factura }}
+                                                    </td>
+                                                    <td>S/. {{ $fact_det->monto_detraccion }}</td>
+                                                    {{-- ESTADOS --}}
+                                                    <td class="text-center tooltip-demo">
+                                                        @switch($factura->f_electronica)
+                                                            @case(0)
+                                                                <button type="button" class="btn btn-warning btn-circle btn-ls"
+                                                                    data-toggle="tooltip" title="En espera">
+                                                                    <i class="fa fa-history"></i>
                                                                 </button>
-                                                            </form>
-                                                            <span style="margin-right: 20px !important"></span>
-                                                            <a href="{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-{{ $fact_det->factura->codigo_fac }}.xml"
-                                                                download><img src="{{ asset('xml.png') }}"
-                                                                    width="30px"></a>
-                                                            <span style="margin-right: 20px !important"></span>
-                                                            <a href="{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-01-{{ $fact_det->factura->codigo_fac }}.zip"
-                                                                download><img src="{{ asset('zip.png') }}"
-                                                                    width="25px"></a>
-                                                        </td>
-                                                    @else
-                                                        <td>{{ $fact_det->id }}</td>
-                                                        <td>{{ $fact_det->factura_m->codigo_fac }}</td>
-                                                        <td>Factura M.</td>
-                                                        <td>{{ Carbon\Carbon::parse($fact_det->factura_m->fecha_emision)->format('d-m-Y') }}
-                                                        </td>
-                                                        <td>{{ $fact_det->factura_m->moneda->simbolo }}
-                                                            {{ $fact_det->monto_total_factura }}</td>
-                                                        <td>S/. {{ $fact_det->monto_detraccion }}</td>
-                                                        <td style="text-align: center" class="tooltip-demo">
-                                                            @if ($fact_det->factura_m->f_electronica == 1)
-                                                                <button type="button"
-                                                                    class="btn btn-info btn-circle btn-ls"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    title="Aceptada"><i
-                                                                        class="fa fa-check-circle"></i></button>
-                                                            @else
-                                                                <button type="button"
-                                                                    class="btn btn-danger btn-circle btn-ls"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    title="Anulada"><i
-                                                                        class="fa fa-times-circle"></i></button>
-                                                            @endif
-                                                            @if ($fact_det->factura_m->nota_credito != 0)
-                                                                @if ($fact_det->factura_m->nota_credito == 1)
-                                                                    <button class="btn btn-info btn-circle btn-ls"
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Nota de Credito:  Aceptada"><i
-                                                                            style="font-weight: 700">NC</i></button>
-                                                                @else
-                                                                    <button class="btn btn-warning btn-circle btn-ls "
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Nota de Credito: En  Espera"><i
-                                                                            style="font-weight: 700">NC</i></button>
-                                                                @endif
-                                                            @endif
-                                                            @if ($fact_det->factura_m->nota_debito != 0)
-                                                                @if ($fact_det->factura_m->nota_debito == 1)
-                                                                    <button class="btn btn-info btn-circle btn-ls "
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Nota de Debito:  Aceptada"><i
-                                                                            style="font-weight: 700">ND</i></button>
-                                                                @else
-                                                                    <button class="btn btn-warning btn-circle btn-ls "
-                                                                        data-toggle="tooltip" data-placement="top"
-                                                                        title="Nota de Debito: En Espera"><i
-                                                                            style="font-weight: 700">ND</i></button>
-                                                                @endif
-                                                            @endif
-                                                        </td>
-                                                        <td align="center">
-                                                            <form class="btn"
-                                                                action="{{ route('pdf_fac', $fact_det->factura_m->id) }}"
-                                                                method="GET">
-                                                                @csrf
-                                                                <input type="hidden" name="name" maxlength="50"
-                                                                    value="{{ $fact_det->factura_m->codigo_fac }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-link p-0 border-0 bg-transparent"
-                                                                    data-toggle="tooltip" data-placement="bottom"
-                                                                    title="Descargar PDF">
-                                                                    <img src="{{ asset('pdf/icon.png') }}" width="30px"
-                                                                        alt="Descargar PDF">
+                                                            @break
+
+                                                            @case(1)
+                                                                <button type="button" class="btn btn-info btn-circle btn-ls"
+                                                                    data-toggle="tooltip" title="Aceptada">
+                                                                    <i class="fa fa-check-circle"></i>
                                                                 </button>
-                                                            </form>
-                                                            <span style="margin-right: 20px !important"></span>
-                                                            <a href="{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-{{ $fact_det->factura_m->codigo_fac }}.xml"
-                                                                download><img src="{{ asset('xml.png') }}"
-                                                                    width="30px"></a>
-                                                            <span style="margin-right: 20px !important"></span>
-                                                            <a href="{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-01-{{ $fact_det->factura_m->codigo_fac }}.zip"
-                                                                download><img src="{{ asset('cdr.png') }}"
-                                                                    width="25px"></a>
-                                                        </td>
-                                                    @endif
+                                                            @break
+
+                                                            @case(2)
+                                                                <button type="button" class="btn btn-danger btn-circle btn-ls"
+                                                                    data-toggle="tooltip" title="Anulada">
+                                                                    <i class="fa fa-times-circle"></i>
+                                                                </button>
+                                                            @break
+                                                        @endswitch
+                                                        {{-- NOTA CREDITO --}}
+                                                        @if ($factura->nota_credito != 0)
+                                                            <button
+                                                                class="btn {{ $factura->nota_credito == 1 ? 'btn-info' : 'btn-warning' }} btn-circle btn-ls"
+                                                                data-toggle="tooltip"
+                                                                title="Nota de Crédito: {{ $factura->nota_credito == 1 ? 'Aceptada' : 'En Espera' }}">
+                                                                <i style="font-weight:700">NC</i>
+                                                            </button>
+                                                        @endif
+                                                        {{-- NOTA DEBITO --}}
+                                                        @if ($factura->nota_debito != 0)
+                                                            <button
+                                                                class="btn {{ $factura->nota_debito == 1 ? 'btn-info' : 'btn-warning' }} btn-circle btn-ls"
+                                                                data-toggle="tooltip"
+                                                                title="Nota de Débito: {{ $factura->nota_debito == 1 ? 'Aceptada' : 'En Espera' }}">
+                                                                <i style="font-weight:700">ND</i>
+                                                            </button>
+                                                        @endif
+                                                    </td>
+                                                    {{-- ARCHIVOS --}}
+                                                    <td class="tooltip-demo text-center">
+                                                        <form class="btn btn-default"
+                                                            action="{{ route('pdf_fac', $factura->id) }}" method="GET">
+                                                            @csrf
+                                                            <input type="hidden" name="name"
+                                                                value="{{ $codigo }}">
+                                                            <button type="submit"
+                                                                class="btn btn-link p-0 border-0 bg-transparent"
+                                                                data-toggle="tooltip" title="Descargar PDF">
+                                                                <img src="{{ asset('pdf/icon.png') }}" width="30px"
+                                                                    alt="PDF">
+                                                            </button>
+                                                        </form>
+
+                                                        @if (!$fact_det->factura_id || $factura->f_electronica != 0)
+                                                            <span style="margin-right:20px"></span>
+                                                            <a href="{{ asset('facturas_electronicas/') }}/{{ $ruta }}.xml"
+                                                                download class="btn btn-default">
+                                                                <img src="{{ asset('xml.png') }}" width="30px">
+                                                            </a>
+                                                            <span style="margin-right:20px"></span>
+                                                            <a href="{{ asset('facturas_electronicas/') }}/R-{{ $ruta }}.zip"
+                                                                download class="btn btn-default">
+                                                                <img src="{{ asset($fact_det->factura_id ? 'zip.png' : 'cdr.png') }}"
+                                                                    width="30px">
+                                                            </a>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -298,6 +243,38 @@
 
         form.btn {
             padding: 0px 0px;
+        }
+
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive,
+        .table-responsive {
+            padding-right: 15px !important;
+            padding-left: 15px !important;
+        }
+
+        form.btn.btn-default {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            color: inherit;
+            background: white;
+            border: 1px solid #e7eaec;
         }
     </style>
 
