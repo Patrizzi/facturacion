@@ -278,7 +278,6 @@
                         if(permiso_xml){
                             button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
                         }
-
                         return button;
                     }
                 },

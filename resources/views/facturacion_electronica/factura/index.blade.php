@@ -107,7 +107,7 @@
                                 <br>
                                 <!-- CONTENIDO DENTRO DEL TAB  -->
                                 <div class="table-responsive">
-                                    <table class="table table-hover dataTables-factura">
+                                    <table class="table table-striped table-bordered dataTables-factura">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-facturas-head"
@@ -160,11 +160,11 @@
                                             @endforeach
                                         </tbody>
                                         @can('factura.emitir')
-                                            <tfooter>
+                                            <tfoot>
                                                 <td colspan="6" align="right" style="padding-right: 2em"></td>
                                                 <td align="center"><button type="button" class="btn btn-primary"
                                                         id="fac_elec_all">Enviar</button></td>
-                                            </tfooter>
+                                            </tfoot>
                                         @endcan
                                     </table>
                                 </div>

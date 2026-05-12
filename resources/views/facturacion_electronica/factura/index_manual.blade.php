@@ -108,7 +108,7 @@
                                 <br>
                                 <!-- CONTENIDO DENTRO DEL TAB  3 -->
                                 <div class="table-responsive">
-                                    <table class="table table-hover dataTables-fact_manual">
+                                    <table class="table table-striped table-bordered dataTables-fact_manual">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-facturas-man-head"
@@ -120,8 +120,10 @@
                                                 <th>Fecha de Creacion</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
                                                     class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
-                                                    rowspan="1" colspan="1"><img src="{{ asset('sunat.png') }}"
+                                                    rowspan="1" colspan="1">
+                                                    @can('factura_m.emitir')<img src="{{ asset('sunat.png') }}"
                                                         width="15px">SUNAT
+                                                    @endcan
                                                 </th>
                                             </tr>
                                         </thead>
@@ -144,19 +146,25 @@
                                                         <td>{{ $facturaciones_m->cotizacion->cliente->nombre }}</td>
                                                     @endif
                                                     <td>{{ $facturaciones_m->fecha_emision }}</td>
-                                                    <td style="text-align: center"><button type="button"
+                                                    <td style="text-align: center">
+                                                        @can('factura_m.emitir')
+                                                            <button type="button"
                                                             class="btn btn-success btn-ls factura_ind"
                                                             id="factura_ind" value="{{ $facturaciones_m->codigo_fac }}"
                                                             onclick="envio_factura_manual(this)"><i
-                                                                class="fa fa-cloud-upload"></i></button></td>
+                                                                class="fa fa-cloud-upload"></i></button>
+                                                        @endcan
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        <tfooter>
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary"
-                                                    id="fac_m_elec_all">Enviar</button></td>
-                                        </tfooter>
+                                        @can('factura_m.emitir')
+                                            <tfoot>
+                                                <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                                <td align="center"><button type="button" class="btn btn-primary"
+                                                        id="fac_m_elec_all">Enviar</button></td>
+                                            </tfoot>
+                                        @endcan
                                     </table>
                                 </div>
                             </div>
@@ -192,7 +200,7 @@
         #alert_one_factura {
             margin-bottom: 0px !important;
         }
-         .tab-pane.active.show {
+        .tab-pane.active.show {
             border-right: 1px solid #e7eaec;
             border-left: 1px solid #e7eaec;
             border-bottom: 1px solid #e7eaec;

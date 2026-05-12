@@ -1675,6 +1675,8 @@ class FacturacionElectronicaController extends Controller
                 $boleta->nota_debito
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('boleta.xml');
+        $json['permiso_cdr'] = auth()->user()->can('boleta.cdr');
         return response()->json($json);
     }
 
