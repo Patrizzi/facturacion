@@ -1764,6 +1764,8 @@ class FacturacionElectronicaController extends Controller
                 $bole_m->nota_debito
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('boleta_m.xml');
+        $json['permiso_cdr'] = auth()->user()->can('boleta_m.cdr');
         return response()->json($json);
     }
 
@@ -1861,6 +1863,9 @@ class FacturacionElectronicaController extends Controller
                 $remi->motivo_anulacion
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('guia_remision.xml');
+        $json['permiso_cdr'] = auth()->user()->can('guia_remision.cdr');
+        $json['permiso_anular'] = auth()->user()->can('guia_remision.anular');
         return response()->json($json);
     }
 
@@ -1954,6 +1959,9 @@ class FacturacionElectronicaController extends Controller
                 $remi->motivo_anulacion
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('guia_remision_m.xml');
+        $json['permiso_cdr'] = auth()->user()->can('guia_remision_m.cdr');
+        $json['permiso_anular'] = auth()->user()->can('guia_remision_m.anular');
         return response()->json($json);
     }
 

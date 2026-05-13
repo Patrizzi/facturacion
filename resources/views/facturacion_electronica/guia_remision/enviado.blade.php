@@ -27,7 +27,8 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.guia_remision.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
@@ -46,15 +47,15 @@
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-7" class="tab-pane active show">
-                                <div style="margin:0px 15px 10px 15px">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_guia" style="min-height: 15px">
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-7" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <div class="row">
+                                    <div class="col-lg-12" id="alert_guia" style="min-height: 15px">
 
-                                        </div>
                                     </div>
-                                    <hr />
+                                </div>
+                                <hr />
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
@@ -85,6 +86,7 @@
                                     </div>
                                 </div>
                                 <br>
+                                <br>
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered dataTables-example3">
                                         <thead>
@@ -100,7 +102,8 @@
                                                 <th>Tipo Transporte</th>
                                                 <th>XML</th>
                                                 <th>CDR</th>
-                                                {{-- <th>Estado</th> --}}
+                                                <th style="text-align:center;color: #0073c1"><img src="{{ asset('sunat.png') }}"
+                                                    width="25px">SUNAT</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -202,6 +205,19 @@
         .showSweetAlert > fieldset > input{
             display: none !important;
         }
+        .td_status {
+            text-align: center;
+        }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
     </style>
 
     <!-- scripts -->
@@ -288,6 +304,9 @@
             }, 1300);
         });
         // {{-- Datatable Facturas Enviadas  --}}
+        var permiso_xml = false;
+        var permiso_cdr = false;
+        var permiso_anular = false;
         var table_remision_env = $('.dataTables-example3').DataTable({
             "serverSide": true,
             "ajax": {
@@ -298,6 +317,9 @@
                     d.value = $('#inputBuscar').val();
                 },
                 dataSrc: function(json) {
+                    permiso_xml = json.permiso_xml;
+                    permiso_cdr = json.permiso_cdr;
+                    permiso_anular = json.permiso_anular;
                     return json.data;
                 }
             },
@@ -331,24 +353,29 @@
                     'render': function(data, type, full, meta) {
                         var url =
                             `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-09-${full[2]}.xml`;
-                        return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                        var button = ``;
+                        if(permiso_xml){
+                            button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                        }
+                        return button;
                     }
                 },
                 {
                     'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
+                        var finish_all = ``;
                         if (`${full[12]}` == 1) {
                             var url =
                                 `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
 
-                            var finish_all =
+                            finish_all +=
                                 `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
                         } else {
                             var url =
                                 `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.zip`;
 
-                            var finish_all = `
+                            finish_all += `
                                 <div id="div_btn_app_man">
                                     <button type="button" class="btn" id="guia_remi_ind_man" value="${full[2]}" onclick="valid_cdr_normal(this)"><img src="{{ asset('cdr.png') }}" width="25px"></button>
                                 </div>
@@ -356,15 +383,18 @@
                                     <a id="download_cdr_post" href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></a>   
                                 </div>  `;
                         };
-                        return finish_all;
+                        if(permiso_cdr){
+                            return finish_all;
+                        }
+                        return ``;
                     }
                 },
                 {
                     'targets': [10], // Estado
                     'orderable': false,
-                    'className': '',
-                    'width': '12%',
-                    'render': function(data, type, full, meta) {
+                    'className': 'td_status',
+                    'width': '5%',
+                    'render': function(data, type, full, meta) { 
                         // Estado
                         var end = ``;
                         if (full[10] == 1) {
@@ -373,8 +403,18 @@
                         }
                         if (full[10] == 2) {
                             end +=
-                                `<button type="button" class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button> `;
+                                `<button type="button" class="btn btn-danger btn-circle btn-ls" title="Motivo: `+ full[14] + ` "><i class="fa fa-times-circle"></i></button> `;
                         }
+                        return end;
+                    }
+                },
+                {
+                    'targets': [11], // Estado
+                    'orderable': false,
+                    'className': '',
+                    'width': '7%',
+                    'render': function(data, type, full, meta) {
+                        var end = ``;
                         // N de Ticket
                         end += `
                               <button class="btn btn-primary btn-sm ticket-btn"
@@ -383,30 +423,24 @@
                             </button>
                         `;
                         // Botón Anular
-                        if (full[10] == 2) { //Si está anulado
-                            end += `
-                              <button class="btn btn-danger btn-sm" disabled>
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        `;
-                        } else { //Si se puede anular
-                            end += `
-                              <button class="btn btn-danger btn-sm boton-anular"  data-id="${full[0]}" data-codigo="${full[2]}">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        `;
+                        if(permiso_anular){
+                            if (full[10] == 2) { //Si está anulado
+                                end += `
+                                <button class="btn btn-danger btn-sm" disabled>
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            `;
+                            } else { //Si se puede anular
+                                end += `
+                                <button class="btn btn-danger btn-sm boton-anular"  data-id="${full[0]}" data-codigo="${full[2]}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                `;
+                            }
                         }
                         return end;
                     }
-                },
-                // {
-                //     'targets': [11],
-                //     'orderable': false,
-                //     'className': 'td_ticket',
-                //     'render': function(data, type, full, meta) {
-                //         return `${full[11]}`;
-                //     }
-                // }
+                }
             ],
             drawCallback: function() {
                 $('.i-checks-remision_env').iCheck({

@@ -10,9 +10,7 @@
                 @include('facturacion_electronica.factura.stadistics')
             </div>
         </div>
-    </div>
-
-    <div class="wrapper wrapper-content animated fadeInRight">
+        
         <div class="row">
 
             {{-- CONTENIDO DE TABS --}}
@@ -96,10 +94,10 @@
                                                 <th>Cliente</th>
                                                 <th>Fecha de Emisión</th>
                                                 <th>Precio Total</th>
-                                                <th style="text-align:center;color: #0073c1"><img
-                                                        src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
                                                 <th>@can('factura_m.xml')XML @endcan</th>
                                                 <th>@can('factura_m.cdr')CDR @endcan</th>
+                                                <th style="text-align:center;color: #0073c1"><img
+                                                        src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -235,8 +233,35 @@
                         'width': '30%',
                         'targets': [4]
                     },
+                   
                     {
-                        'targets': [7], // Estado
+                        'targets': [7], // Descargar XML
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.xml`;
+                            var button = ``;
+                            if(permiso_xml){
+                                button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        'targets': [8],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-01-${full[2]}.zip`;
+                            var button = ``;
+                            if(permiso_cdr){
+                                button = `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        'targets': [9], // Estado
                         'orderable': false,
                         'className': 'td_status',
                         'render': function(data, type, full, meta) {
@@ -272,32 +297,6 @@
                             return end;
                         }
                     },
-                    {
-                        'targets': [8], // Descargar XML
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-01-${full[2]}.xml`;
-                            var button = ``;
-                            if(permiso_xml){
-                                button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
-                            }
-                            return button;
-                        }
-                    },
-                    {
-                        'targets': [9],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-01-${full[2]}.zip`;
-                            var button = ``;
-                            if(permiso_cdr){
-                                button = `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
-                            }
-                            return button;
-                        }
-                    }
                 ],
                 drawCallback: function() {
                     $('[data-toggle="tooltip"]').tooltip();

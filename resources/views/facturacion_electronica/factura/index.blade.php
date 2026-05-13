@@ -37,8 +37,6 @@
                 @include('facturacion_electronica.factura.stadistics')
             </div>
         </div>
-    </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             {{-- CONTENIDO DE TABS --}}

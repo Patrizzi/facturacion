@@ -10,9 +10,7 @@
                 @include('facturacion_electronica.boleta.stadistics')
             </div>
         </div>
-    </div>
-    {{-- Base para agregar el tab para el los contenidos --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
+        {{-- Base para agregar el tab para el los contenidos --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
@@ -49,7 +47,7 @@
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" id="daterange-boleta_env" type="text"
-                                                    name="daterange-boleta_env"
+                                                    name="daterange-boleta_env" readonly
                                                     value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
@@ -92,10 +90,10 @@
                                                 <th>RUC /DNI</th>
                                                 <th>Fecha de emisión</th>
                                                 <th>Precio Total</th>
-                                                <th style="text-align:center;color: #0073c1"><img
-                                                        src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
                                                 <th>@can('boleta_m.xml') XML @endcan</th>
                                                 <th>@can('boleta_m.cdr') CDR @endcan</th>
+                                                <th style="text-align:center;color: #0073c1"><img
+                                                        src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -237,7 +235,33 @@
                         'targets': [4]
                     },
                     {
-                        'targets': [7], // Estado
+                        'targets': [7], // Descargar XML
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.xml`;
+                            var button = ``;
+                            if(permiso_xml){
+                                button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        'targets': [8],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `R-{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.zip`;
+                            var button = ``;
+                            if(permiso_xml){
+                                button += `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        'targets': [9], // Estado
                         'orderable': false,
                         'className': 'td_status',
                         'render': function(data, type, full, meta) {
@@ -273,32 +297,6 @@
                             return end;
                         }
                     },
-                    {
-                        'targets': [8], // Descargar XML
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.xml`;
-                            var button = ``;
-                            if(permiso_xml){
-                                button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
-                            }
-                            return button;
-                        }
-                    },
-                    {
-                        'targets': [9],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `R-{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.zip`;
-                            var button = ``;
-                            if(permiso_xml){
-                                button += `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
-                            }
-                            return button;
-                        }
-                    }
                 ],
                 drawCallback: function() {
                     $('[data-toggle="tooltip"]').tooltip();

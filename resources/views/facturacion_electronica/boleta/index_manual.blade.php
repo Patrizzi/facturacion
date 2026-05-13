@@ -40,9 +40,7 @@
                 @include('facturacion_electronica.boleta.stadistics')
             </div>
         </div>
-    </div>
-    {{-- Base para agregar el tab para el los contenidos --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
+        {{-- Base para agregar el tab para el los contenidos --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
