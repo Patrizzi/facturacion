@@ -51,7 +51,7 @@
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default  dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
