@@ -389,7 +389,7 @@ class Boleta_m extends Model
             if ($motivo == "Devolucion por Item" || $motivo == "07") {
                 $nota_c = Nota_Credito::where('boleta_m_id', $this->attributes['id'])->first();
                 //    dd($nota_c);
-                $total = $total - $nota_c->total_precio;
+                $total = $total - $nota_c->total_precio_number;
                 //    return $nota_c;
             }
         }
@@ -415,7 +415,7 @@ class Boleta_m extends Model
             if ($motivo == "Devolucion por Item" || $motivo == "07") {
                 $nota_c = Nota_Credito::where('boleta_m_id', $this->attributes['id'])->first();
                 //    dd($nota_c);
-                $total = $total - $nota_c->total_precio;
+                $total = $total - $nota_c->total_precio_number;
                 //    return $nota_c;
             }
         }

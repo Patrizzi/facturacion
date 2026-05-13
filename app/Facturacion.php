@@ -407,7 +407,7 @@ class Facturacion extends Model
             if($motivo == "Devolucion por Item"){
                $nota_c = Nota_Credito::where('facturacion_id', $this->attributes['id'])->first();
             //    dd($nota_c);
-               $total = $total - $nota_c->total_precio;
+               $total = $total - $nota_c->total_precio_number;
             //    return $nota_c;
             }
         }
@@ -466,7 +466,7 @@ class Facturacion extends Model
             if($motivo == "Devolucion por Item"){
                $nota_c = Nota_Credito::where('facturacion_id', $this->attributes['id'])->first();
             //    dd($nota_c);
-               $total = $total - $nota_c->total_precio;
+               $total = $total - $nota_c->total_precio_number;
             //    return $nota_c;
             }
         }
