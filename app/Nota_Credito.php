@@ -286,7 +286,7 @@ class Nota_Credito extends Model
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
-        $total_igv = $this->moneda_imbolo . ' ' . number_format($total, 2);
+        $total_igv = $this->moneda_simbolo . ' ' . number_format($total, 2);
         return $total_igv;
     }
 
