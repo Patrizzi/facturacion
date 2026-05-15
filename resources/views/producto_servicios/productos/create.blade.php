@@ -10,9 +10,7 @@
     data-keyboard="false" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 900px;">
         <div class="modal-content">
-            {{-- <form id="form-producto" action="{{ route('productos.store') }}" method="POST"
-                enctype="multipart/form-data"> --}}
-                <form id="form-producto-modal" onsubmit="return false;"
+            <form id="form-producto-modal" onsubmit="return false;"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header d-flex align-items-center">
@@ -433,6 +431,11 @@
 </div>
 <!-- Fin Modal NuevoProducto - 29/05/2025 -->
 
+
+<!-- Modal VerProducto - 29/05/2025 -->
+@include('producto_servicios.productos.show')
+<!-- Fin Modal VerProducto - 29/05/2025 -->
+
 <style>
     .form-control {
         border-radius: 5px;
@@ -573,9 +576,12 @@
         const btnText = document.getElementById('btn-text');
         const btnLoading = document.getElementById('btn-loading');
 
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
         btnText.style.display = 'none';
         btnLoading.style.display = 'inline';
-
         $.ajax({
             url: '{{ route("productos.store") }}',
             method: 'POST',
@@ -595,6 +601,7 @@
                     ).trigger('change');
 
                     $('#NuevoProducto').modal('hide');
+                    $('.dataTables-example').DataTable().ajax.reload();
                     form.reset();
                     toastr.success(response.message || 'Producto creado correctamente');
                 }

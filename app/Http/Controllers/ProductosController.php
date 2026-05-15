@@ -348,7 +348,7 @@ class ProductosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
+        // dd($request->estado);
         $isAjax = $request->ajax() || $request->has('_method');
 
         $isImport = !$isAjax && !$request->hasFile('foto') && !$request->hasFile('archivo');
@@ -444,7 +444,7 @@ class ProductosController extends Controller
                     'descripcion' => $request->descripcion,
                     'archivo' => $name_file ?? $producto->archivo,
                     'foto' => $name ?? $producto->foto,
-                    // 'estado_id' => $request->estado_id,
+                    // 'estado_id' => $request->estado,
                 ]);
 
             } elseif ($isImport) {

@@ -36,7 +36,7 @@ class Producto extends Model
         'subfamilia_id',
         'marca_id',
         'unidad_medida_id',
-        'estado_id'
+        'estado_id',
     ];
 
     protected $appeds = [
@@ -44,7 +44,8 @@ class Producto extends Model
         'unidad_medida',
         'stock',
         'precio_nacional',
-        'precio_extranjero'
+        'precio_extranjero',
+        'fecha_creacion'
     ];
 
     // Relaciones con otras tablas (manteniendo los nombres originales)

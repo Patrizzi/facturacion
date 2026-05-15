@@ -812,11 +812,15 @@ class ApiController extends Controller
                 $value->estado,          // => 5 - estado
                 $value->precios,     // => 6 - precio
                 $value->stock ?? 0,      // => 7 - stock
-                $value,   // => 8 - ficha técnica
-                $value              // => 9 - botones
+                $value->ficha_tecnica,   // => 8 - ficha técnica
+                $value->id,          // => 9 - botones
+                $value,              // => 10 - Informacion
+                $value->fecha_creacion
             ];
         }
-
+        $json['permiso_ver'] = auth()->user()->can('productos.ver');
+        $json['permiso_editar'] = auth()->user()->can('productos.editar');
+        $json['permiso_estado'] = auth()->user()->can('productos.estado');
         return response()->json($json);
     }
     // dsd
