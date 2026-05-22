@@ -21,7 +21,7 @@
                                         <div class="col-md-9">
                                             <input type="text" class="form-control" readonly value=""
                                                 placeholder="Código generado automáticamente" id="codigo_servicio"
-                                                name="   ">
+                                                name="" value="">
                                             <input type="hidden" id="codigo_producto_display" value="">
                                         </div>
                                     </div>
@@ -111,7 +111,7 @@
                                             class="col-form-label col-md-3"><strong>Marca</strong><span
                                                 class="text-danger">*</span></label>
                                         <div class="col-lg-9">
-                                            <select id="marca_id_create" class="form-control marca_select2" required>
+                                            <select id="marca_id_create" class="form-control marca_select2" required style="z-index: 9999999;width: 10px !important;">>
                                                 @foreach ($marcas as $marca)
                                                     <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                                 @endforeach
@@ -430,6 +430,7 @@
     }
 
     let tipo_cambio = parseFloat(`{{ $tipo_cambio->paralelo }}`) || 1;
+    let igv_val = parseFloat(`{{ $igv->igv_total }}`) || 1;
 
     // Cuando cambia el precio nacional → calculamos el extranjero
     $('#precio_nacional_create').on('input', function() {

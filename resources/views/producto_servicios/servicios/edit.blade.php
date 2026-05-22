@@ -77,7 +77,7 @@
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-9">
                                             <select id="familia_id_Edit" required="required"
-                                                class="form-control familia_select2" onchange="edit_list_subfamilia()">
+                                                class="form-control familia_select2">
                                                 <option value=""></option>
                                                 @foreach ($familias as $familia)
                                                     <option value="{{ $familia->id }}">{{ $familia->descripcion }}
@@ -93,11 +93,11 @@
                                             class="col-form-label col-md-3"><strong>SubFamilia</strong></label>
                                         <div class="col-md-9">
                                             <select class="form-control subfamilia_select2" id="subfamilia_Edit">
-                                                @foreach ($subfamilias as $subfamilia)
+                                                {{-- @foreach ($subfamilias as $subfamilia)
                                                     <option value="{{ $subfamilia->id }}">
                                                         {{ $subfamilia->descripcion }}
                                                     </option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                         </div>
                                     </div>
@@ -372,38 +372,41 @@
         $('.afectacion_select2').select2();
     });
 
-    function edit_list_subfamilia() {
-        var family = $('.familia_select2').val();
+    $('#familia_id_Edit').on('change', function () {
+        let family = $(this).val();
         $('.subfamilia_select2').val(null).trigger('change');
-
-        // console.log(family);
         $('.subfamilia_select2').select2({
             placeholder: "Seleccionar",
             ajax: {
-                minimumInputLength: 1,
                 url: "{{ route('subfamilia.search_ajax') }}",
                 dataType: 'json',
-                type: "POST",
-                data: function(params) {
+                type: 'POST',
+                delay: 250,
+
+                data: function (params) {
                     return {
                         _token: "{{ csrf_token() }}",
-                        familia_id: family
+                        familia_id: family,
+                        search: params.term
                     };
                 },
-                processResults: function(data) {
+
+                processResults: function (data) {
                     return {
-                        results: $.map(data, function(item) {
+                        results: $.map(data, function (item) {
                             return {
                                 id: item.id,
-                                text: item.descripcion,
+                                text: item.descripcion
                             };
                         })
                     };
                 },
+
                 cache: true
             }
         });
-    }
+
+    });
     $('#porcentaje_utilidad_edit').on('click', function(e) {
         $('#div_ayuda_utilidad_edit').toggle();
     })
@@ -522,7 +525,7 @@
         if (familia_id) {
             $('#familia_id_Edit').val(familia_id).trigger('change');
             var subfamiliaSelect = $('#subfamilia_Edit');
-            edit_list_subfamilia();
+            // edit_list_subfamilia();
             if (subfamilia_id) {
                 $('#subfamilia_Edit').val(subfamilia_id).trigger('change');
             }

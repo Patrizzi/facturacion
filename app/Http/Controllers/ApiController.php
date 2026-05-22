@@ -700,7 +700,10 @@ class ApiController extends Controller
         ];
 
         $servicios->transform(function ($servicio) {
-            $servicio->familia = $servicio->familia->descripcion;
+            $servicio->familia = $servicio->familia->descripcion ?? "" ;
+            $servicio->marca_name = $servicio->marca->nombre ?? "" ;
+            $servicio->subfamilia_name = $servicio->subfamilia_i_serv->descripcion ?? "";
+            $servicio->tipo_afectacion = $servicio->tipo_afec_i_serv->informacion ?? "";
             $servicio->fecha_creacion = $servicio->fecha_creacion;
             // $moneda_nacional = Moneda::where('tipo', 'nacional')->first();
             // $moneda_extranjera = Moneda::where('tipo', 'extranjera')->first();
@@ -726,6 +729,9 @@ class ApiController extends Controller
                 $value                      // 9 - ficha técnica y editar
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('servicios.ver');
+        $json['permiso_editar'] = auth()->user()->can('servicios.editar');
+        $json['permiso_estado'] = auth()->user()->can('servicios.estado');
         return response()->json($json);
     }
 
@@ -812,7 +818,7 @@ class ApiController extends Controller
                 $value->estado,          // => 5 - estado
                 $value->precios,     // => 6 - precio
                 $value->stock ?? 0,      // => 7 - stock
-                $value->ficha_tecnica,   // => 8 - ficha técnica
+                $value->archivo,   // => 8 - ficha técnica
                 $value->id,          // => 9 - botones
                 $value,              // => 10 - Informacion
                 $value->fecha_creacion

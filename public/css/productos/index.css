@@ -210,3 +210,11 @@ input#archivoInput:hover {
 .td_status {
     text-align: center !important;
 }
+.drop-actions > li > a{
+    margin-right: 10px !important;
+    margin-left: 0px !important;
+}
+
+.drop-header > div > a{
+    margin: 6px 10px 6px 0px !important;
+}

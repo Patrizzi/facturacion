@@ -126,8 +126,8 @@
                                             class="col-form-label col-md-3"><strong>Familia</strong><span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-9">
-                                            <select name="familia_id" id="familia_id_sl" required="required"
-                                                class="form-control familia_select2" >
+                                            <select name="familia_id" id="familia_id_sl" required=""
+                                                class="form-control familia_select2" style="z-index: 9999999;width: 10px !important;">
                                                 <option value=""></option>
                                                 @foreach ($familias as $familia)
                                                     <option value="{{ $familia->id }}">{{ $familia->descripcion }}

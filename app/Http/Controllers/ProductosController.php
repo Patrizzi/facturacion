@@ -183,15 +183,17 @@ class ProductosController extends Controller
 
         $id_producto = $request->get('marca_id');
         $marca = Marca::where("id", "=", $id_producto)->first();
-        $abreviatura = $marca->abreviatura;
-        $marca_cantidad = Producto::where("marca_id", "=", $id_producto)->count();
-        $marca_cantidad++;
-        $contador = 1000000;
-        $marca_cantidad = $contador + $marca_cantidad;
-        $marca_cantidad = (string)$marca_cantidad;
-        $marca_cantidad = substr($marca_cantidad, 1);
+        // $abreviatura = $marca->abreviatura;
+        // $marca_cantidad = Producto::where("marca_id", $id_producto)->count();
+        // // return $marca_cantidad;
+        // $marca_cantidad++;
+        // $contador = 1000000;
+        // $marca_cantidad = $contador + $marca_cantidad;
+        // $marca_cantidad = (string)$marca_cantidad;
+        // $marca_cantidad = substr($marca_cantidad, 1);
 
-        $codigo = $abreviatura . '-' . $marca_cantidad;
+        $codigo = Producto::generarCodigo($marca->id);
+        // return $codigo;
 
         $codigo_original = $request->get('codigo_original');
         if (isset($codigo_original)) {
@@ -356,166 +358,125 @@ class ProductosController extends Controller
         try {
             $producto = Producto::findOrFail($id);
 
-            if ($isAjax) {
-                $request->validate([
-                    'nombre' => 'required|string',
-                    'codigo_producto' => 'required|string',
-                    'codigo_original' => 'required|string|unique:productos,codigo_original,' . $id,
-                    'marca_id' => 'required|exists:marcas,id',
-                    'origen' => 'required|string',
-                    'stock_minimo' => 'required|integer',
-                    'stock_maximo' => 'required|integer',
-                    'unidad_medida_id' => 'required|exists:unidad_medida,id',
-                    'tipo_afectacion_id' => 'nullable|exists:tipo_afectacion,id', // AGREGADO
-                    'garantia' => 'required|string',
-                    'familia_id' => 'required|exists:familias,id',
-                    'subfamilia_id' => 'nullable|exists:subfamilias,id',
-                    'precio_nacional' => 'nullable|numeric',
-                    'precio_venta' => 'nullable|numeric',
-                    'utilidad' => 'nullable|numeric',
-                    'descripcion' => 'nullable|string',
-                    'detalle' => 'nullable|string|max:500',
-                    'peso_cantidad' => 'nullable|numeric',
-                    'peso_unidad' => 'nullable|string|max:50',
-                    'descuento_1' => 'nullable|numeric',
-                    'descuento_2' => 'nullable|numeric',
-                    'descuento_max' => 'nullable|numeric',
-                    'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-                    'archivo' => 'nullable|file|mimes:pdf,doc,docx'
-                ], [
-                    'codigo_original.unique' => 'El código alternativo ya existe',
-                    'foto.image' => 'El archivo debe ser una imagen',
-                    'foto.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif',
-                    'archivo.mimes' => 'El archivo debe ser de tipo: pdf, doc, docx'
-                ]);
-            }elseif (!$isImport) {
-                $this->validate($request, [
-                    'codigo_original' => ['required', 'unique:productos,codigo_original,' . $id],
-                ], [
-                    'codigo_original.unique' => 'El codigo alternativo ya existe',
-                ]);
-            }
-            // return $request;
-            // $name = null;
-            // $name_file = $producto->archivo;
+            $request->validate([
+                'nombre'              => 'required|string',
+                'codigo_producto'     => 'required|string',
+                'codigo_original'     => 'required|string|unique:productos,codigo_original,' . $id,
+                'marca_id'            => 'required|exists:marcas,id',
+                'origen'              => 'required|string',
+                'stock_minimo'        => 'required|integer',
+                'stock_maximo'        => 'required|integer',
+                'unidad_medida_id'    => 'required|exists:unidad_medida,id',
+                'tipo_afectacion_id'  => 'nullable|exists:tipo_afectacion,id',
+                'garantia'            => 'required|string',
+                'familia_id'          => 'required|exists:familias,id',
+                'subfamilia_id'       => 'nullable|exists:subfamilias,id',
+                'precio_nacional'     => 'nullable|numeric',
+                'precio_venta'        => 'nullable|numeric',
+                'utilidad'            => 'nullable|numeric',
+                'descripcion'         => 'nullable|string',
+                'detalle'             => 'nullable|string|max:500',
+                'peso_cantidad'       => 'nullable|numeric',
+                'peso_unidad'         => 'nullable|string|max:50',
+                'descuento_1'         => 'nullable|numeric',
+                'descuento_2'         => 'nullable|numeric',
+                'descuento_max'       => 'nullable|numeric',
+                'foto'                => 'nullable|image|mimes:jpeg,png,jpg,gif',
+                'archivo'             => 'nullable|file'
+            ], [
+                'codigo_original.unique' => 'El código alternativo ya existe',
+                'foto.image'             => 'El archivo debe ser una imagen',
+                'foto.mimes'             => 'La imagen debe ser de tipo: jpeg, png, jpg, gif',
+                'archivo.mimes'          => 'El archivo debe ser de tipo: pdf, doc, docx'
+            ]);
 
-            // if (!$isAjax && !$isImport) {
-                if ($request->hasFile('foto')) {
-                    $image1 = $request->file('foto');
-                    $name = time() . $image1->getClientOriginalName();
-                    $destinationPath = public_path('/archivos/imagenes/productos/');
-                    $image1->move($destinationPath, $name);
-                }
+            /*
+            |--------------------------------------------------------------------------
+            | SUBIR FOTO
+            |--------------------------------------------------------------------------
+            */
 
-                if ($request->hasFile('archivo')) {
-                    $file = $request->file('archivo');
-                    $codigo_original = $request->get('codigo_original') ?: $request->get('codigo');
-                    $name_file = $codigo_original . '-' . $file->getClientOriginalName();
-                    $destinationPath_file = public_path('/archivos/productos/fichas/');
-                    $file->move($destinationPath_file, $name_file);
-                }
-            // }
-                // dd($request->hasFile('archivo'));
-            if ($isAjax) {
-                $peso = $request->peso_cantidad . ' ' . $request->peso_unidad;
-                $producto->update([
-                    'nombre' => $request->nombre,
-                    'codigo_producto' => $request->codigo_producto,
-                    'codigo_original' => $request->codigo_original,
-                    'marca_id' => $request->marca_id,
-                    'origen' => $request->origen,
-                    'peso' => $peso,
-                    // 'stock' => $request->stock,
-                    'stock_minimo' => $request->stock_minimo,
-                    'precio_venta' => $request->precio_venta,
-                    'stock_maximo' => $request->stock_maximo,
-                    'descuento1' => $request->descuento_1,
-                    'descuento2' => $request->descuento_2,
-                    'descuento_maximo' => $request->descuento_max,
-                    'utilidad' => $request->utilidad,
-                    'precio_compra' => $request->precio_nacional,
-                    // 'precio_venta' => $request->precio_venta,
-                    'unidad_medida_id' => $request->unidad_medida_id,
-                    'tipo_afectacion_id' => $request->tipo_afectacion_id, // AGREGADO
-                    'garantia' => $request->garantia,
-                    'familia_id' => $request->familia_id,
-                    'subfamilia_id' => $request->subfamilia_id,
-                    'detalle' => $request->detalle,
-                    'descripcion' => $request->descripcion,
-                    'archivo' => $name_file ?? $producto->archivo,
-                    'foto' => $name ?? $producto->foto,
-                    // 'estado_id' => $request->estado,
-                ]);
+            $foto = $producto->foto;
 
-            } elseif ($isImport) {
+            if ($request->hasFile('foto')) {
 
-                $producto->update($request->all());
-            } else {
+                $image = $request->file('foto');
 
-                $codigo_original = $request->get('codigo_original') ?: $request->get('codigo');
+                $foto = time() . '_' . $image->getClientOriginalName();
 
-                // $estado = $request->get('estado_id') ? 1 : 2;
-
-                $peso = $request->get('peso') ?: 0;
-                $simbolo = $request->get('simbolo');
-
-                if ($request->get('nombre') != null) {
-                    $producto->nombre = $request->get('nombre');
-                }
-
-                $producto->codigo_original = $codigo_original;
-                $producto->descripcion = $request->get('descripcion');
-                $producto->estado_id = $estado;
-                $producto->origen = $request->get('origen');
-
-                $producto->descuento1 = $request->get('descuento_1') ?: 0;
-                $producto->descuento2 = $request->get('descuento_2') ?: 0;
-                $producto->descuento_maximo = $request->get('descuento_max') ?: 0;
-                $producto->utilidad = $request->get('utilidad') ?: 0;
-                $producto->garantia = $request->get('garantia') ?: '0 Meses';
-                $producto->stock_minimo = $request->get('stock_minimo') ?: 0;
-                $producto->stock_maximo = $request->get('stock_maximo') ?: 0;
-
-                $producto->precio_venta = $request->get('precio_venta');
-                // $producto->precio_impuesto = '1';
-                $producto->unidad_medida_id = $request->get('unidad_medida_id');
-                $producto->peso = $peso . ' ' . $simbolo;
-                $producto->tipo_afectacion_id = $request->get('tipo_afectacion');
-
-                if ($name) {
-                    $producto->foto = $name;
-                }
-                $producto->archivo = $name_file;
-
-                $producto->familia_id = $request->get('familia_id');
-                $producto->subfamilia_id = $request->get('sub_familia_id');
-
-                $producto->save();
+                $image->move(
+                    public_path('/archivos/imagenes/productos/'),
+                    $foto
+                );
             }
 
-            if ($isAjax) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Producto actualizado correctamente',
-                    'producto' => $producto
-                ]);
-            } elseif ($isImport) {
-                return true;
-            } else {
-                return redirect()->route('productos.show', $id);
+            /*
+            |--------------------------------------------------------------------------
+            | SUBIR ARCHIVO
+            |--------------------------------------------------------------------------
+            */
+
+            $archivo = $producto->archivo;
+
+            if ($request->hasFile('archivo')) {
+
+                $file = $request->file('archivo');
+
+                $archivo = $request->codigo_original . '-' . $file->getClientOriginalName();
+
+                $file->move(
+                    public_path('/archivos/productos/fichas/'),
+                    $archivo
+                );
             }
 
-        } catch (Exception $e) {
-            if ($isAjax) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al actualizar el producto: ' . $e->getMessage()
-                ], 500);
-            } elseif ($isImport) {
-                throw $e;
-            } else {
-                return back()->withErrors(['error' => 'Error al actualizar el producto: ' . $e->getMessage()]);
-            }
+            /*
+            |--------------------------------------------------------------------------
+            | ACTUALIZAR PRODUCTO
+            |--------------------------------------------------------------------------
+            */
+
+            $peso = trim($request->peso_cantidad . ' ' . $request->peso_unidad);
+
+            $producto->update([
+                'nombre'              => $request->nombre,
+                'codigo_producto'     => $request->codigo_producto,
+                'codigo_original'     => $request->codigo_original,
+                'marca_id'            => $request->marca_id,
+                'origen'              => $request->origen,
+                'peso'                => $peso,
+                'stock_minimo'        => $request->stock_minimo,
+                'stock_maximo'        => $request->stock_maximo,
+                'precio_compra'       => $request->precio_nacional,
+                'precio_venta'        => $request->precio_venta,
+                'utilidad'            => $request->utilidad,
+                'descuento1'          => $request->descuento_1,
+                'descuento2'          => $request->descuento_2,
+                'descuento_maximo'    => $request->descuento_max,
+                'unidad_medida_id'    => $request->unidad_medida_id,
+                'tipo_afectacion_id'  => $request->tipo_afectacion_id,
+                'garantia'            => $request->garantia,
+                'familia_id'          => $request->familia_id,
+                'subfamilia_id'       => $request->subfamilia_id,
+                'detalle'             => $request->detalle,
+                'descripcion'         => $request->descripcion,
+                'foto'                => $foto,
+                'archivo'             => $archivo,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Producto actualizado correctamente',
+                'producto' => $producto
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el producto',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -1466,34 +1427,48 @@ class ProductosController extends Controller
     }
 
     public function desactivarProducto($producto_id) {
-        try {
-
+       try {
             $producto = Producto::findOrFail($producto_id);
             $estadoActivoId = Estado::where('nombre', 'ACTIVO')->value('id');
             $estadoDesactivoId = Estado::where('nombre', 'DESACTIVO')->value('id');
             $estadoDescontinuadoId = Estado::where('nombre', 'DESCONTINUADO')->value('id');
 
-            if($producto->estado_id == $estadoDescontinuadoId) {
-                return redirect()->route('productos.index')->with('warning', 'Advertencia. Este producto está descontinuado');
+            if ($producto->estado_id == $estadoDescontinuadoId) {
+                return response()->json([
+                    'warning' => true,
+                    'message' => 'Advertencia. Este producto está descontinuado'
+                ], 400);
             }
 
-            if($producto->stock_producto->stock !== 0) {
-                return redirect()->route('productos.index')->with('warning', 'Advertencia. Este producto tiene stock');
+            if ($producto->stock_producto->stock !== 0) {
+                return response()->json([
+                    'warning' => true,
+                    'message' => 'Advertencia. Este producto tiene stock'
+                ], 400);
             }
 
-            if($producto->estado_id !== $estadoActivoId) {
-                return redirect()->route('productos.index')->with('warning', 'Solo se pueden desactivar productos activos');
+            if ($producto->estado_id !== $estadoActivoId) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Solo se pueden desactivar productos activos'
+                ], 400);
             }
 
             $producto->estado_id = $estadoDesactivoId;
             $producto->save();
 
-            return redirect()->route('productos.index')->with('success', 'Producto desactivado correctamente');
+            return response()->json([
+                'success' => true,
+                'message' => 'Producto desactivado correctamente'
+            ]);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
 
-            return $e;
-            return redirect()->route('productos.index')->with('error', 'Error. Inténtelo más tarde');
+            return response()->json([
+                'success' => false,
+                'message' => 'Error. Inténtelo más tarde',
+                'error' => $e->getMessage()
+            ], 500);
 
         }
     }

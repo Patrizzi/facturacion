@@ -321,14 +321,6 @@
                                             <div id="fotoIntupShow" class="foto_ver">
                                                 <img src="{{ asset('img/logos/imagen-subir1.svg') }}" id="fotoPreviaShow" alt="" class="img-fluid" style="padding: 10px; width: 30%;">
                                             </div>
-                                            {{-- <input type="file" id="fotoIntupEdit" name="foto_ver"
-                                                onchange="return validarExtEdit()"> --}}
-                                            {{-- <input name="avatar_respaldo" value="defecto_avatar.jpg" hidden> --}}
-                                            {{-- <div id="visorArchivoEdit" class="d-flex justify-content-center">
-                                                <img id="fotoPreviaEdit" name="foto_verar"
-                                                    src="{{ asset('img/logos/imagen-subir1.svg') }}"
-                                                    class="img-fluid hover-zoom" style="padding: 10px; width: 30%;">
-                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>

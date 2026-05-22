@@ -1,387 +1,362 @@
-@extends('layout')
+<div id="ModalFormVerServicio" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static"
+    data-keyboard="false" aria-labelledby="TituloProducto">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1200px;">
+        <div class="modal-content" style="height: 120% !important">>
+            <div class="modal-header d-flex align-items-center">
+                <h2 class="model-title" id="TituloProducto"><b style="font-weight: bold;">Ver Servicio</b></h2>
+                {{-- <input type="checkbox" class="js-switch-1" checked> --}}
+            </div>
+            <div class="modal-body">
+                <div class="scroll_content">
+                    <div class="form-label word-style tooltip-demo" style="margin-left: 8px; margin-right: 8px">
+                        <!-- Código autogenerado -->
+                        <div class="row">
+                            <!-- Código -->
+                            <div class="col-md-6">
+                                <div class="form-group row align-items-center">
+                                    <label class="col-md-3 col-form-label"><strong>Código</strong><span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" readonly value=""
+                                            placeholder="Código generado automáticamente" id="show_codigo_servicio"
+                                            name="   ">
+                                    </div>
+                                </div>
+                            </div>
 
-@section('title', 'Servicios/Ver')
-@section('breadcrumb', 'Servicios/Ver')
-@section('breadcrumb2', 'Servicios/Ver')
-@section('href_accion', route('servicios.create'))
-@section('value_accion', 'Servicio Nuevo')
-
-@section('content')
-<form action="{{ route('servicios.update',$servicios->id) }}"  enctype="multipart/form-data" method="post">
-  @csrf
-  @method('PATCH')
-  <div class="wrapper wrapper-content animated fadeInRight">
-    @if($errors->any())
-    <div style="padding-top: 20px;">
-      <div class="alert alert-danger">
-        <a class="alert-link" href="#">
-          @foreach ($errors->all() as $error)
-          <li style="color: red">{{ $error }}</li>
-          @endforeach
-        </a>
-      </div>
-    </div>
-    @endif
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="ibox product-detail">
-          <div class="ibox-content">
-            <div class="row">
-              <div class="col-md-5">
-                <div class="product-images">
-                  <div>
-                    <div class="image-imitation" style="padding:0px">
-                     <input type="file" id="archivoInput" name="foto" onchange="return validarExt()"   />
-                     <div id="visorArchivo">
-                       <img @if($servicios->foto == "defecto.png" || $servicios->foto == "servicio.png" ) src="{{ asset('/archivos/imagenes/servicios/servicio.png')}}" @else src="{{ asset('/archivos/imagenes/servicios/')}}/{{$servicios->foto}}" @endif style="width:100%;padding: 30px;">
-                       <input type="text" hidden="hidden" name="foto_original" value="{{$servicios->foto}}">
-                     </div>
-                   </div>
-                 </div>
-
-               </div>
-
-             </div>
-             <div class="col-md-7">
-              <div class="tooltip-demo">
-
-                <div class="row" style="padding-bottom: 15px">
-                  <div class="col-sm-4" align="center"><b>Cod.Generado:</b> {{$servicios->codigo_servicio}} </div>
-                  <div class="col-sm-4" align="center"><b>Categoría:</b> Servicio</div>
-                  <div class="col-sm-4" align="center"><b>Marca:</b> {{$servicios->marca->nombre}}</div>
-                </div>
-                <div class="row" style="padding-bottom:10px">
-
-                  <div class="col-sm-4" align="center">
-                    <input placeholder="SERV-0X33X345XX" data-toggle="tooltip" data-placement="top"  title="Código Alternativo:" type="text" class="form-control" name="codigo_original" autocomplete="off" value="{{$servicios->codigo_original}}">
-                  </div>
-                  <div class="col-sm-4" align="center">
-                    <div data-toggle="tooltip" data-placement="top"  title="Familia" >
-                      <select class="familia_select2" name="familia_id" required="required" onchange="list_subfamilia()" >
-                        @foreach($familias as $familia)
-                        <option value="{{ $familia->id }}"  @if( $servicios->familia->id == $familia->id) selected @endif>{{ $familia->descripcion}}</option>
-                        @endforeach
-                      </select>
+                            <!-- Código original -->
+                            <div class="col-md-6">
+                                <div class="form-group row align-items-center" id="form_group_cod_original">
+                                    <label class="col-md-3 col-form-label"><strong>Cod. Orig.</strong></label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="codigo_original" id="codigo_original_show"
+                                            class="form-control" readonly placeholder="Ingresa el código original"
+                                            autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- NOMBRE -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row align-items-center">
+                                    <label class="col-md-2 col-form-label"><strong>Nombre</strong><span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" placeholder="Nombre del Servicio"
+                                            required id="nombre_show" readonly autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- DESCRIPCION --}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row align-items-center">
+                                    <label class="col-md-2 col-form-label"><strong>Descripción</strong></label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" readonly id="descripcion_show"
+                                            placeholder="Ingresa la descripcion">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- FAMILIA Y SUBFAMILIA --}}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-md-3"><strong>Familia</strong><span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" name="" readonly
+                                            id="familia_show">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for=""
+                                        class="col-form-label col-md-3"><strong>SubFamilia</strong></label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" readonly name="" readonly
+                                            id="sub_familia_show">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- MARCA Y DESCUENTO --}}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-md-3"><strong>Marca</strong><span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" readonly name="" readonly
+                                            id="marca_show">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-form-label col-md-3"><strong>Desc.
+                                        </strong></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                            <input type="number" data-toggle="tooltip" data-placement="top"
+                                                title="" class="form-control input_valor_numerico"
+                                                value="0" autocomplete="off" required="required" max="100"
+                                                step="0.01" id="descuento_show" readonly
+                                                data-original-title="Descuenta internamente, de forma automática">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-addon">%</span>
+                                            </div>
+                                        </div>
+                                        {{-- <input type="number" class="form-control" id ="descuento1"
+                                            name="descuento1"> --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- PRECIO EN DOLARES Y SOLES --}}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-3" for=""><strong>P.
+                                            Nacional</strong></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span
+                                                    class="input-group-addon">{{ $moneda->where('tipo', 'nacional')->pluck('simbolo')->first() }}</span>
+                                            </div>
+                                            <input type="number" data-toggle="tooltip" data-placement="top"
+                                                title="" class="form-control input_valor_numerico"
+                                                autocomplete="off" required="required" step="0.01" readonly
+                                                id="precio_nacional_show">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-3" for=""><strong>P.
+                                            Extranjero</strong></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span
+                                                    class="input-group-addon">{{ $moneda->where('tipo', 'extranjera')->pluck('simbolo')->first() }}</span>
+                                            </div>
+                                            <input type="number" data-toggle="tooltip" data-placement="top"
+                                                title="" class="form-control input_valor_numerico" readonly
+                                                autocomplete="off" required="required" step="0.01"
+                                                id="precio_extranjero_show">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- UTILIDAD --}}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for=""
+                                        class="col-form-label col-md-3"><strong>Utilidad</strong><span
+                                            class="text-danger">*</span></label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                            <input type="text" id="sumando_show"
+                                                class="form-control input_valor_numerico" required="required"
+                                                value="0" autocomplete="off" readonly>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-addon">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-md-12">
+                                        <button type="button" id="porcentaje_utilidad_edit"
+                                            class="btn btn-block btn-primary">¿En duda con su porcentaje de
+                                            utilidad?</button>
+                                    </div>
+                                </div>
+                            </div> --}}
+                        </div>
+                        {{-- UTILIDAD | PRECIO COMPRA Y VENTA  +IGV --}}
+                        <div id="div_ayuda_utilidad_show">
+                            <div class="row bg-light m-1 rounded-top rounded-bottom"
+                                style="padding-top: 10px;justify-content: center">
+                                <div class="col-md-12" style="text-align: center">
+                                    <span class="text-center">Calculo aproximado del precio
+                                        <strong>({{ $moneda->where('principal', '1')->pluck('simbolo')->first() }})</strong>
+                                        y el sistema
+                                        calculará
+                                        por ud.
+                                    </span>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group text-center">
+                                        <label for="" class="col-form-label"><b>Precio sin
+                                                IGV</b></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-addon">{{$moneda->where('principal', '1')->pluck('simbolo')->first()}}</span>
+                                            </div>
+                                            <input type="text" class="border-0 form-control input-s-lg"
+                                                id="precio_compra_show" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group text-center">
+                                        <label for="" class="col-form-label"><b>Precio de Venta +
+                                                IGV</b></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-addon">{{$moneda->where('principal', '1')->pluck('simbolo')->first()}}</span>
+                                            </div>
+                                            <input type="text" class="border-0 form-control input-s-lg"
+                                                id="precio_venta_show" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        {{-- FECHA Y AFECTACION --}}
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for=""
+                                        class="col-form-label col-md-3"><strong>Fecha</strong></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" readonly name=""
+                                            id="fecha_show" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <label for=""
+                                        class="col-form-label col-md-3"><strong>Afectación</strong></label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" readonly id="tipo_afectacion_show"
+                                            name="" id="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- IMAGEN --}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row align-items-center">
+                                    <label class="col-md-2 col-form-label"><strong>Imagen</strong></label>
+                                    <div class="col-md-10">
+                                        <div id="fotoIntupShow" class="foto_ver">
+                                            <img src="{{ asset('img/logos/imagen-subir1.svg') }}" id="fotoPreviaShow"
+                                                alt="" class="img-fluid" style="padding: 10px; width: 30%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                 </div>
-                <div class="col-sm-4" align="center">
-                  <div data-toggle="tooltip" data-placement="top" title="Sub Familia">
-                    <select class="subfamilia_select2 form-control" name="sub_familia_id">
-                      @foreach($subfamilias as $subfamilia)
-                        <option value="{{ $subfamilia->id }}"  @if( $servicios->subfamilia_id == $subfamilia->id) selected @endif>{{ $subfamilia->descripcion}}</option>
-                      @endforeach
-                    </select>
-                  </div>
                 </div>
-               </div>
-
-               <input type="text" placeholder="Nombre del Servicio" class="form-control" required="required" data-toggle="tooltip" name="nombre" data-placement="top" title="Nombre del Servicio"  autocomplete="off" value="{{$servicios->nombre}}"  >
-               <textarea style="margin-top:10px" data-toggle="tooltip" data-placement="top" title="Description del Servicio"  type="text" class="form-control" placeholder="Descripcion del Servicio" name="descripcion" rows="2" >{{$servicios->descripcion}}</textarea >
-             </div>
-
-             <hr style="border:1px solid #8080803d;">
-
-             <div class="tooltip-demo " >
-               <div class="row">
-                 <label class="col-sm-2 col-form-label">Descuento:</label>
-                 <div class="col-sm-4">
-                   <div class="input-group m-b">
-                    <div class="input-group-prepend">
-                      <span class="input-group-addon">%</span>
-                    </div>
-                    <input type="text" class="form-control input_valor_numerico" name="descuento" required="required" value="{{$servicios->descuento}}" >
-                  </div>
+            </div>
+            <div class="modal-footer">
+                <div class="">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
                 </div>
-                <label class="col-sm-2 col-form-label">Utilidad: <i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;" data-toggle="modal" data-target="#utilidad_modal"></i></label>
-                <div class="col-sm-4"><div class="input-group m-b">
-                  <div class="input-group-prepend">
-                    <span class="input-group-addon">%</span>
-                  </div>
-                  <input type="text" class="form-control input_valor_numerico" name="utilidad" required="required" value="{{$servicios->utilidad}}" id="utilidad_inpt">
-                </div>
-              </div>
-
             </div>
-
-
-            <div class="row">
-
-              <label class="col-sm-2 col-form-label">Precio s/igv:</label>
-              <div class="col-sm-4"><div class="input-group m-b">
-                <div class="input-group-prepend">
-                  <select class="input-group-addon"  name="moneda" id="moneda_id">
-                    @foreach($monedas as $moneda)
-                    <option value="{{$moneda->id}}" @if($servicios->moneda->id==$moneda->id)selected @endif>{{$moneda->simbolo}}</option>
-                    @endforeach
-                  </select>
-                </div>
-                @if($servicios->moneda->id==2)
-                <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_extranjero}}" >
-                @else
-                <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_nacional}}" >
-                @endif
-              </div>
-            </div>
-            <label class="col-sm-2 col-form-label">Afectación:</label>
-            <div class="col-sm-4">
-              <select class="form-control"  name="afectacion">
-                @foreach($afectacion as $afecta)
-                <option value="{{$afecta->id}}">{{$afecta->informacion}}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-sm-12">
-              <button type="submit" class="ladda-button btn btn-success btn-block button_guardar" >Guardar</button>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-
-
-  <div class="ibox-footer">
-    <span style="text-align:right;">
-      Fecha de Creación <i class="fa fa-clock-o"></i> {{date('d:m:Y')}}
-    </span>
-  </div>
-</div>
-
-</div>
-</div>
-</div>
-</form>
-<!-- Modal -->
-<div class="modal fade" id="utilidad_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">¿En duda con su porcentaje de utilidad? Puede colocar su precio venta y el sistema calculará por ud.</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-4">
-            <p>Precio s/igv: </p>
-          </div>
-          <div class="col-sm-8">
-            <div class="input-group m-b">
-              <div class="input-group-prepend">
-                <span class="input-group-addon" id="sin_key"></span>
-              </div>
-              @if($servicios->moneda->id==2)
-                {{-- <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required"  > --}}
-                <input type="number" min="0" step="0.01" class="form-control" value="{{$servicios->precio_extranjero}}" name="" id="key_sin_igv" onchange="modal_key()">
-              @else
-              <input type="number" min="0" step="0.01" class="form-control" value="{{$servicios->precio_nacional}}" name="" id="key_sin_igv" onchange="modal_key()">
-                {{-- <input type="number" min="0" step="0.01" class="form-control" name="precio" required="required" value="{{$servicios->precio_nacional}}" > --}}
-              @endif
-              
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-sm-4">
-            <p>Precio de Venta: </p>
-          </div>
-          <div class="col-sm-8">
-            <div class="input-group m-b">
-              <div class="input-group-prepend">
-                <span class="input-group-addon" id="venta_key"></span>
-              </div>
-              <input type="number" min="0" step="0.01" class="form-control" name="" id="precio_venta">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        {{-- <button type="button" class="btn btn-secondary" >Close</button> --}}
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="calc_utilidad()">Calcular</button>
-      </div>
-    </div>
-  </div>
 </div>
 <style>
-  input#archivoInput{
-    position:absolute;
-    top:0px;
-    left:0px;
-    right:0px;
-    bottom:0px;
-    width:100%;
-    /*height:100%;*/
-    opacity: 0  ;
-    padding: 30px;
-  }
-  .select2.select2-container.select2-container--default{
-    width: 100% !important;
-    /* height: 100% !important; */
-  }
-  .select2-container--default .select2-selection--single{
-    height: 2.5em;
-  }
-  .select2-container--default .select2-selection--single .select2-selection__rendered{
-    line-height: 32px !important;
-  }
-  .custom-file-label{
-    word-break: break-all;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .custom-file-label::after{
-    content: "Sel."
-  }
-  .select2-selection.select2-selection--single{
-    text-align: justify !important;
-  }
+    .foto_ver {
+        width: 100%;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border: 2px solid #ced4da;
+        border-radius: 6px;
+        text-align: center;
+    }
 </style>
-<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/popper.min.js') }}"></script>
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+<script>
+
+    $(document).on('click', '.ver-servicio', function() {
+        // console.log("a");
+        currentServicioId = $(this).data('id');
+
+        var nombre = $(this).data('nombre');
+        var codigo_servicio = $(this).data('codigo_servicio');
+        var codigo_original = $(this).data('codigo_original');
+        var familia_id = $(this).data('familia_id');
+        var subfamilia_id = $(this).data('subfamilia_id');
+        var marca_id = $(this).data('marca_id');
+        var moneda_id = $(this).data('moneda_id');
+        var precio_nacional = $(this).data('precio_nacional');
+        var precio_extranjero = $(this).data('precio_extranjero');
+        var utilidad = $(this).data('utilidad');
+        var descuento = $(this).data('descuento');
+        var descripcion = $(this).data('descripcion');
+        var foto = $(this).data('foto');
+        var tipo_afectacion_id = $(this).data('tipo_afectacion_id');
+        var estado_anular = $(this).data('estado_anular');
+        var fecha_creacion = $(this).data('fecha_creacion');
+        var marca_name = $(this).data('marca_name');
+        var familia_name = $(this).data('familia_name');
+        var sub_familia_name = $(this).data('subfamilia_name');
+        var tipo_afectacion = $(this).data('tipo_afectacion');
+
+        $('#show_codigo_servicio').val(codigo_servicio);
+        $('#codigo_original_show').val(codigo_original);
+        $('#nombre_show').val(nombre);
+        $('#descripcion_show').val(descripcion);
+        $('#descuento_show').val(descuento);
+        $('#precio_nacional_show').val(precio_nacional);
+        $('#precio_extranjero_show').val(precio_extranjero);
+        $('#sumando_show').val(utilidad);
+        $('#fecha_show').val(fecha_creacion);
+        $('#familia_show').val(familia_name);
+        $('#marca_show').val(marca_name);
+        $('#sub_familia_show').val(sub_familia_name);
+        $('#tipo_afectacion_show').val(tipo_afectacion);
+        
+        $('#fotoPreviaEdit').attr('src', "{{ asset('/archivos/imagenes/servicios') }}/" + foto);
+        
+        // Precios
+        // // let precio_nacional = parseFloat($(this).val()) || 0;
+        // let precio_extranjero = precio_nacional / tipo_cambio;
+        $('#precio_extranjero_show').val(precio_extranjero.toFixed(2));
+        $('#precio_compra_show').val(precio_nacional);
+
+        calcular_precios();
 
 
-<!-- Custom and plugin javascript -->
-<script src="{{ asset('js/inspinia.js') }}"></script>
-<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-{{-- foto --}}
-<script type="text/javascript">
-$(document).ready(function(){
-    $('.familia_select2').select2({
-      placeholder: "Seleccionar",
+    });
     
-    });
-    $('.subfamilia_select2').select2({
-      placeholder: "Seleccionar",
-    });
-  });
-  // $('.subfamilia_select2').val({{$servicios->subfamilia_id}});
-  function list_subfamilia(){
-    var family = $('.familia_select2').val();
-    $('.subfamilia_select2').val(null).trigger('change');
+    function calcular_precios() {
+        var precio_venta = $("#precio_venta_show").val();
+        var precio_compra = $("#precio_compra_show").val();
 
-    // console.log(family);
-    $('.subfamilia_select2').select2({
-      placeholder: "Seleccionar",
-      ajax: {
-        minimumInputLength: 1,
-        url: "{{ route('subfamilia.search_ajax') }}",
-        dataType: 'json',
-        type: "POST",
-        data: function (params) {
-            return {
-                _token: "{{ csrf_token() }}",
-                familia_id: family    
-            };
-        },
-        processResults: function (data) {
-          return {
-            results: $.map(data, function (item) {
-                return {
-                    id: item.id,
-                    text: item.descripcion,
-                };
-            })
-          };
-        },
-        cache: true
-      }
-    });
-  }
-  function validarExt()
-  {
-    var archivoInput = document.getElementById('archivoInput');
-    var archivoRuta = archivoInput.value;
-    var extPermitidas = /(.jpg|.png|.jfif)$/i;
-    if(!extPermitidas.exec(archivoRuta)){
-      alert('Asegúrese de haber seleccionado una Imagen');
-      archivoInput.value = '';
-      return false;
+        // if (!isNaN(precio_venta) && !isNaN(precio_compra) && precio_venta !== "" && precio_compra !== "") {
+        //     var a1 = parseFloat(precio_venta) * 100;
+        //     var a2 = a1 / parseFloat(precio_compra);
+        //     var utilidad = a2 - 100;
+        //     $("#sumando_show").val(utilidad);
+        // } else {
+        //     $("#sumando_show").val("");
+        // }
+
+        // Precio venta + igv
+        var total_venta = precio_compra * 1.18;
+        $('#precio_venta_show').val(total_venta)
+
+        // Disparar evento input para que se actualicen cálculos
+        $("#precio_nacional_show").trigger("input");
     }
-
-    else
-    {
-        //PRevio del PDF
-        if (archivoInput.files && archivoInput.files[0])
-        {
-          var visor = new FileReader();
-          visor.onload = function(e)
-          {
-            document.getElementById('visorArchivo').innerHTML =
-            '<img name="foto" src="'+e.target.result+'" style="width:100%;padding: 30px;"/>';
-          };
-          visor.readAsDataURL(archivoInput.files[0]);
-        }
-      }
-    }
-    function calc_utilidad(){
-     var precio_sin_igv = $('#key_sin_igv').val();
-     var precio_venta = $('#precio_venta').val();
-
-     if (!isNaN(precio_venta) || !isNaN(precio_sin_igv) ) {
-      // var utilidad = (parseFloat(precio_compra)/100) * parseFloat(precio_venta);
-      var a1 =  parseFloat(precio_venta) * 100;
-      var a2 = parseFloat(a1) / parseFloat(precio_sin_igv);
-      console.log(precio_sin_igv)
-      var utilidad = parseFloat(a2) - 100;
-      document.getElementById("utilidad_inpt").value = utilidad;
-      // console.log(utilidad)
-    }
-
-    //  var precio = (precio_sin_igv/precio_venta) * 100;
-    //  console.log(precio);
-  }
-  function modal_key(){
-    // moneda
-    var precio_sin_igv = $('#key_sin_igv').val();
-
-    $('#precio_sin_igv').val(precio_sin_igv) ;
-  }
-  function input_key(){
-    var precio_venta = $('#precio_venta').val();
-    var precio_sin_igv = $('#key_sin_igv').val();
-    $('#key_sin_igv').val(precio_sin_igv) ;
-    if(precio_venta != ""){
-      calc_utilidad();
-    }
-  }
-  // document{
-    // function changue_moneda(){
-      var select = document.getElementById('moneda_id');
-      select.addEventListener('change',
-      function(){
-        var selectedOption = this.options[select.selectedIndex];
-        // console.log(selectedOption.text);
-        $('#sin_key').html(selectedOption.text)
-        $('#venta_key').html(selectedOption.text)
-      });
-    // }
-  // }
-  $(document).ready(function() {
-    var select = document.getElementById('moneda_id');
-      // select.addEventListener('change',function(){
-        var selectedOption = select.options[select.selectedIndex];
-        // console.log(selectedOption.text);
-        $('#sin_key').html(selectedOption.text)
-        $('#venta_key').html(selectedOption.text)
-      // });
-  });
-  $('.input_valor_numerico').on('input', function () {
-    this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
-  });
-  $('.button_guardar').on('mouseenter', function () {
-    var lol = document.querySelectorAll('.input_valor_numerico');
-      lol.forEach(element => {
-        if (element.val == "" || isNaN(Number(element.value)) == true) {
-          element.value = 0;
-        }
-      });
-  });
-  </script>
-  @endsection
+</script>

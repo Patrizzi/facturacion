@@ -261,23 +261,11 @@ body.mini-navbar .navbar-static-side:hover .nav-footer-user .nav-label {
 }
 
 .dropdown-item {
-    display: flex;
-    align-items: center;
-    color: #333;
-    padding: 12px 20px;
-    text-decoration: none;
     transition: var(--menu-transition);
 }
 
 .dropdown-item:hover {
-    background-color: #f8f9fa;
-    color: var(--primary);
     transform: translateX(5px);
-}
-
-.dropdown-item i {
-    margin-right: 10px;
-    width: 16px;
 }
 
 /* scrollbar del menu */
