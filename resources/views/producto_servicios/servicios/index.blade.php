@@ -98,13 +98,13 @@
                                                     <th>Código Original</th>
                                                     <th>Nombre</th>
                                                     <th>Familia</th>
-                                                    <th>P. Venta (
+                                                    <th>P. Venta  (
                                                         <strong>{{ $moneda->where('tipo', 'nacional')->pluck('simbolo')->first() }}</strong>
-                                                        )
+                                                        ) <small>S/igv</small>
                                                     </th>
                                                     <th>P. Venta (
                                                         <strong>{{ $moneda->where('tipo', 'extranjera')->pluck('simbolo')->first() }}</strong>
-                                                        )
+                                                        ) <small>S/igv</small> 
                                                     </th>
                                                     <th>Ficha Técnica</th>
                                                     <th class="icon-estado">Estado</th>

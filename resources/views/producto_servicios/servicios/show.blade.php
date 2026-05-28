@@ -1,7 +1,7 @@
 <div id="ModalFormVerServicio" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static"
     data-keyboard="false" aria-labelledby="TituloProducto">
     <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1200px;">
-        <div class="modal-content" style="height: 120% !important">>
+        <div class="modal-content" style="height: 120% !important">
             <div class="modal-header d-flex align-items-center">
                 <h2 class="model-title" id="TituloProducto"><b style="font-weight: bold;">Ver Servicio</b></h2>
                 {{-- <input type="checkbox" class="js-switch-1" checked> --}}
@@ -98,7 +98,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label for="" class="col-form-label col-md-3"><strong>Desc.
+                                    <label for="" class="col-form-label col-md-3"><strong>Desc. Adc.    
                                         </strong></label>
                                     <div class="col-md-9">
                                         <div class="input-group">
@@ -106,7 +106,7 @@
                                                 title="" class="form-control input_valor_numerico"
                                                 value="0" autocomplete="off" required="required" max="100"
                                                 step="0.01" id="descuento_show" readonly
-                                                data-original-title="Descuenta internamente, de forma automática">
+                                                data-original-title="Descuento Adicional, se selecciona al momento de crear Comprobantes">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-addon">%</span>
                                             </div>
@@ -133,6 +133,15 @@
                                                 title="" class="form-control input_valor_numerico"
                                                 autocomplete="off" required="required" step="0.01" readonly
                                                 id="precio_nacional_show">
+                                            @if ($moneda->where('principal', '1')->where('tipo', 'nacional')->count())
+                                                <div class="input-group-addon" style="padding: 0px !important">
+                                                    <div class="tooltip-demo">
+                                                        <i class="fa fa-check-circle text-success"
+                                                            data-toggle="tooltip" data-placement="bottom" style="padding: 10px; !important"
+                                                            data-original-title="Moneda Principal del Sistema"></i>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -151,6 +160,15 @@
                                                 title="" class="form-control input_valor_numerico" readonly
                                                 autocomplete="off" required="required" step="0.01"
                                                 id="precio_extranjero_show">
+                                            @if ($moneda->where('principal', '1')->where('tipo', 'extranjera')->count())
+                                                <div class="input-group-addon" style="padding: 0px !important">
+                                                    <div class="tooltip-demo">
+                                                        <i class="fa fa-check-circle text-success" style="padding: 10px; !important"
+                                                            data-toggle="tooltip" data-placement="bottom"
+                                                            data-original-title="Moneda Princial del Sistema"></i>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -331,30 +349,34 @@
         // Precios
         // // let precio_nacional = parseFloat($(this).val()) || 0;
         // let precio_extranjero = precio_nacional / tipo_cambio;
-        $('#precio_extranjero_show').val(precio_extranjero.toFixed(2));
-        $('#precio_compra_show').val(precio_nacional);
+        // $('#precio_extranjero_show').val(precio_extranjero.toFixed(2));
+        // $('#precio_compra_show').val(precio_nacional);
 
-        calcular_precios();
-
-
+        calcular_precios_show();
     });
     
-    function calcular_precios() {
-        var precio_venta = $("#precio_venta_show").val();
-        var precio_compra = $("#precio_compra_show").val();
+    var igv_show = `{{$igv->igv_total}}`;
+    function calcular_precios_show() {
+        if(moneda_principal == "nacional"){
+            var precio_principal = $('#precio_nacional_show').val();
+        }else{
+            var precio_principal = $('#precio_extranjero_show').val();
+        }
+        const descuento = parseFloat($("#descuento_show").val()) || 0;
+        const utilidad = parseFloat($("#sumando_show").val()) || 0;
+        const igv = parseFloat(igv_show) || 0;
 
-        // if (!isNaN(precio_venta) && !isNaN(precio_compra) && precio_venta !== "" && precio_compra !== "") {
-        //     var a1 = parseFloat(precio_venta) * 100;
-        //     var a2 = a1 / parseFloat(precio_compra);
-        //     var utilidad = a2 - 100;
-        //     $("#sumando_show").val(utilidad);
-        // } else {
-        //     $("#sumando_show").val("");
-        // }
+        let precio_compra = parseFloat(precio_principal) || 0;
+        precio_compra = precio_compra + (precio_compra * (utilidad / 100));
+        // precio_compra = precio_compra - (precio_compra * (descuento / 100));
 
-        // Precio venta + igv
-        var total_venta = precio_compra * 1.18;
-        $('#precio_venta_show').val(total_venta)
+        $('#precio_compra_show').val(precio_compra.toFixed(2));
+
+        // + IGV
+        const total_venta =
+            precio_compra + (precio_compra * (igv / 100));
+
+        $('#precio_venta_show').val(total_venta.toFixed(2));
 
         // Disparar evento input para que se actualicen cálculos
         $("#precio_nacional_show").trigger("input");
