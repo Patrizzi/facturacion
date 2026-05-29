@@ -359,10 +359,10 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'correo.listar_enviados', 'module' => 'correo', 'description' => 'Lista de Correos Enviados']);
         Permission::create(['name' => 'correo.enviar', 'module' => 'correo', 'description' => 'Enviar Correo']);
         Permission::create(['name' => 'correo.lista_borradores', 'module' => 'correo', 'description' => 'Lista de Borradores de Correos']);
-        Permission::create(['name' => 'correo.configuracion', 'module' => 'correo', 'description' => 'Mostrar Servicio']);
-        Permission::create(['name' => 'correo.eliminar', 'module' => 'correo', 'description' => 'Mostrar Servicio']);
-        Permission::create(['name' => 'correo.papelera', 'module' => 'correo', 'description' => 'Mostrar Servicio']);
-        Permission::create(['name' => 'correo.suprimir', 'module' => 'correo', 'description' => 'Mostrar Servicio']);
+        Permission::create(['name' => 'correo.configuracion', 'module' => 'correo', 'description' => 'Revisar la Configuracion del Correo']);
+        Permission::create(['name' => 'correo.papelera', 'module' => 'correo', 'description' => 'Listar los correos en la Papelera']);
+        Permission::create(['name' => 'correo.eliminar', 'module' => 'correo', 'description' => 'Enviar a la Papelera el Correo']);
+        Permission::create(['name' => 'correo.suprimir', 'module' => 'correo', 'description' => 'Eliminar definitivamente el Correo']);
 
 
         //* Auxiliar

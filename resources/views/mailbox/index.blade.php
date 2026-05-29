@@ -110,7 +110,9 @@
                                                     @endforeach
                                                 </tbody>
                                             </table>
-                                            <button type="submit" style="display: none" id="submit_eliminar"></button>
+                                            @can('email.eliminar')
+                                                <button type="submit" style="display: none" id="submit_eliminar"></button>
+                                            @endcan
                                         </form>
                                     </div>
                                     <br>

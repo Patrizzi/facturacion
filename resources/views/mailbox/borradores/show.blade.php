@@ -18,12 +18,16 @@
                         <div class="col-lg-9">
                             <div class="mail-box-header">
                                 <div class="float-right tooltip-demo">
-                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#enviar"><i class="fa fa-reply"></i> Enviar</button>
-                                    <form action="{{route('email.delete')}}" method="post" style="display: inline-flex">
-                                        @csrf
-                                        <input type="hidden" name="check_input[]" value="{{$mail->id}}">
-                                        <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i></button>
-                                    </form>
+                                    @can('email.enviar')
+                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#enviar"><i class="fa fa-reply"></i> Enviar</button>
+                                    @endcan
+                                    @can('email.eliminar')
+                                        <form action="{{route('email.delete')}}" method="post" style="display: inline-flex">
+                                            @csrf
+                                            <input type="hidden" name="check_input[]" value="{{$mail->id}}">
+                                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    @endcan
                                 </div>
                                 <h2>
                                     Ver Borrador 
@@ -78,11 +82,11 @@
                                     {{-- <p>Hola</p> --}}
                                 @endif
                                     
-                                <div class="mail-body text-right tooltip-demo">
+                                {{-- <div class="mail-body text-right tooltip-demo">
                                     <a href="mail_compose.html" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Reply"><i class="fa fa-reply"></i> Enviar</a>
                                     <a href="mailbox.html" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i> </a>
                                 </div>
-                                <div class="clearfix"></div>
+                                <div class="clearfix"></div> --}}
                             </div>
                         </div>
                     </div>

@@ -19,19 +19,25 @@
                         <div class="col-lg-9">
                             <div class="mail-box-header">
                                 <div class="float-right tooltip-demo">
-                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reenviar"><i class="fa fa-reply"></i> Reenviar</button>
+                                    @can('email.enviar')
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reenviar"><i class="fa fa-reply"></i> Reenviar</button>
+                                    @endcan
                                     @if($mail->estado == 0)
-                                        <form action="{{route('email.delete')}}" method="post" style="display: inline-flex">
-                                            @csrf
-                                            <input type="hidden" name="check_input[]" value="{{$mail->id}}">
-                                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i></button>
-                                        </form>
+                                        @can('correo.eliminar')
+                                            <form action="{{route('email.delete')}}" method="post" style="display: inline-flex">
+                                                @csrf
+                                                <input type="hidden" name="check_input[]" value="{{$mail->id}}">
+                                                <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                            </form>
+                                        @endcan
                                     @else
-                                        <form action="{{route('email.destroy')}}" method="post" style="display: inline-flex">
-                                            @csrf
-                                            <input type="hidden" name="id" value="{{$mail->id}}">
-                                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar permanentemente"><i class="fa fa-trash-o"></i></button>
-                                        </form>
+                                        @can('correo.suprimir')
+                                            <form action="{{route('email.destroy')}}" method="post" style="display: inline-flex">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{$mail->id}}">
+                                                <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar permanentemente"><i class="fa fa-trash-o"></i></button>
+                                            </form>
+                                        @endcan
                                     @endif
                                 </div>
                                 <h2>
@@ -103,14 +109,16 @@
                                     </div>
                                 @endif
 
-                                <div class="mail-body text-right tooltip-demo">
+                                {{-- <div class="mail-body text-right tooltip-demo">
                                     <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reenviar"><i class="fa fa-reply"></i> Reenviar</button>
-                                    <form action="{{route('email.delete')}}" method="post" style="display: inline-flex">
-                                        @csrf
-                                        <input type="hidden" name="check_input[]" value="{{$mail->id}}">
-                                        <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i></button>
-                                    </form>
-                                </div>
+                                    @can('correo.eliminar')
+                                        <form action="{{route('email.delete')}}" method="post" style="display: inline-flex">
+                                            @csrf
+                                            <input type="hidden" name="check_input[]" value="{{$mail->id}}">
+                                            <button type="submit" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Eliminar"><i class="fa fa-trash-o"></i></button>
+                                        </form>
+                                    @endcan
+                                </div> --}}
                                 <div class="clearfix"></div>
                             </div>
                         </div>
