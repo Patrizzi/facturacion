@@ -58,10 +58,12 @@
                                 {{-- Almacen --}}
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
                                     {{-- ALMACEN --}}
-                                    <button class="btn btn-success" data-toggle="modal" href="#nuevoProveedorModal">
-                                        <i class="fa fa-plus"></i>
+                                    @can('proveedor.crear')
+                                        <button class="btn btn-success" data-toggle="modal" href="#nuevoProveedorModal">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endcan
 
-                                    </button>
                                     <button class="btn btn-success" type="button">
                                         <i class="fa fa-upload"></i>
                                     </button>
@@ -322,6 +324,9 @@
     {{-- scritp de modal agregar --}}
     <script>
         $(document).ready(function() {
+            var permiso_ver = false;
+            var permiso_editar = false;
+            var permiso_estado = false;
             var proveedor_table = $('.dataTables-example').DataTable({
                 "pageLength": 15,
                 "serverSide": true,
@@ -332,6 +337,13 @@
                         d.daterange = $('#data_range_filter').val();
                         d.value = $('#search_all_column').val();
                     },
+                    dataSrc: function(json) {
+                        permiso_ver = json.permiso_ver;
+                        permiso_editar = json.permiso_editar;
+                        permiso_estado = json.permiso_estado;
+                        // Retorna los datos de la tabla para que Datatables los procese
+                        return json.data;
+                    }
                 },
                 "columnDefs": [{
                         'width': '1vmax',
@@ -377,24 +389,67 @@
                         'targets': [8],
                         'orderable': false,
                         'render': function(data, type, full, meta) {
+                            let btnEditar = ``;
+                            let btnEstado = ``;
+
+                            // ACTIVO
                             if (full[9] == '1') {
-                                return `
-                                <div class="tooltip-demo">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(` +
-                                    full[0] + `)"> <i class="fa fa-pencil"></i> </button>
-                                    <button type="button" class="btn btn-info" onclick="estado(` + full[0] + `,` +
-                                    full[9] + `)"><i class="fa fa-check" ></i></button>
-                                </div>`;
-                            } else {
-                                // var
-                                return `
-                                <div class="tooltip-demo">
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editar_proveedor" onclick="editar(` +
-                                    full[0] + `)"> <i class="fa fa-eye"></i> </button>
-                                    <button type="button" class="btn btn-danger" onclick="estado(` + full[0] + `,` +
-                                    full[9] + `)"><i class="fa fa-times"></i></button>
-                                </div>`;
+
+                                if (permiso_editar) {
+                                    btnEditar = `
+                                        <button type="button"
+                                            class="btn btn-primary"
+                                            data-toggle="modal"
+                                            data-target="#editar_proveedor"
+                                            onclick="editar(${full[0]})">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                    `;
+                                }
+
+                                if (permiso_estado) {
+                                    btnEstado = `
+                                        <button type="button"
+                                            class="btn btn-info"
+                                            onclick="estado(${full[0]}, ${full[9]})">
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    `;
+                                }
+
+                            } 
+                            // INACTIVO
+                            else {
+
+                                if (permiso_ver) {
+                                    btnEditar = `
+                                        <button type="button"
+                                            class="btn btn-primary"
+                                            data-toggle="modal"
+                                            data-target="#editar_proveedor"
+                                            onclick="editar(${full[0]})">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    `;
+                                }
+
+                                if (permiso_estado) {
+                                    btnEstado = `
+                                        <button type="button"
+                                            class="btn btn-danger"
+                                            onclick="estado(${full[0]}, ${full[9]})">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    `;
+                                }
                             }
+
+                            return `
+                                <div class="tooltip-demo">
+                                    ${btnEditar}
+                                    ${btnEstado}
+                                </div>
+                            `;
                         }
                     }
                 ],

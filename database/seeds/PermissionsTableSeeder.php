@@ -373,7 +373,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'proveedor.crear', 'module' => 'auxiliar', 'description' => 'Crear Proveedor']);
         Permission::create(['name' => 'proveedor.ver', 'module' => 'auxiliar', 'description' => 'Mostrar Proveedor']);
         Permission::create(['name' => 'proveedor.editar', 'module' => 'auxiliar', 'description' => 'Editar Proveedor']);
-        Permission::create(['name' => 'proveedor.anular', 'module' => 'auxiliar', 'description' => 'Anular Proveedor']);
+        Permission::create(['name' => 'proveedor.estado', 'module' => 'auxiliar', 'description' => 'Cambiar estado de Proveedor']);
 
         //* Perfil de Usuario
 

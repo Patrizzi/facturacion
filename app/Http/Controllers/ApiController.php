@@ -1539,6 +1539,9 @@ class ApiController extends Controller
                 $value->estado,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('proveedor.ver');
+        $json['permiso_editar'] = auth()->user()->can('proveedor.editar');
+        $json['permiso_estado'] = auth()->user()->can('proveedor.estado');
         return response()->json($json);
     }
 
