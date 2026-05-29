@@ -402,9 +402,9 @@
 
                                         {{ $sub_total = $notas_credito_registro->nota_credito_ids->op_gravada + $notas_credito_registro->nota_credito_ids->op_inafecta + $notas_credito_registro->nota_credito_ids->op_exonerada }}
                                         {{ $sub_total_gravado = $notas_credito_registro->nota_credito_ids->op_gravada }}
-                                        {{ $igv_p = round($sub_total_gravado, 2) * ($igv->igv_total / 100) }}
-                                        {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                        {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
+                                        {{ $igv_p = $sub_total_gravado * ($igv->igv_total / 100) }}
+                                        {{ $end = $sub_total + $igv_p }}
+                                        {{ $end2 = number_format(round($end, 2), 2) }}
 
                                     </td>
                                 </tr>

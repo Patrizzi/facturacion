@@ -388,23 +388,23 @@ class NotaCreditoController extends Controller
                     } else {
                         if (isset($factura_registro[$a]->producto_id)) {
                             if (strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
-                                $gravada += round($factura_registro[$a]->precio_unitario_comi * $request->$cantidad, 2);
+                                $gravada += $factura_registro[$a]->precio_unitario_comi * $request->$cantidad;
                             }
                             if (strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
-                                $exonerada += round($factura_registro[$a]->precio_unitario_comi * $request->$cantidad, 2);
+                                $exonerada += $factura_registro[$a]->precio_unitario_comi * $request->$cantidad;
                             }
                             if (strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
-                                $inafecta += round($factura_registro[$a]->precio_unitario_comi * $request->$cantidad, 2);
+                                $inafecta += $factura_registro[$a]->precio_unitario_comi * $request->$cantidad;
                             }
                         } else {
                             if (strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
-                                $gravada += round($factura_registro[$a]->precio_unitario_comi * $request->$cantidad, 2);
+                                $gravada += $factura_registro[$a]->precio_unitario_comi * $request->$cantidad;
                             }
                             if (strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
-                                $exonerada += round($factura_registro[$a]->precio_unitario_comi * $request->$cantidad, 2);
+                                $exonerada += $factura_registro[$a]->precio_unitario_comi * $request->$cantidad;
                             }
                             if (strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
-                                $inafecta += round($factura_registro[$a]->precio_unitario_comi * $request->$cantidad, 2);
+                                $inafecta += $factura_registro[$a]->precio_unitario_comi * $request->$cantidad;
                             }
                         }
                     }
@@ -417,23 +417,23 @@ class NotaCreditoController extends Controller
                     } else {
                         if (isset($factura_registro[$a]->producto_id)) {
                             if (strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion, 'Gravado') !== false) {
-                                $gravada += round($factura_registro[$a]->precio * $request->$cantidad, 2);
+                                $gravada += $factura_registro[$a]->precio * $request->$cantidad;
                             }
                             if (strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion, 'Exonerado') !== false) {
-                                $exonerada += round($factura_registro[$a]->precio * $request->$cantidad, 2);
+                                $exonerada += $factura_registro[$a]->precio * $request->$cantidad;
                             }
                             if (strpos($factura_registro[$a]->producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
-                                $inafecta += round($factura_registro[$a]->precio * $request->$cantidad, 2);
+                                $inafecta += $factura_registro[$a]->precio * $request->$cantidad;
                             }
                         } else {
                             if (strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false) {
-                                $gravada += round($factura_registro[$a]->precio * $request->$cantidad, 2);
+                                $gravada += $factura_registro[$a]->precio * $request->$cantidad;
                             }
                             if (strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion, 'Exonerado') !== false) {
-                                $exonerada += round($factura_registro[$a]->precio * $request->$cantidad, 2);
+                                $exonerada += $factura_registro[$a]->precio * $request->$cantidad;
                             }
                             if (strpos($factura_registro[$a]->servicio->tipo_afec_i_serv->informacion, 'Inafecto') !== false) {
-                                $inafecta += round($factura_registro[$a]->precio * $request->$cantidad, 2);
+                                $inafecta += $factura_registro[$a]->precio * $request->$cantidad;
                             }
                         }
                     }
