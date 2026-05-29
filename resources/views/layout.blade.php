@@ -325,14 +325,15 @@
                                 </a>
                             </li>
                         </div>
-                        <div>
-                            <li class="">
-                                <a href="{{ route('email.index') }}" class="count-info">
-                                    <i class="fa fa-envelope fa-lg fa-3x " style="color: #1a3bb3"></i>
-                                </a>
-                            </li>
-                        </div>
-
+                        {{-- @can('')
+                            <div>
+                                <li class="">
+                                    <a href="{{ route('email.index') }}" class="count-info">
+                                        <i class="fa fa-envelope fa-lg fa-3x " style="color: #1a3bb3"></i>
+                                    </a>
+                                </li>
+                            </div>
+                        @endcan --}}
                     </div>
             </div>
 
