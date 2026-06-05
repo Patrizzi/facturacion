@@ -509,6 +509,7 @@ class ComprobantesVentasController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
         $filter = $request->get('value');
+        $estado_pago = $request->estado_pago;
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -518,8 +519,8 @@ class ComprobantesVentasController extends Controller
             0 => 'id',
             1 => 'id',
             2 => 'codigo_fac',
-            3 => 'cliente.nombre',
-            4 => 'cliente.numero_documento',
+            3 => 'clientes.nombre',
+            4 => 'clientes.numero_documento',
             5 => 'fecha_emision',
             6 => 'forma_pago.nombre',
             7 => 'total_conv',
@@ -530,11 +531,11 @@ class ComprobantesVentasController extends Controller
         $query = Facturacion_m::with(['cliente', 'moneda', 'forma_pago'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
 
-        if (!empty($filter)) {
+        if (!empty($filter) || $filter != "") {
             // Agrupar las condiciones de búsqueda en una única cláusula where
             $query->where(function ($q) use ($filter) {
                 $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                $q->orWhereHas('cliente', function ($q) use ($filter) {
+                $q->orWhereHas('clientes', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%')
                         ->orWhere('numero_documento', 'like', '%' . $filter . '%');
                 });
@@ -544,14 +545,18 @@ class ComprobantesVentasController extends Controller
                 });
             });
         }
-
+        if (!empty($estado_pago)) {
+            $query->whereIn('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1, 2]);
+        }
         if ($estado_s !== null) {
             $query->where('f_electronica', $estado_s);
         }
 
         $recordsTotal = $query->count();
 
-                //codigo agregado:
+        //codigo agregado:
         // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
         // Si se requieren todos los registros (length = -1), no aplicar paginación
         if ($length == -1) {
@@ -627,7 +632,7 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_pago,
                 $factura->pago_detalle,
                 $factura->nota_informativa,
-
+                $factura->nota_credito_register->motivo ?? ''
             ];
         }
         // Llamado para la suma total

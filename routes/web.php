@@ -32,6 +32,7 @@ use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CajaChicaController;
 use App\Http\Controllers\ClienteSucursalController;
+use App\Http\Controllers\CobranzasComprobantesController;
 use App\Http\Controllers\ProjectManagerController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ReporteController;
@@ -1059,6 +1060,10 @@ Route::group(
         Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
         Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
         Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
+
+        Route::post('/cobranzas/factura_manual/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturasM'])->name('cobranzas.facturasM_exportar_sin_pago');
+        Route::post('/cobranzas/factura_manual/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturasM'])->name('cobranzas.facturasM_exportar_sin_pago');
+
 
         // SERVICIO TECNICO NUEVO
         Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');

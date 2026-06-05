@@ -26,10 +26,18 @@
                             <ul class="nav nav-tabs" role="tablist"
                                 style="align-items: center;border-bottom: 0px !important;">
                                 @include('cobranzas.facturas_manuales._shared.tabs')
-                                {{-- <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
-                                            class="fa fa-money"></i></button>
-                                </ul> --}}
+                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    <div class="btn-group">
+                                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-download"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                <i class="fa fa-file-excel-o"></i> Excel
+                                            </button>
+                                        </div>
+                                    </div>
+                                </ul>
                             </ul>
                             <div class="tab-content" style="margin-top: -1px">
                                 <div class="tab-pane active show" role="tabpanel" id="tab-1"
@@ -73,7 +81,9 @@
                                             class="table table-striped table-bordered table-hover dataTables-example-facturas_manual_pagados">
                                             <thead>
                                                 <tr>
-                                                    <th>Item</th>
+                                                    <th>
+                                                        <input type="checkbox" class="i-checks" name="input[]">
+                                                    </th>
                                                     <th>Estado</th>
                                                     <th>N° de Factura M</th>
                                                     <th>Cliente</th>
@@ -243,6 +253,8 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
     <script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
 
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
     <script>
         $('#tab-2-tab').addClass('active');
         $(".select2_demo_client").select2({
@@ -380,6 +392,18 @@
                 //     'targets': [10],
                 // },
             ],
+            drawCallback: function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                $('.check_fact').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+
+                $('[data-toggle="popover"]').popover({
+                    trigger: 'hover',
+                    container: 'body'
+                });
+            }
         });
         $('input[name="daterange"]').daterangepicker({
             "locale": {
@@ -417,6 +441,362 @@
         });
         $(`#button_filtros`).on('click', function() {
             fact_m_table.ajax.reload();
+        });
+    </script>
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/icheck.min.js') }}"></script>
+    <script>
+        
+        $(document).ready(function() {
+            // Variables globales
+            var allSelectedIds = [];
+            var masterChecked = false;
+            var isUpdatingCheckboxes = false; // Flag para evitar loops infinitos
+
+            // Inicializar iCheck
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            function hasAnySelection() {
+                return Array.isArray(allSelectedIds) && allSelectedIds.length > 0;
+            }
+            // Función para obtener TODOS los IDs mediante AJAX (para serverSide DataTables)
+            function getAllIds(callback) {
+                $.ajax({
+                    url: "{{ route('cobranzas.lista_facturas_manual_pagados_index') }}",
+                    method: "GET",
+                    data: {
+                        datarange: $('#data_range_filter').val(),
+                        estado_pago: $('#select_estado').val(),
+                        cliente_id: $("#cliente option:selected").val(),
+                        tipo: $('#select_tipo_pago').val(),
+                        value: "",
+                        length: -1,
+                        start: 0,
+                        get_all_ids: true
+                        },
+                    success: function(response) {
+                        var ids = [];
+                        if (response.data && response.data.length > 0) {
+                            response.data.forEach(function(row) {
+                                if (row[0]) {
+                                    ids.push(row[0].toString());
+                                }
+                            });
+                        }
+                        console.log('getAllIds() encontró estos IDs:', ids);
+                        console.log('Total de IDs encontrados:', ids.length);
+                        callback(ids);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error obteniendo todos los IDs:', error);
+                        callback([]);
+                    }
+                });
+            }
+
+            // Función para actualizar el estado del master checkbox automáticamente
+            function updateMasterCheckbox() {
+                if (isUpdatingCheckboxes) return;
+
+                getAllIds(function(allIds) {
+                    // Si hay IDs disponibles y todos están seleccionados, marcar master
+                    var allSelected = allIds.length > 0 && allIds.every(function(id) {
+                        return allSelectedIds.includes(id);
+                    });
+
+                    isUpdatingCheckboxes = true;
+                    if (allSelected && !masterChecked) {
+                        masterChecked = true;
+                        $('thead input[type="checkbox"]').iCheck('check');
+                        console.log('Master checkbox marcado automáticamente - todos los registros están seleccionados');
+                    } else if (!allSelected && masterChecked) {
+                        masterChecked = false;
+                        $('thead input[type="checkbox"]').iCheck('uncheck');
+                        console.log('Master checkbox desmarcado automáticamente - no todos los registros están seleccionados');
+                    }
+                    isUpdatingCheckboxes = false;
+                });
+            }
+
+            // Checkbox del header - seleccionar/deseleccionar todos
+            $('thead input[type="checkbox"]').on('ifChecked ifUnchecked', function(event) {
+                if (isUpdatingCheckboxes) return; // Evitar loops infinitos
+
+                // closeWhatsappPanels();
+                // closeEmailPanels();
+
+                if (event.type === 'ifChecked') {
+                    masterChecked = true;
+                    console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
+
+                    getAllIds(function(ids) {
+                        allSelectedIds = [...ids]; // Crear una copia del array
+                        console.log('allSelectedIds después del master:', allSelectedIds);
+                        console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+
+                        // Marcar todos los checkboxes visibles en la página actual
+                        isUpdatingCheckboxes = true;
+                        $('.dataTables-example-facturas_manual_pagados tbody input[type="checkbox"]').iCheck('check');
+                        isUpdatingCheckboxes = false;
+                    });
+                } else {
+                    masterChecked = false;
+                    allSelectedIds = [];
+                    console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+
+                    isUpdatingCheckboxes = true;
+                    $('.dataTables-example-facturas_manual_pagados tbody input[type="checkbox"]').iCheck('uncheck');
+                    isUpdatingCheckboxes = false;
+                }
+            });
+
+            // Checkboxes individuales
+            $(document).on('ifChecked ifUnchecked', '.dataTables-example-facturas_manual_pagados tbody input[type="checkbox"]', function(event) {
+                if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
+
+                // closeWhatsappPanels();
+                // closeEmailPanels();
+
+                var row = $(this).closest('tr');
+                var rowData = fact_m_table.row(row).data();
+
+                if (rowData && rowData[0]) {
+                    var id = rowData[0].toString();
+
+                    if (event.type === 'ifChecked') {
+                        // Agregar ID si no está ya seleccionado
+                        if (!allSelectedIds.includes(id)) {
+                            allSelectedIds.push(id);
+                        }
+                        console.log('Registro seleccionado:', id);
+                    } else {
+                        // Remover ID de la selección
+                        allSelectedIds = allSelectedIds.filter(function(selectedId) {
+                            return selectedId !== id;
+                        });
+                        console.log('Registro deseleccionado:', id);
+
+                        // Cuando se desmarca individualmente, salir del modo master
+                        if (masterChecked) {
+                            masterChecked = false;
+                            isUpdatingCheckboxes = true;
+                            $('thead input[type="checkbox"]').iCheck('uncheck');
+                            isUpdatingCheckboxes = false;
+                            console.log('Master checkbox desmarcado por deselección individual');
+                        }
+                    }
+
+                    console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+
+                    // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
+                    setTimeout(updateMasterCheckbox, 50);
+                }
+            });
+
+            // Cuando se redibuje la tabla (cambio de página, etc.)
+            fact_m_table.on('draw', function() {
+                // closeWhatsappPanels();
+                // closeEmailPanels();
+                console.log('Tabla redibujada. allSelectedIds actual:', allSelectedIds);
+                console.log('masterChecked actual:', masterChecked);
+
+                // Reinicializar checkboxes
+                $('.dataTables-example-facturas_manual_pagados tbody input[type="checkbox"]').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+
+                // Usar setTimeout para asegurar que iCheck esté completamente inicializado
+                setTimeout(function() {
+                    isUpdatingCheckboxes = true;
+
+                    // Procesar cada checkbox en la página actual
+                    $('.dataTables-example-facturas_manual_pagados tbody input[type="checkbox"]').each(function() {
+                        var row = $(this).closest('tr');
+                        var rowData = fact_m_table.row(row).data();
+
+                        if (rowData && rowData[0]) {
+                            var id = rowData[0].toString();
+
+                            // Si este ID está en nuestra lista de seleccionados, marcarlo
+                            if (allSelectedIds.includes(id)) {
+                                $(this).iCheck('check');
+                            } else {
+                                $(this).iCheck('uncheck');
+                            }
+                        }
+                    });
+
+                    // Actualizar el estado del master checkbox
+                    if (masterChecked) {
+                        $('thead input[type="checkbox"]').iCheck('check');
+                    } else {
+                        $('thead input[type="checkbox"]').iCheck('uncheck');
+                    }
+
+                    isUpdatingCheckboxes = false;
+
+                    // Verificar si necesitamos actualizar el master checkbox automáticamente
+                    setTimeout(updateMasterCheckbox, 100);
+                }, 150);
+            });
+
+
+            // Cerrar al hacer clic fuera
+            // $(document).on('click', function(e) {
+            //     if (!$(e.target).closest('.email-container, .email-form').length) {
+            //         $('.email-form').removeClass('email-fixed').css('height', '0px');
+            //     }
+            // });
+
+
+
+            // Fijar también cuando se hace clic en el input o en cualquier parte del formulario
+            // $(document).on('click', '.wsp-form', function(e) {
+            //     if (hasAnySelection()) {
+            //         e.preventDefault();
+            //         e.stopPropagation();
+            //         closeWhatsappPanels();
+            //         return;
+            //     }
+
+            //     e.stopPropagation();
+            //     $(this).addClass('wsp-fixed').css('height', '50px');
+            // });
+
+            // $(document).on('submit', '.wsp-form form', function() {
+            //     const form = $(this).closest('.wsp-form');
+            //     form.removeClass('wsp-fixed').css('height', '0px');
+            // });
+
+            // Cerrar al hacer clic fuera
+            // $(document).on('click', function(e) {
+            //     if (!$(e.target).closest('.wsp-container, .wsp-form').length) {
+            //         $('.wsp-form').removeClass('wsp-fixed').css('height', '0px');
+            //     }
+            // });
+
+            // Manejar click del botón de exportar
+            $('#btn-exportar-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una factura para exportar.",
+                        type: "warning",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                swal({
+                    title: "Confirmar exportación",
+                    text: `¿Deseas exportar ${allSelectedIds.length} factura(s) seleccionada(s) a Excel?`,
+                    type: "info",
+                    showCancelButton: true,
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(isConfirm) {
+                    if (!isConfirm) return;
+
+                    $('#btn-exportar-filtrado').prop('disabled', true);
+
+                    $.ajax({
+                        url: "{{ route('cobranzas.facturasM_exportar_sin_pago') }}",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({ factura_ids: allSelectedIds }),
+                        headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
+                        xhrFields: { responseType: 'blob' },
+                        complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
+                        success: function(blob) {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `Facturas_${new Date().toISOString().slice(0,10)}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+                        }
+                    });
+                });
+            // });
+            });
+
+            // Funciones helper para debugging (opcional)
+            window.clearAllSelections = function() {
+                allSelectedIds = [];
+                masterChecked = false;
+                isUpdatingCheckboxes = true;
+                $('thead input[type="checkbox"]').iCheck('uncheck');
+                $('.dataTables-example-facturas_manual_pagados tbody input[type="checkbox"]').iCheck('uncheck');
+                isUpdatingCheckboxes = false;
+                console.log('Todas las selecciones limpiadas');
+            };
+
+            window.getSelectedIds = function() {
+                console.log('IDs actualmente seleccionados:', allSelectedIds);
+                return allSelectedIds;
+            };
+            // Función para descargar boletas seleccionadas en PDF/ZIP
+            $('#btn-descargar-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                console.log('IDs seleccionados para descargar:', allSelectedIds);
+
+                if (allSelectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos una factura manual para descargar.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                var mensaje = allSelectedIds.length === 1
+                    ? "¿Deseas descargar la factura manual seleccionada en PDF?"
+                    : `¿Deseas descargar ${allSelectedIds.length} facturas manuales en un archivo ZIP?`;
+
+                swal({
+                    title: "Confirmar descarga",
+                    text: mensaje,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, descargar",
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        var url = '{{ route("facturaM.download.multiple") }}';
+                        var params = new URLSearchParams();
+
+                        allSelectedIds.forEach(function(id) {
+                            params.append('facturaM_ids[]', id);
+                        });
+
+                        console.log('URL de descarga:', url + '?' + params.toString());
+
+                        window.location.href = url + '?' + params.toString();
+
+                        swal({
+                            title: "Procesando",
+                            text: allSelectedIds.length === 1
+                                ? "La factura manual se está descargando..."
+                                : "Las facturas manuales se están comprimiendo y descargando...",
+                            type: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection

@@ -72,7 +72,7 @@
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
-                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
@@ -86,10 +86,15 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <input type="search" class="form-control" placeholder="Buscar:"
-                                                    id="search_all_column">
+                                                <select class="form-control" name="estado_pago[]" id="select_estado_pago"  multiple="multiple" placeholder="Estado de Pago">
+                                                    {{-- <option value="" selected>Estado de Pago</option> --}}
+                                                    {{-- <option value="0">Todos</option> --}}
+                                                    <option value="0">Sin Pagar</option>
+                                                    <option value="1">P. Parcial</option>
+                                                    <option value="2">P. Total</option>
+                                                </select>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <select class="form-control" name="" id="select_estado_sunat">
                                                     <option value="" selected>Estado Sunat</option>
                                                     <option value="0">Sin Enviar</option>
@@ -97,7 +102,11 @@
                                                     <option value="2">Anulado</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <input type="search" class="form-control" placeholder="Buscar:"
+                                                    id="search_all_column">
+                                            </div>
+                                            <div class="col-lg-1 col-md-12 col-sm-12">
                                                 <button type="button" class="btn btn-block btn-primary"
                                                     id="filter_buttons">Buscar</button>
                                             </div>
@@ -107,8 +116,8 @@
                                     <div class="scrooll-table-responsive">
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered dataTables-example-factura" style="min-width: 982px">
-                                            <thead>
+                                        <table class="table table-striped table-bordered dataTables-example-factura">
+                                            <thead> 
                                                 <tr>
                                                     <th>
                                                         <input type="checkbox" class="i-checks" name="input[]">
@@ -191,6 +200,28 @@
             color: black;
             font-weight: normal !important;
         }
+        .select2-container--default .select2-selection--multiple {
+            min-height: 32px;
+            max-height: 32px;
+            overflow-y: auto;
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+            max-height: 28px;
+            overflow-y: auto;
+        }
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--multiple {
+            height: 28px !important;
+            overflow-y: auto;
+            border: 1px solid #e5e6e7;
+            border-radius: 1px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
     </style>
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
     @include('transaccion.comprobantes._shared.js_shared')
@@ -211,6 +242,10 @@
 
                 $bottom.animate({ scrollLeft: target }, 600);
             }
+
+            $('#select_estado_pago').select2({
+                placeholder: "Estado de Pago"
+            });
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
@@ -224,6 +259,7 @@
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
                     d.estado_s = $('#select_estado_sunat').val();
+                    d.estado_pago = $('#select_estado_pago').val();
                     d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
@@ -300,6 +336,16 @@
                 {
                     'width': '30%',
                     'targets': [4]
+                },
+                {
+                    'targets': [7],
+                    'render': function(data, type, full, meta){
+                        if(full[18] == ""){
+                            return `<s>`+full[7] + `</s>`;
+                        }else{
+                            return ``+full[7]+``;
+                        }
+                    }
                 },
                 {
                     'width': '0.5vmax',
@@ -448,7 +494,11 @@
                                 `; 
                             break;
                         }
-                        return end;
+                        if(full[18] == ""){
+                            return end;
+                        }else{
+                            return "";
+                        }
                     }
                 },
                 {
@@ -791,6 +841,8 @@
                 data: {
                     daterange: $('#data_range_filter').val(),
                     tipo_comprobante: $('#select_tipo_coti').val(),
+                    estado_s: $('#select_estado_sunat').val(),
+                    estado_pago: $('#select_estado_pago').val(),
                     value: $('#search_all_column').val(),
                     length: -1,
                     start: 0,
