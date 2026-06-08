@@ -96,7 +96,7 @@
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <select class="form-control" name="" id="select_estado_sunat">
-                                                    <option value="" selected>Estado Sunat</option>
+                                                    <option value="" selected>Todos los estados</option>
                                                     <option value="0">Sin Enviar</option>
                                                     <option value="1">Enviado</option>
                                                     <option value="2">Anulado</option>
@@ -201,11 +201,10 @@
             font-weight: normal !important;
         }
         .select2-container--default .select2-selection--multiple {
-            min-height: 32px;
-            max-height: 32px;
+            min-height: 34px;
+            max-height: 34px;
             overflow-y: auto;
         }
-
         .select2-container--default .select2-selection--multiple .select2-selection__rendered {
             max-height: 28px;
             overflow-y: auto;
@@ -213,7 +212,6 @@
         .select2-container {
             width: 100% !important;
         }
-
         .select2-container--default .select2-selection--multiple {
             height: 28px !important;
             overflow-y: auto;
@@ -221,6 +219,9 @@
             border-radius: 1px;
             overflow-x: auto;
             overflow-y: hidden;
+        }
+        .select2-selection__rendered{
+            margin-top: 4px !important;
         }
     </style>
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
@@ -335,12 +336,13 @@
                 },
                 {
                     'width': '30%',
-                    'targets': [4]
+                    'targets': [4],
+                    'orderable': false
                 },
                 {
                     'targets': [7],
                     'render': function(data, type, full, meta){
-                        if(full[18] == ""){
+                        if(full[18] == "07"){
                             return `<s>`+full[7] + `</s>`;
                         }else{
                             return ``+full[7]+``;
