@@ -354,6 +354,8 @@ class ComprobantesVentasController extends Controller
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
+        $estado_pago = $request->estado_pago;
+
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -390,7 +392,11 @@ class ComprobantesVentasController extends Controller
                 });
             });
         }
-
+        if (!empty($estado_pago)) {
+            $query->whereIn('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1, 2]);
+        }
         if ($estado_s !== null) {
             $query->where('f_electronica', $estado_s);
         }
@@ -471,6 +477,7 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_pago,
                 $factura->pago_detalle,
                 $factura->nota_informativa,
+                $factura->nota_credito_register->motivo ?? ''
             ];
         }
         // Llamado para la suma total

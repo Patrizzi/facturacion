@@ -980,6 +980,7 @@ class FacturacionMController extends Controller
                 'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
                 'filter' => $request->input('value'),
                 'tipo'   => $request->input('tipo_coti'),
+                'estado_pago'   => $request->input('estado_pago'),
             ]);
         }
 

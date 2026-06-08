@@ -15,6 +15,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
 {
     protected ?array $ids;
     protected array $filters;
+    protected array $monedasFila = [];
 
     public function __construct(?array $ids = null, array $filters = [])
     {
@@ -63,6 +64,10 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             });
         }
 
+        if (!empty($this->filters['estado_pago'])) {
+            $query->whereIn('estado_pago', $this->filters['estado_pago']);
+        }
+
         if (!is_null($this->filters['tipo'])) {
             $query->where('tipo', $this->filters['tipo']);
         }
@@ -103,7 +108,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             'Nota Credito',
             'Nota Debito',
             'Tipo de Operacion',
-            'Tipo de Documento',
+            // 'Tipo de Documento',
             'Subtotal',
             'IGV',
             'Importe Total'
@@ -115,6 +120,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
      */
     public function map($f): array
     {
+        $this->monedasFila[] = optional($f->moneda)->codigo;
         $pl = $f->cliente?->vendedor_asignado?->personal?->personal_l;
         $vendedor = $pl ? $pl->nombres . ' ' . $pl->apellidos: '';
         $comi = $f->select_comisionista?->personal?->personal_l;
@@ -166,13 +172,55 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                foreach (range('A', 'Z') as $column) {
-                    $event->sheet->getColumnDimension($column)->setAutoSize(true);
+
+                $sheet = $event->sheet->getDelegate();
+
+                // Formato dinámico por fila
+                foreach ($this->monedasFila as $index => $moneda) {
+
+                    $fila = $index + 2; // fila 1 = encabezados
+
+                    $formato = strtoupper(trim($moneda)) == 'USD'
+                        ? '_-[$$-409]* #,##0.00_-;_-[$$-409]* -#,##0.00_-;_-[$$-409]* "-"??_-;_-@_-'
+                        : '_-[$S/]* #,##0.00_-;_-[$S/]* -#,##0.00_-;_-[$S/]* "-"??_-;_-@_-';
+
+                    $sheet->getStyle("S{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("T{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("U{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                    
+                    $sheet->getStyle("V{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("Z{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("AA{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                    $sheet->getStyle("AB{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
                 }
 
-                foreach(range('A','Z') as $letter1) {
-                    foreach(range('A','Z') as $letter2) {
-                        $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                // Autoajuste columnas simples
+                foreach (range('A', 'AB') as $column) {
+                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                }
+
+                // Autoajuste columnas AA, AB, AC...
+                foreach (range('A', 'AB') as $letter1) {
+                    foreach (range('A', 'AB') as $letter2) {
+                        $sheet->getColumnDimension($letter1 . $letter2)->setAutoSize(true);
                     }
                 }
             }

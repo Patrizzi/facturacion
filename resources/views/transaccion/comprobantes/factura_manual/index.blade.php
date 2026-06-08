@@ -200,29 +200,6 @@
             color: black;
             font-weight: normal !important;
         }
-        .select2-container--default .select2-selection--multiple {
-            min-height: 34px;
-            max-height: 34px;
-            overflow-y: auto;
-        }
-        .select2-container--default .select2-selection--multiple .select2-selection__rendered {
-            max-height: 28px;
-            overflow-y: auto;
-        }
-        .select2-container {
-            width: 100% !important;
-        }
-        .select2-container--default .select2-selection--multiple {
-            height: 28px !important;
-            overflow-y: auto;
-            border: 1px solid #e5e6e7;
-            border-radius: 1px;
-            overflow-x: auto;
-            overflow-y: hidden;
-        }
-        .select2-selection__rendered{
-            margin-top: 4px !important;
-        }
     </style>
     <input type="hidden" name="" id="tipo_comprobante_view" value="factura_manual">
     @include('transaccion.comprobantes._shared.js_shared')

@@ -70,9 +70,14 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
             });
         }
 
+        if (!empty($this->filters['estado_pago'])) {
+            $query->whereIn('estado_pago', $this->filters['estado_pago']);
+        }
+        
         if (!is_null($this->filters['tipo'])) {
             $query->where('tipo', $this->filters['tipo']);
         }
+
         return $query->orderBy('created_at', 'desc');
     }
 
