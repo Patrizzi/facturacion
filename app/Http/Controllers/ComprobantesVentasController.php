@@ -542,7 +542,7 @@ class ComprobantesVentasController extends Controller
             // Agrupar las condiciones de búsqueda en una única cláusula where
             $query->where(function ($q) use ($filter) {
                 $q->where('codigo_fac', 'like', '%' . $filter . '%');
-                $q->orWhereHas('clientes', function ($q) use ($filter) {
+                $q->orWhereHas('cliente', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%')
                         ->orWhere('numero_documento', 'like', '%' . $filter . '%');
                 });
