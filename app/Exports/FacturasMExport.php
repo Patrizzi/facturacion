@@ -217,6 +217,7 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
                     $sheet->getStyle("AA{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
+                        
                     $sheet->getStyle("AB{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);

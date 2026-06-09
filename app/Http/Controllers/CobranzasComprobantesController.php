@@ -186,10 +186,15 @@ class CobranzasComprobantesController extends Controller
         }
         $query->where('estado_pago', 2);
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+        if ($length == -1) {
+            $facturas_m = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $facturas_m = $query->get();
+        }
 
         $facturas_m = $query->get();
 

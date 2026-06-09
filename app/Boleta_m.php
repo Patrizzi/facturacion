@@ -52,6 +52,9 @@ class Boleta_m extends Model
     {
         return $this->hasMany(Boleta_registros_m::class, 'boleta_m_id');
     }
+    public function nota_credito_register(){
+        return $this->hasOne(Nota_Credito::class , 'boleta_m_id');
+    }
     public function cuotas_credito()
     {
         return $this->hasMany(Cuotas_credito::class, 'boleta_m_id');

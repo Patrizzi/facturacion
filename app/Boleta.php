@@ -75,7 +75,9 @@ class Boleta extends Model
     {
         return $this->hasMany(Cuotas_credito::class, 'boleta_id');
     }
-
+    public function nota_credito_register(){
+        return $this->hasOne(Nota_Credito::class , 'boleta_id');
+    }
     public function getFechaEmisionEditAttribute()
     {
         $edit_emision = Carbon::parse($this->attributes['fecha_emision'])->format('yyyy-mm-dd');

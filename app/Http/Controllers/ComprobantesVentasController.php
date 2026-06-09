@@ -50,6 +50,8 @@ class ComprobantesVentasController extends Controller
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
+        $estado_pago = $request->estado_pago;
+
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -90,7 +92,11 @@ class ComprobantesVentasController extends Controller
         if ($estado_s !== null) {
             $query->where('b_electronica', $estado_s);
         }
-
+        if (!empty($estado_pago)) {
+            $query->whereIn('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1, 2]);
+        }
         $recordsTotal = $query->count();
         //codigo agregado:
         // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
@@ -167,7 +173,8 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado,                     // 14
                 $boleta->estado_pago,                // 15
                 $boleta->pago_detalle,               // 16
-                $boleta->nota_informativa            // 17
+                $boleta->nota_informativa,            // 17
+                $boleta->nota_credito_register->motivo ?? ''
             ];
         }
         // Llamado para la suma total
@@ -200,6 +207,7 @@ class ComprobantesVentasController extends Controller
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
+        $estado_pago = $request->estado_pago;
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -236,7 +244,11 @@ class ComprobantesVentasController extends Controller
                 });
             });
         }
-
+        if (!empty($estado_pago)) {
+            $query->whereIn('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1, 2]);
+        }
         if ($estado_s !== null) {
             $query->where('b_electronica', $estado_s);
         }
@@ -316,7 +328,8 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado,                     // 14
                 $boleta->estado_pago,                // 15
                 $boleta->pago_detalle,               // 16
-                $boleta->nota_informativa            // 17
+                $boleta->nota_informativa,            // 17
+                $boleta->nota_credito_register->motivo ?? ''
             ];
         }
         // Llamado para la suma total

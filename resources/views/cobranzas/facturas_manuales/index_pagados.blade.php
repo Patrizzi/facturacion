@@ -706,7 +706,7 @@
                     $('#btn-exportar-filtrado').prop('disabled', true);
 
                     $.ajax({
-                        url: "{{ route('cobranzas.facturasM_exportar_sin_pago') }}",
+                        url: "{{ route('cobranzas.facturasM_exportar_pagadas') }}",
                         method: "POST",
                         contentType: "application/json",
                         data: JSON.stringify({ factura_ids: allSelectedIds }),
@@ -743,60 +743,6 @@
                 console.log('IDs actualmente seleccionados:', allSelectedIds);
                 return allSelectedIds;
             };
-            // Función para descargar boletas seleccionadas en PDF/ZIP
-            $('#btn-descargar-filtrado').on('click', function(e) {
-                e.preventDefault();
-
-                console.log('IDs seleccionados para descargar:', allSelectedIds);
-
-                if (allSelectedIds.length === 0) {
-                    swal({
-                        title: "Sin selección",
-                        text: "Por favor, selecciona al menos una factura manual para descargar.",
-                        type: "warning",
-                        confirmButtonText: "Entendido",
-                        confirmButtonColor: "#1a3bb3"
-                    });
-                    return;
-                }
-
-                var mensaje = allSelectedIds.length === 1
-                    ? "¿Deseas descargar la factura manual seleccionada en PDF?"
-                    : `¿Deseas descargar ${allSelectedIds.length} facturas manuales en un archivo ZIP?`;
-
-                swal({
-                    title: "Confirmar descarga",
-                    text: mensaje,
-                    type: "info",
-                    showCancelButton: true,
-                    confirmButtonText: "Sí, descargar",
-                    cancelButtonText: "Cancelar",
-                    confirmButtonColor: "#1a3bb3"
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        var url = '{{ route("facturaM.download.multiple") }}';
-                        var params = new URLSearchParams();
-
-                        allSelectedIds.forEach(function(id) {
-                            params.append('facturaM_ids[]', id);
-                        });
-
-                        console.log('URL de descarga:', url + '?' + params.toString());
-
-                        window.location.href = url + '?' + params.toString();
-
-                        swal({
-                            title: "Procesando",
-                            text: allSelectedIds.length === 1
-                                ? "La factura manual se está descargando..."
-                                : "Las facturas manuales se están comprimiendo y descargando...",
-                            type: "success",
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                    }
-                });
-            });
         });
     </script>
 @endsection

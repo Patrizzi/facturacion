@@ -88,7 +88,6 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <select class="form-control" name="estado_pago[]" id="select_estado_pago"  multiple="multiple" placeholder="Estado de Pago">
                                                     {{-- <option value="" selected>Estado de Pago</option> --}}
-                                                    {{-- <option value="0">Todos</option> --}}
                                                     <option value="0">Sin Pagar</option>
                                                     <option value="1">P. Parcial</option>
                                                     <option value="2">P. Total</option>

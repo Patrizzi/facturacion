@@ -271,6 +271,7 @@
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
                     d.estado_s = $('#select_estado_sunat').val();
+                    d.estado_pago = $('#select_estado_pago').val()
                     d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {

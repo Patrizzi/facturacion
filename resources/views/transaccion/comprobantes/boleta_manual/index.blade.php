@@ -121,7 +121,7 @@
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row" style="row-gap: 5px">
-                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
                                                         id="data_range_filter"
@@ -135,10 +135,18 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="estado_pago[]" id="select_estado_pago"  multiple="multiple" placeholder="Estado de Pago">
+                                                    {{-- <option value="" selected>Estado de Pago</option> --}}
+                                                    <option value="0">Sin Pagar</option>
+                                                    <option value="1">P. Parcial</option>
+                                                    <option value="2">P. Total</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <select class="form-control" name="" id="select_estado_sunat">
                                                     <option value="" selected>Estado Sunat</option>
                                                     <option value="0">Sin Enviar</option>
@@ -146,7 +154,7 @@
                                                     <option value="2">Anulado</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                            <div class="col-lg-1 col-md-6 col-sm-12">
                                                 <button type="button" class="btn btn-block btn-primary"
                                                     id="filter_buttons">Buscar</button>
                                             </div>
@@ -209,7 +217,9 @@
             $('#modal_pago_tipo_comprobante').val('boleta_manual');
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-2-tab').addClass('active');
-
+            $('#select_estado_pago').select2({
+                placeholder: "Estado de Pago"
+            });
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
@@ -223,6 +233,7 @@
                 data: function(d) {
                     d.daterange = $('#data_range_filter').val();
                     d.estado_s = $('#select_estado_sunat').val();
+                    d.estado_pago = $('#select_estado_pago').val();
                     d.value = $('#search_all_column').val();
                 },
                 dataSrc: function(json) {
@@ -300,6 +311,16 @@
                 {
                     'width': '30%',
                     'targets': [4]
+                },
+                {
+                    'targets': [7],
+                    'render': function(data, type, full, meta){
+                        if(full[18] == "07"){
+                            return `<s>`+full[7] + `</s>`;
+                        }else{
+                            return ``+full[7]+``;
+                        }
+                    }
                 },
                 {
                     'width': '0.5vmax',
@@ -462,7 +483,11 @@
                             break;
                         }
 
-                        return end;
+                        if(full[18] == ""){
+                            return end;
+                        }else{
+                            return "";
+                        }
 
                     }
                 },
@@ -800,6 +825,7 @@
                         daterange: $('#data_range_filter').val(),
                         tipo_comprobante: $('#select_tipo_coti').val(),
                         value: $('#search_all_column').val(),
+                        estado_pago: $('#select_estado_pago').val(),
                         length: -1,
                         start: 0,
                         get_all_ids: true
