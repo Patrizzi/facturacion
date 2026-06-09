@@ -56,20 +56,25 @@ class CobranzasFacturasMExport implements FromQuery, WithHeadings, WithMapping, 
             $this->filters['end']
         ]);
 
-        if (!empty($this->filters['filter'])) {
-            $filter = $this->filters['filter'];
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', "%$filter%")
-                  ->orWhereHas('cliente', fn ($c) =>
-                      $c->where('nombre', 'like', "%$filter%")
-                        ->orWhere('numero_documento', 'like', "%$filter%")
-                  )
-                  ->orWhere('fecha_emision', 'like', "%$filter%");
-            });
+        // if (!empty($this->filters['filter'])) {
+        //     $filter = $this->filters['filter'];
+        //     $query->where(function ($q) use ($filter) {
+        //         $q->where('codigo_fac', 'like', "%$filter%")
+        //           ->orWhereHas('cliente', fn ($c) =>
+        //               $c->where('nombre', 'like', "%$filter%")
+        //                 ->orWhere('numero_documento', 'like', "%$filter%")
+        //           )
+        //           ->orWhere('fecha_emision', 'like', "%$filter%");
+        //     });
+        // }
+        if (!empty($this->filters['cliente_id'])) {
+            $query->where('cliente_id', $this->filters['cliente_id']);
         }
-
-        if (!is_null($this->filters['tipo'])) {
-            $query->where('tipo', $this->filters['tipo']);
+        if (!is_null($this->filters['estado_pago'])) {
+            $query->whereIn('estado_pago', $this->filters['estado_pago']);
+        }
+        if (!is_null($this->filters['forma_pago_id'])) {
+            $query->where('forma_pago_id', (int) $this->filters['forma_pago_id']);
         }
         return $query->orderBy('created_at', 'desc');
     }

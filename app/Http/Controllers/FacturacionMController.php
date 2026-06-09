@@ -986,7 +986,7 @@ class FacturacionMController extends Controller
 
         return Excel::download(
             $export,
-            'Facturas_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+            'Facturas_M_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
         );
     }
 

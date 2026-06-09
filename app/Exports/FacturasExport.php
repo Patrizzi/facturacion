@@ -82,17 +82,17 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
     {
         return [
             'Código Factura',
+            'Cotizacion',
             'Almacén',
             'Orden de compra',
             'Guia de Remision',
-            'Cotizacion',
             'Doc. Cliente',
             'Cliente',
             'Moneda',
             'Forma de pago',
             'Fecha de emision',
             'Fecha de vencimiento',
-            'Cambio',
+            'Tipo de Cambio',
             'Observacion',
             'Comisionista',
             'Emisor',
@@ -100,7 +100,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             'Estado',
             'SUNAT',
             'Estado de pago',
-            'Tipo',
+            // 'Tipo',
             'Operacion gravada',
             'Operacion inafecta',
             'Operacion Exonerada',
@@ -129,7 +129,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
                   + ($f->op_inafecta ?? 0)
                   + ($f->op_exonerada ?? 0);
 
-        $igv = round(($f->op_gravada ?? 0) * 0.18, 2);
+        $igv = ($f->op_gravada ?? 0) * 0.18;
         return [
             $f->codigo_fac,
             optional($f->almacen)->nombre,
@@ -150,7 +150,7 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             $f->estado == 0 ? 'Guardado' : ($f->estado == 1 ? 'Finalizado' : 'Anulado'),
             $f->f_electronica == 0 ? 'Emitido' : ($f->f_electronica == 1 ? 'Enviado' : 'Rechazado' ),
             $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
-            $f->tipo,
+            // $f->tipo,
             $f->op_gravada,
             $f->op_inafecta,
             $f->op_exonerada,
@@ -159,8 +159,8 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             $f->nota_debito,
             optional($f->tipo_operacion)->informacion,
             optional($f->tipo_documento)->informacion,
-            $subtotal,
-            $igv,
+            round($subtotal,2),
+            round($igv,2),
             round($subtotal + $igv, 2),
         ];
     }
@@ -183,43 +183,41 @@ class FacturasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
                     $formato = strtoupper(trim($moneda)) == 'USD'
                         ? '_-[$$-409]* #,##0.00_-;_-[$$-409]* -#,##0.00_-;_-[$$-409]* "-"??_-;_-@_-'
                         : '_-[$S/]* #,##0.00_-;_-[$S/]* -#,##0.00_-;_-[$S/]* "-"??_-;_-@_-';
-
-                    $sheet->getStyle("S{$fila}")
+                    $sheet->getStyle("t{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
-
-                    $sheet->getStyle("T{$fila}")
-                        ->getNumberFormat()
-                        ->setFormatCode($formato);
-
                     $sheet->getStyle("U{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
-                    
+
                     $sheet->getStyle("V{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
 
-                    $sheet->getStyle("Z{$fila}")
+                    $sheet->getStyle("W{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                    
+                    $sheet->getStyle("AB{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
 
-                    $sheet->getStyle("AA{$fila}")
+                    $sheet->getStyle("AC{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
-                    $sheet->getStyle("AB{$fila}")
+                    $sheet->getStyle("AD{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
                 }
 
                 // Autoajuste columnas simples
-                foreach (range('A', 'AB') as $column) {
+                foreach (range('A', 'AD') as $column) {
                     $sheet->getColumnDimension($column)->setAutoSize(true);
                 }
 
-                // Autoajuste columnas AA, AB, AC...
-                foreach (range('A', 'AB') as $letter1) {
-                    foreach (range('A', 'AB') as $letter2) {
+                // Autoajuste columnas AA, AD, AC...
+                foreach (range('A', 'AD') as $letter1) {
+                    foreach (range('A', 'AD') as $letter2) {
                         $sheet->getColumnDimension($letter1 . $letter2)->setAutoSize(true);
                     }
                 }

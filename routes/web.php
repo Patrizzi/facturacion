@@ -1064,6 +1064,9 @@ Route::group(
         Route::post('/cobranzas/factura_manual/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturasM'])->name('cobranzas.facturasM_exportar_sin_pago');
         Route::post('/cobranzas/factura_manual/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturasM'])->name('cobranzas.facturasM_exportar_sin_pago');
 
+        Route::post('/cobranzas/factura/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturas'])->name('cobranzas.facturas_exportar_sin_pago');
+        Route::post('/cobranzas/factura/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturas'])->name('cobranzas.facturas_exportar_sin_pago');
+
 
         // SERVICIO TECNICO NUEVO
         Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
