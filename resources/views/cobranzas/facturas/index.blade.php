@@ -673,7 +673,7 @@
         $('#pago_lote_total').on('click', function() {
 
             $('#div_facturas').empty();
-            $('#ids_divs_factura').empty();
+            // $('#ids_divs_factura').empty();
 
             // $('input[name="select_row"]:checked').each(function() {
             //     check_lote($(this).val());
