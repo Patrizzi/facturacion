@@ -326,8 +326,7 @@
                     'render': function(data, type, full, meta) {
                         return '<input type="checkbox" id="check_' + full[0] +
                             '" class="i-checks check_only check_lost_' + full[0] +
-                            '" name="select_row" value="' + full[0] + '" onclick="check_lote(' + full[0] +
-                            ')"  >';
+                            '" name="select_row" value="' + full[0] + '">';
                     }
                 },
                 {
@@ -454,7 +453,7 @@
             fact_m_table.ajax.reload();
         });
     </script>
-     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
     <script src="{{ asset('js/icheck.min.js') }}"></script>
     <script>
         

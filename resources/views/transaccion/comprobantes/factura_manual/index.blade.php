@@ -318,7 +318,7 @@
                 {
                     'targets': [7],
                     'render': function(data, type, full, meta){
-                        if(full[18] == "07"){
+                        if(full[18] != ""){
                             return `<s>`+full[7] + `</s>`;
                         }else{
                             return ``+full[7]+``;
@@ -472,7 +472,7 @@
                                 `; 
                             break;
                         }
-                        if(full[18] == ""){
+                        if(full[18] != "01"){
                             return end;
                         }else{
                             return "";

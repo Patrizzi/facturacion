@@ -1060,13 +1060,18 @@ Route::group(
         Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
         Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
         Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
+        
+        Route::post('/cobranzas/factura/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturas'])->name('cobranzas.facturas_exportar_sin_pago');
+        Route::post('/cobranzas/factura/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturas'])->name('cobranzas.facturas_exportar_pagadas');
 
         Route::post('/cobranzas/factura_manual/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturasM'])->name('cobranzas.facturasM_exportar_sin_pago');
         Route::post('/cobranzas/factura_manual/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturasM'])->name('cobranzas.facturasM_exportar_pagadas');
 
-        Route::post('/cobranzas/factura/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturas'])->name('cobranzas.facturas_exportar_sin_pago');
-        Route::post('/cobranzas/factura/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturas'])->name('cobranzas.facturas_exportar_pagadas');
+        Route::post('/cobranzas/boleta/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoBoletas'])->name('cobranzas.boletas_exportar_sin_pago');
+        Route::post('/cobranzas/boleta/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasBoletas'])->name('cobranzas.boletas_exportar_pagadas');
 
+        Route::post('/cobranzas/boleta_manual/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoBoletasM'])->name('cobranzas.boletasM_exportar_sin_pago');
+        Route::post('/cobranzas/boleta_manual/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasBoletasM'])->name('cobranzas.boletasM_exportar_pagadas');
 
         // SERVICIO TECNICO NUEVO
         Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');

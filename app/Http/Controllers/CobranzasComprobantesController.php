@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Boleta;
 use App\Boleta_m;
 use App\Cuotas_credito;
+use App\Exports\CobranzasBoletasExport;
+use App\Exports\CobranzasBoletasMExport;
 use App\Exports\CobranzasFacturasExport;
 use App\Exports\CobranzasFacturasMExport;
 use App\Facturacion;
@@ -175,15 +177,15 @@ class CobranzasComprobantesController extends Controller
         if ($tipo_forma_pago != null) {
             $query->where('forma_pago_id', (int)$request->tipo_forma_pago);
         }
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('nombre', 'like', '%' . $filter . '%')
-                    ->orWhere('codigo_fac', 'like', '%' . $filter . '%')
-                    ->orWhereHas('cliente', function ($q, $request) use ($filter) {
-                        $q->where('id', 'like', '%' . $request->cliente_id . '%');
-                    });
-            });
-        }
+        // if (!empty($filter)) {
+        //     $query->where(function ($q) use ($filter) {
+        //         $q->where('nombre', 'like', '%' . $filter . '%')
+        //             ->orWhere('codigo_fac', 'like', '%' . $filter . '%')
+        //             ->orWhereHas('cliente', function ($q, $request) use ($filter) {
+        //                 $q->where('id', 'like', '%' . $request->cliente_id . '%');
+        //             });
+        //     });
+        // }
         $query->where('estado_pago', 2);
         $recordsTotal = $query->count();
         if ($length == -1) {
@@ -301,7 +303,7 @@ class CobranzasComprobantesController extends Controller
         $recordsTotal = $query->count();
 
         if ($length == -1) {
-            $facturas = $query->get();
+            $facturas_m = $query->get();
         } else {
             $sortColumnName = $sortColumns[$order[0]['column']];
             $query->orderBy($sortColumnName, $order[0]['dir'])
@@ -349,6 +351,7 @@ class CobranzasComprobantesController extends Controller
                 $value->id,
                 $value->total_precio_desc_sin_forma,
                 $value->doc_adicional,
+                $value->total_precio_desc
             ];
         }
         return response()->json($json);
@@ -491,6 +494,9 @@ class CobranzasComprobantesController extends Controller
         } else {
             $query = Boleta::orderBy('id', 'desc');
         }
+        $query->whereDoesntHave('nota_credito_register', function ($q) {
+            $q->where('motivo', '01');
+        });
         if($cliente != null){
             $query->where('cliente_id', $cliente);
         }
@@ -506,10 +512,16 @@ class CobranzasComprobantesController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+
+        if ($length == -1) {
+            $facturas_m = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $facturas_m = $query->get();
+        }
 
         $facturas_m = $query->get();
 
@@ -562,6 +574,8 @@ class CobranzasComprobantesController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', [['column' => 0, 'dir' => 'asc']]);
         $filter = $request->get('value');
+        $cliente = $request->get('cliente_id');
+        $tipo_forma_pago = $request->get('tipo_forma_pago');
         $sortColumns = [
             0 => 'id',
             1 => 'estado_pago',
@@ -579,27 +593,37 @@ class CobranzasComprobantesController extends Controller
             $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
             $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-            $query = Boleta_m::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+            $query = Boleta::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {
-            $query = Boleta_m::orderBy('id', 'desc');
+            $query = Boleta::orderBy('id', 'desc');
         }
-
-        if (!empty($filter)) {
-            $query->where(function ($q) use ($filter) {
-                $q->where('nombre', 'like', '%' . $filter . '%')
-                    ->orWhere('codigo_boleta', 'like', '%' . $filter . '%')
-                    ->orWhereHas('cliente', function ($q, $request) use ($filter) {
-                        $q->where('id', 'like', '%' . $request->cliente_id . '%');
-                    });
-            });
+        $query->whereDoesntHave('nota_credito_register', function ($q) {
+            $q->where('motivo', '01');
+        });
+        if($cliente != null){
+            $query->where('cliente_id', $cliente);
         }
+        // if (!empty($filter)) {
+        //     $query->where(function ($q) use ($filter) {
+        //         $q->where('nombre', 'like', '%' . $filter . '%')
+        //             ->orWhere('codigo_boleta', 'like', '%' . $filter . '%')
+        //             ->orWhereHas('cliente', function ($q, $request) use ($filter) {
+        //                 $q->where('id', 'like', '%' . $request->cliente_id . '%');
+        //             });
+        //     });
+        // }
         $query->where('estado_pago', 2);
-        $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
 
+        $recordsTotal = $query->count();
+        if ($length == -1) {
+            $facturas_m = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $facturas_m = $query->get();
+        }
         $facturas_m = $query->get();
 
         $json = [
@@ -678,6 +702,7 @@ class CobranzasComprobantesController extends Controller
         } else {
             $query = Boleta_m::orderBy('id', 'desc');
         }
+        
         if($cliente != null){
             $query->where('cliente_id', $cliente);
         }
@@ -691,10 +716,16 @@ class CobranzasComprobantesController extends Controller
         }
 
         $recordsTotal = $query->count();
-        $sortColumnName = $sortColumns[$order[0]['column']];
-        $query->orderBy($sortColumnName, $order[0]['dir'])
-            ->take($length)
-            ->skip($start);
+
+        if ($length == -1) {
+            $boleta_m = $query->get();
+        } else {
+            $sortColumnName = $sortColumns[$order[0]['column']];
+            $query->orderBy($sortColumnName, $order[0]['dir'])
+                ->take($length)
+                ->skip($start);
+            $boleta_m = $query->get();
+        }
 
         $boleta_m = $query->get();
 
@@ -1104,7 +1135,8 @@ class CobranzasComprobantesController extends Controller
         );
     }
 
-     // Funcion de exportacion en excel para los pagados
+    // * FACTURAS
+    // Funcion de exportacion en excel para los pagados
     public function exportarPagadasFacturasM(Request $request){
         $ids = $request->json('factura_ids');
         if (!empty($ids)) {
@@ -1130,5 +1162,121 @@ class CobranzasComprobantesController extends Controller
             'Facturas_M_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
         );
     }
+
+    // * BOLETAS
+    // Funcion de exportacion en excel Para los que faltan pagar
+    public function exportarSinPagoBoletas(Request $request){
+        $ids = $request->json('factura_ids');
+        if (!empty($ids)) {
+            $export = new CobranzasBoletasExport($ids);
+        } else {
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
+
+            [$start, $end] = explode(' - ', $request->daterange);
+
+            $export = new CobranzasBoletasExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+                'cliente_id'   => $request->input('cliente_id'),
+                'estado_pago' => $request->input('estado_pago'),
+            ]);
+        }
+
+        return Excel::download(
+            $export,
+            'Boleta_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+    public function exportarPagadasBoletas(Request $request){
+        $ids = $request->json('factura_ids');
+        if (!empty($ids)) {
+            $export = new CobranzasBoletasExport($ids);
+        } else {
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
+
+            [$start, $end] = explode(' - ', $request->daterange);
+
+            $export = new CobranzasBoletasExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+                'estado_pago' => '1'
+            ]);
+        }
+
+        return Excel::download(
+            $export,
+            'Boleta_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+    // * BOLETAS M
+    // Funcion de exportacion en excel Para los que faltan pagar
+    public function exportarSinPagoBoletasM(Request $request){
+        $ids = $request->json('factura_ids');
+        if (!empty($ids)) {
+            $export = new CobranzasBoletasMExport($ids);
+        } else {
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
+
+            [$start, $end] = explode(' - ', $request->daterange);
+
+            $export = new CobranzasBoletasMExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+                'cliente_id'   => $request->input('cliente_id'),
+                'estado_pago' => $request->input('estado_pago'),
+            ]);
+        }
+
+        return Excel::download(
+            $export,
+            'Boleta_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+    public function exportarPagadasBoletasM(Request $request){
+        $ids = $request->json('factura_ids');
+        if (!empty($ids)) {
+            $export = new CobranzasBoletasMExport($ids);
+        } else {
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
+
+            [$start, $end] = explode(' - ', $request->daterange);
+
+            $export = new CobranzasBoletasMExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+                'estado_pago' => '1'
+            ]);
+        }
+
+        return Excel::download(
+            $export,
+            'Boleta_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+
+
+
+
+
 
 }

@@ -491,6 +491,38 @@ class Boleta extends Model
         return $saldo_pendiente;
     }
 
+    public function getSaldoPendienteSinFormaAttribute()
+    {
+        // return $this->forma_pago_id;
+        $suma_cuota = $this->total_precio_sin_forma;
+        if ($this->forma_pago_id == 2) { // credito
+            $saldo_pendiente = 0;
+            $cuotas_total = 0;
+            // Falta sacar el monto por la cantidad de pago o adelanto que se ha realizado
+            $cuotas = Cuotas_credito::where('boleta_id', $this->id)->where('estado', '!=',  0)->get();
+            foreach ($cuotas as $cuota) {
+                // if ($cuota->estado == 2 ) {
+                $suma_cuota = $suma_cuota - $cuota->monto;
+                // }
+            }
+            $cuotas_total += $suma_cuota;
+            $saldo_pendiente = $cuotas_total;
+        } else {
+            if ($this->estado_pago == 0) {
+                $saldo_pendiente = $suma_cuota;
+            } else {
+                // Sumatoria para los pagos
+                $totalPagado = ComprobantesPagos::where('boleta_id', $this->id)
+                    ->sum('monto_pago');
+                $saldo_pendiente = max(0, $this->importe_total - $totalPagado);
+                // $saldo_pendiente = 0;
+            }
+        }
+
+        // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
+        return $saldo_pendiente;
+    }
+
     public function getUltimaFechaPagoAttribute()
     {
         $ultimo_pago =  ComprobantesPagos::where('boleta_id', $this->id)->latest()->first();
