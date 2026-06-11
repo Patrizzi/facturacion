@@ -380,7 +380,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'perfil_usuario.ver', 'module' => 'perfil_usuario', 'description' => 'Ver informacion del Perfil del Usuario']);
         Permission::create(['name' => 'perfil_usuario.editar', 'module' => 'perfil_usuario', 'description' => 'Editar informacion del Perfil del Usuario']);
         
-            //* Mi empresa
+        //* Mi empresa
 
         Permission::create(['name' => 'empresa.ver', 'module' => 'empresa', 'description' => 'Ver informacion de la Empresa']);
         Permission::create(['name' => 'empresa.editar', 'module' => 'empresa', 'description' => 'Editar informacion de la Empresa']);
