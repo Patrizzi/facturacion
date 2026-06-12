@@ -220,6 +220,9 @@ class ApiController extends Controller
                 $value->estado,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('familia.estado');
+        $json['permiso_editar'] = auth()->user()->can('familia.editar');
+        $json['permiso_ver'] = auth()->user()->can('familia.ver');
         return response()->json($json);
     }
 
@@ -264,6 +267,7 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('garantia_doc.estado');
         return response()->json($json);
     }
 
@@ -546,6 +550,8 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('unidad_m.estado');
+        $json['permiso_estado'] = auth()->user()->can('unidad_m.estado');
         return response()->json($json);
     }
 

@@ -10,27 +10,29 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" enctype="multipart/form-data" id="form_garantia">
-                    @csrf
-                    <input type="hidden" value="" name="garantia_edit_id" id="id_garantia_edit">
+                @can('garantia_doc.crear')
+                    <form action="" method="post" enctype="multipart/form-data" id="form_garantia">
+                        @csrf
+                        <input type="hidden" value="" name="garantia_edit_id" id="id_garantia_edit">
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="Descripción" class="form-control m-b" name="descripcion_garantia"
-                                id="descripcion_garantia" autocomplete="off">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="text" placeholder="Descripción" class="form-control m-b" name="descripcion_garantia"
+                                    id="descripcion_garantia" autocomplete="off">
+                            </div>
+                            <div class="col-sm-6" style="text-align: center">
+                                <button class="btn  btn-success " type="button" id="add_new_garantia" style="width: 49%"><i
+                                        class="fa fa-plus"></i> Guardar</button>
+                                <button class="btn  btn-success " type="button" id="update_garantia"
+                                    style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i>
+                                    Actualizar</button>
+                                <button class="btn  btn-danger " type="button" id="cancel_garantia" style="width: 49%"><i
+                                        class="fa fa-pencil"></i> Cancelar</button>
+                            </div>
                         </div>
-                        <div class="col-sm-6" style="text-align: center">
-                            <button class="btn  btn-success " type="button" id="add_new_garantia" style="width: 49%"><i
-                                    class="fa fa-plus"></i> Guardar</button>
-                            <button class="btn  btn-success " type="button" id="update_garantia"
-                                style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i>
-                                Actualizar</button>
-                            <button class="btn  btn-danger " type="button" id="cancel_garantia" style="width: 49%"><i
-                                    class="fa fa-pencil"></i> Cancelar</button>
-                        </div>
-                    </div>
-                </form>
-                <hr>
+                    </form>
+                    <hr>
+                @endcan
                 <div class="input-group row">
                     <label class="col-sm-2 col-form-label text-center">Buscar:</label>
                     <input class="form-control col-sm-10" type="text" name="" id="search_garantia">
@@ -42,7 +44,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 35%;">Descripción</th>
-                                <th style="width: 20%;">Estado</th>
+                                <th style="width: 20%;">@can('garantia_doc.estado')Estado @endcan</th>
                             </tr>
                         </thead>
                         <tbody>

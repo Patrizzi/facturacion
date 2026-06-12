@@ -62,36 +62,40 @@
 <div class="container my-5">
     <div class="row">
 
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            
-            <div class="card h-100 card-hover shadow-sm">
+        @can('almacen.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm">
                     <a href=" {{ route('almacen.index') }} ">
-                    <div class="img-container">
-                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Almacen" class="img-bg">
-                        <img src="https://png.pngtree.com/png-vector/20240314/ourmid/pngtree-warehouse-flat-composition-png-image_11961969.png" alt="Icono Almacen" class="img-overlay">
-                    </div>
-                    <div class="card-body text-center p-3">
-                        <h6 class="card-title-custom">Almacen</h6>
-                    </div>
-                </a>
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Almacen" class="img-bg">
+                            <img src="https://png.pngtree.com/png-vector/20240314/ourmid/pngtree-warehouse-flat-composition-png-image_11961969.png" alt="Icono Almacen" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            <h6 class="card-title-custom">Almacen</h6>
+                        </div>
+                    </a>
                 </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('apariencia.index') }}">
-                    <div class="img-container">
-                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Apariencia" class="img-bg">
-                        <img src="https://www.gsmarketing.com/hubfs/New%20Website%20Images/illustrations%20/digital%20solutions-display.png"  alt="Icono Apariencia" class="img-overlay">
-                    </div>
-                    <div class="card-body text-center p-3">
-                        
-                        <h6 class="card-title-custom">Apariencia</h6>
-                    </div>
-                </a>
             </div>
-        </div>
+        @endcan
 
+        @can('apariencia.ver')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm">
+                    <a href="{{ route('apariencia.index') }}">
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Apariencia" class="img-bg">
+                            <img src="https://www.gsmarketing.com/hubfs/New%20Website%20Images/illustrations%20/digital%20solutions-display.png"  alt="Icono Apariencia" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            
+                            <h6 class="card-title-custom">Apariencia</h6>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        @endcan
+
+        {{-- Esto no deberia, pero no se puede eliminar para saber cual llama a cual --}}
         {{-- <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 card-hover shadow-sm">
                 <div class="card h-100 card-hover shadow-sm" id="categorias_button" style="cursor: pointer;">
@@ -106,126 +110,143 @@
             </div>
         </div> --}}
 
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
-                <div class="card h-100 card-hover shadow-sm" id="familia_button" style="cursor: pointer;">
+        @can('familia.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm">
+                    <div class="card h-100 card-hover shadow-sm" id="familia_button" style="cursor: pointer;">
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Familias" class="img-bg">
+                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/producto-10808619-8687861.png" alt="Icono Familias" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            <h6 class="card-title-custom">Familias</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endcan
+
+        @can('garantia_doc.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm">
+                    <div class="card h-100 card-hover shadow-sm" id="garantia_button" style="cursor: pointer;">
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Garantia" class="img-bg">
+                            <img src="https://static.vecteezy.com/system/resources/previews/047/649/375/original/3d-golden-shield-icon-isolated-on-transparent-background-png.png" alt="Icono Garantia" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            <h6 class="card-title-custom">Garantia</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endcan
+
+        @can('marcas.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm">
+                    <div class="card h-100 card-hover shadow-sm" id="marcas_button" style="cursor: pointer;">
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Marcas" class="img-bg">
+                            <img src="https://static.vecteezy.com/system/resources/previews/015/329/405/original/brand-3d-illustration-icon-png.png" alt="Icono Marcas" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            <h6 class="card-title-custom">Marcas</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endcan
+
+        @can('motivos.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm">                
+                    <div class="card h-100 card-hover shadow-sm" id="motivos_button" style="cursor: pointer;">
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Motivos" class="img-bg">
+                            <img src="https://static.vecteezy.com/system/resources/previews/028/272/877/original/puzzle-3d-rendering-isometric-icon-png.png" alt="Icono Motivos" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            <h6 class="card-title-custom">Motivos</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endcan
+
+        @can('tipo_cambio.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm">
+                    <a href="{{ route('tipo_cambio.index') }}">
                     <div class="img-container">
-                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Familias" class="img-bg">
-                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/producto-10808619-8687861.png" alt="Icono Familias" class="img-overlay">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Tipo de cambio" class="img-bg">
+                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tipo-de-cambio-8578991-6805151.png" alt="Icono Tipo de cambio" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
-                        <h6 class="card-title-custom">Familias</h6>
+                        <h6 class="card-title-custom">Tipo de cambio</h6>
                     </div>
+                    </a>
                 </div>
             </div>
-        </div>
+        @endcan
 
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
-                <div class="card h-100 card-hover shadow-sm" id="garantia_button" style="cursor: pointer;">
+        @can('unidad_m.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm" id="medida_button" style="cursor: pointer;">
                     <div class="img-container">
-                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Garantia" class="img-bg">
-                        <img src="https://static.vecteezy.com/system/resources/previews/047/649/375/original/3d-golden-shield-icon-isolated-on-transparent-background-png.png" alt="Icono Garantia" class="img-overlay">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="U. de medida" class="img-bg">
+                        <img src="https://cdn3d.iconscout.com/3d/premium/thumb/measuring-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rulerbow-compass-navigation-office-pack-tools-equipment-icons-10967888.png" alt="Icono U. de medida" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
-                        <h6 class="card-title-custom">Garantia</h6>
+                        <h6 class="card-title-custom">U. de medida</h6>
                     </div>
                 </div>
             </div>
-        </div>
+        @endcan
+        
+        @can('usuarios.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm">
+                    <a href="{{ route('usuario.index') }}">
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Usuarios" class="img-bg">
+                            <img src="https://static.vecteezy.com/system/resources/previews/060/498/831/non_2x/fascinating-acclaimed-facial-recognition-software-icon-with-transparent-background-free-png.png" alt="Icono Usuarios" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            <h6 class="card-title-custom">Usuarios</h6>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        @endcan
 
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
-                <div class="card h-100 card-hover shadow-sm" id="marcas_button" style="cursor: pointer;">
+        @can('validez.listar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm" id="validez_button" style="cursor: pointer;">
                     <div class="img-container">
-                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Marcas" class="img-bg">
-                        <img src="https://static.vecteezy.com/system/resources/previews/015/329/405/original/brand-3d-illustration-icon-png.png" alt="Icono Marcas" class="img-overlay">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Validez" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/thumbnails/048/721/469/small_2x/a-green-check-mark-the-check-mark-is-a-symbol-of-approval-or-satisfaction-png.png" alt="Icono Validez" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
-                        <h6 class="card-title-custom">Marcas</h6>
+                        <h6 class="card-title-custom">Validez</h6>
                     </div>
                 </div>
             </div>
-        </div>
+        @endcan
 
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">                
-                <div class="card h-100 card-hover shadow-sm" id="motivos_button" style="cursor: pointer;">
+        @can('alarma.istar')
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                <div class="card h-100 card-hover shadow-sm" id="alarma_button" style="cursor: pointer;">
                     <div class="img-container">
-                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Motivos" class="img-bg">
-                        <img src="https://static.vecteezy.com/system/resources/previews/028/272/877/original/puzzle-3d-rendering-isometric-icon-png.png" alt="Icono Motivos" class="img-overlay">
+                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Alarma" class="img-bg">
+                        <img src="https://static.vecteezy.com/system/resources/previews/049/886/531/non_2x/distinctive-3d-bell-icon-with-fine-rendering-and-transparent-background-tailored-for-high-end-digital-design-projects-free-png.png" alt="Icono Alarma" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
-                        <h6 class="card-title-custom">Motivos</h6>
+                        <h6 class="card-title-custom">Alarma</h6>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('tipo_cambio.index') }}">
-                <div class="img-container">
-                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Tipo de cambio" class="img-bg">
-                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tipo-de-cambio-8578991-6805151.png" alt="Icono Tipo de cambio" class="img-overlay">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Tipo de cambio</h6>
-                </div>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm" id="medida_button" style="cursor: pointer;">
-                <div class="img-container">
-                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="U. de medida" class="img-bg">
-                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/measuring-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rulerbow-compass-navigation-office-pack-tools-equipment-icons-10967888.png" alt="Icono U. de medida" class="img-overlay">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">U. de medida</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm">
-                <a href="{{ route('usuario.index') }}">
-                    <div class="img-container">
-                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Usuarios" class="img-bg">
-                        <img src="https://static.vecteezy.com/system/resources/previews/060/498/831/non_2x/fascinating-acclaimed-facial-recognition-software-icon-with-transparent-background-free-png.png" alt="Icono Usuarios" class="img-overlay">
-                    </div>
-                    <div class="card-body text-center p-3">
-                        <h6 class="card-title-custom">Usuarios</h6>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm" id="validez_button" style="cursor: pointer;">
-                <div class="img-container">
-                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Validez" class="img-bg">
-                    <img src="https://static.vecteezy.com/system/resources/thumbnails/048/721/469/small_2x/a-green-check-mark-the-check-mark-is-a-symbol-of-approval-or-satisfaction-png.png" alt="Icono Validez" class="img-overlay">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Validez</h6>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 card-hover shadow-sm" id="alarma_button" style="cursor: pointer;">
-                <div class="img-container">
-                    <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Alarma" class="img-bg">
-                    <img src="https://static.vecteezy.com/system/resources/previews/049/886/531/non_2x/distinctive-3d-bell-icon-with-fine-rendering-and-transparent-background-tailored-for-high-end-digital-design-projects-free-png.png" alt="Icono Alarma" class="img-overlay">
-                </div>
-                <div class="card-body text-center p-3">
-                    <h6 class="card-title-custom">Alarma</h6>
-                </div>
-            </div>
-        </div>
+        @endcan
 
     </div>
 </div>
@@ -407,60 +428,49 @@
     <div id="blueimp-gallery" class="blueimp-gallery">
         <div class="slides"></div>
     </div>
-    <!-- fin código Gaby-->
+
     <style>
+        .img-wrap {
+            height: 200px; /* Ajusta este valor según qué tan altas quieras las fotos */
+            overflow: hidden; /* Corta lo que sobresalga */
+            background-color: #f8f9fa; /* Color de fondo por si la imagen tarda en cargar */
+        }
 
+        .img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Mantiene la proporción recortando los bordes */
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
 
-    /* 1. Contenedor de la imagen: Define la altura fija */
+        /* 2. La tarjeta completa */
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            overflow: hidden; /* Evita que la imagen se salga de las esquinas redondeadas */
+        }
 
+        .card-hover:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 10;
+            cursor: pointer;
+        }
 
-    /* 2. La imagen en sí: Se ajusta para cubrir el hueco */
-    /* 1. Definir un tamaño fijo para el contenedor de la imagen */
-.img-wrap {
-    height: 200px; /* Ajusta este valor según qué tan altas quieras las fotos */
-    overflow: hidden; /* Corta lo que sobresalga */
-    background-color: #f8f9fa; /* Color de fondo por si la imagen tarda en cargar */
-}
+        .card-body {
+            text-align: center;
+            padding: 15px;
+        }
 
-.img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Mantiene la proporción recortando los bordes */
-    object-position: center;
-    transition: transform 0.5s ease;
-}
+        .card-title {
+            font-size: 1.1rem; /* Usar rem es mejor para diseño responsivo */
+            margin: 0;
+            font-weight: 400;
+            text-transform: capitalize; /* Opcional: Primera letra en mayúscula */
+        }
 
-/* 2. La tarjeta completa */
-.card-hover {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: none;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    overflow: hidden; /* Evita que la imagen se salga de las esquinas redondeadas */
-}
-
-.card-hover:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    z-index: 10;
-    cursor: pointer;
-}
-
-.card-body {
-    text-align: center;
-    padding: 15px;
-}
-
-.card-title {
-    font-size: 1.1rem; /* Usar rem es mejor para diseño responsivo */
-    margin: 0;
-    font-weight: 400;
-    text-transform: capitalize; /* Opcional: Primera letra en mayúscula */
-}
-
-
-
-        /* OCULTANDO LO DE ORGANIZAR*/
-        /* Ver (números) */
         div.dataTables_length {
             display: none;
         }
@@ -558,6 +568,7 @@
 
     <!--Unidad de medida-->
     <script>
+
        // MOSTRAR MODAL DE UNIDAD MEDIDA
        $('#medida_button').on('click', function() {
             $('#modal-medida').modal('show');
@@ -569,6 +580,7 @@
         });
 
         //FUNCION PARA CARGAR DATATABLE DE UNIDAD MEDIDA
+        let permiso
         function datatable_medida() {
            let table = $('.dataTables-medidas').DataTable({
                "serverSide": true,
@@ -579,6 +591,7 @@
                        d.value = $('#search_medida').val();
                    },
                    dataSrc: function(json) {
+
                        return json.data;
                    }
                },
@@ -700,6 +713,9 @@
 
         //FUNCION PARA CARGAR DATATABLE DE FAMILIA
         function datatable_familias() {
+            let permiso_estado = false;
+            let permiso_ver = false;
+            let permiso_editar = false;
             let table = $('.dataTables-familias').DataTable({
                 "serverSide": true,
                 "ajax": {
@@ -709,6 +725,9 @@
                         d.value = $('#search_familia').val();
                     },
                     dataSrc: function(json) {
+                        permiso_estado = json.permiso_estado;
+                        permiso_editar = json.permiso_editar;
+                        permiso_ver = json.permiso_ver;
                         return json.data;
                     }
                 },
@@ -721,11 +740,15 @@
                     {
                         'targets': [4],
                         'render': function(data, type, full, meta) {
-                            const url = `{{ route('familia.show', '__ID__') }}`.replace('__ID__', data);
-                            return `
+                            if(permiso_ver == true){
+                                const url = `{{ route('familia.show', '__ID__') }}`.replace('__ID__', data);
+                                return `
                                 <a href="${url}" class="btn btn-success btn-sm">
                                     <i class="fa fa-eye"></i>
-                                </a>`;
+                                    </a>`;
+                            }else{
+                                return ``;
+                            }
                         }
                     },
                     {
@@ -733,24 +756,47 @@
                         'className': 'button_estado_familia',
                         'render': function(data, type, full, meta) {
                             if (data == 0) {
-                                return `
-                                    <div class="tooltip-demo">
-                                        <button class="btn btn-info btn-circle change_status_familia"
+                                if(permiso_estado == false){
+                                    return `
+                                        <div class="tooltip-demo">
+                                            <button class="btn btn-info btn-circle change_status_familia"
+                                            data-toggle="tooltip" data-placement="left"
+                                            title="Activo" type="button">
+                                            <i class="fa fa-check"></i>
+                                            </button>
+                                        </div>`;
+                                }else{
+                                    return `
+                                        <div class="tooltip-demo">
+                                            <button class="btn btn-info btn-circle change_status_familia"
                                             data-toggle="tooltip" data-placement="left"
                                             title="Click para desactivar" value="${full[4]}" type="button">
                                             <i class="fa fa-check"></i>
-                                        </button>
-                                    </div>`;
+                                            </button>
+                                        </div>`;
+                                }
+                            }else{
+                                if(permiso_estado == false){
+                                    return `
+                                        <div class="tooltip-demo">
+                                            <button class="btn btn-info btn-circle"
+                                            data-toggle="tooltip" data-placement="left"
+                                            title="Desactivado" type="button">
+                                            <i class="fa fa-check"></i>
+                                            </button>
+                                        </div>`;
+                                }else{
+                                    return `
+                                        <div class="tooltip-demo">
+                                            <button class="btn btn-danger btn-circle change_status_familia"
+                                                value="${full[4]}" type="button"
+                                                data-toggle="tooltip" data-placement="left"
+                                                title="Click para activar">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>`;
+                                }   
                             }
-                            return `
-                                <div class="tooltip-demo">
-                                    <button class="btn btn-danger btn-circle change_status_familia"
-                                        value="${full[4]}" type="button"
-                                        data-toggle="tooltip" data-placement="left"
-                                        title="Click para activar">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </div>`;
                         }
                     }
                 ]
@@ -777,10 +823,11 @@
                 },
                 success: function(data) {
                     console.log(data);
+                    toastr.success('Familia actualizada correctamente');
                     $('.dataTables-familias').DataTable().ajax.reload();
                 },
                 error: function(data) {
-                    console.log(data);
+                    toastr.danger('Hubo un error al actualizar la Familia');
                 }
             });
         });
@@ -801,6 +848,7 @@
                 processData: false,
                 success: function(data) {
                     console.log(data);
+                    toastr.success('Se añadió una nueva familia al registro');
                     $('.dataTables-familias').DataTable().ajax.reload();
                     $('#form_familia')[0].reset();
                 },
@@ -811,32 +859,34 @@
         });
 
         //  EDITAR FAMILIA CON UN CLCIK EN EL ROW DEL DATATABLE
-        $(document).on('click', '.dataTables-familias tbody tr', function() {
-            $('#form_familia')[0].reset();
-            let table = $('.dataTables-familias').DataTable();
-            let data = table.row(this).data();
-            let lastTd = $(this).find('td:last'); // Último td
-            let secondLastTd = lastTd.prev(); // Penúltimo td
+        @can('familia.editar')
+            $(document).on('click', '.dataTables-familias tbody tr', function() {
+                $('#form_familia')[0].reset();
+                let table = $('.dataTables-familias').DataTable();
+                let data = table.row(this).data();
+                let lastTd = $(this).find('td:last'); // Último td
+                let secondLastTd = lastTd.prev(); // Penúltimo td
 
-            if ($(event.target).is(lastTd) || $(event.target).is(secondLastTd) ||
-                $(event.target).closest('td').is(lastTd) || $(event.target).closest('td').is(secondLastTd)) {
-                return;
-            }
-            $('#update_familia').css('display', 'inline-block');
-            $('#add_new_familia').css('display', 'none');
-            //  PASAR DATA AL FORMULARIO
-            $('#id_familia_edit').val(data[4]);
-            $('#descripcion_familia').val(data[1]);
-            $('#ubicacion_familia').val(data[2]);
-        });
-        //  ACTUALIZAR FAMILIA
-        $('#update_familia').on('click', function(event) {
-            let table = $('.dataTables-familias').DataTable();
-            let data = table.row(this).data();
+                if ($(event.target).is(lastTd) || $(event.target).is(secondLastTd) ||
+                    $(event.target).closest('td').is(lastTd) || $(event.target).closest('td').is(secondLastTd)) {
+                    return;
+                }
+                $('#update_familia').css('display', 'inline-block');
+                $('#add_new_familia').css('display', 'none');
+                //  PASAR DATA AL FORMULARIO
+                $('#id_familia_edit').val(data[4]);
+                $('#descripcion_familia').val(data[1]);
+                $('#ubicacion_familia').val(data[2]);
+            });
+            //  ACTUALIZAR FAMILIA
+            $('#update_familia').on('click', function(event) {
+                let table = $('.dataTables-familias').DataTable();
+                let data = table.row(this).data();
 
-            var id_familia = $('#id_familia_edit').val();
-            edit_familia(id_familia);
-        })
+                var id_familia = $('#id_familia_edit').val();
+                edit_familia(id_familia);
+            })
+        @endcan
 
         //  FUNCION PARA EDITAR FAMILIA
         function edit_familia(id) {
@@ -873,77 +923,7 @@
             }
         });
     </script>
-    <script>/*
-        $('#familia_button').on('click', function() {
-            $('#modal-familia').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-familias')) {
-                $('.dataTables-familias').DataTable({
-                    "serverSide": true,
-                    "ajax": {
-                        url: "{{ route('api.get_familias') }}",
-                        method: "get",
-                        data: function(d) {},
-                        dataSrc: function(json) {
-                            return json.data;
-                        }
-                    },
-                    "pageLength": 10,
-                    "columnDefs": [{
-                        'targets': [0]
-                    }, {
-                        'targets': [1],
-                        'className': 'familia_descripcion'
-                    }, {
-                        'targets': [2]
-                    }, {
-                        'targets': [3]
-                    }, {
-                        'targets': [4],
-                        'render': function(data, type, full, meta) {
-                            return "<a href='{{ route('familia.show', '') }}/" + full[0] +
-                                "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
-                        }
-                    }]
-                });
-            } else {
-                // Si ya está inicializado, solo recarga los datos
-                $('.dataTables-familias').DataTable().ajax.reload();
-            }
-        });*/
-
-       //  $('#garantia_button').on('click', function() {
-       //      $('#modal-garantia').modal('show');
-       //      if (!$.fn.DataTable.isDataTable('.dataTables-garantia')) {
-       //          $('.dataTables-garantia').DataTable({
-       //              "serverSide": true,
-       //              "ajax": {
-       //                  url: "{{ route('api.get_garantias') }}",
-       //                  method: "get",
-       //                  data: function(d) {},
-       //                  dataSrc: function(json) {
-       //                      return json.data;
-       //                  }
-       //              },
-       //              "pageLength": 10,
-       //              "columnDefs": [{
-       //                  'targets': [0]
-       //              }, {
-       //                  'targets': [1],
-       //                  'className': 'garantia_descripcion'
-       //              }, {
-       //                  'targets': [2],
-       //                  'render': function(data, type, full, meta) {
-       //                      return "<a href='{{ route('garantia.show', '') }}/" + full[0] +
-       //                          "'><button type='button' class='btn btn-success btn-sm'><i class='fa fa-eye'></i></button></a>";
-       //                  }
-       //              }]
-       //          });
-       //      } else {
-       //          // Si ya está inicializado, solo recarga los datos
-       //          $('.dataTables-garantia').DataTable().ajax.reload();
-       //      }
-       //  });
-
+    <script>
         //*  MOSTRAR MODAL DE MARCAS
         $('#marcas_button').on('click', function() {
             $('#modal-marcas').modal('show');
@@ -1284,6 +1264,8 @@
            });
 
            //  FUNCION PARA CARGAR DATATABLE DE GARANTIA
+           let permiso_editar = false;
+           let permiso_estado = false;
            function datatable_garantia() {
                let table = $('.dataTables-garantia').DataTable({
                    "serverSide": true,
@@ -1294,6 +1276,8 @@
                            d.value = $('#search_garantia').val();
                        },
                        dataSrc: function(json) {
+                            permiso_editar = json.permiso_editar;
+                            permiso_estado = json.permiso_estado;
                            return json.data;
                        }
                    },
@@ -1306,7 +1290,11 @@
                        'className': 'button_estado_garantia',
                        'render': function(data, type, full, meta) {
                            if (data == 0) {
-                               return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_garantia" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[2]}" type="button" ><i class="fa fa-check"></i></button></div>`;
+                               if(permiso_editar == true){
+                                    return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_garantia" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[2]}" type="button" ><i class="fa fa-check"></i></button></div>`;
+                               }else{
+                                    return `<div class="tooltip-demo"><button class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="left" title="Activar" value="${full[2]}" type="button" ><i class="fa fa-check"></i></button></div>`;
+                               }
                            }
                            return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_garantia" value="${full[2]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
                        }

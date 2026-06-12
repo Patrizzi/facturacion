@@ -226,6 +226,7 @@
 
                     $('.dataTables-example-factura tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-factura tfoot th.total-total').html('Total  G.: ' + total_table);
+                    
                     permiso_ver = json.permiso_ver;
                     permiso_pagar = json.permiso_pagar;
                     return json.data;

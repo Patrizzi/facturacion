@@ -403,6 +403,7 @@ class PermissionsTableSeeder extends Seeder
         Permission::create(['name' => 'familia.listar', 'module' => 'configuracion_general', 'description' => 'Lista de las Familias de los Productos y Servicios']);
         Permission::create(['name' => 'familia.crear', 'module' => 'configuracion_general', 'description' => 'Crear Familia para los Productos y Servicios']);
         Permission::create(['name' => 'familia.editar', 'module' => 'configuracion_general', 'description' => 'Editar Familia para los Productos y Servicios']);
+        Permission::create(['name' => 'familia.ver', 'module' => 'configuracion_general', 'description' => 'Ver la informacion de la Familia para los Productos y Servicios']);
         Permission::create(['name' => 'familia.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar el estado de la Familia para los Productos y Servicios']);
 
         Permission::create(['name' => 'subfamilia.ver', 'module' => 'configuracion_general', 'description' => 'Mostrar Subfamilia']);
