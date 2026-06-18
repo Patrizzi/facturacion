@@ -45,7 +45,7 @@
                     <input type="text" class="form-control  col-sm-10" name="" id="search_familia">
                 </div>
                 <br>
-                <div class=" table-responsive">
+                <div class="table-responsive" style="overflow-x: hidden;">
                     <!--Tabla-->
                     <table class="table table-striped text-md-center table-bordered dataTables-familias">
                         <thead>

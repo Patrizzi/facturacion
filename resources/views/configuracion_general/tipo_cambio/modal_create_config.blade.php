@@ -1,4 +1,4 @@
-<!-- modal - Motivos -->
+<!-- modal - Tipo de Cambio -->
 <div id="modal-motivos" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel3">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -9,7 +9,7 @@
                 </button>
               </div>
             <div class="modal-body">
-                @canany(['motivos.crear','motivos.editar'])
+                @canany(['tipo_cambio.crear','tipo_cambio.editar'])
                     <form action="" method="post" enctype="multipart/form-data" id="form_motivos">
                         @csrf
                         <input type="hidden" value="" name="motivos_edit_id" id="id_motivos_edit">

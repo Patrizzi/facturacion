@@ -9,28 +9,32 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" enctype="multipart/form-data" id="form_validez">
-                    @csrf
-                    <input type="hidden" value="" name="validez_edit_id" id="id_validez_edit">
+                @canany(['validez.crear','validez.editar'])
+                    <form action="" method="post" enctype="multipart/form-data" id="form_validez">
+                        @csrf
+                        <input type="hidden" value="" name="validez_edit_id" id="id_validez_edit">
 
-                    <div class="row">
-                        <div class="col-sm-7">
-                            <input type="text" placeholder="Descripción" class="form-control m-b"
-                                    name="descripcion_validez" id="descripcion_validez" autocomplete="off" required>
-                        </div>
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <input type="text" placeholder="Descripción" class="form-control m-b"
+                                        name="descripcion_validez" id="descripcion_validez" autocomplete="off" required>
+                            </div>
 
-                        <div class="col-sm-5" style="text-align: center">
-                            <button class="btn  btn-success " type="button" id="add_new_validez" style="width: 49%"><i
+                            <div class="col-sm-5" style="text-align: center">
+                                @can('validez.crear')
+                                    <button class="btn  btn-success " type="button" id="add_new_validez" style="width: 49%"><i
                                     class="fa fa-plus"></i> Guardar</button>
-                            <button class="btn  btn-success " type="button" id="update_validez"
-                                style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i>
-                                Actualizar</button>
-                            <button class="btn  btn-danger " type="button" id="cancel_validez" style="width: 49%"><i
-                                    class="fa fa-pencil"></i> Cancelar</button>
+                                @endcan
+                                <button class="btn  btn-success " type="button" id="update_validez"
+                                    style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i>
+                                    Actualizar</button>
+                                <button class="btn  btn-danger " type="button" id="cancel_validez" style="width: 49%"><i
+                                        class="fa fa-pencil"></i> Cancelar</button>
+                            </div>
                         </div>
-                    </div>
-                </form>
-                <hr>
+                    </form>
+                    <hr>
+                @endcan
                 <div class="input-group row">
                     <label class="col-sm-2 col-form-label text-center">Buscar:</label>
                     <input class="form-control col-sm-10" type="text" name="" id="search_validez">

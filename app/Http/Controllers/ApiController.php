@@ -268,6 +268,7 @@ class ApiController extends Controller
             ];
         }
         $json['permiso_estado'] = auth()->user()->can('garantia_doc.estado');
+        $json['permiso_editar'] = auth()->user()->can('garantia_doc.editar');
         return response()->json($json);
     }
 
@@ -326,6 +327,8 @@ class ApiController extends Controller
                 $value->nombre_empresa
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('marcas.estado');
+        $json['permiso_editar'] = auth()->user()->can('marcas.editar');
         return response()->json($json);
     }
 
@@ -375,6 +378,8 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('motivos.estado');
+        $json['permiso_editar'] = auth()->user()->can('motivos.editar');
         return response()->json($json);
     }
 
@@ -647,6 +652,8 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('validez.estado');
+        $json['permiso_editar'] = auth()->user()->can('validez.editar');
         return response()->json($json);
     }
     //* Servicios

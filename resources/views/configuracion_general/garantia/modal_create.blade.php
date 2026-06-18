@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                @can('garantia_doc.crear')
+                @canany(['garantia_doc.crear','garantia_doc.editar'])
                     <form action="" method="post" enctype="multipart/form-data" id="form_garantia">
                         @csrf
                         <input type="hidden" value="" name="garantia_edit_id" id="id_garantia_edit">
@@ -21,8 +21,10 @@
                                     id="descripcion_garantia" autocomplete="off">
                             </div>
                             <div class="col-sm-6" style="text-align: center">
-                                <button class="btn  btn-success " type="button" id="add_new_garantia" style="width: 49%"><i
+                                @can('garantia_doc.crear')
+                                    <button class="btn  btn-success " type="button" id="add_new_garantia" style="width: 49%"><i
                                         class="fa fa-plus"></i> Guardar</button>
+                                @endcan
                                 <button class="btn  btn-success " type="button" id="update_garantia"
                                     style="display: none;margin-top: 0px;width: 49%"><i class="fa fa-pencil"></i>
                                     Actualizar</button>
@@ -38,13 +40,13 @@
                     <input class="form-control col-sm-10" type="text" name="" id="search_garantia">
                 </div>
                 <br>
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow-x: hidden;">
                     <!--Tabla-->
                     <table class="table table-striped table-bordered dataTables-garantia">
                         <thead>
                             <tr>
                                 <th style="width: 35%;">Descripción</th>
-                                <th style="width: 20%;">@can('garantia_doc.estado')Estado @endcan</th>
+                                <th style="width: 20%;">Estado</th>
                             </tr>
                         </thead>
                         <tbody>
