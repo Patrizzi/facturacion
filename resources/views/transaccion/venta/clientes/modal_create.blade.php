@@ -381,7 +381,7 @@
                         document.getElementById("cliente_doc").options.item(1)
                             .selected = 'selected';
                         $('#numero_ruc_cli').val(datos[0]);
-                        var nombre = datos[2] + ' ' + datos[3] + ' ' + datos[4];
+                        var nombre = datos[1] + ' ' + datos[2] + ' ' + datos[3];
                         $('#razon_social_cli').val(nombre);
                     }
                 }
