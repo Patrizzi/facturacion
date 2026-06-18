@@ -278,7 +278,7 @@ class ClienteController extends Controller
             [$info['dni']],
             $info['nombres'],
             $info['apellidoPaterno'],
-            $info['apellifoMaterno'],
+            $info['apellidoMaterno'],
         ];
     }
 
