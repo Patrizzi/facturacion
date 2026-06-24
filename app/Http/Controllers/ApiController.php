@@ -454,6 +454,7 @@ class ApiController extends Controller
                 $value->id
             ];
         }
+        $json['permiso_tc'] = auth()->user()->can('tipo_cambio.editar');
         return response()->json($json);
     }
 

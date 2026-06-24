@@ -55,12 +55,12 @@ use function Complex\rho;
 
 //GLOBAL LOGIN
 Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
+Route::get('/', 'ViewController@home')->name('inicio')->middleware('auth');
 Route::group(
     ['middleware' => ['auth', 'api', 'cambio_diario']],
     function () {
 
         // Route::view('/' , 'home')->name('inicio');
-        Route::get('/', 'ViewController@home')->name('inicio');
 
         // RUTAS PROYECTOS
         // Rutas ProjectManager
@@ -947,7 +947,7 @@ Route::group(
         Route::resource('/cantidad_precio', 'CantidadPrecioController');
 
         //* CONFIGURACION GENERAL
-        Route::view('/configuracion_general', 'configuracion_general.configuracion_general')->name('configuracion.general');
+        Route::get('/configuracion_general', 'ConfiguracionGeneralController@configuracion_general')->name('configuracion.general');
 
         //* GARANTIAS
         Route::resource('/garantia', 'GarantiaController');

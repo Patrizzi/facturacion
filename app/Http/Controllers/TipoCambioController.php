@@ -112,7 +112,10 @@ class TipoCambioController extends Controller
        $cambio->fecha=Carbon::now()->format('Y-m-d');
        $cambio->save();
 
-       return redirect()->route('tipo_cambio.index');
+       return response()->json([
+            'success' => true,
+            'message' => 'Tipo de cambio Guardado correctamente',
+        ]);
     }
 
     public function sunat_cambio(Request $request){

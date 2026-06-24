@@ -189,7 +189,7 @@
                 </div>
             @endcan
 
-            @can('tipo_cambio.listar')
+            {{-- @can('tipo_cambio.listar')
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card h-100 card-hover shadow-sm">
                         <a href="{{ route('tipo_cambio.index') }}">
@@ -205,7 +205,7 @@
                         </a>
                     </div>
                 </div>
-            @endcan
+            @endcan --}}
 
             @can('tipo_cambio.listar')
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
@@ -450,7 +450,7 @@
         </div>
     -->
 
-    @include('configuracion_general.tipo_cambio.modal_create')
+    @include('configuracion_general.tipo_cambio.modal_list')
 
     @include('configuracion_general.unidad-de-medida.modal_create')
 
@@ -468,7 +468,7 @@
 
     @include('configuracion_general.alarma.modal_create')
 
-    @include('configuracion_general.tipo_cambio.modal_create')
+    {{-- @include('configuracion_general.tipo_cambio.modal_create') --}}
 
     <div id="blueimp-gallery" class="blueimp-gallery">
         <div class="slides"></div>
@@ -1677,79 +1677,10 @@
             }
         });
         </script>
+
+        @include('configuracion_general.tipo_cambio.scripts')
+
         <script>
-        // MOSTRAR MODAL DE TIPO_CAMBIO
-        $('#tipo_cambio_button').on('click', function() {
-            $('#modal-tipo_cambio').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-tipo_cambio')) {
-                datatable_tipo_cambio();
-            } else {
-                $('.dataTables-tipo_cambio').DataTable().ajax.reload();
-            }
-        });
-        let tabletc;
-        //  FUNCION PARA CARGAR DATATABLE DE TIPO_CAMBIO
-        function datatable_tipo_cambio() {
-            tabletc = $('.dataTables-tipo_cambio').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_tipo_cambio') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.date_filter = $('#search_tipo_cambio').val();
-                    },
-                    dataSrc: function(json) {
-                        return json.data;
-                    }
-                },
-                "pageLength": 15,
-                "columnDefs": [{
-                    sortable: false,
-                    'targets': "_all"
-                }, {
-                    'targets': [0],
-                    'render': function(data, type, full, meta) {
-                        return `${full[4]}`;
-                    }
-                }]
-            });
-
-            // Activar tooltips de Bootstrap después de dibujar la tabla
-            tabletc.on('draw.dt', function() {
-                $('[data-toggle="tooltip"]').tooltip();
-            });
-
-            // Configuración del rango de fechas
-            //    $('input[name="daterange_tipo_cambio"]').daterangepicker();
-            $('input[name="daterange_tipo_cambio"]').daterangepicker({
-                "locale": {
-                    "separator": " | ",
-                    "applyLabel": "Guardar",
-                    "cancelLabel": "Cancelar",
-                    "fromLabel": "Desde",
-                    "toLabel": "Hasta",
-                    "customRangeLabel": "Personalizado",
-                    "daysOfWeek": ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-                    "monthNames": [
-                        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-                    ],
-                    "firstDay": 1
-                }
-            }, function(start, end) {
-                var dates = [];
-                var currentDate = new Date(start);
-                var dateRangeString = dates.join('|');
-                $('.dataTables-tipo_cambio').DataTable().ajax.reload();
-                //    tabletc.column(3).search(dateRangeString, true, false).draw();
-            });
-        }
-        // Función para restaurar el filtro de fecha al mes actual
-        function limpiar_select_tc() {
-            $('input[name="daterange_tipo_cambio"]').val(`{{ date('01/m/Y') }} - {{ date('t/m/Y') }}`);
-            $('.dataTables-tipo_cambio').DataTable().ajax.reload();
-        }
-
         // MOSTRAR MODAL DE MOTIVOS
         $('#motivos_button').on('click', function() {
             $('#modal-motivos').modal('show');
