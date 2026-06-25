@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="staticBackdropLabel">Agregar Tipo de Cambio</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" id="close_" class="close" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

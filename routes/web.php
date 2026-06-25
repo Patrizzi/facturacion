@@ -908,6 +908,7 @@ Route::group(
         Route::patch('/servicios_destroy/{id}', 'ServiciosController@destroy')->name('servicios.destroy');
         Route::get('/servicios_inactivo', 'ServiciosController@index2')->name('servicios.index2');
         Route::resource('/unidad-medida', 'UnidadMedidaController');
+        Route::post('/unidad-medida/estado','UnidadMedidaController@change_state')->name('unidad_medida.change_state');
 
         Route::resource('/transaccion-compra', 'TransaccionCompraController');
 

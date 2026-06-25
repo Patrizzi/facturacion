@@ -517,7 +517,6 @@ class ApiController extends Controller
             0 => 'simbolo',
             1 => 'medida',
             2 => 'unidad',
-
         ];
 
         $query = Unidad_medida::orderBy('created_at', 'desc');
@@ -544,19 +543,16 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-
-        //$unidad_medida = Unidad_medida::get();
         foreach ($unidad_medida as $value) {
             $json['data'][] = [
                 $value->simbolo,
                 $value->medida,
                 $value->unidad,
-                //$value->created_at,
-                //$value->updated_at,
+                $value->estado,
                 $value->id,
             ];
         }
-        $json['permiso_estado'] = auth()->user()->can('unidad_m.estado');
+        $json['permiso_editar'] = auth()->user()->can('unidad_m.editar');
         $json['permiso_estado'] = auth()->user()->can('unidad_m.estado');
         return response()->json($json);
     }

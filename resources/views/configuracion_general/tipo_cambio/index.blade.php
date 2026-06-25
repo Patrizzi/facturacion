@@ -313,7 +313,7 @@
             let paralelo = $('#editar-paralelo').val();
 
             const updateUrl = updateUrlBase.replace(':id', id);
-            console.log(updateUrl);
+            // console.log(updateUrl);
             $.ajax({
                 url: updateUrl,
                 type: 'POST',
@@ -363,9 +363,6 @@
                     return y.toFixed(2); // Mostrar 2 decimales en el eje Y
                 },
             });
-            console.log(minY);
-            console.log(minY);
-
         });
     </script>
 @endsection

@@ -186,14 +186,14 @@
     </style>
     @include('partials.page_script_general')
 
-    
+
     <script type="text/javascript">
         $('.carousel').carousel({
             interval: 2000
         })
     </script>
 
-<script>
+    <script>
         $(document).ready(function() {
             @if (session('success'))
                 toastr.success("{{ session('success') }}", '', {
@@ -222,13 +222,54 @@
     </script>
 
     @include('configuracion_general.tipo_cambio.modal_create')
-    
-    @if (session('check_tipo_cambio'))
+
+    @if (session('check_tipo_cambio') && auth()->user()->can('tipo_cambio.crear'))
         <script>
             $(document).ready(function() {
                 $('#myajax').click();
                 $('#modal-tipo_cambio-create').modal('show');
             })
+        </script>
+    @else
+        <script>
+            $(document).ready(function() {
+                toastr.warning("Espere a que un administrador, ingrese el Tipo de Cambio Diario", '', {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    closeButton: true
+                });
+                iniciarConsultaTipoCambio();
+            });
+
+            const fecha = '{{ now()->format('Y-m-d') }}';
+            let intervaloTipoCambio = null;
+
+            function iniciarConsultaTipoCambio() {
+                if (intervaloTipoCambio !== null) {
+                    return;
+                }
+                intervaloTipoCambio = setInterval(function() {
+                    $.get('{{ route('tipo_cambio.busqueda_tipo_cambio') }}', {
+                        fecha: fecha
+                    }, function(response) {
+                        console.log("a");
+                        if (response.success) {
+                            detenerConsultaTipoCambio();
+                            toastr.clear();
+                            $('#modal-espera').modal('hide');
+                            $('#modal-principal').modal('show');
+                            toastr.success("El administrador ingresó el Tipo de Cambio del díá.", '', {});
+                        }
+                    });
+                }, 5000);
+            }
+
+            function detenerConsultaTipoCambio() {
+                if (intervaloTipoCambio !== null) {
+                    clearInterval(intervaloTipoCambio);
+                    intervaloTipoCambio = null;
+                }
+            }
         </script>
     @endif
 @endsection

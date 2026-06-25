@@ -249,4 +249,5 @@ class TipoCambioController extends Controller
             ], 404);
         }
     }
+
 }

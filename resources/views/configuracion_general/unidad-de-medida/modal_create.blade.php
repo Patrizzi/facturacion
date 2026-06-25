@@ -52,10 +52,9 @@
                         <thead>
                             <tr>
                                 <th style="width: 40%;">Símbolo</th>
-                                <th style="width: 50%;">Medida</th>
+                                <th style="width: 40%;">Medida</th>
                                 <th style="width: 10%;">Unidad</th>
-                                <!--<th style="width: 30%;">Fecha Creación</th>
-                                <th style="width: 30%;">Fecha Actualización</th>-->
+                                <th style="width: 10%;">Estado</th>
                             </tr>
                         </thead>
                         <tbody>
