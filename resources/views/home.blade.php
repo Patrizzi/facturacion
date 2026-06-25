@@ -233,11 +233,6 @@
     @else
         <script>
             $(document).ready(function() {
-                toastr.warning("Espere a que un administrador, ingrese el Tipo de Cambio Diario", '', {
-                    timeOut: 0,
-                    extendedTimeOut: 0,
-                    closeButton: true
-                });
                 iniciarConsultaTipoCambio();
             });
 
@@ -250,17 +245,29 @@
                 }
                 intervaloTipoCambio = setInterval(function() {
                     $.get('{{ route('tipo_cambio.busqueda_tipo_cambio') }}', {
-                        fecha: fecha
-                    }, function(response) {
-                        console.log("a");
-                        if (response.success) {
-                            detenerConsultaTipoCambio();
-                            toastr.clear();
-                            $('#modal-espera').modal('hide');
-                            $('#modal-principal').modal('show');
-                            toastr.success("El administrador ingresó el Tipo de Cambio del díá.", '', {});
-                        }
-                    });
+                            fecha: fecha
+                        })
+                        .done(function(response) {
+                            if (response.success) {
+                                detenerConsultaTipoCambio();
+                                toastr.clear();
+                                $('#modal-espera').modal('hide');
+                                $('#modal-principal').modal('show');
+                                toastr.success("El administrador ingresó el Tipo de Cambio del día.");
+                            }
+                        })
+                        .fail(function(xhr) {
+                            if (xhr.status === 404) {
+                                toastr.warning(
+                                    "Espere a que un administrador ingrese el Tipo de Cambio Diario",
+                                    '', {
+                                        timeOut: 3000,
+                                        extendedTimeOut: 0,
+                                        closeButton: true
+                                    }
+                                );
+                            }
+                        });
                 }, 5000);
             }
 
