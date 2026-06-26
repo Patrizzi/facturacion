@@ -67,6 +67,22 @@
 
             @can('almacen.listar')
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100 card-hover shadow-sm" id="almacen_button" style="cursor: pointer">
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                alt="Almacen" class="img-bg">
+                            <img src="https://png.pngtree.com/png-vector/20240314/ourmid/pngtree-warehouse-flat-composition-png-image_11961969.png"
+                                alt="Icono Almacen" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            <h6 class="card-title-custom">Almacen</h6>
+                        </div>
+                    </div>
+                </div>
+            @endcan
+
+            @can('almacen.listar')
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card h-100 card-hover shadow-sm">
                         <a href=" {{ route('almacen.index') }} ">
                             <div class="img-container">
@@ -209,17 +225,17 @@
 
             @can('tipo_cambio.listar')
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    <div class="card h-100 card-hover shadow-sm"  id="tipo_cambio_button" style="cursor: pointer;">
+                    <div class="card h-100 card-hover shadow-sm" id="tipo_cambio_button" style="cursor: pointer;">
                         {{-- <a href="{{ route('tipo_cambio.index') }}"> --}}
-                            <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
-                                    alt="Tipo de cambio" class="img-bg">
-                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tipo-de-cambio-8578991-6805151.png"
-                                    alt="Icono Tipo de cambio" class="img-overlay">
-                            </div>
-                            <div class="card-body text-center p-3">
-                                <h6 class="card-title-custom">Tipo de cambio</h6>
-                            </div>
+                        <div class="img-container">
+                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                alt="Tipo de cambio" class="img-bg">
+                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tipo-de-cambio-8578991-6805151.png"
+                                alt="Icono Tipo de cambio" class="img-overlay">
+                        </div>
+                        <div class="card-body text-center p-3">
+                            <h6 class="card-title-custom">Tipo de cambio</h6>
+                        </div>
                         {{-- </a> --}}
                     </div>
                 </div>
@@ -296,159 +312,161 @@
 
 
     <!--
-          <div class="wrapper wrapper-content animated fadeInRight">
-            <div class="col">
-                <div class="col-lg-4">
-                    <div class="ibox">
-                        <div class="">
+              <div class="wrapper wrapper-content animated fadeInRight">
+                <div class="col">
+                    <div class="col-lg-4">
+                        <div class="ibox">
                             <div class="">
-                                 Elementos de la fila -->
+                                <div class="">
+                                     Elementos de la fila -->
     <!-- <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                   <button class="btn btn-success dim tam pt-4" type="button">
-                                        <a href="{{ route('almacen.index') }}">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/almacen.svg') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">ALMACÉN</p>
-                                        </a>
-                                    </button>-->
+                                       <button class="btn btn-success dim tam pt-4" type="button">
+                                            <a href="{{ route('almacen.index') }}">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/almacen.svg') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">ALMACÉN</p>
+                                            </a>
+                                        </button>-->
 
 
 
     <!--
-                                    <a href="{{ route('almacen.index') }}">
-                                    <div class="card" style="width: 18rem;">
-                                        <img  src="https://www.scmlogistica.es/wp-content/uploads/como-poner-en-marcha-un-pequeno-almacen.jpg" class="card-img-top" alt="...">
-                                        <div class="card-body">
-                                            <h1 class="card-title">Almacen</h1>
+                                        <a href="{{ route('almacen.index') }}">
+                                        <div class="card" style="width: 18rem;">
+                                            <img  src="https://www.scmlogistica.es/wp-content/uploads/como-poner-en-marcha-un-pequeno-almacen.jpg" class="card-img-top" alt="...">
+                                            <div class="card-body">
+                                                <h1 class="card-title">Almacen</h1>
 
+                                            </div>
                                         </div>
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 d-flex     justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button">
+                                            <a href="{{ route('apariencia.index') }}">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/apariencia.svg') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">APARIENCIA</p>
+                                            </a>
+                                        </button>
                                     </div>
 
-                                </div>
-                                <div class="col-lg-3 col-md-6 d-flex     justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button">
-                                        <a href="{{ route('apariencia.index') }}">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/apariencia.svg') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">APARIENCIA</p>
-                                        </a>
-                                    </button>
-                                </div>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                       <button class="btn btn-success dim tam pt-4" type="button" id="categorias_button">
+                                           <a data-toggle="modal" href="#modal-forms7">
+                                               <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
+                                                   width="50px" alt="">
+                                               <p class="pt-md-3 display-6 fs-4 text-white">CATEGORIAS</p>
+                                           </a>
+                                       </button>
+                                   </div>
 
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                   <button class="btn btn-success dim tam pt-4" type="button" id="categorias_button">
-                                       <a data-toggle="modal" href="#modal-forms7">
-                                           <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
-                                               width="50px" alt="">
-                                           <p class="pt-md-3 display-6 fs-4 text-white">CATEGORIAS</p>
-                                       </a>
-                                   </button>
-                               </div>
+                                     <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button"> </a>
+                                             <a data-toggle="modal" href="#modal-forms5">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
+                                            </a>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button" id="familia_button">
+                                            <a data-toggle="modal" href="">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/familia.svg') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">FAMILIAS</p>
+                                            </a>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button" id="garantia_button">
+                                            <a data-toggle="modal" href="">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/garantia.png') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">GARANTÍA</p>
+                                            </a>
+                                        </button>
+                                    </div>
 
-                                 <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button"> </a>
-                                         <a data-toggle="modal" href="#modal-forms5">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/categoria.svg') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">CATEGORÍAS</p>
-                                        </a>
-                                    </button>
-                                </div>
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button" id="familia_button">
-                                        <a data-toggle="modal" href="">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/familia.svg') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">FAMILIAS</p>
-                                        </a>
-                                    </button>
-                                </div>
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button" id="garantia_button">
-                                        <a data-toggle="modal" href="">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/garantia.png') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">GARANTÍA</p>
-                                        </a>
-                                    </button>
-                                </div>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button" id="marcas_button">
+                                            <a data-toggle="modal" href="#modal-forms7">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/marca.svg') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">MARCAS</p>
+                                            </a>
+                                        </button>
+                                    </div>
 
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button" id="marcas_button">
-                                        <a data-toggle="modal" href="#modal-forms7">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/marca.svg') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">MARCAS</p>
-                                        </a>
-                                    </button>
-                                </div>
-
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button" id="motivos_button">
-                                        <a data-toggle="modal" href="#modal-forms3">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/motivo.svg') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">MOTIVOS</p>
-                                        </a>
-                                    </button>
-                                </div>
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button" id="tipo_cambio_button">                                                                                                                                                                     </a>
-                                        <a data-toggle="modal" href="#modal-forms">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/tipo-cambio.svg') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">TIPO CAMBIO</p>
-                                        </a>
-                                    </button>
-                                </div>
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button" id="medida_button">-->
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button" id="motivos_button">
+                                            <a data-toggle="modal" href="#modal-forms3">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/motivo.svg') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">MOTIVOS</p>
+                                            </a>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button" id="tipo_cambio_button">                                                                                                                                                                     </a>
+                                            <a data-toggle="modal" href="#modal-forms">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/tipo-cambio.svg') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">TIPO CAMBIO</p>
+                                            </a>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button" id="medida_button">-->
     </a>-->
 
     <!--                                                                                                                                                <a data-toggle="modal" href="">
-                                            <img class="rounded bg-white p-2"
-                                                src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px"
-                                                alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">U.DE MEDIDA</p>
-                                        </a>
-                                    </button>
-                                </div>
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                    <button class="btn btn-success dim tam pt-4" type="button">
-                                        <a href="{{ route('usuario.index') }}">
-                                            <img class="rounded bg-white p-2" src="{{ asset('img/logos/usuarios.svg') }}"
-                                                width="50px" alt="">
-                                            <p class="pt-md-3 display-6 fs-4 text-white">USUARIOS</p>
-                                        </a>
-                                    </button>
-                                </div>
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                   <button class="btn btn-success dim tam pt-4" type="button" id="validez_button">
-                                       <a data-toggle="modal" href="">
-                                           <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}"
-                                               width="50px" alt="">
-                                           <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
-                                       </a>
-                                   </button>
-                               </div>
-                               <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
-                                   <button class="btn btn-success dim tam pt-4" type="button" id="alarma_button">
-                                       <a data-toggle="modal" href="">
-                                           <img class="rounded bg-white p-2" src="{{ asset('img/logos/moneda.svg') }}"
-                                               width="50px" alt="">
-                                           <p class="pt-md-3 display-6 fs-4 text-white">ALARMA</p>
-                                       </a>
-                                   </button>
-                               </div></a>
-                                <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                                <img class="rounded bg-white p-2"
+                                                    src="{{ asset('img/logos/unidad_medida.svg') }}" width="50px"
+                                                    alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">U.DE MEDIDA</p>
+                                            </a>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                        <button class="btn btn-success dim tam pt-4" type="button">
+                                            <a href="{{ route('usuario.index') }}">
+                                                <img class="rounded bg-white p-2" src="{{ asset('img/logos/usuarios.svg') }}"
+                                                    width="50px" alt="">
+                                                <p class="pt-md-3 display-6 fs-4 text-white">USUARIOS</p>
+                                            </a>
+                                        </button>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                       <button class="btn btn-success dim tam pt-4" type="button" id="validez_button">
+                                           <a data-toggle="modal" href="">
+                                               <img class="rounded bg-white p-2" src="{{ asset('img/logos/validez.png') }}"
+                                                   width="50px" alt="">
+                                               <p class="pt-md-3 display-6 fs-4 text-white">VALIDEZ</p>
+                                           </a>
+                                       </button>
+                                   </div>
+                                   <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                       <button class="btn btn-success dim tam pt-4" type="button" id="alarma_button">
+                                           <a data-toggle="modal" href="">
+                                               <img class="rounded bg-white p-2" src="{{ asset('img/logos/moneda.svg') }}"
+                                                   width="50px" alt="">
+                                               <p class="pt-md-3 display-6 fs-4 text-white">ALARMA</p>
+                                           </a>
+                                       </button>
+                                   </div></a>
+                                    <div class="col-lg-3 col-md-6 d-flex justify-content-center my-md-4">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    -->
+        -->
+
+    @include('configuracion_general.almacen.modal_list')
 
     @include('configuracion_general.tipo_cambio.modal_list')
 
@@ -628,1252 +646,25 @@
 
     <!--Unidad de medida-->
 
+    @include('configuracion_general.almacen.scripts')
+
     @include('configuracion_general.unidad-de-medida.scripts')
 
-    <script>
-        // MOSTRAR MODAL DE FAMILIAS
-        $('#familia_button').on('click', function() {
-            $('#modal-familia').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-familias')) {
-                datatable_familias();
-            } else {
-                $('.dataTables-familias').DataTable().ajax.reload();
-            }
-        });
+    @include('configuracion_general.familia.scripts')
 
-        //FUNCION PARA CARGAR DATATABLE DE FAMILIA
-        function datatable_familias() {
-            let permiso_estado = false;
-            let permiso_ver = false;
-            let permiso_editar = false;
-            let table = $('.dataTables-familias').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_familias') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.value = $('#search_familia').val();
-                    },
-                    dataSrc: function(json) {
-                        permiso_estado = json.permiso_estado;
-                        permiso_editar = json.permiso_editar;
-                        permiso_ver = json.permiso_ver;
-                        return json.data;
-                    }
-                },
-                "pageLength": 8,
-                "columnDefs": [{
-                        sortable: false,
-                        'targets': "_all"
-                    },
-                    {
-                        'targets': [4],
-                        'render': function(data, type, full, meta) {
-                            if (permiso_ver == true) {
-                                const url = `{{ route('familia.show', '__ID__') }}`.replace('__ID__',
-                                data);
-                                return `
-                                <a href="${url}" class="btn btn-success btn-sm">
-                                    <i class="fa fa-eye"></i>
-                                    </a>`;
-                            } else {
-                                return ``;
-                            }
-                        }
-                    },
-                    {
-                        'targets': [5],
-                        'className': 'button_estado_familia',
-                        'render': function(data, type, full, meta) {
-                            if (data == 0) {
-                                if (permiso_estado == false) {
-                                    return `
-                                        <div class="tooltip-demo">
-                                            <button class="btn btn-info btn-circle change_status_familia"
-                                            data-toggle="tooltip" data-placement="left"
-                                            title="Activo" type="button">
-                                            <i class="fa fa-check"></i>
-                                            </button>
-                                        </div>`;
-                                } else {
-                                    return `
-                                        <div class="tooltip-demo">
-                                            <button class="btn btn-info btn-circle change_status_familia"
-                                            data-toggle="tooltip" data-placement="left"
-                                            title="Click para desactivar" value="${full[4]}" type="button">
-                                            <i class="fa fa-check"></i>
-                                            </button>
-                                        </div>`;
-                                }
-                            } else {
-                                if (permiso_estado == false) {
-                                    return `
-                                        <div class="tooltip-demo">
-                                            <button class="btn btn-info btn-circle"
-                                            data-toggle="tooltip" data-placement="left"
-                                            title="Desactivado" type="button">
-                                            <i class="fa fa-check"></i>
-                                            </button>
-                                        </div>`;
-                                } else {
-                                    return `
-                                        <div class="tooltip-demo">
-                                            <button class="btn btn-danger btn-circle change_status_familia"
-                                                value="${full[4]}" type="button"
-                                                data-toggle="tooltip" data-placement="left"
-                                                title="Click para activar">
-                                                <i class="fa fa-times"></i>
-                                            </button>
-                                        </div>`;
-                                }
-                            }
-                        }
-                    }
-                ]
-            });
+    @include('configuracion_general.marca.scripts')
 
-            table.on('draw.dt', function() {
-                $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
-            });
-        }
+    @include('configuracion_general.categoria.scripts')
+    
+    @include('configuracion_general.garantia.scripts')
 
-        //BUSQUEDA DE FAMILIA
-        $('#search_familia').keyup(function() {
-            $('.dataTables-familias').DataTable().ajax.reload();
-        });
-        // CAMBIAR ESTADO DE FAMILIA CON CLIC EN BOTON
-        $(document).on('click', '.change_status_familia', function(event) {
-            let id = $(this).val();
-            $.ajax({
-                url: "{{ route('familias.change_state') }}",
-                method: "post",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    id: id
-                },
-                success: function(data) {
-                    console.log(data);
-                    toastr.success('Familia actualizada correctamente');
-                    $('.dataTables-familias').DataTable().ajax.reload();
-                },
-                error: function(data) {
-                    toastr.danger('Hubo un error al actualizar la Familia');
-                }
-            });
-        });
+    @include('configuracion_general.validez.scripts')
 
-        //  FUNCION PARA AGREGAR UNA NUEVA FAMILIA
-        $('#add_new_familia').on('click', function() {
-            let form = document.getElementById('form_familia');
-            if (!form.checkValidity()) {
-                form.reportValidity(); // Muestra los mensajes nativos del navegador
-                return; // Detiene la ejecución si hay errores
-            }
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('familias.save_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    toastr.success('Se añadió una nueva familia al registro');
-                    $('.dataTables-familias').DataTable().ajax.reload();
-                    $('#form_familia')[0].reset();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
+    @include('configuracion_general.tipo_cambio.scripts')
 
-        //  EDITAR FAMILIA CON UN CLCIK EN EL ROW DEL DATATABLE
-        @can('familia.editar')
-            $(document).on('click', '.dataTables-familias tbody tr', function() {
-                $('#form_familia')[0].reset();
-                let table = $('.dataTables-familias').DataTable();
-                let data = table.row(this).data();
-                let lastTd = $(this).find('td:last'); // Último td
-                let secondLastTd = lastTd.prev(); // Penúltimo td
+    @include('configuracion_general.motivo.scripts')
+    
 
-                if ($(event.target).is(lastTd) || $(event.target).is(secondLastTd) ||
-                    $(event.target).closest('td').is(lastTd) || $(event.target).closest('td').is(secondLastTd)) {
-                    return;
-                }
-                $('#update_familia').css('display', 'inline-block');
-                $('#add_new_familia').css('display', 'none');
-                //  PASAR DATA AL FORMULARIO
-                $('#id_familia_edit').val(data[4]);
-                $('#descripcion_familia').val(data[1]);
-                $('#ubicacion_familia').val(data[2]);
-            });
-            //  ACTUALIZAR FAMILIA
-            $('#update_familia').on('click', function(event) {
-                let table = $('.dataTables-familias').DataTable();
-                let data = table.row(this).data();
-
-                var id_familia = $('#id_familia_edit').val();
-                edit_familia(id_familia);
-            })
-        @endcan
-
-        //  FUNCION PARA EDITAR FAMILIA
-        function edit_familia(id) {
-            let form = document.getElementById('form_familia');
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('familias.edit_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    toastr.success('Se editó la Familia correctamente');
-                    $('.dataTables-familias').DataTable().ajax.reload();
-                    $('#form_familia')[0].reset();
-                    $('#update_familia').css('display', 'none');
-                    $('#add_new_familia').css('display', 'inline-block');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-        //  CANCELAR EDICION DE FAMILIA  Y RESETEAR FORMULARIO
-        $('#cancel_familia').on('click', function() {
-            $('#form_familia')[0].reset();
-            if ($('#add_new_familia').css('display') == 'inline-block') {
-                console.log('si');
-                $('#add_new_familia').css('display', 'inline-block');
-                $('#update_familia').css('display', 'none');
-            } else {
-                $('#update_familia').css('display', 'none');
-                $('#add_new_familia').css('display', 'inline-block');
-            }
-        });
-    </script>
-    <script>
-        //*  MOSTRAR MODAL DE MARCAS
-        $('#marcas_button').on('click', function() {
-            $('#modal-marcas').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-marcas')) {
-                datatable_marcas();
-            } else {
-                $('.dataTables-marcas').DataTable().ajax.reload();
-            }
-        });
-        //  FUNCION PARA CARGAR DATATABLE DE MARCAS
-        function datatable_marcas() {
-            let permiso_estado = false;
-            let permiso_editar = false;
-            let table = $('.dataTables-marcas').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_marcas') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.value = $('#search_marca').val();
-                    },
-                    dataSrc: function(json) {
-                        permiso_estado = json.permiso_estado;
-                        permiso_editar = json.permiso_editar;
-                        return json.data;
-                    }
-                },
-                "pageLength": 8,
-                "columnDefs": [{
-                    sortable: false,
-                    'targets': "_all"
-                }, {
-                    'targets': [4],
-                    'render': function(data, type, full, meta) {
-                        if (!data || data.trim() === "") {
-                            return `<center><i>Sin Imagen</i></center>`;
-                        }
-                        return `<div class="lightBoxGallery">
-                                   <a href="{{ asset('archivos/imagenes/marcas/') }}/${data}" data-gallery=""><button class="btn btn-primary btn-sm "><i class="fa fa-eye"></i></button></a></div>`;
-                    }
-                }, {
-                    'targets': [5],
-                    'className': 'button_estado_marca',
-                    'render': function(data, type, full, meta) {
-                        if (data == 0) {
-                            if (permiso_editar == false) {
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="left" title="Activo" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            } else {
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_marca" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[6]}" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            }
-                        } else {
-                            if (permiso_editar == false) {
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="left" title="Desactivado" type="button" ><i class="fa fa-times"></i></button></div>`;
-                            } else {
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_marca" value="${full[6]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
-                            }
-                        }
-                    }
-                }]
-            });
-            table.on('draw.dt', function() {
-                $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
-            });
-        }
-        //  BUSQUEDA DE MARCA
-        $('#search_marca').keyup(function() {
-            $('.dataTables-marcas').DataTable().ajax.reload();
-        });
-        // AGREGAR IMAGEN A INPUT FILE DE MARCA
-        $('.custom-file-input').on('change', function() {
-            let fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').addClass("selected").html(fileName);
-        });
-        //  FUNCION PARA AGREGAR UNA NUEVA MARCA
-        $('#add_new_marca').on('click', function() {
-            let form = document.getElementById('form_marca');
-            if (!form.checkValidity()) {
-                form.reportValidity(); // Muestra los mensajes nativos del navegador
-                return; // Detiene la ejecución si hay errores
-            }
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('marcas.save_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-marcas').DataTable().ajax.reload();
-                    $('#form_marca')[0].reset();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        @can('familias.editar')
-            //  CAMBIAR ESTADO DE MARCA CON CLIC EN BOTON
-            $(document).on('click', '.change_status_marca', function(event) {
-                let id = $(this).val();
-                $.ajax({
-                    url: "{{ route('marcas.change_state') }}",
-                    method: "post",
-                    data: {
-                        '_token': $('input[name=_token]').val(),
-                        id: id
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        $('.dataTables-marcas').DataTable().ajax.reload();
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            });
-            //  EDITAR MARCA CON UN CLCIK EN EL ROW DEL DATATABLE
-            $(document).on('click', '.dataTables-marcas tbody tr', function() {
-                $('#form_marca')[0].reset();
-                let table = $('.dataTables-marcas').DataTable();
-                let data = table.row(this).data();
-                let lastTd = $(this).find('td:last'); // Último td
-                let secondLastTd = lastTd.prev(); // Penúltimo td
-
-                if ($(event.target).is(lastTd) || $(event.target).is(secondLastTd) ||
-                    $(event.target).closest('td').is(lastTd) || $(event.target).closest('td').is(secondLastTd)) {
-                    return;
-                }
-                $('#update_marca').css('display', 'inline-block');
-                $('#add_new_marca').css('display', 'none');
-                //  PASAR DATA AL FORMULARIO
-                $('#abreviatura_marca').prop('disabled', true);
-                $('#id_marca_edit').val(data[6]);
-                $('#nombre_marca').val(data[0]);
-                $('#abreviatura_marca').val(data[1]);
-                $('#telefono_marca').val(data[2]);
-                $('#descripcion_marca').val(data[3]);
-                $('#file_marca').val(data[4]);
-                $('#empresa_marca').val(data[7]);
-                if (data[4] != null) {
-                    $('.custom-file-label').html('Cambiar Foto');
-                } else {
-                    $('.custom-file-label').html('Agregar Foto');
-                }
-            });
-            //  ACTUALIZAR MARCA
-            $('#update_marca').on('click', function(event) {
-                let table = $('.dataTables-marcas').DataTable();
-                let data = table.row(this).data();
-
-                var id_marca = $('#id_marca_edit').val();
-                edit_marca(id_marca);
-            })
-        @endcan
-        //  FUNCION PARA EDITAR MARCA
-        function edit_marca(id) {
-            let form = document.getElementById('form_marca');
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('marcas.edit_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-marcas').DataTable().ajax.reload();
-                    $('#form_marca')[0].reset();
-                    $('#abreviatura_marca').prop('disabled', false);
-                    $('#update_marca').css('display', 'none');
-                    $('#add_new_marca').css('display', 'inline-block');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-        //  CANCELAR EDICION DE MARCA Y RESETEAR FORMULARIO
-        $('#cancel_marca').on('click', function() {
-            $('#form_marca')[0].reset();
-            $('#abreviatura_marca').prop('disabled', false);
-            if ($('#add_new_marca').css('display') == 'inline-block') {
-                console.log('si');
-                $('#add_new_marca').css('display', 'inline-block');
-                $('#update_marca').css('display', 'none');
-            } else {
-                $('#update_marca').css('display', 'none');
-                $('#add_new_marca').css('display', 'inline-block');
-            }
-        });
-
-        //*  MOSTRAR MODAL DE CATEGORIAS
-        $('#categorias_button').on('click', function() {
-            $('#modal-categorias').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-categorias')) {
-                datatable_categorias();
-            } else {
-                $('.dataTables-categorias').DataTable().ajax.reload();
-            }
-        });
-        //  FUNCION PARA CARGAR DATATABLE DE CATEGORIAS
-        function datatable_categorias() {
-            let permiso_estado = false;
-            let permiso_editar = false;
-            let table = $('.dataTables-categorias').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_categorias') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.value = $('#search_categoria').val();
-                    },
-                    dataSrc: function(json) {
-                        permiso_estado = json.permiso_estado;
-                        permiso_editar = json.permiso_editar;
-                        return json.data;
-                    }
-                },
-                "pageLength": 8,
-                "columnDefs": [{
-                    sortable: false,
-                    'targets': "_all"
-                }, {
-                    'targets': [2],
-                    'className': 'button_estado_categoria',
-                    'render': function(data, type, full, meta) {
-                        if (data == 0) {
-                            if (permiso_estado == false) {
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="left" title="Activo" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            } else {
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_categoria" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[3]}" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            }
-
-                        } else {
-                            if (permiso_estado == false) {
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="left" title="Desactivado" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            } else {
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_categoria" value="${full[3]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
-                            }
-                        }
-                    }
-                }]
-            });
-            table.on('draw.dt', function() {
-                $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
-            });
-        }
-        //  BUSQUEDA DE CATEGORIA
-        $('#search_categoria').keyup(function() {
-            $('.dataTables-categorias').DataTable().ajax.reload();
-        });
-        //  FUNCION PARA AGREGAR UNA NUEVA CATEGORIA
-        $('#add_new_categoria').on('click', function() {
-            let form = document.getElementById('form_categoria');
-            if (!form.checkValidity()) {
-                form.reportValidity(); // Muestra los mensajes nativos del navegador
-                return; // Detiene la ejecución si hay errores
-            }
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('categorias.save_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-categorias').DataTable().ajax.reload();
-                    $('#form_categoria')[0].reset();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        //  CAMBIAR ESTADO DE CATEGORIA CON CLIC EN BOTON
-        $(document).on('click', '.change_status_categoria', function(event) {
-            let id = $(this).val();
-            $.ajax({
-                url: "{{ route('categorias.change_state') }}",
-                method: "post",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    id: id
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-categorias').DataTable().ajax.reload();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        //  EDITAR CATEGORIA CON UN CLCIK EN EL ROW DEL DATATABLE
-        $(document).on('click', '.dataTables-categorias tbody tr', function() {
-            $('#form_categoria')[0].reset();
-            let table = $('.dataTables-categorias').DataTable();
-            let data = table.row(this).data();
-            let lastTd = $(this).find('td:last'); // Último td
-            let secondLastTd = lastTd.prev(); // Penúltimo td
-
-            if ($(event.target).is(lastTd) ||
-                $(event.target).closest('td').is(lastTd)) {
-                return;
-            }
-            $('#update_categoria').css('display', 'inline-block');
-            $('#add_new_categoria').css('display', 'none');
-            //  PASAR DATA AL FORMULARIO
-            $('#codigo_categoria_edit').val(data[0]);
-            $('#descripcion_categoria').val(data[1]);
-            $('#id_categoria_edit').val(data[3]);
-
-        });
-        //  ACTUALIZAR CATEGORIA
-        $('#update_categoria').on('click', function(event) {
-            let table = $('.dataTables-categorias').DataTable();
-            let data = table.row(this).data();
-
-            var id_categoria = $('#codigo_categoria_edit').val();
-            edit_categoria(id_categoria);
-        })
-        //  FUNCION PARA EDITAR CATEGORIA
-        function edit_categoria(id) {
-            let form = document.getElementById('form_categoria');
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('categorias.edit_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-categorias').DataTable().ajax.reload();
-                    $('#form_categoria')[0].reset();
-                    $('#update_categoria').css('display', 'none');
-                    $('#add_new_categoria').css('display', 'inline-block');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-        //  CANCELAR EDICION DE CATEGORIA Y RESETEAR FORMULARIO
-        $('#cancel_categoria').on('click', function() {
-            $('#form_categoria')[0].reset();
-            if ($('#add_new_categoria').css('display') == 'inline-block') {
-                console.log('si');
-                $('#add_new_categoria').css('display', 'inline-block');
-                $('#update_categoria').css('display', 'none');
-            } else {
-                $('#update_categoria').css('display', 'none');
-                $('#add_new_categoria').css('display', 'inline-block');
-            }
-        });
-
-        //*  MOSTRAR MODAL DE GARANTIA
-        $('#garantia_button').on('click', function() {
-            $('#modal-garantia').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-garantia')) {
-                datatable_garantia();
-            } else {
-                $('.dataTables-garantia').DataTable().ajax.reload();
-            }
-        });
-
-        //  FUNCION PARA CARGAR DATATABLE DE GARANTIA
-        function datatable_garantia() {
-            let permiso_editar = false;
-            let permiso_estado = false;
-            let table = $('.dataTables-garantia').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_garantias') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.value = $('#search_garantia').val();
-                    },
-                    dataSrc: function(json) {
-                        permiso_editar = json.permiso_editar;
-                        permiso_estado = json.permiso_estado;
-                        return json.data;
-                    }
-                },
-                "pageLength": 8,
-                "columnDefs": [{
-                    sortable: false,
-                    'targets': "_all"
-                }, {
-                    'targets': [1],
-                    'width': "5%",
-                    'className': 'button_estado_garantia',
-                    'render': function(data, type, full, meta) {
-                        if (data == 0) {
-                            if (permiso_estado == false) {
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="left" title="Activo" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            } else {
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_garantia" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[2]}" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            }
-                        } else {
-                            if (permiso_estado == false) {
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle" data-toggle="tooltip" data-placement="left" title="Desactivado" type="button" ><i class="fa fa-times"></i></button></div>`;
-                            } else {
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_garantia" value="${full[2]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
-                            }
-                        }
-
-                    }
-                }]
-            });
-            table.on('draw.dt', function() {
-                $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
-            });
-        }
-        //  BUSQUEDA DE GARANTIA
-        $('#search_garantia').keyup(function() {
-            $('.dataTables-garantia').DataTable().ajax.reload();
-        });
-        //  FUNCION PARA AGREGAR UNA NUEVA GARANTIA
-        $('#add_new_garantia').on('click', function() {
-            let form = document.getElementById('form_garantia');
-            if (!form.checkValidity()) {
-                form.reportValidity(); // Muestra los mensajes nativos del navegador
-                return; // Detiene la ejecución si hay errores
-            }
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('garantia.save_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    toastr.success('Se añadió una nueva Garantia al registro');
-                    $('.dataTables-garantia').DataTable().ajax.reload();
-                    $('#form_garantia')[0].reset();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        //  CAMBIAR ESTADO DE GARANTIA CON CLIC EN BOTON
-        $(document).on('click', '.change_status_garantia', function(event) {
-            let id = $(this).val();
-            $.ajax({
-                url: "{{ route('garantia.change_state') }}",
-                method: "post",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    id: id
-                },
-                success: function(data) {
-                    toastr.success('Garantia actualizada correctamente');
-                    $('.dataTables-garantia').DataTable().ajax.reload();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        @can('garantia_doc.editar')
-            //  EDITAR GARANTIA CON UN CLICK EN EL ROW DEL DATATABLE
-            $(document).on('click', '.dataTables-garantia tbody tr', function() {
-                $('#form_garantia')[0].reset();
-                let table = $('.dataTables-garantia').DataTable();
-                let data = table.row(this).data();
-                let lastTd = $(this).find('td:last'); // Último td
-                let secondLastTd = lastTd.prev(); // Penúltimo td
-
-                if ($(event.target).is(lastTd) ||
-                    $(event.target).closest('td').is(lastTd)) {
-                    return;
-                }
-                $('#update_garantia').css('display', 'inline-block');
-                $('#add_new_garantia').css('display', 'none');
-                //  PASAR DATA AL FORMULARIO
-                $('#descripcion_garantia').val(data[0]);
-                $('#id_garantia_edit').val(data[2]);
-
-            });
-            //  ACTUALIZAR GARANTIA
-            $('#update_garantia').on('click', function(event) {
-                let table = $('.dataTables-garantia').DataTable();
-                let data = table.row(this).data();
-
-                var id_garantia = $('#id_garantia_edit').val();
-                edit_garantia(id_garantia);
-            })
-        @endcan
-        //  FUNCION PARA EDITAR GARANTIA
-        function edit_garantia(id) {
-            let form = document.getElementById('form_garantia');
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('garantia.edit_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    toastr.success('Se editó la Garantia correctamente');
-                    $('.dataTables-garantia').DataTable().ajax.reload();
-                    $('#form_garantia')[0].reset();
-                    $('#update_garantia').css('display', 'none');
-                    $('#add_new_garantia').css('display', 'inline-block');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-        //  CANCELAR EDICION DE GARANTIA Y RESETEAR FORMULARIO
-        $('#cancel_garantia').on('click', function() {
-            $('#form_garantia')[0].reset();
-            if ($('#add_new_garantia').css('display') == 'inline-block') {
-                $('#add_new_garantia').css('display', 'inline-block');
-                $('#update_garantia').css('display', 'none');
-            } else {
-                $('#update_garantia').css('display', 'none');
-                $('#add_new_garantia').css('display', 'inline-block');
-            }
-        });
-
-
-        //*  MOSTRAR MODAL DE VALIDEZ
-        $('#validez_button').on('click', function() {
-            $('#modal-validez').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-validez')) {
-                datatable_validez();
-            } else {
-                $('.dataTables-validez').DataTable().ajax.reload();
-            }
-        });
-        //  FUNCION PARA CARGAR DATATABLE DE VALIDEZ
-        function datatable_validez() {
-            let permiso_editar = false;
-            let permiso_estado = false;
-            let table = $('.dataTables-validez').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_validez') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.value = $('#search_validez').val();
-                    },
-                    dataSrc: function(json) {
-                        permiso_estado = json.permiso_estado;
-                        permiso_editar = json.permiso_editar;
-                        return json.data;
-                    }
-                },
-                "pageLength": 8,
-                "columnDefs": [{
-                    sortable: false,
-                    'targets': "_all"
-                }, {
-                    'targets': [1],
-                    'className': 'button_estado_validez',
-                    'render': function(data, type, full, meta) {
-                        if (data == 0) {
-                            if(permiso_estado == false){
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="left" title="Activo" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            }else{
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_validez" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[2]}" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            }
-                        }else{
-                            if(permiso_estado == false){
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle " type="button" data-toggle="tooltip" data-placement="left" title="Desactivado" ><i class="fa fa-times"></i></button></div>`;
-                            }else{
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_validez" value="${full[2]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
-
-                            }
-                        }
-                       
-                    }
-                }]
-            });
-            table.on('draw.dt', function() {
-                $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
-            });
-        }
-        //  BUSQUEDA DE VALIDEZ
-        $('#search_validez').keyup(function() {
-            $('.dataTables-validez').DataTable().ajax.reload();
-        });
-        //  FUNCION PARA AGREGAR UNA NUEVA VALIDEZ
-        $('#add_new_validez').on('click', function() {
-            let form = document.getElementById('form_validez');
-            if (!form.checkValidity()) {
-                form.reportValidity(); // Muestra los mensajes nativos del navegador
-                return; // Detiene la ejecución si hay errores
-            }
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('validez.save_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-validez').DataTable().ajax.reload();
-                    $('#form_validez')[0].reset();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        //  CAMBIAR ESTADO DE VALIDEZ CON CLIC EN BOTON
-        $(document).on('click', '.change_status_validez', function(event) {
-            let id = $(this).val();
-            $.ajax({
-                url: "{{ route('validez.change_state') }}",
-                method: "post",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    id: id
-                },
-                success: function(data) {
-                    toastr.success('Validez actualizada correctamente');
-                    $('.dataTables-validez').DataTable().ajax.reload();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        //  EDITAR VALIDEZ CON UN CLICK EN EL ROW DEL DATATABLE
-        $(document).on('click', '.dataTables-validez tbody tr', function() {
-            $('#form_validez')[0].reset();
-            let table = $('.dataTables-validez').DataTable();
-            let data = table.row(this).data();
-            let lastTd = $(this).find('td:last'); // Último td
-            let secondLastTd = lastTd.prev(); // Penúltimo td
-
-            if ($(event.target).is(lastTd) ||
-                $(event.target).closest('td').is(lastTd)) {
-                return;
-            }
-            $('#update_validez').css('display', 'inline-block');
-            $('#add_new_validez').css('display', 'none');
-            //  PASAR DATA AL FORMULARIO
-            $('#descripcion_validez').val(data[0]);
-            $('#id_validez_edit').val(data[2]);
-
-        });
-        //  ACTUALIZAR VALIDEZ
-        $('#update_validez').on('click', function(event) {
-            let table = $('.dataTables-validez').DataTable();
-            let data = table.row(this).data();
-
-            var id_validez = $('#id_validez_edit').val();
-            edit_validez(id_validez);
-        })
-        //  FUNCION PARA EDITAR VALIDEZ
-        function edit_validez(id) {
-            let form = document.getElementById('form_validez');
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('validez.edit_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-validez').DataTable().ajax.reload();
-                    $('#form_validez')[0].reset();
-                    $('#update_validez').css('display', 'none');
-                    $('#add_new_validez').css('display', 'inline-block');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-        //  CANCELAR EDICION DE VALIDEZ Y RESETEAR FORMULARIO
-        $('#cancel_validez').on('click', function() {
-            $('#form_validez')[0].reset();
-            if ($('#add_new_validez').css('display') == 'inline-block') {
-                console.log('si');
-                $('#add_new_validez').css('display', 'inline-block');
-                $('#update_validez').css('display', 'none');
-            } else {
-                $('#update_validez').css('display', 'none');
-                $('#add_new_validez').css('display', 'inline-block');
-            }
-        });
-        </script>
-
-        @include('configuracion_general.tipo_cambio.scripts')
-
-        <script>
-        // MOSTRAR MODAL DE MOTIVOS
-        $('#motivos_button').on('click', function() {
-            $('#modal-motivos').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-motivos')) {
-                datatable_motivos();
-            } else {
-                $('.dataTables-motivos').DataTable().ajax.reload();
-            }
-        });
-        //  FUNCION PARA CARGAR DATATABLE DE MOTIVOS
-        function datatable_motivos() {
-            let permiso_estado = false;
-            let permiso_editar = false;
-            let table = $('.dataTables-motivos').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_motivos') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.value = $('#search_motivos').val();
-                    },
-                    dataSrc: function(json) {
-                        permiso_estado = json.permiso_estado;
-                        permiso_editar = json.permiso_editar;
-                        return json.data;
-                    }
-                },
-                "pageLength": 8,
-                "columnDefs": [{
-                    sortable: false,
-                    'targets': "_all"
-                }, {
-                    'targets': [2],
-                    'className': 'button_estado_motivos',
-                    'render': function(data, type, full, meta) {
-                        if (data == 0) {
-                            if(permiso_estado == false){
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle" data-toggle="tooltip" data-placement="left" title="Activo" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            }else{
-                                return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_motivos" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[3]}" type="button" ><i class="fa fa-check"></i></button></div>`;
-                            }
-                        }else{
-                            if(permiso_estado == false){
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle "  type="button" data-toggle="tooltip" data-placement="left" title="Desactivo" ><i class="fa fa-times"></i></button></div>`;
-
-                            }else{
-                                return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_motivos" value="${full[3]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
-                            }
-                        }
-                    }
-                }]
-            });
-            table.on('draw.dt', function() {
-                $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
-            });
-        }
-        //  BUSQUEDA DE MOTIVOS
-        $('#search_motivos').keyup(function() {
-            $('.dataTables-motivos').DataTable().ajax.reload();
-        });
-        //  FUNCION PARA AGREGAR UN NUEVO MOTIVO
-        $('#add_new_motivos').on('click', function() {
-            let form = document.getElementById('form_motivos');
-            if (!form.checkValidity()) {
-                form.reportValidity(); // Muestra los mensajes nativos del navegador
-                return; // Detiene la ejecución si hay errores
-            }
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('motivos.save_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-motivos').DataTable().ajax.reload();
-                    $('#form_motivos')[0].reset();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        //  CAMBIAR ESTADO DE MOTIVOS CON CLIC EN BOTON
-        $(document).on('click', '.change_status_motivos', function(event) {
-            let id = $(this).val();
-            $.ajax({
-                url: "{{ route('motivos.change_state') }}",
-                method: "post",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    id: id
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-motivos').DataTable().ajax.reload();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-
-        @can('motivos.editar')
-            //  EDITAR MARCA CON UN CLCIK EN EL ROW DEL DATATABLE
-            $(document).on('click', '.dataTables-motivos tbody tr', function() {
-                $('#form_motivos')[0].reset();
-                let table = $('.dataTables-motivos').DataTable();
-                let data = table.row(this).data();
-                let lastTd = $(this).find('td:last'); // Último td
-                let secondLastTd = lastTd.prev(); // Penúltimo td
-
-                if ($(event.target).is(lastTd) ||
-                    $(event.target).closest('td').is(lastTd)) {
-                    return;
-                }
-                $('#update_motivos').css('display', 'inline-block');
-                $('#add_new_motivos').css('display', 'none');
-                //  PASAR DATA AL FORMULARIO
-                $('#id_motivos_edit').val(data[3]);
-                $('#nombre_motivos_edit').val(data[0]);
-                $('#select_motivos').val(data[1]);
-            });
-            //  ACTUALIZAR MOTIVOS
-            $('#update_motivos').on('click', function(event) {
-                let table = $('.dataTables-motivos').DataTable();
-                let data = table.row(this).data();
-
-                var id_motivo = $('#id_motivos_edit').val();
-                edit_motivos(id_motivo);
-            })
-        @endcan
-        //  FUNCION PARA EDITAR MOTIVOS
-        function edit_motivos(id) {
-            let form = document.getElementById('form_motivos');
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('motivos.edit_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-motivos').DataTable().ajax.reload();
-                    $('#form_motivos')[0].reset();
-                    $('#update_motivos').css('display', 'none');
-                    $('#add_new_motivos').css('display', 'inline-block');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-
-        //  CANCELAR EDICION DE MOTIVOS Y RESETEAR FORMULARIO
-        $('#cancel_motivos').on('click', function() {
-            $('#form_motivos')[0].reset();
-            if ($('#add_new_motivos').css('display') == 'inline-block') {
-                console.log('si');
-                $('#add_new_motivos').css('display', 'inline-block');
-                $('#update_motivos').css('display', 'none');
-            } else {
-                $('#update_motivos').css('display', 'none');
-                $('#add_new_motivos').css('display', 'inline-block');
-            }
-        });
-
-
-        // MOSTRAR MODAL DE ALARMA
-        $('#alarma_button').on('click', function() {
-            $('#modal-alarma').modal('show');
-            if (!$.fn.DataTable.isDataTable('.dataTables-alarma')) {
-                datatable_alarma();
-            } else {
-                $('.dataTables-alarma').DataTable().ajax.reload();
-            }
-        });
-        //  FUNCION PARA CARGAR DATATABLE DE ALARMA
-        function datatable_alarma() {
-            let table = $('.dataTables-alarma').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('api.get_alarma') }}",
-                    method: "get",
-                    data: function(d) {
-                        d.value = $('#search_alarma').val();
-                    },
-                    dataSrc: function(json) {
-                        return json.data;
-                    }
-                },
-                "pageLength": 8,
-                "columnDefs": [{
-                    sortable: false,
-                    'targets': "_all"
-                }, {
-                    'targets': [1],
-                    'className': 'button_estado_alarma',
-                    'render': function(data, type, full, meta) {
-                        if (data == 0) {
-                            return `<div class="tooltip-demo"><button class="btn btn-info btn-circle change_status_alarma" data-toggle="tooltip" data-placement="left" title="Click para desactivar" value="${full[3]}" type="button" ><i class="fa fa-check"></i></button></div>`;
-                        }
-                        return `<div class="tooltip-demo"><button class="btn btn-danger btn-circle change_status_alarma" value="${full[3]}" type="button" data-toggle="tooltip" data-placement="left" title="Click para activar" ><i class="fa fa-times"></i></button></div>`;
-                    }
-                }]
-            });
-            table.on('draw.dt', function() {
-                $('[data-toggle="tooltip"]').tooltip(); // Activa tooltips de Bootstrap
-            });
-        }
-        //  BUSQUEDA DE ALARMA
-        $('#search_alarma').keyup(function() {
-            $('.dataTables-alarma').DataTable().ajax.reload();
-        });
-        //  FUNCION PARA AGREGAR UNA NUEVA ALARMA
-        $('#add_new_alarma').on('click', function() {
-            let form = document.getElementById('form_alarma');
-            if (!form.checkValidity()) {
-                form.reportValidity(); // Muestra los mensajes nativos del navegador
-                return; // Detiene la ejecución si hay errores
-            }
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('alarma.save_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-alarma').DataTable().ajax.reload();
-                    $('#form_alarma')[0].reset();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        //  CAMBIAR ESTADO DE ALARMA CON CLIC EN BOTON
-        $(document).on('click', '.change_status_alarma', function(event) {
-            let id = $(this).val();
-            $.ajax({
-                url: "{{ route('alarma.change_state') }}",
-                method: "post",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    id: id
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-alarma').DataTable().ajax.reload();
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        });
-        //  EDITAR ALARMA CON UN CLICK EN EL ROW DEL DATATABLE
-        $(document).on('click', '.dataTables-alarma tbody tr', function() {
-            $('#form_alarma')[0].reset();
-            let table = $('.dataTables-alarma').DataTable();
-            let data = table.row(this).data();
-            let lastTd = $(this).find('td:last'); // Último td
-            let secondLastTd = lastTd.prev(); // Penúltimo td
-
-            if ($(event.target).is(lastTd) ||
-                $(event.target).closest('td').is(lastTd)) {
-                return;
-            }
-            $('#update_alarma').css('display', 'inline-block');
-            $('#add_new_alarma').css('display', 'none');
-            //  PASAR DATA AL FORMULARIO
-            $('#descripcion_alarma').val(data[0]);
-            $('#tipo').val(data[1]);
-            $('#alarma').val(data[2]);
-            $('#alarma').val(data[2]);
-            $('#id_alarma_edit').val(data[5]);
-
-        });
-        //  ACTUALIZAR ALARMA
-        $('#update_alarma').on('click', function(event) {
-            let table = $('.dataTables-alarma').DataTable();
-            let data = table.row(this).data();
-
-            var id_alarma = $('#id_alarma_edit').val();
-            edit_alarma(id_alarma);
-        })
-        //  FUNCION PARA EDITAR ALARMA
-        function edit_alarma(id) {
-            let form = document.getElementById('form_alarma');
-            let formData = new FormData(form);
-            $.ajax({
-                url: "{{ route('alarma.edit_ajax') }}",
-                method: "post",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    console.log(data);
-                    $('.dataTables-alarma').DataTable().ajax.reload();
-                    $('#form_alarma')[0].reset();
-                    $('#update_alarma').css('display', 'none');
-                    $('#add_new_alarma').css('display', 'inline-block');
-                },
-                error: function(data) {
-                    console.log(data);
-                }
-            });
-        }
-        //  CANCELAR EDICION DE ALARMA Y RESETEAR FORMULARIO
-        $('#cancel_alarma').on('click', function() {
-            $('#form_alarma')[0].reset();
-            if ($('#add_new_alarma').css('display') == 'inline-block') {
-                console.log('si');
-                $('#add_new_alarma').css('display', 'inline-block');
-                $('#update_alarma').css('display', 'none');
-            } else {
-                $('#update_alarma').css('display', 'none');
-                $('#add_new_alarma').css('display', 'inline-block');
-            }
-        });
-    </script>
 
     <script>
         $(document).ready(function() {

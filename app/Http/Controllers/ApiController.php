@@ -21,6 +21,7 @@ use App\Unidad_medida;
 use App\Validez;
 use App\Alarma;
 use App\AlarmasRecordatorios;
+use App\Almacen;
 use App\Boleta;
 use App\Boleta_m;
 use App\ComprobantesPagos;
@@ -168,6 +169,59 @@ class ApiController extends Controller
             ->toJson();
     }
     //* CONFIGURACION GENERAL
+    public function getAlmacen(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+
+        $sortColumns = [
+            0 => 'id',
+            1 => 'nombre',
+            2 => 'abreviatura',
+            3 => 'abreviatura',
+            4 => 'direccion',
+            5 => 'id',
+        ];
+
+        $query = Almacen::orderBy('created_at', 'asc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $almacenes = $query->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        foreach ($almacenes as $almacen) {
+            $json['data'][] = [
+                $almacen->id,
+                $almacen->nombre,
+                $almacen->abreviatura,
+                $almacen->direccion,
+                $almacen->personal->full_name,
+                $almacen->id
+            ];
+        }
+        return response()->json($json);
+    }
+
     public function getFamilias(Request $request)
     {
 
