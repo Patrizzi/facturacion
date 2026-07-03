@@ -98,6 +98,8 @@ Route::group(
 
         Route::post('/whatsapp', 'AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
         Route::resource('/almacen', 'AlmacenController');
+        Route::post('/almacen_sunat/{id}', 'AlmacenController@cod_sunat')->name('almacen.cod_sunat');
+        Route::post('/almacen/estado','AlmacenController@change_state')->name('almacen.change_state');
         Route::resource('/apariencia', 'ConfigController');
         Route::post("/cotizacion_manual/guardar-nota/{id}", "CotizacionManualController@guardarNotaInformativa")->name("cotizacion_manual.guardar_nota");
         Route::resource('/cotizacion_manual', 'CotizacionManualController');

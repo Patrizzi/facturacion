@@ -18,67 +18,67 @@ class Codigo_guia_almacen extends Model
   public static function new_series($request)
   {
     // facturas
-    if ($request->serie_factura == null || $request->serie_factura == "") {
+    if ($request->sunat_factura_create == null || $request->sunat_factura_create == "") {
       $last_fact = Codigo_guia_almacen::max('serie_factura');
       $new_fact = $last_fact + 1;
     } else {
-      $new_fact = $request->serie_factura;
+      $new_fact = $request->sunat_factura_create;
     }
     // boletas
-    if ($request->serie_boleta == null || $request->serie_boleta == "") {
+    if ($request->sunat_boleta_create == null || $request->sunat_boleta_create == "") {
       $last_bol = Codigo_guia_almacen::max('serie_boleta');
       $new_bol = $last_bol + 1;
     } else {
-      $new_bol = $request->serie_boleta;
+      $new_bol = $request->sunat_boleta_create;
     }
     // remision
-    if ($request->serie_remision == null || $request->serie_remision == "") {
+    if ($request->sunat_remision_create == null || $request->sunat_remision_create == "") {
       $last_remi = Codigo_guia_almacen::max('serie_remision');
       $new_remi = $last_remi + 1;
     } else {
-      $new_remi = $request->serie_remision;
+      $new_remi = $request->sunat_remision_create;
     }
     // facturas_manual
-    if ($request->serie_factura_m == null || $request->serie_factura_m == "") {
+    if ($request->sunat_factura_m_create == null || $request->sunat_factura_m_create == "") {
       $last_fact_m = Codigo_guia_almacen::max('serie_factura_m');
       $new_fact_m = $last_fact_m + 1;
     } else {
-      $new_fact_m = $request->serie_factura_m;
+      $new_fact_m = $request->sunat_factura_m_create;
     }
     // boletas_manual
-    if ($request->serie_boleta_m == null || $request->serie_boleta_m == "") {
+    if ($request->sunat_boleta_m_create == null || $request->sunat_boleta_m_create == "") {
       $last_bol_m = Codigo_guia_almacen::max('serie_boleta_m');
       $new_bol_m = $last_bol_m + 1;
     } else {
-      $new_bol_m = $request->serie_boleta_m;
+      $new_bol_m = $request->sunat_boleta_m_create;
     }
     // remision_manual
-    if ($request->serie_remision_m == null || $request->serie_remision_m == "") {
+    if ($request->sunat_remision_m_create == null || $request->sunat_remision_m_create == "") {
       $last_remi_m = Codigo_guia_almacen::max('serie_remision_m');
       $new_remi_m = $last_remi_m + 1;
     } else {
-      $new_remi_m = $request->serie_remision_m;
+      $new_remi_m = $request->sunat_remision_m_create;
     }
     // credito factura
-    if ($request->serie_credito == null || $request->serie_credito == "") {
+    if ($request->sunat_credit_fact_create == null || $request->sunat_credit_fact_create == "") {
       $last_credito = Codigo_guia_almacen::max('serie_nota_credito');
       $new_cred_fact = $last_credito + 1;
     } else {
-      $new_cred_fact = $request->serie_credito;
+      $new_cred_fact = $request->sunat_credit_fact_create;
     }
     // credito boleta
-    if ($request->serie_credito_b == null || $request->serie_credito_b == "") {
+    if ($request->sunat_credit_bol_create == null || $request->sunat_credit_bol_create == "") {
       $last_credito_b = Codigo_guia_almacen::max('serie_nota_credito_b');
       $new_cred_bol = $last_credito_b + 1;
     } else {
-      $new_cred_bol = $request->serie_credito_b;
+      $new_cred_bol = $request->sunat_credit_bol_create;
     }
     // debito
-    if ($request->serie_debito == null || $request->serie_debito == "") {
+    if ($request->sunat_debito_create == null || $request->sunat_debito_create == "") {
       $last_debito = Codigo_guia_almacen::max('serie_nota_debito');
       $new_debito = $last_debito + 1;
     } else {
-      $new_debito = $request->serie_debito;
+      $new_debito = $request->sunat_debito_create;
     }
 
     // return
@@ -171,54 +171,82 @@ class Codigo_guia_almacen extends Model
   public static function search_last_fact($id_almacen)
   {
     $factura = Facturacion::where('almacen_id', $id_almacen)->latest()->first();
+    if (!$factura) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $factura_num_string_porcion = explode("-", $factura->codigo_fac);
     $last_fact = [
-       "serie" => mb_substr($factura_num_string_porcion[0], 1),
-       "correlativo" => $factura_num_string_porcion[1]
+      "serie" => $factura_num_string_porcion[0],
+      "correlativo" => $factura_num_string_porcion[1]
     ];
     return  $last_fact;
   }
   public static function search_last_bol($id_almacen)
   {
     $boleta = Boleta::where('almacen_id', $id_almacen)->latest()->first();
+    if (!$boleta) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $boleta_num_string_porcion = explode("-", $boleta->codigo_boleta);
     $last_bol = [
-       "serie" => mb_substr($boleta_num_string_porcion[0], 1),
-       "correlativo" => $boleta_num_string_porcion[1]
+      "serie" => $boleta_num_string_porcion[0],
+      "correlativo" => $boleta_num_string_porcion[1]
     ];
     return  $last_bol;
   }
   public static function search_last_remision($id_almacen)
   {
     $remision = Guia_remision::where('almacen_id', $id_almacen)->latest()->first();
+    if (!$remision) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $remision_num_string_porcion = explode("-", $remision->cod_guia);
     $last_remision = [
-       "serie" => mb_substr($remision_num_string_porcion[0], 1),
-       "correlativo" => $remision_num_string_porcion[1]
+      "serie" => $remision_num_string_porcion[0],
+      "correlativo" => $remision_num_string_porcion[1]
     ];
     return  $last_remision;
   }
 
   public static function search_last_factura_m($id_almacen)
   {
-   
     $factura_m = Facturacion_m::where('almacen_id', $id_almacen)->latest()->first();
+    if (!$factura_m) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $factura_m_num_string_porcion = explode("-", $factura_m->codigo_fac);
-
     $last_factura_m = [
-       "serie" => mb_substr($factura_m_num_string_porcion[0], 2),
-       "correlativo" => $factura_m_num_string_porcion[1]
+      "serie" => $factura_m_num_string_porcion[0],
+      "correlativo" => $factura_m_num_string_porcion[1]
     ];
     return  $last_factura_m;
   }
-  
+
   public static function search_last_boleta_m($id_almacen)
   {
     $boleta_m = Boleta_m::where('almacen_id', $id_almacen)->latest()->first();
+    if (!$boleta_m) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $boleta_m_num_string_porcion = explode("-", $boleta_m->codigo_boleta);
     $last_boleta_m = [
-       "serie" => mb_substr($boleta_m_num_string_porcion[0], 2),
-       "correlativo" => $boleta_m_num_string_porcion[1]
+      "serie" => $boleta_m_num_string_porcion[0],
+      "correlativo" => $boleta_m_num_string_porcion[1]
     ];
     return  $last_boleta_m;
   }
@@ -226,10 +254,16 @@ class Codigo_guia_almacen extends Model
   public static function search_last_remision_m($id_almacen)
   {
     $remision_m = GuiaRemisionManual::where('almacen_id', $id_almacen)->latest()->first();
+    if (!$remision_m) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $remision_m_num_string_porcion = explode("-", $remision_m->cod_guia);
     $last_remision_m = [
-       "serie" => mb_substr($remision_m_num_string_porcion[0], 2),
-       "correlativo" => $remision_m_num_string_porcion[1]
+      "serie" => $remision_m_num_string_porcion[0],
+      "correlativo" => $remision_m_num_string_porcion[1]
     ];
     return  $last_remision_m;
   }
@@ -238,13 +272,19 @@ class Codigo_guia_almacen extends Model
   {
     $credito_fact = Nota_Credito::where('almacen_id', $id_almacen)
       ->where(function ($query) {
-          $query->whereNotNull('facturacion_id')
-                ->orWhereNotNull('facturacion_m_id');
+        $query->whereNotNull('facturacion_id')
+          ->orWhereNotNull('facturacion_m_id');
       })->latest()->first();
+    if (!$credito_fact) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $credito_fact_num_string_porcion = explode("-", $credito_fact->codigo_n_c);
     $last_credito_f = [
-       "serie" => mb_substr($credito_fact_num_string_porcion[0], 2),
-       "correlativo" => $credito_fact_num_string_porcion[1]
+      "serie" => $credito_fact_num_string_porcion[0],
+      "correlativo" => $credito_fact_num_string_porcion[1]
     ];
     return  $last_credito_f;
   }
@@ -252,25 +292,36 @@ class Codigo_guia_almacen extends Model
   {
     $credito_bol = Nota_Credito::where('almacen_id', $id_almacen)
       ->where(function ($query) {
-          $query->whereNotNull('boleta_id')
-                ->orWhereNotNull('boleta_m_id');
+        $query->whereNotNull('boleta_id')
+          ->orWhereNotNull('boleta_m_id');
       })->latest()->first();
+    if (!$credito_bol) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $credito_bol_num_string_porcion = explode("-", $credito_bol->codigo_n_c);
     $last_credito_b = [
-       "serie" => mb_substr($credito_bol_num_string_porcion[0], 2),
-       "correlativo" => $credito_bol_num_string_porcion[1]
+      "serie" => $credito_bol_num_string_porcion[0],
+      "correlativo" => $credito_bol_num_string_porcion[1]
     ];
     return  $last_credito_b;
   }
   public static function search_last_debito($id_almacen)
   {
     $debito = Nota_Debito::where('almacen_id', $id_almacen)->latest()->first();
+    if (!$debito) {
+      return [
+        'serie' => null,
+        'correlativo' => null,
+      ];
+    }
     $debito_num_string_porcion = explode("-", $debito->codigo_n_d);
     $last_debito = [
-       "serie" => mb_substr($debito_num_string_porcion[0], 2),
-       "correlativo" => $debito_num_string_porcion[1]
+      "serie" => $debito_num_string_porcion[0],
+      "correlativo" => $debito_num_string_porcion[1]
     ];
     return  $last_debito;
   }
-
 }

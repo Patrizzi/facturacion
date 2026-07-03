@@ -216,7 +216,9 @@ class ApiController extends Controller
                 $almacen->abreviatura,
                 $almacen->direccion,
                 $almacen->personal->full_name,
-                $almacen->id
+                $almacen->id,
+                $almacen->estado,
+                $almacen
             ];
         }
         return response()->json($json);
