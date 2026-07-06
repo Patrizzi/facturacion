@@ -221,6 +221,9 @@ class ApiController extends Controller
                 $almacen
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('almacen.estado');
+        $json['permiso_editar'] = auth()->user()->can('almacen.editar');
+        $json['permiso_ver'] = auth()->user()->can('almacen.ver');
         return response()->json($json);
     }
 

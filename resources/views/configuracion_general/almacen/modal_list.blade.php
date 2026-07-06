@@ -15,7 +15,7 @@
                 <div id="almacen_list">
                     <div class="row">
                         <div class="col-sm-5">
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label class="col-form-label"><strong>Fecha:</strong></label>
                                 <div class="input-group">
                                     <input class="form-control" type="text" name="daterange_almacen"
@@ -26,17 +26,19 @@
                                         </button>
                                     </span>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col-sm-5">
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label class="col-form-label"><strong>Buscar:</strong></label>
                                 <input class="form-control" type="text" name=""
                                     id="serach_almacen" value="" />
-                            </div>
+                            </div> --}}
                         </div>
-                        <div class="col-sm-1 text-right">
-                            <button class="btn btn-primary" id="almacen_create"><i class="fa fa-plus"></i></button>
+                        <div class="col-sm-2 text-right">
+                            @can('almacen.crear')
+                                <button class="btn btn-primary" id="almacen_create"><i class="fa fa-plus"></i></button>
+                            @endcan
                         </div>
                     </div>
                     <br>
@@ -64,6 +66,9 @@
                 </div>
                 <div id="almacen_create_div" style="display: none">
                     @include('configuracion_general.almacen.create')
+                </div>
+                <div id="almacen_show_div" style="display: none">
+                    @include('configuracion_general.almacen.show')
                 </div>
             </div>
         </div>
@@ -93,5 +98,8 @@
     }
     span.select2-container.select2-container--default.select2-container--open{
         z-index: 999999 !important;
+    }
+    .buttons_acciones{
+        /* display: flex; */
     }
 </style>

@@ -5,7 +5,7 @@
                 <center>
                     <h2>Crear Almacen</h2>
                     <img src="{{ asset('img/icons/almacen.svg') }}" width="100px" style="margin-right: 10px;">
-                    <h3 id="titulo_almacen">Almacen N°</h3>
+                    <h3 id="titulo_almacen">Almacen Nuevo</h3>
                 </center>
             </div>
             <button type="button" class="btn btn-block btn-default" id="cancel_button_create">Cancelar</button>

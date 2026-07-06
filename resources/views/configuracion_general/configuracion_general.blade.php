@@ -81,7 +81,7 @@
                 </div>
             @endcan
 
-            @can('almacen.listar')
+            {{-- @can('almacen.listar')
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card h-100 card-hover shadow-sm">
                         <a href=" {{ route('almacen.index') }} ">
@@ -97,7 +97,7 @@
                         </a>
                     </div>
                 </div>
-            @endcan
+            @endcan --}}
 
             @can('apariencia.ver')
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
