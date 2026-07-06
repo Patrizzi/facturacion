@@ -37,6 +37,7 @@
                     'targets': [3],
                     'render': function(data, type, full, meta) {
                         if (data == 0) {
+                            // ACTIVO
                             if (permiso_estado == false) {
                                 return `
                                         <div class="tooltip-demo">
@@ -60,7 +61,7 @@
                             if (permiso_estado == false) {
                                 return `
                                         <div class="tooltip-demo">
-                                            <button class="btn btn-info btn-circle"
+                                            <button class="btn btn-danger btn-circle"
                                             data-toggle="tooltip" data-placement="left"
                                             title="Desactivado" type="button">
                                             <i class="fa fa-check"></i>
