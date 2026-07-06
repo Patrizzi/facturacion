@@ -27,6 +27,7 @@ use Illuminate\Support\Carbon;
 use App\Observers\TipoCambioObserver;
 use App\Observers\StockProductosObserver;
 use App\Observers\KardexEntradaRegistroObserver;
+use App\Services\MenuService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -55,10 +56,19 @@ class AppServiceProvider extends ServiceProvider
         // kardex_entrada_registro::observe(KardexEntradaRegistroObserver::class);
         // TipoCambio::observe(new TipoCambioObserver());
         View::composer('layout', function ($view) {
-            $view->with('tipo_cambio', TipoCambio::where('fecha', Carbon::now()->format('Y-m-d'))->first());
-            $view->with('empresa', Empresa::first());
-            $view->with('inventario_inicial', Kardex_entrada::first());
-            $view->with('almacen', Almacen::all());
+            $tipoCambio = TipoCambio::where('fecha', Carbon::now()->format('Y-m-d'))->first();
+            $empresa = Empresa::first();
+            $inventarioInicial = Kardex_entrada::first();
+            $almacen = Almacen::all();
+
+            // 👇 NUEVO: generar menú
+            $menuService = app(MenuService::class);
+            $menus = $menuService->generate(auth()->user(), $inventarioInicial);
+
+            $view->with('tipo_cambio', $tipoCambio);
+            $view->with('empresa', $empresa);
+            $view->with('inventario_inicial', $inventarioInicial);
+            $view->with('almacen', $almacen);
             $view->with('conteo_almacen', Almacen::count());
             $view->with('almacen_primero', Almacen::first());
             $view->with('fact_view_count', Facturacion::where('f_electronica', 0)->count());
@@ -70,6 +80,8 @@ class AppServiceProvider extends ServiceProvider
             $view->with('n_credito_view_count', Nota_Credito::where('n_electronica', 0)->count());
             $view->with('n_debito_view_count', Nota_Debito::where('n_electronica', 0)->count());
             $view->with('count_eventos', EventosUsers::get_user_events());
+
+            $view->with('menus', $menus);
         });
         // return auth()->user()->id;
         Schema::defaultStringLength(191);

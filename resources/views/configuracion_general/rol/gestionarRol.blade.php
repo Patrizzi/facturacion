@@ -3,7 +3,7 @@
 {{-- @section('href_accion', route('usuario.lista'))
 @section('value_accion', 'actualizar') --}}
 @section('button2', 'Atras')
-@section('config',route('usuarios.index'))
+@section('config',route('usuario.index'))
 @section('content')
 <div class="wrapper wrapper-content animated fadeInRight">
     @if($errors->any())

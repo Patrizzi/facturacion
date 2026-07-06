@@ -31,7 +31,9 @@
                                         </div>
                                         <div class="col-sm-6 mail-tools  tooltip-demo m-t-md" align="right" style="margin-top: 0px">
                                             <button class="btn btn-primary " onclick=" location.reload();"><i class="fa fa-refresh"></i> Recargar</button>
-                                            <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar Permanentemente" ><i class="fa fa-trash-o"></i></button>
+                                            @can('email.suprimir')
+                                                <button class="btn btn-danger " id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Eliminar Permanentemente" ><i class="fa fa-trash-o"></i></button>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>
@@ -42,11 +44,11 @@
                                             <table class="table table-hover table-mail dataTables-example" style="width: 100%;margin-bottom: 0px;font-size: 90%;padding-right: 0px">
                                                 <thead style="display: none">
                                                     <tr>
-                                                        <td>a</td>
+                                                        {{-- <td>a</td>
                                                         <td>cb</td>
                                                         <td>c</td>
                                                         <td>d</td>
-                                                        <td>r</td>
+                                                        <td>r</td> --}}
                                                     </tr>
                                                 </thead>
                                                 <tbody>

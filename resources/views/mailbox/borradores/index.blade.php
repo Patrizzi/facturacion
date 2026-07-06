@@ -47,11 +47,15 @@
                                     <div class="mail-tools tooltip-demo m-t-md" align="right">
                                         <div class="row">
                                             <div class="col-sm-6 mail-tools tooltip-demo m-t-md" align="left" style="align-self: self-end">
-                                                <input type="checkbox" class="check_all" data-toggle="tooltip" data-placement="top" title="Seleccionar todo"  onclick="select_all_mail()">
+                                                @can('email.enviar')
+                                                    <input type="checkbox" class="check_all" data-toggle="tooltip" data-placement="top" title="Seleccionar todo"  onclick="select_all_mail()">
+                                                @endcan
                                             </div>
                                             <div class="col-sm-6 mail-tools  tooltip-demo m-t-md" align="right" style="margin-top: 0px">
                                                 <button class="btn btn-primary" onclick=" location.reload();" ><i class="fa fa-refresh"></i> Recargar</button>
-                                                <button class="btn btn-danger" id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
+                                                @can('email.eliminar')
+                                                    <button class="btn btn-danger" id="click_eliminar" data-toggle="tooltip" data-placement="top" title="Mover a la papelera" ><i class="fa fa-trash-o"></i></button>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>

@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', 'Pagos de Facturas Manuales')
+@section('title', 'Pagos de Boletas Manuales')
 @section('content')
     @if ($errors->any())
         <div style="padding-top: 20px;">
@@ -26,8 +26,10 @@
                                 style="align-items: center;border-bottom: 0px !important;">
                                 @include('cobranzas.boletas_manuales._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
-                                            class="fa fa-money"></i></button>
+                                    @can('boleta_m.pagar')
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
+                                                class="fa fa-money"></i></button>
+                                    @endcan
                                 </ul>
                             </ul>
                             <div class="tab-content" style="margin-top: -1px">
@@ -39,7 +41,7 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter" value="" readonly="readonly" />
+                                                        id="data_range_filter" value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -48,20 +50,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <div class="input-group" style="flex-wrap: nowrap;">
-                                                    <select class="select2_demo_client" name="cliente" id="cliente"
+                                                <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_estado" name="" id="select_estado">
+                                                    <select class="select_2_estado" name="select_estado" id="select_estado">
                                                         <option value="">Seleccionar Estado de Pago</option>
                                                         <option value="0">Sin Pagar</option>
                                                         <option value="1">Pagado Parcial</option>
@@ -70,7 +64,7 @@
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_tipo_pago" name="" id="select_tipo_pago">
+                                                    <select class="select_2_tipo_pago" name="select_tipo_pago" id="select_tipo_pago">
                                                         <option value="">Seleccionar Forma de Pago</option>
                                                         <option value="1">Contado</option>
                                                         <option value="2">Credito</option>
@@ -98,7 +92,8 @@
                                                     <th>N° Cuotas</th>
                                                     <th>Saldo</th>
                                                     <th>Fecha V.</th>
-                                                    <th>Acciones</th>
+                                                    <th>Obs.</th>
+                                                    <th>@canany(['boleta_m.ver','boleta_m.pagar']) Acciones @endcan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -263,6 +258,8 @@
             width: "100%"
         });
         // FUNCION DE DATATABLE FACTURA M
+        var permiso_pagar = false;
+        var permiso_ver = false;
         var fact_m_table = $('.dataTables-example-facturas_manual').DataTable({
             "serverSide": true,
             "ajax": {
@@ -273,6 +270,11 @@
                     d.cliente_id = $("#cliente option:selected").val();
                     d.estado_pago = $('#select_estado').val();
                     d.tipo = $('#select_estado').val();
+                },
+                dataSrc: function(json){
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
+                    return json.data
                 }
             },
             "drawCallback": function(settings) {
@@ -349,26 +351,41 @@
                     }
                 },
                 {
-                    // 'width': '55%',
                     'targets': [9],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                    //  console.log(full[10]['nota_credito']);
+                        var base_otros = '';
+                        if (full[11] == "2") {
+                            base_otros += `<span class="label label-success">NC</span> `;
+                        }
+                        return base_otros;
+                    }
+                },
+                {
+                    // 'width': '55%',
+                    'targets': [10],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_boletas_m', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
-                        var view =
-                            `<a class="btn btn-primary btn-ls"
-                        href=" ` + url_view + `"><i class="fa fa-eye"></i></a>
-                            <div class="btn-group">
-                            <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" onclick="pago_boleta(` + full[9] + `)">Pagar</a></li>
-                                <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
-                            </ul>
-                        </div>`;
-
-                        // var view +=  ``;
-
-                        return view;
+                        var buttons = ``;
+                        if(permiso_ver){
+                            buttons += `<a class="btn btn-primary btn-ls"
+                            href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
+                        }
+                        buttons += `<span style="margin:0px 5px"></span>`;
+                        if(permiso_pagar){
+                            buttons +=
+                                `<div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="pago_boleta(` + full[9] + `)">Pagar</a></li>
+                                    <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
+                                </ul>
+                            </div>`;
+                        }
+                        return buttons;
                     }
                 },
                 // {

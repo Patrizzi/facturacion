@@ -103,12 +103,14 @@
                         </div>
 
                         @if ($facturacion->estado == 0)
-                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
-                                <i class="fa fa-times"></i>
-                            </button>
+                            @can('facturacion_m.editar')
+                                <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endcan
                         @endif
                     </div>
                     <div  id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 15px;">

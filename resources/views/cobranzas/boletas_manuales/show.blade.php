@@ -27,8 +27,10 @@
                             @default
                         @endswitch
                         <div class="ibox-tools">
-                            <button class="btn btn-primary btn-sm" type="button" id="pago_lote" disabled><i
+                            @can('boleta_m.pagar')
+                                <button class="btn btn-primary btn-sm" type="button" id="pago_lote" disabled><i
                                     class="fa fa-money"></i></button>
+                            @endcan
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-down"></i>
                             </a>
@@ -74,6 +76,9 @@
                                                     @endif
                                                 </div>
                                                 <div class="text-right">
+                                                    @if($boleta->nota_credito != 0)
+                                                        <small class="text-muted"><s> {{ $boleta->moneda->simbolo }} {{ number_format($boleta->total_precio__sin_forma, 2) }}</s></small>
+                                                    @endif
                                                     {{ $boleta->total_precio }}
                                                 </div>
                                             </div>
@@ -81,6 +86,27 @@
                                     @else
                                         <h3>Lista de Cuotas</h3>
                                         <div>
+                                             @php
+                                                $cuotasCollection = $boleta->cuotas_credito->values();
+
+                                                $total_esperado = round($boleta->total_precio_desc_sin_forma, 2);
+
+                                                $montos = [];
+                                                $suma = 0;
+
+                                                foreach ($cuotasCollection as $i => $cuota) {
+                                                    $monto = round($cuota->nuevo_monto, 2);
+                                                    $montos[$i] = $monto;
+                                                    $suma += $monto;
+                                                }
+
+                                                $diferencia = round($total_esperado - $suma, 2);
+
+                                                if ($diferencia != 0 && count($montos) > 0) {
+                                                    $lastIndex = array_key_last($montos);
+                                                    $montos[$lastIndex] += $diferencia;
+                                                }
+                                            @endphp
                                             @foreach ($boleta->cuotas_credito as $i => $cuotas)
                                                 <div style="margin-top: 10px;margin-bottom: 10px">
                                                     <div style="cursor: pointer;" class="form-control box-detalle"
@@ -116,8 +142,11 @@
                                                                 @endif
                                                             </div>
                                                             <div class="text-right">
+                                                                @if($boleta->nota_credito != 0)
+                                                                    <small class="text-muted"><s> {{ $boleta->moneda->simbolo }} {{ number_format($cuotas->monto, 2) }}</s></small>
+                                                                @endif
                                                                 {{ $boleta->moneda->simbolo }}
-                                                                {{ number_format($cuotas->monto, 2) }}
+                                                                <span>{{ number_format(round($montos[$i],2), 2) }} </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -159,14 +188,21 @@
                                                 <div class="form-group">
                                                     <label for=""><strong>Monto Total</strong></label>
                                                     <p class="form-control" id="total_contado_{{ $boleta->id }}"
-                                                        style="margin-bottom: 0px">{{ $boleta->total_precio }}</p>
+                                                        style="margin-bottom: 0px">
+                                                        @if($boleta->nota_credito != 0)
+                                                            <small class="text-muted"><s> {{ $boleta->moneda->simbolo }} {{ number_format($boleta->total_precio__sin_forma, 2) }}</s></small>
+                                                        @endif
+                                                        {{ $boleta->total_precio }}</p>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label for=""><strong>Fecha de Vencimiento</strong></label>
                                                     <p class="form-control" id="contado_vencimiento_{{ $boleta->id }}"
-                                                        style="margin-bottom: 0px">{{ $boleta->fecha_vencimiento }}</p>
+                                                        style="margin-bottom: 0px">
+                                                        
+                                                        {{ $boleta->fecha_vencimiento }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -249,7 +285,11 @@
                                                     <div class="form-group">
                                                         <label for=""><strong>Monto Total</strong></label>
                                                         <p class="form-control" id="total_cuota_{{ $cuota->id }}"
-                                                            style="margin-bottom: 0px">{{ $cuota->monto_total_format }}
+                                                            style="margin-bottom: 0px">
+                                                            {{ $cuota->monto_total_format }}
+                                                            @if($boleta->nota_credito != 0)
+                                                                <small class="text-muted"><s> {{ $boleta->moneda->simbolo }} {{ number_format($cuota->monto, 2) }}</s></small>
+                                                            @endif
                                                         </p>
                                                     </div>
                                                 </div>

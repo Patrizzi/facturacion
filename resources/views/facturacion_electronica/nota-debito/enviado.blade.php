@@ -10,19 +10,19 @@
                 @include('facturacion_electronica.nota-debito.stadistics')
             </div>
         </div>
-    </div>
-    {{-- Base para agregar el tab para el los contenidos --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
+
+        {{-- Base para agregar el tab para el los contenidos --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                            <ul class="nav nav-tabs" role="tablist"
+                                style="align-items: center;border-bottom: 0px !important;">
                                 @include('facturacion_electronica.nota-debito.shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                     <div class="btn-group">
-                                        <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                             <i class="fa fa-download"></i></button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="#">XML</a></li>
@@ -37,32 +37,22 @@
                         </div>
 
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-7" class="tab-pane active show">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_guia">
-
-                                        </div>
-                                    </div>
-                                    <hr />
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-7" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <br>
+                                <br>
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="dateranger_debito"
-                                                    id="dateranger_debito"
+                                                    id="dateranger_debito" readonly
                                                     value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select()">
                                                         <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select()">
-                                                        <i class="fa fa-eraser"></i>
                                                     </button>
                                                 </span>
                                             </div>
@@ -80,9 +70,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <br>
+                                <br>
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped dataTables-example3">
+                                    <table class="table table-striped table-bordered dataTables-example3">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-debito_env_all" name="input[]">
@@ -94,9 +86,9 @@
                                                 <th>Cliente</th>
                                                 <th>Fecha Emisión</th>
                                                 <th>Fecha Envío</th>
+                                                <th>@can('nota_debito.xml') XML @endcan</th>
+                                                <th>@can('nota_debito.cdr') CDR @endcan</th>
                                                 <th>Estado</th>
-                                                <th>XML</th>
-                                                <th>CDR</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -125,6 +117,22 @@
         /* CSV, Excel, PDF, Print */
         div.dt-buttons {
             display: none;
+        }
+         .td_status {
+            text-align: center;
+        }
+        .dataTables-example3{
+            width: 100% !important;
+        }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px !important;
+            padding-left: 15px !important;
         }
     </style>
 
@@ -157,6 +165,8 @@
             });
 
             // {{-- Datatable Facturas Enviadas  --}}
+            var permiso_xml = false;
+            var permiso_cdr = false;
             var table_debito_env = $('.dataTables-example3').DataTable({
                 "serverSide": true,
                 "ajax": {
@@ -169,6 +179,8 @@
                         d.value = $('#inputBuscar').val();
                     },
                     dataSrc: function(json) {
+                        permiso_xml = json.permiso_xml;
+                        permiso_cdr = json.permiso_cdr;
                         return json.data;
                     }
                 },
@@ -210,7 +222,11 @@
                         'render': function(data, type, full, meta) {
                             var url =
                                 `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-09-${full[2]}.xml`;
-                            return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                            var button = ``;
+                            if(permiso_xml){
+                                button +=  `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
                         }
                     },
                     {
@@ -219,7 +235,11 @@
                         'render': function(data, type, full, meta) {
                             var url =
                                 `R-{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-09-${full[2]}.zip`;
-                            return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            var button = ``;
+                            if(permiso_cdr){
+                                button +=  `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
                         }
                     }
 

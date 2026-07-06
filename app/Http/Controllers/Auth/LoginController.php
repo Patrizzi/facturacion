@@ -10,6 +10,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
+use App\TipoCambio;
+use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
 
 
@@ -83,13 +85,11 @@ class LoginController extends Controller
         }
 
         $request->session()->regenerate();
+        $consulta = TipoCambio::where('fecha', Carbon::now()->format('Y-m-d'))->first();
+        if(!$consulta){
+            return redirect()->route('inicio')->with('error', 'Tipo de cambio no registrado')->with('check_tipo_cambio', true);
+        }
         return redirect('/');
-
-        // return response()->json([
-        //     'AccessToken' => $token,
-        //     'TokenType' => 'Bearer',
-        //     'user' => $user
-        // ], 200);
     }
 
     public function regenerateSession(Request $request, $email, $password){

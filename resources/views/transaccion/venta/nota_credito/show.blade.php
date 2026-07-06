@@ -15,16 +15,21 @@
                         style="cursor:pointer;">
                         <i class="fa fa-arrow-left text-muted"></i>
                     </a>
-
-                    <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="dropdownTipoNotaCredito">
-                        <li style="padding: 3px 12px;"><b>Seleccionar tipo:</b></li>
-                        <li>
-                            <a class="btn btn-w-m btn-link" href="{{ route('nota-credito.create') }}">Factura</a>
-                        </li>
-                        <li>
-                            <a class="btn btn-w-m btn-link" href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
-                        </li>
-                    </ul>
+                    @canany(['nota_credito.crear_factura', 'nota_credito.crear_factura_m','nota_credito.crear_boleta','nota_credito.crear_boleta_m'])
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="dropdownTipoNotaCredito">
+                            <li style="padding: 3px 12px;"><b>Seleccionar tipo:</b></li>
+                            @can('nota_credito.crear_factura', 'nota_credito.crear_factura_m')
+                                <li>
+                                    <a class="btn btn-w-m btn-link" href="{{ route('nota-credito.create') }}">Factura</a>
+                                </li>
+                            @endcan
+                            @can('nota_credito.crear_boleta','nota_credito.crear_boleta_m')
+                                <li>
+                                    <a class="btn btn-w-m btn-link" href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
+                                </li>
+                            @endcan
+                        </ul>
+                    @endcan
                 </span>
                 <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
                     <a class="collapse-link">

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Almacen;
 use App\Personal;
 use App\Codigo_guia_almacen;
@@ -29,11 +30,11 @@ class AlmacenController extends Controller
      */
     public function index()
     {
-        $almacenes=Almacen::all();
-        $conteo_almacen=Almacen::where('estado',0)->count();
-        $personal=Personal::where('estado',1)->get();
+        $almacenes = Almacen::all();
+        $conteo_almacen = Almacen::where('estado', 0)->count();
+        $personal = Personal::where('estado', 1)->get();
         $cod_guia_almacen = Codigo_guia_almacen::all();
-        return view('configuracion_general.almacen.index',compact('almacenes','personal','conteo_almacen','cod_guia_almacen'));
+        return view('configuracion_general.almacen.index', compact('almacenes', 'personal', 'conteo_almacen', 'cod_guia_almacen'));
     }
 
     /**
@@ -41,10 +42,7 @@ class AlmacenController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -56,24 +54,58 @@ class AlmacenController extends Controller
     {
 
         // return $request;
-        $this->validate($request,[
-            'nombre' => ['required'],
-            'abreviatura' => ['required','unique:almacen'],
-            'responsable' => ['required'],
-            'direccion' => ['required'],
-            'descripcion' => ['required'],
-            'ubigeo' => ['required', 'max:6', 'min:6'],
+        $this->validate($request, [
+            'almacen_nombre_create' => ['required', 'unique:almacen,nombre'],
+            'almacen_abreviatura_create' => ['required', 'unique:almacen,abreviatura'],
+            'almacen_responsable_create' => ['required'],
+            'almacen_direccion_create' => ['required'],
+            'almacen_descripcion_create' => ['required'],
+            'almacen_sunat_create' => ['required', 'unique:cod_guia_almacen,cod_sunat,' . ',almacen_id'],
+            'sunat_factura_create' => ['unique:cod_guia_almacen,serie_factura,' . ',almacen_id'],
+            'sunat_boleta_create' => ['unique:cod_guia_almacen,serie_boleta,' . ',almacen_id'],
+            'sunat_remision_create' => ['unique:cod_guia_almacen,serie_remision,' . ',almacen_id'],
+            'sunat_factura_m_create' => ['unique:cod_guia_almacen,serie_factura_m,' . ',almacen_id'],
+            'sunat_boleta_m_create' => ['unique:cod_guia_almacen,serie_boleta_m,' . ',almacen_id'],
+            'sunat_remision_m_create' => ['unique:cod_guia_almacen,serie_remision_m,' . ',almacen_id'],
+            'sunat_credit_fact_create' => ['unique:cod_guia_almacen,serie_nota_credito,' . ',almacen_id'],
+            'sunat_credit_bol_create' => ['unique:cod_guia_almacen,serie_nota_credito_b,' . ',almacen_id'],
+            'sunat_debito_create' => ['unique:cod_guia_almacen,serie_nota_debito,' . ',almacen_id'],
+        ], [
+            'almacen_nombre_create.required' => 'Debe ingresar el nombre del almacén.',
+            'almacen_nombre_create.unique' => 'Ya existe un almacén con ese nombre.',
+
+            'almacen_abreviatura_create.required' => 'Debe ingresar la abreviatura.',
+            'almacen_abreviatura_create.unique' => 'La abreviatura ya se encuentra registrada.',
+
+            'almacen_responsable_create.required' => 'Debe seleccionar un responsable.',
+            'almacen_direccion_create.required' => 'Debe ingresar la dirección.',
+            'almacen_descripcion_create.required' => 'Debe ingresar la descripción.',
+
+            'almacen_sunat_create.required' => 'Debe seleccionar un código SUNAT.',
+            'almacen_sunat_create.unique' => 'El código SUNAT ya está asignado a otro almacén.',
+
+            'sunat_factura_create.unique' => 'La serie de factura ya está registrada.',
+            'sunat_boleta_create.unique' => 'La serie de boleta ya está registrada.',
+            'sunat_remision_create.unique' => 'La serie de guía de remisión ya está registrada.',
+
+            'sunat_factura_m_create.unique' => 'La serie de factura manual ya está registrada.',
+            'sunat_boleta_m_create.unique' => 'La serie de boleta manual ya está registrada.',
+            'sunat_remision_m_create.unique' => 'La serie de guía de remisión manual ya está registrada.',
+
+            'sunat_credit_fact_create.unique' => 'La serie de nota de crédito (factura) ya está registrada.',
+            'sunat_credit_bol_create.unique' => 'La serie de nota de crédito (boleta) ya está registrada.',
+            'sunat_debito_create.unique' => 'La serie de nota de débito ya está registrada.',
         ]);
 
-        $almacen=new Almacen;
-        $almacen->nombre=$request->get('nombre');
-        $almacen->abreviatura=$request->get('abreviatura');
-        $almacen->responsable=$request->get('responsable');
-        $almacen->direccion=$request->get('direccion');
-        $almacen->cod_postal=$request->get('ubigeo');
-        $almacen->descripcion=$request->get('descripcion');
-        $almacen->estado='0';
-        $almacen->principal='0';
+        $almacen = new Almacen;
+        $almacen->nombre = $request->get('almacen_nombre_create');
+        $almacen->abreviatura = $request->get('almacen_abreviatura_create');
+        $almacen->responsable = $request->get('almacen_responsable_create');
+        $almacen->direccion = $request->get('almacen_direccion_create');
+        $almacen->cod_postal = $request->get('almacen_ubigeo_create');
+        $almacen->descripcion = $request->get('almacen_descripcion_create');
+        $almacen->estado = '0';
+        $almacen->principal = '0';
         $almacen->save();
 
         $new_series = Codigo_guia_almacen::new_series($request);
@@ -103,13 +135,13 @@ class AlmacenController extends Controller
         $cod_guia_almacen->save();
         // return $new_series;
         //INSERCION EN LA NUEVA TABLA PARA CODIGOS
-      
-        $productos= Producto::get();
-        foreach($productos as $producto){
-            $stock_almacen=new Stock_almacen;
-            $stock_almacen->producto_id=$producto->id;
-            $stock_almacen->almacen_id=$almacen->id;
-            $stock_almacen->stock=0;
+
+        $productos = Producto::get();
+        foreach ($productos as $producto) {
+            $stock_almacen = new Stock_almacen;
+            $stock_almacen->producto_id = $producto->id;
+            $stock_almacen->almacen_id = $almacen->id;
+            $stock_almacen->stock = 0;
             $stock_almacen->save();
         }
         return redirect()->route('almacen.index');
@@ -121,10 +153,7 @@ class AlmacenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-
-    }
+    public function show($id) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -132,10 +161,7 @@ class AlmacenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-
-    }
+    public function edit($id) {}
     /**
      * Update the specified resource in storage.
      *
@@ -145,90 +171,133 @@ class AlmacenController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
-            'nombre' => ['required','unique:almacen,nombre,'.$id],
-            'abreviatura' => ['required','unique:almacen,abreviatura,'.$id],
-            'responsable' => ['required'],
-            'direccion' => ['required'],
-            'descripcion' => ['required'],
-            'cod_sunat' => ['required','unique:cod_guia_almacen,cod_sunat,'.$id.',almacen_id'],
+        $this->validate($request, [
+            'almacen_nombre_create' => ['required', 'unique:almacen,nombre,' . $id],
+            'almacen_abreviatura_create' => ['required', 'unique:almacen,abreviatura,' . $id],
+            'almacen_responsable_create' => ['required'],
+            'almacen_direccion_create' => ['required'],
+            'almacen_descripcion_create' => ['required'],
+            'almacen_sunat_create' => ['required', 'unique:cod_guia_almacen,cod_sunat,' . $id . ',almacen_id'],
+            'sunat_factura_create' => ['unique:cod_guia_almacen,serie_factura,' . $id . ',almacen_id'],
+            'sunat_boleta_create' => ['unique:cod_guia_almacen,serie_boleta,' . $id . ',almacen_id'],
+            'sunat_remision_create' => ['unique:cod_guia_almacen,serie_remision,' . $id . ',almacen_id'],
+            'sunat_factura_m_create' => ['unique:cod_guia_almacen,serie_factura_m,' . $id . ',almacen_id'],
+            'sunat_boleta_m_create' => ['unique:cod_guia_almacen,serie_boleta_m,' . $id . ',almacen_id'],
+            'sunat_remision_m_create' => ['unique:cod_guia_almacen,serie_remision_m,' . $id . ',almacen_id'],
+            'sunat_credit_fact_create' => ['unique:cod_guia_almacen,serie_nota_credito,' . $id . ',almacen_id'],
+            'sunat_credit_bol_create' => ['unique:cod_guia_almacen,serie_nota_credito_b,' . $id . ',almacen_id'],
+            'sunat_debito_create' => ['unique:cod_guia_almacen,serie_nota_debito,' . $id . ',almacen_id'],
+        ], [
+            'almacen_nombre_create.required' => 'Debe ingresar el nombre del almacén.',
+            'almacen_nombre_create.unique' => 'Ya existe un almacén con ese nombre.',
+
+            'almacen_abreviatura_create.required' => 'Debe ingresar la abreviatura.',
+            'almacen_abreviatura_create.unique' => 'La abreviatura ya se encuentra registrada.',
+
+            'almacen_responsable_create.required' => 'Debe seleccionar un responsable.',
+            'almacen_direccion_create.required' => 'Debe ingresar la dirección.',
+            'almacen_descripcion_create.required' => 'Debe ingresar la descripción.',
+
+            'almacen_sunat_create.required' => 'Debe seleccionar un código SUNAT.',
+            'almacen_sunat_create.unique' => 'El código SUNAT ya está asignado a otro almacén.',
+
+            'sunat_factura_create.unique' => 'La serie de factura ya está registrada.',
+            'sunat_boleta_create.unique' => 'La serie de boleta ya está registrada.',
+            'sunat_remision_create.unique' => 'La serie de guía de remisión ya está registrada.',
+
+            'sunat_factura_m_create.unique' => 'La serie de factura manual ya está registrada.',
+            'sunat_boleta_m_create.unique' => 'La serie de boleta manual ya está registrada.',
+            'sunat_remision_m_create.unique' => 'La serie de guía de remisión manual ya está registrada.',
+
+            'sunat_credit_fact_create.unique' => 'La serie de nota de crédito (factura) ya está registrada.',
+            'sunat_credit_bol_create.unique' => 'La serie de nota de crédito (boleta) ya está registrada.',
+            'sunat_debito_create.unique' => 'La serie de nota de débito ya está registrada.',
         ]);
 
-        $estado=$request->get('estado');
-        if($estado=='on'){
-            $estado_numero='0';
-        }
-        else{
-            $estado_numero='1';
-        }
 
-        // OBTENCION DE CAMPOS
-        $nr_fac=$request->get('cod_fac');
-        $nr_bol=$request->get('cod_bol');
-        $nr_guia=$request->get('cod_guia');
-        $nr_nota_c=$request->get('cod_credito');
-        $nr_nota_c_b=$request->get('cod_credito_b');
-        $nr_nota_d=$request->get('cod_debito');
-        $nr_factura_m=$request->get('cod_factura_m');
-        $nr_boletaa_m=$request->get('cod_boleta_m');
-        $nr_remision_m=$request->get('cod_remision_m');
-        // $almacen=Almacen::where('id', $id)->first();
-        $almacen=Almacen::find($id);
-        $almacen->nombre=$request->get('nombre');
-        $almacen->abreviatura=$request->get('abreviatura');
-        $almacen->responsable=$request->get('responsable');
-        $almacen->direccion=$request->get('direccion');
-
-        $almacen->descripcion=$request->get('descripcion');
-        $almacen->estado=$estado_numero;
+        $almacen = Almacen::find($id);
+        $almacen->nombre = $request->get('almacen_nombre_create');
+        $almacen->abreviatura = $request->get('almacen_abreviatura_create');
+        $almacen->responsable = $request->get('almacen_responsable_create');
+        $almacen->direccion = $request->get('almacen_direccion_create');
+        $almacen->cod_postal = $request->get('almacen_ubigeo_create');
+        $almacen->descripcion = $request->get('almacen_descripcion_create');
         $almacen->save();
-        //INSERCION EL LA TABLA DE CODGIGO
-        $cod_guia_almacen = Codigo_guia_almacen::where('almacen_id',$id)->first();
-        $cod_guia_almacen->cod_sunat=$request->get('cod_sunat');
-        if(is_numeric($cod_guia_almacen->cod_factura) and is_numeric($nr_fac)){
-            $cod_guia_almacen->serie_factura=$request->get('serie_factura');
-            $cod_guia_almacen->cod_factura=$request->get('cod_fac');
-        }
-        if(is_numeric($cod_guia_almacen->cod_boleta) and is_numeric($nr_bol)){
-            $cod_guia_almacen->serie_boleta=$request->get('serie_boleta');
-            $cod_guia_almacen->cod_boleta=$request->get('cod_bol');
-        }
-        if(is_numeric($cod_guia_almacen->cod_remision) and is_numeric($nr_guia)){
-            $cod_guia_almacen->serie_remision=$request->get('serie_remision');
-            $cod_guia_almacen->cod_remision=$request->get('cod_guia');
-        }
-        if(is_numeric($cod_guia_almacen->cod_nota_credito) and is_numeric($nr_nota_c)){
-            $cod_guia_almacen->serie_nota_credito=$request->get('serie_credito');
-            $cod_guia_almacen->cod_nota_credito=$request->get('cod_credito');
-        }
-        if(is_numeric($cod_guia_almacen->cod_nota_credito_b) and is_numeric($nr_nota_c_b)){
-            $cod_guia_almacen->serie_nota_credito_b=$request->get('serie_credito_b');
-            $cod_guia_almacen->cod_nota_credito_b=$request->get('cod_credito_b');
-        }
-        if(is_numeric($cod_guia_almacen->cod_nota_debito) and is_numeric($nr_nota_d)){
-            $cod_guia_almacen->serie_nota_debito=$request->get('serie_debito');
-            $cod_guia_almacen->cod_nota_debito=$request->get('cod_debito');
-        }
-        if(is_numeric($cod_guia_almacen->cod_factura_m) and is_numeric($nr_factura_m)){
-            $cod_guia_almacen->serie_factura_m=$request->get('serie_factura_m');
-            $cod_guia_almacen->cod_factura_m=$request->get('cod_factura_m');
-        }
-        if(is_numeric($cod_guia_almacen->cod_boleta_m) and is_numeric($nr_boletaa_m)){
-            $cod_guia_almacen->serie_boleta_m=$request->get('serie_boleta_m');
-            $cod_guia_almacen->cod_boleta_m=$request->get('cod_boleta_m');
-        }
-        if(is_numeric($cod_guia_almacen->cod_boleta_m) and is_numeric($nr_boletaa_m)){
-            $cod_guia_almacen->serie_boleta_m=$request->get('serie_boleta_m');
-            $cod_guia_almacen->cod_boleta_m=$request->get('cod_boleta_m');
-        }
-        if(is_numeric($cod_guia_almacen->cod_remision_m) and is_numeric($nr_boletaa_m)){
-            $cod_guia_almacen->serie_remision_m=$request->get('serie_remision_m');
-            $cod_guia_almacen->cod_remision_m=$request->get('cod_remision_m');
-        }
-        $cod_guia_almacen->save();
-        return redirect()->route('almacen.index');
 
-  }
+        //INSERCION EL LA TABLA DE CODGIGO
+        $cod_sunat_alm = Codigo_guia_almacen::where('almacen_id', $id)->first();
+        $cod_sunat_alm->cod_sunat = $request->get('almacen_sunat_create');
+
+        if ($request->has('sunat_factura_create')) {
+            $cod_sunat_alm->serie_factura = $request->sunat_factura_create;
+        }
+        if ($request->has('correlativo_factura_create')) {
+            $cod_sunat_alm->cod_factura = $request->correlativo_factura_create;
+        }
+
+        if ($request->has('sunat_boleta_create')) {
+            $cod_sunat_alm->serie_boleta = $request->sunat_boleta_create;
+        }
+        if ($request->has('correlativo_boleta_create')) {
+            $cod_sunat_alm->cod_boleta = $request->correlativo_boleta_create;
+        }
+
+        if ($request->has('sunat_remision_create')) {
+            $cod_sunat_alm->serie_remision = $request->sunat_remision_create;
+        }
+        if ($request->has('correlativo_remision_create')) {
+            $cod_sunat_alm->cod_remision = $request->correlativo_remision_create;
+        }
+
+        if ($request->has('sunat_factura_m_create')) {
+            $cod_sunat_alm->serie_factura_m = $request->sunat_factura_m_create;
+        }
+        if ($request->has('correlativo_factura_m_create')) {
+            $cod_sunat_alm->cod_factura_m = $request->correlativo_factura_m_create;
+        }
+
+        if ($request->has('sunat_boleta_m_create')) {
+            $cod_sunat_alm->serie_boleta_m = $request->sunat_boleta_m_create;
+        }
+        if ($request->has('correlativo_boleta_m_create')) {
+            $cod_sunat_alm->cod_boleta_m = $request->correlativo_boleta_m_create;
+        }
+
+        if ($request->has('sunat_remision_m_create')) {
+            $cod_sunat_alm->serie_remision_m = $request->sunat_remision_m_create;
+        }
+        if ($request->has('correlativo_remision_m_create')) {
+            $cod_sunat_alm->cod_remision_m = $request->correlativo_remision_m_create;
+        }
+
+        if ($request->has('sunat_credit_fact_create')) {
+            $cod_sunat_alm->serie_nota_credito = $request->sunat_credit_fact_create;
+        }
+        if ($request->has('correlativo_credit_fact_create')) {
+            $cod_sunat_alm->cod_nota_credito = $request->correlativo_credit_fact_create;
+        }
+
+        if ($request->has('sunat_credit_bol_create')) {
+            $cod_sunat_alm->serie_nota_credito_b = $request->sunat_credit_bol_create;
+        }
+        if ($request->has('correlativo_credit_bol_create')) {
+            $cod_sunat_alm->cod_nota_credito_b = $request->correlativo_credit_bol_create;
+        }
+
+        if ($request->has('sunat_debito_create')) {
+            $cod_sunat_alm->serie_nota_debito = $request->sunat_debito_create;
+        }
+        if ($request->has('correlativo_debito_create')) {
+            $cod_sunat_alm->cod_nota_debito = $request->correlativo_debito_create;
+        }
+
+        $cod_sunat_alm->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Guardado correctamente'
+        ], 200);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -236,9 +305,37 @@ class AlmacenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $id) {}
+    
+    public function change_state(Request $request)
     {
 
+        $categoria = Almacen::find($request->get('id'));
+        if ($categoria->estado == 0) {
+            $categoria->estado = 1;
+        } else {
+            $categoria->estado = 0;
+        }
+        $categoria->save();
 
+        return response()->json(['success' => true, 'message' => 'Estado de la categoria actualizado correctamente']);
+    }
+
+    public function cod_sunat($id)
+    {
+        $almacen = Almacen::with('cod_sunat')->find($id);
+        return response()->json([
+            'config' => $almacen->cod_sunat,
+            'last_factura' => Codigo_guia_almacen::search_last_fact($id),
+            'last_boleta' => Codigo_guia_almacen::search_last_bol($id),
+            'last_remision' => Codigo_guia_almacen::search_last_remision($id),
+            'last_factura_m' => Codigo_guia_almacen::search_last_factura_m($id),
+            'last_boleta_m' => Codigo_guia_almacen::search_last_boleta_m($id),
+            'last_remision_m' => Codigo_guia_almacen::search_last_remision_m($id),
+            'last_credito_f' => Codigo_guia_almacen::search_last_credito_f($id),
+            'last_credito_b' => Codigo_guia_almacen::search_last_credito_b($id),
+            'last_debito' => Codigo_guia_almacen::search_last_debito($id)
+            // ...
+        ]);
     }
 }

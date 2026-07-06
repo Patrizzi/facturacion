@@ -36,7 +36,7 @@ class Producto extends Model
         'subfamilia_id',
         'marca_id',
         'unidad_medida_id',
-        'estado_id'
+        'estado_id',
     ];
 
     protected $appeds = [
@@ -44,7 +44,8 @@ class Producto extends Model
         'unidad_medida',
         'stock',
         'precio_nacional',
-        'precio_extranjero'
+        'precio_extranjero',
+        'fecha_creacion'
     ];
 
     // Relaciones con otras tablas (manteniendo los nombres originales)
@@ -277,5 +278,25 @@ class Producto extends Model
     public function stockAlmacenProducto($almacen_id){
         $stock_almacen = Stock_almacen::where('producto_id', $this->id)->where('almacen_id', $almacen_id)->first();
         return $stock_almacen;
+    }
+    
+    public static function generarCodigo($marcaId)
+    {
+        $marca = Marca::findOrFail($marcaId);
+        $abreviatura = $marca->abreviatura;
+        $ultimoProducto = self::where('codigo_producto', 'like', $abreviatura . '-%')
+            ->orderByDesc('id')
+            ->first();
+
+
+        if ($ultimoProducto) {
+            $ultimoCorrelativo = explode('-', $ultimoProducto->codigo_producto)[1];
+            $nuevoNumero = ((int) $ultimoCorrelativo) + 1;
+        } else {
+            $nuevoNumero = 1;
+        }
+        $correlativo = str_pad($nuevoNumero, 6, '0', STR_PAD_LEFT);
+
+        return $abreviatura . '-' . $correlativo;
     }
 }

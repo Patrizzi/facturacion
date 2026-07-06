@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -32,57 +32,62 @@
                             <div class="tabs-scroll-top-comprobantes"></div>
                             <div class="tabs-scroll-bottom">
                                 <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
-                                    @include('transaccion.comprobantes._shared.tabs')
-                                    {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        {{-- ALMACEN --}}
-                                        {{-- <a class="btn btn-success" href="{{ route('facturacion_manual.create') }}"><i
-                                                class="fa fa-plus"></i></a> --}}
-                                        <span class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                                <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
-                                                {{-- <button class="btn btn-w-m btn-link"
-                                                    type="submit"></button> --}}
-                                                <a class="btn btn-w-m btn-link"
-                                                    href="{{ route('nota-credito.create') }}">Factura</a>
-                                                <a class="btn btn-w-m btn-link"
-                                                    href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
-                                            </ul>
-                                        </span>
-                                         <div class="btn-group">
-                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-download"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <button type="button" id="btn-imprimir" class="dropdown-item">
-                                                    <i class="fa fa-print"></i> Imprimir
+                                    <div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
+                                        @include('transaccion.comprobantes._shared.tabs')
+                                        {{-- Almacen --}}
+                                        <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                            {{-- ALMACEN --}}
+                                            @canany(['nota_credito.crear_factura', 'nota_credito.crear_factura_m','nota_credito.crear_boleta','nota_credito.crear_boleta_m'])
+                                                <span class="dropdown">
+                                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                                        id="dropdownMenuButton" data-toggle="dropdown">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                                        <span style="margin-left:12px;"><b>Seleccionar tipo:</b></span>
+                                                        {{-- <button class="btn btn-w-m btn-link"
+                                                            type="submit"></button> --}}
+                                                        @canany(['nota_credito.crear_factura', 'nota_credito.crear_factura_m'])
+                                                            <a class="btn btn-w-m btn-link"
+                                                            href="{{ route('nota-credito.create') }}">Factura</a>
+                                                        @endcan
+                                                        @canany(['nota_credito.crear_boleta','nota_credito.crear_boleta_m'])
+                                                            <a class="btn btn-w-m btn-link"
+                                                            href="{{ route('nota-credito.create_boleta') }}">Boleta</a>
+                                                        @endcan
+                                                    </ul>
+                                                </span>
+                                            @endcan
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-download"></i>
                                                 </button>
-                                                <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-file-excel-o"></i> Excel
-                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <button type="button" id="btn-imprimir" class="dropdown-item">
+                                                        <i class="fa fa-print"></i> Imprimir
+                                                    </button>
+                                                    <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-file-excel-o"></i> Excel
+                                                    </button>
 
-                                                <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-file-pdf-o"></i> PDF
-                                                </button>
+                                                    <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-file-pdf-o"></i> PDF
+                                                    </button>
 
-                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-envelope"></i> Correo
-                                                </button>
+                                                    <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-envelope"></i> Correo
+                                                    </button>
 
-                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-whatsapp"></i> Whatsapp
-                                                </button>
+                                                    <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-whatsapp"></i> Whatsapp
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </ul>
-
+                                        </ul>
+                                    </div>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <div role="tabpanel" id="tab-5" class="tab-pane active show"  style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
@@ -138,8 +143,8 @@
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma de Pago</th>
                                                     {{-- <th>Importe T.</th> --}}
-                                                    <th>Ver</th>
-                                                    <th>Eliminar</th>
+                                                    <th>@can('nota_credito.ver') Ver @endcan</th>
+                                                    <th>@can('nota_credito.anular') Anular @endcan</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                     <th>Compartir R.</th>
                                                 </tr>
@@ -199,6 +204,8 @@
                 $bottom.animate({ scrollLeft: target }, 600);
             }
         });
+        let permiso_ver = false;
+        let permiso_anular = false;
         var coti_table = $('.dataTables-example-nota-credito').DataTable({
             "pageLength": 15,
             "serverSide": true,
@@ -209,6 +216,11 @@
                     d.daterange = $('#data_range_filter').val();
                     d.tipo_comprobante = $('#select_tipo_coti').val();
                     d.value = $('#search_all_column').val();
+                },
+                dataSrc: function(json) {
+                    permiso_ver = json.permiso_ver;
+                    permiso_anular = json.permiso_anular;
+                    return json.data;
                 }
             },
             "columnDefs": [{
@@ -243,28 +255,36 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('nota-credito.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </a> `;
+                        }
+                        return button_show;
                     }
                 },
                 {
-                    /// /* ELIMINAR
+                    /// /* ANULAR
                     'width': '0.5vmax',
                     'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('nota-credito.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        if (full[9] == 1) {
-                            return ` <button class="btn btn-secondary disabled" type="button"  data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar" ><i class="fa fa-trash"></i>
-                                                </button>`;
-                        } else {
-                            return `<button value="` + full[2] + `"  onclick="anular_nota(this.value, '` +
-                                full[0] + `','` + full[3] +
-                                `' )" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" ><i class="fa fa-trash"></i></button> `;
+                        if(permiso_anular){
+                            if (full[9] == 1) {
+                                return ` <button class="btn btn-secondary disabled" type="button"  data-toggle="tooltip" data-placement="bottom" title="Solo se puede Anular los pendientes a Enviar" ><i class="fa fa-trash"></i>
+                                                    </button>`;
+                            } else {
+                                return `<button value="` + full[2] + `"  onclick="anular_nota(this.value, '` +
+                                    full[0] + `','` + full[3] +
+                                    `' )" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" ><i class="fa fa-trash"></i></button> `;
+                            }
+                        }else{
+                            return ``;
                         }
                     }
                 },

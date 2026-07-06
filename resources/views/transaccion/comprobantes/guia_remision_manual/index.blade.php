@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -58,44 +58,48 @@
                             <div class="tabs-scroll-bottom">
                                 <ul class="nav nav-tabs" role="tablist"
                                     style="align-items: center;border-bottom: 0px !important;">
-                                    @include('transaccion.comprobantes._shared.tabs')
-                                    {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex"
-                                        style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        {{-- ALMACEN --}}
-                                        <a class="btn btn-primary" href="{{ route('guia_remision_manual.create') }}"><i
-                                                class="fa fa-plus"></i></a>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-download"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <button type="button" id="btn-imprimir-seleccion-grm"
-                                                    class="dropdown-item">
-                                                    <i class="fa fa-print"></i> Imprimir
+                                    <div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
+                                        @include('transaccion.comprobantes._shared.tabs')
+                                        {{-- Almacen --}}
+                                        <ul class="ml-auto d-flex"
+                                            style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                            {{-- ALMACEN --}}
+                                            @can('guia_remision_m.crear')
+                                                <a class="btn btn-primary" href="{{ route('guia_remision_manual.create') }}"><i
+                                                    class="fa fa-plus"></i></a>
+                                            @endcan
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-download"></i>
                                                 </button>
-                                                <button type="button" id="btn-exportar-grm" class="dropdown-item">
-                                                    <i class="fa fa-file-excel-o"></i> Excel
-                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <button type="button" id="btn-imprimir-seleccion-grm"
+                                                        class="dropdown-item">
+                                                        <i class="fa fa-print"></i> Imprimir
+                                                    </button>
+                                                    <button type="button" id="btn-exportar-grm" class="dropdown-item">
+                                                        <i class="fa fa-file-excel-o"></i> Excel
+                                                    </button>
 
-                                                <button type="button" id="btn-descargar-grm"class="dropdown-item">
-                                                    <i class="fa fa-file-pdf-o"></i> PDF
-                                                </button>
+                                                    <button type="button" id="btn-descargar-grm"class="dropdown-item">
+                                                        <i class="fa fa-file-pdf-o"></i> PDF
+                                                    </button>
 
-                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-envelope"></i> Correo
-                                                </button>
+                                                    <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-envelope"></i> Correo
+                                                    </button>
 
-                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-whatsapp"></i> Whatsapp
-                                                </button>
+                                                    <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-whatsapp"></i> Whatsapp
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </ul>
+                                        </ul>
+                                    </div>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <div role="tabpanel" id="tab-5" class="tab-pane active show"
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -149,7 +153,7 @@
                                                     <th>Cliente</th>
                                                     <th>Emisión</th>
                                                     <th>Entrega</th>
-                                                    <th>Ver</th>
+                                                    <th>@can('guia_remision_m.ver') Ver @endcan</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                     <th>Compartir R.</th>
                                                 </tr>
@@ -200,6 +204,8 @@
         /* =========================
          *  DataTable
          * ========================= */
+        let permiso_ver = false;
+        let permiso_anular = false;
         var coti_table = $('.dataTables-example-guia-remision').DataTable({
             pageLength: 15,
             serverSide: true,
@@ -210,6 +216,11 @@
                     d.daterange = $('#data_range_filter').val();
                     d.estado_s = $('#select_estado_sunat').val();
                     d.value = $('#search_all_column').val();
+                },
+                dataSrc: function(json) {
+                    permiso_ver = json.permiso_ver;
+                    permiso_anular = json.permiso_anular;
+                    return json.data;
                 }
             },
             columnDefs: [{
@@ -275,8 +286,12 @@
                     orderable: false,
                     render: function(data, type, full) {
                         var url = "{{ url('guia_remision_manual') }}/" + full[0];
-                        return '<a href="' + url +
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = '<a href="' + url +
                             '"><button type="button" class="btn btn-primary"><i class="fa fa-eye"></i></button></a>';
+                        }
+                        return button_show;
                     }
                 }, {
                     targets: [8],

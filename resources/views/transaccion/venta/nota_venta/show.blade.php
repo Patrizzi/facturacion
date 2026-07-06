@@ -19,18 +19,13 @@
         <div class="ibox">
             <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
                 <div style="margin-top: 5px; margin-bottom: 8px; margin-left: 10px;">
-                    @php
-                        $dropdownNotaVenta = 'dropdownNotaVenta_' . uniqid();
-                    @endphp
-
-                    @if (auth()->check() && auth()->user()->name === 'Administrador')
+                    @if (auth()->user()->almacen_id == NULL)
                         <span class="dropdown">
-                            <a id="{{ $dropdownNotaVenta }}" class="no-hover-icon" data-toggle="dropdown"
+                            <a id="" class="no-hover-icon" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
                                 <i class="fa fa-arrow-left text-muted"></i>
                             </a>
-
-                            <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="{{ $dropdownNotaVenta }}">
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="">
                                 <li style="padding: 3px 12px;"><b>Almacenes:</b></li>
 
                                 @foreach ($almacen as $almacens)
@@ -135,23 +130,41 @@
                             </div>
                         </div>
                         @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null)
-                            <button class="btn-editar btn btn-warning"
-                                    onclick="click_editar()"
-                                    data-toggle="tooltip"
-                                    data-placement="bottom"
-                                    data-original-title="Editar nota de venta"
-                                    style="white-space: nowrap; margin-right: 4px;">
-                                <i class="fa fa-pencil"></i>
-                            </button>
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
+                                @can('nota_venta.editar')
+                                    <div id="btn-slider-nota-venta"
+                                        style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
 
-                            <button class="btn-no-editar no_mostrar btn btn-warning"
-                                    onclick="click_cancelar_editar()"
-                                    data-toggle="tooltip"
-                                    data-placement="bottom"
-                                    data-original-title="Cancelar edición"
-                                    style="white-space: nowrap; margin-right: 4px;">
-                                <i class="fa fa-times"></i>
-                            </button>
+                                        <button class="btn-editar btn btn-warning"
+                                                onclick="click_editar()"
+                                                data-toggle="tooltip"
+                                                data-placement="bottom"
+                                                data-original-title="Editar nota de venta"
+                                                style="white-space: nowrap; margin-right: 4px;">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+
+                                        <button class="btn-no-editar no_mostrar btn btn-warning"
+                                                onclick="click_cancelar_editar()"
+                                                data-toggle="tooltip"
+                                                data-placement="bottom"
+                                                data-original-title="Cancelar edición"
+                                                style="white-space: nowrap; margin-right: 4px;">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+
+                                    <button type="button"
+                                            id="btn-toggle-nota-venta"
+                                            onclick="toggleBtnsNotaVenta()"
+                                            class="btn btn-default"
+                                            style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                        <i class="fa fa-chevron-right" id="btn-arrow-nota-venta"></i>
+                                    </button>
+                                @endcan
+                            </div>
+
+                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
                         @endif
                     </div>
                     <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 18px;">

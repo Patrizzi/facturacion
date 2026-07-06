@@ -17,7 +17,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
@@ -37,8 +37,10 @@
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: absolute;right: 0px">
                                         {{-- ALMACEN --}}
-                                        <a href="#" class="btn btn-primary" id="add_cliente"><i
+                                        @can('clientes.crear')
+                                            <a href="#" class="btn btn-primary" id="add_cliente"><i
                                                 class="fa fa-plus"></i></a>
+                                        @endcan
                                         <button type="button" id="btn-exportar-filtrado" class="btn btn-primary"
                                             title="Exportar a Excel">
                                             <i class="fa fa-upload"></i>
@@ -46,7 +48,7 @@
                                     </ul>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <!-- COTIZACION-->
                                 <div role="tabpanel" id="tab-1" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -180,7 +182,7 @@
                 firstDay: 1
             }
         });
-
+        let button_show = false;
         // DataTable
         var table_cliente = $('#table_cliente').DataTable({
             pageLength: 15,
@@ -195,6 +197,11 @@
                     d.daterange = $('#data_range_filter').val();
                     d.tipo_doc  = $('#tipo_doc').val();
                     d.value     = $('#search_all_column').val();
+                },
+                dataSrc: function(json) {
+                    button_show = json.ver_permiso;
+                    // Retorna los datos de la tabla para que Datatables los procese
+                    return json.data;
                 }
             },
             columnDefs: [
@@ -212,16 +219,26 @@
                 {
                     targets: 8,
                     orderable: false,
+                     width: '6vmax',
                     render: function(data, type, full){
-                        var url = '{{ route("cliente.show", ":id") }}'.replace(':id', full[0]);
-                        return `
-                            <div class="tooltip-demo">
-                                <a href="${url}">
-                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Ver">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </a>
-                            </div>`;
+                        
+                        var url = '{{ route("cliente.show", ":id") }}'.replace(':id', full[8]);
+                        let objet = ``;
+                        if(button_show){
+                            objet = `
+                                    <a href="${url}">
+                                        <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Ver">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </a>`;
+                        }
+
+                        if(full[9] == 1){
+                           return objet+`<button type="button" class="btn btn-info"><i class="fa fa-check-circle"></i></button>`;
+                        }else{
+                            return objet+`<button type="button" class="btn btn-warning"><i class="fa fa-check-circle"></i></button>`;
+                        }
+
                     }
                 }
             ]

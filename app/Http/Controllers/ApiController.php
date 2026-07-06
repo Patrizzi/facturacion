@@ -21,6 +21,7 @@ use App\Unidad_medida;
 use App\Validez;
 use App\Alarma;
 use App\AlarmasRecordatorios;
+use App\Almacen;
 use App\Boleta;
 use App\Boleta_m;
 use App\ComprobantesPagos;
@@ -168,6 +169,64 @@ class ApiController extends Controller
             ->toJson();
     }
     //* CONFIGURACION GENERAL
+    public function getAlmacen(Request $request)
+    {
+        $draw = $request->query('draw', 0);
+        $start = $request->query('start', 0);
+        $length = $request->query('length', 25);
+        $order = $request->query('order', array(0, 'asc'));
+        $filter = $request->get('value');
+
+        $sortColumns = [
+            0 => 'id',
+            1 => 'nombre',
+            2 => 'abreviatura',
+            3 => 'abreviatura',
+            4 => 'direccion',
+            5 => 'id',
+        ];
+
+        $query = Almacen::orderBy('created_at', 'asc');
+
+        if (!empty($filter)) {
+            $query->where(function ($q) use ($filter) {
+                $q->where('nombre', 'like', '%' . $filter . '%');
+            });
+        }
+
+        $recordsTotal = $query->count();
+        $sortColumnName = $sortColumns[$order[0]['column']];
+        $query->orderBy($sortColumnName, $order[0]['dir'])
+            ->take($length)
+            ->skip($start);
+
+        $almacenes = $query->get();
+
+        $json = [
+            'draw' => $draw,
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsTotal,
+            'data' => [],
+        ];
+
+        foreach ($almacenes as $almacen) {
+            $json['data'][] = [
+                $almacen->id,
+                $almacen->nombre,
+                $almacen->abreviatura,
+                $almacen->direccion,
+                $almacen->personal->full_name,
+                $almacen->id,
+                $almacen->estado,
+                $almacen
+            ];
+        }
+        $json['permiso_estado'] = auth()->user()->can('almacen.estado');
+        $json['permiso_editar'] = auth()->user()->can('almacen.editar');
+        $json['permiso_ver'] = auth()->user()->can('almacen.ver');
+        return response()->json($json);
+    }
+
     public function getFamilias(Request $request)
     {
 
@@ -220,6 +279,9 @@ class ApiController extends Controller
                 $value->estado,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('familia.estado');
+        $json['permiso_editar'] = auth()->user()->can('familia.editar');
+        $json['permiso_ver'] = auth()->user()->can('familia.ver');
         return response()->json($json);
     }
 
@@ -264,6 +326,8 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('garantia_doc.estado');
+        $json['permiso_editar'] = auth()->user()->can('garantia_doc.editar');
         return response()->json($json);
     }
 
@@ -322,6 +386,8 @@ class ApiController extends Controller
                 $value->nombre_empresa
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('marcas.estado');
+        $json['permiso_editar'] = auth()->user()->can('marcas.editar');
         return response()->json($json);
     }
 
@@ -371,6 +437,8 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('motivos.estado');
+        $json['permiso_editar'] = auth()->user()->can('motivos.editar');
         return response()->json($json);
     }
 
@@ -445,6 +513,7 @@ class ApiController extends Controller
                 $value->id
             ];
         }
+        $json['permiso_tc'] = auth()->user()->can('tipo_cambio.editar');
         return response()->json($json);
     }
 
@@ -507,7 +576,6 @@ class ApiController extends Controller
             0 => 'simbolo',
             1 => 'medida',
             2 => 'unidad',
-
         ];
 
         $query = Unidad_medida::orderBy('created_at', 'desc');
@@ -534,18 +602,17 @@ class ApiController extends Controller
             'data' => [],
         ];
 
-
-        //$unidad_medida = Unidad_medida::get();
         foreach ($unidad_medida as $value) {
             $json['data'][] = [
                 $value->simbolo,
                 $value->medida,
                 $value->unidad,
-                //$value->created_at,
-                //$value->updated_at,
+                $value->estado,
                 $value->id,
             ];
         }
+        $json['permiso_editar'] = auth()->user()->can('unidad_m.editar');
+        $json['permiso_estado'] = auth()->user()->can('unidad_m.estado');
         return response()->json($json);
     }
 
@@ -641,6 +708,8 @@ class ApiController extends Controller
                 $value->id,
             ];
         }
+        $json['permiso_estado'] = auth()->user()->can('validez.estado');
+        $json['permiso_editar'] = auth()->user()->can('validez.editar');
         return response()->json($json);
     }
     //* Servicios
@@ -700,7 +769,10 @@ class ApiController extends Controller
         ];
 
         $servicios->transform(function ($servicio) {
-            $servicio->familia = $servicio->familia->descripcion;
+            $servicio->familia = $servicio->familia->descripcion ?? "" ;
+            $servicio->marca_name = $servicio->marca->nombre ?? "" ;
+            $servicio->subfamilia_name = $servicio->subfamilia_i_serv->descripcion ?? "";
+            $servicio->tipo_afectacion = $servicio->tipo_afec_i_serv->informacion ?? "";
             $servicio->fecha_creacion = $servicio->fecha_creacion;
             // $moneda_nacional = Moneda::where('tipo', 'nacional')->first();
             // $moneda_extranjera = Moneda::where('tipo', 'extranjera')->first();
@@ -726,6 +798,9 @@ class ApiController extends Controller
                 $value                      // 9 - ficha técnica y editar
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('servicios.ver');
+        $json['permiso_editar'] = auth()->user()->can('servicios.editar');
+        $json['permiso_estado'] = auth()->user()->can('servicios.estado');
         return response()->json($json);
     }
 
@@ -812,11 +887,15 @@ class ApiController extends Controller
                 $value->estado,          // => 5 - estado
                 $value->precios,     // => 6 - precio
                 $value->stock ?? 0,      // => 7 - stock
-                $value,   // => 8 - ficha técnica
-                $value              // => 9 - botones
+                $value->archivo,   // => 8 - ficha técnica
+                $value->id,          // => 9 - botones
+                $value,              // => 10 - Informacion
+                $value->fecha_creacion
             ];
         }
-
+        $json['permiso_ver'] = auth()->user()->can('productos.ver');
+        $json['permiso_editar'] = auth()->user()->can('productos.editar');
+        $json['permiso_estado'] = auth()->user()->can('productos.estado');
         return response()->json($json);
     }
     // dsd
@@ -981,8 +1060,6 @@ class ApiController extends Controller
                 $value->id,
                 $value->id,
                 $value->codigo_interno,
-                // $value->motivo,
-                // $value->asunto,
                 $value->nombre_equipo,
                 $value->marcas_i->nombre,
                 $value->numero_serie,
@@ -994,7 +1071,9 @@ class ApiController extends Controller
                 $value->egresado,
             ];
         }
-
+        $json['permiso_ver'] = auth()->user()->can('guia_ingreso.ver');
+        $json['permiso_anular'] = auth()->user()->can('guia_ingreso.anular');
+        $json['permiso_procesar'] = auth()->user()->can('guia_ingreso.procesar');
         return response()->json($json);
     }
 
@@ -1148,16 +1227,21 @@ class ApiController extends Controller
                 $value->id, // [0]
                 $value->id, // [1]
                 $value->cod_interno, // [2]
-                $value->equipo, // [3]
-                $value->marca, // [4]
-                $value->serie, // [5]
-                $value->cliente, // [6]
-                $value->ruc, // [7]
-                $value->fecha, // [8]
+                $value->ruc, // [3]
+                $value->cliente, // [5]
+                $value->fecha, // [5]
+                $value->equipo, // [6]
+                $value->marca, // [7]
+                $value->serie, // [8]
                 $value->id, // [9]
-                $value->informe_tecnico, // [10]
+                $value->estado, // [10]
+                $value->egresado, // [11]
+                $value->informe_tecnico, // [12]
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('guia_egreso.ver');
+        $json['permiso_anular'] = auth()->user()->can('guia_egreso.anular');
+        $json['permiso_procesar'] = auth()->user()->can('guia_egreso.procesar');
 
         return response()->json($json);
     }
@@ -1272,7 +1356,7 @@ class ApiController extends Controller
                 });
             });
         }
-
+        $query->orderBy('created_at', 'desc');
         // Filtro por marca
         if (!empty($marca)) {
             $query->whereHas('garantia_egreso_i.garantia_ingreso_i', function ($q) use ($marca) {
@@ -1323,18 +1407,18 @@ class ApiController extends Controller
                 $value->id, // [0]
                 $value->id, // [1]
                 $value->garantia_egreso_i->garantia_ingreso_i->codigo_interno ?? '', // [2]
-                $value->garantia_egreso_i->garantia_ingreso_i->nombre_equipo ?? '', // [3]
-                $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '', // [4]
-                $value->garantia_egreso_i->garantia_ingreso_i->numero_serie ?? '', // [5]
-                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '', // [6]
-                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento ?? '', // [7]
-                Carbon::parse($value->fecha)->format('d/m/Y'), // [8]
+                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->numero_documento ?? '', // [3]
+                $value->garantia_egreso_i->garantia_ingreso_i->clientes_i->nombre ?? '', // [4]
+                Carbon::parse($value->fecha)->format('d/m/Y'), // [5]   
+                $value->garantia_egreso_i->garantia_ingreso_i->nombre_equipo ?? '', // [6]
+                $value->garantia_egreso_i->garantia_ingreso_i->marcas_i->nombre ?? '', // [7]
+                $value->garantia_egreso_i->garantia_ingreso_i->numero_serie ?? '', // [8]
                 $value->id, // [9]
-                // $value->informe_tecnico ?? '', // [10]
-                // $value->egresado, // Añadido para la columna 11 que se usa en el frontend [11]
+                $value->estado, // [10]
             ];
         }
-
+        $json['permiso_ver'] = auth()->user()->can('informe_tecnico.ver');
+        $json['permiso_anular'] = auth()->user()->can('informe_tecnico.anular');
         return response()->json($json);
     }
     public function getPersonalTable(Request $request)
@@ -1366,12 +1450,21 @@ class ApiController extends Controller
             $query = Personal::query();
         }
 
-        if ($estado == 1) {
-            $query->where('estado_trabajador_laboral', 'Activo'); // Activo
+        switch ($request->estado) {
+            case '1':
+                $query->where('estado_trabajador_laboral', 'Activo'); // Activo
+                break;
+            
+            case '0':
+                $query->where('estado_trabajador_laboral', 'Desactivo'); // Activo
+                break;
         }
-        if ($estado == 0) {
-            $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
-        }
+        // if ($estado == 1) {
+        //     $query->where('estado_trabajador_laboral', 'Activo'); // Activo
+        // }
+        // if ($estado == 0) {
+        //     $query->where('estado_trabajador_laboral', 'Desactivo'); // Desactivado
+        // }
 
         if (!empty($filter)) {
             $query->where(function ($q) use ($filter) {
@@ -1426,8 +1519,13 @@ class ApiController extends Controller
                 $value->datos_laborales->categoria_ocupacional ?? 'Sin Categoria',
                 $value->id,
                 $value->id,
+                $value->usuario_registrado,
+                $value->estado_trabajador_laboral,
+                $value->personal_venta,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('personal.ver');
+        $json['permiso_estado'] = auth()->user()->can('personal.estado');
         return response()->json($json);
     }
 
@@ -1510,6 +1608,9 @@ class ApiController extends Controller
                 $value->estado,
             ];
         }
+        $json['permiso_ver'] = auth()->user()->can('proveedor.ver');
+        $json['permiso_editar'] = auth()->user()->can('proveedor.editar');
+        $json['permiso_estado'] = auth()->user()->can('proveedor.estado');
         return response()->json($json);
     }
 
@@ -1770,7 +1871,7 @@ class ApiController extends Controller
             $pagado = Cuotas_credito::monto_pagado_convertido_cuota($comprobante->id, $moneda_comprobante->id, $tipo_cambio);
             $restante = Cuotas_credito::restante_pago_convertido_cuota($comprobante->id, $moneda_comprobante->id);
             $comprobante->fecha_pago = Carbon::parse($comprobante->fecha_pago)->format('d-m-Y');
-            $comprobante->monto_total =  $moneda_comprobante->simbolo . ' ' . number_format(round($comprobante->monto, 2), 2);
+            $comprobante->monto_total =  $moneda_comprobante->simbolo . ' ' . number_format(round($comprobante->nuevo_monto, 2), 2);
             $comprobante->pagado = $pagado;
             $comprobante->restante = $restante['moneda'] . ' ' . number_format($restante['saldo_pendiente'],2);
             // $comprobante->tipo_cambio = $comprobante->tipo_cambio;
@@ -1830,6 +1931,7 @@ class ApiController extends Controller
             $detalle->tipo_pago =  ucwords($detalle->tipo_pago);
             $detalle->monto_pago = $detalle->precio_principal . ' - ' . $detalle->precio_secundario;
             $detalle->monto_pagado_format = $detalle->calcularMontoPagadoFormat();
+            $detalle->monto_desc_format = $detalle->calcularMontoPagadoFormat();
             // $detalle->fecha_pago = Carbon::parse($detalle->fechas_inputs)->format('d-m-Y');
             return $detalle;
         });

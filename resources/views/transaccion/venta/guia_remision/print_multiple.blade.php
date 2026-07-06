@@ -345,8 +345,8 @@
                 @php($i=1)
                 @forelse($items as $it)
                     @php($prod = optional($it->producto))
-                    @php($pesoItem = ($it->cantidad * $it->peso))
-                    @php($tota[] = $pesoItem)
+                    @php($pesoItem = ($it->peso / $it->cantidad ))
+                    @php($tota[] = $it->peso)
                     <tr>
                       <td class="tac">{{ $i++ }}</td>
                       <td class="tac">{{ $prod->codigo_producto ?? '-' }}</td>
@@ -362,8 +362,8 @@
                       </td>
                       <td class="tac">{{ optional($prod->unidad_i_producto)->medida ?? 'NIU' }}</td>
                       <td class="tac">{{ $it->cantidad }}</td>
-                      <td class="tac">{{ number_format($it->peso,2)  }}</td>
                       <td class="tac">{{ number_format($pesoItem,2)  }}</td>
+                      <td class="tac">{{ number_format($it->peso,2)  }}</td>
                     </tr>
                 @empty
                     <tr><td colspan="6" class="tac">Sin ítems.</td></tr>

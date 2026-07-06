@@ -88,7 +88,7 @@ class Ventas_registroController extends Controller
     public function destroy($id) {}
 
 
-    public function cotizacion_tab(Request $request) {}
+    // public function cotizacion_tab(Request $request) {}
     //* DATA DE DATATABLES
     public function cotizacion_registers(Request $request)
     {
@@ -223,19 +223,19 @@ class Ventas_registroController extends Controller
                 $cotizacion->fecha_emision,
                 $cotizacion->forma_pago->nombre,
                 $cotizacion->total,
-                $cotizacion->id,
+                $cotizacion->id,                        
                 $cotizacion->estado,
                 $cotizacion->cliente->celular,
                 $cotizacion->cliente->email,
                 $cotizacion->nota_informativa,
                 $estadoRenovacion,
-
             ];
         }
         // Llamado para la suma total
         $total_table = Cotizacion::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        $json['ver_permiso'] =  auth()->user()->can('cotizacion.ver');
         return response()->json($json);
     }
 
@@ -276,6 +276,11 @@ class Ventas_registroController extends Controller
 
         $query = CotizacionManual::with(['cliente', 'moneda', 'forma_pago'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
+        
+        // Permiso para Solo el Usuario
+        // if(!auth()->user()->can('cotizacion_m.ver')){
+        //     $query->where('user_id', auth()->user()->id);
+        // }
 
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where
@@ -382,6 +387,7 @@ class Ventas_registroController extends Controller
         $total_table = CotizacionManual::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        $json['ver_permiso'] =  auth()->user()->can('cotizacion_m.ver');
         return response()->json($json);
     }
 
@@ -424,12 +430,17 @@ class Ventas_registroController extends Controller
                 'cotizacion.cliente',
                 'cotizacion.moneda',
                 'cotizacion.forma_pago'
-            ])
-            ->where(function($q) {
-                $q->whereHas('cotizacionManual')
-                ->orWhereHas('cotizacion');
-            })
-            ->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate])
+            ]);
+        $query->where(function ($q) {
+            if (auth()->user()->can('cotizacion_m.listar')) {
+                $q->orWhereHas('cotizacionManual');
+            }
+
+            if (auth()->user()->can('cotizacion.listar')) {
+                $q->orWhereHas('cotizacion');
+            }
+        });
+        $query->whereBetween('renovacion_ventas.created_at', [$startDate, $endDate])
             ->orderBy('renovacion_ventas.created_at', 'desc');
 
         // FILTRO: búsqueda de texto
@@ -745,7 +756,7 @@ class Ventas_registroController extends Controller
                 $n_venta->forma_pago,
                 $n_venta->total,
                 $n_venta->id,
-                $n_venta->estado,
+                $n_venta->estado_vigente,
                 $n_venta->cliente->celular,
                 $n_venta->cliente->email
             ];
@@ -754,6 +765,7 @@ class Ventas_registroController extends Controller
         $total_table = NotaVenta::total_sum_datatable($request, $startDate, $endDate);
         $json['total_columna'] = $moneda_principal->simbolo . number_format($total_columna, 2);
         $json['total_table'] = $moneda_principal->simbolo . number_format($total_table, 2);
+        $json['ver_permiso'] =  auth()->user()->can('nota_venta.ver');        
         return response()->json($json);
     }
 
@@ -834,10 +846,11 @@ class Ventas_registroController extends Controller
                 $cliente->email,
                 $cliente->celular,
                 $cliente->fecha_ingreso,
-                $cliente->id
+                $cliente->id,
+                $cliente->estado
             ];
         }
-
+        $json['ver_permiso'] =  auth()->user()->can('clientes.ver');        
         return response()->json($json);
     }
 }

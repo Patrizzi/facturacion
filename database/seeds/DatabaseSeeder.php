@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ServicioSeeder::class); //innecesario
         $this->call(TipoDetraccionSeeder::class);
-        $this->call(MedioPagoDetraccionSeeder::class);
+        $this->call(    ::class);
         $this->call(LeyendasFeSeeder::class);
 
         $this->call(TipoTransaccionSeeder::class);

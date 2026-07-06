@@ -26,12 +26,81 @@ class VehiculoController extends Controller
     public function scrapping_mtc(Request $request){
 
         $ruc = $request->get('ruc');
-        $url = 'https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia_display.aspx'; // Reemplaza esta URL por la página que deseas scrapear
 
-        $data = [
-            '__VIEWSTATE' => '/wEPDwUKLTk2MjgwMjM4NWRkdLR4EEmI6H/Gq0VM2km2uPyg+i4=',
-            '__VIEWSTATEGENERATOR' => '11454F71',
-            '__EVENTVALIDATION' => '/wEWCALDzKq+CQLL98WuCwLI98WuCwLJ98WuCwLO98WuCwLFmO/ABwLm+7rTBwK674/pDE754lgXafISz9MUO/Y+ZXqam9WK',
+        $url = 'https://www.mtc.gob.pe/tramitesenlinea/tweb_tLinea/tw_ConsultaDGTT/Frm_rep_intra_mercancia_display.aspx';
+
+        $cookieFile = storage_path('app/mtc_cookie.txt');
+
+        $ch = curl_init();
+
+        /*
+        |--------------------------------------------------------------------------
+        | 1. GET INICIAL
+        |--------------------------------------------------------------------------
+        */
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_COOKIEJAR => $cookieFile,
+            CURLOPT_COOKIEFILE => $cookieFile,
+            CURLOPT_USERAGENT => 'Mozilla/5.0',
+        ]);
+
+        $html = curl_exec($ch);
+
+        if ($html === false || empty($html)) {
+
+            return response()->json([
+                'success' => false,
+                'step' => 'GET',
+                'curl_error' => curl_error($ch),
+                'http_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | EXTRAER TOKENS ASP.NET
+        |--------------------------------------------------------------------------
+        */
+
+        libxml_use_internal_errors(true);
+
+        $dom = new DOMDocument();
+        @$dom->loadHTML($html);
+
+        $xpath = new DOMXPath($dom);
+
+        $getInputValue = function ($name) use ($xpath) {
+
+            $node = $xpath->query("//input[@name='$name']");
+
+            if ($node->length > 0) {
+                return $node->item(0)->getAttribute('value');
+            }
+
+            return '';
+        };
+
+        $viewState = $getInputValue('__VIEWSTATE');
+        $eventValidation = $getInputValue('__EVENTVALIDATION');
+        $viewStateGenerator = $getInputValue('__VIEWSTATEGENERATOR');
+
+        /*
+        |--------------------------------------------------------------------------
+        | 2. POST
+        |--------------------------------------------------------------------------
+        */
+
+        $postData = [
+            '__VIEWSTATE' => $viewState,
+            '__VIEWSTATEGENERATOR' => $viewStateGenerator,
+            '__EVENTVALIDATION' => $eventValidation,
+
             'rbOpciones' => 2,
             'txtValor' => $ruc,
             'hdopcion' => 2,
@@ -39,35 +108,70 @@ class VehiculoController extends Controller
             'hdopc' => 2,
         ];
 
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => http_build_query($postData),
+            CURLOPT_RETURNTRANSFER => true,
+        ]);
 
         $retorno = curl_exec($ch);
+        // return $retorno;
+        if ($retorno === false || empty($retorno)) {
+
+            return response()->json([
+                'success' => false,
+                'step' => 'POST',
+                'curl_error' => curl_error($ch),
+                'http_code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
+            ]);
+        }
 
         curl_close($ch);
 
-         $dom = new DOMDocument();
-         @$dom->loadHTML($retorno); // El "@" se utiliza para suprimir los errores que puedan generarse al analizar el HTML
-         $xpath = new DOMXPath($dom);
- 
-        $columnSelector = '//table//tr/td[2]';
+        /*
+        |--------------------------------------------------------------------------
+        | SCRAPING RESULTADO
+        |--------------------------------------------------------------------------
+        */
 
-        $retorno_aray = [];
-        $nodes = $xpath->query($columnSelector);
-        // Empezar el bucle desde el segundo elemento
-        for ($i = 1; $i < $nodes->length; $i++) {
-            $node = $nodes->item($i);
-            $retorno_aray[] = $node->nodeValue;
+        $dom2 = new DOMDocument();
+        @$dom2->loadHTML($retorno);
+
+        $xpath2 = new DOMXPath($dom2);
+        // return $dom2;
+        // $columnSelector = '//table//tr/td[2]';
+
+        $retorno_array = [];
+
+        $rows = $xpath2->query('//*[@id="lblHtml"]//table//tr');
+        // dd([
+        //     'html' => $retorno,
+        //     'rows_length' => $rows->length,
+        //     'first_row' => $rows->length > 0
+        //         ? $rows->item(0)->ownerDocument->saveHTML($rows->item(0))
+        //         : null,
+        // ]);
+        for ($i = 1; $i < $rows->length; $i++) {
+
+            $cols = $rows->item($i)->getElementsByTagName('td');
+
+            if ($cols->length >= 4) {
+
+                $retorno_array[] = [
+                    'item' => trim($cols->item(0)->nodeValue),
+                    'codigo' => trim($cols->item(1)->nodeValue),
+                    'razon_social' => trim($cols->item(2)->nodeValue),
+                    'ruc' => trim($cols->item(3)->nodeValue),
+                ];
+            }
         }
+
+        return response()->json([
+            'success' => true,
+            'cod_mtc' => $retorno_array,
+        ]);
         
-        $new = [
-            'cod_mtc' => $retorno_aray
-        ];
-        return $new;
     }
     /**
      * Show the form for creating a new resource.

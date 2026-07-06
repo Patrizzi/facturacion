@@ -15,9 +15,11 @@
         </div>
     @endif
 
-    {{-- @include('cobranzas.facturas._shared.statitics') --}}
-
+    
     <div class="wrapper wrapper-content animated fadeInRight">
+
+        @include('cobranzas.facturas._shared.statistics')
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox">
@@ -27,20 +29,23 @@
                                 style="align-items: center;border-bottom: 0px !important;">
                                 @include('cobranzas.facturas._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
+                                    @can('factura.pagar')
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
                                             class="fa fa-money"></i></button>
+                                    @endcan
                                 </ul>
                             </ul>
                             <div class="tab-content" style="margin-top: -1px">
                                 <div class="tab-pane active show" role="tabpanel" id="tab-1"
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+
                                     <br> {{-- FILTRADO DE DATOS --}}
                                     <div class="search-responsive">
                                         <div class="row">
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter" value="" readonly="readonly" />
+                                                        id="data_range_filter" value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -52,17 +57,11 @@
                                                 <div class="input-group" style="flex-wrap: nowrap;">
                                                     <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
                                                 </div>
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_estado" name="" id="select_estado">
+                                                    <select class="select_2_estado" name="estado_pago" id="select_estado">
                                                         <option value="">Seleccionar Estado de Pago</option>
                                                         <option value="0">Sin Pagar</option>
                                                         <option value="1">Pagado Parcial</option>
@@ -71,7 +70,7 @@
                                             </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_tipo_pago" name="" id="select_tipo_pago">
+                                                    <select class="select_2_tipo_pago" name="forma_pago_id" id="tipo_forma_pago">
                                                         <option value="">Seleccionar Forma de Pago</option>
                                                         <option value="1">Contado</option>
                                                         <option value="2">Credito</option>
@@ -100,7 +99,7 @@
                                                     <th>Saldo</th>
                                                     <th>Fecha V.</th>
                                                     <th>Obs.</th>
-                                                    <th>Acciones</th>
+                                                    <th>@canany(['factura.pagar', 'factura.detalle_pago']) Acciones @endcan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -267,6 +266,8 @@
         $('.chosen-select').chosen({
             width: "100%"
         });
+        let permiso_ver = false;
+        let permiso_pagar = false;
         // FUNCION DE DATATABLE FACTURA 
         var fact_table = $('.dataTables-example-facturas').DataTable({
             "serverSide": true,
@@ -278,6 +279,11 @@
                     d.cliente_id = $("#cliente option:selected").val();
                     d.estado_pago = $('#select_estado').val();
                     d.tipo = $('#select_estado').val();
+                },
+                dataSrc: function(json){
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
+                    return json.data
                 }
             },
             "drawCallback": function(settings) {
@@ -359,10 +365,8 @@
                     'render': function(data, type, full, meta) {
                     //  console.log(full[10]['nota_credito']);
                         var base_otros = '';
-                        if (full[11] == 1) {
+                        if (full[11] == "2") {
                             base_otros += `<span class="label label-success">NC</span> `;
-                        }else{
-                        base_otros +=``;
                         }
                         return base_otros;
                     }
@@ -374,20 +378,22 @@
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
-                        var view =
-                            `<a class="btn btn-primary btn-sm btn-ls"
-                        href=" ` + url_view + `"><i class="fa fa-eye"></i></a>
-                            <div class="btn-group">
-                            <button data-toggle="dropdown" class="btn btn-primary btn-sm btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
-                                <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
-                            </ul>
-                        </div>`;
-
-                        // var view +=  ``;
-
-                        return view;
+                        var buttons = ``;
+                        if(permiso_ver){
+                            buttons += `<a class="btn btn-primary btn-ls"
+                            href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
+                        }
+                        buttons += `<span style="margin:0px 5px"></span>`;
+                        if(permiso_pagar){
+                            buttons += `<div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
+                                    <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
+                                </ul>
+                            </div>`;
+                        }
+                        return buttons;
                     }
                 },
                 // {

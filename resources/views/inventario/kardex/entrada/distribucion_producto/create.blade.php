@@ -3,23 +3,23 @@
 @section('href_accion', route('kardex-entrada-Distribucion.index'))
 @section('value_accion', 'Atras')
 @section('button2', 'Nueva Distribucion')
-@section('config',route('kardex-entrada-Distribucion.create'))
+@section('config', route('kardex-entrada-Distribucion.create'))
 @section('content')
 
-<link rel="stylesheet" href="{{ asset('css/kardex/distribucion/create.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/kardex/distribucion/create.css') }}">
 
-@if($errors->any())
-<div style="padding-top: 20px;">
-	<div class="alert alert-danger">
-		<a class="alert-link" href="#">
-			@foreach ($errors->all() as $error)
-			<li style="color: red">{{ $error }}</li>
-			@endforeach
-		</a>
-	</div>
-</div>
-@endif
-{{--  <div class="wrapper wrapper-content animated fadeInRight">
+    @if ($errors->any())
+        <div style="padding-top: 20px;">
+            <div class="alert alert-danger">
+                <a class="alert-link" href="#">
+                    @foreach ($errors->all() as $error)
+                        <li style="color: red">{{ $error }}</li>
+                    @endforeach
+                </a>
+            </div>
+        </div>
+    @endif
+    {{--  <div class="wrapper wrapper-content animated fadeInRight">
 	@if (session('repite'))
         <div class="alert alert-danger">
             {{ session('repite') }}
@@ -36,7 +36,7 @@
 								<div class="switch-button">
 									Generar Guia de Remision &nbsp;&nbsp;
 									<input type="text" name="estado" value="on" hidden="hidden">
-									<input type="checkbox" name="estado_check" class="js-switch1"   @if($check_config->estado == 1) checked  @endif/>
+									<input type="checkbox" name="estado_check" class="js-switch1"   @if ($check_config->estado == 1) checked  @endif/>
 								</div>
 							</div>
 						</div>
@@ -52,7 +52,7 @@
 								<div class="col-sm-4">
 									<select class="form-control" name="almacen" id="almacen" onchange="changue_almc()" required>
 										<option value="">Seleccionar Almacen</option>
-										@foreach($almacenes as $almacen)
+										@foreach ($almacenes as $almacen)
 										<option value="{{$almacen->id}} \ {{$almacen->nombre}}">{{$almacen->abreviatura}} / {{$almacen->descripcion}}</option>
 										@endforeach
 									</select>
@@ -102,7 +102,7 @@
 										<td>
 											<select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
 												<option></option>
-												@foreach($productos as $producto)
+												@foreach ($productos as $producto)
 												<option value="{{$producto->id}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
 												@endforeach
 											</select>
@@ -126,27 +126,28 @@
 			</div>
 		</div>
 	</div>
-</div>--}}
+    </div> --}}
 
-<!-- Vista 29/05/2025-->
-<div class="wrapper wrapper-content animated fadeInRight">
-    @if (session('repite'))
-        <div class="alert alert-danger">
-            {{ session('repite') }}
-        </div>
-    @endif
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox">
-                <div class="ibox-title">
-                    <h4><strong>Kardex de Distribucion</strong></h4>
-                    <div class="ibox-tools" style="margin-top:5px;margin-bottom:8px;margin-right:10px">
-                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        <a class="" href="{{ route('kardex-entrada-Distribucion.index') }}"><i class="fa fa-times"></i></a>
+    <!-- Vista 29/05/2025-->
+    <div class="wrapper wrapper-content animated fadeInRight">
+        @if (session('repite'))
+            <div class="alert alert-danger">
+                {{ session('repite') }}
+            </div>
+        @endif
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h4><strong>Kardex de Distribucion</strong></h4>
+                        <div class="ibox-tools" style="margin-top:5px;margin-bottom:8px;margin-right:10px">
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            <a class="" href="{{ route('kardex-entrada-Distribucion.index') }}"><i
+                                    class="fa fa-times"></i></a>
+                        </div>
                     </div>
-                </div>
-                <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
-                    {{-- <!-- Título -->
+                    <div class="ibox-content" style="font-family: 'Outfit', sans-serif;">
+                        {{-- <!-- Título -->
                     <div style="border-bottom:none solid #e7eaec; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
                         <div style="display: flex; align-items: center;">
                             <a href="{{ route('kardex-entrada-Distribucion.index') }}" style="text-decoration: none; margin-right: 20px;">
@@ -155,132 +156,163 @@
                         </div>
                         <i class="fa fa-user-circle" style="font-size: 28px; color: #222;"></i>
                     </div> --}}
-                <form action="{{ route('kardex-entrada-Distribucion.store') }}" method="POST" id="form_distribucion">
-                    @csrf
-                    <input type="hidden" name="past1" id="past1" value="">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h3 class="" style="font-size:13px;">{{ date('d/m/Y') }}</h3>
-                        <div class="switch-button">
-                            Generar Guia de Remision &nbsp;&nbsp;
-                            <input type="hidden" name="estado" value="on">
-                            <input type="checkbox" class="js-switch1" name="estado_check" id="estado_check" checked>
-                        </div>
-                    </div>
-                    <div style="margin-top:20px">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2"><strong>Motivo:</strong></label>
-                                    <div class="col-lg-10">
-                                        <select name="motivo" class="select2_demo_3 asf" required="">
-                                            <option value="Sin motivo" disabled selected>Selecciona motivo</option>
-                                            @foreach($motivos as $motivo)
-                                                <option value="{{ $motivo->id }}">{{ $motivo->nombre }}</option>
-                                            @endforeach
-                                        </select>
+                        <form action="{{ route('kardex-entrada-Distribucion.store') }}" method="POST"
+                            id="form_distribucion">
+                            @csrf
+                            <input type="hidden" name="past1" id="past1" value="">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h3 class="" style="font-size:13px;">{{ date('d/m/Y') }}</h3>
+                                @can('kardex_distribucion.gen_remision')
+                                    <div class="switch-button">
+                                        Generar Guia de Remision &nbsp;&nbsp;
+                                        <input type="hidden" name="estado" value="on">
+                                        <input type="checkbox" class="js-switch1" name="estado_check" id="estado_check" checked>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2"><strong>Punto partida:</strong></label>
-                                    <div class="col-lg-10">
-                                        <input type="text" name="punto_partida" class="form-control" required="">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2"><strong>Categorìa:</strong></label>
-                                    <div class="col-lg-10">
-                                        <select name="categoria" class="select2_demo_3 asf" required="">
-                                            <option value="Sin categoria" disabled selected>Selecciona categoria</option>
-                                            @foreach($categorias as $categoria)
-                                                <option value="{{ $categoria->id }}">{{ $categoria->descripcion }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+                                @endcan
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2"><strong>Almacen:</strong></label>
-                                    <div class="col-lg-10">
-                                       <select name="almacen" class="select2_demo_3 asf" onchange="ajax_direccion_almacen()">
-                                            <option value="Sin almacen" required="" disabled selected>Selecciona almacen</option>
-                                            @foreach($almacenes as $almacen)
-                                                <option value="{{ $almacen->id }} \ {{ $almacen->nombre}}">{{ $almacen->nombre}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2"><strong>Punto llegada:</strong></label>
-                                    <div class="col-lg-10">
-                                        <input type="text" class="form-control" required="" name="llegada" id="llegada">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="" class="col-form-label col-lg-2"><strong>Observaciones:</strong></label>
-                                    <div class="col-lg-10">
-                                        <textarea name="observacion" required="" class="form-control" id="" rows="1"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-responsive mt-4">
-                            <table cellspacing="0" class="table table-striped " width="100%" id="tabla_productos">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 10px">
-                                                <button type="button" class='btn btn-sm btn-primary btn-outline btn-agregar' onclick="add_row()">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                </button>
-                                            </th>
-                                            <th style="width: auto;">Producto</th>
-                                            <th style="width: auto;">Stock</th>
-                                            <th style="width: 100px;">Unidades</th>
-                                            <th style="width: 150px;">Cantidad</th>
-                                            <th style="width: 150px;">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody_productos">
-                                        <tr id="fila_0">
-                                            <td>
-                                                <button type="button" class='delete borrar2 btn btn btn-sm btn-primary'>
-                                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo0"  onchange="ajax(0);select_opt(0)" >
-                                                    <option></option>
-                                                    @foreach($productos as $producto)
-                                                    <option value="{{$producto->id}} {{$producto->peso}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+                            <div style="margin-top:20px">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label for=""
+                                                class="col-form-label col-lg-2"><strong>Motivo:</strong></label>
+                                            <div class="col-lg-10">
+                                                <select name="motivo" class="select2_demo_3 asf" required="">
+                                                    <option value="Sin motivo" disabled selected>Selecciona motivo</option>
+                                                    @foreach ($motivos as $motivo)
+                                                        <option value="{{ $motivo->id }}">{{ $motivo->nombre }}</option>
                                                     @endforeach
                                                 </select>
-                                                <input type="hidden" value="" id="registro_opt0" name="registro_opt[]" class="registro_opt">
-                                            </td>
-                                            <td>
-                                                <input type='text' id='stock0' disabled="" name='stock[]' class="stock0 form-control" required/>
-                                            </td>
-                                            <td><input type="text" class="monto0 form-control" id="unidades0" name="unidades[]" value="1" onkeyup="multi(0);"></td>
-                                            <td><input type='text' id='cantidad0' name='cantidad[]' class="monto0 form-control" onkeyup="multi(0);" required/></td>
-                                            <td>
-                                                <input type='text' id='total0' name='total[]' class="total0 form-control"  readonly />
-                                                <input type='hidden' id='peso_tot0' name='peso_tot[]' />
-                                                <input type='hidden' id='n_series0' name='n_series[]' value="N/A" />
-                                            </td>
-                                            <span id="spTotal"></span>
-                                        </tr>
-                                    </tbody>
-                            </table>
-                            <button class="btn btn-primary float-right" type="submit" id="btn_guardar">Guardar</button>
-                        </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="" class="col-form-label col-lg-2"><strong>Punto
+                                                    partida:</strong></label>
+                                            <div class="col-lg-10">
+                                                <input type="text" name="punto_partida" class="form-control"
+                                                    required="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for=""
+                                                class="col-form-label col-lg-2"><strong>Categorìa:</strong></label>
+                                            <div class="col-lg-10">
+                                                <select name="categoria" class="select2_demo_3 asf" required="">
+                                                    <option value="Sin categoria" disabled selected>Selecciona categoria
+                                                    </option>
+                                                    @foreach ($categorias as $categoria)
+                                                        <option value="{{ $categoria->id }}">{{ $categoria->descripcion }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label for=""
+                                                class="col-form-label col-lg-2"><strong>Almacen:</strong></label>
+                                            <div class="col-lg-10">
+                                                <select name="almacen" class="select2_demo_3 asf"
+                                                    onchange="ajax_direccion_almacen()">
+                                                    <option value="Sin almacen" required="" disabled selected>Selecciona
+                                                        almacen</option>
+                                                    @foreach ($almacenes as $almacen)
+                                                        <option value="{{ $almacen->id }} \ {{ $almacen->nombre }}">
+                                                            {{ $almacen->nombre }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="" class="col-form-label col-lg-2"><strong>Punto
+                                                    llegada:</strong></label>
+                                            <div class="col-lg-10">
+                                                <input type="text" class="form-control" required="" name="llegada"
+                                                    id="llegada">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for=""
+                                                class="col-form-label col-lg-2"><strong>Observaciones:</strong></label>
+                                            <div class="col-lg-10">
+                                                <textarea name="observacion" required="" class="form-control" id="" rows="1"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive mt-4">
+                                    <table cellspacing="0" class="table table-striped " width="100%"
+                                        id="tabla_productos">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px">
+                                                    <button type="button"
+                                                        class='btn btn-sm btn-primary btn-outline btn-agregar'
+                                                        onclick="add_row()">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </th>
+                                                <th style="width: auto;">Producto</th>
+                                                <th style="width: auto;">Stock</th>
+                                                <th style="width: 100px;">Unidades</th>
+                                                <th style="width: 150px;">Cantidad</th>
+                                                <th style="width: 150px;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody_productos">
+                                            <tr id="fila_0">
+                                                <td>
+                                                    <button type="button"
+                                                        class='delete borrar2 btn btn btn-sm btn-primary'>
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <select class="select2_demo_3 asf" name="articulo[]" required=""
+                                                        id="articulo0" onchange="ajax(0);select_opt(0)">
+                                                        <option></option>
+                                                        @foreach ($productos as $producto)
+                                                            <option value="{{ $producto->id }} {{ $producto->peso }}">
+                                                                {{ $producto->nombre }} | {{ $producto->codigo_original }}
+                                                                | {{ $producto->codigo_producto }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <input type="hidden" value="" id="registro_opt0"
+                                                        name="registro_opt[]" class="registro_opt">
+                                                </td>
+                                                <td>
+                                                    <input type='text' id='stock0' disabled="" name='stock[]'
+                                                        class="stock0 form-control" required />
+                                                </td>
+                                                <td><input type="text" class="monto0 form-control" id="unidades0"
+                                                        name="unidades[]" value="1" onkeyup="multi(0);"></td>
+                                                <td><input type='text' id='cantidad0' name='cantidad[]'
+                                                        class="monto0 form-control" onkeyup="multi(0);" required /></td>
+                                                <td>
+                                                    <input type='text' id='total0' name='total[]'
+                                                        class="total0 form-control" readonly />
+                                                    <input type='hidden' id='peso_tot0' name='peso_tot[]' />
+                                                    <input type='hidden' id='n_series0' name='n_series[]'
+                                                        value="N/A" />
+                                                </td>
+                                                <span id="spTotal"></span>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button class="btn btn-primary float-right" type="submit"
+                                        id="btn_guardar">Guardar</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Fin de la vista 29/05/2025-->
+        <!-- Fin de la vista 29/05/2025-->
 
-{{-- <div class="wrapper wrapper-content animated fadeInRight word-s">
+    {{-- <div class="wrapper wrapper-content animated fadeInRight word-s">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox">
@@ -339,64 +371,69 @@
             </div>
         </div>
     </div>
-</div>
---}}
+    --}}
 
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+        <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+        <script src="{{ asset('js/popper.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.js') }}"></script>
+        <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+        <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
 
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-    <!-- Switchery -->
-    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
-    <!-- iCheck -->
-    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+        <script src="{{ asset('js/inspinia.js') }}"></script>
+        <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+        <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+        <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+        <!-- Switchery -->
+        <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+        <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+        <!-- iCheck -->
+        <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
 
-    <script>
-        $('.i-checks').iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green'
-        });
-    </script>
+        <script>
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+        </script>
 
-    <script>
-        var elem1 = document.querySelector('.js-switch1');
-        var switchery = new Switchery(elem1, { color: '#2776ea' });
-        var elem = document.querySelector('.js-switch');
-        var switchery = new Switchery(elem, { color: '#4cc0f7' });
-    </script>
+        <script>
+            var elem1 = document.querySelector('.js-switch1');
+            var switchery = new Switchery(elem1, {
+                color: '#2776ea'
+            });
+            var elem = document.querySelector('.js-switch');
+            var switchery = new Switchery(elem, {
+                color: '#4cc0f7'
+            });
+        </script>
 
-    <script type="text/javascript">
-        $(".select2_demo_3").select2({
-            placeholder: "Seleccionar Producto",
-        });
-    </script>
-    {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-    <script>
-        function valida(f) {
-            var boton=document.getElementById("boton");
-            var completo = true;
-            var incompleto = false;
-            if( f.elements[0].value == "" )
-                { alert(incompleto); }
-            else{boton.type = 'button';}
-        }
-    </script>
-    {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
-    <!-- Typehead -->
-    <script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
+        <script type="text/javascript">
+            $(".select2_demo_3").select2({
+                placeholder: "Seleccionar Producto",
+            });
+        </script>
+        {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+        <script>
+            function valida(f) {
+                var boton = document.getElementById("boton");
+                var completo = true;
+                var incompleto = false;
+                if (f.elements[0].value == "") {
+                    alert(incompleto);
+                } else {
+                    boton.type = 'button';
+                }
+            }
+        </script>
+        {{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+        <!-- Typehead -->
+        <script src="{{ asset('js/plugins/typehead/bootstrap3-typeahead.min.js') }}"></script>
 
-    <script>
-        // Modificar la función btn-agregar existente para incluir la actualización
-        var i = 2;
-        $(".btn-agregar").on('click', function () {
-            var data = `
+        <script>
+            // Modificar la función btn-agregar existente para incluir la actualización
+            var i = 2;
+            $(".btn-agregar").on('click', function() {
+                var data = `
             <tr>
                 <td>
                     <button type="button" class='delete borrar2 btn btn btn-sm btn-primary' onclick="delete_row()">
@@ -406,8 +443,8 @@
                 <td>
                     <select class="select2_demo_3 asf" name="articulo[]" required="" id="articulo${i}" onchange="ajax(${i});select_opt(${i});actualizarProductosDisponibles()">
                         <option></option>
-                        @foreach($productos as $producto)
-                        <option value="{{$producto->id}} {{$producto->peso}}"> {{$producto->nombre}} | {{$producto->codigo_original}} | {{$producto->codigo_producto}}</option>
+                        @foreach ($productos as $producto)
+                        <option value="{{ $producto->id }} {{ $producto->peso }}"> {{ $producto->nombre }} | {{ $producto->codigo_original }} | {{ $producto->codigo_producto }}</option>
                         @endforeach
                     </select>
                     <input type="hidden" value="" id="registro_opt${i}" name="registro_opt[]" class="registro_opt">
@@ -428,194 +465,195 @@
                 </td>
             </tr>`;
 
-            $('table').append(data);
-            i++;
+                $('table').append(data);
+                i++;
 
-            // Actualizar productos disponibles después de agregar la fila
-            actualizarProductosDisponibles();
-
-            $(".btn-agregar").prop("disabled", true);
-            $(".borrar").prop("disabled", false);
-
-            $(".select2_demo_3").select2({
-                placeholder: "Seleccionar Producto",
-            });
-        });
-
-        // Eliminar fila
-        $(document).on("click", ".borrar2", function() {
-            let fila = $(this).closest("tr");
-            let filas = $(".borrar2").length;
-
-            if (filas > 1) {
-                fila.remove();
-            } else {
-                // Si es la última fila, limpiar campos
-                fila.find("input[type='text']").val("");
-                fila.find("input[name='unidad[]']").val("1");
-                fila.find("select").val("").trigger("change");
-            }
-
-            // Actualizar estado después de eliminar
-            setTimeout(function() {
+                // Actualizar productos disponibles después de agregar la fila
                 actualizarProductosDisponibles();
-                verificarEstadoBotonAgregar();
-            }, 100);
-        });
 
-        // NUEVA FUNCIÓN: Verificar estado del botón agregar
-        function verificarEstadoBotonAgregar() {
-            // Verificar si el primer select tiene un valor seleccionado
-            var primerSelectValor = $('#articulo0').val();
-
-            if (primerSelectValor && primerSelectValor !== "") {
-                $(".btn-agregar").prop("disabled", false);
-            } else {
                 $(".btn-agregar").prop("disabled", true);
-            }
-        }
+                $(".borrar").prop("disabled", false);
 
-        // Manejar cambios en el primer select (articulo0)
-        $(document).on('change', '#articulo0', function() {
-            actualizarProductosDisponibles();
-            verificarEstadoBotonAgregar();
-        });
-    </script>
-
-    <script>
-        // Script para deshabilitar productos ya seleccionados en nuevas filas
-        function actualizarProductosDisponibles() {
-            // Primero habilitar todas las opciones
-            $('select[name="articulo[]"] option').prop("disabled", false);
-
-            // Obtener todos los productos seleccionados actualmente
-            var productosSeleccionados = [];
-            $('select[name="articulo[]"]').each(function() {
-                var valor = $(this).val();
-                if (valor && valor !== "") {
-                    productosSeleccionados.push(valor);
-                }
-            });
-
-            // Deshabilitar las opciones ya seleccionadas en todos los selects
-            $('select[name="articulo[]"]').each(function() {
-                var selectActual = $(this);
-                var valorActual = selectActual.val();
-
-                productosSeleccionados.forEach(function(producto) {
-                    if (producto !== valorActual) {
-                        selectActual.find('option[value="' + producto + '"]').prop("disabled", true);
-                    }
+                $(".select2_demo_3").select2({
+                    placeholder: "Seleccionar Producto",
                 });
             });
-        }
-    </script>
 
-    <script>
-        function multi(a){
-            var total = 1;
-            var change= false;
-            $(`.monto${a}`).each(function(){
-                if (!isNaN(parseFloat($(this).val()))) {
-                    change= true;
-                    if($(this).length == 0){
-                        total = 0;
-                    }else{
-                        total *= parseFloat($(this).val());
-                    }
+            // Eliminar fila
+            $(document).on("click", ".borrar2", function() {
+                let fila = $(this).closest("tr");
+                let filas = $(".borrar2").length;
 
+                if (filas > 1) {
+                    fila.remove();
+                } else {
+                    // Si es la última fila, limpiar campos
+                    fila.find("input[type='text']").val("");
+                    fila.find("input[name='unidad[]']").val("1");
+                    fila.find("select").val("").trigger("change");
                 }
+
+                // Actualizar estado después de eliminar
+                setTimeout(function() {
+                    actualizarProductosDisponibles();
+                    verificarEstadoBotonAgregar();
+                }, 100);
             });
-            total = (change)? total:0;
-            document.getElementById(`total${a}`).value = Math.round(total * 100)/100;
-        }
-    </script>
 
-    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+            // NUEVA FUNCIÓN: Verificar estado del botón agregar
+            function verificarEstadoBotonAgregar() {
+                // Verificar si el primer select tiene un valor seleccionado
+                var primerSelectValor = $('#articulo0').val();
 
-    <script>
-        $(document).ready(function(){
-
-            $('.typeahead_1').typeahead({
-                source: ["item 1","item 2","item 3"]
-            });
-        });
-        function Clear(elem)
-        {
-            elem.value='';
-        }
-        function select_opt(b){
-            var cant_opt = document.getElementById(`articulo${b}`).length;
-            var count_input = document.getElementsByClassName('registro_opt').length;
-
-            var option = document.getElementById(`articulo${b}`);
-
-            var valor_select = option.value;
-            console.log(valor_select);
-            if(valor_select == ""){
-                document.getElementById(`registro_opt${b}`).value = valor_select;
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-            }else{
-                var ant_val = document.getElementById(`registro_opt${b}`).value;
-                $('option[value="'+ant_val+'"]').prop( "disabled", false);
-                $('option[value="'+valor_select+'"]').prop( "disabled", true);
-                document.getElementById(`registro_opt${b}`).value = valor_select;
-                if(cant_opt-1 == count_input ){
+                if (primerSelectValor && primerSelectValor !== "") {
+                    $(".btn-agregar").prop("disabled", false);
+                } else {
                     $(".btn-agregar").prop("disabled", true);
                 }
-                else{
-                    $(".btn-agregar").prop("disabled", false);
-                }
             }
-            $(".select2_demo_3").select2({
-                placeholder: "Seleccionar Producto",
+
+            // Manejar cambios en el primer select (articulo0)
+            $(document).on('change', '#articulo0', function() {
+                actualizarProductosDisponibles();
+                verificarEstadoBotonAgregar();
+            });
+        </script>
+
+        <script>
+            // Script para deshabilitar productos ya seleccionados en nuevas filas
+            function actualizarProductosDisponibles() {
+                // Primero habilitar todas las opciones
+                $('select[name="articulo[]"] option').prop("disabled", false);
+
+                // Obtener todos los productos seleccionados actualmente
+                var productosSeleccionados = [];
+                $('select[name="articulo[]"]').each(function() {
+                    var valor = $(this).val();
+                    if (valor && valor !== "") {
+                        productosSeleccionados.push(valor);
+                    }
+                });
+
+                // Deshabilitar las opciones ya seleccionadas en todos los selects
+                $('select[name="articulo[]"]').each(function() {
+                    var selectActual = $(this);
+                    var valorActual = selectActual.val();
+
+                    productosSeleccionados.forEach(function(producto) {
+                        if (producto !== valorActual) {
+                            selectActual.find('option[value="' + producto + '"]').prop("disabled", true);
+                        }
+                    });
+                });
+            }
+        </script>
+
+        <script>
+            function multi(a) {
+                var total = 1;
+                var change = false;
+                $(`.monto${a}`).each(function() {
+                    if (!isNaN(parseFloat($(this).val()))) {
+                        change = true;
+                        if ($(this).length == 0) {
+                            total = 0;
+                        } else {
+                            total *= parseFloat($(this).val());
+                        }
+
+                    }
+                });
+                total = (change) ? total : 0;
+                document.getElementById(`total${a}`).value = Math.round(total * 100) / 100;
+            }
+        </script>
+
+        <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
+        <script>
+            $(document).ready(function() {
+
+                $('.typeahead_1').typeahead({
+                    source: ["item 1", "item 2", "item 3"]
+                });
             });
 
-        }
-    </script>
+            function Clear(elem) {
+                elem.value = '';
+            }
 
-    <script>
-        $(document).ready(function(){
-            // Deshabilitar el botón al inicio
-            $(".btn-agregar").prop("disabled", true);
-        });
-    </script>
+            function select_opt(b) {
+                var cant_opt = document.getElementById(`articulo${b}`).length;
+                var count_input = document.getElementsByClassName('registro_opt').length;
 
-    <script>
-        function ajax(a){
-            var articulo2 = $(`[id='articulo${a}']`).val();
-            console.log(articulo2);
-            $.ajax({
-                type: "post",
-                url: "{{ route('stock_ajax_distribucion') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'articulo': articulo2
-                    // 'almacen' : almacen
-                    },
-                success: function (msg) {
-                    // console.log(msg);
+                var option = document.getElementById(`articulo${b}`);
 
-                    $(`#stock${a}`).val(msg);
-                    var msg2 = parseInt(msg) ;
-                    $(`#cantidad${a}`).attr('max', msg2 );
+                var valor_select = option.value;
+                console.log(valor_select);
+                if (valor_select == "") {
+                    document.getElementById(`registro_opt${b}`).value = valor_select;
+                    $('option[value="' + valor_select + '"]').prop("disabled", true);
+                } else {
+                    var ant_val = document.getElementById(`registro_opt${b}`).value;
+                    $('option[value="' + ant_val + '"]').prop("disabled", false);
+                    $('option[value="' + valor_select + '"]').prop("disabled", true);
+                    document.getElementById(`registro_opt${b}`).value = valor_select;
+                    if (cant_opt - 1 == count_input) {
+                        $(".btn-agregar").prop("disabled", true);
+                    } else {
+                        $(".btn-agregar").prop("disabled", false);
+                    }
                 }
-            });
-        }
-        function changue_almc(){
-            var almacen = $('[id="almacen"]').val();
-            $.ajax({
-                type: "post",
-                url: "{{route('ajax_direccion_almacen')}}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'almacen': almacen
-                    },
-                success: function(end){
-                    $(`#llegada`).val(end);
-                }
-            });
-        }
-    </script>
+                $(".select2_demo_3").select2({
+                    placeholder: "Seleccionar Producto",
+                });
 
-@endsection
+            }
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                // Deshabilitar el botón al inicio
+                $(".btn-agregar").prop("disabled", true);
+            });
+        </script>
+
+        <script>
+            function ajax(a) {
+                var articulo2 = $(`[id='articulo${a}']`).val();
+                console.log(articulo2);
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('stock_ajax_distribucion') }}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'articulo': articulo2
+                        // 'almacen' : almacen
+                    },
+                    success: function(msg) {
+                        // console.log(msg);
+
+                        $(`#stock${a}`).val(msg);
+                        var msg2 = parseInt(msg);
+                        $(`#cantidad${a}`).attr('max', msg2);
+                    }
+                });
+            }
+
+            function changue_almc() {
+                var almacen = $('[id="almacen"]').val();
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('ajax_direccion_almacen') }}",
+                    data: {
+                        '_token': $('input[name=_token]').val(),
+                        'almacen': almacen
+                    },
+                    success: function(end) {
+                        $(`#llegada`).val(end);
+                    }
+                });
+            }
+        </script>
+
+    @endsection

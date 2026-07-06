@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center;">
                             @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
@@ -90,18 +90,17 @@
                                     {{-- Almacen --}}
                                     <ul class="ml-auto d-flex"
                                         style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        {{-- Almacen --}}
-                                        <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                            <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
-                                                    class="fa fa-plus"></i></a>
-                                            {{-- ALMACEN --}}
-                                            {{-- <button class="btn btn-primary" type="button">
-                                                <i class="fa fa-upload"></i>
-                                            </button> --}}
-                                        </ul>
-                                        <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar cotizaciones">
-                                            <i class="fa fa-copy"></i>
-                                        </a>
+                                        @can('cotizacion_m.crear')
+                                            <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                                <a class="btn btn-primary" href="{{ route('cotizacion_manual.create') }}"><i
+                                                        class="fa fa-plus"></i></a>
+                                            </ul>
+                                        @endcan
+                                        @can('cotizacion_m.duplicar')
+                                            <a href="#" id="btn-duplicar-cotizacion" class="btn btn-primary" title="Duplicar cotizaciones">
+                                                <i class="fa fa-copy"></i>
+                                            </a>
+                                        @endcan
                                         <div class="btn-group">
                                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i class="fa fa-download"></i>
@@ -128,7 +127,7 @@
                                     </ul>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <!-- COTIZACION MANUAL-->
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -253,6 +252,7 @@
             // "ACTIVA EL TAB DE COTIZACION"
             $('#tab-2-tab').addClass('active');
         });
+        let ver_permiso = false;
         var coti_table = $('.dataTables-example-cotizacion_manual').DataTable({
             "lengthChange": false,
             "responsive": true,
@@ -281,6 +281,7 @@
                     $('.dataTables-example-cotizacion_manual tfoot th.total-total').html('Total  G.: ' +
                         total_table);
 
+                    ver_permiso = json.ver_permiso;
                     // Retorna los datos de la tabla para que Datatables los procese
                     return json.data;
                 }
@@ -361,7 +362,16 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('cotizacion_manual.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-
+                        let button_show = ``;
+                        if(ver_permiso){
+                            button_show = `
+                                <a href="${url}">
+                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" data-original-title="Ver">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
+                            `;
+                        }    
                         var iconoRenovacion = '';
                         if (full[13] == 1) {
                             iconoRenovacion = `<button type="button" class="btn" style="background-color:#1ab394; border-color:#1ab394; color:white;" data-toggle="tooltip" data-placement="bottom" data-original-title="Renovación activa"><i class="fa fa-refresh"></i></button>`;
@@ -376,11 +386,7 @@
                         if (full[9] == '0') {
                             return `
                             <div class="tooltip-demo">
-                                <a href="${url}">
-                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" data-original-title="Ver">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </a>
+                                `+button_show+`
                                 <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" data-original-title="Procesado">
                                     <i class="fa fa-clock-o"></i>
                                 </button>
@@ -389,11 +395,7 @@
                         } else {
                             return `
                             <div class="tooltip-demo">
-                                <a href="${url}">
-                                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" data-original-title="Ver">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                </a>
+                                `+button_show+`
                                 <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" data-original-title="Sin Procesar">
                                     <i class="fa fa-check-circle"></i>
                                 </button>

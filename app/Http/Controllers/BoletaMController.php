@@ -319,10 +319,10 @@ class BoletaMController extends Controller
         $boleta->cambio=$cambio->paralelo;
         $boleta->observacion=$request->get('observacion');
         $boleta->user_id =auth()->user()->id;
-        if($request->get('button_submit') == 0){
-            $boleta->estado='0';
+        if($request->button_submit == 0){
+            $boleta->estado = '0'; //! Si se puede seguir editando
         }else{
-            $boleta->estado='1';
+            $boleta->estado = '1'; //! Si ya no se puede editar
         }
         $boleta->tipo_operacion_id= $busca_ope->id;
         $boleta->tipo_documento_id = 2;

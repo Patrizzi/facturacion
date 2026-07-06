@@ -10,21 +10,19 @@
                 @include('facturacion_electronica.boleta.stadistics')
             </div>
         </div>
-    </div>
-
-    {{-- Base para agregar el tab para el los contenidos --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
+        {{-- Base para agregar el tab para el los contenidos --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.boleta.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
@@ -39,21 +37,17 @@
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-6" class="tab-pane active">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_factura">
-
-                                        </div>
-                                    </div>
-                                    <hr />
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-6" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <br>
+                                <br>
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" id="daterange-boleta_env" type="text"
-                                                    name="daterange-boleta_env"
+                                                    name="daterange-boleta_env" readonly
                                                     value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
@@ -82,9 +76,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <br>
+                                <br>
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped dataTables-bol_enviadas">
+                                    <table class="table table-striped table-bordered dataTables-bol_enviadas">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-boletas_env_all" name="input[]">
@@ -94,10 +90,10 @@
                                                 <th>N° Doc</th>
                                                 <th>Fecha de emisión</th>
                                                 <th>Precio Total</th>
+                                                <th>@can('boleta.xml') XML @endcan</th>
+                                                <th>@can('boleta.cdr') CDR @endcan</th>
                                                 <th style="text-align:center;color: #0073c1"><img
                                                         src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
-                                                <th>XML</th>
-                                                <th>CDR</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -122,7 +118,9 @@
                 margin-right: .0rem;
             }
         }
-
+        .table{
+            width: 100% !important;
+        }
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
         div.dataTables_length {
@@ -150,6 +148,16 @@
 
         .td_status {
             text-align: center;
+        }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px !important;
+            padding-left: 15px !important;
         }
     </style>
 
@@ -181,7 +189,8 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
-
+            var permiso_xml = false;
+            var permiso_cdr = false;
             // {{-- Datatable Facturas Enviadas  --}}
             var table_boleta_end = $('.dataTables-bol_enviadas').DataTable({
                 "serverSide": true,
@@ -195,6 +204,8 @@
                         d.value = $('#inputBuscar').val();
                     },
                     dataSrc: function(json) {
+                        permiso_xml = json.permiso_xml;
+                        permiso_cdr = json.permiso_cdr;
                         return json.data;
                     }
                 },
@@ -217,7 +228,33 @@
                         'targets': [4]
                     },
                     {
-                        'targets': [7], // Estado
+                        'targets': [7], // Descargar XML
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.xml`;
+                            var button = ``;
+                            if(permiso_xml){
+                                button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        'targets': [8],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `R-{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.zip`;
+                            var button = ``;
+                            if(permiso_xml){
+                                button += `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        'targets': [9], // Estado
                         'orderable': false,
                         'className': 'td_status',
                         'render': function(data, type, full, meta) {
@@ -253,24 +290,6 @@
                             return end;
                         }
                     },
-                    {
-                        'targets': [8], // Descargar XML
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.xml`;
-                            return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
-                        }
-                    },
-                    {
-                        'targets': [9],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `R-{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.zip`;
-                            return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
-                        }
-                    }
                 ],
                 drawCallback: function() {
                     $('[data-toggle="tooltip"]').tooltip();

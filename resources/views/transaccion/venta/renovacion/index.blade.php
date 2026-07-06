@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center;">
                            @include('transaccion.venta._shared.statistics')
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                                 </ul>
                             </ul>
                         </div>
-                        <div class="tab-content" style="margin-top: -1px">
+                        <div class="tab-content" style="margin-top: -2px">
                             <!-- RENOVACIONES -->
                             <div role="tabpanel" id="tab-2" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                 <br> {{-- FILTRADO DE DATOS --}}

@@ -15,6 +15,10 @@ class Personal_datos_laborales extends Model
         return $this->belongsTo(Personal::class,'personal_id');
     }
 
+    public function personal_venta(){
+        return $this->hasOne(Personal_venta::class, 'id_personal');
+    }
+
     public function getFechaVinculacionAttribute()
 	{
 		if($this->attributes['fecha_vinculacion'] != null){

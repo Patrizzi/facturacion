@@ -1,4 +1,4 @@
-@extends('layout')
+ @extends('layout')
 @section('title', 'Tesorería')
 @section('href_accion', route('inicio'))
 @section('value_accion', 'Atrás')
@@ -84,105 +84,114 @@
 
     {{-- 3. BOTONES ABRIR / CERRAR CAJA --}}
     @if(!$caja || ($caja && $caja->estado == 0))
-    <div id="cajaCerrada" class="d-flex justify-content-end mb-3 gap-2">
-        <form method="POST" action="{{ route('abrir.caja') }}" id="formAbrirCaja">
-            @csrf
-            <button type="submit" class="btn-abrirCaja">Abrir caja</button>
-        </form>
-    </div>
+        @can('caja-chica.abrir_caja')
+            <div id="cajaCerrada" class="d-flex justify-content-end mb-3 gap-2">
+                <form method="POST" action="{{ route('abrir.caja') }}" id="formAbrirCaja">
+                    @csrf
+                    <button type="submit" class="btn-abrirCaja">Abrir caja</button>
+                </form>
+            </div>
+        @endcan
     @else
-    <div id="cajaAbierta">
-        <div id="botones-cajaAbierta" class="d-flex justify-content-end mb-3 gap-2">
-            <form method="POST" action="{{ route('cerrar.caja') }}">
-                @csrf
-                <button type="submit" class="btn-cerrarCaja">Cerrar Caja</button>
-            </form>
+        <div id="cajaAbierta">
+            <div id="botones-cajaAbierta" class="d-flex justify-content-end mb-3 gap-2">
+                @can('caja-chica.cerrar_caja')
+                    <form method="POST" action="{{ route('cerrar.caja') }}">
+                        @csrf
+                        <button type="submit" class="btn-cerrarCaja">Cerrar Caja</button>
+                    </form>
+                @endcan
 
-            {{-- 4. Botón Agregar + Menú Desplegable --}}
-            <div class="dropdown-container">
-                <button type="button" class="btn-agregar" onclick="toggleDropdown(event)">
-                    Agregar
-                </button>
+                {{-- 4. Botón Agregar + Menú Desplegable --}}
+                @canany(['caja-chica.depositar', 'caja-chica.pagar'])
+                    <div class="dropdown-container">
+                        <button type="button" class="btn-agregar" onclick="toggleDropdown(event)">
+                            Agregar
+                        </button>
+                            <div id="opcionesAgregar" class="dropdown-menu" style="display: none;">
+                            @can('caja-chica.depositar')
+                                <button type="button" class="dropdown-item" onclick="openModal('modalTransaccion', event)">
+                                    Recargar
+                                </button>
+                            @endcan
+                            @can('caja-chica.pagar')
+                                <button type="button" class="dropdown-item" onclick="openModal('modalPagoColaborador', event)">
+                                    Pagar
+                                </button>
+                            @endcan
+                        </div> 
+                    </div>
+                @endcan
+            </div>
 
-                <div id="opcionesAgregar" class="dropdown-menu" style="display: none;">
-                    <button type="button" class="dropdown-item" onclick="openModal('modalTransaccion', event)">
-                        Recargar
-                    </button>
-                    <button type="button" class="dropdown-item" onclick="openModal('modalPagoColaborador', event)">
-                        Pagar
-                    </button>
+            {{-- 5. TABLA DE TRANSACCIONES --}}
+            <div id="tablaTransacciones">
+                <div class="table-responsive">
+                    <table class="table dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>NRO. PAGO</th>
+                                <th>FECHA</th>
+                                <th>DNI</th>
+                                <th>NOMBRES</th>
+                                <th>TIPO</th>
+                                <th>MONTO</th>
+                                <th>ACCIONES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($transacciones as $transaccion)
+                            <tr>
+                                <td>{{ $transaccion->nro_pago }}</td>
+                                <td><span>{{ $transaccion->fecha }}</span></td>
+                                <td>{{ $transaccion->dni ?? '-' }}</td>
+                                <td class="text-start">{{ $transaccion->nombres }}</td>
+                                <td><span>{{ $transaccion->tipoTransaccion->nombre }}</span></td>
+                                <td>S/ {{ $transaccion->monto }}</td>
+                                <td>
+                                @if(strtolower($transaccion->tipoTransaccion->nombre) == 'caja' || strtolower($transaccion->tipoTransaccion->nombre) == 'personal')
+                                    {{-- PAGO --}}
+                                    <button class="btn-ver" onclick="abrirModalVerPago(
+                                        '{{ $transaccion->fecha }}',
+                                        '{{ $transaccion->nombres }}',
+                                        '{{ $transaccion->dni }}',
+                                        '{{ $transaccion->descripcion }}',
+                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
+                                        '{{ $transaccion->tipoTransaccion->nombre }}',
+                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
+                                        '{{ $transaccion->monto }}',
+                                        '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}',
+                                        '{{ $transaccion->observaciones }}'
+                                    )">Ver</button>
+                                    <a href="{{ route('transaccion.pdf', $transaccion->id) }}" class="btn-pdf" target="_blank" title="Descargar PDF">
+                                        PDF
+                                    </a>
+                                @else
+                                    {{-- DEPÓSITO --}}
+                                    <button class="btn-ver" onclick="abrirModalVerDeposito(
+                                        '{{ $transaccion->fecha }}',
+                                        '{{ $transaccion->nombres }}',
+                                        '{{ $transaccion->dni }}',
+                                        '{{ $transaccion->tipoTransaccion->nombre }}',
+                                        '{{ $transaccion->monto }}',
+                                        '{{ $transaccion->descripcion }}',
+                                        '{{ $transaccion->observaciones }}',
+                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
+                                        '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
+                                        '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}'
+                                    )">Ver</button>
+                                    <a href="{{ route('transaccion.pdf', $transaccion->id) }}" class="btn-pdf" target="_blank" title="Descargar PDF">
+                                        PDF
+                                    </a>
+                                @endif
+                            </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
-        {{-- 5. TABLA DE TRANSACCIONES --}}
-        <div id="tablaTransacciones">
-            <div class="table-responsive">
-                <table class="table dataTables-example">
-                    <thead>
-                        <tr>
-                            <th>NRO. PAGO</th>
-                            <th>FECHA</th>
-                            <th>DNI</th>
-                            <th>NOMBRES</th>
-                            <th>TIPO</th>
-                            <th>MONTO</th>
-                            <th>ACCIONES</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($transacciones as $transaccion)
-                        <tr>
-                            <td>{{ $transaccion->nro_pago }}</td>
-                            <td><span>{{ $transaccion->fecha }}</span></td>
-                            <td>{{ $transaccion->dni ?? '-' }}</td>
-                            <td class="text-start">{{ $transaccion->nombres }}</td>
-                            <td><span>{{ $transaccion->tipoTransaccion->nombre }}</span></td>
-                            <td>S/ {{ $transaccion->monto }}</td>
-                            <td>
-                            @if(strtolower($transaccion->tipoTransaccion->nombre) == 'caja' || strtolower($transaccion->tipoTransaccion->nombre) == 'personal')
-                                {{-- PAGO --}}
-                                <button class="btn-ver" onclick="abrirModalVerPago(
-                                    '{{ $transaccion->fecha }}',
-                                    '{{ $transaccion->nombres }}',
-                                    '{{ $transaccion->dni }}',
-                                    '{{ $transaccion->descripcion }}',
-                                    '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
-                                    '{{ $transaccion->tipoTransaccion->nombre }}',
-                                    '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
-                                    '{{ $transaccion->monto }}',
-                                    '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}',
-                                    '{{ $transaccion->observaciones }}'
-                                )">Ver</button>
-                                <a href="{{ route('transaccion.pdf', $transaccion->id) }}" class="btn-pdf" target="_blank" title="Descargar PDF">
-                                    PDF
-                                </a>
-                            @else
-                                {{-- DEPÓSITO --}}
-                                <button class="btn-ver" onclick="abrirModalVerDeposito(
-                                    '{{ $transaccion->fecha }}',
-                                    '{{ $transaccion->nombres }}',
-                                    '{{ $transaccion->dni }}',
-                                    '{{ $transaccion->tipoTransaccion->nombre }}',
-                                    '{{ $transaccion->monto }}',
-                                    '{{ $transaccion->descripcion }}',
-                                    '{{ $transaccion->observaciones }}',
-                                    '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->metodo_pago : '' }}',
-                                    '{{ $transaccion->transaccionDetalle ? $transaccion->transaccionDetalle->nro_operacion : '' }}',
-                                    '{{ $transaccion->transaccionDetalle && $transaccion->transaccionDetalle->comprobante ? asset('storage/comprobantes/' . $transaccion->transaccionDetalle->comprobante) : '' }}'
-                                )">Ver</button>
-                                <a href="{{ route('transaccion.pdf', $transaccion->id) }}" class="btn-pdf" target="_blank" title="Descargar PDF">
-                                    PDF
-                                </a>
-                            @endif
-                        </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
     @endif
 </div>
 

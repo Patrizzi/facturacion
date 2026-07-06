@@ -112,6 +112,8 @@ Route::group(['middleware' => ['web', 'auth','cambio_diario']], function () {
     Route::get('informe_tecnico', [ApiController::class, 'getInformeTecnico']);
     //CLIENTES
     Route::get('clientes',[ApiController::class, 'getClientes']);
+    //ALMCEN
+    Route::get('get_almacen',[ApiController::class, 'getAlmacen'])->name('api.get_almacen');
     //FAMILIAS
     Route::get('get_familias',[ApiController::class, 'getFamilias'])->name('api.get_familias');
     // GARANTIA PARA COMPROBANTES

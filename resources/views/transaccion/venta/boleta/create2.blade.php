@@ -6,7 +6,7 @@
 @section('value_accion', 'Agregar')
 @section('content')
 @section('button2', 'Atrás')
-@section('config', route('Configuracion'))
+{{-- @section('config', route('Configuracion')) --}}
 
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">

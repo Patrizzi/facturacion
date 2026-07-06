@@ -2,9 +2,9 @@
 
 @section('title', 'Vendedores')
 @section('breadcrumb', 'Vendedores')
-@section('breadcrumb2', 'Vendedores')
+{{-- @section('breadcrumb2', 'Vendedores')
 @section('data-toggle', 'modal')
-@section('href_accion', '#create')
+@section('href_accion', '#create') --}}
 @section('value_accion', 'Agregar')
 
 @section('content')
@@ -27,10 +27,405 @@
         }
     </style>
 
-    <button class="btn btn-success" data-toggle="modal" data-target="#create">Agregar</button>
+    {{-- <button class="btn btn-success" data-toggle="modal" data-target="#create">Agregar</button> --}}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            {{-- <!-- @include('transaccion.comprobantes._shared.statistics') --> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="tabs-container">
+                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                @include('planilla.vendedores._shared.tabs')
+                                <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
+                                    @can('vendedores.crear')
+                                        {{-- <a href="{{ route('vendedores.create') }}" class="btn btn-success">
+                                            <i class="fa fa-plus"></i>
+                                        </a> --}}
+                                        <button class="btn btn-success" data-toggle="modal" data-target="#create">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endcan
+                                </ul>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" id="tab-5" class="tab-pane active show">
+                                    <br>
+                                    <div class="search-responsive">
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-6 col-sm-12">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="daterange"
+                                                        id="data_range_filter" value="" readonly="readonly" />
+                                                    <span class="input-group-append">
+                                                        <button type="button" class="btn btn-secondary" id="revert_select">
+                                                            <i class="fa fa-history"></i>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <input type="search" class="form-control" placeholder="Buscar:"
+                                                    id="search_all_column">
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <select class="form-control" name="" id="select_tipo_coti">
+                                                    <option value="" selected>Todos</option>
+                                                    <option value="Activo">Activo</option>
+                                                    <option value="Desactivado">Desactivado</option>
+                                                </select>
+                                            </div>
 
+                                            <div class="col-lg-2 col-md-6 col-sm-12">
+                                                <button type="button" class="btn btn-block btn-primary"
+                                                    id="filter_buttons">Buscar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <div class="">
+                                            <div class="fh-column">
+                                                <div class="full-height-scroll">
+                                                    <ul class="list-group elements-list">
+                                                        @foreach ($vendedores as $index0 => $vendedor)
+                                                            <li class="list-group-item">
+                                                                <a @if ($index0 == 0) class="nav-link active show" @else class="nav-link" @endif
+                                                                    data-toggle="tab" href="#tab-{{ $vendedor->id }}"
+                                                                    style="padding-top: 5px;padding-bottom: 5px;">
+                                                                    <strong
+                                                                        style="font-size: 10px">{{ $vendedor->cod_vendedor }}-
+                                                                        {{ $vendedor->personal->personal_l->nombres }}
+                                                                        {{ $vendedor->personal->personal_l->apellidos }}</strong>
+                                                                    <div class="small m-t-xs">
+                                                                        <p class="m-b-xs">
+                                                                            {{ $vendedor->personal->personal_l->documento_identificacion }}:
+                                                                            {{ $vendedor->personal->personal_l->numero_documento }}
+                                                                            <br>
+                                                                            Correo:
+                                                                            {{ $vendedor->personal->personal_l->email }}
+                                                                        </p>
+                                                                        <p class="m-b-none">
+                                                                            <i class="fa fa-user"></i>
+                                                                            {{ $vendedor->personal->tipo_trabajador }}<span
+                                                                                class="float-right text-muted">{{ $vendedor->tipo_comision }}:{{ $vendedor->comision }}</span>
+                                                                        </p>
+                                                                    </div>
+                                                                </a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="full-height">
+                                                <div class="full-height-scroll white-bg border-left">
+                                                    <div>
+                                                        <div class="tab-content">
+                                                            @foreach ($vendedores as $index => $vendedor)
+                                                                <div id="tab-{{ $vendedor->id }}"
+                                                                    @if ($index == 0) class="tab-pane active show" @else class="tab-pane" @endif>
+                                                                    {{-- tabla de vendedor --}}
+                                                                    <div>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div class="ibox ">
+                                                                                    {{-- PArte superior --}}
+                                                                                    <div class="ibox-title"
+                                                                                        style="padding-right: 3.1%;padding-left:  3.1%">
+                                                                                        <div class="row tooltip-demo">
+
+                                                                                            <div class="col-sm-6">
+                                                                                                <span>Saldo a
+                                                                                                    Pagar:&nbsp;&nbsp;
+                                                                                                </span>
+                                                                                                <a class="btn btn-default procesado"
+                                                                                                    style="width: 80px"
+                                                                                                    id="extranjera{{ $vendedor->id }}">0</a>
+                                                                                                <a class="btn btn-default procesado"
+                                                                                                    style="color: inherit !important; width: 80px; transition: 1s"
+                                                                                                    id="nacional{{ $vendedor->id }}">0</a>
+                                                                                            </div>
+                                                                                            <div class="col-sm-6"
+                                                                                                align="right">
+                                                                                                <!-- Vendedor modal -->
+                                                                                                @can('vendedores.editar')
+                                                                                                    <button aling='lefth'
+                                                                                                        type="button"
+                                                                                                        class="btn btn-info"
+                                                                                                        data-toggle="modal"
+                                                                                                        data-target="#exampleModal{{ $vendedor->id }}">Editar
+                                                                                                        Vendedor</button>
+                                                                                                @endcan
+
+                                                                                                <!-- Vendedor Modal -->
+                                                                                                <div class="modal fade"
+                                                                                                    id="exampleModal{{ $vendedor->id }}"
+                                                                                                    tabindex="-1"
+                                                                                                    role="dialog"
+                                                                                                    aria-labelledby="exampleModalLabel"
+                                                                                                    aria-hidden="true">
+                                                                                                    <div class="modal-dialog"
+                                                                                                        role="document">
+                                                                                                        <div class="modal-content"
+                                                                                                            style="width: 550px">
+                                                                                                            <div
+                                                                                                                class="modal-header">
+                                                                                                                <h5 class="modal-title"
+                                                                                                                    id="exampleModalLabel">
+                                                                                                                    Edit
+                                                                                                                    Vendedor
+                                                                                                                </h5>
+                                                                                                                <button
+                                                                                                                    type="button"
+                                                                                                                    class="close"
+                                                                                                                    data-dismiss="modal"
+                                                                                                                    aria-label="Close">
+                                                                                                                    <span
+                                                                                                                        aria-hidden="true">&times;</span>
+                                                                                                                </button>
+                                                                                                            </div>
+                                                                                                            <div
+                                                                                                                class="modal-body">
+                                                                                                                {{-- Form Edit --}}
+                                                                                                                <form
+                                                                                                                    action="{{ route('vendedores.update', $vendedor->id) }}"
+                                                                                                                    enctype="multipart/form-data"
+                                                                                                                    method="post">
+                                                                                                                    @csrf
+                                                                                                                    @method('PATCH')
+                                                                                                                    <div
+                                                                                                                        align="left">
+                                                                                                                        <div class="container"
+                                                                                                                            style=" background: white;">
+                                                                                                                            <div
+                                                                                                                                class="row marketing">
+                                                                                                                                <div
+                                                                                                                                    class="col-lg-6">
+                                                                                                                                    <h4>Código
+                                                                                                                                        Vendedor
+                                                                                                                                    </h4>
+                                                                                                                                    <input
+                                                                                                                                        type="text"
+                                                                                                                                        name="cod_vendedor"
+                                                                                                                                        class="form-control"
+                                                                                                                                        value="{{ $vendedor->cod_vendedor }}"
+                                                                                                                                        disabled="disabled">
+                                                                                                                                </div>
+                                                                                                                                <div
+                                                                                                                                    class="col-lg-6">
+                                                                                                                                    <h4>Nombre
+                                                                                                                                        Vendedor:
+                                                                                                                                    </h4>
+                                                                                                                                    <input
+                                                                                                                                        type="text"
+                                                                                                                                        name="nombre"
+                                                                                                                                        class="form-control"
+                                                                                                                                        value=" {{ $vendedor->personal->personal_l->nombres }} - {{ $vendedor->personal->tipo_trabajador }}"
+                                                                                                                                        disabled="">
+                                                                                                                                </div>
+                                                                                                                                <div
+                                                                                                                                    class="col-lg-6">
+                                                                                                                                    <h4>Tipo
+                                                                                                                                        de
+                                                                                                                                        Comisión
+                                                                                                                                    </h4>
+                                                                                                                                    <input
+                                                                                                                                        type="text"
+                                                                                                                                        class="form-control"
+                                                                                                                                        value=" {{ $vendedor->tipo_comision }}"
+                                                                                                                                        disabled="disabled">
+                                                                                                                                </div>
+                                                                                                                                <div
+                                                                                                                                    class="col-lg-6">
+                                                                                                                                    <h4> Comisión
+                                                                                                                                    </h4>
+                                                                                                                                    <input
+                                                                                                                                        type="text"
+                                                                                                                                        class="form-control"
+                                                                                                                                        name="comision"
+                                                                                                                                        value="{{ $vendedor->comision }}">
+                                                                                                                                </div>
+                                                                                                                                <div
+                                                                                                                                    class="col-lg-6">
+                                                                                                                                    <h4> Estado
+                                                                                                                                    </h4>
+                                                                                                                                    <select
+                                                                                                                                        name="estado"
+                                                                                                                                        class="form-control">
+                                                                                                                                        @if ($vendedor->estado == 0)
+                                                                                                                                            <option
+                                                                                                                                                value="0">
+                                                                                                                                                Activo
+                                                                                                                                            </option>
+                                                                                                                                            <option
+                                                                                                                                                value="1">
+                                                                                                                                                Desactivo
+                                                                                                                                            </option>
+                                                                                                                                        @elseif($vendedor->estado == 1)
+                                                                                                                                            <option
+                                                                                                                                                value="1">
+                                                                                                                                                Desactivo
+                                                                                                                                            </option>
+                                                                                                                                            <option
+                                                                                                                                                value="0">
+                                                                                                                                                Activo
+                                                                                                                                            </option>
+                                                                                                                                        @endif
+                                                                                                                                    </select>
+                                                                                                                                </div>
+                                                                                                                                <div
+                                                                                                                                    class="col-lg-6">
+                                                                                                                                    <h4
+                                                                                                                                        style="color: white">
+                                                                                                                                        Grabar
+                                                                                                                                    </h4>
+                                                                                                                                    <button
+                                                                                                                                        class="btn btn-primary"
+                                                                                                                                        type="submit">Grabar</button>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </form>
+                                                                                                                {{--  Fin Form Edit --}}
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>{{-- Fin Modal --}}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="ibox-content">
+                                                                                        <div class="table-responsive">
+                                                                                            <table
+                                                                                                class="table table-striped table-bordered table-hover dataTables-example {{ $vendedor->id }}">
+                                                                                                <thead>
+                                                                                                    <tr>
+                                                                                                        <th>Item</th>
+                                                                                                        <th>Cod. Cotizador
+                                                                                                        </th>
+                                                                                                        <th>Cod.
+                                                                                                            Boleta/Factura
+                                                                                                        </th>
+                                                                                                        <th>Estado de
+                                                                                                            Boleta/factura
+                                                                                                        </th>
+                                                                                                        <th>Costo Total</th>
+                                                                                                        <th>Comisión</th>
+                                                                                                        <th>Liquidación</th>
+                                                                                                        <th>Observación</th>
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+                                                                                                    <span
+                                                                                                        hidden="hidden">{{ $i = 1 }}</span>
+                                                                                                    @foreach ($lista as $listas)
+                                                                                                        @if ($listas->comisionista == $vendedor->id)
+                                                                                                            <tr>
+                                                                                                                <td>{{ $i++ }}
+                                                                                                                </td>
+                                                                                                                <td>{{-- Codigo de Cotizacion- Producto o servicio --}}
+                                                                                                                    @if (isset($listas->id_coti_produc))
+                                                                                                                        <a href="{{ route('cotizacion.show', $listas->cotizacion_pro->id) }} "
+                                                                                                                            target="_blank">{{ $listas->cotizacion_pro->cod_cotizacion }}</a>
+                                                                                                                    @elseif(isset($listas->id_coti_servicio))
+                                                                                                                        <a href="{{ route('cotizacion_servicio.show', $listas->cotizacion_servi->id) }} "
+                                                                                                                            target="_blank">{{ $listas->cotizacion_servi->cod_cotizacion }}</a>
+                                                                                                                    @else
+                                                                                                                        No
+                                                                                                                        Tiene
+                                                                                                                        Cotizador
+                                                                                                                    @endif
+                                                                                                                </td>
+                                                                                                                <td>{{-- Codigo de Factura o Boleta --}}
+                                                                                                                    @if (isset($listas->id_fac))
+                                                                                                                        {{ $listas->id_facturacion->codigo_fac }}
+                                                                                                                    @elseif(isset($listas->id_bol))
+                                                                                                                        {{ $listas->id_boleta->codigo_boleta }}
+                                                                                                                    @endif
+                                                                                                                </td>
+                                                                                                                <td>{{-- En caso se anule la boleta o Factura --}}
+                                                                                                                    @if ($listas->estado_anular_fac_bol == 0)
+                                                                                                                        Procesado
+                                                                                                                    @elseif($listas->estado_anular_fac_bol == 1)
+                                                                                                                        Anulado
+                                                                                                                    @endif
+                                                                                                                </td>
+                                                                                                                <td>{{ $listas->moneda->simbolo }}{{ $listas->monto_final_fac_bol }}
+                                                                                                                </td>
+                                                                                                                <td>{{ $listas->moneda->simbolo }}{{ round($listas->monto_comision, 2) }}
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    @if ($listas->estado_pagado == 0)
+                                                                                                                        Pagar
+                                                                                                                    @elseif($listas->estado_pagado == 1)
+                                                                                                                        Guía
+                                                                                                                        Pagada
+                                                                                                                    @endif
+                                                                                                                </td>
+                                                                                                                <td>{{ $listas->observacion }}
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            {{-- Calculo de precios de comisiones --}}
+                                                                                                            {{-- <span
+                                                                                                hidden="hidden">{{ $monto_moneda_extranjera = $lista->where('comisionista', '=', $listas->comisionista)->where('tipo_moneda', '=', 2)->where('estado_pagado', '=', 0)->sum('monto_comision') }}
+                                                                                            </span>
+
+                                                                                            <span
+                                                                                                hidden="hidden">{{ $monto_moneda_nacional = $lista->where('comisionista', '=', $listas->comisionista)->where('tipo_moneda', '=', 1)->where('estado_pagado', '=', 0)->sum('monto_comision') }}
+                                                                                            </span>
+                                                                                            <script>
+                                                                                                function myFunction{{$vendedor->id }}() {
+                                                                                                    document.getElementById("extranjera{{ $vendedor->id }}").innerHTML =
+                                                                                                        "{{ $moneda_extranjera->simbolo }}{{ round($monto_moneda_extranjera, 1) }}";
+                                                                                                    document.getElementById("nacional{{ $vendedor->id }}").innerHTML =
+                                                                                                        "{{ $moneda_nacional->simbolo }}{{ round($monto_moneda_nacional, 1) }}";
+                                                                                                }
+                                                                                            </script> --}}
+                                                                                                            {{-- Calculo de precios de comisiones --}}
+                                                                                                        @endif
+                                                                                                    @endforeach
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {{-- fin de tabla vendedor --}}
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Vendedor Modal -->
-    <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="width: 550px">
                 <div class="modal-header">
@@ -55,7 +450,8 @@
                                         <h4>Nombre Vendedor:</h4>
                                         <select class="form-control" name="id_personal" required="required">
                                             @foreach ($personal as $personals)
-                                                <option value="{{ $personals->id }}">{{ $personals->personal_l->nombres }} -
+                                                <option value="{{ $personals->id }}">
+                                                    {{ $personals->personal_l->nombres }} -
                                                     {{ $personals->tipo_trabajador }}</option>
                                             @endforeach
                                         </select>
@@ -83,310 +479,8 @@
             </div>
         </div>
     </div>{{-- Fin Modal --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox" style="  min-height: 300px;">
-                    <div class="ibox-title">
-                    </div>
-                    <div class="ibox-content" style="  min-height: 300px;">
-                        <div class="fh-breadcrumb">
-                            <div class="fh-column">
-                                <div class="full-height-scroll">
-                                    <ul class="list-group elements-list">
-                                        @foreach ($vendedores as $vendedor)
-                                            <li class="list-group-item">
-                                                <a onclick="myFunction{{ $vendedor->id }}()" class="nav-link active show"
-                                                    data-toggle="tab" href="#tab-{{ $vendedor->id }}"
-                                                    style="padding-top: 5px;padding-bottom: 5px;">
-                                                    <strong style="font-size: 10px">{{ $vendedor->cod_vendedor }}-
-                                                        {{ $vendedor->personal->personal_l->nombres }}
-                                                        {{ $vendedor->personal->personal_l->apellidos }}</strong>
-                                                    <div class="small m-t-xs">
-                                                        <p class="m-b-xs">
-                                                            {{ $vendedor->personal->personal_l->documento_identificacion }}:
-                                                            {{ $vendedor->personal->personal_l->numero_documento }} <br>
-                                                            Correo: {{ $vendedor->personal->personal_l->email }}
-                                                        </p>
-                                                        <p class="m-b-none">
-                                                            <i class="fa fa-user"></i>
-                                                            {{ $vendedor->personal->tipo_trabajador }}<span
-                                                                class="float-right text-muted">{{ $vendedor->tipo_comision }}:{{ $vendedor->comision }}</span>
-                                                        </p>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="full-height">
-                                <div class="full-height-scroll white-bg border-left">
-                                    <div>
-                                        <div class="tab-content">
-                                            @foreach ($vendedores as $index =>  $vendedor)
-                                                <div id="tab-{{ $vendedor->id }}" @if ($index == 0) class="tab-pane active show" @else class="tab-pane" @endif>
-                                                    {{-- tabla de vendedor --}}
-                                                    <div>
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="ibox ">
-                                                                    {{-- PArte superior --}}
-                                                                    <div class="ibox-title"
-                                                                        style="padding-right: 3.1%;padding-left:  3.1%">
-                                                                        <div class="row tooltip-demo">
-
-                                                                            <div class="col-sm-6">
-                                                                                <span>Saldo a Pagar:&nbsp;&nbsp; </span>
-                                                                                <a class="btn btn-default procesado"
-                                                                                    style="width: 80px"
-                                                                                    id="extranjera{{ $vendedor->id }}">0</a>
-                                                                                <a class="btn btn-default procesado"
-                                                                                    style="color: inherit !important; width: 80px; transition: 1s"
-                                                                                    id="nacional{{ $vendedor->id }}">0</a>
-                                                                            </div>
-                                                                            <div class="col-sm-6" align="right">
-                                                                                <!-- Vendedor modal -->
-                                                                                <button aling='lefth' type="button"
-                                                                                    class="btn btn-info"
-                                                                                    data-toggle="modal"
-                                                                                    data-target="#exampleModal{{ $vendedor->id }}">Editar
-                                                                                    Vendedor</button>
-
-                                                                                <!-- Vendedor Modal -->
-                                                                                <div class="modal fade"
-                                                                                    id="exampleModal{{ $vendedor->id }}"
-                                                                                    tabindex="-1" role="dialog"
-                                                                                    aria-labelledby="exampleModalLabel"
-                                                                                    aria-hidden="true">
-                                                                                    <div class="modal-dialog"
-                                                                                        role="document">
-                                                                                        <div class="modal-content"
-                                                                                            style="width: 550px">
-                                                                                            <div class="modal-header">
-                                                                                                <h5 class="modal-title"
-                                                                                                    id="exampleModalLabel">
-                                                                                                    Edit Vendedor</h5>
-                                                                                                <button type="button"
-                                                                                                    class="close"
-                                                                                                    data-dismiss="modal"
-                                                                                                    aria-label="Close">
-                                                                                                    <span
-                                                                                                        aria-hidden="true">&times;</span>
-                                                                                                </button>
-                                                                                            </div>
-                                                                                            <div class="modal-body">
-                                                                                                {{-- Form Edit --}}
-                                                                                                <form
-                                                                                                    action="{{ route('vendedores.update', $vendedor->id) }}"
-                                                                                                    enctype="multipart/form-data"
-                                                                                                    method="post">
-                                                                                                    @csrf
-                                                                                                    @method('PATCH')
-                                                                                                    <div align="left">
-                                                                                                        <div class="container"
-                                                                                                            style=" background: white;">
-                                                                                                            <div
-                                                                                                                class="row marketing">
-                                                                                                                <div
-                                                                                                                    class="col-lg-6">
-                                                                                                                    <h4>Código
-                                                                                                                        Vendedor
-                                                                                                                    </h4>
-                                                                                                                    <input
-                                                                                                                        type="text"
-                                                                                                                        name="cod_vendedor"
-                                                                                                                        class="form-control"
-                                                                                                                        value="{{ $vendedor->cod_vendedor }}"
-                                                                                                                        disabled="disabled">
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="col-lg-6">
-                                                                                                                    <h4>Nombre
-                                                                                                                        Vendedor:
-                                                                                                                    </h4>
-                                                                                                                    <input
-                                                                                                                        type="text"
-                                                                                                                        name="nombre"
-                                                                                                                        class="form-control"
-                                                                                                                        value=" {{ $vendedor->personal->personal_l->nombres }} - {{ $vendedor->personal->tipo_trabajador }}"
-                                                                                                                        disabled="">
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="col-lg-6">
-                                                                                                                    <h4>Tipo
-                                                                                                                        de
-                                                                                                                        Comisión
-                                                                                                                    </h4>
-                                                                                                                    <input
-                                                                                                                        type="text"
-                                                                                                                        class="form-control"
-                                                                                                                        value=" {{ $vendedor->tipo_comision }}"
-                                                                                                                        disabled="disabled">
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="col-lg-6">
-                                                                                                                    <h4> Comisión
-                                                                                                                    </h4>
-                                                                                                                    <input
-                                                                                                                        type="text"
-                                                                                                                        class="form-control"
-                                                                                                                        name="comision"
-                                                                                                                        value="{{ $vendedor->comision }}">
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="col-lg-6">
-                                                                                                                    <h4> Estado
-                                                                                                                    </h4>
-                                                                                                                    <select
-                                                                                                                        name="estado"
-                                                                                                                        class="form-control">
-                                                                                                                        @if ($vendedor->estado == 0)
-                                                                                                                            <option
-                                                                                                                                value="0">
-                                                                                                                                Activo
-                                                                                                                            </option>
-                                                                                                                            <option
-                                                                                                                                value="1">
-                                                                                                                                Desactivo
-                                                                                                                            </option>
-                                                                                                                        @elseif($vendedor->estado == 1)
-                                                                                                                            <option
-                                                                                                                                value="1">
-                                                                                                                                Desactivo
-                                                                                                                            </option>
-                                                                                                                            <option
-                                                                                                                                value="0">
-                                                                                                                                Activo
-                                                                                                                            </option>
-                                                                                                                        @endif
-                                                                                                                    </select>
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="col-lg-6">
-                                                                                                                    <h4
-                                                                                                                        style="color: white">
-                                                                                                                        Grabar
-                                                                                                                    </h4>
-                                                                                                                    <button
-                                                                                                                        class="btn btn-primary"
-                                                                                                                        type="submit">Grabar</button>
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </form>
-                                                                                                {{--  Fin Form Edit --}}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>{{-- Fin Modal --}}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="ibox-content">
-                                                                        <div class="table-responsive">
-                                                                            <table
-                                                                                class="table table-striped table-bordered table-hover dataTables-example {{ $vendedor->id }}">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th>Item</th>
-                                                                                        <th>Cod. Cotizador</th>
-                                                                                        <th>Cod. Boleta/Factura</th>
-                                                                                        <th>Estado de Boleta/factura</th>
-                                                                                        <th>Costo Total</th>
-                                                                                        <th>Comisión</th>
-                                                                                        <th>Liquidación</th>
-                                                                                        <th>Observación</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    <span
-                                                                                        hidden="hidden">{{ $i = 1 }}</span>
-                                                                                    @foreach ($lista as $listas)
-                                                                                        @if ($listas->comisionista == $vendedor->id)
-                                                                                            <tr>
-                                                                                                <td>{{ $i++ }}
-                                                                                                </td>
-                                                                                                <td>{{-- Codigo de Cotizacion- Producto o servicio --}}
-                                                                                                    @if (isset($listas->id_coti_produc))
-                                                                                                        <a href="{{ route('cotizacion.show', $listas->cotizacion_pro->id) }} "
-                                                                                                            target="_blank">{{ $listas->cotizacion_pro->cod_cotizacion }}</a>
-                                                                                                    @elseif(isset($listas->id_coti_servicio))
-                                                                                                        <a href="{{ route('cotizacion_servicio.show', $listas->cotizacion_servi->id) }} "
-                                                                                                            target="_blank">{{ $listas->cotizacion_servi->cod_cotizacion }}</a>
-                                                                                                    @else
-                                                                                                        No Tiene Cotizador
-                                                                                                    @endif
-                                                                                                </td>
-                                                                                                <td>{{-- Codigo de Factura o Boleta --}}
-                                                                                                    @if (isset($listas->id_fac))
-                                                                                                        {{ $listas->id_facturacion->codigo_fac }}
-                                                                                                    @elseif(isset($listas->id_bol))
-                                                                                                        {{ $listas->id_boleta->codigo_boleta }}
-                                                                                                    @endif
-                                                                                                </td>
-                                                                                                <td>{{-- En caso se anule la boleta o Factura --}}
-                                                                                                    @if ($listas->estado_anular_fac_bol == 0)
-                                                                                                        Procesado
-                                                                                                    @elseif($listas->estado_anular_fac_bol == 1)
-                                                                                                        Anulado
-                                                                                                    @endif
-                                                                                                </td>
-                                                                                                <td>{{ $listas->moneda->simbolo }}{{ $listas->monto_final_fac_bol }}
-                                                                                                </td>
-                                                                                                <td>{{ $listas->moneda->simbolo }}{{ round($listas->monto_comision, 2) }}
-                                                                                                </td>
-                                                                                                <td>
-                                                                                                    @if ($listas->estado_pagado == 0)
-                                                                                                        Pagar
-                                                                                                    @elseif($listas->estado_pagado == 1)
-                                                                                                        Guía Pagada
-                                                                                                    @endif
-                                                                                                </td>
-                                                                                                <td>{{ $listas->observacion }}
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            {{-- Calculo de precios de comisiones --}}
-                                                                                            <span
-                                                                                                hidden="hidden">{{ $monto_moneda_extranjera = $lista->where('comisionista', '=', $listas->comisionista)->where('tipo_moneda', '=', 2)->where('estado_pagado', '=', 0)->sum('monto_comision') }}
-                                                                                            </span>
-
-                                                                                            <span
-                                                                                                hidden="hidden">{{ $monto_moneda_nacional = $lista->where('comisionista', '=', $listas->comisionista)->where('tipo_moneda', '=', 1)->where('estado_pagado', '=', 0)->sum('monto_comision') }}
-                                                                                            </span>
-                                                                                            <script>
-                                                                                                function myFunction{{ $vendedor->id }}() {
-                                                                                                    document.getElementById("extranjera{{ $vendedor->id }}").innerHTML =
-                                                                                                        "{{ $moneda_extranjera->simbolo }}{{ round($monto_moneda_extranjera, 1) }}";
-                                                                                                    document.getElementById("nacional{{ $vendedor->id }}").innerHTML =
-                                                                                                        "{{ $moneda_nacional->simbolo }}{{ round($monto_moneda_nacional, 1) }}";
-                                                                                                }
-                                                                                            </script>
-                                                                                            {{-- Calculo de precios de comisiones --}}
-                                                                                        @endif
-                                                                                    @endforeach
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    {{-- fin de tabla vendedor --}}
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    
     <!-- NUEVO FRONT-END SOLO VISTA FLAVIA -->
     {{-- <div style="background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); margin: 40px 0; padding: 32px; font-family: 'Outfit', sans-serif;">
         <div

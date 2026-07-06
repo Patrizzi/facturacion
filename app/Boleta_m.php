@@ -386,7 +386,7 @@ class Boleta_m extends Model
             // Reduccion por nota de crédito
             $motivo = Boleta_m::search_motivo_nc($this->attributes['id']);
             // dd($motivo);
-            if ($motivo == "Devolucion por Item") {
+            if ($motivo == "Devolucion por Item" || $motivo == "07") {
                 $nota_c = Nota_Credito::where('boleta_m_id', $this->attributes['id'])->first();
                 //    dd($nota_c);
                 $total = $total - $nota_c->total_precio;
@@ -408,7 +408,17 @@ class Boleta_m extends Model
         $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
 
         $total = $subtotal + ($this->attributes['op_gravada'] * ($igv / 100) );
-
+        if ($this->attributes['nota_credito'] == 2) {
+            // Reduccion por nota de crédito
+            $motivo = Boleta_m::search_motivo_nc($this->attributes['id']);
+            // dd($motivo);
+            if ($motivo == "Devolucion por Item" || $motivo == "07") {
+                $nota_c = Nota_Credito::where('boleta_m_id', $this->attributes['id'])->first();
+                //    dd($nota_c);
+                $total = $total - $nota_c->total_precio;
+                //    return $nota_c;
+            }
+        }
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
@@ -453,7 +463,7 @@ class Boleta_m extends Model
             $cuotas = Cuotas_credito::where('boleta_m_id', $this->id)->where('estado', '!=',  0)->get();
             foreach ($cuotas as $cuota) {
                 // if ($cuota->estado == 2 ) {
-                $suma_cuota = $suma_cuota - $cuota->monto;
+                $suma_cuota = $suma_cuota - $cuota->nuevo_monto;
                 // }
             }
             $cuotas_total += $suma_cuota;
@@ -473,7 +483,11 @@ class Boleta_m extends Model
         // $last_stand = $this->moneda->simbolo.''.$saldo_pendiente;
         return $saldo_pendiente;
     }
-
+    public function getUltimaMontoPagoAttribute()
+    {
+        $ultimo_pago =  ComprobantesPagos::where('boleta_m_id', $this->id)->latest()->first();
+        return $ultimo_pago->monto_pago ?? 0.00;
+    }
     public function getUltimaFechaPagoAttribute()
     {
         $ultimo_pago =  ComprobantesPagos::where('boleta_m_id', $this->id)->latest()->first();

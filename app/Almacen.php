@@ -15,4 +15,7 @@ class Almacen extends Model
         return $this->belongsTo(Personal::class,'responsable');
     }
     
+    public function cod_sunat(){
+        return $this->hasOne(Codigo_guia_almacen::class, 'almacen_id', 'id');
+    }
 }

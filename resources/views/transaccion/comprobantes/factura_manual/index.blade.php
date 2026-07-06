@@ -16,7 +16,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -32,41 +32,45 @@
                             <div class="tabs-scroll-top-comprobantes"></div>
                             <div class="tabs-scroll-bottom">
                                 <ul class="nav nav-tabs" role="tablist" style="align-items: center;border-bottom: 0px !important;">
-                                    @include('transaccion.comprobantes._shared.tabs')
-                                    {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        {{-- ALMACEN --}}
-                                        <a class="btn btn-primary" href="{{ route('facturacion_manual.create') }}"><i
-                                                class="fa fa-plus"></i></a>
-                                         <div class="btn-group">
-                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-download"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <button type="button" id="btn-imprimir" class="dropdown-item">
-                                                    <i class="fa fa-print"></i> Imprimir
+                                    <div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
+                                        @include('transaccion.comprobantes._shared.tabs')
+                                        {{-- Almacen --}}
+                                        <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                            {{-- ALMACEN --}}
+                                            @can('factura_m.crear')
+                                                <a class="btn btn-primary" href="{{ route('facturacion_manual.create') }}"><i
+                                                    class="fa fa-plus"></i></a>
+                                            @endcan
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-download"></i>
                                                 </button>
-                                                <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-file-excel-o"></i> Excel
-                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <button type="button" id="btn-imprimir" class="dropdown-item">
+                                                        <i class="fa fa-print"></i> Imprimir
+                                                    </button>
+                                                    <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-file-excel-o"></i> Excel
+                                                    </button>
 
-                                                <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-file-pdf-o"></i> PDF
-                                                </button>
+                                                    <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-file-pdf-o"></i> PDF
+                                                    </button>
 
-                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-envelope"></i> Correo
-                                                </button>
+                                                    <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-envelope"></i> Correo
+                                                    </button>
 
-                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-whatsapp"></i> Whatsapp
-                                                </button>
+                                                    <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-whatsapp"></i> Whatsapp
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </ul>
+                                        </ul>
+                                    </div>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 <!-- Factura-->
                                 <div role="tabpanel" id="tab-4" class="tab-pane active show"  style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br> {{-- FILTRADO DE DATOS --}}
@@ -120,7 +124,7 @@
                                                     <th>Fecha Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
-                                                    <th>Ver</th>
+                                                    <th>@can('factura_m.ver') Ver @endcan</th>
                                                     <th style="width: 0.5vmax !important">Información</th>
                                                     <th>Pago</th>
                                                     <th>Compartir R.</th>
@@ -214,7 +218,8 @@
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
-
+        let permiso_ver = false;
+        let permiso_pagar = false;
         var coti_table = $('.dataTables-example-factura').DataTable({
             "pageLength": 15,
             "serverSide": true,
@@ -229,10 +234,10 @@
                 dataSrc: function(json) {
                     var total_columna = json.total_columna;
                     var total_table = json.total_table;
-
                     $('.dataTables-example-factura tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-factura tfoot th.total-total').html('Total  G.: ' + total_table);
-
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
                     return json.data;
                 }
             },
@@ -308,11 +313,15 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('facturacion_manual.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </a> `;
+                        }
+                        return button_show;
                     }
                 },
                 {
@@ -393,39 +402,65 @@
                         const e3 = estado_pago[estadoPago];
 
                         let pago = full[16];
-
-                        if (pago) {
-                            var end = `
-                                <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls"
-                                            title="Pago: ${e3.texto}">
-                                        <i style="font-weight:700" class="fa fa-dollar"></i>
-                                    </button>
-                                    <div class="contenedor">
-                                        <div class="mini-overlay">
-                                            <span class="info_overlay">Info. Pago</span><br>
-                                            <b>Monto: </b>${pago.monto_pagado}<br>
-                                            <b>Fecha: </b>${pago.fecha_pago}<br>
-                                            <b>Tipo: </b>${pago.tipo_pago}<br>
-                                            <b>Dato: </b>${pago.detalle_pago}
-                                        </div>
-                                    </div></div>
-                            `;
-                        }else{
-                            var end = `
-                                <div class="wrapper-hover">
-                                    <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
-                                        data-id="${full[0]}"
-                                        data-estado="${full[14]}"
-                                        title="Pago: ${e3.texto}">
-                                    <i style="font-weight:700" class="fa fa-dollar"></i>
-                                    </button>
-                                </div>
-                            `;
+                        let class_pago = ``;
+                        if(permiso_pagar){
+                            class_pago = `button_hover_pago`;
                         }
-
-                        // end += `</div>`;
-
+                        switch (full[15]) {
+                            case 0:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls `+class_pago+`"
+                                            data-id="${full[0]}"
+                                            data-estado="${full[14]}"
+                                            title="Pago: ${e3.texto}">  
+                                        <i style="font-weight:700" class="fa fa-dollar"></i>
+                                        </button>
+                                    </div>
+                                `;
+                                break;
+                            case 1:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls `+class_pago+`"
+                                            data-id="${full[0]}"
+                                            data-estado="${full[14]}"
+                                            title="Pago: ${e3.texto}" 
+                                            title="Pago: ${e3.texto}">
+                                            <i style="font-weight:700" class="fa fa-dollar"></i>
+                                        </button>
+                                        <div class="contenedor">
+                                            <div class="mini-overlay">
+                                                <span class="info_overlay">Info. Ult. Pago</span><br>
+                                                <b>Monto: </b>${pago.monto_pagado}<br>
+                                                <b>Fecha: </b>${pago.fecha_pago}<br>
+                                                <b>Tipo: </b>${pago.tipo_pago}<br>
+                                                <b>Dato: </b>${pago.detalle_pago}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;    
+                                break;
+                            case 2:
+                                var end = `
+                                    <div class="wrapper-hover">
+                                        <button class="btn ${e3.clase} btn-circle btn-ls"
+                                            title="Pago: ${e3.texto}">
+                                            <i style="font-weight:700" class="fa fa-dollar"></i>
+                                        </button>
+                                        <div class="contenedor">
+                                            <div class="mini-overlay">
+                                                <span class="info_overlay">Info. Ult. Pago</span><br>
+                                                <b>Monto: </b>${pago.monto_pagado}<br>
+                                                <b>Fecha: </b>${pago.fecha_pago}<br>
+                                                <b>Tipo: </b>${pago.tipo_pago}<br>
+                                                <b>Dato: </b>${pago.detalle_pago}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `; 
+                            break;
+                        }
                         return end;
                     }
                 },

@@ -40,9 +40,7 @@
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
                                                     <input class="form-control" type="text" name="daterange"
-                                                        id="data_range_filter"
-                                                        value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}"
-                                                        readonly="readonly" />
+                                                        id="data_range_filter" value="{{ date('01/m/Y') }} - {{ date('t/m/Y') }}" readonly="readonly" />
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary" id="revert_select">
                                                             <i class="fa fa-history"></i>
@@ -54,37 +52,21 @@
                                                 <div class="input-group" style="flex-wrap: nowrap;">
                                                     <select class="select2_demo_client" name="cliente" id="cliente"
                                                         required=""></select>
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <div class="input-group">
-                                                    <select class="select_2_estado" name="" id="select_estado">
-                                                        <option value="">Seleccionar Estado de Pago</option>
-                                                        <option value="0">Sin Pagar</option>
-                                                        <option value="1">Pagado Parcial</option>
+                                                    <select class="select_2_tipo_pago" name="forma_pago_id" id="tipo_forma_pago">
+                                                        <option value="">Seleccionar Forma de Pago</option>
+                                                        <option value="1">Contado</option>
+                                                        <option value="2">Credito</option>
                                                     </select>
                                                 </div>
-                                            </div> --}}
-                                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <div class="input-group" style="align-items: center">
-                                                    Contado: &nbsp;<input type="checkbox" class="form-control tipo_check"
-                                                        name="" id="contad_check">&nbsp;&nbsp;
-                                                    Credito: &nbsp;<input type="checkbox" class="form-control tipo_check"
-                                                        name="" id="credit_check">
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select_estado()" style="visibility: hidden">
-                                                            <i class="fa fa-eraser"></i>
-                                                        </button>
-                                                    </span>
-                                                </div>
-                                            </div> --}}
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <button type="button" class="btn btn-primary btn-block"
+                                                    id="button_filtros">Buscar</button>
+                                            </div>
                                         </div>
                                     </div>
                                     <br>
@@ -102,7 +84,7 @@
                                                     <th>N° Cuotas</th>
                                                     <th>Total</th>
                                                     <th>Fecha Cancelado</th>
-                                                    <th>Acciones</th>
+                                                    <th>@can('boleta.detalle_pago') Acciones @endcan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -264,16 +246,57 @@
     <script src="{{ asset('js/plugins/chosen/chosen.jquery.js') }}"></script>
 
     <script>
+        $(".select2_demo_client").select2({
+            placeholder: "Seleccionar Cliente",
+            allowClear: true,
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.clients') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 10,
+                data: function(params) {
+                    var tipo_coti = $('[name="tipo_coti"]:checked').val();
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term, // search term
+                        tipo_coti: tipo_coti
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nombre + ' | ' + item.numero_documento,
+                            };
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+        $('.select_2_estado').select2();
+        $('.select_2_tipo_pago').select2();
+
         $('#tab-2-tab').addClass('active');
 
         // FUNCION DE DATATABLE FACTURA M
-        var fact_m_table = $('.dataTables-example-boletas-pagados').DataTable({
+        var permiso_ver = false;
+        var boleta_table = $('.dataTables-example-boletas-pagados').DataTable({
             "serverSide": true,
             "ajax": {
                 url: "{{ route('cobranzas.lista_boletas_pagados_index') }}",
                 method: "get",
                 data: function(d) {
                     d.datarange = $('#data_range_filter').val();
+                    d.cliente_id = $("#cliente option:selected").val();
+                    d.estado_pago = $('#select_estado').val();
+                    d.tipo = $('#select_tipo_pago').val();
+                },
+                dataSrc: function(json){
+                    permiso_ver = json.permiso_ver;
+                    return json.data
                 }
             },
             "drawCallback": function(settings) {
@@ -352,12 +375,11 @@
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_boletas', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
-                        var view =
-                            `<a class="btn btn-primary btn-ls"
+                        var view =``;
+                        if(permiso_ver){
+                            view += `<a class="btn btn-primary btn-ls"
                                 href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
-
-                        // var view +=  ``;
-
+                        }
                         return view;
                     }
                 },
@@ -367,5 +389,42 @@
                 // },
             ],
         })
+        $('input[name="daterange"]').daterangepicker({
+            "locale": {
+                "separator": " | ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
+        $(`#button_filtros`).on('click', function() {
+            boleta_table.ajax.reload();
+        });
     </script>
 @endsection

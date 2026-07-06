@@ -71,12 +71,14 @@
                         </div>
 
                         @if ($guia_remision_m->estado == 0)
-                            <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                            <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
-                                <i class="fa fa-times"></i>
-                            </button>
+                            @can('guia_remision_m.editar')
+                                <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                                <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endcan
                         @endif
 
                         <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s;">
@@ -266,7 +268,9 @@
             </div>
             <div class="no_mostrar" id="edicion_guias">
                 @if ($guia_remision_m->estado == 0)
-                    @include('transaccion.venta.guia_remision.guia_manual.edit')
+                    @can('guia_remision_m.editar')
+                        @include('transaccion.venta.guia_remision.guia_manual.edit')
+                    @endcan
                 @endif
             </div>
         </div>

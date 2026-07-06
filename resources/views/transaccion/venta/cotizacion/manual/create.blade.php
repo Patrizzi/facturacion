@@ -96,10 +96,15 @@
                                 <div class="col-md-10">
                                     <select class="select2_demo_almacen" name="almacen_form" required="" value=""
                                         onchange="codigo_numero()">
-                                        @foreach ($almacen as $almacenes)
-                                            <option value="{{ $almacenes->id }}">{{ $almacenes->nombre }} -
-                                                {{ $almacenes->abreviatura }}</option>
-                                        @endforeach
+                                        @if(auth()->user()->almacen_id == NULL)
+                                            @foreach ($almacen as $almacenes)
+                                                <option value="{{ $almacenes->id }}">{{ $almacenes->nombre }} -
+                                                    {{ $almacenes->abreviatura }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="{{ auth()->user()->almacen_id }}">{{ auth()->user()->almacen->nombre }} -
+                                                {{ auth()->user()->almacen->abreviatura }}</option>      
+                                        @endif
                                     </select>
                                 </div>
                             </div>

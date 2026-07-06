@@ -4,7 +4,7 @@
 @section('href_accion', '#exampleModal')
 @section('value_accion', 'Editar')
 @section('atributo_actu', 'hidden')
-@section('config', route('Configuracion'))
+{{-- @section('config', route('Configuracion')) --}}
 
 @section('content')
 
@@ -446,10 +446,12 @@
                                 <h4>{{ $mi_empresa->ruc}}</h4>
                                 <p>{{ $mi_empresa->descripcion}}</p>
                             </div>
-                            <div class="col-sm-1">
-                                <button class="btn btn-primary" type="button" data-toggle="modal"
-                                    data-target="#infoModal">Editar</button>
-                            </div>
+                            @can('empresa.editar')
+                                <div class="col-sm-1">
+                                    <button class="btn btn-primary" type="button" data-toggle="modal"
+                                        data-target="#infoModal">Editar</button>
+                                </div>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -869,9 +871,11 @@
                                                                                                         @endif
                                                                                                     </div>
                                                                                                     <div class="col-sm-6">
-                                                                                                        <button class="ladda-button btn btn-primary"
-                                                                                                            type="submit"
-                                                                                                            data-style="zoom-out">Guardar</button>
+                                                                                                        @can('bancos.editar')
+                                                                                                            <button class="ladda-button btn btn-primary"
+                                                                                                                type="submit"
+                                                                                                                data-style="zoom-out">Guardar</button>
+                                                                                                        @endcan
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -1065,43 +1069,56 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     @foreach ($moneda as $monedas)
-        <script>
-            $('#demo_principal{{ $monedas->id }}').click(function() {
-                swal({
-                    title: "{{ $monedas->simbolo }} {{ $monedas->nombre }}",
-                    text: "Moneda '{{ $monedas->nombre }}' actualmente registrada como Moneda Principal."
-                });
-            });
-            $(document).ready(function() {
-                $('#demo{{ $monedas->id }}').click(function() {
+       @can('moneda.editar')
+            <script>
+                $('#demo_principal{{ $monedas->id }}').click(function() {
                     swal({
-                            title: "¿Deseas Cambiar '{{ $monedas->simbolo }} {{ $monedas->nombre }}'' como moneda Principal ?",
-                            text: "",
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#3686ff",
-                            confirmButtonText: "Si, Cambiar",
-                            cancelButtonText: "Cancelar!",
-                            closeOnConfirm: false,
-                            closeOnCancel: false
-                        },
-                        function(isConfirm) {
-                            if (isConfirm) {
-                                var data =
-                                    `  <input type="hidden" hidden name="id_moneda" randoly value="{{ $monedas->id }}" >`;
-                                $('#myForm').append(data);
-                                document.getElementById("myForm").submit();
-                                swal("Moneda Cambiada", "Ahora debes Registrar el Tipo de Cambio",
-                                    "success");
-                            } else {
-                                swal("Cancelado", "", "error");
-                            }
-                        });
-                })
+                        title: "{{ $monedas->simbolo }} {{ $monedas->nombre }}",
+                        text: "Moneda '{{ $monedas->nombre }}' actualmente registrada como Moneda Principal."
+                    });
+                });
+                $(document).ready(function() {
+                    $('#demo{{ $monedas->id }}').click(function() {
+                        swal({
+                                title: "¿Deseas Cambiar '{{ $monedas->simbolo }} {{ $monedas->nombre }}'' como moneda Principal ?",
+                                text: "",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3686ff",
+                                confirmButtonText: "Si, Cambiar",
+                                cancelButtonText: "Cancelar!",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                            },
+                            function(isConfirm) {
+                                if (isConfirm) {
+                                    var data =
+                                        `  <input type="hidden" hidden name="id_moneda" randoly value="{{ $monedas->id }}" >`;
+                                    $('#myForm').append(data);
+                                    document.getElementById("myForm").submit();
+                                    swal("Moneda Cambiada", "Ahora debes Registrar el Tipo de Cambio",
+                                        "success");
+                                } else {
+                                    swal("Cancelado", "", "error");
+                                }
+                            });
+                    })
+                });
+            </script>
+       @endcan
+    @endforeach
+    @cannot('bancos.editar')
+        <script>
+            $(document).ready(function() {
+                $('#modal_banco_{{ $bancos->id }}')
+                    .find('input, select, textarea, button[type="submit"]')
+                    .prop('disabled', true);
+
+                // Mantener visible el botón cerrar del modal
+                $('#modal_banco_{{ $bancos->id }} .close').prop('disabled', false);
             });
         </script>
-    @endforeach
-
+    @endcannot
 
     <script type="text/javascript">
         $(document).ready(function() {
