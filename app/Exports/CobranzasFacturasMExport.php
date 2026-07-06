@@ -8,7 +8,6 @@ use App\Nota_Debito;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\{
     FromQuery,
-    WithColumnFormatting,
     WithHeadings,
     WithMapping,
     WithEvents
@@ -16,12 +15,11 @@ use Maatwebsite\Excel\Concerns\{
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
+class CobranzasFacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
 {
     protected ?array $ids;
     protected array $filters;
     protected array $monedasFila = [];
-
 
     public function __construct(?array $ids = null, array $filters = [])
     {
@@ -42,7 +40,7 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
             'forma_pago',
             'user.personal',
             'tipo_operacion',
-            'tipo_documento'
+            'tipo_documento',
         ]);
 
         // ▶ Exportar por selección
@@ -58,26 +56,26 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
             $this->filters['end']
         ]);
 
-        if (!empty($this->filters['filter'])) {
-            $filter = $this->filters['filter'];
-            $query->where(function ($q) use ($filter) {
-                $q->where('codigo_fac', 'like', "%$filter%")
-                  ->orWhereHas('cliente', fn ($c) =>
-                      $c->where('nombre', 'like', "%$filter%")
-                        ->orWhere('numero_documento', 'like', "%$filter%")
-                  )
-                  ->orWhere('fecha_emision', 'like', "%$filter%");
-            });
+        // if (!empty($this->filters['filter'])) {
+        //     $filter = $this->filters['filter'];
+        //     $query->where(function ($q) use ($filter) {
+        //         $q->where('codigo_fac', 'like', "%$filter%")
+        //           ->orWhereHas('cliente', fn ($c) =>
+        //               $c->where('nombre', 'like', "%$filter%")
+        //                 ->orWhere('numero_documento', 'like', "%$filter%")
+        //           )
+        //           ->orWhere('fecha_emision', 'like', "%$filter%");
+        //     });
+        // }
+        if (!empty($this->filters['cliente_id'])) {
+            $query->where('cliente_id', $this->filters['cliente_id']);
         }
-
-        if (!empty($this->filters['estado_pago'])) {
+        if (!is_null($this->filters['estado_pago'])) {
             $query->whereIn('estado_pago', $this->filters['estado_pago']);
         }
-        
-        if (!is_null($this->filters['tipo'])) {
-            $query->where('tipo', $this->filters['tipo']);
+        if (!is_null($this->filters['forma_pago_id'])) {
+            $query->where('forma_pago_id', (int) $this->filters['forma_pago_id']);
         }
-
         return $query->orderBy('created_at', 'desc');
     }
 
@@ -88,34 +86,35 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
     {
         return [
             'Código Factura Manual',
-            'Cotización',
-            'Almacén',
+            // 'Cotización',
+            // 'Almacén',
             'Orden de compra',
             'Guía de remisión',
             'Doc. Cliente',
             'Cliente',
-            'Moneda',
+            // 'Moneda',
             'Forma de pago',
+            // 'Tipo de cambio',
+            // 'Emisor',
+            // 'Vendedor Asignado',
+            // 'SUNAT',
+            // 'Operación gravada',
+            // 'Operación inafecta',
+            // 'Operación exonerada',
+            // 'Operación gratuita',
+            // 'Nota crédito',
+            // 'Nota débito',
+            // 'Tipo de operación',
+            // 'Tipo de documento',
+            // 'Subtotal',
+            // 'IGV',
+            'Importe total',
+            // 'Estado',
+            'Monto a Deuda',
+            'Estado de pago',
             'Fecha de emisión',
             'Fecha de vencimiento',
-            'Tipo de cambio',
             'Observación',
-            'Emisor',
-            'Vendedor Asignado',
-            'Estado',
-            'SUNAT',
-            'Estado de pago',
-            'Operación gravada',
-            'Operación inafecta',
-            'Operación exonerada',
-            'Operación gratuita',
-            'Nota crédito',
-            'Nota débito',
-            'Tipo de operación',
-            // 'Tipo de documento',
-            'Subtotal',
-            'IGV',
-            'Importe total'
         ];
     }
 
@@ -144,40 +143,38 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
         }
         return [
             $f->codigo_fac,
-            optional($f->cotizacionM)->cod_cotizacion,
-            optional($f->almacen)->nombre,
+            // optional($f->cotizacionM)->cod_cotizacion,
+            // optional($f->almacen)->nombre,
             $f->orden_compra,
             $f->guia_remision,
             optional($f->cliente)->numero_documento,
             optional($f->cliente)->nombre,
-            optional($f->moneda)->nombre,
+            // optional($f->moneda)->nombre,
             optional($f->forma_pago)->nombre,
+            // $f->cambio,
+            // optional($f->user->personal)->nombres.' '.optional($f->user->personal)->apellidos,
+            // $vendedor,
+            // $f->estado ? 'Activo' : 'Inactivo',
+            // $f->f_electronica ? 'Emitido' : 'Pendiente',
+            // round($f->op_gravada,2),
+            // round($f->op_inafecta,2),
+            // round($f->op_exonerada,2),
+            // round($f->op_gratuita,2),
+            // $codigo_nc ?? "",
+            // $codigo_nd ?? "",
+            // optional($f->tipo_operacion)->informacion,
+            // optional($f->tipo_documento)->informacion,
+            // round($subtotal, 2),
+            // round($igv, 2),
+            round($subtotal + $igv, 2),
+            round($f->saldo_pendiente_sin_forma,2),
+            $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
             $f->fecha_emision,
             $f->fecha_vencimiento,
-            $f->cambio,
             $f->observacion,
-            optional($f->user->personal)->nombres.' '.optional($f->user->personal)->apellidos,
-            $vendedor,
-            $f->estado ? 'Activo' : 'Inactivo',
-            $f->f_electronica ? 'Emitido' : 'Pendiente',
-            $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
-            round($f->op_gravada,2),
-            round($f->op_inafecta,2),
-            round($f->op_exonerada,2),
-            round($f->op_gratuita,2),
-            $codigo_nc ?? "",
-            $codigo_nd ?? "",
-            optional($f->tipo_operacion)->informacion,
-            // optional($f->tipo_documento)->informacion,
-            round($subtotal, 2),
-            round($igv, 2),
-            round($subtotal + $igv, 2),
         ];
     }
 
-    /**
-     * FORMATO (opcional)
-     */
     public function registerEvents(): array
     {
         return [
@@ -194,43 +191,23 @@ class FacturasMExport implements FromQuery, WithHeadings, WithMapping, WithEvent
                         ? '_-[$$-409]* #,##0.00_-;_-[$$-409]* -#,##0.00_-;_-[$$-409]* "-"??_-;_-@_-'
                         : '_-[$S/]* #,##0.00_-;_-[$S/]* -#,##0.00_-;_-[$S/]* "-"??_-;_-@_-';
 
-                    $sheet->getStyle("S{$fila}")
+                    $sheet->getStyle("G{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
 
-                    $sheet->getStyle("T{$fila}")
-                        ->getNumberFormat()
-                        ->setFormatCode($formato);
-
-                    $sheet->getStyle("U{$fila}")
-                        ->getNumberFormat()
-                        ->setFormatCode($formato);
-                    
-                    $sheet->getStyle("V{$fila}")
-                        ->getNumberFormat()
-                        ->setFormatCode($formato);
-
-                    $sheet->getStyle("Z{$fila}")
-                        ->getNumberFormat()
-                        ->setFormatCode($formato);
-
-                    $sheet->getStyle("AA{$fila}")
-                        ->getNumberFormat()
-                        ->setFormatCode($formato);
-                        
-                    $sheet->getStyle("AB{$fila}")
+                    $sheet->getStyle("H{$fila}")
                         ->getNumberFormat()
                         ->setFormatCode($formato);
                 }
 
                 // Autoajuste columnas simples
-                foreach (range('A', 'AB') as $column) {
+                foreach (range('A', 'Z') as $column) {
                     $sheet->getColumnDimension($column)->setAutoSize(true);
                 }
 
                 // Autoajuste columnas AA, AB, AC...
-                foreach (range('A', 'AB') as $letter1) {
-                    foreach (range('A', 'AB') as $letter2) {
+                foreach (range('A', 'Z') as $letter1) {
+                    foreach (range('A', 'Z') as $letter2) {
                         $sheet->getColumnDimension($letter1 . $letter2)->setAutoSize(true);
                     }
                 }

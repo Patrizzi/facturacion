@@ -286,8 +286,23 @@ class Nota_Credito extends Model
         // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
         // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
 
-        $total_igv = $this->moneda_imbolo . ' ' . number_format($total, 2);
+        $total_igv = $this->moneda_simbolo . ' ' . number_format($total, 2);
         return $total_igv;
+    }
+
+    public function getTotalPrecioNumberAttribute()
+    {
+        // $boleta = Boleta::find($this->attributes['id']);
+        $igv = Igv::first()->renta;
+        // $boleta_reg = Boleta_registro::where('boleta_id', $boleta->id)->get();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+
+        $total = round($subtotal + ($this->attributes['op_gravada'] * $igv) / 100, 2);
+
+        // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
+        // $total_conv = ComprobantesVentas::moneda_principal_convert($this->attributes['id']->moneda_id, $total);
+
+        return $total;
     }
 
     public function getClienteAttribute()

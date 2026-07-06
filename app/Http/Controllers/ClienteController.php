@@ -261,7 +261,7 @@ class ClienteController extends Controller
 
         $info = $response->json();
 
-        if (!isset($info['ruc'])) {
+        if (!isset($info['dni'])) {
             return ['sin', 'data DNI'];
         }
 
@@ -278,7 +278,7 @@ class ClienteController extends Controller
             [$info['dni']],
             $info['nombres'],
             $info['apellidoPaterno'],
-            $info['apellifoMaterno'],
+            $info['apellidoMaterno'],
         ];
     }
 

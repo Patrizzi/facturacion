@@ -267,14 +267,14 @@
                                     {{$doc_reg[$e]->descripcion_item}}
                                 </td>
                                 <td>{{$notas_credito_registro->cantidad}}</td>
-                                <td>{{$notas_credito_registro->precio}}</td>
-                                <td>{{$notas_credito_registro->precio* $notas_credito_registro->cantidad }}</td>
+                                <td>{{ number_format($notas_credito_registro->precio,2)}}</td>
+                                <td>{{ number_format($notas_credito_registro->precio * $notas_credito_registro->cantidad, 2) }}</td>
                                 <td style="display: none">
-                                    {{$sub_total=($notas_credito_registro->nota_credito_ids->op_gravada)+($notas_credito_registro->nota_credito_ids->op_inafecta)+($notas_credito_registro->nota_credito_ids->op_exonerada)}}
-                                    {{$sub_total_gravado=($notas_credito_registro->nota_credito_ids->op_gravada)}}
-                                    {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
-                                    {{$end=round($sub_total, 2)+round($igv_p, 2)}}
-                                    {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
+                                    {{ $sub_total = $notas_credito_registro->nota_credito_ids->op_gravada + $notas_credito_registro->nota_credito_ids->op_inafecta + $notas_credito_registro->nota_credito_ids->op_exonerada }}
+                                    {{ $sub_total_gravado = $notas_credito_registro->nota_credito_ids->op_gravada }}
+                                    {{ $igv_p = $sub_total_gravado * ($igv->igv_total / 100) }}
+                                    {{ $end = $sub_total + $igv_p }}
+                                    {{ $end2 = number_format(round($end, 2), 2) }}
                                 </td>
                             </tr>
                         @endforeach
@@ -283,7 +283,7 @@
             </div>
             <table  style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
                 <tr>
-                    <td style="width: 70%;border: none">
+                    <td style="width: 50%;border: none">
                         <h3 align="left">
                             <?php
                                 use Luecano\NumeroALetras\NumeroALetras;
@@ -302,7 +302,7 @@
                             @endif
                         </h3>
                     </td>
-                    <td class="col-sm-4 qr-container">
+                    <td class="qr-container">
                         <div class="qr-box">
                             @if(!empty($qrCode))
                                 <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
@@ -390,17 +390,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            border: none;
+            padding-top: 0px;
+            padding-bottom: 0px
         }
 
         .qr-box {
-            width: 120px;
-            height: 120px;
+            width: 70px;
+            height: 70px;
             border: 2px solid #3D3D3D;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5px;
+            padding: 3px;
             background: white;
         }
 

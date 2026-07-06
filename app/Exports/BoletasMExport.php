@@ -16,6 +16,7 @@ class BoletasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
 {
     protected ?array $ids;
     protected array $filters;
+    protected array $monedasFila = [];
 
     public function __construct(?array $ids = null, array $filters = [])
     {
@@ -63,7 +64,9 @@ class BoletasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
                   ->orWhere('fecha_emision', 'like', "%$filter%");
             });
         }
-
+        if (!empty($this->filters['estado_pago'])) {
+            $query->whereIn('estado_pago', $this->filters['estado_pago']);
+        }
         if (!is_null($this->filters['tipo'])) {
             $query->where('tipo', $this->filters['tipo']);
         }
@@ -113,6 +116,7 @@ class BoletasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
      */
     public function map($b): array
     {
+        $this->monedasFila[] = optional($b->moneda)->codigo;
         $subtotal = ($b->op_gravada ?? 0)
                   + ($b->op_inafecta ?? 0)
                   + ($b->op_exonerada ?? 0);
@@ -138,17 +142,17 @@ class BoletasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
             $b->estado ? 'Activo' : 'Inactivo',
             $b->f_electronica ? 'Emitido' : 'Pendiente',
             $b->estado_pago == 0 ? 'Sin pagar' : ($b->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
-            number_format(round($b->op_gravada,2),2),
-            number_format(round($b->op_inafecta,2),2),
-            number_format(round($b->op_exonerada,2),2),
-            number_format(round($b->op_gratuita,2),2),
+            round($b->op_gravada,2),
+            round($b->op_inafecta,2),
+            round($b->op_exonerada,2),
+            round($b->op_gratuita,2),
             $b->nota_credito,
             $b->nota_debito,
             optional($b->tipo_operacion)->informacion,
             optional($b->tipo_documento)->informacion,
-            number_format(round($subtotal,2),2),
-            number_format(round($igv,2),2),
-            number_format(round($subtotal + $igv, 2),2),
+            round($subtotal,2),
+            round($igv,2),
+            round($subtotal + $igv, 2),
         ];
     }
 
@@ -159,13 +163,56 @@ class BoletasMExport implements FromQuery, WithHeadings, WithMapping, WithEvents
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                foreach (range('A', 'Z') as $column) {
-                    $event->sheet->getColumnDimension($column)->setAutoSize(true);
+
+                $sheet = $event->sheet->getDelegate();
+
+                // Formato dinámico por fila
+                foreach ($this->monedasFila as $index => $moneda) {
+
+                    $fila = $index + 2; // fila 1 = encabezados
+
+                    $formato = strtoupper(trim($moneda)) == 'USD'
+                        ? '_-[$$-409]* #,##0.00_-;_-[$$-409]* -#,##0.00_-;_-[$$-409]* "-"??_-;_-@_-'
+                        : '_-[$S/]* #,##0.00_-;_-[$S/]* -#,##0.00_-;_-[$S/]* "-"??_-;_-@_-';
+
+                    $sheet->getStyle("R{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("S{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("T{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                    
+                    $sheet->getStyle("U{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("Z{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("AA{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                        
+                    $sheet->getStyle("AB{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
                 }
 
-                foreach(range('A','Z') as $letter1) {
-                    foreach(range('A','Z') as $letter2) {
-                        $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                // Autoajuste columnas simples
+                foreach (range('A', 'AB') as $column) {
+                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                }
+
+                // Autoajuste columnas AA, AB, AC...
+                foreach (range('A', 'AB') as $letter1) {
+                    foreach (range('A', 'AB') as $letter2) {
+                        $sheet->getColumnDimension($letter1 . $letter2)->setAutoSize(true);
                     }
                 }
             }

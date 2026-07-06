@@ -15,6 +15,7 @@ class BoletasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
 {
     protected ?array $ids;
     protected array $filters;
+    protected array $monedasFila = [];
 
     public function __construct(?array $ids = null, array $filters = [])
     {
@@ -62,7 +63,9 @@ class BoletasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
                   ->orWhere('fecha_emision', 'like', "%$filter%");
             });
         }
-
+        if (!empty($this->filters['estado_pago'])) {
+            $query->whereIn('estado_pago', $this->filters['estado_pago']);
+        }
         if (!is_null($this->filters['tipo'])) {
             $query->where('tipo', $this->filters['tipo']);
         }
@@ -114,6 +117,7 @@ class BoletasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
      */
     public function map($b): array
     {
+        $this->monedasFila[] = optional($b->moneda)->codigo;
         $subtotal = ($b->op_gravada ?? 0)
                   + ($b->op_inafecta ?? 0)
                   + ($b->op_exonerada ?? 0);
@@ -161,13 +165,56 @@ class BoletasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-                foreach (range('A', 'Z') as $column) {
-                    $event->sheet->getColumnDimension($column)->setAutoSize(true);
+
+                $sheet = $event->sheet->getDelegate();
+
+                // Formato dinámico por fila
+                foreach ($this->monedasFila as $index => $moneda) {
+
+                    $fila = $index + 2; // fila 1 = encabezados
+
+                    $formato = strtoupper(trim($moneda)) == 'USD'
+                        ? '_-[$$-409]* #,##0.00_-;_-[$$-409]* -#,##0.00_-;_-[$$-409]* "-"??_-;_-@_-'
+                        : '_-[$S/]* #,##0.00_-;_-[$S/]* -#,##0.00_-;_-[$S/]* "-"??_-;_-@_-';
+
+                    $sheet->getStyle("T{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("U{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                    
+                    $sheet->getStyle("V{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("W{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("AB{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                        
+                    $sheet->getStyle("AC{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                    
+                    $sheet->getStyle("AD{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
                 }
 
-                foreach(range('A','Z') as $letter1) {
-                    foreach(range('A','Z') as $letter2) {
-                        $event->sheet->getColumnDimension($letter1.$letter2)->setAutoSize(true);
+                // Autoajuste columnas simples
+                foreach (range('A', 'AD') as $column) {
+                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                }
+
+                // Autoajuste columnas AA, AB, AC...
+                foreach (range('A', 'AD') as $letter1) {
+                    foreach (range('A', 'AD') as $letter2) {
+                        $sheet->getColumnDimension($letter1 . $letter2)->setAutoSize(true);
                     }
                 }
             }

@@ -34,8 +34,8 @@ class ComprobantesVentasController extends Controller
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // return $count_month_comprobantes;
@@ -50,6 +50,8 @@ class ComprobantesVentasController extends Controller
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
+        $estado_pago = $request->estado_pago;
+
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -90,7 +92,11 @@ class ComprobantesVentasController extends Controller
         if ($estado_s !== null) {
             $query->where('b_electronica', $estado_s);
         }
-
+        if (!empty($estado_pago)) {
+            $query->whereIn('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1, 2]);
+        }
         $recordsTotal = $query->count();
         //codigo agregado:
         // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
@@ -150,23 +156,25 @@ class ComprobantesVentasController extends Controller
         foreach ($boletas as $boleta) {
             $total_columna += $boleta->total_conv;
             $json['data'][] = [
-                $boleta->id,
-                $boleta->id,
-                $boleta->codigo_boleta,
-                $boleta->cliente->numero_documento,
-                $boleta->cliente->nombre,
-                $boleta->fecha_emision,
-                $boleta->forma_pago->nombre,
-                $boleta->total,
-                $boleta->id,
-                $boleta->estado_proceso,
-                $boleta->estado_nota_credito,
-                $boleta->estado_nota_debito,
-                $boleta->cliente->celular ?? '',
-                $boleta->cliente->email ?? '',
-                $boleta->estado,
-                $boleta->estado_pago,
-                $boleta->pago_detalle
+                $boleta->id,                         // 0
+                $boleta->id,                         // 1
+                $boleta->codigo_boleta,              // 2
+                $boleta->cliente->numero_documento,  // 3
+                $boleta->cliente->nombre,            // 4
+                $boleta->fecha_emision,              // 5
+                $boleta->forma_pago->nombre,         // 6
+                $boleta->total,                      // 7
+                $boleta->id,                         // 8
+                $boleta->estado_proceso,             // 9
+                $boleta->estado_nota_credito,        // 10
+                $boleta->estado_nota_debito,         // 11
+                $boleta->cliente->celular ?? '',     // 12
+                $boleta->cliente->email ?? '',       // 13
+                $boleta->estado,                     // 14
+                $boleta->estado_pago,                // 15
+                $boleta->pago_detalle,               // 16
+                $boleta->nota_informativa,            // 17
+                $boleta->nota_credito_register->motivo ?? ''
             ];
         }
         // Llamado para la suma total
@@ -186,8 +194,8 @@ class ComprobantesVentasController extends Controller
         $count_all_comprobantes = ComprobantesVentas::count_day_comprobantes();
          // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         return view('transaccion.comprobantes.boleta_manual.index', compact('almacen', 'count_all_comprobantes', 'count_month_comprobantes','fecha_hoy','monedas','tipo_cambio','bancos'));
@@ -201,6 +209,7 @@ class ComprobantesVentasController extends Controller
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
+        $estado_pago = $request->estado_pago;
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -237,7 +246,11 @@ class ComprobantesVentasController extends Controller
                 });
             });
         }
-
+        if (!empty($estado_pago)) {
+            $query->whereIn('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1, 2]);
+        }
         if ($estado_s !== null) {
             $query->where('b_electronica', $estado_s);
         }
@@ -300,23 +313,25 @@ class ComprobantesVentasController extends Controller
         foreach ($boletas as $boleta) {
             $total_columna += $boleta->total_conv;
             $json['data'][] = [
-                $boleta->id,
-                $boleta->id,
-                $boleta->codigo_boleta,
-                $boleta->cliente->numero_documento,
-                $boleta->cliente->nombre,
-                $boleta->fecha_emision,
-                $boleta->forma_pago->nombre,
-                $boleta->total,
-                $boleta->id,
-                $boleta->estado_proceso,
-                $boleta->estado_nota_credito,
-                $boleta->estado_nota_debito,
-                $boleta->cliente->celular ?? '',
-                $boleta->cliente->email ?? '',
-                $boleta->estado,
-                $boleta->estado_pago,
-                $boleta->pago_detalle
+                $boleta->id,                         // 0
+                $boleta->id,                         // 1
+                $boleta->codigo_boleta,              // 2
+                $boleta->cliente->numero_documento,  // 3
+                $boleta->cliente->nombre,            // 4
+                $boleta->fecha_emision,              // 5
+                $boleta->forma_pago->nombre,         // 6
+                $boleta->total,                      // 7
+                $boleta->id,                         // 8
+                $boleta->estado_proceso,             // 9
+                $boleta->estado_nota_credito,        // 10
+                $boleta->estado_nota_debito,         // 11
+                $boleta->cliente->celular ?? '',     // 12
+                $boleta->cliente->email ?? '',       // 13
+                $boleta->estado,                     // 14
+                $boleta->estado_pago,                // 15
+                $boleta->pago_detalle,               // 16
+                $boleta->nota_informativa,            // 17
+                $boleta->nota_credito_register->motivo ?? ''
             ];
         }
         // Llamado para la suma total
@@ -340,8 +355,8 @@ class ComprobantesVentasController extends Controller
         $igv = Igv::first();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Facturacion::cambio_estado_facturas();
@@ -356,6 +371,8 @@ class ComprobantesVentasController extends Controller
         $start = $request->query('start', 0);
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
+        $estado_pago = $request->estado_pago;
+
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -392,7 +409,11 @@ class ComprobantesVentasController extends Controller
                 });
             });
         }
-
+        if (!empty($estado_pago)) {
+            $query->whereIn('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1, 2]);
+        }
         if ($estado_s !== null) {
             $query->where('f_electronica', $estado_s);
         }
@@ -471,7 +492,9 @@ class ComprobantesVentasController extends Controller
                 $factura->cliente->email ?? '',
                 $factura->estado,
                 $factura->estado_pago,
-                $factura->pago_detalle
+                $factura->pago_detalle,
+                $factura->nota_informativa,
+                $factura->nota_credito_register->motivo ?? ''
             ];
         }
         // Llamado para la suma total
@@ -495,8 +518,8 @@ class ComprobantesVentasController extends Controller
         $igv = Igv::first();
         // Pago rápido
         $fecha_hoy = Carbon::now()->add(1,'day');
-        $monedas = Moneda::get();   
-        $tipo_cambio = TipoCambio::latest('created_at')->first();    
+        $monedas = Moneda::get();
+        $tipo_cambio = TipoCambio::latest('created_at')->first();
         $bancos_pluck = Banco::where('estado', 0)->pluck('id');
         $bancos = Banco::where('estado', 0)->whereIn('id', $bancos_pluck)->get();
         // Facturacion_m::cambio_estado_facturasM();
@@ -512,6 +535,7 @@ class ComprobantesVentasController extends Controller
         $length = $request->query('length', 25);
         $order = $request->query('order', array(0, 'asc'));
         $filter = $request->get('value');
+        $estado_pago = $request->estado_pago;
         // DATA DE DB
         $igv = Igv::first()->renta;
         $moneda_principal = Moneda::where('principal', 1)->first();
@@ -521,8 +545,8 @@ class ComprobantesVentasController extends Controller
             0 => 'id',
             1 => 'id',
             2 => 'codigo_fac',
-            3 => 'cliente.nombre',
-            4 => 'cliente.numero_documento',
+            3 => 'clientes.nombre',
+            4 => 'clientes.numero_documento',
             5 => 'fecha_emision',
             6 => 'forma_pago.nombre',
             7 => 'total_conv',
@@ -533,7 +557,7 @@ class ComprobantesVentasController extends Controller
         $query = Facturacion_m::with(['cliente', 'moneda', 'forma_pago'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
 
-        if (!empty($filter)) {
+        if (!empty($filter) || $filter != "") {
             // Agrupar las condiciones de búsqueda en una única cláusula where
             $query->where(function ($q) use ($filter) {
                 $q->where('codigo_fac', 'like', '%' . $filter . '%');
@@ -547,14 +571,18 @@ class ComprobantesVentasController extends Controller
                 });
             });
         }
-
+        if (!empty($estado_pago)) {
+            $query->whereIn('estado_pago', $estado_pago);
+        } else {
+            $query->whereIn('estado_pago', [0, 1, 2]);
+        }
         if ($estado_s !== null) {
             $query->where('f_electronica', $estado_s);
         }
 
         $recordsTotal = $query->count();
 
-                //codigo agregado:
+        //codigo agregado:
         // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
         // Si se requieren todos los registros (length = -1), no aplicar paginación
         if ($length == -1) {
@@ -628,8 +656,9 @@ class ComprobantesVentasController extends Controller
                 $factura->cliente->email ?? '',
                 $factura->estado,
                 $factura->estado_pago,
-                $factura->pago_detalle
-
+                $factura->pago_detalle,
+                $factura->nota_informativa,
+                $factura->nota_credito_register->motivo ?? ''
             ];
         }
         // Llamado para la suma total

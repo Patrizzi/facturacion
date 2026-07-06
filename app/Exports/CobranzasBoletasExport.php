@@ -1,0 +1,215 @@
+<?php
+
+namespace App\Exports;
+
+use App\Boleta;
+use App\Igv;
+use App\Nota_Credito;
+use App\Nota_Debito;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Events\AfterSheet;
+
+class CobranzasBoletasExport implements FromQuery, WithHeadings, WithMapping, WithEvents
+{
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected ?array $ids;
+    protected array $filters;
+    protected array $monedasFila = [];
+
+    public function __construct(?array $ids = null, array $filters = [])
+    {
+        $this->ids = $ids;
+        $this->filters = $filters;
+    }
+
+    /**
+     * QUERY PRINCIPAL (STREAMING)
+     */
+    public function query()
+    {
+        $query = Boleta::with([
+            'cotizacion',
+            'almacen',
+            'cliente',
+            'moneda',
+            'forma_pago',
+            'user.personal',
+            'tipo_operacion',
+            'tipo_documento',
+        ]);
+
+        // ▶ Exportar por selección
+        if (!empty($this->ids)) {
+            return $query
+                ->whereIn('id', $this->ids)
+                ->orderBy('created_at', 'desc');
+        }
+
+        // ▶ Exportar por filtros
+        $query->whereBetween('created_at', [
+            $this->filters['start'],
+            $this->filters['end']
+        ]);
+
+        if (!empty($this->filters['filter'])) {
+            $filter = $this->filters['filter'];
+            $query->where(function ($q) use ($filter) {
+                $q->where('codigo_boleta', 'like', "%$filter%")
+                    ->orWhereHas(
+                        'cliente',
+                        fn($c) =>
+                        $c->where('nombre', 'like', "%$filter%")
+                            ->orWhere('numero_documento', 'like', "%$filter%")
+                    )
+                    ->orWhere('fecha_emision', 'like', "%$filter%");
+            });
+        }
+
+        if (!is_null($this->filters['tipo'])) {
+            $query->where('tipo', $this->filters['tipo']);
+        }
+        return $query->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * CABECERAS
+     */
+    public function headings(): array
+    {
+        return [
+            'Código Boleta',
+            // 'Cotización',
+            // 'Almacén',
+            'Orden de compra',
+            'Guía de remisión',
+            'Doc. Cliente',
+            'Cliente',
+            // 'Moneda',
+            'Forma de pago',
+            // 'Tipo de cambio',
+            // 'Emisor',
+            // 'Vendedor Asignado',
+            // 'SUNAT',
+            // 'Operación gravada',
+            // 'Operación inafecta',
+            // 'Operación exonerada',
+            // 'Operación gratuita',
+            // 'Nota crédito',
+            // 'Nota débito',
+            // 'Tipo de operación',
+            // 'Tipo de documento',
+            // 'Subtotal',
+            // 'IGV',
+            'Importe total',
+            // 'Estado',
+            'Monto a Deuda',
+            'Estado de pago',
+            'Fecha de emisión',
+            'Fecha de vencimiento',
+            'Observación',
+        ];
+    }
+
+    /**
+     * MAPEO DE CADA FILA
+     */
+    public function map($f): array
+    {
+        $this->monedasFila[] = optional($f->moneda)->codigo;
+        $pl = $f->cliente?->vendedor_asignado?->personal?->personal_l;
+        $vendedor = $pl ? $pl->nombres . ' ' . $pl->apellidos : '';
+
+        $subtotal = ($f->op_gravada ?? 0)
+            + ($f->op_inafecta ?? 0)
+            + ($f->op_exonerada ?? 0);
+        $igv_val = Igv::first();
+        $igv = ($f->op_gravada ?? 0) * ($igv_val->igv_total / 100);
+
+        if ($f->nota_credito != 0) {
+            $nota_cred = Nota_Credito::where('boleta_id', $f->id)->first();
+            $codigo_nc = $nota_cred->codigo_n_c;
+        }
+        if ($f->nota_debito != 0) {
+            $nota_deb = Nota_Debito::where('boleta_id',  $f->id)->first();
+            $codigo_nd = $nota_deb->codigo_n_d;
+        }
+        return [
+            $f->codigo_boleta,
+            // optional($f->cotizacionM)->cod_cotizacion,
+            // optional($f->almacen)->nombre,
+            $f->orden_compra,
+            $f->guia_remision,
+            optional($f->cliente)->numero_documento,
+            optional($f->cliente)->nombre,
+            // optional($f->moneda)->nombre,
+            optional($f->forma_pago)->nombre,
+            // $f->cambio,
+            // optional($f->user->personal)->nombres.' '.optional($f->user->personal)->apellidos,
+            // $vendedor,
+            // $f->estado ? 'Activo' : 'Inactivo',
+            // $f->f_electronica ? 'Emitido' : 'Pendiente',
+            // round($f->op_gravada,2),
+            // round($f->op_inafecta,2),
+            // round($f->op_exonerada,2),
+            // round($f->op_gratuita,2),
+            // $codigo_nc ?? "",
+            // $codigo_nd ?? "",
+            // optional($f->tipo_operacion)->informacion,
+            // optional($f->tipo_documento)->informacion,
+            // round($subtotal, 2),
+            // round($igv, 2),
+            round($subtotal + $igv, 2),
+            round($f->saldo_pendiente_sin_forma, 2),
+            $f->estado_pago == 0 ? 'Sin pagar' : ($f->estado_pago == 1 ? 'Pagado adelantado' : 'Pagado'),
+            $f->fecha_emision,
+            $f->fecha_vencimiento,
+            $f->observacion,
+        ];
+    }
+
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+
+                $sheet = $event->sheet->getDelegate();
+
+                // Formato dinámico por fila
+                foreach ($this->monedasFila as $index => $moneda) {
+
+                    $fila = $index + 2; // fila 1 = encabezados
+
+                    $formato = strtoupper(trim($moneda)) == 'USD'
+                        ? '_-[$$-409]* #,##0.00_-;_-[$$-409]* -#,##0.00_-;_-[$$-409]* "-"??_-;_-@_-'
+                        : '_-[$S/]* #,##0.00_-;_-[$S/]* -#,##0.00_-;_-[$S/]* "-"??_-;_-@_-';
+
+                    $sheet->getStyle("G{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+
+                    $sheet->getStyle("H{$fila}")
+                        ->getNumberFormat()
+                        ->setFormatCode($formato);
+                }
+
+                // Autoajuste columnas simples
+                foreach (range('A', 'Z') as $column) {
+                    $sheet->getColumnDimension($column)->setAutoSize(true);
+                }
+
+                // Autoajuste columnas AA, AB, AC...
+                foreach (range('A', 'Z') as $letter1) {
+                    foreach (range('A', 'Z') as $letter2) {
+                        $sheet->getColumnDimension($letter1 . $letter2)->setAutoSize(true);
+                    }
+                }
+            }
+        ];
+    }
+}

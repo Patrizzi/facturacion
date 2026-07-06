@@ -153,7 +153,29 @@
     .view_pagos {
         display: none;
     }
-
+    .select2-container--default .select2-selection--multiple {
+        min-height: 34px;
+        max-height: 34px;
+        overflow-y: auto;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        max-height: 28px;
+        overflow-y: auto;
+    }
+    .select2-container {
+        width: 100% !important;
+    }
+    .select2-container--default .select2-selection--multiple {
+        height: 28px !important;
+        overflow-y: auto;
+        border: 1px solid #e5e6e7;
+        border-radius: 1px;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+    .select2-selection__rendered{
+        margin-top: 4px !important;
+    }
 </style>
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

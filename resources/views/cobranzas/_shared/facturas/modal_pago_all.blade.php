@@ -14,7 +14,7 @@
                  @csrf
 
                  <input type="hidden" id="modal_pago_tipo_comprobante" name="tipo_comprobante" value="">
-                 <div class="display: none" id="ids_divs_factura">
+                 <div style="display: none" id="ids_divs_factura">
 
                  </div>
                  <input type="hidden" value="{{ $fecha_hoy }}" name="" id="fecha_value_php">

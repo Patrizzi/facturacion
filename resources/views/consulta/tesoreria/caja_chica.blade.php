@@ -6,6 +6,9 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/caja-chica/caja_chica.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda-themeless.min.css">
+
+
 @endsection
 
 @section('content')
@@ -304,7 +307,7 @@
                                 <label class="form-label small text-muted">Nombre y DNI</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control form-control-lg" name="nombres" placeholder="Nombres" value="{{ old('nombres') }}" required>
-                                    <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}" required>
+                                    <input type="text" class="form-control form-control-lg" name="dni" placeholder="DNI" value="{{ old('dni') }}" maxlength="8" minlength="8" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)" required>
                                 </div>
                             </div>
                         </div>
@@ -332,7 +335,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label class="form-label small text-muted">Descripción</label>
-                                <input type="text" class="form-control form-control-lg" name="descripcion" placeholder="Detalle o concepto" value="{{ old('descripcion') }}">
+                                <input type="text" class="form-control form-control-lg" name="descripcion" placeholder="Detalle o concepto" value="{{ old('descripcion') }}" required>
                             </div>
                         </div>
                         {{-- Método de Pago --}}
@@ -347,8 +350,7 @@
                                             class="btn-check"
                                             name="metodo_pago_trans"
                                             id="trans_{{ $metodo }}"
-                                            value="{{ $metodo }}"
-                                            @if($i===0) required @endif
+                                            value="{{ $metodo }}"  
                                         >
                                         <label class="btn-method metodo-{{ strtolower($metodo) }}" for="trans_{{ $metodo }}">
                                             {{ $metodo }}
@@ -356,22 +358,25 @@
                                     </div>
                                     @endforeach
                                 </div>
+                                <div id="error-metodo-pago" class="text-danger small" style="display:none;">
+                                    Seleccione un método de pago.
+                                </div>
                                 @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                         {{-- Hidden para enviar al controlador --}}
-                        <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_trans" />
+                        <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_trans" required/>
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label">Nro. Operación:</label>
-                                <input type="text" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}">
+                                <input type="number" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}" required>
                                 @error('nro_operacion')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label">Comprobante:</label>
-                                <input type="file" name="comprobante" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf">
+                                <input type="file" name="comprobante" class="form-control-file" accept=".jpg,.jpeg,.png,.pdf" >
                                 @error('comprobante')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
@@ -385,9 +390,12 @@
                     </div>
                 </div>
                 <div class="modal-footer-payment">
-                    <button type="submit" class="btn-confirm">
-                        <span class="icon-check"></span>Registrar
+                    <button type="submit" class="btn-confirm ladda-button" data-style="expand-right">
+                        <span class="ladda-label">
+                            <span class="icon-check"></span> Registrar
+                        </span>
                     </button>
+
                 </div>
             </form>
         </div>
@@ -549,8 +557,7 @@
                             class="btn-check"
                             name="metodo_pago_pago"
                             id="pago_{{ $metodo }}"
-                            value="{{ $metodo }}"
-                            @if($i===0) required @endif
+                            value="{{ $metodo }}" 
                         >
                         <label class="btn-method metodo-{{ strtolower($metodo) }}" for="pago_{{ $metodo }}">
                             {{ $metodo }}
@@ -558,10 +565,13 @@
                         </div>
                     @endforeach
                     </div>
+                    <div id="error-metodo-pago-pago" class="text-danger small" style="display:none;">
+                        Seleccione un método de pago.
+                    </div>
                     @error('metodo_pago')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
                     {{-- Hidden para enviar al controlador --}}
-                    <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_pago" />
+                    <input type="hidden" name="metodo_pago" id="hidden_metodo_pago_pago" required />
                     {{-- Tipo de Transacción --}}
                     <div class="form-group">
                         <label class="form-label">Tipo de Transacción:</label>
@@ -583,7 +593,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Nro. Operación:</label>
-                        <input type="text" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}">
+                        <input type="text" name="nro_operacion" class="form-control" value="{{ old('nro_operacion') }}" required>
                         @error('nro_operacion')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
 
@@ -615,7 +625,7 @@
                     <button type="button" class="btn-cancel" onclick="closeModal('modalPagoColaborador')">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn-confirm">
+                    <button type="submit" class="btn-confirm ladda-button" data-style="expand-right">
                         <span class="icon-check"></span> Confirmar Pago
                     </button>
                 </div>
@@ -1055,6 +1065,7 @@ function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTra
         }
     });
     </script>
+
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const toast = document.getElementById('toast');
@@ -1067,5 +1078,79 @@ function abrirModalVerPago(fecha, nombres, dni, descripcion, metodoPago, tipoTra
             }, 4000);
         }
     });
+    
+
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Ladda/1.0.6/ladda.min.js"></script>
+
+<script>
+document.getElementById("formTransaccion").addEventListener("submit", function () {
+    const laddaBtn = document.querySelector(".ladda-button");
+    const l = Ladda.create(laddaBtn);
+    l.start();
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("formTransaccion");
+    const error = document.getElementById("error-metodo-pago");
+
+    form.addEventListener("submit", function (e) {
+
+        const metodo = document.querySelector('input[name="metodo_pago_trans"]:checked');
+
+        // Si NO selecciona método
+        if (!metodo) {
+            e.preventDefault();
+            error.style.display = "block";
+
+            // detener cualquier loader activo
+            Ladda.stopAll();
+
+            return false;
+        }
+
+        // Si todo está correcto
+        error.style.display = "none";
+
+        const l = Ladda.create(btn);
+        l.start();
+    });
+
+});
+document.addEventListener("DOMContentLoaded", function () {
+
+   const formPago = document.querySelector('#modalPagoColaborador form');
+    const errorPago = document.getElementById("error-metodo-pago-pago");
+    const btnPago = formPago.querySelector(".ladda-button");
+
+    formPago.addEventListener("submit", function (e) {
+
+        const metodo = document.querySelector('input[name="metodo_pago_pago"]:checked');
+
+        if (!metodo) {
+            e.preventDefault();
+            errorPago.style.display = "block";
+
+            // detener cualquier loader activo
+            Ladda.stopAll();
+
+            return false;
+        }
+
+        errorPago.style.display = "none";
+
+        const l = Ladda.create(btnPago);
+        l.start();
+    });
+
+});
+
+</script>
+
+
+
 @endsection

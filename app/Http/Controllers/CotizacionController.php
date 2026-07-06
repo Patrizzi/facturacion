@@ -262,7 +262,7 @@ class CotizacionController extends Controller
         $tipo_cambio=TipoCambio::latest('created_at')->first();
         $config=ConfiguracionGuiaIngresos::where('tipo_guia','cotizacion')->get();
         // return $config;
-        
+
         // return $cotiDuplicada;
         return view('transaccion.venta.cotizacion.factura.create2',compact('config','garantia','validez','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','suma','categoria','cotizacion_numero','sucursal','tipo_operacion','cotizacion_numero_boleta','cotizacion_numero_n_venta','config_create', 'cotiDuplicada'));
     }
@@ -1716,6 +1716,7 @@ class CotizacionController extends Controller
         // $ruta = "transaccion.venta.cotizacion.pdf2";
         // $compact = "' ','cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'";
         // return $pdf;
+
         return view('transaccion.venta.cotizacion.show2', compact('cotizacion', 'almacenes_list','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2','garantia','validez','nota_venta','forma_pagos','renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero'));
     }
 
@@ -3989,7 +3990,6 @@ if($validacion==1){
         try {
             $email = $request->get('email');
             $cotizacion_ids = $request->get('cotizacion_ids', []);
-
             if (empty($cotizacion_ids)) {
                 return response()->json([
                     'success' => false,
