@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                    @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
+                    {{-- @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0) --}}
                         <div class="d-flex align-items-center" style="overflow: hidden;">
                             <div id="btn-slider-cotizacion"
                                 style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
@@ -173,7 +173,7 @@
                             @endcan
                         </div>
                         <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
-                    @endif
+                    {{-- @endif --}}
 
                     <a href="{{ route('cotizacion.free_print', $cotizacion->id) }}"
                     class="btn btn-secondary"
@@ -232,30 +232,31 @@
                             </a>
                         </div>
                     </div>
-
                     @if(is_null($factura))
-                        <button type="button"
+                        @can('cotizacion.editar')
+                            <button type="button"
                                 class="btn btn-warning btn-editar"
                                 id="edit"
                                 onclick="click_editar()"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 data-original-title="Editar cotización"
-                                style="white-space: nowrap;">
-                            <i class="fa fa-pencil"></i>
-                        </button>
-                        <button type="button"
-                                class="btn-no-editar no_mostrar btn btn-warning"
-                                onclick="click_cancelar_editar()"
-                                data-toggle="tooltip"
-                                data-placement="bottom"
-                                data-original-title="Cancelar edición"
-                                style="white-space: nowrap;">
-                            <i class="fa fa-times"></i>
-                        </button>
+                                style="white-space: nowrap; margin-right: 4px;">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+
+                            <button type="button"
+                                    class="btn-no-editar no_mostrar btn btn-warning"
+                                    onclick="click_cancelar_editar()"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    data-original-title="Cancelar edición"
+                                    style="white-space: nowrap; margin-right: 4px;">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        @endcan
                     @endif
                 </div>
-
                 <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 15px;">
                     <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn" style="text-align: none; padding-right: 0; padding-left: 0;">
                         @csrf

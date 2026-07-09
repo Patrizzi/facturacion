@@ -729,7 +729,7 @@
                 return allSelectedIds;
             };
         });
-            $('input[name="daterange"]').daterangepicker({
+        $('input[name="daterange"]').daterangepicker({
             "locale": {
                 "separator": " | ",
                 "applyLabel": "Guardar",

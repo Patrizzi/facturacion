@@ -35,12 +35,13 @@
                                     @endcan
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-download"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
-                                            <i class="fa fa-file-excel-o"></i> Excel
+                                            <i class="fa fa-download"></i>
                                         </button>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                <i class="fa fa-file-excel-o"></i> Excel
+                                            </button>
+                                        </div>
                                     </div>
                                 </ul>
                             </ul>

@@ -598,9 +598,9 @@ class CobranzasComprobantesController extends Controller
             9 => 'id'
         ];
         
-        if ($request->daterange != null) {
-            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        if ($request->datarange !== null && $request->datarange !== "") {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->datarange)[1])->endOfDay();
 
             $query = Boleta::whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
         } else {

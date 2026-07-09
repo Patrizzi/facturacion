@@ -31,6 +31,11 @@
                                         <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
                                             class="fa fa-money"></i></button>
                                     @endcan
+
+                                    @can('boleta.pagar')
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
+                                            class="fa fa-money"></i></button>
+                                    @endcan 
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-download"></i>
