@@ -16,55 +16,62 @@
 
     <script src="@yield('vue_js', '#')" defer></script>
 
-    <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/steps/jquery.steps.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
 
     {{-- FUNCION CERRAR AUTOMATICAMENTE --}}
     <SCRIPT LANGUAGE="JavaScript">
-        // function cerrar() {
-        // window.close();
-        // }
+        function cerrar() {
+            window.close();
+        }
     </SCRIPT>
-<style>
-    @media print {
-    @page {
-        size: A4;
-        margin: 15mm;
-    }
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    .avoid-break {
-        page-break-inside: avoid;
-    }
-}
-</style>
+    <style>
+        @media print {
+            @page {
+                size: A4;
+                /* margin: 15mm; */
+            }
+
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .avoid-break {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
 </head>
 
 {{-- LLAMADO AL BODY EN FUNCION CERRAR CON UNA DURACION DE 10 SEGUNDOS --}}
-{{-- <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)"> --}}
-<body class="white-bg" >
 
-<div class="row">
+<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
+{{-- <body class="white-bg" > --}}
+    <div class="row">
         <div class="col-lg-12">
-            <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
+            <div class="ibox-content" style=" margin-bottom: 20px;padding-bottom: 50px;">
                 <div class="row" style="height: auto;">
                     <div class="col-sm-4 text-left" align="left">
                         <div class="form-control" align="center" style="height: 100%;" align="left">
-                            <img align="center" src="{{asset('img/logos/'.$empresa->foto)}}" style="max-width: 100%;max-height: 100px;padding: 5px;vertical-align: middle;align-items: center">
+                            <img align="center" src="{{ asset('img/logos/' . $empresa->foto) }}"
+                                style="max-width: 100%;max-height: 100px;padding: 5px;vertical-align: middle;align-items: center">
                         </div>
                     </div>
                     <div class="col-sm-4" align="center">
-                        <div class="form-control" align="center" style="height: 100%;display: inline-flex; align-items: center; justify-content: center;" align="center"  >
-                            <img align="center" src="{{asset('archivos/imagenes/marcas/'.$garantia_guia_ingreso->marcas_i->imagen)}}" style="max-width: 100%;max-height: 100px;padding: 5px;">
+                        <div class="form-control" align="center"
+                            style="height: 100%;display: inline-flex; align-items: center; justify-content: center;"
+                            align="center">
+                            <img align="center"
+                                src="{{ asset('archivos/imagenes/marcas/' . $garantia_guia_ingreso->marcas_i->imagen) }}"
+                                style="max-width: 100%;max-height: 100px;padding: 5px;">
                         </div>
                     </div>
-                    <div class="col-sm-4" align="right" >
+                    <div class="col-sm-4" align="right">
                         <div class="form-control" align="center" style="height: 100%;"align="right">
-                            <h3 style=""><strong>R.U.C {{$empresa->ruc}}</strong></h3>
-                            <h2 ><strong>GUÍA DE INGRESO</strong></h2>
-                            <h4>{{$garantia_guia_ingreso->orden_servicio}}</h4>
+                            <h3 style=""><strong>R.U.C {{ $empresa->ruc }}</strong></h3>
+                            <h2><strong>GUÍA DE INGRESO</strong></h2>
+                            <h4>{{ $garantia_guia_ingreso->orden_servicio }}</h4>
                         </div>
                     </div>
                 </div>
@@ -74,232 +81,209 @@
                         <div class="form-control">
                             <h3>Contacto Cliente</h3>
                             <div align="left">
-                                <strong>Señor(es):</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->nombre}}<br>
-                                <strong>@if($garantia_guia_ingreso->clientes_i->documento_identificacion == "RUC") Empresa: @else Nombre: @endif</strong> &nbsp;{{$garantia_guia_ingreso->clientes_i->numero_documento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Fecha:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha))}}<br>
-                                <strong>Dirección:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->direccion}}<br>
-                                <strong>Teléfono:</strong>&nbsp;{{$garantia_guia_ingreso->clientes_i->telefono}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <strong>Correo:</strong>&nbsp; {{$garantia_guia_ingreso->clientes_i->email}}<br>
+                                <strong>Señor(es):</strong> &nbsp;{{ $garantia_guia_ingreso->clientes_i->nombre }}<br>
+                                <strong>
+                                    @if ($garantia_guia_ingreso->clientes_i->documento_identificacion == 'RUC')
+                                        Empresa:
+                                    @else
+                                        Nombre:
+                                    @endif
+                                </strong>
+                                &nbsp;{{ $garantia_guia_ingreso->clientes_i->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                <strong>Dirección:</strong>&nbsp;
+                                {{ $garantia_guia_ingreso->clientes_i->direccion }}<br>
+                                <strong>Teléfono:</strong>&nbsp;{{ $garantia_guia_ingreso->clientes_i->telefono }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <strong>Correo:</strong>&nbsp; {{ $garantia_guia_ingreso->clientes_i->email }}<br>
                                 <strong>Contacto:&nbsp;</strong>
-                                @if($garantia_guia_ingreso->contacto_cliente_id == null)
-                                <em>Sin Registro</em>
+                                @if ($garantia_guia_ingreso->contacto_cliente_id == null)
+                                    <em>Sin Registro</em>
                                 @else
-                                {{$contacto->where('id','=',$garantia_guia_ingreso->contacto_cliente_id)->pluck('nombre')->first()}} &nbsp;
+                                    {{ $contacto->where('id', '=', $garantia_guia_ingreso->contacto_cliente_id)->pluck('nombre')->first() }}
+                                    &nbsp;
                                 @endif
                                 <br>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6" align="center">
-                         <div class="form-control" >
-                             <h3>Condiciones Generales</h3>
-                             <div align="left">
-                                <strong>Técnico Asignado:</strong>&nbsp;{{$garantia_guia_ingreso->personal_laborales->nombres}} {{$garantia_guia_ingreso->personal_laborales->apellidos}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                <strong>Motivo:</strong>&nbsp;{{$garantia_guia_ingreso->motivo}}<br>
-                                <strong>Marca :</strong>&nbsp;{{$garantia_guia_ingreso->marcas_i->nombre}} &nbsp;<br>
+                        <div class="form-control">
+                            <h3>Condiciones Generales</h3>
+                            <div align="left">
+                                <strong>Técnico
+                                    Asignado:</strong>&nbsp;{{ $garantia_guia_ingreso->personal_laborales->nombres }}
+                                {{ $garantia_guia_ingreso->personal_laborales->apellidos }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                <strong>Motivo:</strong>&nbsp;{{ $garantia_guia_ingreso->motivo }}<br>
+                                <strong>Marca :</strong>&nbsp;{{ $garantia_guia_ingreso->marcas_i->nombre }} &nbsp;<br>
 
-                                <strong>Asunto:</strong>&nbsp;{{$garantia_guia_ingreso->asunto}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                <br>
+                                <strong>Asunto:</strong>&nbsp;{{ $garantia_guia_ingreso->asunto }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                <strong>Fecha:</strong>
+                                &nbsp;{{ date('d/m/Y', strtotime($garantia_guia_ingreso->fecha)) }}
                             </div>
                         </div>
                     </div>
                     <br>
-                   <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                    <div class="col-sm-12" align="center" style="padding-top: 15px;">
                         <div class="form-control" style="height: 100%">
-                             <h3>Datos del Equipo</h3>
-                             <div class="row" style="padding-bottom: 1px">
-                                 <div align="left" class="col-sm-6">
-                                    <strong>Modelo:</strong> &nbsp;{{$garantia_guia_ingreso->nombre_equipo}}<br>
-                                    <strong>Número de serie:</strong> &nbsp;{{$garantia_guia_ingreso->numero_serie}}<br>
+                            <h3>Datos del Equipo</h3>
+                            <div class="row" style="padding-bottom: 1px">
+                                <div align="left" class="col-sm-6">
+                                    <strong>Modelo:</strong> &nbsp;{{ $garantia_guia_ingreso->nombre_equipo }}<br>
+                                    <strong>Número de serie:</strong>
+                                    &nbsp;{{ $garantia_guia_ingreso->numero_serie }}<br>
                                 </div>
                                 <div align="left" class="col-sm-6">
-                                    <strong>Código Interno:</strong>&nbsp; {{$garantia_guia_ingreso->codigo_interno}}<br>
-                                    <strong>Fecha de Compra:</strong> &nbsp;{{date("d/m/Y", strtotime($garantia_guia_ingreso->fecha_compra))}}<br>
+                                    <strong>Código Interno:</strong>&nbsp;
+                                    {{ $garantia_guia_ingreso->codigo_interno }}<br>
+                                    <strong>Fecha de Compra:</strong>
+                                    &nbsp;{{ date('d/m/Y', strtotime($garantia_guia_ingreso->fecha_compra)) }}<br>
                                 </div>
                             </div>
                         </div>
                     </div>
-                 </div>
+                </div>
 
-            <footer style="padding-top: 10px">
-            <div class="row" align="center">
-                <div class="col-sm-12" align="center">
-                    <div class="form-control" style="height: 100%">
-                        <h3>Descripción del Problema:</h3>
-                        <div align="left" style="font-size: 13px;">
-                            <p>{{$garantia_guia_ingreso->descripcion_problema}} </p>
+                <footer style="padding-top: 10px">
+                    <div class="row" align="center">
+                        <div class="col-sm-12" align="center">
+                            <div class="form-control" style="height: 100%">
+                                <h3>Descripción del Problema:</h3>
+                                <div align="left" style="font-size: 13px;">
+                                    <p>{{ $garantia_guia_ingreso->descripcion_problema }} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                            <div class="form-control" style="height: 100%">
+                                <h3>Revisión y diagnóstico</h3>
+                                <div align="left" style="font-size: 13px;">
+                                    <p> {!! nl2br($garantia_guia_ingreso->revision_diagnostico) !!}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="col-sm-12" align="center" style="padding-top: 15px;">
+                            <div class="form-control" style="height: 100%">
+                                <h3>Estética</h3>
+                                <div align="left" style="font-size: 13px">
+                                    <p> {!! nl2br($garantia_guia_ingreso->estetica) !!}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <br><br>
-                <div class="col-sm-12" align="center" style="padding-top: 15px;">
-                    <div class="form-control" style="height: 100%">
-                        <h3>Revisión y diagnóstico</h3>
-                        <div align="left" style="font-size: 13px;">
-                            <p> {!! nl2br($garantia_guia_ingreso->revision_diagnostico)!!}</p>
-                        </div>
+                </footer>
+                <br>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <strong>
+                            <p><u>Centro de Atención :
+                        </strong></u></p>
+                        <strong>Dirección:</strong> {{ $garantia_guia_ingreso->almacen->direccion }}<br>
+                        <strong>Teléfonos :</strong> {{ $empresa->telefono }} / {{ $usuario->celular }} &nbsp;<br>
+                        <strong>{{ $garantia_guia_ingreso->marcas_i->nombre_empresa }}:</strong>
+                        {{ $garantia_guia_ingreso->marcas_i->telefono }}<br>
+                        <strong>Email:</strong> {{ $usuario->email_user }}<br>
+                        <strong>Web:</strong> {{ $empresa->pagina_web }}<br>
                     </div>
-                </div>
-                <br><br>
-                <div class="col-sm-12" align="center" style="padding-top: 15px;">
-                    <div class="form-control" style="height: 100%">
-                        <h3>Estética</h3>
-                        <div align="left" style="font-size: 13px">
-                            <p> {!! nl2br($garantia_guia_ingreso->estetica)!!}</p>
-                        </div>
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3"><br><br>
+
                     </div>
+
                 </div>
-            </div>
-
-        <!-- <footer style="padding-top: 10px">
-            <div class="row" align="center" style="padding-bottom: 5px">
-                <div class="col-sm-4" align="center">
-                    <div class="form-control" style="height: 100%">
-                        <h3>Descripcion del Problema:</h3>
-                        <div align="left" style="font-size: 13px;">
-                            <p>{{$garantia_guia_ingreso->descripcion_problema}} </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4" align="center">
-                    <div class="form-control" style="height: 100%">
-                        <h3>Revisión y diagnóstico</h3>
-                        <div align="left" style="font-size: 13px;">
-                            <p> {!! nl2br($garantia_guia_ingreso->revision_diagnostico)!!}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4" align="center">
-                    <div class="form-control" style="height: 100%">
-                        <h3>Estética</h3>
-                        <div align="left" style="font-size: 13px">
-                            <p> {!! nl2br($garantia_guia_ingreso->estetica)!!}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer> -->
-
-        </footer>
-
-            <!-- Fin Totales de Productos -->
-            {{-- <div class="row">
-                @foreach($banco as $bancos)
-                <div class="col-sm-3 " align="center">
-                    <p class="form-control" style="height: 100px">
-                      <img  src="" style="width: 100px;height: 30px;">
-                      <br>
-                      N° S/. :
-                      <br>
-                      N° $ : <br>
-
-                  </p>
-              </div>
-              @endforeach
-
-          </div> --}}
-
-          <div class="row">
-            <div class="col-sm-4">
-                <strong><p><u>Centro de Atención : </strong></u></p>
-                <strong>Dirección:</strong> {{$usuario->almacen->direccion}}<br>
-                <strong>Teléfonos :</strong>  {{$empresa->telefono}} / {{$usuario->celular}} &nbsp;<br>
-                <strong>{{$garantia_guia_ingreso->marcas_i->nombre_empresa}}:</strong> {{$garantia_guia_ingreso->marcas_i->telefono}}<br>
-                <strong>Email:</strong> {{$usuario->email_user}}<br>
-                <strong>Web:</strong> {{$empresa->pagina_web}}<br>
-            </div>
-            <div class="col-sm-2"></div>
-            <div class="col-sm-3"></div>
-            <div class="col-sm-3"><br><br>
 
             </div>
+        </div>
+    </div>
 
+    </div>
+
+    <div class="container">
+        <div class="child1"><br>
+            <hr />
+            <p style="width:250px;" align="center">Departamento de Servicio Técnico <br>
+                Ing. {{ $garantia_guia_ingreso->personal_laborales->nombres }}
+                {{ $garantia_guia_ingreso->personal_laborales->apellidos }}</p>
+        </div>
+        <div class="child2"><br>
+            <hr />
+            <p style="width:200px;" align="center">{{ $garantia_guia_ingreso->clientes_i->nombre }}<br>
+                ({{ $garantia_guia_ingreso->clientes_i->documento_identificacion }}:
+                {{ $garantia_guia_ingreso->clientes_i->numero_documento }})</p>
+        </div>
+    </div>
+
+    <div class="">
+        <div>
+            <p><b>IMPORTANTE:</b> Toda revisión por garantía consta de 48 horas. El plazo para el recojo del equipo es
+                de 15 días calendario. en caso de no recoger el equipo dentro de los plazos, este será trasladado al
+                almacén. debiendo pagar S/.20.00 por cada semana que transcurra por gastos administrativos, seguros y
+                almacenaje. Así mismo pasado los 90 días el cliente pierde el derecho total sobre el equipo. </p>
+        </div>
+        <div>
+            <table class="table table-bordered white-bg">
+                <tbody>
+                    <tr>
+                        <th style="width: 25%;text-align: center">{{ $garantia_guia_ingreso->clientes_i->nombre }}</th>
+                        <th style="text-align: center">{{ $garantia_guia_ingreso->orden_servicio }}</th>
+                        <th style="width: 25%;text-align: center">{{ $garantia_guia_ingreso->clientes_i->nombre }}</th>
+                        <th style="text-align: center">{{ $garantia_guia_ingreso->orden_servicio }}</th>
+                        <th style="width: 25%;text-align: center">{{ $garantia_guia_ingreso->clientes_i->nombre }}</th>
+                        <th style="text-align: center">{{ $garantia_guia_ingreso->orden_servicio }}</th>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
     </div>
-</div>
-</div>
 
-</div>
 
-<div class="container">
-    <div class="child1"><br>
-        <hr />
-        <p style="width:250px;" align="center">Departamento de Servicio Técnico <br>
-        Ing. {{$garantia_guia_ingreso->personal_laborales->nombres}} {{$garantia_guia_ingreso->personal_laborales->apellidos}}</p>
     </div>
-    <div class="child2"><br>
-        <hr />
-        <p style="width:200px;" align="center">{{$garantia_guia_ingreso->clientes_i->nombre}}<br> ({{$garantia_guia_ingreso->clientes_i->documento_identificacion}}: {{$garantia_guia_ingreso->clientes_i->numero_documento}})</p>
-    </div>
-</div>
+    <style>
+        .cero {
+            margin-bottom: 0px;
 
-<div class="footer">
-        <div >
-            <p><b>IMPORTANTE:</b> Toda revisión por garantía consta de 48 horas. El plazo para el recojo del equipo es de 15 días calendario. en caso de no recoger el equipo dentro de los plazos, este será trasladado al almacén. debiendo pagar S/.20.00 por cada semana que transcurra por gastos administrativos, seguros y almacenaje. Así mismo pasado los 90 días el cliente pierde el derecho total sobre el equipo.  </p>
-         </div>
-         <div>
-              <table class="table table-bordered white-bg">
-                    <tbody>
-            <tr>
-                <th >{{$garantia_guia_ingreso->clientes_i->nombre}}</th>
-                <th >{{$garantia_guia_ingreso->orden_servicio}}</th>
-                <th >{{$garantia_guia_ingreso->clientes_i->nombre}}</th>
-                <th>{{$garantia_guia_ingreso->orden_servicio}}</th>
-                <th >{{$garantia_guia_ingreso->clientes_i->nombre}}</th>
-                <th >{{$garantia_guia_ingreso->orden_servicio}}</th>
-            </tr>
-                    </tbody>
-                </table>
-         </div>
+        }
 
-</div>
+        .container {
+            /* background: #e0e0e0; */
+            margin: 1 1 1rem;
+            height: 7rem;
+            display: flex;
+            align-items: start;
+            margin-top: 8rem;
 
+        }
 
-</div>
-<style>
-    .cero{
-    margin-bottom: 0px;
+        .child1 {
+            /* background: #60e0b0; */
+            height: 7rem;
+            padding: .2rem;
+            margin-left: 120px;
 
-    }
-    .container {
-        /* background: #e0e0e0; */
-        margin: 1 1 1rem;
-        height: 7rem;
-        display: flex;
-        align-items: start;
-        margin-top:8rem;
+        }
 
-    }
+        .child2 {
+            /* background: #60e0b0; */
+            padding: .2rem;
+            height: 7rem;
+            margin-left: 30%;
+        }
 
-    .child1 {
-        /* background: #60e0b0; */
-        height: 7rem;
-        padding: .2rem;
-    margin-left: 120px;
+        .border {
+            border-color: #aaaaaa;
+            border-width: 1px;
+            border-style: solid;
+        }
 
-    }
-
-    .child2 {
-        /* background: #60e0b0; */
-        padding: .2rem;
-        height: 7rem;
-        margin-left: 30%;
-    }
-
-    .border {
-        border-color: #aaaaaa;
-        border-width: 1px;
-        border-style: solid;
-    }
-    .form-control{
-        border-radius: 7px;
-    }
-
-</style>
+        .form-control {
+            border-radius: 7px;
+        }
+    </style>
 
 
-<!-- Mainly scripts -->
+    <!-- Mainly scripts -->
     <script src="js/jquery-3.1.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.js"></script>
@@ -312,5 +296,3 @@
     <script type="text/javascript">
         window.print();
     </script>
-
-

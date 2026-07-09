@@ -38,7 +38,9 @@
                             <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
                                 @include('transaccion.garantias._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <a class="btn btn-primary" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    @can('guia_ingreso.crear')
+                                        <a class="btn btn-primary" id="create_guia_ingreso"><i class="fa fa-plus"></i></a>
+                                    @endcan
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fa fa-download"></i>
@@ -118,14 +120,15 @@
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
                                                     <th>Código Interno</th>
+                                                    <th>RUC</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha de Compra</th>
                                                     <th>Producto</th>
                                                     <th>Marca</th>
-                                                    <th>Serie</th>
-                                                    <th>Cliente</th>
-                                                    <th>RUC</th>
-                                                    <th>Fecha</th>
-                                                    <th>Ver</th>
-                                                    <th>Acciones</th>
+                                                    <th>N° Serie</th>
+                                                    <th>@can('guia_ingreso.ver') Ver @endcan</th>
+                                                    <th>@canany(['guia_ingreso.anular','guia_ingreso.procesar']) Acciones @endcan</th>
+                                                    <th>Información</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -258,7 +261,9 @@
         // });
 
         $('#tab-1').addClass('active');
-
+        let permiso_ver = false;
+        let permiso_anular = false;
+        let permiso_procesar = false;
         var coti_table = $('.dataTables-guia-ingreso').DataTable({
             "serverSide": true,
             "ajax": {
@@ -269,6 +274,12 @@
                     d.marca = $('#marcas_filter').val();
                     d.egreso = $('#egresado_filter').val();
                     d.value = $('#search_all_column').val();
+                },
+                dataSrc: function(json) {
+                    permiso_ver = json.permiso_ver;
+                    permiso_anular = json.permiso_anular;
+                    permiso_procesar = json.permiso_procesar;
+                    return json.data;
                 }
             },
             "drawCallback": function(settings) {
@@ -286,7 +297,7 @@
                     }
                 },
                 {
-                    'width': '5%',
+                    'width': '3%',
                     'targets': [1],
                 },
                 {
@@ -294,67 +305,110 @@
                     'targets': [2],
                 },
                 {
-                    'width': '8%',
+                    // 'width': '10%',
                     'targets': [3],
+                    'render': function(data, type, full, meta) {
+                        return full[7];
+                    }
                 },
                 {
-                    'width': '10%',
+                    'width': '20%',
                     'targets': [4],
+                    'render': function(data, type, full, meta) {
+                        return full[6];
+                    }
                 },
                 {
-                    'width': '25%',
+                    'width': '15%',
                     'targets': [5],
+                    'render': function(data, type, full, meta) {
+                        return full[8];
+                    }
                 },
                 {
                     'width': '25%',
                     'targets': [6],
+                    'render': function(data, type, full, meta) {
+                        return full[3];
+                    }
                 },
                 {
-                    'width': '25%',
+                    'width': '10%',
                     'targets': [7],
+                    'render': function(data, type, full, meta) {
+                        return full[4];
+                    }
                 },
                 {
+                    'width': '10%',
                     'targets': [8],
+                    'render': function(data, type, full, meta) {
+                        return full[5];
+                    }
                 },
                 {
-                    'width': '5%',
+                    'width': '1%',
                     'targets': [9],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('garantia_guia_ingreso.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<div class="tooltip-demo">
-                            <a href="${url}">
-                                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Ver">
-                                    <i class="fa fa-eye"></i>
-                                </button>
-                            </a>
-                        </div>`;
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<div class="tooltip-demo">
+                                <a href="${url}">
+                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="Ver">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </a>
+                            </div>`;
+                        }
+                        return button_show;
+                    }
+                },
+                {
+                    // 'width': '10%',
+                    'targets': [10],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        var html_fin = ``;
+                        // Accion de Eliminar
+                        html_fin += `<div style="display: flex;column-gap: 10px;">`
+                        if(permiso_anular){
+                            if(full[11] == 0 && full[10] == 1){
+                                html_fin += `<a data-toggle="modal" class="btn btn-danger btn-circle btn-sm" onclick="anular_guia(` + full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                            }else{
+                                html_fin += `<a data-toggle="modal" class="btn btn-default btn-circle btn-sm disabled" style="background-color:gray;"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                            }
+                        }
+                        if(permiso_procesar){
+                        // Accion de Procesar
+                            if(full[10] == 1 && full[11] == 0 ){
+                                var url = '{{ route('garantia_guia_egreso.create_egreso', ':id') }}'
+                                url = url.replace(':id', full[0]);
+                                html_fin += `<a href="${url}"><button type="button" class="btn btn-info btn-sm"><i class="fa fa-sign-in"></i></button>`;
+                            }else{
+                                html_fin += `<a href="#"><button type="button" class="btn btn-default btn-sm disabled" style="background-color:gray;"><i class="fa fa-sign-in"></i></button>`;
+                            }
+                        }
+                        html_fin += `</div>`
+                        return html_fin;
                     }
                 },
                 {
                     'width': '5%',
-                    'targets': [10],
+                    'targets': [11],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var concat2 = ``;
-                        if (full[11] == 0) { // Si no está egresado
-                            if (full[10] == 1) { // Si está activo
-                                var url = '{{ route('garantia_guia_egreso.create_egreso', ':id') }}'
-                                url = url.replace(':id', full[0]);
-                                concat2 += `
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` + full[0] + `, '` + full[2] + `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>
-                                        <a href="${url}"><button type="button" class="btn btn-info"><i class="fa fa-sign-in"></i></button>
-                                    </div>
-                                `;
-                            } else { // Si no está activo
-                                concat2 += `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
+                       if(full[11] == 1){
+                            return `<button class="btn btn-success btn-circle btn-sm" title="Guia Procesada"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`
+                       }else{
+                            if(full[10] == 1){
+                                return `<button class="btn btn-warning btn-circle btn-sm" title="Guia sin Procesar"><i class="fa fa-clock-o" style="color:white;font-size: 110%"></i></button>`
+                            }else{
+                                return `<button class="btn btn-danger btn-circle btn-sm" title="Guia Anulada"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`
                             }
-                        } else { // Si está egresado
-                            concat2 += `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
-                        }
-                        return concat2;
+                       }
                     }
                 }
             ],
@@ -949,6 +1003,33 @@ $('#modal-form').on('hidden.bs.modal', function () {
 
         // Inicializar contador
         updateSelectionCounter();
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        @if (session('success'))
+            toastr.success("{{ session('success') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if (session('error'))
+            toastr.error("{{ session('error') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if (session('warning'))
+            toastr.warning("{{ session('warning') }}", '', {
+                timeOut: 3000
+            });
+        @endif
+
+        @if (session('info'))
+            toastr.info("{{ session('info') }}", '', {
+                timeOut: 3000
+            });
+        @endif
     });
 </script>
 @endsection

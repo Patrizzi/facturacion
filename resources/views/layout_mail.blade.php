@@ -3,62 +3,48 @@
         
         <div class="ibox-content mailbox-content">
             <div class="file-manager">
-                <button type="button" class="btn btn-block btn-primary compose-mail" data-toggle="modal" data-target="#redactar">
-                    Redactar
-                </button>
+                @can('correo.enviar')
+                    <button type="button" class="btn btn-block btn-primary compose-mail" data-toggle="modal" data-target="#redactar">
+                        Redactar
+                    </button>
+                @endcan
                 <div class="space-25"></div>
                 <h5>Folders</h5>
                 <ul class="folder-list m-b-md" style="padding: 0">
-                    <li>
-                        <a href="{{route('email.index')}}" id="index_mail">
-                            <i class="fa fa-inbox"></i>Enviados
-                            <span class="label label-primary float-right">{{$count_mailbox}}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('borradores_email.index')}}" id="borradores_mail">
-                            <i class="fa fa-envelope-o"></i>Borradores
-                            <span class="label label-warning float-right">{{$count_borradores}}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('configuracion_email.index')}}" id="configuracion_mail">
-                            <i class="fa fa-gear"></i>Configuracion
-                            {{-- <span class="label label-primary float-right"></span> --}}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{route('email.trash')}}" id="papelera_mail">
-                            <i class="fa fa-trash-o"></i>Papelera
-                            <span class="label label-danger float-right">{{$count_eliminados}}</span>
-                        </a>
-                    </li>
-                    {{-- <li><a href="mailbox.html"> <i class="fa fa-inbox "></i> Inbox <span class="label label-warning float-right">16</span> </a></li>
-                    <li><a href="mailbox.html"> <i class="fa fa-envelope-o"></i> Send Mail</a></li>
-                    <li><a href="mailbox.html"> <i class="fa fa-certificate"></i> Important</a></li>
-                    <li><a href="mailbox.html"> <i class="fa fa-file-text-o"></i> Drafts <span class="label label-danger float-right">2</span></a></li>
-                    <li><a href="mailbox.html"> <i class="fa fa-trash-o"></i> Trash</a></li> --}}
+                    @can('correo.listar_enviados')
+                        <li>
+                            <a href="{{route('email.index')}}" id="index_mail">
+                                <i class="fa fa-inbox"></i>Enviados
+                                <span class="label label-primary float-right">{{$count_mailbox}}</span>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('correo.listar_enviados')
+                        <li>
+                            <a href="{{route('borradores_email.index')}}" id="borradores_mail">
+                                <i class="fa fa-envelope-o"></i>Borradores
+                                <span class="label label-warning float-right">{{$count_borradores}}</span>
+                            </a>
+                        </li>
+                    @endcan
+                    @can('correo.listar_enviados')
+                        <li>
+                            <a href="{{route('configuracion_email.index')}}" id="configuracion_mail">
+                                <i class="fa fa-gear"></i>Configuracion
+                                {{-- <span class="label label-primary float-right"></span> --}}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('correo.listar_enviados')
+                        <li>
+                            <a href="{{route('email.trash')}}" id="papelera_mail">
+                                <i class="fa fa-trash-o"></i>Papelera
+                                <span class="label label-danger float-right">{{$count_eliminados}}</span>
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
-                {{-- <h5>Categories</h5>
-                <ul class="category-list" style="padding: 0">
-                    <li><a href="#"> <i class="fa fa-circle text-navy"></i> Work </a></li>
-                    <li><a href="#"> <i class="fa fa-circle text-danger"></i> Documents</a></li>
-                    <li><a href="#"> <i class="fa fa-circle text-primary"></i> Social</a></li>
-                    <li><a href="#"> <i class="fa fa-circle text-info"></i> Advertising</a></li>
-                    <li><a href="#"> <i class="fa fa-circle text-warning"></i> Clients</a></li>
-                </ul>
-
-                <h5 class="tag-title">Labels</h5>
-                <ul class="tag-list" style="padding: 0">
-                    <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
-                    <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
-                    <li><a href=""><i class="fa fa-tag"></i> Home</a></li>
-                    <li><a href=""><i class="fa fa-tag"></i> Children</a></li>
-                    <li><a href=""><i class="fa fa-tag"></i> Holidays</a></li>
-                    <li><a href=""><i class="fa fa-tag"></i> Music</a></li>
-                    <li><a href=""><i class="fa fa-tag"></i> Photography</a></li>
-                    <li><a href=""><i class="fa fa-tag"></i> Film</a></li>
-                </ul> --}}
+                
                 <div class="clearfix"></div>
             </div>
         </div>

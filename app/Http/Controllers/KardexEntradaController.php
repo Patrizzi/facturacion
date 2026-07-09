@@ -31,41 +31,42 @@ class KardexEntradaController extends Controller
     public function index()
     {
 
-      $primer_registro=Kardex_entrada::first();
-      if(empty($primer_registro)){$primer_registro_kardex=1;}else{ $primer_registro_kardex=$primer_registro->id;}
-      $inventario_inicial=Kardex_entrada::where('codigo_guia','INVENTARIO INICIAL')->where('id','!=',$primer_registro_kardex)->get();
-      $user_login =auth()->user();
-      $almacenes=Almacen::all();
-      $almacen_1=Almacen::first();
-      $clasificaciones=Categoria::all();
-      if ($user_login->name== 'Administrador') {
-        $kardex_entradas=Kardex_entrada::where('tipo_registro_id',1)->where('codigo_guia','!=','INVENTARIO INICIAL')->get();
-        /* numero '1' es igual a Entrada de productos*/
-      }else{ $kardex_entradas=Kardex_entrada::where('almacen_id',$user_login->almacen_id)->where('codigo_guia','!=','INVENTARIO INICIAL')->get();}
+      $primer_registro = Kardex_entrada::first();
+      $primer_registro_kardex = $primer_registro ? $primer_registro->id : 1;
+      $inventario_inicial = Kardex_entrada::where('codigo_guia', 'INVENTARIO INICIAL')
+          ->where('id', '!=', $primer_registro_kardex)
+          ->get();
 
-      foreach ($kardex_entradas as $value => $kardex_entrada) {
-        $kardex_entrada_registros=kardex_entrada_registro::where('kardex_entrada_id',$kardex_entrada->id)->get();
-        foreach ($kardex_entrada_registros as $value2 => $kardex_entrada_registro) {
-          $KER_cantidad_inicial=$kardex_entrada_registro->cantidad_inicial;
-          $KER_cantidad=$kardex_entrada_registro->cantidad;
-          if($KER_cantidad_inicial==$KER_cantidad){
-            $validador=1;
-          }else{
-            $validador=0;
-            break;
+      $user_login = auth()->user();
+      $almacenes = Almacen::all();
+      $almacen_1 = Almacen::first();
+      $clasificaciones = Categoria::all();
+      $query = Kardex_entrada::where('codigo_guia', '!=', 'INVENTARIO INICIAL');
+
+      // Filtro por rol
+      if ($user_login->almacen_id != NULL) {
+          $query->where('tipo_registro_id', 1);
+      } else {
+          $query->where('tipo_registro_id', 1)->where('almacen_id', $user_login->almacen_id);
+      }
+      $kardex_entradas = $query->orderBy('id', 'ASC')->get();
+      $kardex_entradas->load('registros');
+      $array_final = [];
+      foreach ($kardex_entradas as $key => $kardex_entrada) {
+          $validador = 1; // asumimos válido
+          foreach ($kardex_entrada->registros as $registro) {
+              if ($registro->cantidad_inicial != $registro->cantidad) {
+                  $validador = 0;
+                  break;
+              }
           }
-        }
-        $array_final[$value]=$validador;
-
+          $array_final[$key] = $validador;
       }
-      if(count($kardex_entradas) == 0){
-        $validador=0;
-        $array_final[1]=$validador;
+      if ($kardex_entradas->isEmpty()) {
+          $array_final[1] = 0;
       }
-      // return $array_final;
-      
-      return view('inventario.kardex.entrada.entrada_producto.index' ,compact('primer_registro','kardex_entradas','almacenes','clasificaciones','array_final','almacen_1'));
-
+      // return $kardex_entradas;
+      return view('inventario.kardex.entrada.entrada_producto.index',compact('primer_registro','kardex_entradas','almacenes','clasificaciones','array_final','almacen_1')); 
     }
 
     public function fetcha(Request $request)
@@ -146,7 +147,7 @@ class KardexEntradaController extends Controller
      */
     public function store(Request $request)
     {
-      // return $request;
+      return $request;  
       // return kardex_entrada_registro::stock_producto_precio();
       // return $request;
       $this->validate($request,[

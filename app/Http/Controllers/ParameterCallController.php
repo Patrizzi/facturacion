@@ -21,6 +21,7 @@ use App\Forma_pago;
 use App\TipoCambio;
 use App\Kardex_entrada;
 use App\helpers;
+use App\Personal;
 use App\Personal_venta;
 use App\Tipo_operacion_f;
 use App\TipoDetraccion;
@@ -32,6 +33,8 @@ use Swift_Mailer;
 use Swift_TransportException;
 
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class ParameterCallController extends Controller
 {
@@ -883,5 +886,33 @@ class ParameterCallController extends Controller
         return response()->json($forma_pago);
     }
 
+    public function getPersonalData(Request $request){
+        $data = Personal::findorFail($request->id);
+        return response()->json($data);
+    }
 
+    public function getUserData(Request $request){
+        $data = User::with('personal','roles')->findorFail($request->id);
+        return response()->json($data);
+    }
+
+    public function getPermissionxRolData(Request $request){
+        $rol = Role::find($request->id_rol);
+        $ids = $rol->permissions()->pluck('id');
+
+        return response()->json($ids);
+    }
+    public function getRolesXUserData(Request $request){
+        
+        if($request->rol_id == 4){
+            $users = User::with('personal')
+                ->whereHas('roles', function ($q) {
+                    $q->where('type', 1);
+                })
+                ->get();
+        }else{
+            $users = User::with('personal')->role($request->rol_id)->get();   
+        }
+        return json_decode($users);
+    }
 }

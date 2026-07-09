@@ -10,19 +10,19 @@
                 @include('facturacion_electronica.nota_credito.stadistics')
             </div>
         </div>
-    </div>
+
     {{-- Base para agregar el tab para el los contenidos --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                            <ul class="nav nav-tabs" role="tablist"
+                                style="align-items: center;border-bottom: 0px !important;">
                                 @include('facturacion_electronica.nota_credito.shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                     <div class="btn-group">
-                                        <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                             <i class="fa fa-download"></i></button>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item" href="#">XML</a></li>
@@ -36,32 +36,22 @@
                             </ul>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-7" class="tab-pane active show">
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_guia">
-
-                                        </div>
-                                    </div>
-                                    <hr />
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-7" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <br>
+                                <br>
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="dateranger_credito"
                                                     id="dateranger_credito"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" readonly />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select()">
                                                         <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select()">
-                                                        <i class="fa fa-eraser"></i>
                                                     </button>
                                                 </span>
                                             </div>
@@ -79,9 +69,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <br>
+                                <br>
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  2 -->
-                                    <table class="table table-striped dataTables-example3">
+                                    <table class="table table-striped table-bordered dataTables-example3">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-credito_env_all" name="input[]">
@@ -93,76 +85,12 @@
                                                 <th>Cliente</th>
                                                 <th>Fecha Emisión</th>
                                                 <th>Fecha Envío</th>
+                                                <th>@can('nota_credito.xml') XML @endcan</th>
+                                                <th>@can('nota_credito.cdr') CDR @endcan</th>
                                                 <th>Estado</th>
-                                                <th>XML</th>
-                                                <th>CDR</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- <span hidden>{{ $q = 1 }}</span>
-                                            @foreach ($n_creditos_enviados as $n_credito_enviado)
-                                                <tr>
-                                                    <td>
-                                                        <input type="checkbox" class="i-checks" name="input[]">
-                                                    </td>
-                                                    <td>{{ $q++ }}</td>
-                                                    @if ($n_credito_enviado->facturacion_id != null)
-                                                        <td>{{ $n_credito_enviado->codigo_n_c }}</td>
-                                                        <td>Factura</td>
-                                                        <td><a class="link_tds" target="_blank"
-                                                                href="{{ route('facturacion.show', $n_credito_enviado->nota_i_facturacion->id) }}">{{ $n_credito_enviado->nota_i_facturacion->codigo_fac }}</a>
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_facturacion->cliente->nombre }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_facturacion->cliente->numero_documento }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_facturacion->created_at }}</td>
-                                                    @elseif($n_credito_enviado->boleta_id != null)
-                                                        <td>{{ $n_credito_enviado->codigo_n_c }}</td>
-                                                        <td>Boleta</td>
-                                                        <td><a class="link_tds" target="_blank"
-                                                                href="{{ route('boleta.show', $n_credito_enviado->nota_i_boleta->id) }}">{{ $n_credito_enviado->nota_i_boleta->codigo_boleta }}</a>
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_boleta->cliente->nombre }}</td>
-                                                        <td>{{ $n_credito_enviado->nota_i_boleta->cliente->numero_documento }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_boleta->created_at }}</td>
-                                                    @elseif($n_credito_enviado->boleta_m_id != null)
-                                                        <td>{{ $n_credito_enviado->codigo_n_c }}</td>
-                                                        <td>Boleta Manual</td>
-                                                        <td><a class="link_tds" target="_blank"
-                                                                href="{{ route('boleta_manual.show', $n_credito_enviado->nota_i_boleta_manual->id) }}">{{ $n_credito_enviado->nota_i_boleta_manual->codigo_boleta }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_boleta_manual->cliente->nombre }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_boleta_manual->cliente->numero_documento }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_boleta_manual->created_at }}</td>
-                                                    @else
-                                                        <td>{{ $n_credito_enviado->codigo_n_c }}</td>
-                                                        <td>Factura Manual</td>
-                                                        <td><a class="link_tds" target="_blank"
-                                                                href="{{ route('facturacion_manual.show', $n_credito_enviado->nota_i_fac_manual->id) }}">{{ $n_credito_enviado->nota_i_fac_manual->codigo_fac }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_fac_manual->cliente->nombre }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_fac_manual->cliente->numero_documento }}
-                                                        </td>
-                                                        <td>{{ $n_credito_enviado->nota_i_fac_manual->created_at }}</td>
-                                                    @endif
-
-                                                    <td>
-                                                        <a href="{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-07-{{ $n_credito_enviado->codigo_n_c }}.xml"
-                                                            download><img src="{{ asset('xml.png') }}" width="25px"></a>
-                                                    </td>
-                                                    <td>
-                                                        <a href="{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-07-{{ $n_credito_enviado->codigo_n_c }}.zip"
-                                                            download><img src="{{ asset('zip.png') }}" width="25px"></a>
-                                                    </td>
-                                                    <td><button type="button" class="btn btn-info btn-circle btn-ls"><i
-                                                                class="fa fa-check-circle"></i></button></td>
-                                                </tr>
-                                            @endforeach --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -188,6 +116,22 @@
         /* CSV, Excel, PDF, Print */
         div.dt-buttons {
             display: none;
+        }
+        .td_status {
+            text-align: center;
+        }
+        .dataTables-example3{
+            width: 100% !important;
+        }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px !important;
+            padding-left: 15px !important;
         }
     </style>
     <!-- scripts -->
@@ -220,6 +164,8 @@
             });
 
             // {{-- Datatable Facturas Enviadas  --}}
+            var permiso_xml = false;
+            var permiso_cdr = false;
             var table_credito_env = $('.dataTables-example3').DataTable({
                 "serverSide": true,
                 "ajax": {
@@ -232,6 +178,8 @@
                         d.value = $('#inputBuscar').val();
                     },
                     dataSrc: function(json) {
+                        permiso_xml = json.permiso_xml;
+                        permiso_cdr = json.permiso_cdr;
                         return json.data;
                     }
                 },
@@ -251,7 +199,33 @@
                         'targets': [6]
                     },
                     {
-                        'targets': [9], // Estado
+                        'targets': [9], // Descargar XML
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-07-${full[2]}.xml`;
+                            var button = ``;
+                            if(permiso_xml){
+                                button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>` ;
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        'targets': [10],
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url =
+                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-07-${full[2]}.zip`;
+                            var button = ``;
+                            if(permiso_cdr){
+                                button += `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
+                            }
+                            return button;
+                        }
+                    },
+                    {
+                        'targets': [11], // Estado
                         'orderable': false,
                         'className': 'td_status',
                         'render': function(data, type, full, meta) {
@@ -267,24 +241,6 @@
                             return end;
                         }
                     },
-                    {
-                        'targets': [10], // Descargar XML
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-07-${full[2]}.xml`;
-                            return `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
-                        }
-                    },
-                    {
-                        'targets': [11],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/R-{{ $empresa->ruc }}-07-${full[2]}.zip`;
-                            return `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
-                        }
-                    }
 
                 ],
                 drawCallback: function() {

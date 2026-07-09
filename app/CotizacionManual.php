@@ -168,7 +168,11 @@ class CotizacionManual extends Model
         // Busqueda en DB
         $query = CotizacionManual::with(['cliente', 'moneda', 'forma_pago'])
             ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-
+        
+        // Permiso para Solo el Usuario
+        // if(!auth()->user()->can('cotizacion_m.ver')){
+        //     $query->where('user_id', auth()->user()->id);
+        // }
         //  Filtro
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where

@@ -40,20 +40,19 @@
                 @include('facturacion_electronica.boleta.stadistics')
             </div>
         </div>
-    </div>
-    {{-- Base para agregar el tab para el los contenidos --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
+        {{-- Base para agregar el tab para el los contenidos --}}
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.boleta.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
@@ -69,8 +68,8 @@
                         </div>
                         <!-- Tablas y su contenido -->
                         <div class="tab-content">
-                            <div role="tabpanel" id="tab-7" class="tab-pane active show">
-                                <div class="panel-body">
+                            <div role="tabpanel" id="tab-7" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-lg-12" id="alert_boleta">
 
@@ -82,17 +81,11 @@
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="daterange-boleta_m"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    value="" readonly />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select()">
                                                         <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select()">
-                                                        <i class="fa fa-eraser"></i>
                                                     </button>
                                                 </span>
                                             </div>
@@ -110,9 +103,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <br>
+                                <br>
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped dataTables-boleta_m">
+                                    <table class="table table-striped table-bordered dataTables-boleta_m">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-boletas-head"
@@ -124,8 +119,11 @@
                                                 <th>Fecha de Creación</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
                                                     class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
-                                                    rowspan="1" colspan="1"><img src="{{ asset('sunat.png') }}"
-                                                        width="15px">SUNAT
+                                                    rowspan="1" colspan="1">
+                                                    @can('boleta.emitir')
+                                                        <img src="{{ asset('sunat.png') }}"
+                                                            width="15px">SUNAT
+                                                    @endcan
                                                 </th>
                                             </tr>
                                         </thead>
@@ -146,19 +144,25 @@
                                                         <td>{{ $boleta->cotizacion->cliente->numero_documento }}</td>
                                                     @endif
                                                     <td>{{ $boleta->fecha_emision }}</td>
-                                                    <td style="text-align: center"><button type="button"
-                                                            class="btn btn-success btn-circle btn-ls"
-                                                            value="{{ $boleta->codigo_boleta }}"
-                                                            onclick="envio_boleta_m(this)"><i
-                                                                class="fa fa-cloud-upload"></i></button></td>
+                                                    <td style="text-align: center">
+                                                        @can('boleta.emitir')
+                                                            <button type="button"
+                                                                class="btn btn-success btn-ls"
+                                                                value="{{ $boleta->codigo_boleta }}"
+                                                                onclick="envio_boleta_m(this)"><i
+                                                                    class="fa fa-cloud-upload"></i></button>
+                                                        @endcan    
+                                                        </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        <tfooter>
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary"
-                                                    id="boleta_elec_all_m">Enviar</button></td>
-                                        </tfooter>
+                                        @can('boleta.emitir')
+                                            <tfoot>
+                                                <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                                <td align="center"><button type="button" class="btn btn-primary"
+                                                        id="boleta_elec_all_m">Enviar</button></td>
+                                            </tfoot>
+                                        @endcan
                                     </table>
                                 </div>
                             </div>
@@ -183,6 +187,16 @@
         /* CSV, Excel, PDF, Print */
         div.dt-buttons {
             display: none;
+        }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
         }
     </style>
     <!-- scripts -->

@@ -1,16 +1,13 @@
-<div id="EditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static"
+<div id="ModalFormEditProducto" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static"
     data-keyboard="false" tabindex="-1" aria-labelledby="TituloProducto">
-    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 900px;">>
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 1200px;">
+        <div class="modal-content" style="height: 120% !important">
             <form action="">
                 @csrf
                 <div class="modal-header d-flex align-items-center">
-                    <h2 class="model-title" id="TituloProducto"><b>Editar Producto <span id="codigo_header"></span></b>
+                    <h2 class="model-title" id="TituloProducto"><b><span id="codigo_header"></span></b>
                     </h2>
-                    {{--if (isset($producto))
-                        <input type="checkbox" class="js-switch" id="edit_estado_id" name="edit_estado_id"
-                            {{ $producto->estado_id == 1 ? 'checked' : '' }}>
-                    @endif--}}
+                    {{-- <input type="checkbox" class="js-switch-edit" id="edit_estado_id" name="estado_id"> --}}
                 </div>
                 <div class="modal-body">
                     <div class="scroll_content">

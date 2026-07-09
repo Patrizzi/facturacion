@@ -37,8 +37,6 @@
                 @include('facturacion_electronica.factura.stadistics')
             </div>
         </div>
-    </div>
-    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             {{-- CONTENIDO DE TABS --}}
@@ -47,11 +45,13 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.factura.shared.tabs')
-                                    <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
+                                    <ul class="ml-auto d-flex"
+                                        style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
@@ -66,8 +66,8 @@
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-5" class="tab-pane active show">
+                         <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-5" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                 <div class="row">
                                     <div class="col-lg-12" id="alert_factura">
 
@@ -80,17 +80,11 @@
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="dateranger_factura"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    value="" readonly id="daterange-factura" />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select_factura()">
                                                         <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select_factura()">
-                                                        <i class="fa fa-eraser"></i>
                                                     </button>
                                                 </span>
                                             </div>
@@ -104,13 +98,14 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-primary  btn-block">Buscar</button>
+                                            <button class="btn btn-primary btn-block" id="filter_buttons">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
+                                <br>
                                 <!-- CONTENIDO DENTRO DEL TAB  -->
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-hover dataTables-factura">
+                                    <table class="table table-striped table-bordered dataTables-factura">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-facturas-head"
@@ -122,8 +117,11 @@
                                                 <th>Fecha de Creacion</th>
                                                 <th style="text-align: center; color: rgb(0, 115, 193); width: 0px;"
                                                     class="sorting" tabindex="0" aria-controls="DataTables_Table_1"
-                                                    rowspan="1" colspan="1"><img src="{{ asset('sunat.png') }}"
-                                                        width="15px">SUNAT
+                                                    rowspan="1" colspan="1">
+                                                    @can('factura.emitir')
+                                                        <img src="{{ asset('sunat.png') }}"
+                                                            width="15px">SUNAT
+                                                    @endcan
                                                 </th>
                                             </tr>
                                         </thead>
@@ -140,26 +138,32 @@
                                                         <td>{{ $facturaciones->cliente->numero_documento }}</td>
                                                         <td>{{ $facturaciones->cliente->nombre }}</td>
                                                     @else
-                                                        <td>{{ $facturaciones->cotizacion->cliente->numero_documento }}
+                                                        <td>{{ $facturaciones->cotizacion->cliente->numero_documento }}</td>
                                                         <td>{{ $facturaciones->cotizacion->cliente->nombre }}</td>
-                                                        </td>
                                                     @endif
                                                     <td>
                                                         <span>{{ $facturaciones->fecha_emision }}</span>
                                                     </td>
-                                                    <td style="text-align: center"><button type="button"
-                                                            class="btn btn-success btn-circle btn-ls"
-                                                            value="{{ $facturaciones->codigo_fac }}"
-                                                            onclick="envio_factura(this)"><i
-                                                                class="fa fa-cloud-upload"></i></button></td>
+                                                    <td style="text-align: center">
+                                                        @can('factura.emitir')
+                                                            <button type="button"
+                                                                class="btn btn-success "
+                                                                value="{{ $facturaciones->codigo_fac }}"
+                                                                onclick="envio_factura(this)">
+                                                                <i class="fa fa-cloud-upload"></i>
+                                                            </button>
+                                                        @endcan
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        <tfooter>
-                                            <td colspan="6" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary"
-                                                    id="fac_elec_all">Enviar</button></td>
-                                        </tfooter>
+                                        @can('factura.emitir')
+                                            <tfoot>
+                                                <td colspan="6" align="right" style="padding-right: 2em"></td>
+                                                <td align="center"><button type="button" class="btn btn-primary"
+                                                        id="fac_elec_all">Enviar</button></td>
+                                            </tfoot>
+                                        @endcan
                                     </table>
                                 </div>
                             </div>
@@ -200,7 +204,7 @@
             border-bottom: 1px solid #e7eaec;
         }
 
-        .search-responsive {
+        .search-responsive, .table-responsive {
             padding-right: 15px;
             padding-left: 15px;
         }
@@ -236,66 +240,82 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
-            // {{-- Datatable Facturas --}}
-            table_factura = $('.dataTables-factura').DataTable({
-                searching: false,
-                info: false,
-                pageLength: 15,
-                responsive: true
-            });
-            $('input[name="dateranger_factura"]').daterangepicker({
+        });
 
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                },
-                function(start, end, label) {
-                    var dates = [];
-                    var currentDate = new Date(start);
-                    while (currentDate <= end) {
-                        var day = ('0' + currentDate.getDate()).slice(-2);
-                        var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-                        var year = currentDate.getFullYear();
+        // {{-- Datatable Facturas --}}
+        var table_factura = $('.dataTables-factura').DataTable({
+            info: false,
+            pageLength: 15,
+            responsive: true
+        });
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                
+                let range = $('input[name="dateranger_factura"]').val();
 
-                        var formattedDate = day + '-' + month + '-' + year;
-                        dates.push(formattedDate);
-
-                        currentDate.setDate(currentDate.getDate() + 1);
-                    }
-                    var dateRangeString = dates.join('|');
-                    console.log(dateRangeString);
-                    table_factura.column(5).search(dateRangeString, true, false).draw();
+                if (!range || range.trim() === '') {
+                    return true;
                 }
-            );
+
+                let dates = range.split(' - ');
+
+                if (dates.length !== 2) {
+                    return true;
+                }
+
+                let min = moment(dates[0], 'DD/MM/YYYY');
+                let max = moment(dates[1], 'DD/MM/YYYY');
+
+                let current = moment(data[5], 'DD/MM/YYYY');
+
+                if (!current.isValid()) {
+                    return false;
+                }
+
+                return current.isBetween(min, max, undefined, '[]');
+            }
+        );
+
+        $('input[name="dateranger_factura"]').daterangepicker({
+            "locale": {
+                "separator": " - ",
+                "applyLabel": "Guardar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "Desde",
+                "toLabel": "Hasta",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Do",
+                    "Lu",
+                    "Ma",
+                    "Mi",
+                    "Ju",
+                    "Vi",
+                    "Sa"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1,
+                "format": "DD/MM/YYYY"
+            }
+        });
+
+        $('#filter_buttons').on('click', function() {
+
+            table_factura.draw();
+
         });
 
         // Facturas

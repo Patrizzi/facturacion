@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class PermissionsTableSeeder extends Seeder
 {
@@ -15,482 +16,486 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-        //Lista de permisos
-        Permission::create(['name' => 'inicio']);
-        Permission::create(['name' => 'transacciones']);
-        Permission::create(['name' => 'transacciones-ventas']);
-        Permission::create(['name' => 'transacciones-ventas-cotizaciones.index']);
-        Permission::create(['name' => 'transacciones-ventas-cotizaciones.create']);
-        Permission::create(['name' => 'transacciones-ventas-cotizaciones.store']);
-        Permission::create(['name' => 'transacciones-ventas-cotizaciones.show']);
-        Permission::create(['name' => 'transacciones-ventas-cotizaciones.edit']);
-        Permission::create(['name' => 'transacciones-ventas-cotizaciones.update']);
-        Permission::create(['name' => 'transacciones-ventas-cotizaciones.destroy']);
-        Permission::create(['name' => 'transacciones-ventas-facturacion.index']);
-        Permission::create(['name' => 'transacciones-ventas-facturacion.create']);
-        Permission::create(['name' => 'transacciones-ventas-facturacion.store']);
-        Permission::create(['name' => 'transacciones-ventas-facturacion.show']);
-        Permission::create(['name' => 'transacciones-ventas-facturacion.edit']);
-        Permission::create(['name' => 'transacciones-ventas-facturacion.update']);
-        Permission::create(['name' => 'transacciones-ventas-facturacion.destroy']);
-        Permission::create(['name' => 'transacciones-ventas-boleta.index']);
-        Permission::create(['name' => 'transacciones-ventas-boleta.create']);
-        Permission::create(['name' => 'transacciones-ventas-boleta.store']);
-        Permission::create(['name' => 'transacciones-ventas-boleta.show']);
-        Permission::create(['name' => 'transacciones-ventas-boleta.edit']);
-        Permission::create(['name' => 'transacciones-ventas-boleta.update']);
-        Permission::create(['name' => 'transacciones-ventas-boleta.destroy']);
-        Permission::create(['name' => 'transacciones-ventas-guia_remision.index']);
-        Permission::create(['name' => 'transacciones-ventas-guia_remision.create']);
-        Permission::create(['name' => 'transacciones-ventas-guia_remision.store']);
-        Permission::create(['name' => 'transacciones-ventas-guia_remision.show']);
-        Permission::create(['name' => 'transacciones-ventas-guia_remision.edit']);
-        Permission::create(['name' => 'transacciones-ventas-guia_remision.update']);
-        Permission::create(['name' => 'transacciones-ventas-guia_remision.destroy']);
-        Permission::create(['name' => 'transacciones-garantias']);
-        Permission::create(['name' => 'transacciones-garantias-guias_ingreso.index']);
-        Permission::create(['name' => 'transacciones-garantias-guias_ingreso.create']);
-        Permission::create(['name' => 'transacciones-garantias-guias_ingreso.store']);
-        Permission::create(['name' => 'transacciones-garantias-guias_ingreso.show']);
-        Permission::create(['name' => 'transacciones-garantias-guias_ingreso.edit']);
-        Permission::create(['name' => 'transacciones-garantias-guias_ingreso.update']);
-        Permission::create(['name' => 'transacciones-garantias-guias_ingreso.destroy']);
-        Permission::create(['name' => 'transacciones-garantias-guias_egreso.index']);
-        Permission::create(['name' => 'transacciones-garantias-guias_egreso.create']);
-        Permission::create(['name' => 'transacciones-garantias-guias_egreso.store']);
-        Permission::create(['name' => 'transacciones-garantias-guias_egreso.show']);
-        Permission::create(['name' => 'transacciones-garantias-guias_egreso.edit']);
-        Permission::create(['name' => 'transacciones-garantias-guias_egreso.update']);
-        Permission::create(['name' => 'transacciones-garantias-guias_egreso.destroy']);
-        Permission::create(['name' => 'transacciones-garantias-informe_tecnico.index']);
-        Permission::create(['name' => 'transacciones-garantias-informe_tecnico.create']);
-        Permission::create(['name' => 'transacciones-garantias-informe_tecnico.store']);
-        Permission::create(['name' => 'transacciones-garantias-informe_tecnico.show']);
-        Permission::create(['name' => 'transacciones-garantias-informe_tecnico.edit']);
-        Permission::create(['name' => 'transacciones-garantias-informe_tecnico.update']);
-        Permission::create(['name' => 'transacciones-garantias-informe_tecnico.destroy']);
-        Permission::create(['name' => 'inventario']);
-        Permission::create(['name' => 'inventario-productos_kardex']);
-        Permission::create(['name' => 'inventario-productos_kardex-entrada_producto.index']);
-        Permission::create(['name' => 'inventario-productos_kardex-entrada_producto.create']);
-        Permission::create(['name' => 'inventario-productos_kardex-entrada_producto.store']);
-        Permission::create(['name' => 'inventario-productos_kardex-entrada_producto.show']);
-        Permission::create(['name' => 'inventario-productos_kardex-entrada_producto.edit']);
-        Permission::create(['name' => 'inventario-productos_kardex-entrada_producto.update']);
-        Permission::create(['name' => 'inventario-productos_kardex-entrada_producto.destroy']);
-        Permission::create(['name' => 'inventario-productos_kardex-salida_producto.index']);
-        Permission::create(['name' => 'inventario-productos_kardex-salida_producto.create']);
-        Permission::create(['name' => 'inventario-productos_kardex-salida_producto.store']);
-        Permission::create(['name' => 'inventario-productos_kardex-salida_producto.show']);
-        Permission::create(['name' => 'inventario-productos_kardex-salida_producto.edit']);
-        Permission::create(['name' => 'inventario-productos_kardex-salida_producto.update']);
-        Permission::create(['name' => 'inventario-productos_kardex-salida_producto.destroy']);
-        Permission::create(['name' => 'inventario-productos-inventario_inicial.index']);
-        Permission::create(['name' => 'inventario-productos-inventario_inicial.create']);
-        Permission::create(['name' => 'inventario-productos-inventario_inicial.store']);
-        Permission::create(['name' => 'inventario-productos-inventario_inicial.show']);
-        Permission::create(['name' => 'inventario-productos-inventario_inicial.edit']);
-        Permission::create(['name' => 'inventario-productos-inventario_inicial.update']);
-        Permission::create(['name' => 'inventario-productos-inventario_inicial.destroy']);
-        Permission::create(['name' => 'inventario-toma_de_inventario.index']);
-        Permission::create(['name' => 'inventario-toma_de_inventario.create']);
-        Permission::create(['name' => 'inventario-toma_de_inventario.store']);
-        Permission::create(['name' => 'inventario-toma_de_inventario.show']);
-        Permission::create(['name' => 'inventario-toma_de_inventario.edit']);
-        Permission::create(['name' => 'inventario-toma_de_inventario.update']);
-        Permission::create(['name' => 'inventario-toma_de_inventario.destroy']);
-        Permission::create(['name' => 'planilla']);
-        Permission::create(['name' => 'planilla-datos_generales.index']);
-        Permission::create(['name' => 'planilla-datos_generales.create']);
-        Permission::create(['name' => 'planilla-datos_generales.store']);
-        Permission::create(['name' => 'planilla-datos_generales.show']);
-        Permission::create(['name' => 'planilla-datos_generales.edit']);
-        Permission::create(['name' => 'planilla-datos_generales.update']);
-        Permission::create(['name' => 'planilla-datos_generales.destroy']);
-        Permission::create(['name' => 'planilla-vendedores.index']);
-        Permission::create(['name' => 'planilla-vendedores.create']);
-        Permission::create(['name' => 'planilla-vendedores.store']);
-        Permission::create(['name' => 'planilla-vendedores.show']);
-        Permission::create(['name' => 'planilla-vendedores.edit']);
-        Permission::create(['name' => 'planilla-vendedores.update']);
-        Permission::create(['name' => 'planilla-vendedores.destroy']);
-        Permission::create(['name' => 'consultas']);
-        Permission::create(['name' => 'consultas-garantias']);
-        Permission::create(['name' => 'consultas-garantias-guia_ingreso.index']);
-        Permission::create(['name' => 'consultas-garantias-guia_ingreso.create']);
-        Permission::create(['name' => 'consultas-garantias-guia_ingreso.store']);
-        Permission::create(['name' => 'consultas-garantias-guia_ingreso.show']);
-        Permission::create(['name' => 'consultas-garantias-guia_ingreso.edit']);
-        Permission::create(['name' => 'consultas-garantias-guia_ingreso.update']);
-        Permission::create(['name' => 'consultas-garantias-guia_ingreso.destroy']);
-        Permission::create(['name' => 'consultas-garantias-guia_egreso.index']);
-        Permission::create(['name' => 'consultas-garantias-guia_egreso.create']);
-        Permission::create(['name' => 'consultas-garantias-guia_egreso.store']);
-        Permission::create(['name' => 'consultas-garantias-guia_egreso.show']);
-        Permission::create(['name' => 'consultas-garantias-guia_egreso.edit']);
-        Permission::create(['name' => 'consultas-garantias-guia_egreso.update']);
-        Permission::create(['name' => 'consultas-garantias-guia_egreso.destroy']);
-        Permission::create(['name' => 'consultas-garantias-informe_tecnico.index']);
-        Permission::create(['name' => 'consultas-garantias-informe_tecnico.create']);
-        Permission::create(['name' => 'consultas-garantias-informe_tecnico.store']);
-        Permission::create(['name' => 'consultas-garantias-informe_tecnico.show']);
-        Permission::create(['name' => 'consultas-garantias-informe_tecnico.edit']);
-        Permission::create(['name' => 'consultas-garantias-informe_tecnico.update']);
-        Permission::create(['name' => 'consultas-garantias-informe_tecnico.destroy']);
-        Permission::create(['name' => 'auxiliares']);
-        Permission::create(['name' => 'auxiliares-clientes.index']);
-        Permission::create(['name' => 'auxiliares-clientes.create']);
-        Permission::create(['name' => 'auxiliares-clientes.store']);
-        Permission::create(['name' => 'auxiliares-clientes.show']);
-        Permission::create(['name' => 'auxiliares-clientes.edit']);
-        Permission::create(['name' => 'auxiliares-clientes.update']);
-        Permission::create(['name' => 'auxiliares-clientes.destroy']);
-        Permission::create(['name' => 'auxiliares-provedores.index']);
-        Permission::create(['name' => 'auxiliares-provedores.create']);
-        Permission::create(['name' => 'auxiliares-provedores.store']);
-        Permission::create(['name' => 'auxiliares-provedores.show']);
-        Permission::create(['name' => 'auxiliares-provedores.edit']);
-        Permission::create(['name' => 'auxiliares-provedores.update']);
-        Permission::create(['name' => 'auxiliares-provedores.destroy']);
-        Permission::create(['name' => 'maestro']);
-        Permission::create(['name' => 'maestro-catalogo']);
-        Permission::create(['name' => 'maestro-catalogo-productos.index']);
-        Permission::create(['name' => 'maestro-catalogo-productos.create']);
-        Permission::create(['name' => 'maestro-catalogo-productos.store']);
-        Permission::create(['name' => 'maestro-catalogo-productos.show']);
-        Permission::create(['name' => 'maestro-catalogo-productos.edit']);
-        Permission::create(['name' => 'maestro-catalogo-productos.update']);
-        Permission::create(['name' => 'maestro-catalogo-productos.destroy']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-categorias.index']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-categorias.create']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-categorias.store']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-categorias.show']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-categorias.edit']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-categorias.update']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-categorias.destroy']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-familias.index']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-familias.create']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-familias.store']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-familias.show']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-familias.edit']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-familias.update']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-familias.destroy']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-marcas.index']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-marcas.create']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-marcas.store']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-marcas.show']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-marcas.edit']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-marcas.update']);
-        Permission::create(['name' => 'maestro-catalogo-clasificacion-marcas.destroy']);
-        Permission::create(['name' => 'maestro-tablas_generales']);
-        Permission::create(['name' => 'maestro-tablas_generales-motivos.index']);
-        Permission::create(['name' => 'maestro-tablas_generales-motivos.create']);
-        Permission::create(['name' => 'maestro-tablas_generales-motivos.store']);
-        Permission::create(['name' => 'maestro-tablas_generales-motivos.show']);
-        Permission::create(['name' => 'maestro-tablas_generales-motivos.edit']);
-        Permission::create(['name' => 'maestro-tablas_generales-motivos.update']);
-        Permission::create(['name' => 'maestro-tablas_generales-motivos.destroy']);
-        Permission::create(['name' => 'maestro-almacenes.index']);
-        Permission::create(['name' => 'maestro-almacenes.create']);
-        Permission::create(['name' => 'maestro-almacenes.store']);
-        Permission::create(['name' => 'maestro-almacenes.show']);
-        Permission::create(['name' => 'maestro-almacenes.edit']);
-        Permission::create(['name' => 'maestro-almacenes.update']);
-        Permission::create(['name' => 'maestro-almacenes.destroy']);
-        Permission::create(['name' => 'maestro-usuarios.index']);
-        Permission::create(['name' => 'maestro-usuarios.create']);
-        Permission::create(['name' => 'maestro-usuarios.store']);
-        Permission::create(['name' => 'maestro-usuarios.show']);
-        Permission::create(['name' => 'maestro-usuarios.edit']);
-        Permission::create(['name' => 'maestro-usuarios.update']);
-        Permission::create(['name' => 'maestro-usuarios.destroy']);
-        Permission::create(['name' => 'maestro-monedas.index']);
-        Permission::create(['name' => 'maestro-monedas.create']);
-        Permission::create(['name' => 'maestro-monedas.store']);
-        Permission::create(['name' => 'maestro-monedas.show']);
-        Permission::create(['name' => 'maestro-monedas.edit']);
-        Permission::create(['name' => 'maestro-monedas.update']);
-        Permission::create(['name' => 'maestro-monedas.destroy']);
-        Permission::create(['name' => 'maestro-tipo_de_cambio.index']);
-        Permission::create(['name' => 'maestro-tipo_de_cambio.create']);
-        Permission::create(['name' => 'maestro-tipo_de_cambio.store']);
-        Permission::create(['name' => 'maestro-tipo_de_cambio.show']);
-        Permission::create(['name' => 'maestro-tipo_de_cambio.edit']);
-        Permission::create(['name' => 'maestro-tipo_de_cambio.update']);
-        Permission::create(['name' => 'maestro-tipo_de_cambio.destroy']);
-        Permission::create(['name' => 'maestro-configuracion_general']);
-        Permission::create(['name' => 'maestro-configuracion_general.mi_empresa.index']);
-        Permission::create(['name' => 'maestro-configuracion_general.mi_empresa.create']);
-        Permission::create(['name' => 'maestro-configuracion_general.mi_empresa.store']);
-        Permission::create(['name' => 'maestro-configuracion_general.mi_empresa.show']);
-        Permission::create(['name' => 'maestro-configuracion_general.mi_empresa.edit']);
-        Permission::create(['name' => 'maestro-configuracion_general.mi_empresa.update']);
-        Permission::create(['name' => 'maestro-configuracion_general.mi_empresa.destroy']);
-        Permission::create(['name' => 'maestro-configuracion_general.unidad_de_medida.index']);
-        Permission::create(['name' => 'maestro-configuracion_general.unidad_de_medida.create']);
-        Permission::create(['name' => 'maestro-configuracion_general.unidad_de_medida.store']);
-        Permission::create(['name' => 'maestro-configuracion_general.unidad_de_medida.show']);
-        Permission::create(['name' => 'maestro-configuracion_general.unidad_de_medida.edit']);
-        Permission::create(['name' => 'maestro-configuracion_general.unidad_de_medida.update']);
-        Permission::create(['name' => 'maestro-configuracion_general.unidad_de_medida.destroy']);
-        Permission::create(['name' => 'maestro-configuracion_general.igv.index']);
-        Permission::create(['name' => 'maestro-configuracion_general.igv.create']);
-        Permission::create(['name' => 'maestro-configuracion_general.igv.store']);
-        Permission::create(['name' => 'maestro-configuracion_general.igv.show']);
-        Permission::create(['name' => 'maestro-configuracion_general.igv.edit']);
-        Permission::create(['name' => 'maestro-configuracion_general.igv.update']);
-        Permission::create(['name' => 'maestro-configuracion_general.igv.destroy']);
 
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        DB::table('role_has_permissions')->truncate();
+        DB::table('model_has_roles')->truncate();
+        DB::table('model_has_permissions')->truncate();
+
+        Role::truncate();
+        Permission::truncate();
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+
+        // CREACION DE LAS NUEVOS PERMISOS
+        Permission::create(['name' => 'inicio.inicio', 'module' => 'dashboard', 'description' => 'Dashboard Inicio']);
+        //* VENTAS
+        Permission::create(['name' => 'cotizacion.listar', 'module' => 'ventas', 'description' => 'Lista de Cotizaciones']);
+        Permission::create(['name' => 'cotizacion.crear', 'module' => 'ventas', 'description' => 'Crear Cotizacion']);
+        Permission::create(['name' => 'cotizacion.ver', 'module' => 'ventas', 'description' => 'Mostrar Cotizacion']);
+        Permission::create(['name' => 'cotizacion.editar', 'module' => 'ventas', 'description' => 'Editar Cotizacion']);
+        Permission::create(['name' => 'cotizacion.procesar', 'module' => 'ventas', 'description' => 'Procesar Cotizacion']);
+        Permission::create(['name' => 'cotizacion.duplicar', 'module' => 'ventas', 'description' => 'Duplicar Cotizacion']);
+
+        Permission::create(['name' => 'cotizacion_m.listar', 'module' => 'ventas', 'description' => 'Lista de Cotizaciones Manuales']);
+        Permission::create(['name' => 'cotizacion_m.crear', 'module' => 'ventas', 'description' => 'Crear Cotizacion Manual']);
+        Permission::create(['name' => 'cotizacion_m.ver', 'module' => 'ventas', 'description' => 'Mostrar Cotizacion Manual']);
+        Permission::create(['name' => 'cotizacion_m.editar', 'module' => 'ventas', 'description' => 'Editar Cotizacion Manual']);
+        Permission::create(['name' => 'cotizacion_m.procesar', 'module' => 'ventas', 'description' => 'Procesar Cotizacion Manual']);
+        Permission::create(['name' => 'cotizacion_m.duplicar', 'module' => 'ventas', 'description' => 'Duplicar Cotizacion Manual']);
+
+        Permission::create(['name' => 'nota_venta.listar', 'module' => 'ventas', 'description' => 'Lista de Nota de Ventas']);
+        Permission::create(['name' => 'nota_venta.crear', 'module' => 'ventas', 'description' => 'Crear Nota de Venta']);
+        Permission::create(['name' => 'nota_venta.ver', 'module' => 'ventas', 'description' => 'Mostrar Nota de Venta']);
+        Permission::create(['name' => 'nota_venta.editar', 'module' => 'ventas', 'description' => 'Editar Nota de Venta']);
+
+        Permission::create(['name' => 'clientes.listar', 'module' => 'ventas', 'description' => 'Lista de Clientes']);
+        Permission::create(['name' => 'clientes.crear', 'module' => 'ventas', 'description' => 'Creacion de Cliente']);
+        Permission::create(['name' => 'clientes.ver', 'module' => 'ventas', 'description' => 'Mostrar Cliente']);
+        Permission::create(['name' => 'clientes.editar', 'module' => 'ventas', 'description' => 'Editar Cliente']);
+        Permission::create(['name' => 'clientes.anular', 'module' => 'ventas', 'description' => 'Anular Cliente']);
+
+        Permission::create(['name' => 'coti_renovacion.listar', 'module' => 'ventas', 'description' => 'Lista de Cotizaciones que se han renovado']); //?
+        Permission::create(['name' => 'coti_renovacion.crear', 'module' => 'ventas', 'description' => 'Activar la Renovacion de Comprobantes']);
+
+
+        //* Tesoreria
+
+        Permission::create(['name' => 'caja-chica.listar_detalle', 'module' => 'tesoreria', 'description' => 'Listar detalle Caja de Tesorería']); //* Vista de lista
+        Permission::create(['name' => 'caja-chica.abrir_caja', 'module' => 'tesoreria', 'description' => 'Abrir Caja de Tesorería']);
+        Permission::create(['name' => 'caja-chica.cerrar_caja', 'module' => 'tesoreria', 'description' => 'Cerrar Caja de Tesorería']);
+        Permission::create(['name' => 'caja-chica.depositar', 'module' => 'tesoreria', 'description' => 'Depositar en Caja de Tesorería']);
+        Permission::create(['name' => 'caja-chica.pagar', 'module' => 'tesoreria', 'description' => 'Pagar en Caja de Tesorería']);
+
+        //*Comprobantes
+        Permission::create(['name' => 'factura.listar', 'module' => 'comprobantes', 'description' => 'Lista de Facturas']);
+        Permission::create(['name' => 'factura.crear', 'module' => 'comprobantes', 'description' => 'Crear Factura']);
+        Permission::create(['name' => 'factura.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Factura']);
+        Permission::create(['name' => 'factura.editar', 'module' => 'comprobantes', 'description' => 'Editar Factura']);
+        Permission::create(['name' => 'factura.anular', 'module' => 'comprobantes', 'description' => 'Anular Factura en el Sistema']);
+        Permission::create(['name' => 'factura.pagar_solo', 'module' => 'comprobantes', 'description' => 'Pagar Factura en Comprobantes']);
+
+        Permission::create(['name' => 'factura_m.listar', 'module' => 'comprobantes', 'description' => 'Lista de Facturas Manuales']);
+        Permission::create(['name' => 'factura_m.crear', 'module' => 'comprobantes', 'description' => 'Crear Factura Manual']);
+        Permission::create(['name' => 'factura_m.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Factura Manual']);
+        Permission::create(['name' => 'factura_m.editar', 'module' => 'comprobantes', 'description' => 'Editar Factura Manual']);
+        Permission::create(['name' => 'factura_m.anular', 'module' => 'comprobantes', 'description' => 'Anular Factura Manual en el Sistema']);
+        Permission::create(['name' => 'factura_m.pagar_solo', 'module' => 'comprobantes', 'description' => 'Pagar Factura Manual en Comprobantes']);
+
+        Permission::create(['name' => 'boleta.listar', 'module' => 'comprobantes', 'description' => 'Lista de Boletas']);
+        Permission::create(['name' => 'boleta.crear', 'module' => 'comprobantes', 'description' => 'Crear Boleta']);
+        Permission::create(['name' => 'boleta.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Boleta']);
+        Permission::create(['name' => 'boleta.editar', 'module' => 'comprobantes', 'description' => 'Editar Boleta']);
+        Permission::create(['name' => 'boleta.anular', 'module' => 'comprobantes', 'description' => 'Anular Boleta en el Sistema']);
+        Permission::create(['name' => 'boleta.pagar_solo', 'module' => 'comprobantes', 'description' => 'Pagar Boleta en Comprobantes']);
+
+        Permission::create(['name' => 'boleta_m.listar', 'module' => 'comprobantes', 'description' => 'Lista de Boletas Manuales']);
+        Permission::create(['name' => 'boleta_m.crear', 'module' => 'comprobantes', 'description' => 'Crear Boleta Manual']);
+        Permission::create(['name' => 'boleta_m.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Boleta Manual']);
+        Permission::create(['name' => 'boleta_m.editar', 'module' => 'comprobantes', 'description' => 'Editar Boleta Manual']);
+        Permission::create(['name' => 'boleta_m.anular', 'module' => 'comprobantes', 'description' => 'Anular Boleta Manual en el Sistema']);
+        Permission::create(['name' => 'boleta_m.pagar_solo', 'module' => 'comprobantes', 'description' => 'Pagar Boleta en Comprobantes']);
+
+
+        Permission::create(['name' => 'nota_credito.listar', 'module' => 'comprobantes', 'description' => 'Lista de Notas de Crédito']);
+        Permission::create(['name' => 'nota_credito.crear_factura', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito para Factura']);
+        Permission::create(['name' => 'nota_credito.crear_factura_m', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito para Factura MN']);
+        Permission::create(['name' => 'nota_credito.crear_boleta', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito']);
+        Permission::create(['name' => 'nota_credito.crear_boleta_m', 'module' => 'comprobantes', 'description' => 'Crear Nota de Crédito']);
+        Permission::create(['name' => 'nota_credito.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Nota de Crédito']);
+        Permission::create(['name' => 'nota_credito.editar', 'module' => 'comprobantes', 'description' => 'Editar Nota de Crédito']);
+        Permission::create(['name' => 'nota_credito.anular', 'module' => 'comprobantes', 'description' => 'Anular Nota de Crédito en el Sistema']);
+
+        Permission::create(['name' => 'nota_debito.listar', 'module' => 'comprobantes', 'description' => 'Lista de Notas de Débito']);
+        Permission::create(['name' => 'nota_debito.crear_factura', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.crear_factura_m', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.crear_boleta', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.crear_boleta_m', 'module' => 'comprobantes', 'description' => 'Crear Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.editar', 'module' => 'comprobantes', 'description' => 'Editar Nota de Débito']);
+        Permission::create(['name' => 'nota_debito.anular', 'module' => 'comprobantes', 'description' => 'Anular Nota de Débito en el Sistema']);
+
+        Permission::create(['name' => 'guia_remision.listar', 'module' => 'comprobantes', 'description' => 'Lista de Guías de Remisión']);
+        Permission::create(['name' => 'guia_remision.crear', 'module' => 'comprobantes', 'description' => 'Crear Guia de Remisión']);
+        Permission::create(['name' => 'guia_remision.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Guia de Remisión']);
+        Permission::create(['name' => 'guia_remision.editar', 'module' => 'comprobantes', 'description' => 'Editar Guia de Remisión']);
+
+        Permission::create(['name' => 'guia_remision_m.listar', 'module' => 'comprobantes', 'description' => 'Lista de Guías de Remisión Manuales']);
+        Permission::create(['name' => 'guia_remision_m.crear', 'module' => 'comprobantes', 'description' => 'Crear Guia de Remisión Manual']);
+        Permission::create(['name' => 'guia_remision_m.ver', 'module' => 'comprobantes', 'description' => 'Mostrar Guia de Remisión Manual']);
+        Permission::create(['name' => 'guia_remision_m.editar', 'module' => 'comprobantes', 'description' => 'Editar Guia de Remisión Manual']);
+        Permission::create(['name' => 'guia_remision_m.anular', 'module' => 'comprobantes', 'description' => 'Anular Guia de Remisión Manual en el Sistema']);
+
+        //*GARANTIAS    
+
+        Permission::create(['name' => 'guia_ingreso.listar', 'module' => 'garantias', 'description' => 'Lista de Guias de Ingreso de Garantias']);
+        Permission::create(['name' => 'guia_ingreso.crear', 'module' => 'garantias', 'description' => 'Crear Guia de Ingreso de Garantia']);
+        Permission::create(['name' => 'guia_ingreso.ver', 'module' => 'garantias', 'description' => 'Mostrar Guia de Ingreso de Garantias']);
+        Permission::create(['name' => 'guia_ingreso.editar', 'module' => 'garantias', 'description' => 'Editar Guia de Ingreso de Garantias']);
+        Permission::create(['name' => 'guia_ingreso.procesar', 'module' => 'garantias', 'description' => 'Procesar Guia de Ingreso a Egreso de Garantias']);
+        Permission::create(['name' => 'guia_ingreso.anular', 'module' => 'garantias', 'description' => 'Anular Guia de Ingreso de Garantias en el Sistema']);
+
+        Permission::create(['name' => 'guia_egreso.listar', 'module' => 'garantias', 'description' => 'Lista de Guias de Egreso de Garantias']);
+        Permission::create(['name' => 'guia_egreso.ver', 'module' => 'garantias', 'description' => 'Mostrar Guia de Egreso de Garantias']);
+        Permission::create(['name' => 'guia_egreso.editar', 'module' => 'garantias', 'description' => 'Editar Guia de Egreso de Garantias']);
+        Permission::create(['name' => 'guia_egreso.procesar', 'module' => 'garantias', 'description' => 'Procesar Guia de Egreso a Infome Técnico de Garantias']);
+        Permission::create(['name' => 'guia_egreso.anular', 'module' => 'garantias', 'description' => 'Anular Guia de Egreso de Garantias en el Sistema']);
+
+        Permission::create(['name' => 'informe_tecnico.listar', 'module' => 'garantias', 'description' => 'Lista de Informes Técnicos de Garantias']);
+        Permission::create(['name' => 'informe_tecnico.ver', 'module' => 'garantias', 'description' => 'Mostrar Informe Técnico de Garantias']);
+        Permission::create(['name' => 'informe_tecnico.editar', 'module' => 'garantias', 'description' => 'Editar Informe Técnico de Garantias']);
+        Permission::create(['name' => 'informe_tecnico.anular', 'module' => 'garantias', 'description' => 'Anular Informe Técnico de Garantias']);
+
+        //* Inventario
+        
+        Permission::create(['name' => 'kardex_entrada.inicial', 'module' => 'inventario', 'description' => 'Entrada del Inventario Inicial']);
+        
+        // ALMACEN 1
+        Permission::create(['name' => 'kardex_entrada.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Entrada en Kardex']);
+        Permission::create(['name' => 'kardex_entrada.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Entrada en Kardex']);
+        Permission::create(['name' => 'kardex_entrada.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Entrada en Kardex']);
+        Permission::create(['name' => 'kardex_entrada.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Entrada en Kardex']);
+
+        // ALMACEN 1 A X
+        Permission::create(['name' => 'kardex_distribucion.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Distribución en Kardex']);
+        Permission::create(['name' => 'kardex_distribucion.gen_remision', 'module' => 'inventario', 'description' => 'Generar Guia de Remision para Guía de Distribución en Kardex']);
+
+        // ALMACEN X A X
+        Permission::create(['name' => 'kardex_traslado.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Traslado en Kardex']);
+        Permission::create(['name' => 'kardex_traslado.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Traslado en Kardex']);
+        Permission::create(['name' => 'kardex_traslado.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Traslado en Kardex']);
+        Permission::create(['name' => 'kardex_traslado.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Traslado en Kardex']);
+        Permission::create(['name' => 'kardex_traslado.gen_remision', 'module' => 'inventario', 'description' => 'Generar Guia de Remision para Guía de Traslado en Kardex']);
+
+        Permission::create(['name' => 'kardex_salida.listar', 'module' => 'inventario', 'description' => 'Lista de Guías de Salida en Kardex']);
+        Permission::create(['name' => 'kardex_salida.crear', 'module' => 'inventario', 'description' => 'Crear Guía de Salida en Kardex']);
+        Permission::create(['name' => 'kardex_salida.ver', 'module' => 'inventario', 'description' => 'Mostrar Guía de Salida en Kardex']);
+        Permission::create(['name' => 'kardex_salida.anular', 'module' => 'inventario', 'description' => 'Anular Guía de Salida en Kardex']);
+
+        Permission::create(['name' => 'inventario.consulta', 'module' => 'inventario', 'description' => 'Consulta de Inventario por Producto']);
+
+        Permission::create(['name' => 'cierre_periodo.listar', 'module' => 'inventario', 'description' => 'Lista de los Cierres de Periodo en el Sistema']);
+        Permission::create(['name' => 'cierre_periodo.ver', 'module' => 'inventario', 'description' => 'Lista de Guías de Salida en Kardex']);
+
+        Permission::create(['name' => 'inventario.movimiento', 'module' => 'inventario', 'description' => 'Lista de Movimientos por Productos o Servicios']);
+
+        //* Créditos y Cobranzas 
+
+        Permission::create(['name' => 'factura.listar_por_pagar', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Facturas a Pagar']);
+        Permission::create(['name' => 'factura.listar_pagadas', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Facturas Pagadas']);
+        Permission::create(['name' => 'factura.pagar', 'module' => 'creditos_cobranzas', 'description' => 'Pagar Factura']);
+        Permission::create(['name' => 'factura.detalle_pago', 'module' => 'creditos_cobranzas', 'description' => 'Ver detalle de pago de la Factura']);
+
+        Permission::create(['name' => 'factura_m.listar_por_pagar', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Facturas Manuales a Pagar']);
+        Permission::create(['name' => 'factura_m.listar_pagadas', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Facturas Manuales Pagadas']);
+        Permission::create(['name' => 'factura_m.pagar', 'module' => 'creditos_cobranzas', 'description' => 'Pagar Factura Manual']);
+        Permission::create(['name' => 'factura_m.detalle_pago', 'module' => 'creditos_cobranzas', 'description' => 'Ver detalle de pago de la Factura Manual']);
+
+        Permission::create(['name' => 'boleta.listar_por_pagar', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Boletas a Pagar']);
+        Permission::create(['name' => 'boleta.listar_pagadas', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Boletas Pagadas']);
+        Permission::create(['name' => 'boleta.pagar', 'module' => 'creditos_cobranzas', 'description' => 'Pagar Boleta']);
+        Permission::create(['name' => 'boleta.detalle_pago', 'module' => 'creditos_cobranzas', 'description' => 'Ver detalle de pago de la Boleta']);
+
+        Permission::create(['name' => 'boleta_m.listar_por_pagar', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Boletas Manuales a Pagar']);
+        Permission::create(['name' => 'boleta_m.listar_pagadas', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Boletas Manuales Pagadas']);
+        Permission::create(['name' => 'boleta_m.pagar', 'module' => 'creditos_cobranzas', 'description' => 'Pagar Boleta Manual']);
+        Permission::create(['name' => 'boleta_m.detalle_pago', 'module' => 'creditos_cobranzas', 'description' => 'Ver detalle de pago de la Boleta Manual']);
+
+        Permission::create(['name' => 'nota_venta.listar_por_pagar', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Notas de Ventas a Pagar']);
+        Permission::create(['name' => 'nota_venta.listar_pagadas', 'module' => 'creditos_cobranzas', 'description' => 'Lista de Notas de Ventas Pagadas']);
+        Permission::create(['name' => 'nota_venta.pagar', 'module' => 'creditos_cobranzas', 'description' => 'Pagar Notas de Venta']);
+        Permission::create(['name' => 'nota_venta.detalle_pago', 'module' => 'creditos_cobranzas', 'description' => 'Ver detalle de pago de la Notas de Venta']);
+
+        //* Servicio Técnico
+
+        Permission::create(['name' => 'servicio_tecnico.servicios_listar', 'module' => 'servicio_tecnico', 'description' => 'Lista de Servicios']);
+        Permission::create(['name' => 'servicio_tecnico.servicios_crear', 'module' => 'servicio_tecnico', 'description' => 'Lista de Servicios']);
+        Permission::create(['name' => 'servicio_tecnico.cotizacion_listar', 'module' => 'servicio_tecnico', 'description' => 'Lista de Servicios']);
+        Permission::create(['name' => 'servicio_tecnico.cotizacion_ver', 'module' => 'servicio_tecnico', 'description' => 'Lista de Servicios']);
+        Permission::create(['name' => 'servicio_tecnico.o_servicio_listar', 'module' => 'servicio_tecnico', 'description' => 'Lista de Servicios']);
+        Permission::create(['name' => 'servicio_tecnico.o_servicio_entregados_listar', 'module' => 'servicio_tecnico', 'description' => 'Lista de Servicios']);
+
+        //! Posiblemente falta
+
+        //* Personal
+
+        Permission::create(['name' => 'personal.listar', 'module' => 'personal', 'description' => 'Lista de Personal']);
+        Permission::create(['name' => 'personal.crear', 'module' => 'personal', 'description' => 'Crear Personal']);
+        Permission::create(['name' => 'personal.ver', 'module' => 'personal', 'description' => 'Mostrar Personal']);
+        Permission::create(['name' => 'personal.editar', 'module' => 'personal', 'description' => 'Editar Personal']);
+        Permission::create(['name' => 'personal.estado', 'module' => 'personal', 'description' => 'Cambiar el estado de un Personal en el Sistema']);
+
+        Permission::create(['name' => 'vendedores.listar', 'module' => 'personal', 'description' => 'Lista de Vendedores']);
+        Permission::create(['name' => 'vendedores.crear', 'module' => 'personal', 'description' => 'Crear Vendedor']);
+        Permission::create(['name' => 'vendedores.ver', 'module' => 'personal', 'description' => 'Mostrar Vendedor']);
+        Permission::create(['name' => 'vendedores.editar', 'module' => 'personal', 'description' => 'Editar Vendedor']);
+        Permission::create(['name' => 'vendedores.estado', 'module' => 'personal', 'description' => 'Cambiar el estado de un Personal en el Sistema']);
+
+        Permission::create(['name' => 'transporte_publico.listar', 'module' => 'personal', 'description' => 'Lista de Vehiculos de Transporte Público']);
+        Permission::create(['name' => 'transporte_publico.crear', 'module' => 'personal', 'description' => 'Crear Vehiculo de Transporte Público']);
+        Permission::create(['name' => 'transporte_publico.ver', 'module' => 'personal', 'description' => 'Mostrar Vehiculo de Transporte Público']);
+        Permission::create(['name' => 'transporte_publico.editar', 'module' => 'personal', 'description' => 'Editar Vehiculo de Transporte Público']);
+        Permission::create(['name' => 'transporte_publico.estado', 'module' => 'personal', 'description' => 'Cambiar el estado de un Vehiculo de Transporte Público en el Sistema']);
+
+        Permission::create(['name' => 'transporte_privado.listar', 'module' => 'personal', 'description' => 'Lista de Vehiculos de Transporte Privado']);
+        Permission::create(['name' => 'transporte_privado.crear', 'module' => 'personal', 'description' => 'Crear Vehiculo de Transporte Privado']);
+        Permission::create(['name' => 'transporte_privado.ver', 'module' => 'personal', 'description' => 'Mostrar Vehiculo de Transporte Privado']);
+        Permission::create(['name' => 'transporte_privado.editar', 'module' => 'personal', 'description' => 'Editar Vehiculo de Transporte Privado']);
+        Permission::create(['name' => 'transporte_privado.estado', 'module' => 'personal', 'description' => 'Cambiar el estado de un Vehiculo de Transporte Privado en el Sistema']);
+
+        //* Consultas
+
+        Permission::create(['name' => 'consultas.guia_ingreso', 'module' => 'consultas', 'description' => 'Consulta para Guias de Ingreso']);
+        Permission::create(['name' => 'consultas.guia_egreso', 'module' => 'consultas', 'description' => 'Consulta para Guias de Egreso']);
+        Permission::create(['name' => 'consultas.informe_tecnico', 'module' => 'consultas', 'description' => 'Consulta para Informe Tecnico']);
+
+        Permission::create(['name' => 'consultas.productos', 'module' => 'consultas', 'description' => 'Consulta sobre Productos']);
+        Permission::create(['name' => 'consultas.servicios', 'module' => 'consultas', 'description' => 'Consulta sobre Servicios']);
+        
+        Permission::create(['name' => 'consultas.reporte_comprobantes', 'module' => 'consultas', 'description' => 'Consulta para los Comprobantes']);
+
+        //* Registro Sunat
+
+        Permission::create(['name' => 'factura.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Facturas a Emitir']);
+        Permission::create(['name' => 'factura.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Factura a Sunat']);
+        Permission::create(['name' => 'factura.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Facturas Emitidas']);
+        Permission::create(['name' => 'factura.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Factura Emitida']);
+        Permission::create(['name' => 'factura.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Factura Emitida']);
+
+        Permission::create(['name' => 'factura_m.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Facturas Manuales a Emitir']);
+        Permission::create(['name' => 'factura_m.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Factura Manual a Sunat']);
+        Permission::create(['name' => 'factura_m.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Facturas Manuales Emitidas']);
+        Permission::create(['name' => 'factura_m.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Factura Manual Emitida']);
+        Permission::create(['name' => 'factura_m.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Factura Manual Emitida']);
+
+        Permission::create(['name' => 'detraccion_factura.listar', 'module' => 'registro_sunat', 'description' => 'Lista de Facturas con Detraccions']);
+
+        Permission::create(['name' => 'boleta.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Boletas a Emitir']);
+        Permission::create(['name' => 'boleta.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Boleta a Sunat']);
+        Permission::create(['name' => 'boleta.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Boletas Emitidas']);
+        Permission::create(['name' => 'boleta.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Boleta Emitida']);
+        Permission::create(['name' => 'boleta.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Boleta Emitida']);
+
+        Permission::create(['name' => 'boleta_m.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Boletas Manuales a Emitir']);
+        Permission::create(['name' => 'boleta_m.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Boleta Manual a Sunat']);
+        Permission::create(['name' => 'boleta_m.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Boletas Manuales Emitidas']);
+        Permission::create(['name' => 'boleta_m.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Boleta Manual Emitida']);
+        Permission::create(['name' => 'boleta_m.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Boleta Manual Emitida']);
+
+        Permission::create(['name' => 'guia_remision.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Guias Electronicas a Emitir']);
+        Permission::create(['name' => 'guia_remision.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Guia Electronica a Sunat']);
+        Permission::create(['name' => 'guia_remision.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Guias Electronicass Emitidas']);
+        Permission::create(['name' => 'guia_remision.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Guia Electronica Emitida']);
+        Permission::create(['name' => 'guia_remision.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Guia Electronica Emitida']);
+        Permission::create(['name' => 'guia_remision.anular', 'module' => 'registro_sunat', 'description' => 'Anular Guia Electronica Emitida']);
+
+        Permission::create(['name' => 'guia_remision_m.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Guias Electronicas M a Emitir']);
+        Permission::create(['name' => 'guia_remision_m.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Guia Electronica a Sunat']);
+        Permission::create(['name' => 'guia_remision_m.listar_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Guias Electronicas M. Emitidas']);
+        Permission::create(['name' => 'guia_remision_m.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Guia Electronica M. Emitida']);
+        Permission::create(['name' => 'guia_remision_m.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar CDR de Guia Electronica M. Emitida']);
+        // Permission::create(['name' => 'guia_remision_m.anular', 'module' => 'registro_sunat', 'description' => 'Anular Guia Electronica M. Emitida']);
+
+        Permission::create(['name' => 'nota_credito.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Notas de Crédito a Emitir']);
+        Permission::create(['name' => 'nota_credito.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Notas de Crédito a Sunat']);
+        Permission::create(['name' => 'nota_credito.lista_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Notas de Crédito Emitidas']);
+        Permission::create(['name' => 'nota_credito.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Nota de Crédito Emitida']);
+        Permission::create(['name' => 'nota_credito.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Nota de Crédito Emitida']);
+
+        Permission::create(['name' => 'nota_debito.listar_por_emitir', 'module' => 'registro_sunat', 'description' => 'Lista de Notas de Débito a Emitir']);
+        Permission::create(['name' => 'nota_debito.emitir', 'module' => 'registro_sunat', 'description' => 'Emitir Notas de Débito a Sunat']);
+        Permission::create(['name' => 'nota_debito.lista_emitidas', 'module' => 'registro_sunat', 'description' => 'Lista de Notas de Débito Emitidas']);
+        Permission::create(['name' => 'nota_debito.xml', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Nota de Débito Emitida']);
+        Permission::create(['name' => 'nota_debito.cdr', 'module' => 'registro_sunat', 'description' => 'Descargar XML de Nota de Débito Emitida']);
+
+
+        // * Productos y Servicios
+
+        Permission::create(['name' => 'productos.listar', 'module' => 'productos_servicios', 'description' => 'Lista de Productos']);
+        Permission::create(['name' => 'productos.crear', 'module' => 'productos_servicios', 'description' => 'Crear Producto']);
+        Permission::create(['name' => 'productos.ver', 'module' => 'productos_servicios', 'description' => 'Mostrar Producto']);
+        Permission::create(['name' => 'productos.editar', 'module' => 'productos_servicios', 'description' => 'Editar Producto']);
+        Permission::create(['name' => 'productos.estado', 'module' => 'productos_servicios', 'description' => 'Cambiar el estado de un Producto']);
+
+        Permission::create(['name' => 'servicios.listar', 'module' => 'productos_servicios', 'description' => 'Lista de Servicios']);
+        Permission::create(['name' => 'servicios.crear', 'module' => 'productos_servicios', 'description' => 'Crear Servicio']);
+        Permission::create(['name' => 'servicios.ver', 'module' => 'productos_servicios', 'description' => 'Mostrar Servicio']);
+        Permission::create(['name' => 'servicios.editar', 'module' => 'productos_servicios', 'description' => 'Editar Servicio']);
+        Permission::create(['name' => 'servicios.estado', 'module' => 'productos_servicios', 'description' => 'Cambiar el estado de un Servicio']);
+
+        //* Proyecto PBM
+
+        Permission::create(['name' => 'proyectos_pmb.listar', 'module' => 'proyectos_pmb', 'description' => 'Lista de Proyectos']);
+        Permission::create(['name' => 'proyectos_pmb.crear', 'module' => 'proyectos_pmb', 'description' => 'Crear Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.ver', 'module' => 'proyectos_pmb', 'description' => 'Ver el detalle de un Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.editar', 'module' => 'proyectos_pmb', 'description' => 'Editar un Proyecto']);
+
+        Permission::create(['name' => 'proyectos_pmb.listar_act', 'module' => 'proyectos_pmb', 'description' => 'Ver las actividades de un Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.crear_act', 'module' => 'proyectos_pmb', 'description' => 'Crear las actividades de un Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.editar_act', 'module' => 'proyectos_pmb', 'description' => 'Crear las actividades de un Proyecto']);
+        Permission::create(['name' => 'proyectos_pmb.borrar_act', 'module' => 'proyectos_pmb', 'description' => 'Borrar actividades de un Proyecto']);
+
+        Permission::create(['name' => 'proyectos_pmb.listar_tareas', 'module' => 'proyectos_pmb', 'description' => 'Listar tareas para una actividad']);
+        Permission::create(['name' => 'proyectos_pmb.ver_tareas', 'module' => 'proyectos_pmb', 'description' => 'Ver tareas para una actividad']);
+        Permission::create(['name' => 'proyectos_pmb.crear_tarea', 'module' => 'proyectos_pmb', 'description' => 'Crear tareas para una actividad']);
+        Permission::create(['name' => 'proyectos_pmb.editar_tarea', 'module' => 'proyectos_pmb', 'description' => 'Editar tareas para una actividad']);
+        Permission::create(['name' => 'proyectos_pmb.borrar_tarea', 'module' => 'proyectos_pmb', 'description' => 'Crear las actividades de un Proyecto']);
+
+        Permission::create(['name' => 'proyectos_pmb.crear_comentario', 'module' => 'proyectos_pmb', 'description' => 'Crear comentario a las tareas de una actividades de un Proyecto']);
+
+        Permission::create(['name' => 'proyectos_pmb.reporte', 'module' => 'proyectos_pmb', 'description' => 'Ver el Reporte General']);
+
+        Permission::create(['name' => 'proyectos_pmb.gantt', 'module' => 'proyectos_pmb', 'description' => 'Ver en Gráfico Gantt un Proyectos']);
+
+        //* Correo
+
+        Permission::create(['name' => 'correo.listar_enviados', 'module' => 'correo', 'description' => 'Lista de Correos Enviados']);
+        Permission::create(['name' => 'correo.enviar', 'module' => 'correo', 'description' => 'Enviar Correo']);
+        Permission::create(['name' => 'correo.lista_borradores', 'module' => 'correo', 'description' => 'Lista de Borradores de Correos']);
+        Permission::create(['name' => 'correo.configuracion', 'module' => 'correo', 'description' => 'Revisar la Configuracion del Correo']);
+        Permission::create(['name' => 'correo.papelera', 'module' => 'correo', 'description' => 'Listar los correos en la Papelera']);
+        Permission::create(['name' => 'correo.eliminar', 'module' => 'correo', 'description' => 'Enviar a la Papelera el Correo']);
+        Permission::create(['name' => 'correo.suprimir', 'module' => 'correo', 'description' => 'Eliminar definitivamente el Correo']);
+
+
+        //* Auxiliar
+
+        //! Clientes existe 
+
+        Permission::create(['name' => 'proveedor.listar', 'module' => 'auxiliar', 'description' => 'Lista de Proveedores']);
+        Permission::create(['name' => 'proveedor.crear', 'module' => 'auxiliar', 'description' => 'Crear Proveedor']);
+        Permission::create(['name' => 'proveedor.ver', 'module' => 'auxiliar', 'description' => 'Mostrar Proveedor']);
+        Permission::create(['name' => 'proveedor.editar', 'module' => 'auxiliar', 'description' => 'Editar Proveedor']);
+        Permission::create(['name' => 'proveedor.estado', 'module' => 'auxiliar', 'description' => 'Cambiar estado de Proveedor']);
+
+        //* Perfil de Usuario
+
+        Permission::create(['name' => 'perfil_usuario.ver', 'module' => 'perfil_usuario', 'description' => 'Ver informacion del Perfil del Usuario']);
+        Permission::create(['name' => 'perfil_usuario.editar', 'module' => 'perfil_usuario', 'description' => 'Editar informacion del Perfil del Usuario']);
+        
+        //* Mi empresa
+
+        Permission::create(['name' => 'empresa.ver', 'module' => 'empresa', 'description' => 'Ver informacion de la Empresa']);
+        Permission::create(['name' => 'empresa.editar', 'module' => 'empresa', 'description' => 'Editar informacion de la Empresa']);
+
+        Permission::create(['name' => 'bancos.editar', 'module' => 'empresa', 'description' => 'Editar informacion de los Bancos de la Empresa']);
+
+        Permission::create(['name' => 'moneda.editar', 'module' => 'empresa', 'description' => 'Editar la Moneda Principal de la Empresa']);
+
+        // * Configuracion
+
+        Permission::create(['name' => 'almacen.listar', 'module' => 'configuracion_general', 'description' => 'Lista de los Almacenes']);
+        Permission::create(['name' => 'almacen.crear', 'module' => 'configuracion_general', 'description' => 'Crear Almacen para el Sistema']);
+        Permission::create(['name' => 'almacen.ver', 'module' => 'configuracion_general', 'description' => 'Mostrar informacion del Almacen']);
+        Permission::create(['name' => 'almacen.editar', 'module' => 'configuracion_general', 'description' => 'Editar informacion del Almacen']);
+        Permission::create(['name' => 'almacen.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar el estado del Almacen']);
+
+        Permission::create(['name' => 'apariencia.ver', 'module' => 'configuracion_general', 'description' => 'Mostrar configuracion de la Apariencia del Sistema']);
+        Permission::create(['name' => 'apariencia.editar', 'module' => 'configuracion_general', 'description' => 'Editar configuracion de la Apariencia del Sistema']);
+
+        Permission::create(['name' => 'familia.listar', 'module' => 'configuracion_general', 'description' => 'Lista de las Familias de los Productos y Servicios']);
+        Permission::create(['name' => 'familia.crear', 'module' => 'configuracion_general', 'description' => 'Crear Familia para los Productos y Servicios']);
+        Permission::create(['name' => 'familia.editar', 'module' => 'configuracion_general', 'description' => 'Editar Familia para los Productos y Servicios']);
+        Permission::create(['name' => 'familia.ver', 'module' => 'configuracion_general', 'description' => 'Ver la informacion de la Familia para los Productos y Servicios']);
+        Permission::create(['name' => 'familia.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar el estado de la Familia para los Productos y Servicios']);
+
+        Permission::create(['name' => 'subfamilia.ver', 'module' => 'configuracion_general', 'description' => 'Mostrar Subfamilia']);
+        Permission::create(['name' => 'subfamilia.crear', 'module' => 'configuracion_general', 'description' => 'Crear Subfamilia']);
+        Permission::create(['name' => 'subfamilia.editar', 'module' => 'configuracion_general', 'description' => 'Editar Subfamilia']);
+        Permission::create(['name' => 'subfamilia.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar el estado de la Subfamilia']);
+
+        Permission::create(['name' => 'garantia_doc.listar', 'module' => 'configuracion_general', 'description' => 'Lista de las Garantias para Documentos']);
+        Permission::create(['name' => 'garantia_doc.crear', 'module' => 'configuracion_general', 'description' => 'Crear Garantia para Documentos']);
+        Permission::create(['name' => 'garantia_doc.editar', 'module' => 'configuracion_general', 'description' => 'Editar Garantia para Documentos']);
+        Permission::create(['name' => 'garantia_doc.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar el estado de la Garantia para Documentos']);
+
+        Permission::create(['name' => 'marcas.listar', 'module' => 'configuracion_general', 'description' => 'Lista de las Marcas de los Productos y Servicios']);
+        Permission::create(['name' => 'marcas.crear', 'module' => 'configuracion_general', 'description' => 'Crear Marca para los Productos y Servicios']);
+        Permission::create(['name' => 'marcas.editar', 'module' => 'configuracion_general', 'description' => 'Editar Marca para los Productos y Servicios']);
+        Permission::create(['name' => 'marcas.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar el estado de la Marca para los Productos y Servicios']);
+
+        Permission::create(['name' => 'motivos.listar', 'module' => 'configuracion_general', 'description' => 'Lista de Motivos']);
+        Permission::create(['name' => 'motivos.crear', 'module' => 'configuracion_general', 'description' => 'Crear Marca para los Productos y Servicios']);
+        Permission::create(['name' => 'motivos.editar', 'module' => 'configuracion_general', 'description' => 'Editar Marca para los Productos y Servicios']);
+        Permission::create(['name' => 'motivos.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar el estado de la Marca para los Productos y Servicios']);
+
+        Permission::create(['name' => 'tipo_cambio.listar', 'module' => 'configuracion_general', 'description' => 'Lista de Tipo de Cambio Historico']);
+        Permission::create(['name' => 'tipo_cambio.crear', 'module' => 'configuracion_general', 'description' => 'Generar el Tipo de Cambio del Día']);
+        Permission::create(['name' => 'tipo_cambio.editar', 'module' => 'configuracion_general', 'description' => 'Editar el Tipo de Cambio del Día']);
+
+        Permission::create(['name' => 'unidad_m.listar', 'module' => 'configuracion_general', 'description' => 'Lista Unidades de Medida']);
+        Permission::create(['name' => 'unidad_m.crear', 'module' => 'configuracion_general', 'description' => 'Crear Unidad de Medida']);
+        Permission::create(['name' => 'unidad_m.editar', 'module' => 'configuracion_general', 'description' => 'Editar Unidad de Medida']);
+        Permission::create(['name' => 'unidad_m.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar estado de Unidad de Medida']);
+
+        Permission::create(['name' => 'usuarios.listar', 'module' => 'configuracion_general', 'description' => 'Listar Usuarios del Sistema']);
+        Permission::create(['name' => 'usuarios.crear', 'module' => 'configuracion_general', 'description' => 'Asignar Personal como usuario en el Sistema']);
+        Permission::create(['name' => 'usuarios.personalizar_permisos', 'module' => 'configuracion_general', 'description' => 'Asignar Permisos Personalizados a un Usuario']);
+        Permission::create(['name' => 'usuarios.editar', 'module' => 'configuracion_general', 'description' => 'Editar Datos de un Usuario']);
+        Permission::create(['name' => 'usuarios.estado', 'module' => 'configuracion_general', 'description' => 'Cambiar estado de un Usuario en el Sistema']);
+        Permission::create(['name' => 'usuarios.password', 'module' => 'configuracion_general', 'description' => 'Cambiar de contraseña a un Usuario en el Sistema']);
+
+        Permission::create(['name' => 'roles.listar', 'module' => 'configuracion_general', 'description' => 'Listar Roles del Sistema']);
+        Permission::create(['name' => 'roles.crear', 'module' => 'configuracion_general', 'description' => 'Crear Roles del Sistema']);
+        Permission::create(['name' => 'roles.ver', 'module' => 'configuracion_general', 'description' => 'Ver la información del Rol']);
+        Permission::create(['name' => 'roles.permisos', 'module' => 'configuracion_general', 'description' => 'Ver los permisos por cada Rol']);
+        Permission::create(['name' => 'roles.editar_permisos', 'module' => 'configuracion_general', 'description' => 'Editar los permisos por cada Rol']);
+
+        Permission::create(['name' => 'validez.listar', 'module' => 'configuracion_general', 'description' => 'Lista de Validez para Comprobantes']);
+        Permission::create(['name' => 'validez.crear', 'module' => 'configuracion_general', 'description' => 'Crear Validez para Comprobantes']);
+        Permission::create(['name' => 'validez.editar', 'module' => 'configuracion_general', 'description' => 'Crear Validez para Comprobantes']);
+        Permission::create(['name' => 'validez.estado', 'module' => 'configuracion_general', 'description' => 'Crear Validez para Comprobantes']);
+
+        Permission::create(['name' => 'alarma.listar', 'module' => 'configuracion_general', 'description' => 'Lista de Alarma para Comprobantes']);
+        Permission::create(['name' => 'alarma.crear', 'module' => 'configuracion_general', 'description' => 'Crear de Alarma para Comprobantes']);
+        Permission::create(['name' => 'alarma.editar', 'module' => 'configuracion_general', 'description' => 'Crear de Alarma para Comprobantes']);
+        Permission::create(['name' => 'alarma.estado', 'module' => 'configuracion_general', 'description' => 'Crear de Alarma para Comprobantes']);
 
         //Admin
-        $admin = Role::create(['name' => 'Admin']);
+        $super_admin = Role::create(['name' => 'SuperAdministrador','description'=>'Rol de SuperAdministrador, solo se deberia tener 1 por Sistema']);
+        $admin = Role::create(['name' => 'Administrador', 'description'=>'Rol de Administrador Total del Sistema']);
+        $ventas = Role::create(['name' => 'Vendedor', 'description'=>'Rol de Vendedor Total del Sistema']);
+        $personalizado = Role::create(['name' => 'Personalizado', 'description'=>'Rol para Personalizar en el Sistema']);
 
-        $admin->givePermissionTo([
-            'inicio',
-            'transacciones',
-            'transacciones-ventas',
-            'transacciones-ventas-cotizaciones.index',
-            'transacciones-ventas-cotizaciones.create',
-            'transacciones-ventas-cotizaciones.store',
-            'transacciones-ventas-cotizaciones.show',
-            'transacciones-ventas-cotizaciones.edit',
-            'transacciones-ventas-cotizaciones.update',
-            'transacciones-ventas-cotizaciones.destroy',
-            'transacciones-ventas-facturacion.index',
-            'transacciones-ventas-facturacion.create',
-            'transacciones-ventas-facturacion.store',
-            'transacciones-ventas-facturacion.show',
-            'transacciones-ventas-facturacion.edit',
-            'transacciones-ventas-facturacion.update',
-            'transacciones-ventas-facturacion.destroy',
-            'transacciones-ventas-boleta.index',
-            'transacciones-ventas-boleta.create',
-            'transacciones-ventas-boleta.store',
-            'transacciones-ventas-boleta.show',
-            'transacciones-ventas-boleta.edit',
-            'transacciones-ventas-boleta.update',
-            'transacciones-ventas-boleta.destroy',
-            'transacciones-ventas-guia_remision.index',
-            'transacciones-ventas-guia_remision.create',
-            'transacciones-ventas-guia_remision.store',
-            'transacciones-ventas-guia_remision.show',
-            'transacciones-ventas-guia_remision.edit',
-            'transacciones-ventas-guia_remision.update',
-            'transacciones-ventas-guia_remision.destroy',
-            'transacciones-garantias',
-            'transacciones-garantias-guias_ingreso.index',
-            'transacciones-garantias-guias_ingreso.create',
-            'transacciones-garantias-guias_ingreso.store',
-            'transacciones-garantias-guias_ingreso.show',
-            'transacciones-garantias-guias_ingreso.edit',
-            'transacciones-garantias-guias_ingreso.update',
-            'transacciones-garantias-guias_ingreso.destroy',
-            'transacciones-garantias-guias_egreso.index',
-            'transacciones-garantias-guias_egreso.create',
-            'transacciones-garantias-guias_egreso.store',
-            'transacciones-garantias-guias_egreso.show',
-            'transacciones-garantias-guias_egreso.edit',
-            'transacciones-garantias-guias_egreso.update',
-            'transacciones-garantias-guias_egreso.destroy',
-            'transacciones-garantias-informe_tecnico.index',
-            'transacciones-garantias-informe_tecnico.create',
-            'transacciones-garantias-informe_tecnico.store',
-            'transacciones-garantias-informe_tecnico.show',
-            'transacciones-garantias-informe_tecnico.edit',
-            'transacciones-garantias-informe_tecnico.update',
-            'transacciones-garantias-informe_tecnico.destroy',
-            'inventario',
-            'inventario-productos_kardex',
-            'inventario-productos_kardex-entrada_producto.index',
-            'inventario-productos_kardex-entrada_producto.create',
-            'inventario-productos_kardex-entrada_producto.store',
-            'inventario-productos_kardex-entrada_producto.show',
-            'inventario-productos_kardex-entrada_producto.edit',
-            'inventario-productos_kardex-entrada_producto.update',
-            'inventario-productos_kardex-entrada_producto.destroy',
-            'inventario-productos_kardex-salida_producto.index',
-            'inventario-productos_kardex-salida_producto.create',
-            'inventario-productos_kardex-salida_producto.store',
-            'inventario-productos_kardex-salida_producto.show',
-            'inventario-productos_kardex-salida_producto.edit',
-            'inventario-productos_kardex-salida_producto.update',
-            'inventario-productos_kardex-salida_producto.destroy',
-            'inventario-productos-inventario_inicial.index',
-            'inventario-productos-inventario_inicial.create',
-            'inventario-productos-inventario_inicial.store',
-            'inventario-productos-inventario_inicial.show',
-            'inventario-productos-inventario_inicial.edit',
-            'inventario-productos-inventario_inicial.update',
-            'inventario-productos-inventario_inicial.destroy',
-            'inventario-toma_de_inventario.index',
-            'inventario-toma_de_inventario.create',
-            'inventario-toma_de_inventario.store',
-            'inventario-toma_de_inventario.show',
-            'inventario-toma_de_inventario.edit',
-            'inventario-toma_de_inventario.update',
-            'inventario-toma_de_inventario.destroy',
-            'planilla',
-            'planilla-datos_generales.index',
-            'planilla-datos_generales.create',
-            'planilla-datos_generales.store',
-            'planilla-datos_generales.show',
-            'planilla-datos_generales.edit',
-            'planilla-datos_generales.update',
-            'planilla-datos_generales.destroy',
-            'planilla-vendedores.index',
-            'planilla-vendedores.create',
-            'planilla-vendedores.store',
-            'planilla-vendedores.show',
-            'planilla-vendedores.edit',
-            'planilla-vendedores.update',
-            'planilla-vendedores.destroy',
-            'consultas',
-            'consultas-garantias',
-            'consultas-garantias-guia_ingreso.index',
-            'consultas-garantias-guia_ingreso.create',
-            'consultas-garantias-guia_ingreso.store',
-            'consultas-garantias-guia_ingreso.show',
-            'consultas-garantias-guia_ingreso.edit',
-            'consultas-garantias-guia_ingreso.update',
-            'consultas-garantias-guia_ingreso.destroy',
-            'consultas-garantias-guia_egreso.index',
-            'consultas-garantias-guia_egreso.create',
-            'consultas-garantias-guia_egreso.store',
-            'consultas-garantias-guia_egreso.show',
-            'consultas-garantias-guia_egreso.edit',
-            'consultas-garantias-guia_egreso.update',
-            'consultas-garantias-guia_egreso.destroy',
-            'consultas-garantias-informe_tecnico.index',
-            'consultas-garantias-informe_tecnico.create',
-            'consultas-garantias-informe_tecnico.store',
-            'consultas-garantias-informe_tecnico.show',
-            'consultas-garantias-informe_tecnico.edit',
-            'consultas-garantias-informe_tecnico.update',
-            'consultas-garantias-informe_tecnico.destroy',
-            'auxiliares',
-            'auxiliares-clientes.index',
-            'auxiliares-clientes.create',
-            'auxiliares-clientes.store',
-            'auxiliares-clientes.show',
-            'auxiliares-clientes.edit',
-            'auxiliares-clientes.update',
-            'auxiliares-clientes.destroy',
-            'auxiliares-provedores.index',
-            'auxiliares-provedores.create',
-            'auxiliares-provedores.store',
-            'auxiliares-provedores.show',
-            'auxiliares-provedores.edit',
-            'auxiliares-provedores.update',
-            'auxiliares-provedores.destroy',
-            'maestro',
-            'maestro-catalogo',
-            'maestro-catalogo-productos.index',
-            'maestro-catalogo-productos.create',
-            'maestro-catalogo-productos.store',
-            'maestro-catalogo-productos.show',
-            'maestro-catalogo-productos.edit',
-            'maestro-catalogo-productos.update',
-            'maestro-catalogo-productos.destroy',
-            'maestro-catalogo-clasificacion',
-            'maestro-catalogo-clasificacion-categorias.index',
-            'maestro-catalogo-clasificacion-categorias.create',
-            'maestro-catalogo-clasificacion-categorias.store',
-            'maestro-catalogo-clasificacion-categorias.show',
-            'maestro-catalogo-clasificacion-categorias.edit',
-            'maestro-catalogo-clasificacion-categorias.update',
-            'maestro-catalogo-clasificacion-categorias.destroy',
-            'maestro-catalogo-clasificacion-familias.index',
-            'maestro-catalogo-clasificacion-familias.create',
-            'maestro-catalogo-clasificacion-familias.store',
-            'maestro-catalogo-clasificacion-familias.show',
-            'maestro-catalogo-clasificacion-familias.edit',
-            'maestro-catalogo-clasificacion-familias.update',
-            'maestro-catalogo-clasificacion-familias.destroy',
-            'maestro-catalogo-clasificacion-marcas.index',
-            'maestro-catalogo-clasificacion-marcas.create',
-            'maestro-catalogo-clasificacion-marcas.store',
-            'maestro-catalogo-clasificacion-marcas.show',
-            'maestro-catalogo-clasificacion-marcas.edit',
-            'maestro-catalogo-clasificacion-marcas.update',
-            'maestro-catalogo-clasificacion-marcas.destroy',
-            'maestro-tablas_generales',
-            'maestro-tablas_generales-motivos.index',
-            'maestro-tablas_generales-motivos.create',
-            'maestro-tablas_generales-motivos.store',
-            'maestro-tablas_generales-motivos.show',
-            'maestro-tablas_generales-motivos.edit',
-            'maestro-tablas_generales-motivos.update',
-            'maestro-tablas_generales-motivos.destroy',
-            'maestro-almacenes.index',
-            'maestro-almacenes.create',
-            'maestro-almacenes.store',
-            'maestro-almacenes.show',
-            'maestro-almacenes.edit',
-            'maestro-almacenes.update',
-            'maestro-almacenes.destroy',
-            'maestro-usuarios.index',
-            'maestro-usuarios.create',
-            'maestro-usuarios.store',
-            'maestro-usuarios.show',
-            'maestro-usuarios.edit',
-            'maestro-usuarios.update',
-            'maestro-usuarios.destroy',
-            'maestro-monedas.index',
-            'maestro-monedas.create',
-            'maestro-monedas.store',
-            'maestro-monedas.show',
-            'maestro-monedas.edit',
-            'maestro-monedas.update',
-            'maestro-monedas.destroy',
-            'maestro-tipo_de_cambio.index',
-            'maestro-tipo_de_cambio.create',
-            'maestro-tipo_de_cambio.store',
-            'maestro-tipo_de_cambio.show',
-            'maestro-tipo_de_cambio.edit',
-            'maestro-tipo_de_cambio.update',
-            'maestro-tipo_de_cambio.destroy',
-            'maestro-configuracion_general',
-            'maestro-configuracion_general.mi_empresa.index',
-            'maestro-configuracion_general.mi_empresa.create',
-            'maestro-configuracion_general.mi_empresa.store',
-            'maestro-configuracion_general.mi_empresa.show',
-            'maestro-configuracion_general.mi_empresa.edit',
-            'maestro-configuracion_general.mi_empresa.update',
-            'maestro-configuracion_general.mi_empresa.destroy',
-            'maestro-configuracion_general.unidad_de_medida.index',
-            'maestro-configuracion_general.unidad_de_medida.create',
-            'maestro-configuracion_general.unidad_de_medida.store',
-            'maestro-configuracion_general.unidad_de_medida.show',
-            'maestro-configuracion_general.unidad_de_medida.edit',
-            'maestro-configuracion_general.unidad_de_medida.update',
-            'maestro-configuracion_general.unidad_de_medida.destroy',
-            'maestro-configuracion_general.igv.index',
-            'maestro-configuracion_general.igv.create',
-            'maestro-configuracion_general.igv.store',
-            'maestro-configuracion_general.igv.show',
-            'maestro-configuracion_general.igv.edit',
-            'maestro-configuracion_general.igv.update',
-            'maestro-configuracion_general.igv.destroy',
-        ]);
-        //$admin->givePermissionTo('products.index');
-        //$admin->givePermissionTo(Permission::all());
+        $super_admin->givePermissionTo(Permission::all());
+        $admin->givePermissionTo(Permission::all());
 
-        //Guest
-        $guest = Role::create(['name' => 'Guest']);
+        $users = User::get();
 
-        $guest->givePermissionTo([
-            'inicio',
-        ]);
+        foreach ($users as $usuario) {
+            if ($usuario->id == 1) {
+                $usuario->assignRole('SuperAdministrador');
+            } else {
+                $usuario->assignRole('Administrador');
+            }
+        }
 
-        //User Admin
-        $user = User::find(1);
-        $user->assignRole('Admin');
 
-        // $user2 = User::find(2);
-        // $user2->assignRole('Admin');
+        // //$admin->givePermissionTo('products.index');
+        // //$admin->givePermissionTo(Permission::all());
 
-        // $user3 = User::find(3);
-        // $user3->assignRole('Admin');
+        // //Guest
+        // $guest = Role::create(['name' => 'Guest']);
+
+        // $guest->givePermissionTo([
+        //     'inicio',
+        // ]);
+
+        // //User Admin
+        // $user = User::find(1);
+        // $user->assignRole('Admin');
+
+        // // $user2 = User::find(2);
+        // // $user2->assignRole('Admin');
+
+        // // $user3 = User::find(3);
+        // // $user3->assignRole('Admin');
     }
 }

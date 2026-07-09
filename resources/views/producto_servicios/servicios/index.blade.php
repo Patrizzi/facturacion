@@ -9,7 +9,7 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
-                <div class="ibox">
+                <div class="ibox">  
                     <div class="ibox-title">
                         <h4>Resumen de {{ Str::ucfirst(Carbon\Carbon::now()->translatedFormat('F Y')) }}</h4>
                     </div>
@@ -21,51 +21,41 @@
                 </div>
             </div>
         </div>
-    </div>
 
-
-    <div class="wrapper wrapper-content animated fadeInRight">
         <div class="row">
             <div class="col-lg-12">
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="tabs-container">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                            <ul class="nav nav-tabs" role="tablist"
+                                style="align-items: center;border-bottom: 0px !important;">
                                 @include('producto_servicios.servicios.shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-sm btn-primary" id="openUploadModal">
+                                    <button class="btn btn-primary" id="openUploadModal" title="Importar">
                                         <i class="fa fa-upload text-secondary"
                                             style="cursor: pointer;color: white !important"></i>
-                                    </button>
-                                    <div class="btn btn-sm btn-primary dropdown" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
-                                        <i class="fa fa-download text-secondary"
-                                            style="cursor: pointer;color: white !important"></i>
-
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <button class="dropdown-item" onclick="exportarTodo(event)"
-                                                style="width: 100%;">
-                                                <i class="fa fa-file-excel mr-2"></i>
-                                                Exportar Todo
-                                            </button>
-                                            <button class="dropdown-item" id="exportSelected" style="width: 100%;">
-                                                <i class="fa fa-file-pdf mr-2"></i>
-                                                Exportar Selecionados
-                                            </button>
-                                        </div>
+                                    </button>                    
+                                    <div class="btn-group">
+                                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" title="Exportar">
+                                            <i class="fa fa-download"></i></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="#" onclick="exportarTodo(event)">Exportar Todo</a></li>
+                                            <li><a class="dropdown-item" href="#"  id="exportSelected">Exportar seleccionados</a></li>
+                                        </ul>
                                     </div>
-
                                     {{-- forms ocultos exportar productos --}}
                                     <form id="formExportProdAll" action="{{ route('export.excel') }}" method="GET"
                                         style="display: none;"></form>
-
-                                    <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#NuevoServicio"
-                                        id="nuevo_servicio">
-                                        <i class="fa fa-plus"></i></button>
+                                    @can('servicios.crear')
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#NuevoServicio"
+                                            id="nuevo_servicio" title="Nuevo Servicio">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    @endcan
                                 </ul>
                             </ul>
-                            <div class="tabs-content">
-                                <div class="tab-pane active show" id="tab-1">
+                            <div class="tabs-content"  style="margin-top: -2px">
+                                <div class="tab-pane active show" id="tab-1" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                     <br>
                                     <div class="search-responsive" style="padding-right: 15px;padding-left: 15px;">
                                         <div class="row">
@@ -98,6 +88,7 @@
                                         </div>
                                     </div>
                                     <br>
+                                    <br>
                                     <div class="table-responsive">
                                         <table class="table table-striped table-bordered table-hover dataTables-example">
                                             <thead>
@@ -107,19 +98,17 @@
                                                     <th>Código Original</th>
                                                     <th>Nombre</th>
                                                     <th>Familia</th>
-                                                    <th>P. Venta (
+                                                    <th>P. Venta  (
                                                         <strong>{{ $moneda->where('tipo', 'nacional')->pluck('simbolo')->first() }}</strong>
-                                                        )
+                                                        ) <small>S/igv</small>
                                                     </th>
                                                     <th>P. Venta (
                                                         <strong>{{ $moneda->where('tipo', 'extranjera')->pluck('simbolo')->first() }}</strong>
-                                                        )
+                                                        ) <small>S/igv</small> 
                                                     </th>
                                                     <th>Ficha Técnica</th>
-                                                    <th class="icon-estado"></th>
-                                                    <th><i class="fa fa-sliders" style="cursor: pointer;"
-                                                            data-toggle="dropdown" aria-haspopup="true"
-                                                            aria-expanded="false"></th>
+                                                    <th class="icon-estado">Estado</th>
+                                                    <th><i class="fa fa-sliders"></i></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -213,15 +202,9 @@
             object-fit: contain;
             transition: transform 0.3s ease-in-out;
         }
-
-        .btn-circle {
-            width: 25px;
-            height: 25px;
-            padding: 3px 0;
-        }
-
-        .icon-estado {
-            text-align: center;
+        .drop-actions > li > a{
+            margin-right: 10px !important;
+            margin-left: 0px !important;
         }
     </style>
 
@@ -265,6 +248,9 @@
         });
         // const destroyBaseUrl = "{{ url('servicios_destroy') }}";
         // $('#tab-1').addClass('active')
+        var permiso_editar = false;
+        var permiso_ver = false;
+        var permiso_estado = false;
         var servicios_table = $('.dataTables-example').DataTable({
             pageLength: 15,
             "serverSide": true,
@@ -275,6 +261,12 @@
                     d.daterange = $('#data_range_filter').val();
                     d.estado_anular = $('#estado_anular').val();
                     d.value = $('#search_all_column').val();
+                },
+                dataSrc: function(json) {
+                    permiso_editar = json.permiso_editar;
+                    permiso_ver = json.permiso_ver;
+                    permiso_estado = json.permiso_estado;
+                    return json.data;
                 }
             },
             "columnDefs": [{
@@ -286,6 +278,9 @@
                                 2] +
                             '" class="i-checks-boleta">';
                     }
+                },{
+                    'width': '350px',
+                    'targets': [3],
                 },
                 {
                     'targets': [7],
@@ -308,61 +303,88 @@
                     'orderable': false,
                     'className': "icon-estado",
                     'render': function(data, type, full, meta) {
-                        if (full[7] == 0) {
-                            return `<button class="btn btn-sm btn-success btn-circle" title="Servicio ">
-                                    <i class="fa fa-check"></i>
-                                </button> `;
-                        } else {
-                            return `<button class="btn btn-sm btn-danger btn-circle" title="Servicio ">
-                                    <i class="fa fa-times"></i>
-                                </button> `;
+                        if(full[7] == 0){
+                            return `<button class="btn btn-info btn-circle btn-ls" title="Activo">
+                                        <i class="fa fa-check" ></i>
+                                    </button> `
+                        }else{
+                            return `<button class="btn btn-danger btn-circle btn-ls" title="Anulado">
+                                    <i class="fa fa-times" ></i>
+                                </button> `
                         }
                     }
                 },
                 {
                     'targets': [9],
+                    'width': '3%',
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        var data = "";
-                        data +=
-                            `
-                        <div class="dropdown d-inline">
-                            <i class="fa fa-ellipsis-h text-secondary" style="cursor:pointer;" id="dropdownMenuIcon1" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"></i>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuIcon1">
-                                <a class="dropdown-item edit-servicio"  data-toggle="modal" href="#EditServicio" data-id="` +
-                            full[9]['id'] +
-                            `" data-codigo_servicio="` + full[9]['codigo_servicio'] +
-                            `" data-codigo_original="` + full[9]['codigo_original'] +
-                            `" data-familia_id="` + full[9]['familia_id'] +
-                            `" data-subfamilia_id="` + full[9]['subfamilia_id'] +
-                            `" data-marca_id="` + full[9]['marca_id'] +
-                            `" data-moneda_id="` + full[9]['moneda_id'] +
-                            `" data-nombre="` + full[9]['nombre'] +
-                            `" data-precio_nacional="` + full[9]['precio_nacional_float'] +
-                            `" data-precio_extranjero="` + full[9]['precio_extranjero_float'] +
-                            `" data-utilidad="` + full[9]['utilidad'] +
-                            `" data-descuento="` + full[9]['descuento'] +
-                            `" data-descripcion="` + full[9]['descripcion'] +
-                            `" data-foto="` + full[9]['foto'] +
-                            `" data-tipo_afectacion_id="` + full[9]['tipo_afectacion_id'] +
-                            `" data-estado_anular="` + full[9]['estado_anular'] +
-                            `" data-fecha_creacion="` + full[9]['fecha_creacion'] + `">
-                                    Editar
-                                </a>
-                                `;
-                        if (full[7] == "0") {
-                            data +=
-                                `<button class="dropdown-item text-danger" onclick="desactivarserivicio( ` +
-                                full[0] + `, event)"
-                                    style="width: 100%; cursor: pointer;">
-                                    Anular
-                                </button>`;
+                        var servicio = full[9];
+                        let text_button = ``;
+                        let ver_button = ``;
+                        let estado_button = ``;
+                        let button_ver_editar = ``;
+                        function ServicioDataAttr(servicio){
+                            return  `
+                                data-id="${servicio.id}"
+                                data-codigo_servicio="${servicio.codigo_servicio}"
+                                data-codigo_original="${servicio.codigo_original}"  
+                                data-familia_id="${servicio.familia_id}"
+                                data-subfamilia_id="${servicio.subfamilia_id}"
+                                data-marca_id="${servicio.marca_id}"
+                                data-moneda_id="${servicio.moneda_id}"
+                                data-nombre="${servicio.nombre}"
+                                data-precio_nacional="${servicio.precio_nacional_float}"
+                                data-precio_extranjero="${servicio.precio_extranjero_float}"
+                                data-utilidad="${servicio.utilidad}"
+                                data-descuento="${servicio.descuento}"
+                                data-descripcion="${servicio.descripcion}"
+                                data-foto="${servicio.foto}"
+                                data-tipo_afectacion_id="${servicio.tipo_afectacion_id}"
+                                data-estado_anular="${servicio.estado_anular}"
+                                data-fecha_creacion="${servicio.fecha_creacion}"
+                                data-familia="${servicio.familia.nombre}"
+                            `;
                         }
-                        data += `
-                            </div>
-                        </div>`;
-                        return data;
+                        if (permiso_ver) {
+                            button_ver_editar += `
+                                <li><a class="dropdown-item ver-servicio"
+                                    data-toggle="modal"
+                                    href="#ModalFormVerServicio"
+                                    ${ServicioDataAttr(servicio)}
+                                    data-familia_name="${servicio.familia.descripcion}"
+                                    data-subfamilia_name="${servicio.subfamilia_name}"
+                                    data-marca_name="${servicio.marca_name}"
+                                    data-tipo_afectacion="${servicio.tipo_afectacion}"
+                                    >
+                                    Ver
+                                </a></li>
+                            `;
+                        }
+
+                        if (permiso_editar) {
+                            button_ver_editar += `
+                                <li><a class="dropdown-item edit-servicio "
+                                    data-toggle="modal"
+                                    href="#EditServicio"
+                                    ${ServicioDataAttr(servicio)}>
+                                    Editar
+                                </a></li>
+                            `;
+                        }
+                        if(permiso_estado && full[7] == 0){
+                            estado_button = `
+                                <li><a class="dropdown-item" onclick="desactivarserivicio(${servicio.id}, event)" style="color: red;font-weight: bold" href="#">Desactivar</a></li>
+                                `;
+                        }
+                        let html =`
+                            <button data-toggle="dropdown" aria-expanded="false" class="btn btn-primary" id="dropdownMenuIcon${servicio.id}"><i class="fa fa-ellipsis-h"></i></button>
+                            <ul class="dropdown-menu drop-actions" x-placement="bottom-start">
+                                `+ button_ver_editar +`
+                                <li>`+ estado_button +`</li>
+                            </u>
+                        `;
+                        return html;
                     }
                 }
             ]
@@ -370,6 +392,8 @@
 
         // ficha tecnica modal
         $(document).on('click', '.btn-ft', function() {
+            $('#pdf_ficha_tecnica').attr('src', "");
+
             var servicioId = $(this).data('id');
             var servicioNombre = $(this).data('nombre');
 
@@ -483,6 +507,7 @@
 
     @include('producto_servicios.servicios.create2')
     @include('producto_servicios.servicios.edit')
+    @include('producto_servicios.servicios.show')
     @include('producto_servicios.servicios.shared.pie')
     @include('producto_servicios.servicios.shared.ficha_tecnica')
 @endsection

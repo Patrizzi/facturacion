@@ -357,15 +357,10 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                {{-- <button type="button" name="name" value="pd"
-                                    class="btn btn-primary button-ladda" id="boton"
-                                    style="background: #0400c2; border-radius: 8px; font-weight: 450; font-size: 1rem; padding: 7px 20px; color: white; border: none;">
-                                    <strong>Guardar</strong>
-                                </button>
-                                <button id="button_submit" hidden type="submit">Button DB</button> --}}
-
-                                <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
+                                @can('factura_m.editar')
+                                    <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
                                     type="button">Guardar</button>
+                                @endcan
                                 <button data-style="zoom-out" class="btn btn-primary float-right button-ladda" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
                                 <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""

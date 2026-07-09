@@ -10,36 +10,42 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" enctype="" id="form_familia">
-                    @csrf
-                    <input type="hidden" value="" name="familia_edit_id" id="id_familia_edit">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <input type="text" placeholder="Descripción:" name="descripcion_familia" id="descripcion_familia" class="form-control m-b" required autocomplete="off">
+                @canany(['familia.crear','familia.editar'])
+                    <form action="" method="post" enctype="" id="form_familia">
+                        @csrf
+                        <input type="hidden" value="" name="familia_edit_id" id="id_familia_edit">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input type="text" placeholder="Descripción:" name="descripcion_familia" id="descripcion_familia" class="form-control m-b" required autocomplete="off">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-9">
-                            <input type="text" placeholder="Ubicación:" name="ubicacion_familia" id="ubicacion_familia" class="form-control m-b" autocomplete="off">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <input type="text" placeholder="Ubicación:" name="ubicacion_familia" id="ubicacion_familia" class="form-control m-b" autocomplete="off">
+                            </div>
+                            <div class="col-sm-3" style="text-align: center;">
+                                @can('familia.crear')
+                                    <button class="btn btn-success " type="button" id="add_new_familia"
+                                    style="background-color:blue; border-color:blue; width: 49%"><i class="fa fa-plus"></i> Guardar</button>
+                                @endcan
+                                @can('familia.editar')
+                                    <button class="btn btn-success " type="button" id="update_familia"
+                                        style="background-color:blue; border-color:blue; display: none; margin-top: 0px; width: 49%"><i class="fa fa-pencil"></i> Actualizar</button>
+                                @endcan
+                                <button class="btn btn-danger " type="button" id="cancel_familia" style="width: 49%"><i
+                                    class="fa fa-pencil"></i> Cancelar</button>
+                            </div>
                         </div>
-                        <div class="col-sm-3" style="text-align: center;">
-                            <button class="btn btn-success " type="button" id="add_new_familia"
-                                style="background-color:blue; border-color:blue; width: 49%"><i class="fa fa-plus"></i> Guardar</button>
-                            <button class="btn btn-success " type="button" id="update_familia"
-                                style="background-color:blue; border-color:blue; display: none; margin-top: 0px; width: 49%"><i class="fa fa-pencil"></i> Actualizar</button>
-                            <button class="btn btn-danger " type="button" id="cancel_familia" style="width: 49%"><i
-                                class="fa fa-pencil"></i> Cancelar</button>
-                        </div>
-                    </div>
-                </form>
-                <hr>
+                    </form>
+                    <hr>    
+                @endcan
                 <!--Fecha, Buscar y tabla-->
                 <div class="input-group row">
                     <label class="col-sm-2 col-form-label text-center">Buscar:</label>
-                    <input type="text" class="form-control col-sm-10" name="" id="search_familia">
+                    <input type="text" class="form-control  col-sm-10" name="" id="search_familia">
                 </div>
                 <br>
-                <div class=" table-responsive">
+                <div class="table-responsive" style="overflow-x: hidden;">
                     <!--Tabla-->
                     <table class="table table-striped text-md-center table-bordered dataTables-familias">
                         <thead>
@@ -48,7 +54,7 @@
                                 <th style="width: 30%;">Descripción</th>
                                 <th style="width: 20%;">Ubicación</th>
                                 <th style="width: 20%;"># SubFamilias</th>
-                                <th style="width: 10%;">Acción</th>
+                                <th style="width: 10%;">@can('familia.ver')Acción @endcan</th>
                                 <th style="width: 10%;">Estado</th>
                             </tr>
                         </thead>

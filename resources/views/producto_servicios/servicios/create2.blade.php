@@ -1,6 +1,6 @@
 <div id="NuevoServicio" class="modal fade" style="display: none;" aria-modal="true" data-backdrop="static"
     data-keyboard="false" aria-labelledby="TituloProducto">
-    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 900px;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1100px;">
         <div class="modal-content">
             <form id="form-servicio" action="" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -21,7 +21,7 @@
                                         <div class="col-md-9">
                                             <input type="text" class="form-control" readonly value=""
                                                 placeholder="Código generado automáticamente" id="codigo_servicio"
-                                                name="   ">
+                                                name="" value="">
                                             <input type="hidden" id="codigo_producto_display" value="">
                                         </div>
                                     </div>
@@ -111,7 +111,8 @@
                                             class="col-form-label col-md-3"><strong>Marca</strong><span
                                                 class="text-danger">*</span></label>
                                         <div class="col-lg-9">
-                                            <select id="marca_id_create" class="form-control marca_select2" required>
+                                            <select id="marca_id_create" class="form-control marca_select2" required
+                                                style="z-index: 9999999;width: 10px !important;">>
                                                 @foreach ($marcas as $marca)
                                                     <option value="{{ $marca->id }}">{{ $marca->nombre }}</option>
                                                 @endforeach
@@ -129,7 +130,7 @@
                                                     title="" class="form-control input_valor_numerico"
                                                     value="0" autocomplete="off" required="required"
                                                     max="100" step="0.01" id="descuento_create"
-                                                    data-original-title="Descuenta internamente, de forma automática">
+                                                    data-original-title="Descuento Adicional">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-addon">%</span>
                                                 </div>
@@ -153,9 +154,23 @@
                                                         class="input-group-addon">{{ $moneda->where('tipo', 'nacional')->pluck('simbolo')->first() }}</span>
                                                 </div>
                                                 <input type="number" data-toggle="tooltip" data-placement="top"
-                                                    title="" class="form-control input_valor_numerico"
+                                                    title="" class="form-control input_valor_numerico "
                                                     autocomplete="off" required="required" step="0.01"
                                                     id="precio_nacional_create">
+                                                @if ($moneda->where('principal', '1')->where('tipo', 'nacional')->count())
+                                                    <div class="input-group-addon" style="padding: 0px; !important">
+                                                        <div class="tooltip-demo">
+                                                            <i class="fa fa-check-circle text-success"
+                                                                data-toggle="tooltip" data-placement="bottom"
+                                                                style="padding: 10px; !important"
+                                                                data-original-title="Moneda Principal del Sistema"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="precio_principal">
+                                                    <script>
+                                                        var moneda_principal = "nacional";
+                                                    </script>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -166,7 +181,6 @@
                                                 Extranjero</strong></label>
                                         <div class="col-md-9">
                                             <div class="input-group">
-
                                                 <div class="input-group-prepend">
                                                     <span
                                                         class="input-group-addon">{{ $moneda->where('tipo', 'extranjera')->pluck('simbolo')->first() }}</span>
@@ -175,6 +189,20 @@
                                                     title="" class="form-control input_valor_numerico"
                                                     autocomplete="off" required="required" step="0.01"
                                                     id="precio_extranjero_create">
+                                                @if ($moneda->where('principal', '1')->where('tipo', 'extranjera')->count())
+                                                    <div class="input-group-addon" style="padding: 0px; !important">
+                                                        <div class="tooltip-demo">
+                                                            <i class="fa fa-check-circle text-success"
+                                                                data-toggle="tooltip" data-placement="bottom"
+                                                                style="padding: 10px; !important"
+                                                                data-original-title="Moneda Princial del Sistema"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="precio_principal">
+                                                    <script>
+                                                        var moneda_principal = "extranjera";
+                                                    </script>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -226,8 +254,8 @@
                                             <label for="" class="col-form-label"><b>Precio sin
                                                     IGV</b></label>
                                             <input type="text" class="border-0 form-control input-s-lg"
-                                                placeholder="{{ $moneda->where('tipo', 'nacional')->pluck('simbolo')->first() }}"
-                                                id="precio_compra_create" oninput="calcular_utilidad_create()">
+                                                placeholder="{{ $moneda->where('principal', '1')->pluck('simbolo')->first() }}"
+                                                id="precio_compra_create">
                                         </div>
                                     </div>
                                     <div class="col-md-5">
@@ -235,8 +263,8 @@
                                             <label for="" class="col-form-label"><b>Precio de Venta +
                                                     IGV</b></label>
                                             <input type="text" class="border-0 form-control input-s-lg"
-                                                placeholder="{{ $moneda->where('tipo', 'nacional')->pluck('simbolo')->first() }}"
-                                                id="precio_venta_create" oninput="calcular_utilidad_create()">
+                                                placeholder="{{ $moneda->where('principal', '1')->pluck('simbolo')->first() }}"
+                                                id="precio_venta_create">
                                         </div>
                                     </div>
                                 </div>
@@ -323,10 +351,15 @@
     .select2-container .select2-dropdown {
         z-index: 20000 !important;
     }
+
+    .tooltip {
+        z-index: 100000000;
+    }
 </style>
 {{-- {{$tipo_cambio->fecha}} --}}
 <script>
     $(document).ready(function() {
+        console.log(moneda_principal);
         $('.familia_select2').select2({
             placeholder: "Seleccionar"
         });
@@ -375,26 +408,6 @@
         $('#div_ayuda_utilidad').toggle();
     })
 
-    function calcular_utilidad_create() {
-        var precio_venta = $("#precio_venta_create").val();
-        var precio_compra = $("#precio_compra_create").val();
-
-        if (!isNaN(precio_venta) && !isNaN(precio_compra) && precio_venta !== "" && precio_compra !== "") {
-            var a1 = parseFloat(precio_venta) * 100;
-            var a2 = a1 / parseFloat(precio_compra);
-            var utilidad = a2 - 100;
-            console.log(utilidad);
-            $("#sumando_create").val(utilidad);
-        } else {
-            $("#sumando_create").val("");
-        }
-
-        $("#precio_nacional_create").val(precio_compra);
-
-        // Disparar evento input para que se actualicen cálculos
-        $("#precio_nacional_create").trigger("input");
-    }
-
     function validarExtCreate() {
         var archivoInputCreate = document.getElementById('archivoInputCreate');
         var archivoRutaCreate = archivoInputCreate.value;
@@ -428,24 +441,6 @@
             visor.readAsDataURL(archivoInputCreate.files[0]);
         }
     }
-
-    let tipo_cambio = parseFloat(`{{ $tipo_cambio->paralelo }}`) || 1;
-
-    // Cuando cambia el precio nacional → calculamos el extranjero
-    $('#precio_nacional_create').on('input', function() {
-        let precio_nacional = parseFloat($(this).val()) || 0;
-        let precio_extranjero = precio_nacional / tipo_cambio;
-        $('#precio_extranjero_create').val(precio_extranjero.toFixed(2));
-        $('#precio_compra_create').val(precio_nacional);
-    });
-
-    // Cuando cambia el precio extranjero → calculamos el nacional
-    $('#precio_extranjero_create').on('input', function() {
-        let precio_extranjero = parseFloat($(this).val()) || 0;
-        let precio_nacional = precio_extranjero * tipo_cambio;
-        $('#precio_nacional_create').val(precio_nacional.toFixed(2));
-        $('#precio_compra_create').val(precio_nacional.toFixed(2));
-    });
 
     $('#store_servicio').on('click', function(e) {
         e.preventDefault();
@@ -515,5 +510,138 @@
                 submitBtn.prop('disabled', false).val('Guardar');
             }
         });
+    });
+
+    var tipo_cambio = parseFloat(`{{ $tipo_cambio->paralelo }}`) || 1;
+    var igv_create = `{{ $igv->igv_total }}`;
+
+    function calcular_precios_create() {
+        if (moneda_principal == "nacional") {
+            var precio_principal = $('#precio_nacional_create').val();
+        } else {
+            var precio_principal = $('#precio_extranjero_create').val();
+        }
+        const descuento = parseFloat($("#descuento_create").val()) || 0;
+        const utilidad = parseFloat($("#sumando_create").val()) || 0;
+        const igv = parseFloat(igv_create) || 0;
+
+        let precio_compra = parseFloat(precio_principal) || 0;
+        precio_compra = precio_compra + (precio_compra * (utilidad / 100));
+        $('#precio_compra_create').val(precio_compra.toFixed(2));
+        // + IGV
+        const total_venta =
+            precio_compra + (precio_compra * (igv / 100));
+        $('#precio_venta_create').val(total_venta.toFixed(2));
+        // Disparar evento input para que se actualicen cálculos
+    }
+
+    $('#precio_nacional_create').on('input', function() {
+        if (actualizando) return;
+        actualizando = true;
+        let nacional = parseFloat($(this).val()) || 0;
+        let extranjero = nacional / tipo_cambio;
+        // actualizar extranjero
+        $('#precio_extranjero_create').val(
+            extranjero.toFixed(2)
+        );
+        // actualizar principal
+        if (moneda_principal === 'nacional') {
+            $('#precio_principal').val(nacional.toFixed(2));
+        } else {
+            $('#precio_principal').val(extranjero.toFixed(2));
+        }
+        actualizando = false;
+        calcular_precios_create();
+    });
+
+    $('#precio_extranjero_create').on('input', function() {
+        if (actualizando) return;
+        actualizando = true;
+        let extranjero = parseFloat($(this).val()) || 0;
+        let nacional = extranjero * tipo_cambio;
+        // actualizar nacional
+        $('#precio_nacional_create').val(
+            nacional.toFixed(2)
+        );
+        // actualizar principal
+        if (moneda_principal === 'nacional') {
+            $('#precio_principal').val(nacional.toFixed(2));
+        } else {
+            $('#precio_principal').val(extranjero.toFixed(2));
+        }
+        actualizando = false;
+        calcular_precios_create();
+    });
+    $('#sumando_create').on('input', function() {
+        calcular_precios_create();
+    });
+
+    function calcular_utilidad_create() {
+
+        const precioPrincipal =
+            parseFloat($('#precio_principal').val()) || 0;
+        const precioCompra =
+            parseFloat($('#precio_compra_create').val()) || 0;
+
+        if (precioPrincipal <= 0 || precioCompra <= 0) {
+            $('#sumando_create').val('');
+            return;
+        }
+        const utilidad =
+            ((precioCompra - precioPrincipal) / precioPrincipal) * 100;
+
+        $('#sumando_create').val(
+            utilidad.toFixed(2)
+        );
+    }
+    $('#precio_compra_create').on('input', function() {
+
+        if (actualizando) return;
+
+        actualizando = true;
+
+        const precioCompra =
+            parseFloat($(this).val()) || 0;
+
+        const igv =
+            parseFloat(igv_create) || 0;
+
+        // calcular venta
+        const precioVenta =
+            precioCompra + (precioCompra * (igv / 100));
+
+        $('#precio_venta_create').val(
+            precioVenta.toFixed(2)
+        );
+
+        calcular_utilidad_create();
+
+        actualizando = false;
+
+    });
+    $('#precio_venta_create').on('input', function() {
+
+        if (actualizando) return;
+
+        actualizando = true;
+
+        const precioVenta =
+            parseFloat($(this).val()) || 0;
+
+        const igv =
+            parseFloat(igv_create) || 0;
+
+        // quitar IGV
+        const precioCompra =
+            precioVenta / (1 + (igv / 100));
+
+        $('#precio_compra_create').val(
+            precioCompra.toFixed(2)
+        );
+
+        calcular_utilidad_create();
+
+        actualizando = false;
+
     });
 </script>

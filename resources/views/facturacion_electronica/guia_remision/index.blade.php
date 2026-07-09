@@ -48,9 +48,7 @@
                 @include('facturacion_electronica.guia_remision.stadistics')
             </div>
         </div>
-    </div>
-    {{-- Base para agregar el tab para el los contenidos --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
+        {{-- Base para agregar el tab para el los contenidos --}}
         <div class="row">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             <div class="col-lg-12">
@@ -58,11 +56,12 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.guia_remision.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
@@ -77,31 +76,25 @@
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-6" class="tab-pane active show">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_remision">
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-6" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <div class="row">
+                                    <div class="col-lg-12" id="alert_remision">
 
-                                        </div>
                                     </div>
-                                    <hr />
+                                </div>
+                                <hr style="margin-left: 15px;margin-right: 15px;" />
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="dateranger_factura"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    value="" readonly />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select()">
                                                         <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select()">
-                                                        <i class="fa fa-eraser"></i>
                                                     </button>
                                                 </span>
                                             </div>
@@ -119,9 +112,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <br>
+                                <br>
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped dataTables-remision">
+                                    <table class="table table-bordered table-striped dataTables-remision">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-remision-head"
@@ -133,8 +128,11 @@
                                                 <th>Fecha de emisión</th>
                                                 <th>Fecha de entrega</th>
                                                 <th>Tipo Transporte</th>
-                                                <th style="text-align:center;color: #0073c1"><img
-                                                        src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
+                                                <th style="text-align:center;color: #0073c1">
+                                                    @can('guia_remision.emitir')
+                                                        <img src="{{ asset('sunat.png') }}" width="25px">SUNAT
+                                                    @endcan
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -166,13 +164,15 @@
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        <tfooter>
-                                            <td colspan="8" align="right" style="padding-right: 2em"></td>
-                                            <td align="center">
-                                                <button type="submit" class="btn btn-primary"
-                                                    id="remision_elec_all">Enviar</button>
-                                            </td>
-                                        </tfooter>
+                                        @can('guia_remision.emitir')
+                                            <tfoot>
+                                                <td colspan="8" align="right" style="padding-right: 2em"></td>
+                                                <td align="center">
+                                                    <button type="submit" class="btn btn-primary"
+                                                        id="remision_elec_all">Enviar</button>
+                                                </td>
+                                            </tfoot>
+                                        @endcan
                                     </table>
                                 </div>
                             </div>
@@ -207,6 +207,16 @@
 
         #alert_one_remision {
             margin-bottom: 0px !important;
+        }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
         }
     </style>
     <!-- scripts -->

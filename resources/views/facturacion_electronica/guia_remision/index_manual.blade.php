@@ -56,7 +56,8 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.guia_remision.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
@@ -75,32 +76,26 @@
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-8" class="tab-pane active show">
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-8" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
                                 <div class="panel-body">
-                                    <div class="panel-body ">
-                                        <div class="row">
-                                            <div class="col-lg-12" id="alert_remision">
-
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-lg-12" id="alert_remision">
+    
                                         </div>
-                                        <hr />
+                                    </div>
+                                    <hr />
+                                    <div class="search-responsive">
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="input-group">
                                                     <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                     <input class="form-control" type="text" name="dateranger_factura"
-                                                        value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                        value=""  readonly/>
                                                     <span class="input-group-append">
                                                         <button type="button" class="btn btn-secondary"
                                                             onclick="revert_select()">
                                                             <i class="fa fa-history"></i>
-                                                        </button>
-                                                    </span>
-                                                    <span class="input-group-append">
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="limpiar_select()">
-                                                            <i class="fa fa-eraser"></i>
                                                         </button>
                                                     </span>
                                                 </div>
@@ -119,9 +114,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
-                                    <table class="table table-striped dataTables-example4">
+                                    <table class="table table-bordered table-striped dataTables-example4">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks-remision-head"
@@ -133,8 +128,11 @@
                                                 <th>Fecha emision</th>
                                                 <th>Fecha entrega</th>
                                                 <th>Tipo Transporte</th>
-                                                <th style="text-align:center;color: #0073c1"><img
-                                                        src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
+                                                <th style="text-align:center;color: #0073c1">
+                                                    @can('guia_remision_m.emitir')
+                                                        <img src="{{ asset('sunat.png') }}" width="25px">SUNAT
+                                                    @endcan
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -157,34 +155,34 @@
                                                         <td>Trasporte Privado</td>
                                                     @endif
                                                     <td>
-                                                        <button type="button"
-                                                            class="btn btn-success btn-circle btn-ls factura_ind"
-                                                            id="guia_remi_ind" value="{{ $guia_remision->cod_guia }}"
-                                                            onclick="envio_guia_manual(this)"><i
-                                                                class="fa fa-cloud-upload"></i></button>
+                                                        @can('guia_remision_m.emitir')
+                                                            <button type="button"
+                                                                class="btn btn-success btn-circle btn-ls factura_ind"
+                                                                id="guia_remi_ind" value="{{ $guia_remision->cod_guia }}"
+                                                                onclick="envio_guia_manual(this)"><i
+                                                                    class="fa fa-cloud-upload"></i></button>
+                                                        @endcan
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="8" align="right" style="padding-right: 2em"></td>
-                                                <td align="center">
-                                                    <button type="submit" class="btn btn-primary"
-                                                        id="remision_m_elec_all">Enviar</button>
-                                                    {{-- <span class="btn btn-primary btn-ls disabled">
-                                                        Enviar
-                                                    </span> --}}
-                                                </td>
-                                            </tr>
-                                        </tbody>
+                                        @can('guia_remision_m.emitir')
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="8" align="right" style="padding-right: 2em"></td>
+                                                    <td align="center">
+                                                        <button type="submit" class="btn btn-primary"
+                                                            id="remision_m_elec_all">Enviar</button>
+                                                        {{-- <span class="btn btn-primary btn-ls disabled">
+                                                            Enviar
+                                                        </span> --}}
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        @endcan
                                     </table>
                                 </div>
                             </div>
-
-                            <div role="tabpanel" id="tab-9" class="tab-pane">
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -233,6 +231,16 @@
         div.dt-buttons {
             display: none;
         }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
     </style>
     <!-- scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -264,7 +272,7 @@
                 radioClass: 'iradio_square-green',
             });
             // {{-- Datatable Facturas --}}
-            table_remision = $('.dataTables-remision').DataTable({
+            table_remision = $('.dataTables-example4').DataTable({
                 pageLength: 15,
                 order: [
                     [0, "desc"]

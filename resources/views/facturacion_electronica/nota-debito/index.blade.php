@@ -12,9 +12,8 @@
                 @include('facturacion_electronica.nota-debito.stadistics')
             </div>
         </div>
-    </div>
-    {{-- Base para agregar el tab para el los contenidos --}}
-    <div class="wrapper wrapper-content animated fadeInRight">
+
+        {{-- Base para agregar el tab para el los contenidos --}}
         <div class="row">
             <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
             <div class="col-lg-12">
@@ -22,11 +21,12 @@
                     <div class="ibox-content">
                         <div class="">
                             <div class="tabs-container">
-                                <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                                <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                     @include('facturacion_electronica.nota_credito.shared.tabs')
                                     <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                         <div class="btn-group">
-                                            <button data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle">
+                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
                                                 <i class="fa fa-download"></i></button>
                                             <ul class="dropdown-menu">
                                                 <li><a class="dropdown-item" href="#">XML</a></li>
@@ -41,31 +41,30 @@
                             </div>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-6" class="tab-pane active show">
-                                <div class="panel-body ">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_credito">
-
-                                        </div>
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-6" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-12" id="alert_credito">
+                                        @if (Session::has('successMsg'))
+                                            <div class="alert alert-success" style="margin-bottom: 0rem">
+                                                <a class="alert-link" href="#">{{ session('successMsg') }}</a>.
+                                            </div>
+                                        @endif
                                     </div>
-                                    <hr />
+                                </div>
+                                <hr />
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
                                                 <label class="col-lg-2 col-form-label"><strong>Fecha:</strong></label>
                                                 <input class="form-control" type="text" name="dateranger_factura"
-                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" />
+                                                    value="{{ date('m/01/Y') }} - {{ date('m/t/Y') }}" readonly />
                                                 <span class="input-group-append">
                                                     <button type="button" class="btn btn-secondary"
                                                         onclick="revert_select_factura()">
                                                         <i class="fa fa-history"></i>
-                                                    </button>
-                                                </span>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-primary"
-                                                        onclick="limpiar_select_factura()">
-                                                        <i class="fa fa-eraser"></i>
                                                     </button>
                                                 </span>
                                             </div>
@@ -83,9 +82,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel-body">
+                                <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  -->
-                                    <table class="table table-striped dataTables-example2">
+                                    <table class="table table-bordered table-striped dataTables-example2">
                                         <thead>
                                             <tr>
                                                 <th><input type="checkbox" class="i-checks" name="input[]"></th>
@@ -95,8 +94,12 @@
                                                 <th>Cliente</th>
                                                 <th>Ruc/DNI</th>
                                                 <th>Fecha Emisión</th>
-                                                <th style="text-align:center;color: #0073c1"><img
-                                                        src="{{ asset('sunat.png') }}" width="25px">SUNAT</th>
+                                                <th style="text-align:center;color: #0073c1">
+                                                    @can('nota_debito.emitir')
+                                                        <img
+                                                            src="{{ asset('sunat.png') }}" width="25px">SUNAT
+                                                    @endcan        
+                                                </th>
                                             </tr>
                                         </thead>
                                         <input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
@@ -114,16 +117,18 @@
                                                         </td>
                                                         <td>{{ $nota_d->nota_i_facturacion->created_at }}</td>
                                                         <td style="text-align: center">
-                                                            <form
-                                                                action="{{ route('facturacion_electronica.nota_debito') }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id"
-                                                                    value="{{ $nota_d->id }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-success btn-circle btn-ls"><i
-                                                                        class="fa fa-cloud-upload"></i></button>
-                                                            </form>
+                                                            @can('nota_debito.emitir')
+                                                                <form
+                                                                    action="{{ route('facturacion_electronica.nota_debito') }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $nota_d->id }}">
+                                                                    <button type="submit"
+                                                                        class="btn btn-success btn-circle btn-ls"><i
+                                                                            class="fa fa-cloud-upload"></i></button>
+                                                                </form>
+                                                            @endcan
                                                         </td>
                                                     @elseif($nota_d->boleta_id != null)
                                                         <td>Boleta</td>
@@ -131,16 +136,18 @@
                                                         <td>{{ $nota_d->nota_i_boleta->cliente->numero_documento }}</td>
                                                         <td>{{ $nota_d->nota_i_boleta->created_at }}</td>
                                                         <td style="text-align: center">
-                                                            <form
-                                                                action="{{ route('facturacion_electronica.nota_debito_bol') }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id"
-                                                                    value="{{ $nota_d->id }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-success btn-circle btn-ls"><i
-                                                                        class="fa fa-cloud-upload"></i></button>
-                                                            </form>
+                                                            @can('nota_debito.emitir')
+                                                                <form
+                                                                    action="{{ route('facturacion_electronica.nota_debito_bol') }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $nota_d->id }}">
+                                                                    <button type="submit"
+                                                                        class="btn btn-success btn-circle btn-ls"><i
+                                                                            class="fa fa-cloud-upload"></i></button>
+                                                                </form>
+                                                            @endcan
                                                         </td>
                                                     @elseif($nota_d->boleta_m_id != null)
                                                         <td>Boleta Manual</td>
@@ -149,16 +156,18 @@
                                                         </td>
                                                         <td>{{ $nota_d->nota_i_boleta_manual->created_at }}</td>
                                                         <td style="text-align: center">
-                                                            <form
-                                                                action="{{ route('facturacion_electronica.nota_debito_bol') }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id"
-                                                                    value="{{ $nota_d->id }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-success btn-circle btn-ls"><i
-                                                                        class="fa fa-cloud-upload"></i></button>
-                                                            </form>
+                                                            @can('nota_debito.emitir')
+                                                                <form
+                                                                    action="{{ route('facturacion_electronica.nota_debito_bol') }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $nota_d->id }}">
+                                                                    <button type="submit"
+                                                                        class="btn btn-success btn-circle btn-ls"><i
+                                                                            class="fa fa-cloud-upload"></i></button>
+                                                                </form>
+                                                            @endcan
                                                         </td>
                                                     @else
                                                         <td>Factura Manual</td>
@@ -167,31 +176,32 @@
                                                         </td>
                                                         <td>{{ $nota_d->nota_i_fac_manual->created_at }}</td>
                                                         <td style="text-align: center">
-                                                            <form
-                                                                action="{{ route('facturacion_electronica.nota_debito') }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="id"
-                                                                    value="{{ $nota_d->id }}">
-                                                                <button type="submit"
-                                                                    class="btn btn-success btn-circle btn-ls"><i
-                                                                        class="fa fa-cloud-upload"></i></button>
-                                                            </form>
+                                                            @can('nota_debito.emitir')
+                                                                <form
+                                                                    action="{{ route('facturacion_electronica.nota_debito') }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    <input type="hidden" name="id"
+                                                                        value="{{ $nota_d->id }}">
+                                                                    <button type="submit"
+                                                                        class="btn btn-success btn-circle btn-ls"><i
+                                                                            class="fa fa-cloud-upload"></i></button>
+                                                                </form>
+                                                            @endcan
                                                         </td>
                                                     @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        <tfooter>
-                                            <td colspan="7" align="right" style="padding-right: 2em"></td>
-                                            <td align="center"><button type="button" class="btn btn-primary"
-                                                    id="nota_debito_elec_all">Enviar</button></td>
-                                        </tfooter>
+                                        @can('nota_debito.emitir')
+                                            <tfoot>
+                                                <td colspan="7" align="right" style="padding-right: 2em"></td>
+                                                <td align="center"><button type="button" class="btn btn-primary"
+                                                        id="nota_debito_elec_all">Enviar</button></td>
+                                            </tfoot>
+                                        @endcan
                                     </table>
                                 </div>
-                            </div>
-
-                            <div role="tabpanel" id="tab-7" class="tab-pane">
                             </div>
                         </div>
                     </div>
@@ -199,28 +209,6 @@
             </div>
         </div>
     </div>
-
-    <!-- scripts -->
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.js') }}"></script>
-    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
-    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
-    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
-
-    <script src="{{ asset('js/inspinia.js') }}"></script>
-    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
-
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
-    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
-
     <style>
         /* OCULTANDO LO DE ORGANIZAR*/
         /* Ver (números) */
@@ -237,7 +225,44 @@
         div.dt-buttons {
             display: none;
         }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        #alert_credito > .alert {
+            margin-bottom: 0rem;
+        }
     </style>
+
+    <!-- scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
+
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+    <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.tooltip.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.resize.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.pie.js') }}"></script>
+    <script src="{{ asset('js/plugins/flot/jquery.flot.time.js') }}"></script>
+
 
     <script>
         $(document).ready(function() {

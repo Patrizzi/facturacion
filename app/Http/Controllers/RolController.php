@@ -14,48 +14,116 @@ use Illuminate\Http\Request;
 class RolController extends Controller
 {
 
-    public function crearRol(Request $request){
+    public function index(Request $request)
+    {
+        $roles = Role::whereNotIn('id',[1])->where('type','!=', 1)->get();
+        $count_perso = Role::where('type', 1)->count();
+
+        return view('configuracion_general.usuario.roles.index', compact('roles','count_perso'));
+    }
+
+    public function create(Request $request)
+    {
+        $roles = Role::where('id', '!=', 1)->where('type', '!=', 1)->get();
+        $permisos = Permission::orderBy('id')
+            ->get()
+            ->groupBy('module') // nivel 1
+            ->map(function ($grupo) {
+                return $grupo->groupBy(function ($permiso) {
+                    return explode('.', $permiso->name)[0]; // nivel 2
+                });
+            });
+        return view('configuracion_general.usuario.roles.create', compact('roles', 'permisos'));
+    }
+
+    public function store(Request $request)
+    {
+
+        // return $request;
+
+        $nombre = $request->name;
+        $permisos = $request->permissions;
+        $rol = Role::create(['name' => $nombre, 'guard_name' => 'web', 'type' => 0]);
+
+        // Obtener permisos por ID
+        $permisosValidos = Permission::whereIn('id', $permisos)->get();
+
+        // Asignarlos al rol
+        $rol->syncPermissions($permisosValidos);
+
+        return redirect()->back()->with('success', 'Rol y permisos asociados, creados correctamente');
+    }
+
+    public function edit($id){
+        $rol = Role::findorFail($id);
+        $permisos = Permission::orderBy('id')
+            ->get()
+            ->groupBy('module') // nivel 1
+            ->map(function ($grupo) {
+                return $grupo->groupBy(function ($permiso) {
+                    return explode('.', $permiso->name)[0]; // nivel 2
+                });
+            });
+        $permisosRol = $rol->permissions->pluck('name')->toArray();
+        return view('configuracion_general.usuario.roles.edit', compact('rol','permisos','permisosRol'));
+    }
+
+    public function update(Request $request, $id){
+        
+        // return $request;
+        $rol = Role::findById($id);
+        $rol->name = $request->name;
+        $rol->description = $request->description;
+        $rol->save();
+        $rol->syncPermissions($request->permissions);
+        return redirect()->back()->with('success', "El Rol se modificó correctamente");
+    }
+
+
+    public function crearRol(Request $request)
+    {
         DB::beginTransaction();
-        try{
-            if(!isset($request->nombre)) return redirect()->route('usuarios.index')->with('error', 'El nombre es un campo obligatorio.');
-            
+        try {
+            if (!isset($request->nombre)) return redirect()->route('usuarios.index')->with('error', 'El nombre es un campo obligatorio.');
+
             $nombre = $request->nombre;
 
-            if(strlen($nombre) == 0) return redirect()->route('usuarios.index')->with('error', 'El nombre no puede estar vacío.');
+            if (strlen($nombre) == 0) return redirect()->route('usuarios.index')->with('error', 'El nombre no puede estar vacío.');
 
             $nombreRoles = Role::get()->pluck('name')->toArray();
 
-            if(in_array($nombre, $nombreRoles)) return redirect()->route('usuarios.index')->with('error', 'Ya existe un rol con ese nombre.');
+            if (in_array($nombre, $nombreRoles)) return redirect()->route('usuarios.index')->with('error', 'Ya existe un rol con ese nombre.');
 
             Role::create(['name' => $nombre, 'guard_name' => 'web']);
             DB::commit();
             return redirect()->route('usuarios.index')->with('success', 'Rol creado exitosamente.');
-        } catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
             return redirect()->route('usuarios.index')->with('error', 'Ocurrió un error');
         }
     }
 
-    public function editarRol(Request $request, $rol_id){
+    public function editarRol(Request $request, $rol_id)
+    {
         DB::beginTransaction();
-        try{
+        try {
             $rol = Role::findOrFail($rol_id);
-            if($rol){
-                if(!isset($request->nombre)) return redirect()->route('usuarios.index')->with('error', 'El nombre es un campo obligatorio.');
-                
+            if ($rol) {
+                if (!isset($request->nombre)) return redirect()->route('usuarios.index')->with('error', 'El nombre es un campo obligatorio.');
+
                 $nombre = $request->nombre;
-    
-                if(strlen($nombre) == 0) return redirect()->route('usuarios.index')->with('error', 'El nombre no puede estar vacío.');
-    
-                $nombreRoles = Role::where('id', '!=',$rol_id)->get()->pluck('name')->toArray();
-    
-                if(in_array($nombre, $nombreRoles)) return redirect()->route('usuarios.index')->with('error', 'Ya existe un rol con ese nombre.');
-    
+
+                if (strlen($nombre) == 0) return redirect()->route('usuarios.index')->with('error', 'El nombre no puede estar vacío.');
+
+                $nombreRoles = Role::where('id', '!=', $rol_id)->get()->pluck('name')->toArray();
+
+                if (in_array($nombre, $nombreRoles)) return redirect()->route('usuarios.index')->with('error', 'Ya existe un rol con ese nombre.');
+
                 $rol->update(["name" => $nombre]);
             }
             DB::commit();
             return redirect()->route('usuarios.index')->with('success', 'Rol editado exitosamente.');
-        } catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
             return redirect()->route('usuarios.index')->with('error', 'Ocurrió un error');
         }
@@ -66,7 +134,7 @@ class RolController extends Controller
 
         $access = ParameterCallController::verifyPermissionAccess(['admin-access']);
 
-        if(!$access){
+        if (!$access) {
             return redirect()->route('inicio')->with('error', 'No tiene permisos para ejecutar esa acción.');
         }
 
@@ -193,8 +261,8 @@ class RolController extends Controller
                     if ($permiso) {
                         // verificar si el rol lo tiene
                         if (in_array($permiso_id, $permisosRolId)) {
-                        //Si lo tiene se remueve
-                        $rol->revokePermissionTo($permiso);
+                            //Si lo tiene se remueve
+                            $rol->revokePermissionTo($permiso);
                         }
                     }
                 }
@@ -207,6 +275,4 @@ class RolController extends Controller
             return redirect()->route('roles.gestRol', $rol_id)->with('error', 'Ocurrió un error');
         }
     }
-    
-
 }

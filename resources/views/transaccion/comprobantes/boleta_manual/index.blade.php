@@ -64,7 +64,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row" style="justify-content: center">
                             @include('transaccion.comprobantes._shared.statistics')
                         </div>
                     </div>
@@ -80,41 +80,45 @@
                             <div class="tabs-scroll-bottom">
                                 <ul class="nav nav-tabs" role="tablist"
                                     style="align-items: center;border-bottom: 0px !important;">
-                                    @include('transaccion.comprobantes._shared.tabs')
-                                    {{-- Almacen --}}
-                                    <ul class="ml-auto d-flex"
-                                        style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
-                                        <a class="btn btn-primary" href="{{ route('boleta_manual.create') }}"><i
-                                                class="fa fa-plus"></i></a>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-primary dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fa fa-download"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <button type="button" id="btn-imprimir" class="dropdown-item">
-                                                    <i class="fa fa-print"></i> Imprimir
+                                    <div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
+                                        @include('transaccion.comprobantes._shared.tabs')
+                                        {{-- Almacen --}}
+                                        <ul class="ml-auto d-flex"
+                                            style="gap: 10px; align-items: center;z-index: 20;position: fixed;right: 40px">
+                                            @can('boleta_m.crear')
+                                                <a class="btn btn-primary" href="{{ route('boleta_manual.create') }}"><i
+                                                    class="fa fa-plus"></i></a>
+                                            @endcan
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-primary dropdown-toggle"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-download"></i>
                                                 </button>
-                                                <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-file-excel-o"></i> Excel
-                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <button type="button" id="btn-imprimir" class="dropdown-item">
+                                                        <i class="fa fa-print"></i> Imprimir
+                                                    </button>
+                                                    <button type="button" id="btn-exportar-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-file-excel-o"></i> Excel
+                                                    </button>
 
-                                                <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-file-pdf-o"></i> PDF
-                                                </button>
+                                                    <button type="button" id="btn-descargar-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-file-pdf-o"></i> PDF
+                                                    </button>
 
-                                                <button type="button" id="btn-correo-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-envelope"></i> Correo
-                                                </button>
+                                                    <button type="button" id="btn-correo-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-envelope"></i> Correo
+                                                    </button>
 
-                                                <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
-                                                    <i class="fa fa-whatsapp"></i> Whatsapp
-                                                </button>
-                                            </div>
-                                    </ul>
+                                                    <button type="button" id="btn-whatsapp-filtrado" class="dropdown-item">
+                                                        <i class="fa fa-whatsapp"></i> Whatsapp
+                                                    </button>
+                                                </div>
+                                        </ul>
+                                    </div>
                                 </ul>
                             </div>
-                            <div class="tab-content" style="margin-top: -1px">
+                            <div class="tab-content" style="margin-top: -2px">
                                 {{-- BOLETA --}}
                                 <div role="tabpanel" id="tab-2" class="tab-pane active show"
                                     style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
@@ -178,7 +182,7 @@
                                                     <th>Emisión</th>
                                                     <th>Forma</th>
                                                     <th>Importe T.</th>
-                                                    <th>Ver</th>
+                                                    <th>@can('boleta_m.ver') Ver @endcan</th>
                                                     <th style="width: 0.5vmax !important">Acciones</th>
                                                     <th>Pago</th>
                                                     <th>Compartir R.</th>
@@ -223,7 +227,8 @@
         });
 
         //  {{-- SCRIPTS PARA DATATABLE --}}
-
+        let permiso_ver = false;
+        let permiso_pagar = false;
         var coti_table = $('.dataTables-example-boleta').DataTable({
             "pageLength": 15,
             "serverSide": true,
@@ -242,7 +247,8 @@
 
                     $('.dataTables-example-boleta tfoot th.total-columna').html('Total: ' + total_columna);
                     $('.dataTables-example-boleta tfoot th.total-total').html('Total  G.: ' + total_table);
-
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
                     return json.data;
                 }
             },
@@ -329,11 +335,15 @@
                     'render': function(data, type, full, meta) {
                         var url = '{{ route('boleta_manual.show', ':id') }}';
                         url = url.replace(':id', full[0]);
-                        return `<a href="${url}">
+                        let button_show = ``;
+                        if(permiso_ver){
+                            button_show = `<a href="${url}">
                                     <button type="button" class="btn btn-primary">
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </a> `;
+                        }
+                        return button_show;
                     }
                 },
                 {
@@ -427,11 +437,15 @@
 
                         let pago = full[16];
 
+                        let class_pago = ``;
+                        if(permiso_pagar){
+                            class_pago = `button_hover_pago`;
+                        }
                         switch (full[15]) {
                             case 0:
                                 var end = `
                                     <div class="wrapper-hover">
-                                        <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
+                                        <button class="btn ${e3.clase} btn-circle btn-ls `+class_pago+`"
                                             data-id="${full[0]}"
                                             data-estado="${full[14]}"
                                             title="Pago: ${e3.texto}">  
@@ -443,7 +457,7 @@
                             case 1:
                                 var end = `
                                     <div class="wrapper-hover">
-                                        <button class="btn ${e3.clase} btn-circle btn-ls button_hover_pago"
+                                        <button class="btn ${e3.clase} btn-circle btn-ls `+class_pago+`"
                                             data-id="${full[0]}"
                                             data-estado="${full[14]}"
                                             title="Pago: ${e3.texto}" 

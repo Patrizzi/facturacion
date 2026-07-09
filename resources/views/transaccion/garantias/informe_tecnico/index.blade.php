@@ -40,7 +40,8 @@
                                     {{-- <a class="btn btn-sm btn-success" href="{{ route('garantia_informe_tecnico.guias') }}"
                                         id="create_guia_ingreso"><i class="fa fa-plus"></i></a> --}}
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fa fa-download"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right">
@@ -109,14 +110,15 @@
                                                     <th><input type="checkbox" class="i-checks" name="input[]"></th>
                                                     <th>ID</th>
                                                     <th>Código Interno</th>
+                                                    <th>RUC</th>
+                                                    <th>Cliente</th>
+                                                    <th>Fecha</th>
                                                     <th>Equipo</th>
                                                     <th>Marca</th>
                                                     <th>Serie</th>
-                                                    <th>Cliente</th>
-                                                    <th>RUC</th>
-                                                    <th>Fecha</th>
-                                                    <th>Ver</th>
-                                                    {{-- <th>Estado</th> --}}
+                                                    <th>@can('informe_tecnico.ver') Ver @endcan</th>
+                                                    <th>@can('informe_tecnico.anular') Acciones @endcan</th>
+                                                    <th>Información</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -129,723 +131,818 @@
             </div>
         </div>
     </div>
-
+    <div id="modal-anular" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row" align="center">
+                        <div class="col-sm-12 b-r">
+                            <h3 class="m-t-none m-b">¿Seguro que desea anular la guía <strong><span
+                                        id="valor_ind"></span></strong>?</h3>
+                            <p>Esta guía se anulará inmediatamente. Esta acción no se puede deshacer</p>
+                            <form id="formulario_anular"
+                                action="{{ route('garantia_informe_tecnico.anular_informe_tecnico', ':id') }} "
+                                enctype="multipart/form-data" method="post">
+                                @csrf @method('POST')
+                                <center><button type="submit" class="btn btn-w-m btn-danger">Anular</button></center>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @include('transaccion.garantias._shared.js_shared')
 
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
     <!-- Seleccionar todos los check -->
-<script>
-    $(document).ready(function() {
-        // "ACTIVA EL TAB DE COTIZACION"
-        $('#tab-3').addClass('active');
+    <script>
+        $(document).ready(function() {
+            // "ACTIVA EL TAB DE COTIZACION"
+            $('#tab-3').addClass('active');
 
-        // Inicializar Select2
-        $('#marcas_filter').select2({
-            placeholder: "Selecciona una marca",
-            allowClear: true,
-            width: '100%'
-        });
-
-        // Variables para manejar selecciones
-        var selectedRows = {};
-        var tableId = 'dataTables-informe_tecnico';
-        selectedRows[tableId] = {};
-
-        // Función para inicializar iCheck
-        function initializeICheck(container) {
-            container.find('input[type="checkbox"]:not(.iCheck-helper + input)').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
+            // Inicializar Select2
+            $('#marcas_filter').select2({
+                placeholder: "Selecciona una marca",
+                allowClear: true,
+                width: '100%'
             });
-        }
 
-        // Función para actualizar contador de selecciones
-        function updateSelectionCounter() {
-            var count = Object.keys(selectedRows[tableId] || {}).length;
-            var counter = $('.dataTables-informe_tecnico').closest('.dataTables_wrapper').find('.selection-counter');
-        }
+            // Variables para manejar selecciones
+            var selectedRows = {};
+            var tableId = 'dataTables-informe_tecnico';
+            selectedRows[tableId] = {};
 
-        // Función para actualizar el estado del checkbox master
-        function updateMasterCheckbox() {
-            var masterCheckbox = $('.dataTables-informe_tecnico thead input[type="checkbox"]');
-            var selectedCount = Object.keys(selectedRows[tableId] || {}).length;
-
-            // Para server-side necesitamos obtener el total de registros del DataTable
-            var dataTable = $('.dataTables-informe_tecnico').DataTable();
-            var totalRows = dataTable.page.info().recordsTotal;
-
-            if (selectedCount === 0) {
-                masterCheckbox.iCheck('uncheck');
-            } else if (selectedCount === totalRows) {
-                masterCheckbox.iCheck('check');
-            } else {
-                // Estado intermedio - necesitamos manejarlo manualmente
-                masterCheckbox.iCheck('indeterminate');
+            // Función para inicializar iCheck
+            function initializeICheck(container) {
+                container.find('input[type="checkbox"]:not(.iCheck-helper + input)').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
             }
-        }
 
-        // Función para restaurar el estado de los checkboxes en la página actual
-        function restoreCheckboxState() {
-            $('.dataTables-informe_tecnico tbody input[type="checkbox"]').each(function() {
-                var rowId = $(this).val();
-                if (selectedRows[tableId] && selectedRows[tableId][rowId]) {
-                    $(this).iCheck('check');
-                } else {
-                    $(this).iCheck('uncheck');
-                }
-            });
-            updateMasterCheckbox();
-        }
-
-        // Inicializar DataTable
-        var coti_table = $('.dataTables-informe_tecnico').DataTable({
-            "serverSide": true,
-            "ajax": {
-                url: "{{ route('api.get_guia_informe_tecnico') }}",
-                method: "get",
-                data: function(d) {
-                    // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                    d.daterange = $('#data_range_filter').val();
-                    d.marca = $('#marcas_filter').val();
-                    d.value = $('#search_all_column').val();
-                }
-            },
-            "drawCallback": function(settings) {
-                // Esta función se ejecuta después de cada draw/redraw del DataTable
-                initializeICheck($('.dataTables-informe_tecnico'));
-                restoreCheckboxState();
-                updateSelectionCounter();
-            },
-            "columnDefs": [{
-                    'width': '1vmax',
-                    'targets': [0], // Aplica a la primera columna (index 0)
-                    'orderable': false, // Deshabilitar ordenación en esta columna
-                    'render': function(data, type, full, meta) {
-                        // Renderizar el checkbox en la primera columna
-                        return '<input type="checkbox" class="i-checks" name="select_row" value="' + full[0] + '">';
-                    }
-                },
-                {
-                    'width': '5%',
-                    'targets': [1],
-                },
-                {
-                    // 'width': '8%',
-                    'targets': [2],
-                },
-                {
-                    'width': '8%',
-                    'targets': [3],
-                },
-                {
-                    'width': '10%',
-                    'targets': [4],
-                },
-                {
-                    // 'width': '25%',
-                    'targets': [5],
-                },
-                {
-                    'targets': [6],
-                },
-                {
-                    // 'width': '25%',
-                    'targets': [7],
-                },
-                {
-                    // 'width': '25%',
-                    'targets': [8],
-                },
-                {
-                    'targets': [9],
-                    'width': '5%',
-                    'orderable': false,
-                    'render': function(data, type, full, meta) {
-                        var url = '{{ route('garantia_informe_tecnico.show', ':id') }}';
-                        url = url.replace(':id', full[0]); // Reemplazar el placeholder con el valor dinámico
-                        // ver
-                        var concat = `<div class="tooltip-demo">
-                            <a href="${url}">
-                                <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
-                            </a>`;
-
-                        return concat;
-                    }
-                },
-                // {
-                //     'targets': [10], // Configuración para otra columna (como la de acciones)
-                //     'width': '5%',
-                //     'orderable': false,
-                //     'render': function(data, type, full, meta) {
-                //         // Generar la URL de forma dinámica usando la función route con un placeholder
-
-                //         var concat2 = ``;
-                //         if (full[11] == 0) { // Si no está egresado
-                //             if (full[10] == 1) { // Si está activo
-                //                 concat2 +=
-                //                     `<a data-toggle="modal" class="btn btn-warning btn-circle btn-ls" onclick="anular_guia(` +
-                //                     full[0] + `, '` + full[2] +
-                //                     `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
-                //             } else { // Si no  está activo
-                //                 concat2 +=
-                //                     `<button class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`;
-                //             }
-                //         } else { // Si está egresado
-                //             concat2 +=
-                //                 `<button class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`;
-                //         }
-
-                //         return concat2;
-                //     }
-                // }
-            ],
-        });
-
-        // Inicialización inicial
-        initializeICheck($(document));
-
-        // Controlar el checkbox del thead (seleccionar/deseleccionar todos)
-        $(document).on('ifChecked ifUnchecked', '.dataTables-informe_tecnico thead input[type="checkbox"]', function(event) {
-            if (event.type === 'ifChecked') {
-                // Confirmar selección masiva si hay muchos registros
-                var totalRows = coti_table.page.info().recordsTotal;
-                if (totalRows > 50) {
-                    swal({
-                        title: "Seleccionar todos",
-                        text: `¿Estás seguro de que quieres seleccionar todos los ${totalRows} registros?`,
-                        type: "info",
-                        showCancelButton: true,
-                        confirmButtonText: "Sí, seleccionar todos",
-                        cancelButtonText: "Cancelar"
-                    }, function(isConfirm) {
-                        if (isConfirm) {
-                            selectAllRecords();
-                        } else {
-                            // Revertir el checkbox master
-                            $('.dataTables-informe_tecnico thead input[type="checkbox"]').iCheck('uncheck');
-                        }
-                    });
-                } else {
-                    selectAllRecords();
-                }
-            } else {
-                // Deseleccionar todos
-                selectedRows[tableId] = {};
-                $('.dataTables-informe_tecnico tbody input[type="checkbox"]').iCheck('uncheck');
-                updateSelectionCounter();
+            // Función para actualizar contador de selecciones
+            function updateSelectionCounter() {
+                var count = Object.keys(selectedRows[tableId] || {}).length;
+                var counter = $('.dataTables-informe_tecnico').closest('.dataTables_wrapper').find(
+                    '.selection-counter');
             }
-        });
 
-        // Función para seleccionar todos los registros
-        function selectAllRecords() {
-            // Para server-side, necesitamos hacer una petición AJAX para obtener todos los IDs
-            var ajaxData = {
-                daterange: $('#data_range_filter').val(),
-                marca: $('#marcas_filter').val(),
-                value: $('#search_all_column').val(),
-                get_all_ids: true // Parámetro especial para obtener solo IDs
-            };
+            // Función para actualizar el estado del checkbox master
+            function updateMasterCheckbox() {
+                var masterCheckbox = $('.dataTables-informe_tecnico thead input[type="checkbox"]');
+                var selectedCount = Object.keys(selectedRows[tableId] || {}).length;
 
-            $.ajax({
-                url: "{{ route('api.get_guia_informe_tecnico') }}",
-                method: "GET",
-                data: ajaxData,
-                success: function(response) {
-                    // Asumiendo que el servidor devuelve los IDs cuando get_all_ids=true
-                    if (response.all_ids) {
-                        response.all_ids.forEach(function(id) {
-                            selectedRows[tableId][id] = true;
-                        });
+                // Para server-side necesitamos obtener el total de registros del DataTable
+                var dataTable = $('.dataTables-informe_tecnico').DataTable();
+                var totalRows = dataTable.page.info().recordsTotal;
+
+                if (selectedCount === 0) {
+                    masterCheckbox.iCheck('uncheck');
+                } else if (selectedCount === totalRows) {
+                    masterCheckbox.iCheck('check');
+                } else {
+                    // Estado intermedio - necesitamos manejarlo manualmente
+                    masterCheckbox.iCheck('indeterminate');
+                }
+            }
+
+            // Función para restaurar el estado de los checkboxes en la página actual
+            function restoreCheckboxState() {
+                $('.dataTables-informe_tecnico tbody input[type="checkbox"]').each(function() {
+                    var rowId = $(this).val();
+                    if (selectedRows[tableId] && selectedRows[tableId][rowId]) {
+                        $(this).iCheck('check');
                     } else {
-                        // Fallback: usar los datos actuales de la página
-                        coti_table.rows().every(function(rowIdx, tableLoop, rowLoop) {
-                            var data = this.data();
-                            if (data && data[0]) {
-                                selectedRows[tableId][data[0]] = true;
+                        $(this).iCheck('uncheck');
+                    }
+                });
+                updateMasterCheckbox();
+            }
+
+            // Inicializar DataTable
+            let permiso_ver;
+            let permiso_anular;
+            var coti_table = $('.dataTables-informe_tecnico').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    url: "{{ route('api.get_guia_informe_tecnico') }}",
+                    method: "get",
+                    data: function(d) {
+                        // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
+                        d.daterange = $('#data_range_filter').val();
+                        d.marca = $('#marcas_filter').val();
+                        d.value = $('#search_all_column').val();
+                    },
+                    dataSrc: function(json) {
+                        permiso_ver = json.permiso_ver;
+                        permiso_anular = json.permiso_anular;
+                        return json.data;
+                    }
+                },
+                "drawCallback": function(settings) {
+                    // Esta función se ejecuta después de cada draw/redraw del DataTable
+                    initializeICheck($('.dataTables-informe_tecnico'));
+                    restoreCheckboxState();
+                    updateSelectionCounter();
+                },
+                "columnDefs": [{
+                        'width': '1vmax',
+                        'targets': [0], // Aplica a la primera columna (index 0)
+                        'orderable': false, // Deshabilitar ordenación en esta columna
+                        'render': function(data, type, full, meta) {
+                            // Renderizar el checkbox en la primera columna
+                            return '<input type="checkbox" class="i-checks" name="select_row" value="' +
+                                full[0] + '">';
+                        }
+                    },
+                    {
+                        'width': '3%',
+                        'targets': [1],
+                    },
+                    {
+                        'width': '7%',
+                        'targets': [2],
+                    },
+                    {
+                        'width': '10%',
+                        'targets': [3],
+                    },
+                    {
+                        'width': '20%',
+                        'targets': [4],
+                    },
+                    {
+                        'width': '6%',
+                        'targets': [5],
+                    },
+                    {
+                        'targets': [6],
+                    },
+                    {
+                        // 'width': '25%',
+                        'targets': [7],
+                    },
+                    {
+                        'width': '10%',
+                        'targets': [8],
+                    },
+                    {
+                        'targets': [9],
+                        'width': '1%',
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var url = '{{ route('garantia_informe_tecnico.show', ':id') }}';
+                            url = url.replace(':id', full[
+                            0]); // Reemplazar el placeholder con el valor dinámico
+                            let button_show = ``;
+                            if(permiso_ver){
+                                button_show = `<div class="tooltip-demo">
+                                    <a href="${url}">
+                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Ver"> <i class="fa fa-eye"></i> </button>
+                                    </a>`;
                             }
-                        });
-                    }
-
-                    $('.dataTables-informe_tecnico tbody input[type="checkbox"]').iCheck('check');
-                    updateMasterCheckbox();
-                    updateSelectionCounter();
-                },
-                error: function() {
-                    // Fallback: seleccionar solo los visibles
-                    console.warn('No se pudo obtener todos los IDs, seleccionando solo los visibles');
-                    $('.dataTables-informe_tecnico tbody input[type="checkbox"]').each(function() {
-                        var rowId = $(this).val();
-                        if (rowId) {
-                            selectedRows[tableId][rowId] = true;
-                            $(this).iCheck('check');
+                            return button_show;
                         }
-                    });
-                    updateMasterCheckbox();
-                    updateSelectionCounter();
-                }
-            });
-        }
-
-        // Manejar selección individual de checkboxes
-        $(document).on('ifChanged', '.dataTables-informe_tecnico tbody input[type="checkbox"]', function(event) {
-            var rowId = $(this).val();
-
-            if ($(this).is(':checked')) {
-                selectedRows[tableId][rowId] = true;
-            } else {
-                delete selectedRows[tableId][rowId];
-            }
-
-            updateMasterCheckbox();
-            updateSelectionCounter();
-        });
-
-        // Configuración del date range picker
-        $('input[name="daterange"]').daterangepicker({
-            "locale": {
-                "separator": " | ",
-                "applyLabel": "Guardar",
-                "cancelLabel": "Cancelar",
-                "fromLabel": "Desde",
-                "toLabel": "Hasta",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Do",
-                    "Lu",
-                    "Ma",
-                    "Mi",
-                    "Ju",
-                    "Vi",
-                    "Sa"
-                ],
-                "monthNames": [
-                    "Enero",
-                    "Febrero",
-                    "Marzo",
-                    "Abril",
-                    "Mayo",
-                    "Junio",
-                    "Julio",
-                    "Agosto",
-                    "Septiembre",
-                    "Octubre",
-                    "Noviembre",
-                    "Diciembre"
-                ],
-                "firstDay": 1
-            }
-        });
-
-        // Evento para filtrar
-        $(`#filter_buttons`).on('click', function() {
-            // Limpiar selecciones al filtrar
-            selectedRows[tableId] = {};
-            updateSelectionCounter();
-            coti_table.ajax.reload();
-        });
-
-        // Evento para crear guía de ingreso
-        $('#create_guia_ingreso').on('click', function() {
-            $('#modal-form').modal('show');
-        });
-
-        // Evento para revertir selección
-        $('#revert_select').on('click', function() {
-            var start = moment().startOf('month');
-            var end = moment().endOf('month');
-
-            // Setear en el input
-            $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
-            $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
-
-            // Limpiar selecciones
-            selectedRows[tableId] = {};
-            updateSelectionCounter();
-            coti_table.ajax.reload();
-        });
-
-        // Función para anular guía
-        window.anular_guia = function(id, valor) {
-            console.log(id);
-            let form = document.getElementById('formulario_anular');
-            let action = form.getAttribute('action');
-            // Reemplaza ':id' por el valor que quieras
-            action = action.replace(':id', id);
-            form.setAttribute('action', action);
-            $('#valor_ind').text(valor);
-            $(`#modal-anular`).modal('show');
-        };
-
-        // Función para imprimir múltiples informes técnicos
-        $('#bnt-imprimir').on('click', function(e) {
-            e.preventDefault();
-
-            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
-                return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
-            });
-
-            if (selectedIds.length === 0) {
-                swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos un informe técnico para imprimir.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-                return;
-            }
-
-            // Confirmar acción
-            swal({
-                title: "Confirmar impresión",
-                text: `¿Deseas imprimir ${selectedIds.length} informe(s) técnico(s) seleccionado(s)?`,
-                type: "info",
-                showCancelButton: true,
-                confirmButtonText: "Sí, imprimir",
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#1a3bb3"
-            }, function(isConfirm) {
-                if (isConfirm) {
-                    // Construir URL con parámetros GET
-                    var url = '{{ route("informeTecnico.print.multiple") }}';
-                    var params = new URLSearchParams();
-
-                    selectedIds.forEach(function(id) {
-                        params.append('informe_ids[]', id);
-                    });
-
-                    // Abrir nueva pestaña para impresión
-                    var printWindow = window.open(
-                        url + '?' + params.toString(),
-                        '_blank'
-                    );
-
-                    if (printWindow) {
-                        printWindow.focus();
-                    } else {
-                        alert('Por favor, permite ventanas emergentes para imprimir');
-                    }
-                }
-            });
-        });
-
-        // Manejar click del botón de exportar
-        $('#btn-exportar-filtrado').on('click', function(e) {
-            e.preventDefault();
-
-            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
-                return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
-            });
-
-            if (selectedIds.length === 0) {
-                swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos un informe técnico para exportar.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-                return;
-            }
-
-            swal({
-                title: "Confirmar exportación",
-                text: `¿Deseas exportar ${selectedIds.length} informe(es) seleccionado(s) a Excel?`,
-                type: "info",
-                showCancelButton: true,
-                confirmButtonText: "Sí, exportar",
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#1a3bb3"
-            }, function(isConfirm) {
-                if (!isConfirm) return;
-
-                $('#btn-exportar-filtrado').prop('disabled', true);
-
-                $.ajax({
-                    url: "{{ route('garantiasIT.exportar') }}",
-                    method: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify({ informe_ids: selectedIds }),
-                    headers: { 'X-CSRF-TOKEN': "{{ csrf_token() }}" },
-                    xhrFields: { responseType: 'blob' },
-                    complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
-                    success: function(blob) {
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = `Garantia_Informe_Tecnico_${new Date().toISOString().slice(0,10)}.xlsx`;
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                        window.URL.revokeObjectURL(url);
                     },
-                    error: function() {
-                        swal({
-                            title: "Error",
-                            text: "No se pudo exportar. Intenta nuevamente.",
-                            type: "error",
-                            confirmButtonColor: "#1a3bb3"
-                        });
-                    }
-                });
-            });
-        });
-
-        // Inicializar contador
-        updateSelectionCounter();
-
-        // Descargar 1..N informes técnicos en PDF/ZIP
-        $('#btn-descargar-filtrado').on('click', function(e) {
-            e.preventDefault();
-
-            // Reusar estructura de selección de esta vista
-            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
-                return selectedRows[tableId][id] === true &&
-                    id !== '' &&
-                    id !== 'undefined' &&
-                    !isNaN(parseInt(id));
-            });
-
-            if (selectedIds.length === 0) {
-                swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos un informe técnico para descargar.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-                return;
-            }
-
-            const msg = selectedIds.length === 1
-                ? "¿Deseas descargar el informe técnico seleccionado en PDF?"
-                : `¿Deseas descargar ${selectedIds.length} informes técnicos en un archivo ZIP?`;
-
-            swal({
-                title: "Confirmar descarga",
-                text: msg,
-                type: "info",
-                showCancelButton: true,
-                confirmButtonText: "Sí, descargar",
-                cancelButtonText: "Cancelar",
-                confirmButtonColor: "#1a3bb3"
-            }, function(isConfirm) {
-                if (!isConfirm) return;
-
-                // Form dinámico para POST (SIN target="_blank" para descargar en la misma página)
-                var form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '{{ route("GarantiaIT.download.multiple") }}';
-                // form.target = '_blank'; // ← QUITADO para que descargue en la misma página
-
-                // CSRF
-                var csrf = document.createElement('input');
-                csrf.type = 'hidden';
-                csrf.name = '_token';
-                csrf.value = '{{ csrf_token() }}';
-                form.appendChild(csrf);
-
-                // IDs seleccionados
-                selectedIds.forEach(function(id) {
-                    var input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'informe_ids[]';
-                    input.value = id;
-                    form.appendChild(input);
-                });
-
-                document.body.appendChild(form);
-                form.submit();
-                document.body.removeChild(form);
-
-                // Mensaje corto (opcional)
-                swal({
-                    title: "Procesando",
-                    text: selectedIds.length === 1
-                        ? "Generando PDF del informe técnico..."
-                        : "Generando y comprimiendo los informes técnicos...",
-                    type: "success",
-                    timer: 1800,
-                    showConfirmButton: false
-                });
-            });
-        });
-
-        // Función para enviar informes tecnico por Correo múltiple
-        $('#btn-correo-filtrado').on('click', function(e) {
-            e.preventDefault();
-
-            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
-                return selectedRows[tableId][id] === true &&
-                    id !== '' &&
-                    id !== 'undefined' &&
-                    !isNaN(parseInt(id));
-            });
-
-            console.log('IDs seleccionados para Correo:', selectedIds);
-
-            if (selectedIds.length === 0) {
-                return swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos un informe técnico para enviar por correo.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-            }
-
-            swal({
-                title: "Enviar por Correo",
-                text: `Ingresa el correo electrónico para enviar ${selectedIds.length} informe(s) técnico(s):`,
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                confirmButtonText: "Enviar",
-                cancelButtonText: "Cancelar",
-                inputPlaceholder: "ejemplo@correo.com",
-                confirmButtonColor: "#1a3bb3"
-            }, function(inputValue) {
-                if (inputValue === false) return false;
-                if (!inputValue) return swal.showInputError("Por favor ingresa un correo electrónico");
-
-                // Validar formato de email
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(inputValue)) {
-                    return swal.showInputError("Por favor ingresa un correo electrónico válido");
-                }
-
-                // Mostrar mensaje de procesando
-                swal({
-                    title: "Enviando...",
-                    text: `Procesando ${selectedIds.length} informes(s) técnico(s). Por favor espera...`,
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                });
-
-                // Enviar por AJAX
-                $.ajax({
-                    url: '{{ route('envioCorreo.garantia_informe_tecnico.multiple') }}',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        email: inputValue,
-                        guia_ids: selectedIds
+                    {
+                        'targets': [10],
+                        'width': '5%',
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            var html_fin = ``;
+                            html_fin += ``
+                            if (permiso_anular) {
+                                if (full[10] == 1) {
+                                    html_fin +=
+                                        `<a data-toggle="modal" class="btn btn-danger btn-circle btn-sm" onclick="anular_guia(` +
+                                        full[0] + `, '` + full[2] +
+                                        `')"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                                } else {
+                                    html_fin +=
+                                        `<a data-toggle="modal" class="btn btn-default btn-circle btn-sm disabled" style="background-color:gray;"><i class="fa fa-trash-o" style="color:white;font-size: 110%"></i></a>`;
+                                }
+                            }
+                            html_fin += ``
+                            return html_fin;
+                        }
                     },
-                    success: function(response) {
-                        if (response.success) {
+                    {
+                        'targets': [11],
+                        'width': '5%',
+                        'orderable': false,
+                        'render': function(data, type, full, meta) {
+                            if (full[10] == 1) {
+                                return `<button class="btn btn-success btn-circle btn-sm" title="Guia Activa"><i class="fa fa-check-circle" style="color:white;font-size: 110%"></i></button>`
+                            } else {
+                                return `<button class="btn btn-danger btn-circle btn-sm" title="Guia Anulada"><i class="fa fa-times-circle" style="color:white;font-size: 110%"></i></button>`
+                            }
+                        }
+                    }
+                ],
+            });
+
+            // Inicialización inicial
+            initializeICheck($(document));
+
+            // Controlar el checkbox del thead (seleccionar/deseleccionar todos)
+            $(document).on('ifChecked ifUnchecked', '.dataTables-informe_tecnico thead input[type="checkbox"]',
+                function(event) {
+                    if (event.type === 'ifChecked') {
+                        // Confirmar selección masiva si hay muchos registros
+                        var totalRows = coti_table.page.info().recordsTotal;
+                        if (totalRows > 50) {
                             swal({
-                                title: "¡Enviado!",
-                                text: response.message || `Se han enviado ${selectedIds.length} informes(s) técnico(s) por correo`,
-                                type: "success",
-                                timer: 3000,
-                                showConfirmButton: true,
-                                confirmButtonColor: "#1a3bb3"
+                                title: "Seleccionar todos",
+                                text: `¿Estás seguro de que quieres seleccionar todos los ${totalRows} registros?`,
+                                type: "info",
+                                showCancelButton: true,
+                                confirmButtonText: "Sí, seleccionar todos",
+                                cancelButtonText: "Cancelar"
+                            }, function(isConfirm) {
+                                if (isConfirm) {
+                                    selectAllRecords();
+                                } else {
+                                    // Revertir el checkbox master
+                                    $('.dataTables-informe_tecnico thead input[type="checkbox"]')
+                                        .iCheck('uncheck');
+                                }
                             });
                         } else {
+                            selectAllRecords();
+                        }
+                    } else {
+                        // Deseleccionar todos
+                        selectedRows[tableId] = {};
+                        $('.dataTables-informe_tecnico tbody input[type="checkbox"]').iCheck('uncheck');
+                        updateSelectionCounter();
+                    }
+                });
+
+            // Función para seleccionar todos los registros
+            function selectAllRecords() {
+                // Para server-side, necesitamos hacer una petición AJAX para obtener todos los IDs
+                var ajaxData = {
+                    daterange: $('#data_range_filter').val(),
+                    marca: $('#marcas_filter').val(),
+                    value: $('#search_all_column').val(),
+                    get_all_ids: true // Parámetro especial para obtener solo IDs
+                };
+
+                $.ajax({
+                    url: "{{ route('api.get_guia_informe_tecnico') }}",
+                    method: "GET",
+                    data: ajaxData,
+                    success: function(response) {
+                        // Asumiendo que el servidor devuelve los IDs cuando get_all_ids=true
+                        if (response.all_ids) {
+                            response.all_ids.forEach(function(id) {
+                                selectedRows[tableId][id] = true;
+                            });
+                        } else {
+                            // Fallback: usar los datos actuales de la página
+                            coti_table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                                var data = this.data();
+                                if (data && data[0]) {
+                                    selectedRows[tableId][data[0]] = true;
+                                }
+                            });
+                        }
+
+                        $('.dataTables-informe_tecnico tbody input[type="checkbox"]').iCheck('check');
+                        updateMasterCheckbox();
+                        updateSelectionCounter();
+                    },
+                    error: function() {
+                        // Fallback: seleccionar solo los visibles
+                        console.warn(
+                            'No se pudo obtener todos los IDs, seleccionando solo los visibles');
+                        $('.dataTables-informe_tecnico tbody input[type="checkbox"]').each(function() {
+                            var rowId = $(this).val();
+                            if (rowId) {
+                                selectedRows[tableId][rowId] = true;
+                                $(this).iCheck('check');
+                            }
+                        });
+                        updateMasterCheckbox();
+                        updateSelectionCounter();
+                    }
+                });
+            }
+
+            // Manejar selección individual de checkboxes
+            $(document).on('ifChanged', '.dataTables-informe_tecnico tbody input[type="checkbox"]', function(
+            event) {
+                var rowId = $(this).val();
+
+                if ($(this).is(':checked')) {
+                    selectedRows[tableId][rowId] = true;
+                } else {
+                    delete selectedRows[tableId][rowId];
+                }
+
+                updateMasterCheckbox();
+                updateSelectionCounter();
+            });
+
+            // Configuración del date range picker
+            $('input[name="daterange"]').daterangepicker({
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            });
+
+            // Evento para filtrar
+            $(`#filter_buttons`).on('click', function() {
+                // Limpiar selecciones al filtrar
+                selectedRows[tableId] = {};
+                updateSelectionCounter();
+                coti_table.ajax.reload();
+            });
+
+            // Evento para crear guía de ingreso
+            $('#create_guia_ingreso').on('click', function() {
+                $('#modal-form').modal('show');
+            });
+
+            // Evento para revertir selección
+            $('#revert_select').on('click', function() {
+                var start = moment().startOf('month');
+                var end = moment().endOf('month');
+
+                // Setear en el input
+                $('input[name="daterange"]').data('daterangepicker').setStartDate(start);
+                $('input[name="daterange"]').data('daterangepicker').setEndDate(end);
+
+                // Limpiar selecciones
+                selectedRows[tableId] = {};
+                updateSelectionCounter();
+                coti_table.ajax.reload();
+            });
+
+            // Función para anular guía
+            window.anular_guia = function(id, valor) {
+                console.log(id);
+                let form = document.getElementById('formulario_anular');
+                let action = form.getAttribute('action');
+                // Reemplaza ':id' por el valor que quieras
+                action = action.replace(':id', id);
+                form.setAttribute('action', action);
+                $('#valor_ind').text(valor);
+                $(`#modal-anular`).modal('show');
+            };
+
+            // Función para imprimir múltiples informes técnicos
+            $('#bnt-imprimir').on('click', function(e) {
+                e.preventDefault();
+
+                var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                    return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
+                });
+
+                if (selectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos un informe técnico para imprimir.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                // Confirmar acción
+                swal({
+                    title: "Confirmar impresión",
+                    text: `¿Deseas imprimir ${selectedIds.length} informe(s) técnico(s) seleccionado(s)?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, imprimir",
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        // Construir URL con parámetros GET
+                        var url = '{{ route('informeTecnico.print.multiple') }}';
+                        var params = new URLSearchParams();
+
+                        selectedIds.forEach(function(id) {
+                            params.append('informe_ids[]', id);
+                        });
+
+                        // Abrir nueva pestaña para impresión
+                        var printWindow = window.open(
+                            url + '?' + params.toString(),
+                            '_blank'
+                        );
+
+                        if (printWindow) {
+                            printWindow.focus();
+                        } else {
+                            alert('Por favor, permite ventanas emergentes para imprimir');
+                        }
+                    }
+                });
+            });
+
+            // Manejar click del botón de exportar
+            $('#btn-exportar-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                    return selectedRows[tableId][id] === true && id !== '' && id !== 'undefined';
+                });
+
+                if (selectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos un informe técnico para exportar.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                swal({
+                    title: "Confirmar exportación",
+                    text: `¿Deseas exportar ${selectedIds.length} informe(es) seleccionado(s) a Excel?`,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, exportar",
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(isConfirm) {
+                    if (!isConfirm) return;
+
+                    $('#btn-exportar-filtrado').prop('disabled', true);
+
+                    $.ajax({
+                        url: "{{ route('garantiasIT.exportar') }}",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            informe_ids: selectedIds
+                        }),
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        xhrFields: {
+                            responseType: 'blob'
+                        },
+                        complete: () => $('#btn-exportar-filtrado').prop('disabled', false),
+                        success: function(blob) {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download =
+                                `Garantia_Informe_Tecnico_${new Date().toISOString().slice(0,10)}.xlsx`;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            window.URL.revokeObjectURL(url);
+                        },
+                        error: function() {
                             swal({
                                 title: "Error",
-                                text: response.message || "Hubo un error al enviar los correos",
+                                text: "No se pudo exportar. Intenta nuevamente.",
+                                type: "error",
+                                confirmButtonColor: "#1a3bb3"
+                            });
+                        }
+                    });
+                });
+            });
+
+            // Inicializar contador
+            updateSelectionCounter();
+
+            // Descargar 1..N informes técnicos en PDF/ZIP
+            $('#btn-descargar-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                // Reusar estructura de selección de esta vista
+                var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                    return selectedRows[tableId][id] === true &&
+                        id !== '' &&
+                        id !== 'undefined' &&
+                        !isNaN(parseInt(id));
+                });
+
+                if (selectedIds.length === 0) {
+                    swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos un informe técnico para descargar.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                    return;
+                }
+
+                const msg = selectedIds.length === 1 ?
+                    "¿Deseas descargar el informe técnico seleccionado en PDF?" :
+                    `¿Deseas descargar ${selectedIds.length} informes técnicos en un archivo ZIP?`;
+
+                swal({
+                    title: "Confirmar descarga",
+                    text: msg,
+                    type: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, descargar",
+                    cancelButtonText: "Cancelar",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(isConfirm) {
+                    if (!isConfirm) return;
+
+                    // Form dinámico para POST (SIN target="_blank" para descargar en la misma página)
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route('GarantiaIT.download.multiple') }}';
+                    // form.target = '_blank'; // ← QUITADO para que descargue en la misma página
+
+                    // CSRF
+                    var csrf = document.createElement('input');
+                    csrf.type = 'hidden';
+                    csrf.name = '_token';
+                    csrf.value = '{{ csrf_token() }}';
+                    form.appendChild(csrf);
+
+                    // IDs seleccionados
+                    selectedIds.forEach(function(id) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'informe_ids[]';
+                        input.value = id;
+                        form.appendChild(input);
+                    });
+
+                    document.body.appendChild(form);
+                    form.submit();
+                    document.body.removeChild(form);
+
+                    // Mensaje corto (opcional)
+                    swal({
+                        title: "Procesando",
+                        text: selectedIds.length === 1 ?
+                            "Generando PDF del informe técnico..." :
+                            "Generando y comprimiendo los informes técnicos...",
+                        type: "success",
+                        timer: 1800,
+                        showConfirmButton: false
+                    });
+                });
+            });
+
+            // Función para enviar informes tecnico por Correo múltiple
+            $('#btn-correo-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                    return selectedRows[tableId][id] === true &&
+                        id !== '' &&
+                        id !== 'undefined' &&
+                        !isNaN(parseInt(id));
+                });
+
+                console.log('IDs seleccionados para Correo:', selectedIds);
+
+                if (selectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos un informe técnico para enviar por correo.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por Correo",
+                    text: `Ingresa el correo electrónico para enviar ${selectedIds.length} informe(s) técnico(s):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "ejemplo@correo.com",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError(
+                        "Por favor ingresa un correo electrónico");
+
+                    // Validar formato de email
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(inputValue)) {
+                        return swal.showInputError(
+                        "Por favor ingresa un correo electrónico válido");
+                    }
+
+                    // Mostrar mensaje de procesando
+                    swal({
+                        title: "Enviando...",
+                        text: `Procesando ${selectedIds.length} informes(s) técnico(s). Por favor espera...`,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+
+                    // Enviar por AJAX
+                    $.ajax({
+                        url: '{{ route('envioCorreo.garantia_informe_tecnico.multiple') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            email: inputValue,
+                            guia_ids: selectedIds
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                swal({
+                                    title: "¡Enviado!",
+                                    text: response.message ||
+                                        `Se han enviado ${selectedIds.length} informes(s) técnico(s) por correo`,
+                                    type: "success",
+                                    timer: 3000,
+                                    showConfirmButton: true,
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            } else {
+                                swal({
+                                    title: "Error",
+                                    text: response.message ||
+                                        "Hubo un error al enviar los correos",
+                                    type: "error",
+                                    confirmButtonText: "Entendido",
+                                    confirmButtonColor: "#1a3bb3"
+                                });
+                            }
+                        },
+                        error: function(xhr) {
+                            let errorMsg = 'Error al enviar los correos';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMsg = xhr.responseJSON.message;
+                            }
+                            swal({
+                                title: "Error",
+                                text: errorMsg,
                                 type: "error",
                                 confirmButtonText: "Entendido",
                                 confirmButtonColor: "#1a3bb3"
                             });
                         }
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Error al enviar los correos';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMsg = xhr.responseJSON.message;
-                        }
-                        swal({
-                            title: "Error",
-                            text: errorMsg,
-                            type: "error",
-                            confirmButtonText: "Entendido",
-                            confirmButtonColor: "#1a3bb3"
-                        });
-                    }
-                });
-            });
-        });
-
-        // Función para enviar guías por WhatsApp múltiple
-        $('#btn-whatsapp-filtrado').on('click', function(e) {
-            e.preventDefault();
-
-            // Usar la misma lógica que la descarga para obtener los IDs seleccionados
-            var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
-                return selectedRows[tableId][id] === true &&
-                    id !== '' &&
-                    id !== 'undefined' &&
-                    !isNaN(parseInt(id));
-            });
-
-            console.log('IDs seleccionados para WhatsApp:', selectedIds);
-
-            if (selectedIds.length === 0) {
-                return swal({
-                    title: "Sin selección",
-                    text: "Por favor, selecciona al menos un informe técnico para enviar por WhatsApp.",
-                    type: "warning",
-                    confirmButtonText: "Entendido",
-                    confirmButtonColor: "#1a3bb3"
-                });
-            }
-
-            swal({
-                title: "Enviar por WhatsApp",
-                text: `Ingresa el número de WhatsApp para enviar ${selectedIds.length} informe(s) técnico(s):`,
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                confirmButtonText: "Enviar",
-                cancelButtonText: "Cancelar",
-                inputPlaceholder: "Ejemplo: 999999999",
-                confirmButtonColor: "#1a3bb3"
-            }, function(inputValue) {
-                if (inputValue === false) return false;
-                if (!inputValue) return swal.showInputError("Por favor ingresa un número de WhatsApp válido");
-                if (!/^\d+$/.test(inputValue)) return swal.showInputError("Por favor ingresa solo números");
-
-                swal.close();
-                swal({
-                    title: "Procesando...",
-                    text: "Enviando informes técnicos por WhatsApp",
-                    type: "info",
-                    showConfirmButton: false,
-                    allowOutsideClick: false
-                });
-
-                const form = $('<form>', {
-                    action: '{{ route('envioWhatsapp.informeTecnico.multiple') }}',
-                    method: 'POST',
-                    target: '_blank',
-                    style: 'display:none;'
-                });
-
-                form.append($('<input>', {type: 'hidden', name: '_token', value: '{{ csrf_token() }}'}));
-                form.append($('<input>', {type: 'hidden', name: 'numero', value: inputValue}));
-
-                selectedIds.forEach(id => {
-                    form.append($('<input>', {type: 'hidden', name: 'guia_ids[]', value: id}));
-                });
-
-                $('body').append(form);
-                form.submit();
-                setTimeout(() => form.remove(), 1000);
-                setTimeout(() => {
-                    swal({
-                        title: "¡Enviado!",
-                        text: `Se han enviado ${selectedIds.length} informe(s) técnico(s) por WhatsApp`,
-                        type: "success",
-                        timer: 3000,
-                        showConfirmButton: true
                     });
-                }, 500);
+                });
+            });
+
+            // Función para enviar guías por WhatsApp múltiple
+            $('#btn-whatsapp-filtrado').on('click', function(e) {
+                e.preventDefault();
+
+                // Usar la misma lógica que la descarga para obtener los IDs seleccionados
+                var selectedIds = Object.keys(selectedRows[tableId] || {}).filter(function(id) {
+                    return selectedRows[tableId][id] === true &&
+                        id !== '' &&
+                        id !== 'undefined' &&
+                        !isNaN(parseInt(id));
+                });
+
+                console.log('IDs seleccionados para WhatsApp:', selectedIds);
+
+                if (selectedIds.length === 0) {
+                    return swal({
+                        title: "Sin selección",
+                        text: "Por favor, selecciona al menos un informe técnico para enviar por WhatsApp.",
+                        type: "warning",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#1a3bb3"
+                    });
+                }
+
+                swal({
+                    title: "Enviar por WhatsApp",
+                    text: `Ingresa el número de WhatsApp para enviar ${selectedIds.length} informe(s) técnico(s):`,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Enviar",
+                    cancelButtonText: "Cancelar",
+                    inputPlaceholder: "Ejemplo: 999999999",
+                    confirmButtonColor: "#1a3bb3"
+                }, function(inputValue) {
+                    if (inputValue === false) return false;
+                    if (!inputValue) return swal.showInputError(
+                        "Por favor ingresa un número de WhatsApp válido");
+                    if (!/^\d+$/.test(inputValue)) return swal.showInputError(
+                        "Por favor ingresa solo números");
+
+                    swal.close();
+                    swal({
+                        title: "Procesando...",
+                        text: "Enviando informes técnicos por WhatsApp",
+                        type: "info",
+                        showConfirmButton: false,
+                        allowOutsideClick: false
+                    });
+
+                    const form = $('<form>', {
+                        action: '{{ route('envioWhatsapp.informeTecnico.multiple') }}',
+                        method: 'POST',
+                        target: '_blank',
+                        style: 'display:none;'
+                    });
+
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: '_token',
+                        value: '{{ csrf_token() }}'
+                    }));
+                    form.append($('<input>', {
+                        type: 'hidden',
+                        name: 'numero',
+                        value: inputValue
+                    }));
+
+                    selectedIds.forEach(id => {
+                        form.append($('<input>', {
+                            type: 'hidden',
+                            name: 'guia_ids[]',
+                            value: id
+                        }));
+                    });
+
+                    $('body').append(form);
+                    form.submit();
+                    setTimeout(() => form.remove(), 1000);
+                    setTimeout(() => {
+                        swal({
+                            title: "¡Enviado!",
+                            text: `Se han enviado ${selectedIds.length} informe(s) técnico(s) por WhatsApp`,
+                            type: "success",
+                            timer: 3000,
+                            showConfirmButton: true
+                        });
+                    }, 500);
+                });
             });
         });
-    });
-</script>
+    </script>
+        <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                toastr.success("{{ session('success') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('error'))
+                toastr.error("{{ session('error') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('warning'))
+                toastr.warning("{{ session('warning') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+
+            @if (session('info'))
+                toastr.info("{{ session('info') }}", '', {
+                    timeOut: 3000
+                });
+            @endif
+        });
+    </script>
 @endsection

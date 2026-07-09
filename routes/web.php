@@ -56,12 +56,12 @@ use function Complex\rho;
 
 //GLOBAL LOGIN
 Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
+Route::get('/', 'ViewController@home')->name('inicio')->middleware('auth');
 Route::group(
     ['middleware' => ['auth', 'api', 'cambio_diario']],
     function () {
 
         // Route::view('/' , 'home')->name('inicio');
-        Route::get('/', 'ViewController@home')->name('inicio');
 
         // RUTAS PROYECTOS
         // Rutas ProjectManager
@@ -99,6 +99,8 @@ Route::group(
 
         Route::post('/whatsapp', 'AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
         Route::resource('/almacen', 'AlmacenController');
+        Route::post('/almacen_sunat/{id}', 'AlmacenController@cod_sunat')->name('almacen.cod_sunat');
+        Route::post('/almacen/estado','AlmacenController@change_state')->name('almacen.change_state');
         Route::resource('/apariencia', 'ConfigController');
         Route::post("/cotizacion_manual/guardar-nota/{id}", "CotizacionManualController@guardarNotaInformativa")->name("cotizacion_manual.guardar_nota");
         Route::resource('/cotizacion_manual', 'CotizacionManualController');
@@ -530,6 +532,11 @@ Route::group(
         Route::post('parameter_call/ajax_remision', 'ParameterCallController@ajax_remision')->name('pa.ajax_remision');
         Route::post('parameter_call/getPersonalVendedor', 'ParameterCallController@getPersonalVendedor')->name('pa.getPersonalVendedor');
         Route::post('parameter_call/getFormaPago', 'ParameterCallController@getFormaPago')->name('pa.getFormaPago');
+        Route::post('parameter_call/getPersonalData', 'ParameterCallController@getPersonalData')->name('pa.getPersonalData');
+        Route::post('parameter_call/getPermissionxRolData', 'ParameterCallController@getPermissionxRolData')->name('pa.getPermissionxRolData');
+        Route::post('parameter_call/getUserData', 'ParameterCallController@getUserData')->name('pa.getUserData');
+        Route::post('parameter_call/getRolesXUserData', 'ParameterCallController@getRolesXUserData')->name('pa.getRolesXUserData');
+        
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
@@ -671,6 +678,7 @@ Route::group(
         Route::get('garantia_guia_egreso/impresionEgreso/{id}', 'GarantiaGuiaEgresoController@print')->name('impresiones_egreso');
         Route::get('garantia_guia_egreso/guias', 'GarantiaGuiaEgresoController@guias')->name('garantia_guia_egreso.guias');
         Route::resource('/garantia_guia_egreso', 'GarantiaGuiaEgresoController')->except(['create', 'edit', 'destroy']);
+        Route::post('garantia_guia_egreso/anular/{id}', 'GarantiaGuiaEgresoController@anular_guia_egreso')->name('garantia_guia_egreso.anular_guia_egreso');
 
         Route::get('garantia_guia_egreso/create_egreso/{id}', 'GarantiaGuiaEgresoController@create_egreso')->name('garantia_guia_egreso.create_egreso');
 
@@ -682,6 +690,8 @@ Route::group(
         Route::resource('/garantia_informe_tecnico', 'GarantiaInformeTecnicoController')->except(['create', 'edit', 'destroy']);
         Route::get('garantia_informe_tecnico/create_tecnico/{id}', 'GarantiaInformeTecnicoController@create_tecnico')
             ->name('garantia_informe_tecnico.create_tecnico');
+        Route::post('garantia_informe_tecnico/anular/{id}', 'GarantiaInformeTecnicoController@anular_informe_tecnico')->name('garantia_informe_tecnico.anular_informe_tecnico');
+
         //Consultas
         Route::get('consultas/garantias-guias-ingreso', 'ConsultasController@garantias_guias_ingreso')->name('consultas.garantias.guias_ingreso');
         Route::get('consultas/garantias-guias-egreso', 'ConsultasController@garantias_guias_egreso')->name('consultas.garantias.guias_egreso');
@@ -857,6 +867,7 @@ Route::group(
         // Route::post('/pagados/store',)
         Route::resource('/pedidos', 'PedidosController');
         Route::resource('/personal', 'PersonalController');
+        Route::post('/personal_desactivar/{id}', 'PersonalController@desactivar_personal')->name('personal.desactivar_pe');
         Route::get('/personal_inactivo', 'PersonalController@index_inactivo')->name('personal.index_inactivo');
 
         Route::get('/personal2/creacion2', 'PersonalController@creacion2')->name('personal2.create2');
@@ -900,25 +911,36 @@ Route::group(
         Route::patch('/servicios_destroy/{id}', 'ServiciosController@destroy')->name('servicios.destroy');
         Route::get('/servicios_inactivo', 'ServiciosController@index2')->name('servicios.index2');
         Route::resource('/unidad-medida', 'UnidadMedidaController');
+        Route::post('/unidad-medida/estado','UnidadMedidaController@change_state')->name('unidad_medida.change_state');
 
         Route::resource('/transaccion-compra', 'TransaccionCompraController');
 
         //Usuarios
         Route::get('/usuario/lista', 'UsuarioController@lista')->name('usuario.lista');
-        Route::get('usuario/crear/{id}', 'UsuarioController@crear')->name('usuario.crear');
-        Route::post('usuario/creacion/{guia}', 'UsuarioController@creacion')->name('usuario.creacion');
-        Route::post('usuario/envio_codigo/{id}', 'UsuarioController@envio_codigo')->name('usuario.envio_codigo');
-        Route::post('usuario/activar/{id}', 'UsuarioController@activar')->name('usuario.activar');
+        Route::post('usuario/validar_cuenta', 'UsuarioController@validar_cuenta')->name('usuario.validar_cuenta');
+        Route::post('usuario/change_password', 'UsuarioController@change_password')->name('usuario.change_password');
+        // Route::post('usuario/activar/{id}', 'UsuarioController@activar')->name('usuario.activar');
         Route::get('usuario/permiso/{id}', 'UsuarioController@permiso')->name('usuario.permiso');
         Route::post('usuario/permisos/asignar/{id}', 'UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
         Route::post('usuario/permisos/delegar/{id}', 'UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
-        Route::resource('/usuario', 'UsuarioController');
-        Route::get('/usuarios', 'UsuarioController@index_usuarios')->name('usuarios.index');
+
+        Route::resource('/usuario', 'UsuarioController')->except(['create','update']);
+        Route::post('usuario/crear', 'UsuarioController@create')->name('usuario.create');
+        // Route::post('usuario/perfil', 'UsuarioController@create')->name('usuario.create');
+        Route::post('usuario/update/{id}', 'UsuarioController@update')->name('usuario.update');
+        Route::post('usuario/codigo_nuevo_correo/{id}', 'UsuarioController@codigo_nuevo_correo')->name('usuario.codigo_nuevo_correo');
+        
+        
+        Route::post('usuario/permiso_personalizado', 'UsuarioController@permiso_personalizado')->name('usuario.permiso_personalizado');
+        
+        Route::get('/perfil', 'UsuarioController@perfil')->name('usuario.perfil');
         Route::resource('/venta', 'VentaController');
 
         //Roles y Permisos
-        Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
-        Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
+        Route::resource('/roles', 'RolController');
+        
+        // Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
+        // Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
         Route::get('/gestRol/{rol_id}', [RolController::class, 'gestionarRol'])->name('roles.gestRol');
         Route::put('/gestRol/asignarPermisos/{rol_id}', [RolController::class, 'asignarPermisos'])->name('roles.asignarPermisos');
         Route::put('/gestRol/removerPermiso/{rol_id}/{permiso_id}', [RolController::class, 'removerPermiso'])->name('roles.removerPermiso');
@@ -929,7 +951,7 @@ Route::group(
         Route::resource('/cantidad_precio', 'CantidadPrecioController');
 
         //* CONFIGURACION GENERAL
-        Route::view('/configuracion_general', 'configuracion_general.configuracion_general')->name('Configuracion');
+        Route::get('/configuracion_general', 'ConfiguracionGeneralController@configuracion_general')->name('configuracion.general');
 
         //* GARANTIAS
         Route::resource('/garantia', 'GarantiaController');

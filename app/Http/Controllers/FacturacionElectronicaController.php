@@ -1494,6 +1494,8 @@ class FacturacionElectronicaController extends Controller
                 $facturas->nota_debito
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('factura.xml');
+        $json['permiso_cdr'] = auth()->user()->can('factura.cdr');
         return response()->json($json);
     }
 
@@ -1581,6 +1583,8 @@ class FacturacionElectronicaController extends Controller
                 $facturas->nota_debito
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('factura_m.xml');
+        $json['permiso_cdr'] = auth()->user()->can('factura_m.cdr');
         return response()->json($json);
     }
 
@@ -1671,6 +1675,8 @@ class FacturacionElectronicaController extends Controller
                 $boleta->nota_debito
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('boleta.xml');
+        $json['permiso_cdr'] = auth()->user()->can('boleta.cdr');
         return response()->json($json);
     }
 
@@ -1758,6 +1764,8 @@ class FacturacionElectronicaController extends Controller
                 $bole_m->nota_debito
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('boleta_m.xml');
+        $json['permiso_cdr'] = auth()->user()->can('boleta_m.cdr');
         return response()->json($json);
     }
 
@@ -1855,6 +1863,9 @@ class FacturacionElectronicaController extends Controller
                 $remi->motivo_anulacion
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('guia_remision.xml');
+        $json['permiso_cdr'] = auth()->user()->can('guia_remision.cdr');
+        $json['permiso_anular'] = auth()->user()->can('guia_remision.anular');
         return response()->json($json);
     }
 
@@ -1948,6 +1959,9 @@ class FacturacionElectronicaController extends Controller
                 $remi->motivo_anulacion
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('guia_remision_m.xml');
+        $json['permiso_cdr'] = auth()->user()->can('guia_remision_m.cdr');
+        $json['permiso_anular'] = auth()->user()->can('guia_remision_m.anular');
         return response()->json($json);
     }
 
@@ -2004,16 +2018,17 @@ class FacturacionElectronicaController extends Controller
 
             try {
                 // Si está en formato DD/MM/YYYY (viene del accessor), convertir a DD-MM-YYYY para DataTables
-                if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $fecha)) {
-                    return Carbon::createFromFormat('d/m/Y', $fecha)->format('d-m-Y');
+                if (preg_match('/^\d{2}\/\d{2}\/\d{4}/', $fecha)) {
+                    return Carbon::createFromFormat('d/m/Y', substr($fecha, 0, 10))
+                        ->format('d-m-Y');
                 }
 
-                // Si está en formato YYYY-MM-DD, convertir a DD-MM-YYYY
-                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
-                    return Carbon::createFromFormat('Y-m-d', $fecha)->format('d-m-Y');
+                // Si está en formato YYYY-MM-DD o YYYY-MM-DD HH:MM:SS
+                if (preg_match('/^\d{4}-\d{2}-\d{2}/', $fecha)) {
+                    return Carbon::parse($fecha)->format('d-m-Y');
                 }
 
-                // Si ya está en formato DD-MM-YYYY, dejarlo así
+                // Si ya está en formato DD-MM-YYYY
                 if (preg_match('/^\d{2}-\d{2}-\d{4}$/', $fecha)) {
                     return $fecha;
                 }
@@ -2077,6 +2092,8 @@ class FacturacionElectronicaController extends Controller
                 $remi->id
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('nota_credito.xml');
+        $json['permiso_cdr'] = auth()->user()->can('nota_credito.cdr');
         return response()->json($json);
 
     }
@@ -2177,6 +2194,8 @@ class FacturacionElectronicaController extends Controller
                 $nota_d->id
             ];
         }
+        $json['permiso_xml'] = auth()->user()->can('nota_debito.xml');
+        $json['permiso_cdr'] = auth()->user()->can('nota_debito.cdr');
         return response()->json($json);
     }
 

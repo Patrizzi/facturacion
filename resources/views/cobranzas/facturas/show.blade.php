@@ -26,14 +26,15 @@
 
                             @default
                         @endswitch
-                        <div class="ibox-tools">
-                            <button class="btn btn-primary btn-sm" type="button" id="pago_lote" disabled><i
-                                    class="fa fa-money"></i></button>
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-down"></i>
-                            </a>
-                        </div>
-
+                        @can('factura.pagar')
+                            <div class="ibox-tools">
+                                <button class="btn btn-primary btn-sm" type="button" id="pago_lote" disabled><i
+                                        class="fa fa-money"></i></button>
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-down"></i>
+                                </a>
+                            </div>
+                        @endcan
                     </div>
                     <div class="ibox-content">
                         <div class="row">

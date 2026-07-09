@@ -26,8 +26,10 @@
                                 style="align-items: center;border-bottom: 0px !important;">
                                 @include('cobranzas.facturas_manuales._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
-                                            class="fa fa-money"></i></button>
+                                    @can('factura_m.pagar')
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
+                                                class="fa fa-money"></i></button>
+                                    @endcan
                                     <div class="btn-group">
                                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fa fa-download"></i>
@@ -38,6 +40,7 @@
                                             </button>
                                         </div>
                                     </div>
+                                    
                                 </ul>
                             </ul>
                             <div class="tab-content" style="margin-top: -1px">
@@ -101,7 +104,7 @@
                                                     <th>Saldo</th>
                                                     <th>Fecha V.</th>
                                                     <th>Obs.</th>
-                                                    <th>Acciones</th>
+                                                    <th>@canany(['factura_m.pagar', 'factura_m.detalle_pago']) Acciones @endcan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -278,6 +281,8 @@
             width: "100%"
         });
         // FUNCION DE DATATABLE FACTURA M
+        let permiso_ver = false;
+        let permiso_pagar = false;
         var fact_m_table = $('.dataTables-example-facturas_manual').DataTable({
             "serverSide": true,
             "ajax": {
@@ -288,6 +293,11 @@
                     d.cliente_id = $("#cliente option:selected").val();
                     d.estado_pago = $('#select_estado').val();
                     d.tipo = $('#select_tipo_pago').val();
+                },
+                dataSrc: function(json){
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
+                    return json.data
                 }
             },
             "drawCallback": function(settings) {
@@ -381,20 +391,23 @@
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_facturas_m', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
-                        var view =
-                            `<a class="btn btn-primary btn-ls"
-                        href=" ` + url_view + `"><i class="fa fa-eye"></i></a>
-                            <div class="btn-group">
-                            <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
-                                
-                            </ul>
-                        </div>`;
-                        // // <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
-                        // var view +=  ``;
+                        var buttons = ``;
+                        if(permiso_ver){
+                            buttons += `<a class="btn btn-primary btn-ls"
+                                href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
+                        }
+                        buttons += `<span style="margin:0px 5px"></span>`;
+                        if(permiso_pagar){
+                            buttons += `<div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="pago_factura(` + full[9] + `)">Pagar</a></li>
+                                    
+                                </ul>
+                            </div>`;
+                        }
 
-                        return view;
+                        return buttons;
                     }
                 },
                 // {

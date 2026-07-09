@@ -27,8 +27,10 @@
                                 style="align-items: center;border-bottom: 0px !important;">
                                 @include('cobranzas.boletas._shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;">
-                                    <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
-                                        class="fa fa-money"></i></button>
+                                    @can('boleta.pagar')
+                                        <button class="btn btn-primary" type="button" id="pago_lote_total" disabled><i
+                                            class="fa fa-money"></i></button>
+                                    @endcan
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fa fa-download"></i>
@@ -108,7 +110,7 @@
                                                     <th>N° Cuotas</th>
                                                     <th>Saldo</th>
                                                     <th>Fecha V.</th>
-                                                    <th>Acciones</th>
+                                                    <th>@canany(['boleta.pagar', 'boleta.detalle_pago']) Acciones @endcan</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -274,6 +276,8 @@
         $('.chosen-select').chosen({
             width: "100%"
         });
+        var permiso_ver = false;
+        var permiso_pagar = false;
         // FUNCION DE DATATABLE BOLETAS
         var boletas_table = $('.dataTables-example-boletas').DataTable({
             "serverSide": true,
@@ -285,6 +289,11 @@
                     d.cliente_id = $("#cliente option:selected").val();
                     d.estado_pago = $('#select_estado').val();
                     d.tipo = $('#select_estado').val();
+                },
+                dataSrc: function(json){
+                    permiso_ver = json.permiso_ver;
+                    permiso_pagar = json.permiso_pagar;
+                    return json.data
                 }
             },
             "drawCallback": function(settings) {
@@ -366,20 +375,23 @@
                     'render': function(data, type, full, meta) {
                         var base_url = "{{ route('pagos.show_boletas', ':id') }}";
                         var url_view = base_url.replace(':id', full[0]);
-                        var view =
-                            `<a class="btn btn-primary btn-ls"
-                        href=" ` + url_view + `"><i class="fa fa-eye"></i></a>
-                            <div class="btn-group">
-                            <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#" onclick="pago_boleta(` + full[9] + `)">Pagar</a></li>
-                                <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
-                            </ul>
-                        </div>`;
-
-                        // var view +=  ``;
-
-                        return view;
+                        var buttons = ``;
+                        if(permiso_ver){
+                            buttons += `<a class="btn btn-primary btn-ls"
+                                href=" ` + url_view + `"><i class="fa fa-eye"></i></a>`;
+                        }
+                        buttons += `<span style="margin:0px 5px"></span>`;
+                        if(permiso_pagar){
+                            buttons +=
+                                `<div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-primary btn-ls dropdown-toggle"><i class="fa fa-money"></i></button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="pago_boleta(` + full[9] + `)">Pagar</a></li>
+                                    <li><a class="dropdown-item" href="#" class="font-bold">Adelantar</a></li>
+                                </ul>
+                            </div>`;
+                        }
+                        return buttons;
                     }
                 },
                 // {

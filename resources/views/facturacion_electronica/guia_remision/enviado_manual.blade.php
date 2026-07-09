@@ -26,7 +26,8 @@
                 <div class="ibox ">
                     <div class="ibox-content">
                         <div class="">
-                            <ul class="nav nav-tabs" role="tablist" style="align-items: center;">
+                            <ul class="nav nav-tabs" role="tablist"
+                                    style="align-items: center;border-bottom: 0px !important;">
                                 @include('facturacion_electronica.guia_remision.shared.tabs')
                                 <ul class="ml-auto d-flex" style="gap: 10px; align-items: center;margin-right: 15px">
                                     <div class="btn-group">
@@ -44,15 +45,15 @@
                             </ul>
                         </div>
                         <!-- Tablas y su contenido -->
-                        <div class="tab-content">
-                            <div role="tabpanel" id="tab-9" class="tab-pane active show">
-                                <div style="margin:0px 15px 10px 15px">
-                                    <div class="row">
-                                        <div class="col-lg-12" id="alert_guia">
+                        <div class="tab-content" style="margin-top: -2px">
+                            <div role="tabpanel" id="tab-9" class="tab-pane active show" style="margin-top: -1px;border-top: 1px solid #e7eaec !important;">
+                                <div class="row">
+                                    <div class="col-lg-12" id="alert_guia" style="min-height: 15px">
 
-                                        </div>
                                     </div>
-                                    <hr />
+                                </div>
+                                <hr />
+                                <div class="search-responsive">
                                     <div class="row">
                                         <div class="col-md-5">
                                             <div class="input-group">
@@ -81,6 +82,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                <br>
+                                <br>
                                 <div class="table-responsive">
                                     <!-- CONTENIDO DENTRO DEL TAB  3 -->
                                     <table class="table table-striped table-bordered dataTables-example5">
@@ -96,8 +99,8 @@
                                                 <th>Fecha entrega</th>
                                                 <th>Tipo Transporte</th>
                                                 {{-- <th>Estado</th> --}}
-                                                <th>XML</th>
-                                                <th>CDR</th>
+                                                <th>@can('guia_remision_m.xml') XML @endcan</th>
+                                                <th>@can('guia_remision_m.cdr') CDR @endcan</th>
                                                 <th>Acciones</th>
                                             </tr>
                                         </thead>
@@ -198,6 +201,19 @@
         .showSweetAlert > fieldset > input{
             display: none !important;
         }
+        .td_status {
+            text-align: center;
+        }
+        .tab-pane.active.show {
+            border-right: 1px solid #e7eaec;
+            border-left: 1px solid #e7eaec;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        .search-responsive, .table-responsive {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
     </style>
 
     <!-- scripts -->
@@ -232,7 +248,9 @@
                 radioClass: 'iradio_square-green',
             });
 
-
+            var permiso_xml = false;
+            var permiso_cdr = false;
+            var permiso_anular = false;
             var table_remision_env = $('.dataTables-example5').DataTable({
                 "serverSide": true,
                 "ajax": {
@@ -335,14 +353,7 @@
                             return end;
                         }
                     }
-                    // {
-                    //     'targets': [11],
-                    //     'orderable': false,
-                    //     'className': 'td_ticket',
-                    //     'render': function(data, type, full, meta) {
-                    //         return `${full[11]}`;
-                    //     }
-                    // }
+
                 ],
                 drawCallback: function() {
                     $('.i-checks-remision_env').iCheck({

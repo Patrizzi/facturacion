@@ -238,9 +238,11 @@
                                     </table>
                                 </div>
                                 <div class="d-flex justify-content-end mt-4">
-                                    <button data-style="zoom-out" id="guardar" name="boton"
-                                        class="guardar button-lada-guardar btn btn-primary btn-outline"
-                                        type="button">Guardar</button>
+                                    @can('guia_remision.editar')
+                                        <button data-style="zoom-out" id="guardar" name="boton"
+                                            class="guardar button-lada-guardar btn btn-primary btn-outline"
+                                            type="button">Guardar</button>
+                                    @endcan
                                     <button class="btn btn-primary float-right button-lada-finalizar"
                                         style="margin-left: 10px;" type="button" id="finalizar">Guardar y
                                         Finalizar</button>

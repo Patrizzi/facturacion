@@ -366,20 +366,12 @@
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-end mt-4">
-                                {{-- <button type="button" id="boton" name="boton" class="btn btn-primary button-lada">
-                                    <strong>Guardar</strong>
-                                </button>
-                                <button class="btnn float-right" id="finalizar_button" type="button"
-                                    style="margin-left:10px; background: #6c757d; border-radius:8px; font-weight:450; font-size: 1rem; padding: 7px 20px; border: none; color: white;">
-                                    <strong>Guardar y finalizar</strong>
-                                </button> --}}
-                                 <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
+                                @can('factura.editar')
+                                    <button data-style="zoom-out" id="boton" name="boton" class="guardar button-lada btn btn-primary btn-outline"
                                     type="button">Guardar</button>
+                                @endcan
                                 <button data-style="zoom-out" class="btn btn-primary float-right button-lada" style="margin-left: 10px;"
                                     type="button" id="finalizar">Guardar y Finalizar</button>
-                                {{-- <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden=""
-                                    data-style="zoom-out"></button> --}}
-                                {{-- <button class="ladda-button btn btn-primary float-right" type="button" id="boton" name="boton" ><i class="fa fa-cloud-upload" aria-hidden="true"> Guardar</i></button>&nbsp; --}}
                                 <button type="submit" id="button_submit" hidden name="button_submit" value="0" ></button>
 
                             </div>

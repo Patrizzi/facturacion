@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Familia;
+use App\Igv;
 use App\Subfamilia;
 use App\Marca;
 use App\Moneda;
@@ -32,11 +33,11 @@ class ServiciosController extends Controller
         $marcas = Marca::where('estado', 0)->get();
         $subfamilias = Subfamilia::all();
         $tipo_afectacion = Tipo_afectacion::all();
+        $igv = Igv::first();
         $tipo_cambio = TipoCambio::latest()->first();
         // return $statics;
-        return view('producto_servicios.servicios.index', compact('barra_statics', 's_statics', 'servicios', 'moneda', 'marcas', 'familias', 'subfamilias', 'tipo_afectacion', 'tipo_cambio'));
-    }
-    // SERVICIOS INACTIVO
+        return view('producto_servicios.servicios.index', compact('barra_statics', 's_statics', 'servicios', 'moneda', 'marcas', 'familias', 'subfamilias', 'tipo_afectacion', 'tipo_cambio','igv'));
+    }    // SERVICIOS INACTIVO
     public function index2()
     {
         $servicios = Servicios::all();
@@ -392,21 +393,16 @@ class ServiciosController extends Controller
     }
 
 
-    // public function generar_codigo_servicio(Request $request)
-    // {
+    public function generar_codigo_servicio(Request $request)
+    {
 
-    //     try {
-    //         // Tu lógica para generar el código del servicio
-    //         $conteo = Servicios::all()->count();
-    //         $suma = $conteo + 1;
-    //         $servicio_nr = str_pad($suma, 8, "0", STR_PAD_LEFT);
-    //         $codigo_servicio = "SERV-" . $servicio_nr;
-    //         // return $codigo_servicio;
-
-    //         return response()->json($codigo_servicio); // Esto es lo que AJAX espera
-    //     } catch (\Exception $e) {
-    //         // Devuelve el error para poder verlo en consola
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // }
+        try {
+            // Tu lógica para generar el código del servicio
+            $codigo_servicio = Servicios::generar_codigo();
+            return response()->json($codigo_servicio); // Esto es lo que AJAX espera
+        } catch (\Exception $e) {
+            // Devuelve el error para poder verlo en consola
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

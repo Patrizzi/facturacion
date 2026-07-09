@@ -117,6 +117,13 @@ class GarantiaGuiaEgresoController extends Controller
         return redirect()->route('garantia_guia_egreso.show',$guia_egreso->id);
     }
 
+    public function anular_guia_egreso(Request $request, $id){
+        $guia_egreso = GarantiaGuiaEgreso::find($id);
+        $guia_egreso->estado = 0;
+        $guia_egreso->save();
+        return redirect()->back()->with('success', 'Guia de Egreso anulada correctamente');
+    }
+
     public function print($id){
         $contacto = Contacto::all();
         $mi_empresa = Empresa::first();
