@@ -73,5 +73,5 @@
             Remisión Man.
         </a>
     </li>
-    </div>
+    {{-- </div> --}}
 @endcan
