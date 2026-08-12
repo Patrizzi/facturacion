@@ -223,7 +223,10 @@
 
     @include('configuracion_general.tipo_cambio.modal_create')
 
-    @if (session('check_tipo_cambio') && auth()->user()->can('tipo_cambio.crear'))
+    @if (isset($check_tipo_cambio) &&
+            $check_tipo_cambio &&
+            auth()->user()->can('tipo_cambio.crear') &&
+            !isset($tipo_cambio->fecha))
         <script>
             $(document).ready(function() {
                 $('#myajax').click();
@@ -253,7 +256,12 @@
                                 toastr.clear();
                                 $('#modal-espera').modal('hide');
                                 $('#modal-principal').modal('show');
-                                toastr.success("El administrador ingresó el Tipo de Cambio del día.");
+                                toastr.success("El administrador ingresó el Tipo de Cambio del día.", '', {
+                                    showDuration: 0,
+                                    hideDuration: 0,
+                                    timeOut: 0,
+                                    extendedTimeOut: 0,
+                                });
                             }
                         })
                         .fail(function(xhr) {
@@ -261,7 +269,7 @@
                                 toastr.warning(
                                     "Espere a que un administrador ingrese el Tipo de Cambio Diario",
                                     '', {
-                                        timeOut: 3000,
+                                        timeOut: 5000,
                                         extendedTimeOut: 0,
                                         closeButton: true
                                     }

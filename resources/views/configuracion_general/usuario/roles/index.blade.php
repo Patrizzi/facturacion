@@ -7,11 +7,11 @@
 @section('content')
 
 
-    <form method="POST" action="{{ route('usuario.asignar_permiso', 1) }}">
+    {{-- <form method="POST" action="{{ route('usuario.asignar_permiso', 1) }}">
         @csrf
         <input type="hidden" name="permisos" id="" value="Superadministrador">
         <input type="submit" class="btn btn-s-m btn-success" value="Activar" />
-    </form>
+    </form> --}}
 
     <div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom: 0px">
         <div class="row">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            @include('configuracion_general.usuario._shared.statistics')
+                            {{-- @include('configuracion_general.usuario._shared.statistics') --}}
                         </div>
                     </div>
                 </div>

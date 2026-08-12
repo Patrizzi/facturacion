@@ -27,7 +27,7 @@
                     </div>
                     <div class="ibox-content">
                         <div class="row">
-                            @include('configuracion_general.usuario._shared.statistics')
+                            {{-- @include('configuracion_general.usuario._shared.statistics') --}}
                         </div>
                     </div>
                 </div>
