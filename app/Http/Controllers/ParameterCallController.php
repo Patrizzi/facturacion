@@ -203,8 +203,7 @@ class ParameterCallController extends Controller
             }
         } else if ($tipo == '0') { //Boleta
             if ($search == '') {
-                // $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->where('documento_identificacion', '!=', 'RUC')->limit(5)->get();
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->limit(5)->get();
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'forma_pago_id')->limit(5)->get();
             } else {
                 $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('documento_identificacion', 'DNI')->where(function ($query) use ($search) {
                     $query->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%');
@@ -212,7 +211,7 @@ class ParameterCallController extends Controller
             }
         } else { // All : ESTE ELSE ES EXCLUYENTE SI ES UNA BOLETA O FACTURA PARA EL LLAMADO DE RUC O DNI
             if ($search == '') {
-                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento')->limit(5)->get();
+                $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'forma_pago_id')->limit(5)->get();
             } else {
                 $employees = Cliente::orderby('created_at', 'desc')->select('id', 'nombre', 'numero_documento', 'documento_identificacion','forma_pago_id')->where('nombre', 'like', '%' . $search . '%')->orWhere('numero_documento', 'like', '%' . $search . '%')->limit(5)->get();
             }

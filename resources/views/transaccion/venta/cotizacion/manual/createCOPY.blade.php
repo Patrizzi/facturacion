@@ -573,7 +573,7 @@
                 url: "{{ route('pa.clients') }}",
                 dataType: 'json',
                 type: "POST",
-                delay: 10,
+                delay: 50,
                 data: function(params) {
                     var tipo_coti = $('[name="tipo_coti"]:checked').val();
                     return {

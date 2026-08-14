@@ -757,7 +757,7 @@
                 url: "{{ route('pa.clients') }}",
                 dataType: 'json',
                 type: "POST",
-                delay: 10,
+                delay: 500,
                 data: function(params) {
                     var tipo_coti = $('[name="tipo_coti"]').val();
                     return {
