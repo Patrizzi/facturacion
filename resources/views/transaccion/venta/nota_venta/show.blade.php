@@ -129,7 +129,7 @@
                                 </a>
                             </div>
                         </div>
-                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null)
+                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion_m == null && $nota_venta->id_cotizacion_m == null)
                             <div class="d-flex align-items-center" style="overflow: hidden;">
                                 @can('nota_venta.editar')
                                     <div id="btn-slider-nota-venta"
