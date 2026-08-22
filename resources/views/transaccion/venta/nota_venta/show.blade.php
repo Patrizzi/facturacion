@@ -129,7 +129,7 @@
                                 </a>
                             </div>
                         </div>
-                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion_m == null && $nota_venta->id_cotizacion_m == null)
+                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null)
                             <div class="d-flex align-items-center" style="overflow: hidden;">
                                 @can('nota_venta.editar')
                                     <div id="btn-slider-nota-venta"
@@ -897,5 +897,20 @@
 
             }
         });
+        function toggleBtnsNotaVenta() {
+            const slider = document.getElementById('btn-slider-nota-venta');
+            const arrow = document.getElementById('btn-arrow');
+            const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
+
+            if (isOpen) {
+                slider.style.width = '0';
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-left');
+            } else {
+                slider.style.width = slider.scrollWidth + 'px';
+                arrow.classList.remove('fa-chevron-left');
+                arrow.classList.add('fa-chevron-right');
+            }
+        }
     </script>
 @endsection
