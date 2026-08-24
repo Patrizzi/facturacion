@@ -72,7 +72,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-primary  btn-block">Buscar</button>
+                                            <button class="btn btn-primary  btn-block" id="filter_buttons">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
@@ -196,155 +196,161 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
-            var permiso_xml = false;
-            var permiso_cdr = false;
-            // {{-- Datatable Facturas Enviadas  --}}
-            var table_boleta_end = $('.dataTables-bol_enviadas').DataTable({
-                "serverSide": true,
-                "ajax": {
-                    url: "{{ route('boletas_electronicas.list_boletas_env') }}",
-                    method: "get",
-                    data: function(d) {
-                        // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
-                        d.daterange = $('#daterange-boleta_env')
-                            .val(); // Supongamos que tienes un select para el tipo de cotización
-                        d.value = $('#inputBuscar').val();
-                    },
-                    dataSrc: function(json) {
-                        permiso_xml = json.permiso_xml;
-                        permiso_cdr = json.permiso_cdr;
-                        return json.data;
+        });
+
+        var permiso_xml = false;
+        var permiso_cdr = false;
+
+        // {{-- Datatable Facturas Enviadas  --}}
+        var table_boleta_end = $('.dataTables-bol_enviadas').DataTable({
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('boletas_electronicas.list_boletas_env') }}",
+                method: "get",
+                data: function(d) {
+                    // Aquí añades los parámetros que quieres enviar junto con la petición AJAX
+                    d.daterange = $('#daterange-boleta_env')
+                        .val(); // Supongamos que tienes un select para el tipo de cotización
+                    d.value = $('#inputBuscar').val();
+                },
+                dataSrc: function(json) {
+                    permiso_xml = json.permiso_xml;
+                    permiso_cdr = json.permiso_cdr;
+                    return json.data;
+                }
+            },
+            "fnRowCallback": function(nRow, aData, iDisplayIndex) {
+                $(nRow).addClass('tooltip-demo');
+                return nRow;
+            },
+            "columnDefs": [{
+                    'width': '1vmax',
+                    'targets': [0], // Aplica a la primera columna (index 0)
+                    'orderable': false, // Deshabilitar ordenación en esta columna
+                    'render': function(data, type, full, meta) {
+                        // Renderizar el checkbox en la primera columna
+                        return '<input type="checkbox" name="select_row" value="' + full[2] +
+                            '" class="i-checks-boletas_env">';
                     }
                 },
-                "fnRowCallback": function(nRow, aData, iDisplayIndex) {
-                    $(nRow).addClass('tooltip-demo');
-                    return nRow;
+                {
+                    'width': '30%',
+                    'targets': [4]
                 },
-                "columnDefs": [{
-                        'width': '1vmax',
-                        'targets': [0], // Aplica a la primera columna (index 0)
-                        'orderable': false, // Deshabilitar ordenación en esta columna
-                        'render': function(data, type, full, meta) {
-                            // Renderizar el checkbox en la primera columna
-                            return '<input type="checkbox" name="select_row" value="' + full[2] +
-                                '" class="i-checks-boletas_env">';
+                {
+                    'targets': [7], // Descargar XML
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        var url =
+                            `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.xml`;
+                        var button = ``;
+                        if(permiso_xml){
+                            button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
                         }
-                    },
-                    {
-                        'width': '30%',
-                        'targets': [4]
-                    },
-                    {
-                        'targets': [7], // Descargar XML
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.xml`;
-                            var button = ``;
-                            if(permiso_xml){
-                                button += `<a href="${url}" download ><img src="{{ asset('xml.png') }}" width="25px"></i></a>`;
-                            }
-                            return button;
+                        return button;
+                    }
+                },
+                {
+                    'targets': [8],
+                    'orderable': false,
+                    'render': function(data, type, full, meta) {
+                        var url =
+                            `R-{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.zip`;
+                        var button = ``;
+                        if(permiso_xml){
+                            button += `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
                         }
-                    },
-                    {
-                        'targets': [8],
-                        'orderable': false,
-                        'render': function(data, type, full, meta) {
-                            var url =
-                                `R-{{ asset('facturas_electronicas/') }}/{{ $empresa->ruc }}-03-${full[2]}.zip`;
-                            var button = ``;
-                            if(permiso_xml){
-                                button += `<a href="${url}" download ><img src="{{ asset('cdr.png') }}" width="25px"></i></a>`;
-                            }
-                            return button;
+                        return button;
+                    }
+                },
+                {
+                    'targets': [9], // Estado
+                    'orderable': false,
+                    'className': 'td_status',
+                    'render': function(data, type, full, meta) {
+                        var end = ``;
+                        if (full[7] == 1) {
+                            end +=
+                                `<button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button> `;
+                        } else {
+                            end +=
+                                `<button type="button" class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button> `;
                         }
-                    },
-                    {
-                        'targets': [9], // Estado
-                        'orderable': false,
-                        'className': 'td_status',
-                        'render': function(data, type, full, meta) {
-                            var end = ``;
-                            if (full[7] == 1) {
+                        // NOTA DE CREDITO
+                        if (full[9] != 0) {
+                            if (full[9] == 1) {
                                 end +=
-                                    `<button type="button" class="btn btn-info btn-circle btn-ls"><i class="fa fa-check-circle"></i></button> `;
+                                    `<button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito:  Aceptada"><i style="font-weight: 700">NC</i></button> `;
                             } else {
                                 end +=
-                                    `<button type="button" class="btn btn-danger btn-circle btn-ls"><i class="fa fa-times-circle"></i></button> `;
+                                    `<button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito: En Espera"><i style="font-weight: 700">NC</i></button> `;
                             }
-                            // NOTA DE CREDITO
-                            if (full[9] != 0) {
-                                if (full[9] == 1) {
-                                    end +=
-                                        `<button class="btn btn-info btn-circle btn-ls"  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito:  Aceptada"><i style="font-weight: 700">NC</i></button> `;
-                                } else {
-                                    end +=
-                                        `<button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Credito: En Espera"><i style="font-weight: 700">NC</i></button> `;
-                                }
-                            }
-                            // NOTA DE DEBITO
-                            if (full[10] != 0) {
-                                if (full[10] == 1) {
-                                    end +=
-                                        `<button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito:  Aceptada"><i style="font-weight: 700">ND</i></button>`;
-                                } else {
-                                    end +=
-                                        `<button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito: En Espera"><i style="font-weight: 700">ND</i></button>`;
-                                }
-                            }
-
-                            return end;
                         }
-                    },
-                ],
-                drawCallback: function() {
-                    $('[data-toggle="tooltip"]').tooltip();
-                    $('.i-checks-boletas_env').iCheck({
-                        checkboxClass: 'icheckbox_square-green',
-                        radioClass: 'iradio_square-green',
-                    });
-                }
-            });
+                        // NOTA DE DEBITO
+                        if (full[10] != 0) {
+                            if (full[10] == 1) {
+                                end +=
+                                    `<button class="btn btn-info btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito:  Aceptada"><i style="font-weight: 700">ND</i></button>`;
+                            } else {
+                                end +=
+                                    `<button class="btn btn-warning btn-circle btn-ls "  data-toggle="tooltip" data-placement="bottom" title="Nota de Debito: En Espera"><i style="font-weight: 700">ND</i></button>`;
+                            }
+                        }
 
-            $('input[name="daterange-boleta_env"]').daterangepicker({
-
-                    "locale": {
-                        "separator": " | ",
-                        "applyLabel": "Guardar",
-                        "cancelLabel": "Cancelar",
-                        "fromLabel": "Desde",
-                        "toLabel": "Hasta",
-                        "customRangeLabel": "Custom",
-                        "daysOfWeek": [
-                            "Do",
-                            "Lu",
-                            "Ma",
-                            "Mi",
-                            "Ju",
-                            "Vi",
-                            "Sa"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
+                        return end;
                     }
-                }
-
-            );
+                },
+            ],
+            drawCallback: function() {
+                $('[data-toggle="tooltip"]').tooltip();
+                $('.i-checks-boletas_env').iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green',
+                });
+            }
         });
+
+        $('input[name="daterange-boleta_env"]').daterangepicker({
+
+                "locale": {
+                    "separator": " | ",
+                    "applyLabel": "Guardar",
+                    "cancelLabel": "Cancelar",
+                    "fromLabel": "Desde",
+                    "toLabel": "Hasta",
+                    "customRangeLabel": "Custom",
+                    "daysOfWeek": [
+                        "Do",
+                        "Lu",
+                        "Ma",
+                        "Mi",
+                        "Ju",
+                        "Vi",
+                        "Sa"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            }
+
+        );
+            $(`#filter_buttons`).on('click', function() {
+            table_boleta_end.ajax.reload();
+        });
+        
 
 
         // Facturas Enviadas
