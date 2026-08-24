@@ -1524,17 +1524,21 @@ class FacturacionElectronicaController extends Controller
             11 => 'estado_nd',
         ];
 
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+        
+        if ($request->daterange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
+            $query = Facturacion_m::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+        } else {
+            $query = Facturacion_m::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->orderBy('id', 'desc');
+        }
 
-        $query = Facturacion_m::with((['cliente', 'moneda']))->where('f_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-
-        if(empty($filter)){
+        if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_fac', 'like', '%'. $filter . '%' );
-                $q->orWhereHas('cliente', function ($q) use ($filter){
-                    $q->where('nombre', 'like', '%' . $filter . '%')
+                $q->orWhereHas('cliente', function ($sub) use ($filter){
+                    $sub->where('nombre', 'like', '%' . $filter . '%')
                         ->orWhere('numero_documento', 'like', '%' . $filter . '%');
                 });
                 $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
@@ -1704,14 +1708,17 @@ class FacturacionElectronicaController extends Controller
             10 => 'estado_nc',
             11 => 'estado_nd',
         ];
+            
+        if ($request->daterange != null) {
+            $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
+            $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
-        $startDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[0])->startOfDay();
-        $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
+            $query = Boleta_m::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('id', 'desc');
+        } else {
+            $query = Boleta_m::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->orderBy('id', 'desc');
+        }
 
-
-        $query = Boleta_m::with((['cliente', 'moneda']))->where('b_electronica','!=', 0)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
-
-        if(empty($filter)){
+        if(!empty($filter)){
             $query->where(function($q) use ($filter){
                 $q->where('codigo_fac', 'like', '%'. $filter . '%' );
                 $q->orWhereHas('cliente', function ($q) use ($filter){

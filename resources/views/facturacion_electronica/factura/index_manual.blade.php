@@ -97,7 +97,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-2">
-                                            <button class="btn btn-primary  btn-block">Buscar</button>
+                                            <button class="btn btn-primary  btn-block" id="filter_buttons">Buscar</button>
                                         </div>
                                     </div>
                                 </div>
