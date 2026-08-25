@@ -103,7 +103,7 @@
                         </div>
 
                         @if ($facturacion->estado == 0)
-                            @can('facturacion_m.editar')
+                            @can('factura_m.editar')
                                 <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
                                     <i class="fa fa-pencil"></i>
                                 </button>
