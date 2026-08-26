@@ -385,7 +385,7 @@
 
                         if (full[9] == '0') {
                             return `
-                            <div class="tooltip-demo">
+                            <div class="tooltip-demo"  style="display:flex;gap: 5px">
                                 `+button_show+`
                                 <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" data-original-title="Procesado">
                                     <i class="fa fa-clock-o"></i>
@@ -394,7 +394,7 @@
                             </div>`;
                         } else {
                             return `
-                            <div class="tooltip-demo">
+                            <div class="tooltip-demo" style="display:flex;gap: 5px">
                                 `+button_show+`
                                 <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" data-original-title="Sin Procesar">
                                     <i class="fa fa-check-circle"></i>
