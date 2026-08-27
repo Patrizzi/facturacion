@@ -143,10 +143,18 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="9"></th>
-                                                <th class="total-columna">Total: 0</th>
+                                                <th colspan="3" id="">
+                                                    <div style="display: flex;justify-content: space-between">
+                                                        @foreach ($moneda as $coin)
+                                                            <div>
+                                                                {{$coin->simbolo}} <span @if($coin->principal == 1) id="total-seleccion-prin" @else id="total-seleccion-sec" @endif >0.00</span>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </th>
+                                                <th colspan="6"></th>
+                                                <th class="total-columna" colspan="2">Total: 0</th>
                                                 <th class="total-total">Total G: 0</th>
-                                                <th></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -295,22 +303,36 @@
             });
 
             // Checkboxes individuales
+            var totalSeleccionPrin = 0;
+            var totalSeleccionSec = 0;
+            var moneda_p_id  = `{{$moneda->where('principal', 1)->pluck('id')->first()}}`;
+            var moneda_p_simbolo  = `{{$moneda->where('principal', 1)->pluck('simbolo')->first()}}`;
             $(document).on('ifChecked ifUnchecked', '.dataTables-example-renovacion tbody input[type="checkbox"]', function(event) {
                 if (isUpdatingCheckboxes) return;
 
                 var checkboxValue = $(this).val();
-
+                var moneda_comprobante = $(this).data('moneda');
+                var total_select = parseFloat($(this).data('total')) || 0;
                 if (event.type === 'ifChecked') {
                     if (!allSelectedIds.includes(checkboxValue)) {
                         allSelectedIds.push(checkboxValue);
                     }
-                    console.log('Registro seleccionado:', checkboxValue);
+                    if(moneda_p_id == moneda_comprobante){
+                        totalSeleccionPrin += total_select;
+                    }else{
+                        totalSeleccionSec += total_select;
+                    }
+                    // console.log('Registro seleccionado:', checkboxValue);
                 } else {
                     allSelectedIds = allSelectedIds.filter(function(selectedId) {
                         return selectedId !== checkboxValue;
                     });
-                    console.log('Registro deseleccionado:', checkboxValue);
-
+                    // console.log('Registro deseleccionado:', checkboxValue);
+                    if(moneda_p_id == moneda_comprobante){
+                        totalSeleccionPrin -= total_select;
+                    }else{
+                        totalSeleccionSec -= total_select;
+                    }
                     if (masterChecked) {
                         masterChecked = false;
                         isUpdatingCheckboxes = true;
@@ -318,8 +340,9 @@
                         isUpdatingCheckboxes = false;
                     }
                 }
-
-                console.log('allSelectedIds:', allSelectedIds);
+                $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+                $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
+                // console.log('allSelectedIds:', allSelectedIds);
                 setTimeout(updateMasterCheckbox, 50);
             });
 
@@ -354,7 +377,7 @@
                     'targets': [0],
                     'orderable': false,
                     'render': function(data, type, full, meta) {
-                        return '<input type="checkbox" name="select_row" value="' + full[0] + '">';
+                        return '<input type="checkbox" name="select_row" value="' + full[0] + '" data-total="'+full[15]+'" data-moneda="'+full[16]+'">';
                     }
                 },
                 {

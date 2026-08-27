@@ -193,7 +193,16 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
+                                                    <th colspan="3" id="">
+                                                        <div style="display: flex;justify-content: space-between">
+                                                            @foreach ($monedas as $coin)
+                                                                <div>
+                                                                    {{$coin->simbolo}} <span @if($coin->principal == 1) id="total-seleccion-prin" @else id="total-seleccion-sec" @endif >0.00</span>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </th>
+                                                    <th colspan="5"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                     <th colspan="2" class="total-total">Total G: 0</th>
                                                 </tr>
@@ -258,7 +267,7 @@
                     'orderable': false,
                     'render': function(data, type, full, meta) {
                         return '<input type="checkbox" name="select_row" value="' + full[2] +
-                            '" class="i-checks-boletaM">';
+                            '" class="i-checks-boletaM" data-total="'+full[19]+'" data-moneda="'+full[20]+'">';
                     }
                 },
                 {
@@ -905,9 +914,28 @@
 
                     getAllIds(function(ids) {
                         allSelectedIds = [...ids]; // Crear una copia del array
-                        console.log('allSelectedIds después del master:', allSelectedIds);
-                        console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                        // console.log('allSelectedIds después del master:', allSelectedIds);
+                        // console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                        totalSeleccionPrin = 0;
+                        totalSeleccionSec = 0;
 
+                        coti_table.rows().every(function() {
+                            var rowNode = this.node();
+                            var chk = $(rowNode).find('.i-checks-boletaM');
+                            
+                            var total = parseFloat(chk.data('total')) || 0;
+                            var moneda = chk.data('moneda');
+
+                            if (String(moneda_p_id) === String(moneda)) {
+                                totalSeleccionPrin += total;
+                            } else {
+                                totalSeleccionSec += total;
+                            }
+                        });
+
+                        // 2. Actualizar el DOM
+                        $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+                        $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
                         // Marcar todos los checkboxes visibles en la página actual
                         isUpdatingCheckboxes = true;
                         $('.i-checks-boletaM').iCheck('check');
@@ -916,8 +944,13 @@
                 } else {
                     masterChecked = false;
                     allSelectedIds = [];
-                    console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+                    // console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+                    totalSeleccionPrin = 0;
+                    totalSeleccionSec = 0;
 
+                    // 2. Actualizar el DOM
+                    $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+                    $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
                     isUpdatingCheckboxes = true;
                     $('.i-checks-boletaM').iCheck('uncheck');
                     isUpdatingCheckboxes = false;
@@ -925,16 +958,23 @@
             });
 
             // Controlar checkboxes individuales
+            var totalSeleccionPrin = 0;
+            var totalSeleccionSec = 0;
+            var moneda_p_id  = `{{$monedas->where('principal', 1)->pluck('id')->first()}}`;
+            var moneda_p_simbolo  = `{{$monedas->where('principal', 1)->pluck('simbolo')->first()}}`;
             $(document).on('ifChecked ifUnchecked', '.i-checks-boletaM', function(event) {
                 if (isUpdatingCheckboxes)
-            return; // Evitar que se ejecute cuando estamos actualizando programáticamente
+                return; // Evitar que se ejecute cuando estamos actualizando programáticamente
 
                 closeWhatsappPanels();
                 closeEmailPanels();
 
                 var row = $(this).closest('tr');
                 var rowData = coti_table.row(row).data();
-
+                var moneda_comprobante = $(this).data('moneda');
+                var total_select = parseFloat($(this).data('total')) || 0;
+                console.log(total_select);
+                console.log(moneda_comprobante);
                 if (rowData && rowData[0]) {
                     var id = rowData[0].toString();
 
@@ -942,14 +982,23 @@
                         // Agregar ID si no está ya seleccionado
                         if (!allSelectedIds.includes(id)) {
                             allSelectedIds.push(id);
+                            if(moneda_p_id == moneda_comprobante){
+                                totalSeleccionPrin += total_select;
+                            }else{
+                                totalSeleccionSec += total_select;
+                            }
                         }
-                        console.log('Registro seleccionado:', id);
+                        
                     } else {
                         // Remover ID de la selección
                         allSelectedIds = allSelectedIds.filter(function(selectedId) {
                             return selectedId !== id;
                         });
-                        console.log('Registro deseleccionado:', id);
+                        if(moneda_p_id == moneda_comprobante){
+                            totalSeleccionPrin -= total_select;
+                        }else{
+                            totalSeleccionSec -= total_select;
+                        }
 
                         // Cuando se desmarca individualmente, salir del modo master
                         if (masterChecked) {
@@ -961,8 +1010,9 @@
                         }
                     }
 
-                    console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
-
+                    // console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+                    $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+                    $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
                     // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
                     setTimeout(updateMasterCheckbox, 50);
                 }

@@ -134,6 +134,7 @@ class ComprobantesVentasController extends Controller
             $boleta->total_conv = ComprobantesVentas::moneda_principal_convert($boleta->moneda_id, $total);
 
             $boleta->total = $boleta->moneda->simbolo . number_format($total, 2); //total para la columna de la tabla
+            $boleta->total_sin = $total; //total para la columna de la tabla
             $boleta->emision = Carbon::parse($boleta->created_at)->format('d-m-Y');
             $boleta->estado_proceso = Boleta::estado_sunat($boleta->id);
             $boleta->estado_nota_credito = Boleta::estado_nota_credito($boleta->id);
@@ -174,7 +175,9 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado_pago,                // 15
                 $boleta->pago_detalle,               // 16
                 $boleta->nota_informativa,            // 17
-                $boleta->nota_credito_register->motivo ?? ''
+                $boleta->nota_credito_register->motivo ?? '',
+                $boleta->total_sin,
+                $boleta->moneda_id,
             ];
         }
         // Llamado para la suma total
@@ -292,6 +295,7 @@ class ComprobantesVentasController extends Controller
             $boleta->total_conv = ComprobantesVentas::moneda_principal_convert($boleta->moneda_id, $total);
 
             $boleta->total = $boleta->moneda->simbolo . number_format($total, 2); //total para la columna de la tabla
+            $boleta->total_sin = $total;
             $boleta->emision = Carbon::parse($boleta->created_at)->format('d-m-Y');
             $boleta->estado_proceso = Boleta_m::estado_sunat($boleta->id);
             $boleta->estado_nota_credito = Boleta_m::estado_nota_credito($boleta->id);
@@ -331,7 +335,9 @@ class ComprobantesVentasController extends Controller
                 $boleta->estado_pago,                // 15
                 $boleta->pago_detalle,               // 16
                 $boleta->nota_informativa,            // 17
-                $boleta->nota_credito_register->motivo ?? ''
+                $boleta->nota_credito_register->motivo ?? '',
+                $boleta->total_sin,
+                $boleta->moneda_id,
             ];
         }
         // Llamado para la suma total
@@ -454,6 +460,7 @@ class ComprobantesVentasController extends Controller
             $factura->total_conv = ComprobantesVentas::moneda_principal_convert($factura->moneda_id, $total);
 
             $factura->total = $factura->moneda->simbolo . number_format($total, 2); //total para la columna de la tabla
+            $factura->total_sin = $total;
             $factura->emision = Carbon::parse($factura->created_at)->format('d-m-Y');
             $factura->estado_proceso = Facturacion::estado_sunat($factura->id);
             $factura->estado_nota_credito = Facturacion::estado_nota_credito($factura->id);
@@ -494,7 +501,9 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_pago,
                 $factura->pago_detalle,
                 $factura->nota_informativa,
-                $factura->nota_credito_register->motivo ?? ''
+                $factura->nota_credito_register->motivo ?? '',
+                $factura->total_sin,
+                $factura->moneda_id
             ];
         }
         // Llamado para la suma total
@@ -617,6 +626,7 @@ class ComprobantesVentasController extends Controller
             $factura->total_conv = ComprobantesVentas::moneda_principal_convert($factura->moneda_id, $total);
 
             $factura->total = $factura->moneda->simbolo . number_format($total, 2); //total para la columna de la tabla
+            $factura->total_sin = $total; //total para la columna de la tabla
             $factura->emision = Carbon::parse($factura->created_at)->format('d-m-Y');
             $factura->estado_proceso = Facturacion_m::estado_sunat($factura->id);
             $factura->estado_nota_credito = Facturacion_m::estado_nota_credito($factura->id);
@@ -658,7 +668,9 @@ class ComprobantesVentasController extends Controller
                 $factura->estado_pago,
                 $factura->pago_detalle,
                 $factura->nota_informativa,
-                $factura->nota_credito_register->motivo ?? ''
+                $factura->nota_credito_register->motivo ?? '',
+                $factura->total_sin,
+                $factura->moneda_id
             ];
         }
         // Llamado para la suma total

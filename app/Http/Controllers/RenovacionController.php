@@ -22,6 +22,7 @@ use ZipArchive;
 use App\EmailBandejaEnvios;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailConfiguraciones;
+use App\Moneda;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 
@@ -39,9 +40,10 @@ class RenovacionController extends Controller
         $mes_año = Carbon::now()->format('d-m-Y');
         $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
         $almacen = Almacen::get(); // Si lo necesitas
+        $moneda = Moneda::get();
         $count_all_ventas = ComprobantesVentas::count_day_ventas();
 
-        return view('transaccion.venta.renovacion.index', compact('count_month_ventas', 'almacen', 'count_all_ventas'));
+        return view('transaccion.venta.renovacion.index', compact('count_month_ventas', 'almacen', 'count_all_ventas','moneda'));
     }
 
 

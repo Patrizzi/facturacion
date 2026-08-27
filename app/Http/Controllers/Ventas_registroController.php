@@ -183,7 +183,7 @@ class Ventas_registroController extends Controller
 
             // SEPARACION PARA EL TOTAL EN UNA SOLA MONEDA
             $cotizacion->total_conv = Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total);
-
+            $cotizacion->total_val = $total;
             $cotizacion->total = $cotizacion->moneda->simbolo . number_format($total, 2); //total para la columna de la tabla
             $cotizacion->emision = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
             $cotizacion->estado_proceso = Cotizacion::estado_proceso($cotizacion->id);
@@ -229,6 +229,8 @@ class Ventas_registroController extends Controller
                 $cotizacion->cliente->email,
                 $cotizacion->nota_informativa,
                 $estadoRenovacion,
+                $cotizacion->total_val,
+                $cotizacion->moneda_id
             ];
         }
         // Llamado para la suma total
@@ -336,6 +338,8 @@ class Ventas_registroController extends Controller
             $cotizacion_manual->total_conv = Ventas_registro::moneda_principal_convert($cotizacion_manual->moneda_id, $total);
 
             $cotizacion_manual->total = $cotizacion_manual->moneda->simbolo . number_format($total, 2);
+            $cotizacion_manual->total_val = $total;
+
             $cotizacion_manual->emision = Carbon::parse($cotizacion_manual->created_at)->format('d-m-Y');
             $cotizacion_manual->estado_proceso = CotizacionManual::estado_proceso($cotizacion_manual->id);
             return $cotizacion_manual;
@@ -380,7 +384,9 @@ class Ventas_registroController extends Controller
                 $cotizacion_manual->cliente->celular,
                 $cotizacion_manual->cliente->email,
                 $cotizacion_manual->nota_informativa,
-                $estadoRenovacion
+                $estadoRenovacion,
+                $cotizacion_manual->total_val,
+                $cotizacion_manual->moneda_id
             ];
         }
         // Llamado para la suma total
@@ -547,6 +553,7 @@ class Ventas_registroController extends Controller
 
                 $renovacion->total_conv    = Ventas_registro::moneda_principal_convert($cotizacion->moneda_id, $total);
                 $renovacion->total         = $cotizacion->moneda->simbolo . number_format($total, 2);
+                $renovacion->total_val     = $total;
                 $renovacion->emision       = Carbon::parse($cotizacion->created_at)->format('d-m-Y');
 
                 $modelo = $renovacion->cotizacion ? Cotizacion::class : CotizacionManual::class;
@@ -572,6 +579,7 @@ class Ventas_registroController extends Controller
             } else {
                 $renovacion->total_conv            = 0;
                 $renovacion->total                 = '0.00';
+                $renovacion->total_val             = 0.00;
                 $renovacion->emision               = '';
                 $renovacion->estado_proceso        = 0;
                 $renovacion->cotizacion_data       = null;
@@ -608,6 +616,8 @@ class Ventas_registroController extends Controller
                     $tipo,
                     $cotizacion->cliente->celular,
                     $cotizacion->cliente->email,
+                    $renovacion->total_val,
+                    $cotizacion->moneda_id
                 ];
             }
         }
@@ -737,6 +747,7 @@ class Ventas_registroController extends Controller
             $nota_venta->total_conv = Ventas_registro::moneda_principal_convert($nota_venta->moneda_id, $total);
 
             $nota_venta->total = $nota_venta->moneda->simbolo . number_format($total, 2);
+            $nota_venta->total_sin = $total;
             $nota_venta->emision = Carbon::parse($nota_venta->created_at)->format('d-m-Y');
 
             return $nota_venta;
@@ -758,7 +769,9 @@ class Ventas_registroController extends Controller
                 $n_venta->id,
                 $n_venta->estado_vigente,
                 $n_venta->cliente->celular,
-                $n_venta->cliente->email
+                $n_venta->cliente->email,
+                $n_venta->total_sin,
+                $n_venta->moneda_id
             ];
         }
         // // Llamado para la suma total

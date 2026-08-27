@@ -191,7 +191,16 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
+                                                    <th colspan="3" id="">
+                                                        <div style="display: flex;justify-content: space-between">
+                                                            @foreach ($moneda as $coin)
+                                                                <div>
+                                                                    {{$coin->simbolo}} <span @if($coin->principal == 1) id="total-seleccion-prin" @else id="total-seleccion-sec" @endif >0.00</span>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </th>
+                                                    <th colspan="5"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                     <th class="total-total">Total G: 0</th>
                                                 </tr>
@@ -293,7 +302,7 @@
                     'render': function(data, type, full, meta) {
                         // Renderizar el checkbox en la primera columna
                         return '<input type="checkbox" name="select_row" value="' + full[0] +
-                            '">';
+                            '"class="i-checks-facturaM"  data-total="'+full[14]+'" data-moneda="'+full[15]+'">';
                     }
                 },
                 {
@@ -621,13 +630,30 @@ $(document).ready(function() {
 
         if (event.type === 'ifChecked') {
             masterChecked = true;
-            console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
+            // console.log('Master checkbox marcado manualmente - obteniendo todos los IDs...');
 
             getAllIds(function(ids) {
                 allSelectedIds = [...ids]; // Crear una copia del array
-                console.log('allSelectedIds después del master:', allSelectedIds);
-                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                // console.log('allSelectedIds después del master:', allSelectedIds);
+                // console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                totalSeleccionPrin = 0;
+                totalSeleccionSec = 0;
 
+                coti_table.rows().every(function() {
+                    var rowNode = this.node();
+                    var chk = $(rowNode).find('.i-checks-facturaM');
+                    
+                    var total = parseFloat(chk.data('total')) || 0;
+                    var moneda = chk.data('moneda');
+
+                    if (String(moneda_p_id) === String(moneda)) {
+                        totalSeleccionPrin += total;
+                    } else {
+                        totalSeleccionSec += total;
+                    }
+                });
+                $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+                $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
                 // Marcar todos los checkboxes visibles en la página actual
                 isUpdatingCheckboxes = true;
                 $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('check');
@@ -636,8 +662,13 @@ $(document).ready(function() {
         } else {
             masterChecked = false;
             allSelectedIds = [];
-            console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+            // console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+            totalSeleccionPrin = 0;
+            totalSeleccionSec = 0;
 
+            // 2. Actualizar el DOM
+            $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+            $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
             isUpdatingCheckboxes = true;
             $('.dataTables-example-cotizacion_manual tbody input[type="checkbox"]').iCheck('uncheck');
             isUpdatingCheckboxes = false;
@@ -645,6 +676,10 @@ $(document).ready(function() {
     });
 
     // Checkboxes individuales
+    var totalSeleccionPrin = 0;
+    var totalSeleccionSec = 0;
+    var moneda_p_id  = `{{$moneda->where('principal', 1)->pluck('id')->first()}}`;
+    var moneda_p_simbolo  = `{{$moneda->where('principal', 1)->pluck('simbolo')->first()}}`;
     $(document).on('ifChecked ifUnchecked', '.dataTables-example-cotizacion_manual tbody input[type="checkbox"]', function(event) {
         if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
 
@@ -652,19 +687,32 @@ $(document).ready(function() {
         closeEmailPanels();
 
         var checkboxValue = $(this).val();
-
+        var moneda_comprobante = $(this).data('moneda');
+        var total_select = parseFloat($(this).data('total')) || 0;
+        
         if (event.type === 'ifChecked') {
             // Agregar ID si no está ya seleccionado
             if (!allSelectedIds.includes(checkboxValue)) {
                 allSelectedIds.push(checkboxValue);
+                if(moneda_p_id == moneda_comprobante){
+                    totalSeleccionPrin += total_select;
+                }else{
+                    totalSeleccionSec += total_select;
+                }
             }
-            console.log('Registro seleccionado:', checkboxValue);
+            // console.log('Registro seleccionado:', checkboxValue);
         } else {
             // Remover ID de la selección
             allSelectedIds = allSelectedIds.filter(function(selectedId) {
                 return selectedId !== checkboxValue;
             });
-            console.log('Registro deseleccionado:', checkboxValue);
+            if(moneda_p_id == moneda_comprobante){
+                totalSeleccionPrin -= total_select;
+            }else{
+                totalSeleccionSec -= total_select;
+            }
+
+            // console.log('Registro deseleccionado:', checkboxValue);
 
             // Cuando se desmarca individualmente, salir del modo master
             if (masterChecked) {
@@ -672,12 +720,14 @@ $(document).ready(function() {
                 isUpdatingCheckboxes = true;
                 $('thead input[type="checkbox"]').iCheck('uncheck');
                 isUpdatingCheckboxes = false;
-                console.log('Master checkbox desmarcado por deselección individual');
+                // console.log('Master checkbox desmarcado por deselección individual');
             }
+
         }
 
-        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
-
+        // console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+        $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+        $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
         // AQUÍ ESTÁ LA MAGIA: Verificar automáticamente si todos están seleccionados
         setTimeout(updateMasterCheckbox, 50);
     });
