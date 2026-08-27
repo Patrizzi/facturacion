@@ -164,7 +164,16 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
+                                                    <th colspan="3" id="">
+                                                        <div style="display: flex;justify-content: space-between">
+                                                            @foreach ($moneda as $coin)
+                                                                <div>
+                                                                    {{$coin->simbolo}} <span @if($coin->principal == 1) id="total-seleccion-prin" @else id="total-seleccion-sec" @endif >0.00</span>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </th>
+                                                    <th colspan="5"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                     <th class="total-total">Total G: 0</th>
                                                 </tr>
@@ -282,7 +291,7 @@
                 'orderable': false,
                 'render': function(data, type, full, meta) {
                     return '<input type="checkbox" name="select_row" value="' + full[0] +
-                        '" class="i-checks-boleta">';
+                        '" class="i-checks-boleta" data-total="'+full[12]+'" data-moneda="'+full[13]+'">';
                 }
             },
             {
@@ -531,6 +540,10 @@
     });
 
     // CORRECCIÓN: Checkboxes individuales
+    var totalSeleccionPrin = 0;
+    var totalSeleccionSec = 0;
+    var moneda_p_id  = `{{$moneda->where('principal', 1)->pluck('id')->first()}}`;
+    var moneda_p_simbolo  = `{{$moneda->where('principal', 1)->pluck('simbolo')->first()}}`;
     $(document).on('ifChecked ifUnchecked', '.dataTables-example-nota_venta tbody input[type="checkbox"]', function(event) {
         if (isUpdatingCheckboxes) return; // Evitar que se ejecute cuando estamos actualizando programáticamente
 
@@ -538,19 +551,30 @@
         closeEmailPanels();
 
         var checkboxValue = $(this).val();
-
+        var moneda_comprobante = $(this).data('moneda');
+        var total_select = parseFloat($(this).data('total')) || 0;
         if (event.type === 'ifChecked') {
             // Agregar ID si no está ya seleccionado
             if (!allSelectedIds.includes(checkboxValue)) {
                 allSelectedIds.push(checkboxValue);
+                if(moneda_p_id == moneda_comprobante){
+                    totalSeleccionPrin += total_select;
+                }else{
+                    totalSeleccionSec += total_select;
+                }
             }
-            console.log('Registro seleccionado:', checkboxValue);
+            // console.log('Registro seleccionado:', checkboxValue);
         } else {
             // Remover ID de la selección
             allSelectedIds = allSelectedIds.filter(function(selectedId) {
                 return selectedId !== checkboxValue;
             });
-            console.log('Registro deseleccionado:', checkboxValue);
+            if(moneda_p_id == moneda_comprobante){
+                totalSeleccionPrin -= total_select;
+            }else{
+                totalSeleccionSec -= total_select;
+            }
+            // console.log('Registro deseleccionado:', checkboxValue);
 
             // CORRECCIÓN: Cuando se desmarca individualmente, salir del modo master
             if (masterChecked) {
@@ -558,12 +582,13 @@
                 isUpdatingCheckboxes = true;
                 $('thead input[type="checkbox"]').iCheck('uncheck');
                 isUpdatingCheckboxes = false;
-                console.log('Master checkbox desmarcado por deselección individual');
+                // console.log('Master checkbox desmarcado por deselección individual');
             }
         }
 
-        console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
-
+        // console.log('allSelectedIds después de checkbox individual:', allSelectedIds);
+        $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+        $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
         // CORRECCIÓN: Verificar automáticamente si todos están seleccionados
         setTimeout(updateMasterCheckbox, 50);
     });

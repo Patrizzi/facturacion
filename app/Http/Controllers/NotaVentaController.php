@@ -415,9 +415,10 @@ class NotaVentaController extends Controller
 
 
         $almacen = Almacen::get();
+        $moneda = Moneda::get();
         $count_all_ventas = ComprobantesVentas::count_day_ventas();
 
-        return view('transaccion.venta.nota_venta.index2',compact('count_month_ventas', 'almacen' ,'count_all_ventas'));
+        return view('transaccion.venta.nota_venta.index2',compact('count_month_ventas', 'almacen' ,'count_all_ventas','moneda'));
     }
 
     public function exportNotasVentas(Request $request)

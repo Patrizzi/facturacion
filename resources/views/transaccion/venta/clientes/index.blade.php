@@ -219,7 +219,7 @@
                 {
                     targets: 8,
                     orderable: false,
-                     width: '6vmax',
+                     width: '10vmax',
                     render: function(data, type, full){
                         
                         var url = '{{ route("cliente.show", ":id") }}'.replace(':id', full[8]);

@@ -182,7 +182,16 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th colspan="8"></th>
+                                                    <th colspan="3" id="">
+                                                        <div style="display: flex;justify-content: space-between">
+                                                            @foreach ($moneda as $coin)
+                                                                <div>
+                                                                    {{$coin->simbolo}} <span @if($coin->principal == 1) id="total-seleccion-prin" @else id="total-seleccion-sec" @endif >0.00</span>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </th>
+                                                    <th colspan="5"></th>
                                                     <th class="total-columna">Total: 0</th>
                                                     <th class="total-total">Total G: 0</th>
                                                 </tr>
@@ -329,7 +338,7 @@
                 'render': function (data, type, full, meta) {
                     // Renderizar el checkbox en la primera columna
                     return '<input type="checkbox" name="select_row" value="' + full[0] +
-                        '">';
+                        '" data-total="'+full[14]+'" data-moneda="'+full[15]+'" >';
                 }
             },
             {
@@ -442,7 +451,7 @@
 
                     if (full[9] == '0') {
                         return `
-                        <div class="tooltip-demo">
+                        <div class="tooltip-demo" style="display:flex;gap:5px">
                             `+button_show+`
                             <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado">
                                 <i class="fa fa-clock-o"></i>
@@ -451,7 +460,7 @@
                         </div>`;
                     } else {
                         return `
-                        <div class="tooltip-demo">
+                        <div class="tooltip-demo" style="display:flex;gap:5px">
                             `+button_show+`
                             <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar">
                                 <i class="fa fa-check-circle"></i>
@@ -686,6 +695,11 @@
             });
 
             // Checkboxes individuales
+            var totalSeleccionPrin = 0;
+            var totalSeleccionSec = 0;
+            var moneda_p_id  = `{{$moneda->where('principal', 1)->pluck('id')->first()}}`;
+            var moneda_p_simbolo  = `{{$moneda->where('principal', 1)->pluck('simbolo')->first()}}`;
+
             $(document).on('ifChecked ifUnchecked', '.dataTables-example-cotizacion tbody input[type="checkbox"]', function (event) {
                 if (isUpdatingCheckboxes) return;
 
@@ -693,15 +707,28 @@
                 closeEmailPanels();
 
                 var checkboxValue = $(this).val();
+                var moneda_comprobante = $(this).data('moneda');
+                var total_select = parseFloat($(this).data('total')) || 0;
 
                 if (event.type === 'ifChecked') {
                     if (!allSelectedIds.includes(checkboxValue)) {
                         allSelectedIds.push(checkboxValue);
+                        
+                        if(moneda_p_id == moneda_comprobante){
+                            totalSeleccionPrin += total_select;
+                        }else{
+                            totalSeleccionSec += total_select;
+                        }
                     }
                 } else {
                     allSelectedIds = allSelectedIds.filter(function (selectedId) {
                         return selectedId !== checkboxValue;
                     });
+                    if(moneda_p_id == moneda_comprobante){
+                        totalSeleccionPrin -= total_select;
+                    }else{
+                        totalSeleccionSec -= total_select;
+                    }
 
                     if (masterChecked) {
                         masterChecked = false;
@@ -710,7 +737,8 @@
                         isUpdatingCheckboxes = false;
                     }
                 }
-
+                $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2))
+                $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2))
                 setTimeout(updateMasterCheckbox, 50);
             });
 

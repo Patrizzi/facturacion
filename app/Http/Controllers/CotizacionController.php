@@ -3389,9 +3389,9 @@ if($validacion==1){
         $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
 
         $almacen = Almacen::get();
-
+        $moneda = Moneda::get();
         $count_all_ventas = ComprobantesVentas::count_day_ventas();
-        return view('transaccion.venta.cotizacion.index3',compact('almacen','count_all_ventas','count_month_ventas'));
+        return view('transaccion.venta.cotizacion.index3',compact('almacen','count_all_ventas','count_month_ventas','moneda'));
     }
 
     public function exportar_cotizaciones(Request $request)
