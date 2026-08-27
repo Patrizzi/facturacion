@@ -520,9 +520,26 @@
 
             getAllIds(function(ids) {
                 allSelectedIds = [...ids]; // Crear una copia del array
-                console.log('allSelectedIds después del master:', allSelectedIds);
-                console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                // console.log('allSelectedIds después del master:', allSelectedIds);
+                // console.log('Cantidad de IDs en allSelectedIds:', allSelectedIds.length);
+                totalSeleccionPrin = 0;
+                totalSeleccionSec = 0;
 
+                coti_table.rows().every(function() {
+                    var rowNode = this.node();
+                    var chk = $(rowNode).find('.i-checks-boleta');
+                    
+                    var total = parseFloat(chk.data('total')) || 0;
+                    var moneda = chk.data('moneda');
+
+                    if (String(moneda_p_id) === String(moneda)) {
+                        totalSeleccionPrin += total;
+                    } else {
+                        totalSeleccionSec += total;
+                    }
+                });
+                $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+                $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
                 // Marcar todos los checkboxes visibles en la página actual
                 isUpdatingCheckboxes = true;
                 $('.dataTables-example-nota_venta tbody input[type="checkbox"]').iCheck('check');
@@ -531,8 +548,13 @@
         } else {
             masterChecked = false;
             allSelectedIds = [];
-            console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+            // console.log('Master checkbox desmarcado manualmente - allSelectedIds limpio');
+            totalSeleccionPrin = 0;
+            totalSeleccionSec = 0;
 
+            // 2. Actualizar el DOM
+            $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+            $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
             isUpdatingCheckboxes = true;
             $('.dataTables-example-nota_venta tbody input[type="checkbox"]').iCheck('uncheck');
             isUpdatingCheckboxes = false;

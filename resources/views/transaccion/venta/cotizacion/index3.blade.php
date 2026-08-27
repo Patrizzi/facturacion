@@ -338,7 +338,7 @@
                 'render': function (data, type, full, meta) {
                     // Renderizar el checkbox en la primera columna
                     return '<input type="checkbox" name="select_row" value="' + full[0] +
-                        '" data-total="'+full[14]+'" data-moneda="'+full[15]+'" >';
+                        '"class="i-checks-cotizacion" data-total="'+full[14]+'" data-moneda="'+full[15]+'" >';
                 }
             },
             {
@@ -681,6 +681,24 @@
                     masterChecked = true;
                     getAllIds(function (ids) {
                         allSelectedIds = [...ids];
+                        totalSeleccionPrin = 0;
+                        totalSeleccionSec = 0;
+
+                        coti_table.rows().every(function() {
+                            var rowNode = this.node();
+                            var chk = $(rowNode).find('.i-checks-cotizacion');
+                            
+                            var total = parseFloat(chk.data('total')) || 0;
+                            var moneda = chk.data('moneda');
+
+                            if (String(moneda_p_id) === String(moneda)) {
+                                totalSeleccionPrin += total;
+                            } else {
+                                totalSeleccionSec += total;
+                            }
+                        });
+                        $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+                        $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
                         isUpdatingCheckboxes = true;
                         $('.dataTables-example-cotizacion tbody input[type="checkbox"]').iCheck('check');
                         isUpdatingCheckboxes = false;
@@ -688,6 +706,12 @@
                 } else {
                     masterChecked = false;
                     allSelectedIds = [];
+                    totalSeleccionPrin = 0;
+                    totalSeleccionSec = 0;
+
+                    // 2. Actualizar el DOM
+                    $('#total-seleccion-prin').html(totalSeleccionPrin.toFixed(2));
+                    $('#total-seleccion-sec').html(totalSeleccionSec.toFixed(2));
                     isUpdatingCheckboxes = true;
                     $('.dataTables-example-cotizacion tbody input[type="checkbox"]').iCheck('uncheck');
                     isUpdatingCheckboxes = false;
