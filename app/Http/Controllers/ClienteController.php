@@ -317,6 +317,8 @@ class ClienteController extends Controller
             'Codigo Postal',
             'Aniversario',
             'Fecha Registro',
+            'Vendedor Asignado',
+            'Forma de Pago'
         ];
 
         // Agregar headers de sucursales dinámicamente
@@ -327,7 +329,7 @@ class ClienteController extends Controller
         $headers[] = 'Retenedor';
 
         $rows = [$headers];
-
+        
         foreach ($clientes as $cliente) {
             $row = [
                 $cliente->nombre,
@@ -344,7 +346,9 @@ class ClienteController extends Controller
                 $cliente->tipo_cliente,
                 $cliente->cod_postal,
                 $cliente->aniversario,
-                $cliente->fecha_registro
+                $cliente->fecha_registro,
+                $cliente->vendedor_asignado?->personal?->personal_l->nombres.' '.$cliente->vendedor_asignado?->personal?->personal_l->apellidos,
+                $cliente->forma_pago?->id,
             ];
 
             $clientSucur = Cliente_sucursal::where('cliente_id', $cliente->id)->get();
@@ -457,6 +461,8 @@ class ClienteController extends Controller
             'Codigo Postal',
             'Aniversario',
             'Fecha Registro',
+            'Vendedor Asignado',
+            'Forma de Pago'
         ];
 
         // Agregar headers de sucursales dinámicamente
@@ -485,7 +491,9 @@ class ClienteController extends Controller
                 $cliente->tipo_cliente,
                 $cliente->cod_postal,
                 $cliente->aniversario,
-                $cliente->fecha_registro
+                $cliente->fecha_registro,
+                $cliente->vendedor_asignado?->personal?->personal_l->nombres.' '.$cliente->vendedor_asignado?->personal?->personal_l->apellidos,
+                $cliente->forma_pago?->id,
             ];
 
             $clientSucur = Cliente_sucursal::where('cliente_id', $cliente->id)->get();
