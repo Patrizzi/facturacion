@@ -416,7 +416,7 @@
                                     </button> `;
                         }
 
-                        return end;
+                        return `<div style="display: flex; gap: 5px; align-items: center; justify-content: center;">${end}</div>`;
 
                     }
                 },
