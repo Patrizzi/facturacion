@@ -1711,26 +1711,11 @@
                     'moneda': moneda
                 },
                 success: function(msg) {
-                    if (validarJson(msg)) {
-                        var data = JSON.parse(msg);
-                        if (data.length === 0) {
-                            toastr.warning("No se encontraron resultados",
-                                '', {
-                                    timeOut: 3000
-                                });
-                            return;
-                        }
-                    } else if (msg == "[]") {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
-                        return;
-                    } else {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
+                    // Intentar parsear si el backend no manda las cabeceras application/json correctas
+                    let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+                    // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
+                    if (!data || data.length === 0) {
+                        toastr.warning("No se encontraron resultados", '', { timeOut: 3000 });
                         return;
                     }
                     var quantity = $('#quantity_modal').val();

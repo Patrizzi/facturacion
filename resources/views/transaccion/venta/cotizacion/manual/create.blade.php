@@ -1358,7 +1358,7 @@
             var moneda = $('[id="moneda_id"]').val();
             $.ajax({
                 type: "post",
-                url: "{{ route('pa.search_multiple') }}",
+                url: "{{ route('pa.search_multiple_manual') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'articulo': busqueda,

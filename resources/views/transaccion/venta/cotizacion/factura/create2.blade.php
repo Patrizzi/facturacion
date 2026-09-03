@@ -1451,7 +1451,6 @@
                 success: function(msg) {
                     // Intentar parsear si el backend no manda las cabeceras application/json correctas
                     let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
-
                     // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
                     if (!data || data.length === 0) {
                         toastr.warning("No se encontraron resultados", '', { timeOut: 3000 });

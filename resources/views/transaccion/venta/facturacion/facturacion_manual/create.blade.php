@@ -1914,6 +1914,8 @@
                         quantity = 1;
                     }
                     $('.data_table_multiple').DataTable({
+                        "bLengthChange": false,
+                        "searching": false,
                         "autoWidth": false,
                         pageLength: 10,
                         responsive: true,
