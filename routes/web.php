@@ -100,7 +100,7 @@ Route::group(
         Route::post('/whatsapp', 'AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
         Route::resource('/almacen', 'AlmacenController');
         Route::post('/almacen_sunat/{id}', 'AlmacenController@cod_sunat')->name('almacen.cod_sunat');
-        Route::post('/almacen/estado','AlmacenController@change_state')->name('almacen.change_state');
+        Route::post('/almacen/estado', 'AlmacenController@change_state')->name('almacen.change_state');
         Route::resource('/apariencia', 'ConfigController');
         Route::post("/cotizacion_manual/guardar-nota/{id}", "CotizacionManualController@guardarNotaInformativa")->name("cotizacion_manual.guardar_nota");
         Route::resource('/cotizacion_manual', 'CotizacionManualController');
@@ -536,7 +536,7 @@ Route::group(
         Route::post('parameter_call/getPermissionxRolData', 'ParameterCallController@getPermissionxRolData')->name('pa.getPermissionxRolData');
         Route::post('parameter_call/getUserData', 'ParameterCallController@getUserData')->name('pa.getUserData');
         Route::post('parameter_call/getRolesXUserData', 'ParameterCallController@getRolesXUserData')->name('pa.getRolesXUserData');
-        
+
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 
@@ -596,22 +596,6 @@ Route::group(
         Route::post('email/delete', 'EmailBandejaEnviosController@delete')->name('email.delete');
         Route::get('/trash', 'EmailBandejaEnviosController@trash')->name('email.trash');
         Route::post('/trash/delete', 'EmailBandejaEnviosController@destroy')->name('email.destroy');
-        Route::post('/email/config', 'EmailBandejaEnviosController@configstore')->name('email.configstore');
-        Route::post('/email/config/{id}', 'EmailBandejaEnviosController@configupdate')->name('email.configupdate');
-        // * MailBox Configuracion
-        Route::resource('/configuracion_email', 'EmailConfiguracionesController');
-        // Route::get('/email_backup','EmailConfiguracionesController@email_backup')->name('email_backup');
-        Route::post('/email_backup/save', 'EmailConfiguracionesController@backup_save')->name('backup_save');
-        // Route::post('/configuracion_email/update/{id}','EmailConfiguracionesController@update')->name('configuracion_email.update');
-        Route::post('/email/config/pdf', 'EmailConfiguracionesController@store')->name('email.config');
-        // * MailBox Borradores
-        Route::resource('/borradores_email', 'EmailBorradoresController');
-        // * MailBox Bandeja y Papelera
-        Route::resource('/email', 'EmailBandejaEnviosController');
-
-        Route::post('email/delete', 'EmailBandejaEnviosController@delete')->name('email.delete');
-        Route::get('/trash', 'EmailBandejaEnviosController@trash')->name('email.trash');
-        // Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
         Route::post('/email/config', 'EmailBandejaEnviosController@configstore')->name('email.configstore');
         Route::post('/email/config/{id}', 'EmailBandejaEnviosController@configupdate')->name('email.configupdate');
 
@@ -911,7 +895,7 @@ Route::group(
         Route::patch('/servicios_destroy/{id}', 'ServiciosController@destroy')->name('servicios.destroy');
         Route::get('/servicios_inactivo', 'ServiciosController@index2')->name('servicios.index2');
         Route::resource('/unidad-medida', 'UnidadMedidaController');
-        Route::post('/unidad-medida/estado','UnidadMedidaController@change_state')->name('unidad_medida.change_state');
+        Route::post('/unidad-medida/estado', 'UnidadMedidaController@change_state')->name('unidad_medida.change_state');
 
         Route::resource('/transaccion-compra', 'TransaccionCompraController');
 
@@ -924,21 +908,21 @@ Route::group(
         Route::post('usuario/permisos/asignar/{id}', 'UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
         Route::post('usuario/permisos/delegar/{id}', 'UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
 
-        Route::resource('/usuario', 'UsuarioController')->except(['create','update']);
+        Route::resource('/usuario', 'UsuarioController')->except(['create', 'update']);
         Route::post('usuario/crear', 'UsuarioController@create')->name('usuario.create');
         // Route::post('usuario/perfil', 'UsuarioController@create')->name('usuario.create');
         Route::post('usuario/update/{id}', 'UsuarioController@update')->name('usuario.update');
         Route::post('usuario/codigo_nuevo_correo/{id}', 'UsuarioController@codigo_nuevo_correo')->name('usuario.codigo_nuevo_correo');
-        
-        
+
+
         Route::post('usuario/permiso_personalizado', 'UsuarioController@permiso_personalizado')->name('usuario.permiso_personalizado');
-        
+
         Route::get('/perfil', 'UsuarioController@perfil')->name('usuario.perfil');
         Route::resource('/venta', 'VentaController');
 
         //Roles y Permisos
         Route::resource('/roles', 'RolController');
-        
+
         // Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
         // Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
         Route::get('/gestRol/{rol_id}', [RolController::class, 'gestionarRol'])->name('roles.gestRol');
@@ -1082,7 +1066,7 @@ Route::group(
         Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
         Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
         Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
-        
+
         Route::post('/cobranzas/factura/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturas'])->name('cobranzas.facturas_exportar_sin_pago');
         Route::post('/cobranzas/factura/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturas'])->name('cobranzas.facturas_exportar_pagadas');
 
