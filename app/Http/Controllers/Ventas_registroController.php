@@ -143,6 +143,19 @@ class Ventas_registroController extends Controller
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
+                $q->orWhereHas('cotizacion_registros', function ($q) use ($filter) {
+                    $q->where('descripcion_item', 'like', '%' . $filter . '%')
+                        ->orWhereHas('producto', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        })
+                        ->orWhereHas('servicio', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_servicio', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        });
+                });
             });
         }
 
@@ -295,6 +308,19 @@ class Ventas_registroController extends Controller
                 $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+                $q->orWhereHas('coti_manual_registros', function ($q) use ($filter) {
+                    $q->where('descripcion_item', 'like', '%' . $filter . '%')
+                        ->orWhereHas('producto', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        })
+                        ->orWhereHas('servicio', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_servicio', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        });
                 });
             });
         }
@@ -690,6 +716,19 @@ class Ventas_registroController extends Controller
                         ->orWhere('numero_documento', 'like', '%' . $filter . '%');
                 });
                 $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
+                $q->orWhereHas('notaventa_registros', function ($q) use ($filter) {
+                    $q->where('descripcion_item', 'like', '%' . $filter . '%')
+                        ->orWhereHas('producto', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        })
+                        ->orWhereHas('servicio', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_servicio', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        });
+                });
             });
         }
         if( $cliente !== null ) {

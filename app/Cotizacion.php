@@ -56,6 +56,10 @@ class Cotizacion extends Model
     {
         return $this->hasOne(\App\RenovacionVentas::class, 'cotizacion_id', 'id');
     }
+    public function cotizacion_registros()
+    {
+        return $this->hasMany(Cotizacion_factura_registro::class, 'cotizacion_id');
+    }
     public static function count_mes($fecha)
     {
         //CANTIDAD DE COTIZACIONES Formato = 02-09-2023"
