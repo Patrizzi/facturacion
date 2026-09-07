@@ -181,10 +181,6 @@
                                                     <option value="2">P. Total</option>
                                                 </select>
                                             </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <input type="search" class="form-control" placeholder="Buscar:"
-                                                    id="search_all_column">
-                                            </div>
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <select class="form-control" name="" id="select_estado_sunat">
                                                     <option value="" selected>Estado Sunat</option>
@@ -192,6 +188,10 @@
                                                     <option value="1">Enviado</option>
                                                     <option value="2">Anulado</option>
                                                 </select>
+                                            </div>
+                                            <div class="col-lg-3 col-md-6 col-sm-12">
+                                                <input type="search" class="form-control" placeholder="Buscar:"
+                                                    id="search_all_column">
                                             </div>
                                             <div class="col-lg-1 col-md-6 col-sm-12">
                                                 <button type="button" class="btn btn-block btn-primary"

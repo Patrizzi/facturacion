@@ -237,7 +237,7 @@ class Boleta extends Model
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where
             $query->where(function ($q) use ($filter) {
-                $q->where('cod_boleta', 'like', '%' . $filter . '%');
+                $q->where('codigo_boleta', 'like', '%' . $filter . '%');
                 $q->orWhereHas('cliente', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%')
                         ->orWhere('numero_documento', 'like', '%' . $filter . '%');
@@ -245,6 +245,19 @@ class Boleta extends Model
                 $q->orWhere('fecha_emision', 'like', '%' . $filter . '%');
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
+                });
+                $q->orWhereHas('registros', function ($q) use ($filter) {
+                    $q->where('descripcion_item', 'like', '%' . $filter . '%')
+                        ->orWhereHas('producto', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        })
+                        ->orWhereHas('servicio', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_servicio', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        });
                 });
             });
         }

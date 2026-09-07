@@ -425,7 +425,7 @@
                         };
 
 
-                        let end = "";
+                        let end = `<div style="display: flex; gap: 5px; align-items: center; justify-content: center;">`;
 
                         const estadoSunat = parseInt(full[9]);
                         const estadoCredito = parseInt(full[10]);
@@ -460,7 +460,7 @@
                                         <i style="font-weight: 700" >ND</i>
                                     </button> `;
                         }
-                        return `<div style="display: flex; gap: 5px; align-items: center; justify-content: center;">${end}</div>`;
+                        return end;
 
                     }
                 },
