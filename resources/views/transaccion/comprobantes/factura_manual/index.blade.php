@@ -292,7 +292,7 @@
                             contenidoBoton = `
                                 <button type="button" class="btn btn-sm info-icon"
                                         data-trigger="hover"
-                                        data-placement="top"
+                                        data-placement="left"
                                         data-toggle="popover"
                                         title="Nota Informativa"
                                         data-content="${escapedNota}"
