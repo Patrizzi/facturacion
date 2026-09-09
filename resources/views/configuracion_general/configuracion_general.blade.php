@@ -913,4 +913,17 @@
             table.column(4).search(`{{ date('m-Y') }}`).draw();
         }
     </script>
-@stop
+
+    @include('auxiliar.ubigeo.ubigeo_comprobante')
+
+     <script>
+        $('#button_ubigeo_comprobante').on('click', function() {
+            var ubigeo = $('#cod_ubigeo_comprobantes').val();
+            $('#almacen_ubigeo_create').val(ubigeo);
+            // $('#UbigeoModal').modal('hide');
+            // Toast para "cambio agregado"
+            toastr.success('Codigo Ubigeo cambiado correctamente', ' ', { timeOut: 3000 });
+        });
+    </script>
+
+@endsection

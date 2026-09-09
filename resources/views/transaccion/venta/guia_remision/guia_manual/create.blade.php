@@ -766,7 +766,7 @@
     </script>
     @include('transaccion.venta.clientes.modal_create')
 
-     @include('auxiliar.ubigeo.ubigeo_comprobante')
+    @include('auxiliar.ubigeo.ubigeo_comprobante')
 
     <script>
         $('#button_ubigeo_comprobante').on('click', function() {
