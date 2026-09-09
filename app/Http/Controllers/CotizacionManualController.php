@@ -807,8 +807,10 @@ class CotizacionManualController extends Controller
     // agregar la funcion del checkbox apra q se mande a la bd
 public function update(Request $request, $id)
 {
+    // return $request;
     $cotizacion = CotizacionManual::find($id);
     $cotizacion->cliente_id = $request->get('cliente');
+    $cotizacion->moneda_id = $request->get('moneda');
     $cotizacion->forma_pago_id = $request->get('forma_pago');
     $cotizacion->garantia = $request->get('garantia');
     $cotizacion->validez = $request->get('validez');
