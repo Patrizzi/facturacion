@@ -82,10 +82,6 @@
                                                     style="width: 25%" data-toggle="tooltip" data-placement="top"
                                                     title="Codigo Ubigeo" required {{-- onkeyup="this.value=NumText(this.value)" --}} maxlength="6"
                                                     minlength="6">
-                                                {{-- <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"
-                                                    target="_blank" style="margin: auto"><i class="fa fa-question-circle"
-                                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a> --}}
-
                                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ComprobanteUbigeoModal">
                                                     <i class="fa fa-question-circle"
                                                         style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
