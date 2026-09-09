@@ -82,28 +82,13 @@
                                         <input type="text" name="nombre" class="fast_add required"
                                             id="razon_social_cli" required="required">
                                     </div>
-                                    <!-- DIRECCION -->
-                                    <div class="col-md-6">
-                                        <label for="abreviatura" class="form-label"><b>Dirección:</b></label>
-                                        <input type="text" value="Lima" class="fast_add" name="direccion"
-                                            id="direccion_cli" required="required" aria-required="true">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
                                     <!-- CORREO -->
                                     <div class="col-md-6">
                                         <label for="correo" class="form-label"> <b>Correo:</b></label>
                                         <input value="sincorreo@gmail.com" type="text" class="fast_add"
                                             placeholder="" name="email" autocomplete="off" required="required">
                                     </div>
-                                    <!-- DISTRITO -->
-                                    <div class="col-md-6">
-                                        <label for="distrito" class="form-label">
-                                            <b>Distrito:</b>
-                                        </label>
-                                        <input type="text" value="Lima" class="fast_add" name="ciudad"
-                                            id="distrito_cli" required="required" aria-required="true">
-                                    </div>
+
                                 </div>
                                 <div class="row mb-3">
                                     <!-- TELEFONO -->
@@ -117,6 +102,24 @@
                                     <div class="col-md-6">
                                         <label for="direccion" class="form-label"><b>Celular</b></label>
                                         <input value="0000000" type="number" class="fast_add valid" name="celular">
+                                    </div>
+
+                                </div>
+                                <div class="row mb-3">
+
+                                    <!-- DEPARTAMENTO -->
+                                    <div class="col-md-6">
+                                        <label for="abreviatura" class="form-label"><b>Departamento:</b></label>
+                                        <input value="Lima" type="text" class="fast_add valid"
+                                            name="departamento" id="provincia_cli" aria-invalid="false">
+                                    </div>
+                                    <!-- DISTRITO -->
+                                    <div class="col-md-6">
+                                        <label for="distrito" class="form-label">
+                                            <b>Distrito:</b>
+                                        </label>
+                                        <input type="text" value="Lima" class="fast_add" name="ciudad"
+                                            id="distrito_cli" required="required" aria-required="true">
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="padding: 10px">
@@ -132,6 +135,15 @@
                             <!-- MODAL -->
                             <div class="col-md-12">
                                 <div class="row mb-3">
+
+                                    <!-- DIRECCION -->
+                                    <div class="col-md-6">
+                                        <label for="abreviatura" class="form-label"><b>Dirección:</b></label>
+                                        <input type="text" value="Lima" class="fast_add" name="direccion"
+                                            id="direccion_cli" required="required" aria-required="true">
+                                    </div>
+
+
                                     <!-- CODIGO UBIGEO -->
                                     <div class="col-md-6">
                                         <label for="codigoUbigeo" class="form-label">
@@ -147,12 +159,7 @@
                                                 minlength="6" maxlength="6">
                                         </div>
                                     </div>
-                                    <!-- DEPARTAMENTO -->
-                                    <div class="col-md-6">
-                                        <label for="abreviatura" class="form-label"><b>Departamento:</b></label>
-                                        <input value="Lima" type="text" class="fast_add valid"
-                                            name="departamento" id="provincia_cli" aria-invalid="false">
-                                    </div>
+
                                 </div>
                                 <div class="row mb-3">
                                     <!-- PAIS-->
@@ -215,6 +222,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
                             <br>
                             <!-- Aquí se agrega el contenido del modal -->
