@@ -146,15 +146,16 @@
 
                                     <!-- CODIGO UBIGEO -->
                                     <div class="col-md-6">
-                                        <label for="codigoUbigeo" class="form-label">
-                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"
-                                                target="_blank" style="text-decoration: none;">
-                                                <i class="fa fa-podcast" aria-hidden="true"></i>
-                                            </a>
+                                        <label for="codigoUbigeo" class="form-label" style="display: flex;justify-content: space-between;margin-bottom: 4px">
                                             <b>Cod. Ubigeo:</b>
+                                            <div>
+                                                <button type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#UbigeoModal" style="padding: 0px 10px">
+                                                    <i class="fa fa-podcast" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
                                         </label>
                                         <div class="input-group">
-                                            <input value="150101" input type="text" class="fast_add" id="ubigeo"
+                                            <input value="150101" input type="text" class="fast_add" id="ubigeo_cli"
                                                 name="ubigeo" autocomplete="off" required="required" placeholder=""
                                                 minlength="6" maxlength="6">
                                         </div>
@@ -361,7 +362,7 @@
                         $('#provincia_cli').val(datos[3]);
                         $('#distrito_cli').val(datos[4]);
                         // $('#fechaInscripcion_cli').val(datos[5]);
-                        $('#ubigeo').val(datos[5]);
+                        $('#ubigeo_cli').val(datos[5]);
                     }
 
                 }
@@ -490,7 +491,7 @@
                     $('#direccion_cli').val('Lima');
                     $('#distrito_cli').val('Lima');
                     $('#provincia_cli').val('Lima');
-                    $('#ubigeo').val('150101');
+                    $('#ubigeo_cli').val('150101');
                     $('#dni_cliente').val('');
                 },
                 error: function(error) {
@@ -591,3 +592,5 @@
         }
     });
 </script>
+
+@include('auxiliar.cliente.modal_ubigeo_cliente')

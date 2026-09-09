@@ -86,7 +86,7 @@
                                                     target="_blank" style="margin: auto"><i class="fa fa-question-circle"
                                                         style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a> --}}
 
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#UbigeoModal">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ComprobanteUbigeoModal">
                                                     <i class="fa fa-question-circle"
                                                         style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
                                                 </button>
@@ -351,7 +351,6 @@
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
 
-    @include('auxiliar.ubigeo.busqueda_ubigeo')
 
     {{-- Validar Formulario --}}
     <script>
@@ -959,4 +958,15 @@
 
     @include('transaccion.venta.clientes.modal_create')
 
+    @include('auxiliar.ubigeo.ubigeo_comprobante')
+
+    <script>
+        $('#button_ubigeo_comprobante').on('click', function() {
+            var ubigeo = $('#cod_ubigeo_comprobantes').val();
+            $('#postal_input').val(ubigeo);
+            // $('#UbigeoModal').modal('hide');
+            // Toast para "cambio agregado"
+            toastr.success('Codigo Ubigeo cambiado correctamente', ' ', { timeOut: 3000 });
+        });
+    </script>
 @endsection
