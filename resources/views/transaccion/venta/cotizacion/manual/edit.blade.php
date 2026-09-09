@@ -76,7 +76,7 @@
                         <div class="col-md-8">
                             <select class="form-control select2_moneda" name="moneda" required="required" onchange="changeMoney()">
                                 @foreach ($moneda as $monedas)
-                                    <option value="{{ $monedas->nombre }}"
+                                    <option value="{{ $monedas->id }}"
                                         @if ($cotizacion->moneda_id == $monedas->id) selected @endif>
                                         {{ ucfirst($monedas->nombre) }}</option>
                                 @endforeach
