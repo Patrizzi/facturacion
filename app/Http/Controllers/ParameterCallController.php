@@ -33,6 +33,7 @@ use Swift_Mailer;
 use Swift_TransportException;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -879,5 +880,71 @@ class ParameterCallController extends Controller
             $users = User::with('personal')->role($request->rol_id)->get();   
         }
         return json_decode($users);
+    }
+
+    public function search_cod_postal(Request $request){
+            
+        $ubigeo = $request->cod_ubigeo;
+        $path = public_path('js/json/ubigeo.json');
+
+        $ubigeos = json_decode(file_get_contents($path), true);
+        foreach ($ubigeos as $item) {
+            if ((string) $item['Ubigeo'] === (string) $ubigeo) {
+                return $item;
+            }
+        }
+        return "false";
+    }
+
+    protected function cargarUbigeos()
+    {
+        return Cache::remember('catalogo_ubigeos', 60 * 60 * 24, function () {
+            $path = public_path('js/json/ubigeo.json'); // ajusta la ruta real
+            $data = json_decode(file_get_contents($path), true);
+            return collect($data);
+        });
+    }
+
+
+    public function ubigeo_departamentos()
+    {
+        $departamentos = $this->cargarUbigeos()
+            ->pluck('Departamento')
+            ->unique()
+            ->sort()
+            ->values();
+
+        return response()->json($departamentos);
+    }
+
+    // GET /ubigeo/provincias?departamento=Amazonas
+    public function ubigeo_provincias(Request $request)
+    {
+        $provincias = $this->cargarUbigeos()
+            ->where('Departamento', $request->departamento)
+            ->pluck('Provincia')
+            ->unique()
+            ->sort()
+            ->values();
+
+        return response()->json($provincias);
+    }
+
+    // GET /ubigeo/distritos?departamento=Amazonas&provincia=Chachapoyas
+    public function ubigeo_distritos(Request $request)
+    {
+        $distritos = $this->cargarUbigeos()
+            ->where('Departamento', $request->departamento)
+            ->where('Provincia', $request->provincia)
+            ->map(function ($item) {
+                return [
+                    'ubigeo' => $item['Ubigeo'],
+                    'distrito' => $item['Distrito'],
+                ];
+            })
+            ->sortBy('distrito')
+            ->values();
+
+        return response()->json($distritos);
     }
 }

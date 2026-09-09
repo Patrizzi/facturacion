@@ -536,7 +536,13 @@ Route::group(
         Route::post('parameter_call/getPermissionxRolData', 'ParameterCallController@getPermissionxRolData')->name('pa.getPermissionxRolData');
         Route::post('parameter_call/getUserData', 'ParameterCallController@getUserData')->name('pa.getUserData');
         Route::post('parameter_call/getRolesXUserData', 'ParameterCallController@getRolesXUserData')->name('pa.getRolesXUserData');
+        Route::post('parameter_call/getUbigeo', 'ParameterCallController@search_cod_postal')->name('pa.getUbigeo');
 
+        Route::prefix('ubigeo')->group(function () {
+            Route::get('/departamentos', [ParameterCallController::class, 'ubigeo_departamentos'])->name('pa.UbigeoDepartamento');
+            Route::get('/provincias', [ParameterCallController::class, 'ubigeo_provincias'])->name('pa.UbigeoProvincia');
+            Route::get('/distritos', [ParameterCallController::class, 'ubigeo_distritos'])->name('pa.UbigeoDistrito');
+        });
 
         Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
 

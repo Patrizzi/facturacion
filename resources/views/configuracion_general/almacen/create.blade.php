@@ -72,7 +72,15 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class=""><strong>Codigo Ubigeo</strong></label>
+                                    <label for="codigoUbigeo" class="form-label" style="display: flex;justify-content: space-between;margin-bottom: 4px">
+                                        <b>Cod. Ubigeo:</b>
+                                        <div>
+                                            <button type="button" class="btn btn-link btn-xs" data-toggle="modal" data-target="#ComprobanteUbigeoModal" style="padding: 0px 10px">
+                                                <i class="fa fa-podcast" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </label>
+                                    {{-- <label class=""><strong>Codigo Ubigeo</strong></label> --}}
                                     <input type="text" class="form-control" name="almacen_ubigeo_create"
                                         id="almacen_ubigeo_create">
                                 </div>
@@ -263,3 +271,4 @@
         </form>
     </div>
 </div>
+

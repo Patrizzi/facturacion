@@ -105,7 +105,7 @@
                             @endif
                         @endforeach
                     </ul>
-                    <div style="max-height: 70px;" class="nav-last-footer">
+                    <div style="max-height: 70px;" class="nav-last-footer"  >
                         <div class="" style="width: 100%">
                             <div class="nav-label"
                                 style="display: flex;flex-direction: row;align-items: center;white-space: initial !important;justify-content: space-between;">

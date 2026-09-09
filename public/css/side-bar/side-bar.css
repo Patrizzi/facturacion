@@ -235,7 +235,7 @@ body.mini-navbar .navbar-static-side:hover .nav-footer-user .nav-label {
 }
 
 .navbar-default:hover .nav-last-footer {
-    padding: 0px 5px 0px 20px !important;
+    /* padding: 0px 5px 0px 20px !important; */
 }
 
 

@@ -85,9 +85,10 @@
                                                 style="width: 25%" data-toggle="tooltip" data-placement="top"
                                                 title="Codigo Ubigeo" required onkeyup="this.value=NumText(this.value)"
                                                 maxlength="6" minlength="6">
-                                            <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"
-                                                target="_blank" style="margin: auto"><i class="fa fa-question-circle"
-                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ComprobanteUbigeoModal">
+                                                <i class="fa fa-question-circle"
+                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
+                                            </button>
                                         </div>
                                         <input type="hidden" name="" id="input_suc_array">
                                         <input type="hidden" name="" id="input_post_array">
@@ -764,4 +765,17 @@
         });
     </script>
     @include('transaccion.venta.clientes.modal_create')
+
+    @include('auxiliar.ubigeo.ubigeo_comprobante')
+
+    <script>
+        $('#button_ubigeo_comprobante').on('click', function() {
+            var ubigeo = $('#cod_ubigeo_comprobantes').val();
+            $('#postal_input').val(ubigeo);
+            // $('#UbigeoModal').modal('hide');
+            // Toast para "cambio agregado"
+            toastr.success('Codigo Ubigeo cambiado correctamente', ' ', { timeOut: 3000 });
+        });
+    </script>
+
 @endsection

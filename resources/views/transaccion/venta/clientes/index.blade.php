@@ -165,6 +165,9 @@
 
     <script>
     $(function () {
+        // $(document).ready(function() {
+            $('#UbigeoModal').attr('data-bs-backdrop', 'false');
+        // });
         // Activar tab "Clientes"
         $('#tab-4-tab').addClass('active');
 

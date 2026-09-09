@@ -80,11 +80,12 @@
                                                 </datalist>
                                                 <input id="postal_input" class="form-control" name="postal_input"
                                                     style="width: 25%" data-toggle="tooltip" data-placement="top"
-                                                    title="Codigo Ubigeo" required onkeyup="this.value=NumText(this.value)"
-                                                    maxlength="6" minlength="6">
-                                                <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html"
-                                                    target="_blank" style="margin: auto"><i class="fa fa-question-circle"
-                                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                                    title="Codigo Ubigeo" required {{-- onkeyup="this.value=NumText(this.value)" --}} maxlength="6"
+                                                    minlength="6">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ComprobanteUbigeoModal">
+                                                    <i class="fa fa-question-circle"
+                                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
+                                                </button>
                                             </div>
                                             <input type="hidden" name="" id="input_suc_array">
                                             <input type="hidden" name="" id="input_post_array">
@@ -204,9 +205,7 @@
                                                         id="articulo" style="width: 100%;" onchange="ajax(0);"
                                                         required></select>
                                                     {{-- ✅ CORREGIDO: id="descripcion0" agregado --}}
-                                                    <textarea class="form-control" name="descripcion[]"
-                                                        id="descripcion0"
-                                                        placeholder="Detalle del Producto"
+                                                    <textarea class="form-control" name="descripcion[]" id="descripcion0" placeholder="Detalle del Producto"
                                                         rows="1" style="margin-top: 5px"></textarea>
                                                 </td>
                                                 <td>
@@ -222,8 +221,7 @@
                                                         onchange="peso_cantidad(0)" />
                                                 </td>
                                                 <td>
-                                                    <textarea style="min-width: 250px" name="series[]" id="series0"
-                                                        class="form-control prod_text"
+                                                    <textarea style="min-width: 250px" name="series[]" id="series0" class="form-control prod_text"
                                                         placeholder="escanear N/S"></textarea>
                                                 </td>
                                                 <td>
@@ -257,31 +255,39 @@
         </div>
     </div>
 
+    
+
     <style type="text/css">
         .input-group>.select2-container--bootstrap {
             width: auto;
             flex: 1 1 auto;
         }
+
         .input-group>.select2-container--bootstrap .select2-selection--single {
             height: 100%;
             line-height: inherit;
             padding: 0.5rem 1rem;
             border: 1px solid #e5e6e7;
         }
+
         .select2-results__option.select2-results__option--highlighted {
             background-color: #1c84c6 !important;
             color: white !important;
         }
+
         .ruc {
             border-radius: 10px;
             height: 150px;
         }
+
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             font-size: 12px;
         }
+
         .select2-container--default .select2-selection--single {
             border: none;
         }
+
         span.select2.select2-container.select2-container--default {
             max-width: 100% !important;
             width: 700px !important;
@@ -292,21 +298,27 @@
             padding: 3px 12px;
             border: 1px solid #e5e6e7;
         }
+
         .select2-hidden-accessible {
             width: auto !important;
         }
+
         input[type=date],
         input[type=datetime-local],
         input[type=month],
         input[type=time] {
             font-size: 12px;
         }
+
         @media only screen and (max-width: 1497px) {
             .td_selected>span.select2.select2-container.select2-container--default {
                 min-width: 376px !important;
             }
         }
-        .a { color: red }
+
+        .a {
+            color: red
+        }
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -314,14 +326,27 @@
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+    <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <!-- Jquery Validate -->
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+
+    <!-- Steps -->
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+    <!-- Switchery -->
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
 
     {{-- Validar Formulario --}}
     <script>
@@ -432,8 +457,10 @@
                         return {
                             results: $.map(data, function(item) {
                                 return {
-                                    id: item.id + " | " + item.cod_prod + " | " + item.cod_origi + " | " + item.nombre,
-                                    text: item.id + " | " + item.cod_prod + " | " + item.cod_origi + " | " + item.nombre,
+                                    id: item.id + " | " + item.cod_prod + " | " + item.cod_origi +
+                                        " | " + item.nombre,
+                                    text: item.id + " | " + item.cod_prod + " | " + item.cod_origi +
+                                        " | " + item.nombre,
                                 };
                             })
                         };
@@ -611,6 +638,38 @@
         function delete_guion(string) {
             return string.replace(/-/g, "");
         }
+        // Funcion de validición de Cod Postal
+        $('#postal_input').on('change', function() {
+            var cod = $(this).val();
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.getUbigeo') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'cod_ubigeo': cod
+                },
+                success: function(msg) {
+                    // let cod_co = msg.cod_postal;
+                    console.log(msg.ubigeo);
+                    if (msg['Ubigeo'] == cod) {
+                        toastr.success('Ubigeo Existente', {
+                                timeOut: 3000
+                            });
+                    } else {
+                        toastr.error('Datos no encontrado',
+                            'El codigo de Ubigeo no existe, revisar', {
+                                timeOut: 3000
+                            });
+                    }
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        })
     </script>
 
     {{-- Guardar / Finalizar --}}
@@ -895,4 +954,15 @@
 
     @include('transaccion.venta.clientes.modal_create')
 
+    @include('auxiliar.ubigeo.ubigeo_comprobante')
+
+    <script>
+        $('#button_ubigeo_comprobante').on('click', function() {
+            var ubigeo = $('#cod_ubigeo_comprobantes').val();
+            $('#postal_input').val(ubigeo);
+            // $('#UbigeoModal').modal('hide');
+            // Toast para "cambio agregado"
+            toastr.success('Codigo Ubigeo cambiado correctamente', ' ', { timeOut: 3000 });
+        });
+    </script>
 @endsection
