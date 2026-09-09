@@ -69,9 +69,9 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card h-100 card-hover shadow-sm" id="almacen_button" style="cursor: pointer">
                         <div class="img-container">
-                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                            <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                 alt="Almacen" class="img-bg">
-                            <img src="https://png.pngtree.com/png-vector/20240314/ourmid/pngtree-warehouse-flat-composition-png-image_11961969.png"
+                            <img src="{{ asset('img/configuracion/almacen-icon.png') }}"
                                 alt="Icono Almacen" class="img-overlay">
                         </div>
                         <div class="card-body text-center p-3">
@@ -86,7 +86,7 @@
                     <div class="card h-100 card-hover shadow-sm">
                         <a href=" {{ route('almacen.index') }} ">
                             <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                     alt="Almacen" class="img-bg">
                                 <img src="https://png.pngtree.com/png-vector/20240314/ourmid/pngtree-warehouse-flat-composition-png-image_11961969.png"
                                     alt="Icono Almacen" class="img-overlay">
@@ -104,9 +104,9 @@
                     <div class="card h-100 card-hover shadow-sm">
                         <a href="{{ route('apariencia.index') }}">
                             <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                     alt="Apariencia" class="img-bg">
-                                <img src="https://www.gsmarketing.com/hubfs/New%20Website%20Images/illustrations%20/digital%20solutions-display.png"
+                                <img src="{{ asset('img/configuracion/apariencia-icon.webp') }}"
                                     alt="Icono Apariencia" class="img-overlay">
                             </div>
                             <div class="card-body text-center p-3">
@@ -123,7 +123,7 @@
             <div class="card h-100 card-hover shadow-sm">
                 <div class="card h-100 card-hover shadow-sm" id="categorias_button" style="cursor: pointer;">
                     <div class="img-container">
-                        <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg" alt="Categoria" class="img-bg">
+                        <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}" alt="Categoria" class="img-bg">
                         <img src="https://cdn3d.iconscout.com/3d/premium/thumb/jerarquia-4721274-3927987.png" alt="Icono Categoria" class="img-overlay">
                     </div>
                     <div class="card-body text-center p-3">
@@ -138,9 +138,9 @@
                     <div class="card h-100 card-hover shadow-sm">
                         <div class="card h-100 card-hover shadow-sm" id="familia_button" style="cursor: pointer;">
                             <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                     alt="Familias" class="img-bg">
-                                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/producto-10808619-8687861.png"
+                                <img src="{{ asset('img/configuracion/familias-icon.webp') }}"
                                     alt="Icono Familias" class="img-overlay">
                             </div>
                             <div class="card-body text-center p-3">
@@ -156,9 +156,9 @@
                     <div class="card h-100 card-hover shadow-sm">
                         <div class="card h-100 card-hover shadow-sm" id="garantia_button" style="cursor: pointer;">
                             <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                     alt="Garantia" class="img-bg">
-                                <img src="https://static.vecteezy.com/system/resources/previews/047/649/375/original/3d-golden-shield-icon-isolated-on-transparent-background-png.png"
+                                <img src="{{ asset('img/configuracion/garantia-icon.png') }}"
                                     alt="Icono Garantia" class="img-overlay">
                             </div>
                             <div class="card-body text-center p-3">
@@ -174,9 +174,9 @@
                     <div class="card h-100 card-hover shadow-sm">
                         <div class="card h-100 card-hover shadow-sm" id="marcas_button" style="cursor: pointer;">
                             <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                     alt="Marcas" class="img-bg">
-                                <img src="https://static.vecteezy.com/system/resources/previews/015/329/405/original/brand-3d-illustration-icon-png.png"
+                                <img src="{{ asset('img/configuracion/marcas-icon.png') }}"
                                     alt="Icono Marcas" class="img-overlay">
                             </div>
                             <div class="card-body text-center p-3">
@@ -192,9 +192,9 @@
                     <div class="card h-100 card-hover shadow-sm">
                         <div class="card h-100 card-hover shadow-sm" id="motivos_button" style="cursor: pointer;">
                             <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                     alt="Motivos" class="img-bg">
-                                <img src="https://static.vecteezy.com/system/resources/previews/028/272/877/original/puzzle-3d-rendering-isometric-icon-png.png"
+                                <img src="{{ asset('img/configuracion/motivos-icon.png') }}"
                                     alt="Icono Motivos" class="img-overlay">
                             </div>
                             <div class="card-body text-center p-3">
@@ -210,7 +210,7 @@
                     <div class="card h-100 card-hover shadow-sm">
                         <a href="{{ route('tipo_cambio.index') }}">
                             <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                     alt="Tipo de cambio" class="img-bg">
                                 <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tipo-de-cambio-8578991-6805151.png"
                                     alt="Icono Tipo de cambio" class="img-overlay">
@@ -228,9 +228,9 @@
                     <div class="card h-100 card-hover shadow-sm" id="tipo_cambio_button" style="cursor: pointer;">
                         {{-- <a href="{{ route('tipo_cambio.index') }}"> --}}
                         <div class="img-container">
-                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                            <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                 alt="Tipo de cambio" class="img-bg">
-                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/tipo-de-cambio-8578991-6805151.png"
+                            <img src="{{ asset('img/configuracion/tipo-cambio-icon.webp') }}"
                                 alt="Icono Tipo de cambio" class="img-overlay">
                         </div>
                         <div class="card-body text-center p-3">
@@ -245,9 +245,9 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card h-100 card-hover shadow-sm" id="medida_button" style="cursor: pointer;">
                         <div class="img-container">
-                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                            <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                 alt="U. de medida" class="img-bg">
-                            <img src="https://cdn3d.iconscout.com/3d/premium/thumb/measuring-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rulerbow-compass-navigation-office-pack-tools-equipment-icons-10967888.png"
+                            <img src="{{ asset('img/configuracion/u-medida-icon.webp') }}"
                                 alt="Icono U. de medida" class="img-overlay">
                         </div>
                         <div class="card-body text-center p-3">
@@ -262,9 +262,9 @@
                     <div class="card h-100 card-hover shadow-sm">
                         <a href="{{ route('usuario.index') }}">
                             <div class="img-container">
-                                <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                                <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                     alt="Usuarios" class="img-bg">
-                                <img src="https://static.vecteezy.com/system/resources/previews/060/498/831/non_2x/fascinating-acclaimed-facial-recognition-software-icon-with-transparent-background-free-png.png"
+                                <img src="{{ asset('img/configuracion/usuario-icon.png') }}"
                                     alt="Icono Usuarios" class="img-overlay">
                             </div>
                             <div class="card-body text-center p-3">
@@ -279,9 +279,9 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card h-100 card-hover shadow-sm" id="validez_button" style="cursor: pointer;">
                         <div class="img-container">
-                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                            <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                 alt="Validez" class="img-bg">
-                            <img src="https://static.vecteezy.com/system/resources/thumbnails/048/721/469/small_2x/a-green-check-mark-the-check-mark-is-a-symbol-of-approval-or-satisfaction-png.png"
+                            <img src="{{ asset('img/configuracion/validez-icon.png') }}"
                                 alt="Icono Validez" class="img-overlay">
                         </div>
                         <div class="card-body text-center p-3">
@@ -295,9 +295,9 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card h-100 card-hover shadow-sm" id="alarma_button" style="cursor: pointer;">
                         <div class="img-container">
-                            <img src="https://img.freepik.com/fotos-premium/abstract-background-images-wallpaper-ai-generated_643360-68582.jpg"
+                            <img src="{{ asset('img/configuracion/fondo-configuracion.avif') }}"
                                 alt="Alarma" class="img-bg">
-                            <img src="https://static.vecteezy.com/system/resources/previews/049/886/531/non_2x/distinctive-3d-bell-icon-with-fine-rendering-and-transparent-background-tailored-for-high-end-digital-design-projects-free-png.png"
+                            <img src="{{ asset('img/configuracion/alarma-icon.png') }}"
                                 alt="Icono Alarma" class="img-overlay">
                         </div>
                         <div class="card-body text-center p-3">

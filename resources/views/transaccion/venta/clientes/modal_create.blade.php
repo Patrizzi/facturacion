@@ -154,7 +154,7 @@
                                             <b>Cod. Ubigeo:</b>
                                         </label>
                                         <div class="input-group">
-                                            <input value="150101" input type="text" class="fast_add"
+                                            <input value="150101" input type="text" class="fast_add" id="ubigeo"
                                                 name="ubigeo" autocomplete="off" required="required" placeholder=""
                                                 minlength="6" maxlength="6">
                                         </div>
