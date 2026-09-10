@@ -396,7 +396,7 @@
                             return `
                             <div class="tooltip-demo"  style="display:flex;gap: 5px">
                                 `+button_show+`
-                                <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" data-original-title="Procesado">
+                                <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" data-original-title="Sin Procesar" onclick="procesar_rapido('` + full[16] + `', ` + full[0] + `, ` + full[17] + `)">
                                     <i class="fa fa-clock-o"></i>
                                 </button>
                                 ${iconoRenovacion}
@@ -405,7 +405,7 @@
                             return `
                             <div class="tooltip-demo" style="display:flex;gap: 5px">
                                 `+button_show+`
-                                <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" data-original-title="Sin Procesar">
+                                <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" data-original-title="Procesado">
                                     <i class="fa fa-check-circle"></i>
                                 </button>
                                 ${iconoRenovacion}
@@ -537,6 +537,21 @@
             mostrarToast = true;
             coti_table.ajax.reload();
         });
+        
+        function procesar_rapido(tipo, id_cotizacion, id_almacen) {
+            // Rutas generadas por Blade con placeholder, se reemplaza en JS
+            const rutas = {
+                factura:     "{{ route('cotizacion_manual.facturar', ':id') }}",
+                boleta:      "{{ route('cotizacion_manual.boletear', ':id') }}",     // ajusta el nombre real
+                nota_venta:  "{{ route('cotizacion_manual.gen_nota_venta', ':id') }}",   // ajusta el nombre real
+            };
+
+            if (!rutas[tipo]) return;
+
+            const url = rutas[tipo].replace(':id', id_cotizacion);
+            window.location.href = url;
+        }
+
     </script>
     <!-- Seleccionar todos los check -->
 <script>

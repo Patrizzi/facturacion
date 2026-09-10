@@ -453,7 +453,7 @@
                         return `
                         <div class="tooltip-demo" style="display:flex;gap:5px">
                             `+button_show+`
-                            <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Procesado">
+                            <button type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Sin Procesar" onclick="procesar_rapido('` + full[16] + `', ` + full[0] + `, ` + full[17] + `)">
                                 <i class="fa fa-clock-o"></i>
                             </button>
                             ${iconoRenovacion}
@@ -594,6 +594,42 @@
             mostrarToast = true;
             coti_table.ajax.reload();
         });
+
+         function procesar_rapido(tipo, id_cotizacion, id_almacen) {
+            // Rutas generadas por Blade con placeholder, se reemplaza en JS
+            const rutas = {
+                factura:     "{{ route('cotizacion.facturar', ':id') }}",
+                boleta:      "{{ route('cotizacion.boletear', ':id') }}",     // ajusta el nombre real
+                nota_venta:  "{{ route('cotizacion.nota_venta', ':id') }}",   // ajusta el nombre real
+            };
+
+            if (!rutas[tipo]) return;
+
+            const url = rutas[tipo].replace(':id', id_cotizacion);
+
+            // Crear el form dinámicamente
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+            form.style.display = 'none';
+
+            // Token CSRF
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token() }}';
+            form.appendChild(csrfInput);
+
+            // Campo almacen
+            const almacenInput = document.createElement('input');
+            almacenInput.type = 'hidden';
+            almacenInput.name = 'almacen';
+            almacenInput.value = id_almacen;
+            form.appendChild(almacenInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
     <script>
         $(document).ready(function () {

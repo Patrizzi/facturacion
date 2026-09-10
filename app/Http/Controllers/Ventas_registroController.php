@@ -243,7 +243,9 @@ class Ventas_registroController extends Controller
                 $cotizacion->nota_informativa,
                 $estadoRenovacion,
                 $cotizacion->total_val,
-                $cotizacion->moneda_id
+                $cotizacion->moneda_id,
+                $cotizacion->tipo,
+                $cotizacion->almacen_id,
             ];
         }
         // Llamado para la suma total
@@ -412,7 +414,9 @@ class Ventas_registroController extends Controller
                 $cotizacion_manual->nota_informativa,
                 $estadoRenovacion,
                 $cotizacion_manual->total_val,
-                $cotizacion_manual->moneda_id
+                $cotizacion_manual->moneda_id,
+                $cotizacion_manual->tipo,
+                $cotizacion_manual->almacen_id,
             ];
         }
         // Llamado para la suma total
