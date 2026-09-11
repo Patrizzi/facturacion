@@ -223,7 +223,7 @@
                         </div>
                         <input type="hidden" name="" id="count_articles" value="">
                         <div class="col-md-12">
-                            <div class="table-responsive">
+                            <div class="table-responsive"> 
                                 <table cellspacing="0" class="table tables" id="inp_s">
                                     <thead>
                                         <tr>
@@ -393,7 +393,7 @@
     <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="height: 575px;">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -402,13 +402,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-12" style="margin-bottom: 15px">
-                            <input type="text" name="" id="search_product" class="form-control"
-                                placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
-                            <small style="padding-right: 12px;padding-left: 12px ">Filtrado por Producto o Servicio</small>
+                        <div class="col-sm-6" style="margin-bottom: 15px">
+                            <input type="text" name="" id="search_product" class="form-control form-control-sm"
+                                placeholder="Buscar por código o nombre del producto o servicio" autocomplete="off">
                         </div>
+                        <div class="col-sm-6" style="margin-bottom: 15px">
+                            <button data-toggle="button" class="btn btn-primary btn-outline btn-sm" type="button" aria-pressed="false" id="button_filter_stock">Con Stock</button>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 90%">
                         <div class="col-lg-12">
-                            <div class="table-responsive">
+                            <div class="table-responsive"  style="height: 100% !important">
                                 <table class="table table-striped table-hover data_table_multiple"
                                     style="font-size: 90%;border-top: 1px solid #e7eaec;padding: 0px">
                                     <thead>
@@ -416,22 +420,35 @@
                                             {{-- <th>ID</th> --}}
                                             <th>CÓDIGO</th>
                                             <th>ARTÍCULO</th>
-                                            <th>CANTIDAD</th>
-                                            <th>PRECIO U. SUGERIDO </th>
+                                            <th style="text-align: center">STOCK</th>
+
+                                            <th>PRECIO U.  </th>
                                             <th>PRECIO S/IGV</th>
-                                            <th>PRECIO C/IGV</th>
+                                            <th>TOTAL EST.</th>
+                                            <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="modal-cart-footer d-flex justify-content-between align-items-center">
+                                <div class="dt-left-info"></div>
+                                <div class="dt-right-actions d-flex align-items-center">
+                                    <div class="subtotal-box text-right mr-4">
+                                        <div class="subtotal-label"><strong>TOTAL ESTIMADO</strong></div>
+                                        <div class="subtotal-value">
+                                            <span id="subtotal-simbolo">{{ $moneda->simbolo }}</span> <span id="subtotal-monto">0.00</span>
+                                            {{-- <span id="subtotal-items">(0 ítems)</span> --}}
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary rounded-pill mr-2" id="btn-cancelar-cotizacion" data-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="close_add_product_data"
-                        data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -624,12 +641,28 @@
 
         @media (min-width: 992px) {
             #add_product_data>.modal-lg {
-                max-width: 1200px;
+                max-width: 1000px;
             }
         }
 
         .dataTables_wrapper {
-            padding-bottom: 0px;
+            padding: 0px;
+        }
+        #DataTables_Table_0_wrapper{
+            display: flex;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            height: 100% !important;
+        }
+        #DataTables_Table_0_wrapper > .top{
+            display: none;
+        }
+        #DataTables_Table_0_wrapper > .row > .col-sm-12 {
+            padding: 0px !important;
+        }
+        .data_table_multiple{
+            border: 1px solid #e7eaec;
+            margin-bottom: 0px !important;
         }
     </style>
 
@@ -726,6 +759,108 @@
     .renovacion .row {
         margin-bottom: 6px;
     }
+    .bootstrap-touchspin {
+        background-color: #f4f5f7;
+        border-radius: 50px;
+        overflow: hidden;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        width: auto;
+    }
+
+    .bootstrap-touchspin .touchspin-btn {
+        background-color: transparent !important;
+        border: none !important;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: none !important;
+    }
+
+    .bootstrap-touchspin .touchspin-btn:hover {
+        background-color: #e9eaed !important;
+        border-radius: 50%;
+    }
+
+    .bootstrap-touchspin .touchspin1 {
+        background-color: transparent !important;
+        border: none !important;
+        text-align: center;
+        box-shadow: none !important;
+        width: 40px;
+        padding: 0;
+    }
+
+    .bootstrap-touchspin .touchspin1:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .bootstrap-touchspin .input-group-btn {
+        display: flex;
+    }
+    .btn.btn-link.btn-sm.bootstrap-touchspin-up:hover,.btn.btn-link.btn-sm.bootstrap-touchspin-down:hover{
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    .input-cantidad.js-touchspin-init{
+        font-size: 12px;
+    }
+    ul.pagination {
+        margin-bottom: 0px;
+    }
+    .precio_search{
+        vertical-align: middle !important;
+        /* text-align: center !important; */
+
+    }
+    .precio_cantidad{
+        text-align: center !important;
+    }
+    .bootstrap-touchspin{
+        flex-wrap: nowrap;
+    }
+    .precio_dt{
+        text-align: right !important;
+        vertical-align: middle !important;
+    }
+    .modal-cart-footer{
+        position: absolute;
+        margin-left: 0px;
+        right: 15px;
+        bottom: 0px;
+    }
+    .small-description{
+        font-size: 9px !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    #DataTables_Table_0_info{
+        margin-bottom: 5px !important;
+    }
+    
+    .articulo-nombre {
+        max-width: 330px;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+    }
+
+    .articulo-nombre.is-overflowing span {
+        display: inline-block;
+        animation: marquee 8s linear infinite;
+        padding-right: 40px; /* espacio antes de repetir */
+    }
+
+    @keyframes marquee {
+        0%,30%   { transform: translateX(0); }
+        100% { transform: translateX(calc(-100% - 20px)); }
+    }
     </style>
 
     <!-- Mainly scripts -->
@@ -748,44 +883,15 @@
     <!-- Sweet alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
 
     <script>
         $('#coti_store_Fac').on('submit', function() {
             $('#btn-finalizar').prop('disabled', true)
         });
-        function ajax_confi(parameters) {
-            var configuracion_seleccionado = parameters.id;
-            $.ajax({
-                type: "post",
-                url: "{{ route('envio_confi_ingresos') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'tipo_configuracion': configuracion_seleccionado
-                },
-                success: function(msg) {
-                    // alert(msg);
-                }
-            });
-        }
-
-        function ConfiguracionSelector(parameters) {
-            // console.log(parameters.id);
-            var configuracion_seleccionado = parameters.id;
-
-            var data1 = document.getElementById(configuracion_seleccionado + "_1");
-            var data2 = document.getElementById(configuracion_seleccionado + "_2");
-
-            if (data1.hasAttribute("hidden")) {
-                data1.removeAttribute("hidden", "");
-                data2.removeAttribute("hidden", "");
-                ajax_confi(parameters);
-            } else {
-                data1.setAttribute("hidden", "");
-                data2.setAttribute("hidden", "");
-                ajax_confi(parameters);
-            }
-        }
+       
         $('.demo3').click(function() {
             if (document.forms['coti_store_Fac'].reportValidity()) {
                 swal({
@@ -1259,6 +1365,7 @@
 
             document.getElementById("igv").value = igv_decimal;
             document.getElementById("total_final").value = end2;
+            document.getElementById("total_final").dispatchEvent(new Event('change'));
         }
 
         //Funcion para revertir un string dado
@@ -1342,7 +1449,7 @@
                 },
                 success: function(msg) {
                     //Cambio de moneda
-                    // console.log('a');
+                    console.log(msg);
                     // document.getElementById("moneda_id").value = msg.id;
                     // document.getElementById("moneda").value = msg.nombre;
                     $('[id="moneda_id"]').val(msg.id);
@@ -1366,18 +1473,19 @@
                         }
                     }
                     disabled_money();
+                    $('#subtotal-simbolo').html(msg.simbolo);
                 },
             });
         }
 
-        $(document).on({
-            ajaxStart: function() {
-                $("body").addClass("loading");
-            },
-            ajaxStop: function() {
-                $("body").removeClass("loading");
-            }
-        });
+        // $(document).on({
+        //     ajaxStart: function() {
+        //         $("body").addClass("loading");
+        //     },
+        //     ajaxStop: function() {
+        //         $("body").removeClass("loading");
+        //     }
+        // });
 
         jQuery.event.special.touchstart = {
             setup: function(_, ns, handle) {
@@ -1432,6 +1540,8 @@
             search_multiple("");
             $('#search_product').val('');
         });
+        let articulosAgregados = new Set();
+        let filtrarConStock = false;
         function search_multiple(busqueda) {
             // Limpiar DataTable previo
             if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
@@ -1445,6 +1555,7 @@
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'articulo': busqueda,
+                    'stock': filtrarConStock ? 1 : 0,
                     'almacen': $('[id="almacen_id"]').val(),
                     'moneda': $('[id="moneda_id"]').val()
                 },
@@ -1462,24 +1573,91 @@
                         "bLengthChange": false,
                         "searching": false,
                         "autoWidth": false,
-                        pageLength: 10,
+                        pageLength: 7,
                         responsive: true,
                         "aaData": data,
+                        drawCallback: function (settings) {
+                            $(".touchspin1").each(function () {
+                                const $input = $(this);
+                                // Evitar doble inicialización si el plugin ya envolvió este input
+                                if (!$input.hasClass('js-touchspin-init')) {
+                                    $input.addClass('js-touchspin-init').TouchSpin({
+                                        buttondown_class: 'btn btn-link btn-sm',
+                                        buttonup_class: 'btn btn-link btn-sm',
+                                        min: 1,
+                                        max: parseFloat($input.attr('max')) || 0,
+                                    });
+                                }
+                            });
+                            activarSliderSiDesborda();
+                        },
+                        dom: '<"top"f>rt<"dt-left-info"ip>', // i = info ("Mostrando X-Y de Z"), p = paginación
+                        language: {
+                            info: "Mostrando _START_-_END_ de _TOTAL_ artículos",
+                            infoEmpty: "No hay artículos",
+                            paginate: {
+                                previous: '<i class="fa fa-chevron-left"></i>',
+                                next: '<i class="fa fa-chevron-right"></i>'
+                            }
+                        },
+                        pagingType: "simple_numbers",
                         "columns": [
-                            { "data": "id" },
-                            { "data": "codigo" },
-                            { "data": "nombre", "defaultContent": "" },
-                            { "data": "stock", "defaultContent": "" },
+                            // { "data": "id" },
+                            { 
+                                "data": "codigo",
+                                "width": "130px",
+                                render: function(data, type, row) {
+                                     return `
+                                        <span class="codigo-toggle" 
+                                            data-producto="${row.codigo_producto}" 
+                                            data-original="${row.codigo_original ?? ''}" 
+                                            data-showing="producto"
+                                            style="cursor:pointer; display:inline-block; min-width:80px;">
+                                            <span class="badge badge-info">${row.codigo_producto}</span>
+                                        </span>
+                                    `;
+                                }
+                            },
+                            { 
+                                "data": "nombre", 
+                                "defaultContent": "",
+                                render: function(data, type, row) {
+                                    return `
+                                        <div class="articulo-nombre"><span class=""><strong>${row.nombre}</strong></span></div>
+                                        <small class="small-description">${row.description}</small>
+                                    `;
+                                } 
+                            },
+                            { 
+                                "data": "stock", 
+                                "className": "precio_search precio_cantidad",  
+                                "defaultContent": "",
+                                render: function(data, type, row) {
+                                    let claseCss;
+                                    if (`${row.stock}` == 0) {
+                                        claseCss = "badge badge-danger"; // ver nota abajo sobre badge-error
+                                    } else {
+                                        claseCss = "badge badge-success";
+                                    }
+                                    return `<span class="${claseCss}">${row.stock}</span>`;
+                                } 
+                            },
                             {
                                 data: null,
                                 title: 'CANTIDAD',
+                                "className": "precio_cantidad",
+                                "width": "100px",
                                 render: function(data, type, row) {
-                                    return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
+                                    return `
+                                        <input class="touchspin1 form-control-sm input-cantidad" type="text" value="1" name="demo1" min="1" max="${row.stock}" data-simbolo="${row.moneda.simbolo}" value="1" data-price="${row.price}" data-id="${row.id}">
+                                    `;
                                 }
                             },
                             {
                                 data: 'price',
-                                title: 'PRECIO U.',
+                                title: 'P. UNITARIO',
+                                "width": "100px",
+                                "className": "precio_dt",
                                 render: function(data, type, row) {
                                     const formattedPrice = $.fn.dataTable.render.number(',', '.', 2).display(data);
                                     return `${row.moneda.simbolo} ${formattedPrice}`;
@@ -1487,9 +1665,23 @@
                             },
                             {
                                 data: null,
-                                title: 'PRECIO TOTAL',
+                                title: 'TOTAL',
+                                "width": "100px",
+                                "className": "precio_dt",
                                 render: function(data, type, row) {
-                                    return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                                    return `<span class="total" data-id="${row.id}" data-simbolo="${row.moneda.simbolo}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                                }
+                            },
+                            {
+                                "width": "100px",
+                                "className": "precio_search precio_cantidad",
+                                render: function(data, type, row) {
+                                    const yaAgregado = articulosAgregados.has(row.id);
+                                    if (`${row.stock}` != 0) {
+                                        return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}" ${yaAgregado ? 'disabled' : ''}> <i class="fa fa-plus"></i> Agregar</button>`;
+                                    }else{ 
+                                        return `<button class="btn btn-danger btn-xs btn-agregar-articulo" disabled><i class="fa fa-times"></i> Sin stock</button>`;
+                                    }
                                 }
                             }
                         ]
@@ -1502,70 +1694,111 @@
                 }
             });
         }
-        $('.data_table_multiple').on('input', '.input-cantidad', function() {
+        $('.data_table_multiple').on('input change', '.input-cantidad', function() {
             const cantidad = parseFloat($(this).val()) || 0;
             const price = parseFloat($(this).data('price'));
+            const simbolo = $(this).data('simbolo');
             const total = cantidad * price;
-            var simbolo = $('#basic-addon3').html();
             const id = $(this).data('id');
-            $(`.total[data-id="${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
+            $(`.total[data-id="${id}"]`).text(`${simbolo} ` + `${total.toFixed(2)}`);
         });
 
-        $('.data_table_multiple').on('click', 'tbody > tr', function(e) {
-            if ($(e.target).is('input') || $(e.target).closest('td').index() === 4) {
-                return;
-            }
-            var stock = $(this).find("td:eq(3)").text();
-            var cantidad = $(this).find('input').val();
-            // console.log(stock);
-            // console.log(cantidad);
-            if (parseFloat(cantidad) > parseFloat(stock)) {
-                // console.log("dentro del if");
-                toastr.warning("Cantidad mayor al stock",
-                    '', {
-                        timeOut: 3000
-                    });
-                return;
-            }
-            var count_artc = $('#count_articles').val();
-            var id = $(this).find("td:eq(0)").text();
-            var codigos = $(this).find("td:eq(1)").text();
-            var nombres = $(this).find("td:eq(2)").text();
+        $('.data_table_multiple').on('click', '.btn-agregar-articulo', function(e) {
+            var $btn = $(this);
+            var $row = $(this).closest('tr');
 
-            var concat_data = id + " | " + codigos + " | " + nombres;
+            var stock = $row.find("td:eq(3)").text();
+            var cantidad = $row.find('input').val();
+
+            if (parseFloat(cantidad) > parseFloat(stock)) {
+                toastr.warning("Cantidad mayor al stock", '', { timeOut: 3000 });
+                return;
+            }
+
+            var count_artc = $('#count_articles').val();
+            var id =  $(this).data('id');
+            var cod_prod = $(this).data('cod_producto');
+            var cod_origi = $(this).data('cod_original');
+            var nombres =$(this).data('nombre');
+
+            articulosAgregados.add(id);
+
+            var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
             const selectedValue = $('#articulo').val();
+
             if (count_artc == "" && selectedValue == null) {
                 $('#articulo').append(newOption).trigger('change');
                 $('#count_articles').val(1);
-                //
+
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad0`).val(cantidad);
-                    // console.log("se cambio de cantidad");
                 }, 1500);
-                //
+
             } else {
                 $('.addmore').click();
                 var count_artc = $('#count_articles').val();
                 $(`#articulo${count_artc}`).append(newOption).trigger('change');
 
-                //
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                    // console.log("se cambio de cantidad")
                 }, 1500);
-                //
             }
-            toastr.info("Se agregó el Articulo correctamente",
-                '', {
-                    timeOut: 3000
-                });
+            $btn.prop('disabled', true);
+
+            toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
         });
 
+        $('#total_final').on('input change', function(){
+            var total = $(this).val();
+            $('#subtotal-monto').html(total);
+        });
+        
+        setInterval(function () {
+            $('.codigo-toggle').each(function () {
+                const $el = $(this);
+                const showing = $el.data('showing');
+
+                if (showing === 'producto') {
+                    $el.fadeOut(150, function () {
+                        $el.html(`<span class="badge badge-info">${$el.data('original')}</span>`).fadeIn(150);
+                    });
+                    $el.data('showing', 'original');
+                } else {
+                    $el.fadeOut(150, function () {
+                        $el.html(`<span class="badge badge-info">${$el.data('producto')}</span>`).fadeIn(150);
+                    });
+                    $el.data('showing', 'producto');
+                }
+            });
+        }, 5000); // cambia cada 2 segundos
+
+        function activarSliderSiDesborda() {
+            setTimeout(function () {
+                $('.articulo-nombre').each(function () {
+                    const el = this; // elemento DOM nativo, no jQuery
+
+                    if (el.scrollWidth > el.clientWidth) {
+                        $(el).addClass('is-overflowing');
+                    } else {
+                        $(el).removeClass('is-overflowing');
+                    }
+                });
+            }, 50);
+        }
+        $('#add_product_data').on('shown.bs.modal', function () {
+            activarSliderSiDesborda();
+        });
+
+        $('#button_filter_stock').on('click', function(){
+            const $btn = $(this);
+            filtrarConStock = !$btn.hasClass('active');
+            search_multiple($('#buscador_articulo').val());
+        });
         function validarJson(data) {
             try {
                 JSON.parse(data);
