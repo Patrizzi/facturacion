@@ -1529,7 +1529,7 @@
 
         // MODAL BUSQUEDA DE PRODUCTO
         let debounceTimer;
-        $('#search_product').on('keyup', function(e) {
+        $('#search_product').on('input', function(e) {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 var busqueda = $(this).val();
@@ -1735,8 +1735,8 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad0`).val(cantidad);
-                }, 1500);
-
+                    multi(0);
+                }, 1000);
             } else {
                 $('.addmore').click();
                 var count_artc = $('#count_articles').val();
@@ -1746,7 +1746,8 @@
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                }, 1500);
+                    multi(`${count_artc}`);
+                }, 1000);
             }
             $btn.prop('disabled', true);
 
