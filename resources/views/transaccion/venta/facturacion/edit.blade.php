@@ -432,5 +432,5 @@
             </form>
         </div>
     </div>
-    @include('transaccion.venta.facturacion._shared.modal_add_product')
+    @include('transaccion.comprobantes._shared.modal_add_product')
 </div>

@@ -1808,15 +1808,6 @@
                 return false; // no es JSON
             }
         }
-
-        function validarJson(data) {
-            try {
-                JSON.parse(data);
-                return true; // es JSON válido
-            } catch (e) {
-                return false; // no es JSON
-            }
-        }
     </script>
 
     <script>

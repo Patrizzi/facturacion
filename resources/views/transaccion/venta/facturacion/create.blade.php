@@ -244,7 +244,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <button type="button" class='delete borrar e btn btn-sm btn-danger'> <i
+                                                <button type="button" class='delete borrar e btn btn-sm btn-primary'> <i
                                                         class="fa fa-trash" aria-hidden="true"></i> </button>
                                             </td>
                                             <td class="td_selected">
@@ -830,7 +830,7 @@
             var data = `[
         <tr>
             <td>
-                <button type="button" class='delete e borrar btn btn-sm btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                <button type="button" class='delete e borrar btn btn-sm btn-primary'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
             </td>";
             <td class="td_selected">
                 <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})" autocomplete="off" required></select>
@@ -1358,6 +1358,7 @@
                     //Cambio de moneda
                     $(`#moneda_id`).val(msg.id);
                     $(`#moneda`).val(msg.nombre);
+                    $(`#moneda`).val(msg.nombre);
                     $(`#button_changeMoney`).html(msg.other);
                     $(`#basic-addon3`).html(msg.simbolo);
                     $(`.span_simbolo_credido`).html(msg.simbolo);
@@ -1382,8 +1383,9 @@
                             ajax(selected.substring(8));
                         }
                     }
-
                     disabled_money();
+                    $('#subtotal-simbolo').html(msg.simbolo);
+
                 },
             });
         }
@@ -1872,6 +1874,7 @@
 
         let articulosAgregados = new Set();
         let filtrarConStock = false;
+
         function search_multiple(busqueda) {
             // Limpiar DataTable previo
             if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
@@ -2123,6 +2126,11 @@
         }
         $('#add_product_data').on('shown.bs.modal', function () {
             activarSliderSiDesborda();
+        });
+        $('#button_filter_stock').on('click', function(){
+            const $btn = $(this);
+            filtrarConStock = !$btn.hasClass('active');
+            search_multiple($('#buscador_articulo').val());
         });
         function validarJson(data) {
             try {
