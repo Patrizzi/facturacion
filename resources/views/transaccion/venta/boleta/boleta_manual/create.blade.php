@@ -226,9 +226,9 @@
                                                         style="display: none"><i class="fa fa-plus-square"
                                                             aria-hidden="true"></i></button>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
-                                                    data-target="#add_product_data">
-                                                    <i class="fa fa-plus-square"></i>
+                                                <button type="button" class="btn btn-sm btn-primary btn-outline" data-toggle="modal"
+                                                    data-target="#add_product_data" id="add_new_product">
+                                                    <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
                                             <th>Artículo</th>
@@ -242,7 +242,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <button type="button" class='delete borrar e btn btn-sm btn-danger'> <i
+                                                <button type="button" class='delete borrar e btn btn-sm btn-primary'> <i
                                                         class="fa fa-trash" aria-hidden="true"></i></button>
                                             </td>
                                             <td class="td_selected">
@@ -423,58 +423,11 @@
 
     {{-- MODALES Y BOTONES FLOTANTES --}}
 
-
-    <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
-    <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-12" style="margin-bottom: 15px">
-                            <input type="text" name="" id="search_product" class="form-control"
-                                placeholder="Buscar por código o nombre del producto o Servicio" autocomplete="off">
-                            <small style="padding-right: 12px;padding-left: 12px ">Filtrado por Producto o Servicio</small>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover data_table_multiple"
-                                    style="font-size: 90%;border-top: 1px solid #e7eaec;">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>CÓDIGO</th>
-                                            <th>ARTÍCULO</th>
-                                            <th>CANTIDAD</th>
-                                            <th>PRECIO U. SUGERIDO </th>
-                                            <th>PRECIO S/IGV</th>
-                                            <th>PRECIO C/IGV</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="close_add_product_data"
-                        data-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+   @include('transaccion.comprobantes._shared.modal_add_product')
 
     {{-- MODALES Y BOTONES FLOTANTES --}}
     <div id="loaderGif"></div>
+
     <style>
         .input-group>.select2-container--bootstrap {
             width: auto;
@@ -548,7 +501,7 @@
 
         @media (min-width: 992px) {
             #add_product_data>.modal-lg {
-                max-width: 1200px;
+                max-width: 1000px;
             }
         }
 
@@ -617,6 +570,8 @@
 
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script type="text/javascript">
         $(".select2_demo_almacen").select2({
@@ -947,7 +902,7 @@
             // var subtotal = document.querySelector(`#total`).value;
             document.getElementById("total_final").value = total_tt;
             document.getElementById("total_final_view").value = total_tt.toFixed(2);
-
+            document.getElementById("total_final_view").dispatchEvent(new Event('change'));
 
             var monto_c = document.getElementsByClassName('monto_pago');
 
@@ -1525,16 +1480,20 @@
             }
         }
 
-        // MODAL BUSQUEDA DE PRODUCTO
         let debounceTimer;
-        $('#search_product').on('keyup', function(e) {
+        $('#search_product').on('input', function(e) {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 var busqueda = $(this).val();
                 search_multiple(busqueda);
             }, 500); // Espera 300 ms antes de ejecutar la acción
         });
-
+        // MODAL BUSQUEDA DE PRODUCTO
+        $('#add_new_product').on('click', function(){
+            search_multiple("");
+            $('#search_product').val('');
+        });
+        let filtrarConStock = false;
         function search_multiple(busqueda) {
             // CLEAN DATABLE(?)
             if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
@@ -1542,7 +1501,7 @@
             }
             $('.data_table_multiple tbody').empty();
 
-            var almacen = $('[id="almacen_id"]').val();
+            var almacen = $('select[name="almacen_id_selec"]').val();
             var moneda = $('[id="moneda_id"]').val();
             $.ajax({
                 type: "post",
@@ -1551,105 +1510,120 @@
                     '_token': $('input[name=_token]').val(),
                     'articulo': busqueda,
                     'almacen': almacen,
+                    'stock': filtrarConStock ? 1 : 0,
                     'moneda': moneda
                 },
                 success: function(msg) {
-                    // console.log(data.mone)
-                    if (validarJson(msg)) {
-                        var data = JSON.parse(msg);
-                        if (data.length === 0) {
-                            toastr.warning("No se encontraron resultados",
-                                '', {
-                                    timeOut: 3000
-                                });
-                            return;
-                        }
-                    } else if (msg == "[]") {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
-                        return;
-                    } else {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
+                    // Intentar parsear si el backend no manda las cabeceras application/json correctas
+                    let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+                    // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
+                    if (!data || data.length === 0) {
+                        toastr.warning("No se encontraron resultados", '', { timeOut: 3000 });
                         return;
                     }
-                    var igv = $('#igv_input').val();
-                    var quantity = $('#quantity_modal').val();
-                    if (quantity == "") {
-                        quantity = 1;
-                    }
+  
                     $('.data_table_multiple').DataTable({
                         "bLengthChange": false,
                         "searching": false,
                         "autoWidth": false,
-                        pageLength: 10,
+                        pageLength: 7,
                         responsive: true,
                         "aaData": data,
-                        "columns": [{
-                                "data": "id"
+                        drawCallback: function (settings) {
+                            $(".touchspin1").each(function () {
+                                const $input = $(this);
+                                // Evitar doble inicialización si el plugin ya envolvió este input
+                                if (!$input.hasClass('js-touchspin-init')) {
+                                    $input.addClass('js-touchspin-init').TouchSpin({
+                                        buttondown_class: 'btn btn-link btn-sm',
+                                        buttonup_class: 'btn btn-link btn-sm',
+                                        min: 1,
+                                    });
+                                }
+                            });
+                            activarSliderSiDesborda();
+                        },
+                        dom: '<"top"f>rt<"dt-left-info"ip>', // i = info ("Mostrando X-Y de Z"), p = paginación
+                        language: {
+                            info: "Mostrando _START_-_END_ de _TOTAL_ artículos",
+                            infoEmpty: "No hay artículos",
+                            paginate: {
+                                previous: '<i class="fa fa-chevron-left"></i>',
+                                next: '<i class="fa fa-chevron-right"></i>'
+                            }
+                        },
+                        pagingType: "simple_numbers",
+                        "columns": [
+                            // { "data": "id" },
+                            { 
+                                "data": "codigo",
+                                "width": "130px",
+                                render: function(data, type, row) {
+                                     return `
+                                        <span class="codigo-toggle" 
+                                            data-producto="${row.codigo_producto}" 
+                                            data-original="${row.codigo_original ?? ''}" 
+                                            data-showing="producto"
+                                            style="cursor:pointer; display:inline-block; min-width:80px;">
+                                            <span class="badge badge-info">${row.codigo_producto}</span>
+                                        </span>
+                                    `;
+                                }
                             },
                             {
-                                "data": "codigo"
+                                "data": "nombre", 
+                                "defaultContent": "",
+                                render: function(data, type, row) {
+                                    return `
+                                        <div class="articulo-nombre"><span class=""><strong>${row.nombre}</strong></span></div>
+                                        <small class="small-description">${row.description}</small>
+                                    `;
+                                } 
                             },
                             {
-                                "data": "nombre",
-                                "defaultContent": ""
+                                "data": "stock", 
+                                "className": "precio_search precio_cantidad",  
+                                "defaultContent": "",
+                                render: function(data, type, row) {
+                                    let claseCss;
+                                    return `<span class="badge badge-plain">${row.stock}</span>`;
+                                } 
                             },
                             {
                                 data: null,
                                 title: 'CANTIDAD',
-                                render: function(data, type, row, meta) {
-                                    return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
-
-                                }
-                            },
-                            {
-                                data: 'price',
-                                title: 'PRECIO S. C / IGV',
+                                "className": "precio_cantidad",
+                                "width": "100px",
                                 render: function(data, type, row) {
-                                    const simbolo = row.moneda
-                                        .simbolo; // Obtén el símbolo de la moneda
-                                    const formattedPrice = $.fn.dataTable.render.number(',',
-                                        '.', 2).display(data); // Formatea el precio
-                                    return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
-                                }
-                            },
-                            {
-                                data: 'price',
-                                title: 'PRECIO S / IGV',
-                                render: function(data, type, row) {
-                                    const simbolo = row.moneda.simbolo;
-                                    const formattedPrice = $.fn.dataTable.render.number(',',
-                                        '.', 2).display(data); // Formatea el precio
                                     return `
-                                        <div class="input-group input-group-sm" >
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-addon" id="basic-addon3">${simbolo}</span>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm total_s_igv" value="${formattedPrice}" id="precio_s_igv${row.id}" data-id="${row.id}">
-                                        </div>
+                                        <input class="touchspin1 form-control-sm input-cantidad" type="text" value="1" name="demo1" min="1" data-simbolo="${row.moneda.simbolo}" value="1" data-price="${row.price}" data-id="${row.id}">
                                     `;
                                 }
                             },
                             {
                                 data: 'price',
-                                title: 'PRECIO  C / IGV',
+                                title: 'P. UNITARIO',
+                                "width": "100px",
+                                "className": "precio_dt",
                                 render: function(data, type, row) {
-                                    const simbolo = row.moneda.simbolo;
-                                    const formattedPrice = $.fn.dataTable.render.number(',',
-                                        '.', 2).display(data); // Formatea el precio
-                                    return `
-                                         <div class="input-group input-group-sm" >
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-addon" >${simbolo}</span>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm total_c_igv" value="${formattedPrice}" id="precio_c_igv${row.id}" data-id="${row.id}">
-                                        </div>
-                                    `; // Retorna el precio con el símbolo
+                                    const formattedPrice = $.fn.dataTable.render.number(',', '.', 2).display(data);
+                                    return `${row.moneda.simbolo} ${formattedPrice}`;
+                                }
+                            },
+                            {
+                                data: null,
+                                title: 'TOTAL',
+                                "width": "100px",
+                                "className": "precio_dt",
+                                render: function(data, type, row) {
+                                    return `<span class="total" data-id="${row.id}" data-simbolo="${row.moneda.simbolo}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                                }
+                            },
+                            {
+                                "width": "100px",
+                                "className": "precio_search precio_cantidad",
+                                render: function(data, type, row) {
+                                    return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}" > <i class="fa fa-plus"></i> Agregar</button>`;
                                 }
                             }
                         ]
@@ -1657,89 +1631,115 @@
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
-                        console.log(eject.responseJSON.error);
+                        // console.log(eject.responseJSON.error);
+                        console.log('Error');
                     }
                 },
                 cache: true
             });
         }
-
-        // PRECIO SIN IGV
-        $('.data_table_multiple').on('input', '.total_s_igv', function() {
-            console.log($(this));
+        $('.data_table_multiple').on('input change', '.input-cantidad', function() {
+            const cantidad = parseFloat($(this).val()) || 0;
+            const price = parseFloat($(this).data('price'));
+            const simbolo = $(this).data('simbolo');
+            const total = cantidad * price;
             const id = $(this).data('id');
-            const price = parseFloat($(`#precio_s_igv${id}`).val());
-            var simbolo = $('#basic-addon3').html();
-
-            var igv = $('#igv_input').val();
-            const precio_c_gv = price + (price * (igv / 100));
-            $(`#precio_c_igv${id}`).val(`${precio_c_gv.toFixed(2)}`);
-        });
-        // PRECIO SIN IGV
-        $('.data_table_multiple').on('input', '.total_c_igv', function() {
-            console.log($(this));
-            const id = $(this).data('id');
-            const price = parseFloat($(`#precio_c_igv${id}`).val());
-            var simbolo = $('#basic-addon3').html();
-
-            var igv = $('#igv_input').val();
-            const precio_s_igv = price / (1 + (igv / 100));
-            $(`#precio_s_igv${id}`).val(`${precio_s_igv.toFixed(2)}`);
+            $(`.total[data-id="${id}"]`).text(`${simbolo} ` + `${total.toFixed(2)}`);
         });
 
-        $('.data_table_multiple').on('click', 'tbody > tr', function(e) {
-            if ($(e.target).is('input') || $(e.target).closest('td').index() === 3 || $(e.target).closest('td')
-                .index() === 5 || $(e.target).closest('td').index() === 6) {
+        $('.data_table_multiple').on('click', '.btn-agregar-articulo', function(e) {
+            var $btn = $(this);
+            var $row = $(this).closest('tr');
+
+            var stock = $row.find("td:eq(3)").text();
+            var cantidad = $row.find('input').val();
+
+            if (parseFloat(cantidad) > parseFloat(stock)) {
+                toastr.warning("Cantidad mayor al stock", '', { timeOut: 3000 });
                 return;
             }
-            var cantidad = $(this).find('.input-cantidad').val();
-            var precio_s_igv = $(this).find('.total_s_igv').val();
 
             var count_artc = $('#count_articles').val();
-            var id = $(this).find("td:eq(0)").text();
-            var codigos = $(this).find("td:eq(1)").text();
-            var nombres = $(this).find("td:eq(2)").text();
+            var id =  $(this).data('id');
+            var cod_prod = $(this).data('cod_producto');
+            var cod_origi = $(this).data('cod_original');
+            var nombres =$(this).data('nombre');
 
-            var concat_data = id + " | " + codigos + " | " + nombres;
+            var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
             const selectedValue = $('#articulo').val();
+
             if (count_artc == "" && selectedValue == null) {
                 $('#articulo').append(newOption).trigger('change');
                 $('#count_articles').val(1);
-                //
+
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad0`).val(cantidad);
-                    $(`#precio0`).val(precio_s_igv);
-                    multi_s_igv(0);
                     multi(0);
-                    console.log("se cambio de cantidad");
-                    resetModalCuotas()
                 }, 1000);
-                //
             } else {
                 $('.addmore').click();
                 var count_artc = $('#count_articles').val();
                 $(`#articulo${count_artc}`).append(newOption).trigger('change');
 
-                //
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                    $(`#precio${count_artc}`).val(precio_s_igv);
-                    multi_s_igv(`${count_artc}`);
                     multi(`${count_artc}`);
-                    console.log("se cambio de cantidad")
-                    resetModalCuotas()
                 }, 1000);
-                //
             }
-            toastr.info("Se agregó el Articulo correctamente",
-                '', {
-                    timeOut: 3000
+
+            toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
+        });
+
+        $('#total_final_view').on('input change', function(){
+            var total = $(this).val();
+            $('#subtotal-monto').html(total);
+        });
+        
+        setInterval(function () {
+            $('.codigo-toggle').each(function () {
+                const $el = $(this);
+                const showing = $el.data('showing');
+
+                if (showing === 'producto') {
+                    $el.fadeOut(150, function () {
+                        $el.html(`<span class="badge badge-info">${$el.data('original')}</span>`).fadeIn(150);
+                    });
+                    $el.data('showing', 'original');
+                } else {
+                    $el.fadeOut(150, function () {
+                        $el.html(`<span class="badge badge-info">${$el.data('producto')}</span>`).fadeIn(150);
+                    });
+                    $el.data('showing', 'producto');
+                }
+            });
+        }, 5000); // cambia cada 2 segundos
+
+        function activarSliderSiDesborda() {
+            setTimeout(function () {
+                $('.articulo-nombre').each(function () {
+                    const el = this; // elemento DOM nativo, no jQuery
+
+                    if (el.scrollWidth > el.clientWidth) {
+                        $(el).addClass('is-overflowing');
+                    } else {
+                        $(el).removeClass('is-overflowing');
+                    }
                 });
+            }, 50);
+        }
+        $('#add_product_data').on('shown.bs.modal', function () {
+            activarSliderSiDesborda();
+        });
+
+        $('#button_filter_stock').on('click', function(){
+            const $btn = $(this);
+            filtrarConStock = !$btn.hasClass('active');
+            search_multiple($('#buscador_articulo').val());
         });
         function validarJson(data) {
             try {

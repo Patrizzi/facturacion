@@ -795,6 +795,7 @@
             // console.log(typeof end);
             document.getElementById("igv").value = igv;
             document.getElementById("total_final").value = end;
+            document.getElementById("total_final").dispatchEvent(new Event('change'));
         });
     </script>
 

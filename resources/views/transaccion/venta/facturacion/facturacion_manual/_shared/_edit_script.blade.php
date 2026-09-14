@@ -736,7 +736,7 @@
 
     // MODAL BUSQUEDA DE PRODUCTO
     let debounceTimer;
-    $('#search_product').on('keyup', function(e) {
+    $('#search_product').on('input', function(e) {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             var busqueda = $(this).val();

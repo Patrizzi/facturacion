@@ -455,7 +455,7 @@
 
         @media (min-width: 992px) {
             #add_product_data>.modal-lg {
-                max-width: 1200px;
+                max-width: 1000px;
             }
         }
     </style>
@@ -1038,7 +1038,7 @@
         }
         // MODAL BUSQUEDA DE PRODUCTO
         let debounceTimer;
-        $('#search_product').on('keyup', function(e) {
+        $('#search_product').on('input', function(e) {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 var busqueda = $(this).val();

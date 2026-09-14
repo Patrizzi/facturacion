@@ -1354,6 +1354,7 @@
             var end3 = end;
             document.getElementById("total_final").value = end3;
             document.getElementById("total_final_view").value = end3.toFixed(2);
+            document.getElementById("total_final_view").dispatchEvent(new Event('change'));
 
             var monto_c = document.getElementsByClassName('monto_pago');
 
@@ -1663,6 +1664,7 @@
                     //Cambio de moneda
                     $(`#moneda_id`).val(msg.id);
                     $(`#moneda`).val(msg.nombre);
+                    $(`#subtotal-simbolo`).val(msg.simbolo);
                     $(`#button_changeMoney`).html(msg.other);
 
                     resetModalCuotas()
@@ -1858,6 +1860,14 @@
             }
         });
 
+        let debounceTimer;
+        $('#search_product').on('input', function(e) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                var busqueda = $(this).val();
+                search_multiple(busqueda);
+            }, 500); // Espera 300 ms antes de ejecutar la acción
+        });
         // MODAL BUSQUEDA DE PRODUCTO
         $('#add_new_product').on('click', function(){
             search_multiple("");

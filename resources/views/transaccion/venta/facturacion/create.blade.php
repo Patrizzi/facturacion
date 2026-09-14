@@ -1120,7 +1120,6 @@
 
                 }
                 document.getElementById(`precio_unitario_igv${a}`).value = precio_uni_igv;
-                document.getElementById("total_final").dispatchEvent(new Event('change'));
             }
 
             // var totalInp = $('[name="afectacion"]');
@@ -1169,6 +1168,7 @@
 
             document.getElementById("igv").value = igv_decimal;
             document.getElementById("total_final").value = end2;
+            document.getElementById("total_final").dispatchEvent(new Event('change'));
             if(parseFloat(end2) > 700){
                 console.log('mayor a 700');
                 $('#detraccion').attr('disabled', false);
@@ -1309,6 +1309,7 @@
 
             document.getElementById("igv").value = igv;
             document.getElementById("total_final").value = end;
+            document.getElementById("total_final").dispatchEvent(new Event('change'));
             articlesSelect2();
         })
 
@@ -1358,7 +1359,7 @@
                     //Cambio de moneda
                     $(`#moneda_id`).val(msg.id);
                     $(`#moneda`).val(msg.nombre);
-                    $(`#moneda`).val(msg.nombre);
+                    $(`#subtotal-simbolo`).val(msg.simbolo);
                     $(`#button_changeMoney`).html(msg.other);
                     $(`#basic-addon3`).html(msg.simbolo);
                     $(`.span_simbolo_credido`).html(msg.simbolo);

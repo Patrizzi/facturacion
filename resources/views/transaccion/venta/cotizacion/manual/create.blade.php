@@ -1345,6 +1345,7 @@
 
                 var subtotal = document.querySelector(`#total`).value;
                 document.getElementById("total_final").value = subtotal;
+                document.getElementById("total_final").dispatchEvent(new Event('change'));
             } else {
                 limpiar_inputs();
                 $(".select2_demo_3").val(null).trigger("change");
@@ -1483,7 +1484,7 @@
         }
         // MODAL BUSQUEDA DE PRODUCTO
         let debounceTimer;
-        $('#search_product').on('keyup', function(e) {
+        $('#search_product').on('input', function(e) {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 var busqueda = $(this).val();

@@ -324,7 +324,7 @@
 
         @media (min-width: 992px) {
             #add_product_data>.modal-lg {
-                max-width: 1200px;
+                max-width: 1000px;
             }
         }
     </style>
@@ -345,6 +345,8 @@
     <!-- Sweet alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script type="text/javascript">
         $('.demo3').click(function(e) {
@@ -696,7 +698,7 @@
     <script>
         // MODAL BUSQUEDA DE PRODUCTO
         let debounceTimer;
-        $('#search_product').on('keyup', function(e) {
+        $('#search_product').on('input', function(e) {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 var busqueda = $(this).val();
