@@ -481,10 +481,10 @@ class ParameterCallController extends Controller
         $orderService = 'asc';
 
         $productQuery = Producto::select('id', 'codigo_producto', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);
-        $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular');
+        $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);;
         if(empty($search)){
-            $productQuery->orderby('nombre', $orderProduct)->take(20);
-            $serviceQuery->orderby('nombre', $orderProduct)->take(20);
+            $productQuery->orderby('nombre', $orderProduct)->take(28);
+            $serviceQuery->orderby('nombre', $orderProduct)->take(28);
         }else{
             $productQuery->where(function ($query) use ($search) {
                 $query->where('codigo_producto', 'like', '%' . $search . '%')
@@ -672,23 +672,30 @@ class ParameterCallController extends Controller
         $orderProduct = $search == '' ? 'desc' : 'asc';
         $orderService = 'asc';
 
-        $products = Producto::orderby('nombre', $orderProduct)
-            ->select('id', 'codigo_producto', 'codigo_original', 'nombre')
-            ->where(function ($query) use ($search) {
-                $query->where('codigo_producto', 'like', '%' . $search . '%')
-                    ->orWhere('codigo_original', 'like', '%' . $search . '%')
-                    ->orWhere('nombre', 'like', '%' . $search . '%');
-            })
-            ->get();
 
-        $services = Servicios::orderby('nombre', $orderService)
-            ->select('id', 'codigo_servicio', 'codigo_original', 'nombre', 'estado_anular')
-            ->where(function ($query) use ($search) {
+        $productQuery = Producto::select('id', 'codigo_producto', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);
+        $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);;
+        if(empty($search)){
+            $productQuery->orderby('nombre', $orderProduct)->take(28);
+            $serviceQuery->orderby('nombre', $orderProduct)->take(28);
+        }else{
+            $productQuery->where(function ($query) use ($search) {
+                $query->where('codigo_producto', 'like', '%' . $search . '%')
+                        ->orWhere('codigo_original', 'like', '%' . $search . '%')
+                        ->orWhere('nombre', 'like', '%' . $search . '%');
+            })->orderBy('nombre', 'asc');
+            
+            $serviceQuery->where(function ($query) use ($search) {
                 $query->where('codigo_servicio', 'like', '%' . $search . '%')
-                    ->orWhere('codigo_original', 'like', '%' . $search . '%')
-                    ->orWhere('nombre', 'like', '%' . $search . '%');
-            })
-            ->get();
+                        ->orWhere('codigo_original', 'like', '%' . $search . '%')
+                        ->orWhere('nombre', 'like', '%' . $search . '%');
+            })->orderBy('nombre', 'asc');
+        }
+
+        $products = $productQuery->get();
+        $services = $serviceQuery->get();
+
+
 
         if ($money_id->principal == 1) {
             $moneda = Moneda::where('principal', '1')->first();
@@ -698,23 +705,29 @@ class ParameterCallController extends Controller
                     if ($moneda->tipo == 'nacional') {
                         $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') * ($product->utilidad - $product->descuento1) / 100;
                         $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') + $utilidad), 2);
+                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_nacional'), 2);
                     } else {
                         $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * ($product->utilidad - $product->descuento1) / 100;
                         $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') + $utilidad), 2);
+                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero'), 2);
                     }
                     $afectacion = explode(" ", $product->tipo_afec_i_producto->informacion);
-
+                    if ($request->boolean('stock') && (!$array_cantidad || $array_cantidad <= 0)) {
+                        continue;
+                    }
                     //Guardado de variables
                     $data_all[] = [
                         'identifier' => 'product',
                         'id' => $product->id,
-                        'codigo' => $product->codigo_producto . " | " . $product->codigo_original,
+                        'codigo_producto' => $product->codigo_producto,
+                        'codigo_original' => $product->codigo_original ?? "",
                         'nombre' => $product->nombre,
-                        'description' => $product->descripcion,
+                        'description' => $product->descripcion ?? "",
                         'utility' => $utilidad,
                         'price' => $array,
+                        'stock' => $array_cantidad,
                         'average' => $array_promedio,
                         'discount' => $product->descuento2,
                         'afectacion' => $afectacion[0],
@@ -739,11 +752,13 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'service',
                         'id' => $service->id,
-                        'codigo' => $service->codigo_servicio . " | " . $service->codigo_original,
+                        'codigo_producto' => $service->codigo_servicio,
+                        'codigo_original' => $service->codigo_original ?? "",
                         'nombre' => $service->nombre,
-                        'description' => $service->descripcion,
+                        'description' => $service->descripcion ?? "",
                         'utility' => $utilidad_serv,
                         'price' => $array2,
+                        'stock' => 100,
                         'average' => $array_promedio_serv,
                         'discount' => $service->descuento2,
                         'afectacion' => $afectacion[0],
@@ -759,21 +774,28 @@ class ParameterCallController extends Controller
                     if ($moneda->tipo == 'extranjera') {
                         $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') * ($product->utilidad - $product->descuento1) / 100;
                         $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') + $utilidad) / $tipo_cambio->paralelo, 2);
+                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') / $tipo_cambio->paralelo, 2);
                     } else {
                         $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * ($product->utilidad - $product->descuento1) / 100;
+                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
                         $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') + $utilidad) * $tipo_cambio->paralelo, 2);
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * $tipo_cambio->paralelo, 2);
                     }
                     $afectacion = explode(" ", $product->tipo_afec_i_producto->informacion);
+                    if ($request->boolean('stock') && (!$array_cantidad || $array_cantidad <= 0)) {
+                        continue;
+                    }
                     $data_all[] = [
                         'identifier' => 'product',
                         'id' => $product->id,
-                        'codigo' => $product->codigo_producto . " | " . $product->codigo_original,
+                        'codigo_producto' => $product->codigo_producto,
+                        'codigo_original' => $product->codigo_original ?? "",
                         'nombre' => $product->nombre,
                         'description' => $product->descripcion,
                         'utility' => $utilidad,
                         'price' => $array,
+                        'stock' => $array_cantidad,
                         'average' => $array_promedio,
                         'discount' => $product->descuento2,
                         'afectacion' => $afectacion[0],
@@ -798,11 +820,13 @@ class ParameterCallController extends Controller
                     $data_all[] = [
                         'identifier' => 'service',
                         'id' => $service->id,
-                        'codigo' => $service->codigo_servicio . " | " . $service->codigo_original,
+                        'codigo_producto' => $service->codigo_servicio,
+                        'codigo_original' => $service->codigo_original ?? "",
                         'nombre' => $service->nombre,
-                        'description' => $service->descripcion,
+                        'description' => $service->descripcion ?? "",
                         'utility' => $utilidad_serv,
                         'price' => $array2,
+                        'stock' => 100,
                         'average' => $array_promedio_serv,
                         'discount' => $service->descuento2,
                         'afectacion' => $afectacion[0],

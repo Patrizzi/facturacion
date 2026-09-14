@@ -241,7 +241,7 @@
                                                             aria-hidden="true"></i></button>
                                                 </div>
                                                 <button type="button" class="btn btn-sm btn-primary btn-outline" data-toggle="modal"
-                                                    data-target="#add_product_data">
+                                                    data-target="#add_product_data" id="add_new_product">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
@@ -355,7 +355,7 @@
             </div>
         </div>
     </div>
-
+{{-- 
     <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
     <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -399,6 +399,71 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="close_add_product_data"
                         data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
+     <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
+    <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content" style="height: 575px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6" style="margin-bottom: 15px">
+                            <input type="text" name="" id="search_product" class="form-control form-control-sm"
+                                placeholder="Buscar por código o nombre del producto o servicio" autocomplete="off">
+                        </div>
+                        <div class="col-sm-6" style="margin-bottom: 15px">
+                            <button data-toggle="button" class="btn btn-primary btn-outline btn-sm" type="button" aria-pressed="false" id="button_filter_stock">Con Stock</button>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 90%">
+                        <div class="col-lg-12">
+                            <div class="table-responsive"  style="height: 100% !important">
+                                <table class="table table-striped table-hover data_table_multiple"
+                                    style="font-size: 90%;border-top: 1px solid #e7eaec;padding: 0px">
+                                    <thead>
+                                        <tr>
+                                            {{-- <th>ID</th> --}}
+                                            <th>CÓDIGO</th>
+                                            <th>ARTÍCULO</th>
+                                            <th style="text-align: center">STOCK</th>
+
+                                            <th>PRECIO U.  </th>
+                                            <th>PRECIO S/IGV</th>
+                                            <th>TOTAL EST.</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-cart-footer d-flex justify-content-between align-items-center">
+                                <div class="dt-left-info"></div>
+                                <div class="dt-right-actions d-flex align-items-center">
+                                    <div class="subtotal-box text-right mr-4">
+                                        <div class="subtotal-label"><strong>TOTAL ESTIMADO</strong></div>
+                                        <div class="subtotal-value">
+                                            <span id="subtotal-simbolo">{{$moneda->where('principal', 1 )->pluck('simbolo')->first()}}</span> <span id="subtotal-monto">0.00</span>
+                                            {{-- <span id="subtotal-items">(0 ítems)</span> --}}
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary rounded-pill mr-2" id="btn-cancelar-cotizacion" data-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -503,8 +568,27 @@
 
         @media (min-width: 992px) {
             #add_product_data>.modal-lg {
-                max-width: 1200px;
+                max-width: 1000px;
             }
+        }
+        .dataTables_wrapper {
+            padding: 0px;
+        }
+        #DataTables_Table_0_wrapper{
+            display: flex;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            height: 100% !important;
+        }
+        #DataTables_Table_0_wrapper > .top{
+            display: none;
+        }
+        #DataTables_Table_0_wrapper > .row > .col-sm-12 {
+            padding: 0px !important;
+        }
+        .data_table_multiple{
+            border: 1px solid #e7eaec;
+            margin-bottom: 0px !important;
         }
     </style>
 
@@ -601,6 +685,108 @@
     .renovacion .row {
         margin-bottom: 6px;
     }
+     .bootstrap-touchspin {
+        background-color: #f4f5f7;
+        border-radius: 50px;
+        overflow: hidden;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        width: auto;
+    }
+
+    .bootstrap-touchspin .touchspin-btn {
+        background-color: transparent !important;
+        border: none !important;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: none !important;
+    }
+
+    .bootstrap-touchspin .touchspin-btn:hover {
+        background-color: #e9eaed !important;
+        border-radius: 50%;
+    }
+
+    .bootstrap-touchspin .touchspin1 {
+        background-color: transparent !important;
+        border: none !important;
+        text-align: center;
+        box-shadow: none !important;
+        width: 40px;
+        padding: 0;
+    }
+
+    .bootstrap-touchspin .touchspin1:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .bootstrap-touchspin .input-group-btn {
+        display: flex;
+    }
+    .btn.btn-link.btn-sm.bootstrap-touchspin-up:hover,.btn.btn-link.btn-sm.bootstrap-touchspin-down:hover{
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    .input-cantidad.js-touchspin-init{
+        font-size: 12px;
+    }
+    ul.pagination {
+        margin-bottom: 0px;
+    }
+    .precio_search{
+        vertical-align: middle !important;
+        /* text-align: center !important; */
+
+    }
+    .precio_cantidad{
+        text-align: center !important;
+    }
+    .bootstrap-touchspin{
+        flex-wrap: nowrap;
+    }
+    .precio_dt{
+        text-align: right !important;
+        vertical-align: middle !important;
+    }
+    .modal-cart-footer{
+        position: absolute;
+        margin-left: 0px;
+        right: 15px;
+        bottom: 0px;
+    }
+    .small-description{
+        font-size: 9px !important;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    #DataTables_Table_0_info{
+        margin-bottom: 5px !important;
+    }
+    
+    .articulo-nombre {
+        max-width: 330px;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+    }
+
+    .articulo-nombre.is-overflowing span {
+        display: inline-block;
+        animation: marquee 8s linear infinite;
+        padding-right: 40px; /* espacio antes de repetir */
+    }
+
+    @keyframes marquee {
+        0%,30%   { transform: translateX(0); }
+        100% { transform: translateX(calc(-100% - 20px)); }
+    }
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -624,7 +810,8 @@
     <!-- Sweet alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
-
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script>
         $(function() {
@@ -692,6 +879,10 @@
         }
 
         $(document).ready(function() {
+
+            var simbolo = 
+            $('#subtotal-simbolo').html();
+
             var form = document.getElementById('form_sto');
             var guardarButton = document.querySelector('.guardar');
             // Instancia manual de Ladda para controlar el estado de carga del botón Guardar.
@@ -1289,6 +1480,7 @@
                     $(`#moneda_id`).val(msg.id);
                     $(`#moneda`).val(msg.nombre);
                     $(`#button_changeMoney`).html(msg.other);
+                    $('#subtotal-simbolo').html(msg.simbolo);
                     if (status == 1) {
                         status = 0;
                     } else {
@@ -1346,7 +1538,12 @@
                 search_multiple(busqueda);
             }, 500); // Espera 300 ms antes de ejecutar la acción
         });
-
+        $('#add_new_product').on('click', function(){
+            search_multiple("");
+            $('#search_product').val('');
+        });
+        let articulosAgregados = new Set();
+        let filtrarConStock = false;
         function search_multiple(busqueda) {
             // CLEAN DATABLE(?)
             if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
@@ -1354,7 +1551,7 @@
             }
             $('.data_table_multiple tbody').empty();
 
-            var almacen = $('[id="almacen_id"]').val();
+            var almacen = $('select[name="almacen_form"]').val();
             var moneda = $('[id="moneda_id"]').val();
             $.ajax({
                 type: "post",
@@ -1363,82 +1560,123 @@
                     '_token': $('input[name=_token]').val(),
                     'articulo': busqueda,
                     'almacen': almacen,
+                    'stock': filtrarConStock ? 1 : 0,
                     'moneda': moneda
                 },
                 success: function(msg) {
-                    if (validarJson(msg)) {
-                        var data = JSON.parse(msg);
-                        if (data.length === 0) {
-                            toastr.warning("No se encontraron resultados",
-                                '', {
-                                    timeOut: 3000
-                                });
-                            return;
-                        }
-                    } else if (msg == "[]") {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
-                        return;
-                    } else {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
+                    // Intentar parsear si el backend no manda las cabeceras application/json correctas
+                    let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+                    // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
+                    if (!data || data.length === 0) {
+                        toastr.warning("No se encontraron resultados", '', { timeOut: 3000 });
                         return;
                     }
-                    var quantity = $('#quantity_modal').val();
-                    if (quantity == "") {
-                        quantity = 1;
-                    }
+  
                     $('.data_table_multiple').DataTable({
-                        "autoWidth": false,
                         "bLengthChange": false,
                         "searching": false,
-                        pageLength: 10,
+                        "autoWidth": false,
+                        pageLength: 7,
                         responsive: true,
                         "aaData": data,
-                        "columns": [{
-                                "data": "id"
+                        drawCallback: function (settings) {
+                            $(".touchspin1").each(function () {
+                                const $input = $(this);
+                                // Evitar doble inicialización si el plugin ya envolvió este input
+                                if (!$input.hasClass('js-touchspin-init')) {
+                                    $input.addClass('js-touchspin-init').TouchSpin({
+                                        buttondown_class: 'btn btn-link btn-sm',
+                                        buttonup_class: 'btn btn-link btn-sm',
+                                        min: 1,
+                                    });
+                                }
+                            });
+                            activarSliderSiDesborda();
+                        },
+                        dom: '<"top"f>rt<"dt-left-info"ip>', // i = info ("Mostrando X-Y de Z"), p = paginación
+                        language: {
+                            info: "Mostrando _START_-_END_ de _TOTAL_ artículos",
+                            infoEmpty: "No hay artículos",
+                            paginate: {
+                                previous: '<i class="fa fa-chevron-left"></i>',
+                                next: '<i class="fa fa-chevron-right"></i>'
+                            }
+                        },
+                        pagingType: "simple_numbers",
+                        "columns": [
+                            // { "data": "id" },
+                            { 
+                                "data": "codigo",
+                                "width": "130px",
+                                render: function(data, type, row) {
+                                     return `
+                                        <span class="codigo-toggle" 
+                                            data-producto="${row.codigo_producto}" 
+                                            data-original="${row.codigo_original ?? ''}" 
+                                            data-showing="producto"
+                                            style="cursor:pointer; display:inline-block; min-width:80px;">
+                                            <span class="badge badge-info">${row.codigo_producto}</span>
+                                        </span>
+                                    `;
+                                }
                             },
                             {
-                                "data": "codigo"
+                                "data": "nombre", 
+                                "defaultContent": "",
+                                render: function(data, type, row) {
+                                    return `
+                                        <div class="articulo-nombre"><span class=""><strong>${row.nombre}</strong></span></div>
+                                        <small class="small-description">${row.description}</small>
+                                    `;
+                                } 
                             },
                             {
-                                "data": "nombre",
-                                "defaultContent": ""
-                            },
-                            {
-                                "data": "stock",
-                                "defaultContent": ""
+                                "data": "stock", 
+                                "className": "precio_search precio_cantidad",  
+                                "defaultContent": "",
+                                render: function(data, type, row) {
+                                    let claseCss;
+                                    return `<span class="badge badge-plain">${row.stock}</span>`;
+                                } 
                             },
                             {
                                 data: null,
                                 title: 'CANTIDAD',
-                                render: function(data, type, row, meta) {
-                                    return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
-
+                                "className": "precio_cantidad",
+                                "width": "100px",
+                                render: function(data, type, row) {
+                                    return `
+                                        <input class="touchspin1 form-control-sm input-cantidad" type="text" value="1" name="demo1" min="1" data-simbolo="${row.moneda.simbolo}" value="1" data-price="${row.price}" data-id="${row.id}">
+                                    `;
                                 }
                             },
                             {
                                 data: 'price',
-                                title: 'PRECIO U.',
+                                title: 'P. UNITARIO',
+                                "width": "100px",
+                                "className": "precio_dt",
                                 render: function(data, type, row) {
-                                    const simbolo = row.moneda
-                                        .simbolo; // Obtén el símbolo de la moneda
-                                    const formattedPrice = $.fn.dataTable.render.number(',',
-                                        '.', 2).display(data); // Formatea el precio
-                                    return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
+                                    const formattedPrice = $.fn.dataTable.render.number(',', '.', 2).display(data);
+                                    return `${row.moneda.simbolo} ${formattedPrice}`;
                                 }
                             },
                             {
                                 data: null,
-                                title: 'PRECIO TOTAL',
-                                render: function(data, type, row, meta) {
-                                    return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                                title: 'TOTAL',
+                                "width": "100px",
+                                "className": "precio_dt",
+                                render: function(data, type, row) {
+                                    return `<span class="total" data-id="${row.id}" data-simbolo="${row.moneda.simbolo}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
                                 }
                             },
+                            {
+                                "width": "100px",
+                                "className": "precio_search precio_cantidad",
+                                render: function(data, type, row) {
+                                    const yaAgregado = articulosAgregados.has(row.id);
+                                    return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}" ${yaAgregado ? 'disabled' : ''}> <i class="fa fa-plus"></i> Agregar</button>`;
+                                }
+                            }
                         ]
                     });
                 },
@@ -1451,68 +1689,111 @@
                 cache: true
             });
         }
-        $('.data_table_multiple').on('input', '.input-cantidad', function() {
+        $('.data_table_multiple').on('input change', '.input-cantidad', function() {
             const cantidad = parseFloat($(this).val()) || 0;
             const price = parseFloat($(this).data('price'));
+            const simbolo = $(this).data('simbolo');
             const total = cantidad * price;
-            var simbolo = $('#basic-addon3').html();
             const id = $(this).data('id');
-            $(`.total[data-id="${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
+            $(`.total[data-id="${id}"]`).text(`${simbolo} ` + `${total.toFixed(2)}`);
         });
 
-        $('.data_table_multiple').on('click', 'tbody > tr', function(e) {
-            if ($(e.target).is('input') || $(e.target).closest('td').index() === 4) {
-                return;
-            }
-            var stock = $(this).find("td:eq(3)").text();
-            var cantidad = $(this).find('input').val();
-            // console.log(stock);
-            // console.log(cantidad);
-            if (parseFloat(cantidad) > parseFloat(stock)) {
-                // console.log("dentro del if");
-                toastr.warning("Cantidad mayor al stock",
-                    '', {
-                        timeOut: 3000
-                    });
-                return;
-            }
-            var count_artc = $('#count_articles').val();
-            var id = $(this).find("td:eq(0)").text();
-            var codigos = $(this).find("td:eq(1)").text();
-            var nombres = $(this).find("td:eq(2)").text();
+        $('.data_table_multiple').on('click', '.btn-agregar-articulo', function(e) {
+            var $btn = $(this);
+            var $row = $(this).closest('tr');
 
-            var concat_data = id + " | " + codigos + " | " + nombres;
+            var stock = $row.find("td:eq(3)").text();
+            var cantidad = $row.find('input').val();
+
+            if (parseFloat(cantidad) > parseFloat(stock)) {
+                toastr.warning("Cantidad mayor al stock", '', { timeOut: 3000 });
+                return;
+            }
+
+            var count_artc = $('#count_articles').val();
+            var id =  $(this).data('id');
+            var cod_prod = $(this).data('cod_producto');
+            var cod_origi = $(this).data('cod_original');
+            var nombres =$(this).data('nombre');
+
+            articulosAgregados.add(id);
+
+            var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
             const selectedValue = $('#articulo').val();
+
             if (count_artc == "" && selectedValue == null) {
                 $('#articulo').append(newOption).trigger('change');
                 $('#count_articles').val(1);
-                //
+
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad0`).val(cantidad);
-                    // console.log("se cambio de cantidad");
-                }, 1500);
-                //
+                    multi(0);
+                }, 1000);
             } else {
                 $('.addmore').click();
                 var count_artc = $('#count_articles').val();
                 $(`#articulo${count_artc}`).append(newOption).trigger('change');
 
-                //
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                    // console.log("se cambio de cantidad")
-                }, 1500);
-                //
+                    multi(`${count_artc}`);
+                }, 1000);
             }
-            toastr.info("Se agregó el Articulo correctamente",
-                '', {
-                    timeOut: 3000
+            $btn.prop('disabled', true);
+
+            toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
+        });
+
+        $('#total_final').on('input change', function(){
+            var total = $(this).val();
+            $('#subtotal-monto').html(total);
+        });
+        
+        setInterval(function () {
+            $('.codigo-toggle').each(function () {
+                const $el = $(this);
+                const showing = $el.data('showing');
+
+                if (showing === 'producto') {
+                    $el.fadeOut(150, function () {
+                        $el.html(`<span class="badge badge-info">${$el.data('original')}</span>`).fadeIn(150);
+                    });
+                    $el.data('showing', 'original');
+                } else {
+                    $el.fadeOut(150, function () {
+                        $el.html(`<span class="badge badge-info">${$el.data('producto')}</span>`).fadeIn(150);
+                    });
+                    $el.data('showing', 'producto');
+                }
+            });
+        }, 5000); // cambia cada 2 segundos
+
+        function activarSliderSiDesborda() {
+            setTimeout(function () {
+                $('.articulo-nombre').each(function () {
+                    const el = this; // elemento DOM nativo, no jQuery
+
+                    if (el.scrollWidth > el.clientWidth) {
+                        $(el).addClass('is-overflowing');
+                    } else {
+                        $(el).removeClass('is-overflowing');
+                    }
                 });
+            }, 50);
+        }
+        $('#add_product_data').on('shown.bs.modal', function () {
+            activarSliderSiDesborda();
+        });
+
+        $('#button_filter_stock').on('click', function(){
+            const $btn = $(this);
+            filtrarConStock = !$btn.hasClass('active');
+            search_multiple($('#buscador_articulo').val());
         });
 
         function validarJson(data) {
