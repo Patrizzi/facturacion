@@ -483,8 +483,8 @@ class ParameterCallController extends Controller
         $productQuery = Producto::select('id', 'codigo_producto', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);
         $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);;
         if(empty($search)){
-            $productQuery->orderby('nombre', $orderProduct)->take(28);
-            $serviceQuery->orderby('nombre', $orderProduct)->take(28);
+            $productQuery->orderby('nombre', $orderProduct)->take(27);
+            $serviceQuery->orderby('nombre', $orderProduct)->take(27);
         }else{
             $productQuery->where(function ($query) use ($search) {
                 $query->where('codigo_producto', 'like', '%' . $search . '%')
@@ -676,8 +676,8 @@ class ParameterCallController extends Controller
         $productQuery = Producto::select('id', 'codigo_producto', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);
         $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);;
         if(empty($search)){
-            $productQuery->orderby('nombre', $orderProduct)->take(28);
-            $serviceQuery->orderby('nombre', $orderProduct)->take(28);
+            $productQuery->orderby('nombre', $orderProduct)->take(27);
+            $serviceQuery->orderby('nombre', $orderProduct)->take(27);
         }else{
             $productQuery->where(function ($query) use ($search) {
                 $query->where('codigo_producto', 'like', '%' . $search . '%')

@@ -217,7 +217,7 @@
                         </div>
                         <div class="col-md-12">
                             <hr style="border: 1px solid #ddd; margin: 10px 0;width: 100%;">
-                            <input type="hidden" name   ="almacen" id="almacen_id" class="form-control "
+                            <input type="hidden" name="almacen" id="almacen_id" class="form-control "
                                 value="{{ $sucursal->id }}" readonly="readonly">
                             <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}">
                         </div>
