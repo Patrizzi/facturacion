@@ -564,7 +564,7 @@
         formData.append('familia_id', $('#familia_id_Edit').val());
         formData.append('subfamilia_id', $('#subfamilia_Edit').val());
         formData.append('marca_id', $('#marca_id_Edit').val());
-        formData.append('send_sunat_description', $('#edit_check_description_sunat').val());
+        formData.append('send_sunat_description', $('#edit_check_description_sunat').prop('checked'));
         // formData.append('codigo', $('#codigo_original_Edit').val());
 
         if ($('#archivoInputEdit')[0].files.length > 0) {

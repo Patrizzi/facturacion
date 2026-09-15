@@ -14,7 +14,7 @@ class AddColumnDescriptionSunatToProductoTable extends Migration
     public function up()
     {
         Schema::table('productos', function (Blueprint $table) {
-            $table->boolean('send_sunat_description')->default(0)->after('estado_id');
+            $table->boolean('send_sunat_description')->default(0)->after('tipo_afectacion_id');
         });
     }
 

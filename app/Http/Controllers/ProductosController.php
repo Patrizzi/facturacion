@@ -279,7 +279,7 @@ class ProductosController extends Controller
         $producto->archivo = $name_file;
         $producto->estado_anular = '1';
         $producto->detalle = $request->get('detalle');
-        if ($request->get('check_description_sunat') == "on") {
+        if ($request->get('check_description_sunat') == true) {
             $producto->send_sunat_description = 1;
         }
         $producto->save();
@@ -385,7 +385,8 @@ class ProductosController extends Controller
                 'descuento_2'         => 'nullable|numeric',
                 'descuento_max'       => 'nullable|numeric',
                 'foto'                => 'nullable|image|mimes:jpeg,png,jpg,gif',
-                'archivo'             => 'nullable|file'
+                'archivo'             => 'nullable|file',
+                'send_sunat_description'             => 'nullable'
             ], [
                 'codigo_original.unique' => 'El código alternativo ya existe',
                 'foto.image'             => 'El archivo debe ser una imagen',
@@ -440,11 +441,12 @@ class ProductosController extends Controller
             */
 
             $peso = trim($request->peso_cantidad . ' ' . $request->peso_unidad);
-            if ($request->get('check_description_sunat') == "on") {
+            if ($request->get('send_sunat_description') == "true") {
                 $send_sunat_description = 1;
             }else{
                 $send_sunat_description = 0;
             }
+            
             $producto->update([
                 'nombre'              => $request->nombre,
                 'codigo_producto'     => $request->codigo_producto,
@@ -471,7 +473,7 @@ class ProductosController extends Controller
                 'archivo'             => $archivo,
                 'send_sunat_description'=> $send_sunat_description
             ]);
-
+            // return $producto;
             return response()->json([
                 'success' => true,
                 'message' => 'Producto actualizado correctamente',

@@ -97,13 +97,14 @@ class ServiciosController extends Controller
         } else {
             $name = "servicio.png";
         }
-        if ($request->get('check_description_sunat') == "on") {
-            $send_sunat_description = 1;
-        }else{
-            $send_sunat_description = 0;
-        }
+
         $isAjax = $request->ajax() || $request->has('_method');
         if ($isAjax) {
+            if ($request->get('check_description_sunat') == true) {
+                $send_sunat_description = 1;
+            }else{
+                $send_sunat_description = 0;
+            }
             try {
                 $servicio = Servicios::create([
                     'codigo_servicio' => $codigo,
@@ -187,12 +188,10 @@ class ServiciosController extends Controller
         $servicios->estado_anular = '0';
         $servicios->estado_activo = '0';
         $servicios->tipo_afectacion_id = $request->get('afectacion');
-        if ($request->get('check_description_sunat') == "on") {
-            $send_sunat_description = 1;
-        }else{
-            $send_sunat_description = 0;
+        if ($request->get('check_description_sunat') == true) {
+            $servicios->send_sunat_description = 1;
         }
-        $servicios->send_sunat_description = $send_sunat_description;
+        
 
         $servicios->save();
         return redirect()->route('servicios.show', $servicios->id);
@@ -269,11 +268,12 @@ class ServiciosController extends Controller
                 $destinationPath = public_path('/archivos/imagenes/servicios/');
                 $image1->move($destinationPath, $name);
             }
-            if ($request->get('send_sunat_description') == "on") {
+            if ($request->get('send_sunat_description') == "true") {
                 $send_sunat_description = 1;
             }else{
                 $send_sunat_description = 0;
             }
+            // return $send_sunat_description;
             $servicio = Servicios::findOrFail($id);
             // Generar Cambio para precio nacional y precio extranjero ----------------------------------------------
             if ($isAjax) {
