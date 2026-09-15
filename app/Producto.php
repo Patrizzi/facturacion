@@ -37,6 +37,7 @@ class Producto extends Model
         'marca_id',
         'unidad_medida_id',
         'estado_id',
+        'send_sunat_description'
     ];
 
     protected $appeds = [

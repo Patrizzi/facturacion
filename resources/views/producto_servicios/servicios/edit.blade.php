@@ -28,6 +28,7 @@
                                 </div>
 
                                 <!-- Código original -->
+                                
                                 <div class="col-md-6">
                                     <div class="form-group row align-items-center" id="form_group_cod_original">
                                         <label class="col-md-3 col-form-label"><strong>Cod. Orig.</strong></label>
@@ -307,6 +308,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Envio de la Descripcion de Sunat -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-md-2 col-form-label" data-toggle="tooltip" data-placement="top" data-original-title="Se enviará el nombre + descripcion en Comprobantes a Sunat" >
+                                            <strong>Descripcion Sunat</strong>
+                                        </label>
+                                        
+                                        <div class="col-md-10">
+                                            <input type="checkbox" name="check_description_sunat" id="edit_check_description_sunat" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -488,6 +503,7 @@
         var tipo_afectacion_id = $(this).data('tipo_afectacion_id');
         var estado_anular = $(this).data('estado_anular');
         var fecha_creacion = $(this).data('fecha_creacion');
+        var check_description_sunat = $(this).data('check_description');
 
         $('#edit_codigo_servicio').val(codigo_servicio);
         $('#codigo_original_Edit').val(codigo_original);
@@ -498,7 +514,9 @@
         $('#precio_extranjero_Edit').val(precio_extranjero);
         $('#sumando_Edit').val(utilidad);
         $('#fecha_edit').val(fecha_creacion);
-
+        if(check_description_sunat == 1){
+            $('#edit_check_description_sunat').prop('checked', true);
+        }
         $('#fotoPreviaEdit').attr('src', "{{ asset('/archivos/imagenes/servicios') }}/" + foto);
         // $('#link_archivo').attr('download', archivo);
 
@@ -546,6 +564,7 @@
         formData.append('familia_id', $('#familia_id_Edit').val());
         formData.append('subfamilia_id', $('#subfamilia_Edit').val());
         formData.append('marca_id', $('#marca_id_Edit').val());
+        formData.append('send_sunat_description', $('#edit_check_description_sunat').prop('checked'));
         // formData.append('codigo', $('#codigo_original_Edit').val());
 
         if ($('#archivoInputEdit')[0].files.length > 0) {

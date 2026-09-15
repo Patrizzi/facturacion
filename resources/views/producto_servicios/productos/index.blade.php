@@ -1007,6 +1007,7 @@
                                     data-archivo="${producto.archivo}"
                                     data-foto="${producto.foto}"
                                     data-estado_id="${producto.estado_id}"
+                                    data-check_description="${producto.send_sunat_description}"
                                 `;
                             }
 
@@ -1251,7 +1252,8 @@
                 var archivo = $(this).data('archivo');
                 var foto = $(this).data('foto');
                 var estado = $(this).data('estado_id');
-                console.log($(this).data());
+                var check_description_sunat = $(this).data('check_description');
+                // console.log($(this).data());
                 // Llenar los campos básicos
                 $('#ver_nombre').val(nombre);
                 $('#ver_codigo').val(codigo);
@@ -1276,7 +1278,11 @@
                 $('#ver_familia').val(familia);
                 $('#ver_tipo_afectacion').val(afectacion);
                 $('#ver_subfamilia').val(subfamilia);
-
+                if(check_description_sunat == 1){
+                    $('#ver_check_description_sunat').val('Si');
+                }else{
+                    $('#ver_check_description_sunat').val('No');
+                }
                 // Header del modal
                 $('#codigo_header_show').text(codigo);
 
@@ -1331,6 +1337,7 @@
                 var archivo = $(this).data('archivo');
                 var foto = $(this).data('foto');
                 var estado = $(this).data('estado_id');
+                var check_description_sunat = $(this).data('check_description');
 
                 // Llenar los campos básicos
                 $('#edit_nombre').val(nombre);
@@ -1352,7 +1359,9 @@
                 $('#edit_detalle').val(detalle);
                 $('#edit_fecha').val(fecha);
                 $('#edit_estado_id').val(estado);
-
+                if(check_description_sunat == 1){
+                    $('#edit_check_description_sunat').prop('checked', true);
+                }
                 // Header del modal
                 $('#codigo_header').text(codigo);
 
@@ -1453,6 +1462,7 @@
                 formData.append('descripcion', $('#edit_descripcion').val() || '');
                 formData.append('detalle', $('#edit_detalle').val() || '');
                 formData.append('estado', $('#edit_estado_id').val() || '');
+                formData.append('send_sunat_description', $('#edit_check_description_sunat').prop('checked'));
 
                 // Método y token
                 formData.append('_method', 'PUT');

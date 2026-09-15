@@ -408,6 +408,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Envio de la Descripcion de Sunat -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-md-2 col-form-label" data-toggle="tooltip" data-placement="top" data-original-title="Se enviará el nombre + descripcion en Comprobantes a Sunat" >
+                                            <strong>Descripcion Sunat</strong>
+                                        </label>
+                                        
+                                        <div class="col-md-10">
+                                            <input type="checkbox" name="check_description_sunat" id="edit_check_description_sunat" >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

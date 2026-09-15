@@ -1,4 +1,4 @@
-<div class="nav nav-custom" style="min-width: 1450px;overflow-y: hidden;overflow-x: auto;">
+<div class="nav nav-custom">
     @can('productos.ver')
         <li class="nav-item">
             <a class="nav-link" href="{{ route('productos.index') }}" id="tab-1-tab">
