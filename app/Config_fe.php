@@ -138,8 +138,8 @@ class Config_fe extends Model
         foreach ($facturas_registros as $cont => $factura_registro) {
             if (isset($factura_registro->producto->codigo_producto)) {
                 $item_nombre = $factura_registro->producto->codigo_producto;
-                if($factura_registro->producto->send_description_sunat == true){
-                    $desc_nombre = substr( $factura_registro->producto->nombre + $factura_registro->producto->descripcion, 0 , 500);
+                if($factura_registro->producto->send_sunat_description == true){
+                    $desc_nombre = mb_substr( $factura_registro->producto->nombre .' '. $factura_registro->descripcion_item, 0, 498, 'UTF-8');
                 }else{
                     $desc_nombre = $factura_registro->producto->nombre;
                 }
@@ -147,7 +147,11 @@ class Config_fe extends Model
                 $codigo_item = 'NIU';
             } else {
                 $item_nombre = $factura_registro->servicio->codigo_servicio;
-                $desc_nombre = $factura_registro->servicio->nombre;
+                if($factura_registro->servicio->send_sunat_description == true){
+                    $desc_nombre = mb_substr( $factura_registro->servicio->nombre .' '. $factura_registro->descripcion_item, 0, 498, 'UTF-8');
+                }else{
+                    $desc_nombre = $factura_registro->servicio->nombre;
+                }
                 $afec = $factura_registro->servicio->tipo_afec_i_serv->codigo;
                 $codigo_item = 'ZZ';
             }
@@ -402,12 +406,20 @@ class Config_fe extends Model
         foreach ($facturas_registros as $cont => $factura_registro) {
             if (isset($factura_registro->producto->codigo_producto)) {
                 $item_nombre = $factura_registro->producto->codigo_producto;
-                $desc_nombre = $factura_registro->producto->nombre;
+                if($factura_registro->producto->send_sunat_description == true){
+                    $desc_nombre = mb_substr( $factura_registro->producto->nombre .' '. $factura_registro->descripcion_item, 0, 498, 'UTF-8');
+                }else{
+                    $desc_nombre = $factura_registro->producto->nombre;
+                }
                 $afec = $factura_registro->producto->tipo_afec_i_producto->codigo;
                 $codigo_item = 'NIU';
             } else {
                 $item_nombre = $factura_registro->servicio->codigo_servicio;
-                $desc_nombre = $factura_registro->servicio->nombre;
+                if($factura_registro->servicio->send_sunat_description == true){
+                    $desc_nombre = mb_substr( $factura_registro->servicio->nombre .' '. $factura_registro->descripcion_item, 0, 498, 'UTF-8');
+                }else{
+                    $desc_nombre = $factura_registro->servicio->nombre;
+                }
                 $afec = $factura_registro->servicio->tipo_afec_i_serv->codigo;
                 $codigo_item = 'ZZ';
             }
@@ -597,7 +609,7 @@ class Config_fe extends Model
             return $invoice;
         }
     }
-
+    // EN DESUSO
     public static function factura_servicio($factura, $facturas_registros, $guia)
     {
 
@@ -823,12 +835,21 @@ class Config_fe extends Model
             // return $sin_igv;
             if (isset($boleta_registro->producto->codigo_producto)) {
                 $item_nombre = $boleta_registro->producto->codigo_producto;
-                $desc_nombre = $boleta_registro->producto->nombre;
+                if($boleta_registro->producto->send_sunat_description == true){
+                    $desc_nombre = mb_substr( $boleta_registro->producto->nombre .' '. $boleta_registro->descripcion_item, 0, 498, 'UTF-8');
+                }else{
+                    $desc_nombre = $boleta_registro->producto->nombre;
+                }
                 $afec = $boleta_registro->producto->tipo_afec_i_producto->codigo;
                 $codigo_item = 'NIU';
             } else {
                 $item_nombre = $boleta_registro->servicio->codigo_servicio;
-                $desc_nombre = $boleta_registro->servicio->nombre;
+                
+                if($boleta_registro->servicio->send_sunat_description == true){
+                    $desc_nombre = mb_substr( $boleta_registro->servicio->nombre .' '. $boleta_registro->descripcion_item, 0, 498, 'UTF-8');
+                }else{
+                    $desc_nombre = $boleta_registro->servicio->nombre;
+                }
                 $afec = $boleta_registro->servicio->tipo_afec_i_serv->codigo;
                 $codigo_item = 'ZZ';
             }
@@ -997,7 +1018,7 @@ class Config_fe extends Model
             return $invoice;
         }
     }
-
+    // En Desuso
     public static function boleta_servicio($boleta, $boletas_registros)
     {
         $empresa = Empresa::first();
@@ -1251,6 +1272,7 @@ class Config_fe extends Model
         }
 
         $despatch = new Despatch();
+
         $despatch->setVersion('2022')
             ->setTipoDoc('09')
             ->setSerie($serie_g)      //cambiar codigo de guia
@@ -1264,10 +1286,15 @@ class Config_fe extends Model
             ->setEnvio($envio);
 
         foreach ($guias_registros as $cont => $guia_registro) {
+            if($guia_registro->producto->send_sunat_description == true){
+                $desc_nombre = mb_substr( $guia_registro->producto->nombre .' '. $guia_registro->descripcion, 0, 498, 'UTF-8');
+            }else{
+                $desc_nombre = $guia_registro->producto->nombre;
+            }
             $detail[$cont] = new DespatchDetail();
             $detail[$cont]->setCantidad($guia_registro->cantidad)
                 ->setUnidad('ZZ')
-                ->setDescripcion($guia_registro->producto->nombre)
+                ->setDescripcion($desc_nombre)
                 ->setCodigo($guia_registro->producto->codigo_producto);
         }
 
@@ -1275,6 +1302,7 @@ class Config_fe extends Model
 
         return $despatch;
     }
+    // EN DEWS
     public static function guia_remision_baja($guia, $guias_registros, $tipo_transporte)
     {
 
@@ -1443,12 +1471,20 @@ class Config_fe extends Model
             for ($i = 0; $i < $contador; $i++) {
                 if (isset($nc_registro[$i]->producto->codigo_producto)) {
                     $item_nombre = $nc_registro[$i]->producto->codigo_producto;
-                    $desc_nombre = $nc_registro[$i]->producto->nombre;
+                    if($nc_registro[$i]->producto->send_sunat_description == true){
+                        $desc_nombre = mb_substr( $nc_registro[$i]->producto->nombre .' '. $nc_registro[$i]->descripcion, 0, 498, 'UTF-8');
+                    }else{
+                        $desc_nombre = $nc_registro[$i]->producto->nombre;
+                    }
                     $afec = $nc_registro[$i]->producto->tipo_afec_i_producto->codigo;
                     $codigo_item = 'NIU';
                 } else {
                     $item_nombre = $nc_registro[$i]->servicio->codigo_servicio;
-                    $desc_nombre = $nc_registro[$i]->servicio->nombre;
+                    if($nc_registro[$i]->servicio->send_sunat_description == true){
+                        $desc_nombre = mb_substr( $nc_registro[$i]->servicio->nombre .' '. $nc_registro[$i]->descripcion, 0, 498, 'UTF-8');
+                    }else{
+                        $desc_nombre = $nc_registro[$i]->servicio->nombre;
+                    }
                     $afec = $nc_registro[$i]->servicio->tipo_afec_i_serv->codigo;
                     $codigo_item = 'ZZ';
                 }
@@ -1508,12 +1544,20 @@ class Config_fe extends Model
 
                 if (isset($factura_registro[$p]->producto->codigo_producto)) {
                     $item_nombre = $factura_registro[$p]->producto->codigo_producto;
-                    $desc_nombre = $factura_registro[$p]->producto->nombre;
+                    if($factura_registro[$p]->producto->send_sunat_description == true){
+                        $desc_nombre = mb_substr( $factura_registro[$p]->producto->nombre .' '. $factura_registro[$p]->descripcion, 0, 498, 'UTF-8');
+                    }else{
+                        $desc_nombre = $factura_registro[$p]->producto->nombre;
+                    }
                     $afec = $factura_registro[$p]->producto->tipo_afec_i_producto->codigo;
                     $codigo_item = 'NIU';
                 } else {
                     $item_nombre = $factura_registro[$p]->servicio->codigo_servicio;
-                    $desc_nombre = $factura_registro[$p]->servicio->nombre;
+                    if($factura_registro[$p]->servicio->send_sunat_description == true){
+                        $desc_nombre = mb_substr( $factura_registro[$p]->servicio->nombre .' '. $factura_registro[$p]->descripcion, 0, 498, 'UTF-8');
+                    }else{
+                        $desc_nombre = $factura_registro[$p]->servicio->nombre;
+                    }
                     $afec = $factura_registro[$p]->servicio->tipo_afec_i_serv->codigo;
                     $codigo_item = 'ZZ';
                 }
@@ -1791,12 +1835,20 @@ class Config_fe extends Model
             for ($i = 0; $i < $contador; $i++) {
                 if (isset($nc_registros[$i]->producto->codigo_producto)) {
                     $item_nombre = $nc_registros[$i]->producto->codigo_producto;
-                    $desc_nombre = $nc_registros[$i]->producto->nombre;
+                    if($nc_registros[$i]->producto->send_sunat_description == true){
+                        $desc_nombre = mb_substr( $nc_registros[$i]->producto->nombre .' '. $nc_registros[$i]->descripcion, 0, 498, 'UTF-8');
+                    }else{
+                        $desc_nombre = $nc_registros[$i]->producto->nombre;
+                    }
                     $afec = $nc_registros[$i]->producto->tipo_afec_i_producto->codigo;
                     $codigo_item = 'NIU';
                 } else {
                     $item_nombre = $nc_registros[$i]->servicio->codigo_servicio;
-                    $desc_nombre = $nc_registros[$i]->servicio->nombre;
+                    if($nc_registros[$i]->servicio->send_sunat_description == true){
+                        $desc_nombre = mb_substr( $nc_registros[$i]->servicio->nombre .' '. $nc_registros[$i]->descripcion, 0, 498, 'UTF-8');
+                    }else{
+                        $desc_nombre = $nc_registros[$i]->servicio->nombre;
+                    }
                     $afec = $nc_registros[$i]->servicio->tipo_afec_i_serv->codigo;
                     $codigo_item = 'ZZ';
                 }
@@ -1857,12 +1909,20 @@ class Config_fe extends Model
 
                 if (isset($boleta_registro[$p]->producto->codigo_producto)) {
                     $item_nombre = $boleta_registro[$p]->producto->codigo_producto;
-                    $desc_nombre = $boleta_registro[$p]->producto->nombre;
+                    if($boleta_registro[$p]->producto->send_sunat_description == true){
+                        $desc_nombre = mb_substr( $boleta_registro[$p]->producto->nombre .' '. $boleta_registro[$p]->descripcion, 0, 498, 'UTF-8');
+                    }else{
+                        $desc_nombre = $boleta_registro[$p]->producto->nombre;
+                    }
                     $afec = $boleta_registro[$p]->producto->tipo_afec_i_producto->codigo;
                     $codigo_item = 'NIU';
                 } else {
                     $item_nombre = $boleta_registro[$p]->servicio->codigo_servicio;
-                    $desc_nombre = $boleta_registro[$p]->servicio->nombre;
+                    if($boleta_registro[$p]->servicio->send_sunat_description == true){
+                        $desc_nombre = mb_substr( $boleta_registro[$p]->servicio->nombre .' '. $boleta_registro[$p]->descripcion, 0, 498, 'UTF-8');
+                    }else{
+                        $desc_nombre = $boleta_registro[$p]->servicio->nombre;
+                    }
                     $afec = $boleta_registro[$p]->servicio->tipo_afec_i_serv->codigo;
                     $codigo_item = 'ZZ';
                 }
