@@ -30,14 +30,14 @@
         </div>
         <div class="ibox-content" style="padding-right: 3.1%; padding-left: 3.1%; padding-bottom: 10px;">
             <div class="row align-items-center tooltip-demo">
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-5">
                     <h3 style="margin: 0;">{{ $cotizacion->cod_cotizacion }}</h3>
                     <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                 </div>
 
-                <div class="col-12 col-md-4 text-center">
-                    <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
-                        COTIZACIÓN
+                <div class="col-12 col-md-2 text-center">
+                    <h2 class="mb-0 text-nowrap" style="text-align: center">
+                        COTIZACIÓN M.
                     </h2>
                 </div>
 
@@ -46,7 +46,7 @@
                         <div id="btn-slider-cotizacion-manual"
                             style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
                             @if ($cotizacion->tipo == 'factura' && $cotizacion->estado == 0)
-                                <a class="btn btn-success"
+                                <a class="btn btn-success btn-sm"
                                 href="{{ route('cotizacion_manual.facturar', $cotizacion->id) }}"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
@@ -58,7 +58,7 @@
                             @endif
 
                             @if ($cotizacion->tipo == 'factura' && $cotizacion->estado == 1)
-                                <a class="btn btn-default procesado"
+                                <a class="btn btn-default btn-sm procesado"
                                 style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
                                 href="{{ route('facturacion_manual.show', $factura->id) }}"
                                 data-toggle="tooltip"
@@ -69,7 +69,7 @@
                             @endif
 
                             @if($cotizacion->tipo == 'boleta' && $cotizacion->estado == 0)
-                                <a class="btn btn-success"
+                                <a class="btn btn-success btn-sm"
                                 href="{{ route('cotizacion_manual.boletear', $cotizacion->id) }}"
                                 target="_blank"
                                 data-toggle="tooltip"
@@ -82,7 +82,7 @@
                             @endif
 
                             @if($cotizacion->tipo == 'boleta' && $cotizacion->estado == 1)
-                                <a class="btn btn-default procesado"
+                                <a class="btn btn-default btn-sm procesado"
                                 style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
                                 href="{{ route('boleta_manual.show', $boleta->id) }}"
                                 data-toggle="tooltip"
@@ -93,7 +93,7 @@
                             @endif
 
                             @if($cotizacion->tipo == 'nota_venta' && $cotizacion->estado == 0)
-                                <a class="btn btn-success"
+                                <a class="btn btn-sm btn-success"
                                 href="{{ route('cotizacion_manual.gen_nota_venta', $cotizacion->id) }}"
                                 target="_blank"
                                 data-toggle="tooltip"
@@ -106,7 +106,7 @@
                             @endif
 
                             @if($cotizacion->tipo == 'nota_venta' && $cotizacion->estado == 1)
-                                <a class="btn btn-default procesado"
+                                <a class="btn btn-default btn-sm procesado"
                                 style="color: inherit !important; transition: 1s; white-space: nowrap; margin-right: 4px;"
                                 href="{{ route('nota_venta.show', $nota_venta->id) }}"
                                 data-toggle="tooltip"
@@ -120,7 +120,7 @@
                         <button type="button"
                                 id="btn-toggle-cotizacion-manual"
                                 onclick="toggleBtnsCotizacionManual()"
-                                class="btn btn-default"
+                                class="btn btn-default btn-sm"
                                 style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
                             <i class="fa fa-chevron-left" id="btn-arrow-cotizacion-manual"></i>
                         </button>
@@ -129,7 +129,7 @@
                     <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
 
                     <a href="{{ route('cotizacion_manual.free_print', $cotizacion->id) }}"
-                    class="btn btn-secondary"
+                    class="btn btn-secondary btn-sm"
                     target="_blank"
                     data-toggle="tooltip"
                     data-placement="bottom"
@@ -141,7 +141,7 @@
                         @csrf
                         <input type="text" name="name" maxlength="50" hidden value="CotizacionManual_{{ $cotizacion->tipo }}">
                         <button type="submit"
-                                class="btn btn-success"
+                                class="btn btn-success btn-sm"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 data-original-title="Descargar PDF">
@@ -149,7 +149,7 @@
                         </button>
                     </form>
 
-                    <a class="btn btn-success"
+                    <a class="btn btn-success btn-sm"
                     href="{{ route('cotizacion_manual.print', $cotizacion->id) }}"
                     target="_blank"
                     data-toggle="tooltip"
@@ -159,10 +159,10 @@
                     </a>
 
                     @if(Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.cotizacion_manual', $cotizacion->id) }}" method="post" style="padding: 0;" class="btn">
+                        <form action="{{ route('email.cotizacion_manual', $cotizacion->id) }}" method="post" style="padding: 0;" class="btn ">
                             @csrf
                             <button type="submit"
-                                    class="btn btn-secondary"
+                                    class="btn btn-secondary btn-sm"
                                     data-toggle="tooltip"
                                     data-placement="bottom"
                                     formtarget="_blank"
@@ -174,7 +174,7 @@
 
                     <div style="position: relative; display: inline-block;">
                         <div id="auto" onclick="divAuto()">
-                            <a class="btn btn-success"
+                            <a class="btn btn-success btn-sm"
                             style="background: green; border-color: green;"
                             data-toggle="tooltip"
                             data-placement="bottom"
@@ -185,7 +185,7 @@
                     </div>
                     @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
                         <button type="button"
-                                class="btn btn-warning btn-editar"
+                                class="btn btn-warning btn-sm btn-editar"
                                 id="edit"
                                 onclick="click_editar()"
                                 data-toggle="tooltip"
@@ -196,7 +196,7 @@
                         </button>
 
                         <button type="button"
-                                class="btn-no-editar no_mostrar btn btn-warning"
+                                class="btn-no-editar no_mostrar btn btn-warning btn-sm"
                                 onclick="click_cancelar_editar()"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
@@ -215,7 +215,7 @@
                         <input type="text" hidden name="url" value="{{ route('cotizacion_manual_pdf', $cotizacion->id) }}?archivo=">
                         <input type="text" name="name_sin_cambio" hidden value="Cotizacion_{{ $cotizacion->tipo }}" />
                         <button type="submit"
-                                class="btn btn-success"
+                                class="btn btn-success btn-sm"
                                 style="background: green; border-color: green;"
                                 formtarget="_blank"
                                 data-toggle="tooltip"
@@ -458,61 +458,11 @@
 {{-- Fin de modal configuracion --}}
 
 <style>
-    .input_small > div {
-        margin-top: 2px ;
-        margin-bottom: 2px ;
+    .mostrar{
+        display: initial;
     }
-    .input_small > div > input {
-        padding: 5px 10px;
-    }
-    .input_small > div > select{
-        padding: 5px 10px;
-    }
-    #auto{
-        cursor: pointer;
-        box-shadow: 0px 0px 1px #000;
-        display: inline-block;
-    }
-    #auto:hover{
-        opacity: .8;
-    }
-    #div-mostrar{
-        margin: auto;
-        height: 0px;
-        transition: height .4s;
-        color:white;
-        text-align: right;
-    }
-    #auto:hover{
-        opacity: .8;
-    }
-    #auto:hover + #div-mostrar{
-        height: 50px;
-    }
-    /* .form-control{margin-top: 5px; border-radius: 5px} */
-    p#texto{
-        text-align: center;
-        color:black;
-    }
-
-    input#archivoInput{
-        position:absolute;
-        top:0px;
-        left:0px;
-        right:0px;
-        bottom:0px;
-        width:100%;
-        height:100%;
-        opacity: 0  ;
-    }
-    /* .form-control{border-radius: 10px; padding: 10px } */
-    .ibox-tools a{color: white !important}
-    .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
-    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+    .no_mostrar{
+        display: none;
     }
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         font-size: 12px;
@@ -529,163 +479,7 @@
         padding: 3px 12px;
         border: 1px solid #e5e6e7;
     }
-    .limp{
-        width: 90px;
-    }
-    .limp_txt{
-        width: 100%;
-    }
-    .mostrar{
-        display: initial;
-    }
-    .no_mostrar{
-        display: none;
-    }
-    .select2-hidden-accessible{
-        width: 0px;
-        margin: 0px;
-        width: auto;
-    }
-    .table-responsive{
-        /* display: inline-table; */
-    }
-
-    //Estilos nuevos para la seccion de renovacion
-    .renovacion {
-        padding: 0;
-        margin-bottom: 15px;
-        margin-top: 8px;
-    }
-
-    .switch-container {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-        margin: 0;
-        flex-shrink: 0;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: .3s;
-        border-radius: 24px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .3s;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    input:checked + .slider {
-        background-color: #1ab394;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 2px #1ab394;
-    }
-
-    input:checked + .slider:before {
-        transform: translateX(26px);
-    }
-
-    .switch-label {
-        font-size: 13px;
-        color: #676a6c;
-        font-weight: 500;
-        cursor: pointer;
-        user-select: none;
-        margin: 0;
-        line-height: 24px;
-        white-space: nowrap;
-    }
-
-    #renovacion_container {
-        animation: slideDown 0.3s ease-out;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .renovacion select:focus {
-        outline: none;
-        box-shadow: none;
-        border-color: #e5e6e7;
-    }
-
-    .renovacion hr {
-        display: none;
-    }
-
-    .form-control-sm {
-        height: 34px;
-        padding: 0.375rem 0.75rem;
-        font-size: 13px;
-        line-height: 1.5;
-        border-radius: 1px;
-    }
-
-    #renovacion_container select {
-        font-size: 13px;
-        height: 34px;
-        padding: 0.375rem 0.75rem;
-        line-height: 1.5;
-        border: 1px solid #e5e6e7;
-        width: 100%;
-    }
-
-    #extra_selects select {
-        font-size: 13px;
-        height: 34px;
-        padding: 0.375rem 0.75rem;
-        line-height: 1.5;
-        margin-bottom: 0;
-        border: 1px solid #e5e6e7;
-        width: 100%;
-    }
-
-    .renovacion .row {
-        margin-bottom: 6px;
-    }
-    .row_articulo{
-        width: 45% !important;
-        max-width: 45% !important;
-    }
-    </style>
+</style>
 
 <!-- Mainly scripts -->
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

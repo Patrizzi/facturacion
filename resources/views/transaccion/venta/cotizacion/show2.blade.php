@@ -34,15 +34,14 @@
                             <i class="fa fa-arrow-left text-muted"></i>
                         </a>
 
-                        <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="" style="margin: 5px 3px">
-                            <li style="padding: 3px 12px;"><b>Almacenes:</b></li>
-
+                        <ul class="dropdown-menu animated fadeInRight" aria-labelledby="" style="margin: 5px 3px">
+                            <li style="padding: 12px 12px 5px 15px;"><b>Almacenes:</b></li>
                             @foreach ((isset($almacenes_list) && is_iterable($almacenes_list)) ? $almacenes_list : [] as $almacens)
                                 <li>
                                     <form action="{{ route('cotizacion.create_factura') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="almacen" value="{{ $almacens->id }}">
-                                        <button class="btn btn-w-m btn-link" type="submit">
+                                        <button class="btn btn-block btn-link" type="submit" style="box-shadow: none;text-align: left">
                                             {{ $almacens->nombre }}
                                         </button>
                                     </form>
@@ -55,7 +54,7 @@
                         @csrf
                         {{-- Usa el ID del almacén de la cotización (tu $almacen actual es int) --}}
                         <input type="hidden" name="almacen" value="{{ $almacen }}">
-                        <button class="btn btn-link no-hover-icon" type="submit" style="cursor: pointer;">
+                        <button type="submit" class="btn btn-link btn-sm" style="box-shadow: none;transform: none">
                             <i class="fa fa-arrow-left text-muted"></i>
                         </button>
                     </form>
@@ -72,13 +71,13 @@
         </div>
         <div class="ibox-content" style="padding-right: 3.1%; padding-left: 3.1%; padding-bottom: 10px;">
             <div class="row align-items-center tooltip-demo">
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-5">
                     <h3 style="margin: 0;">{{ $cotizacion->cod_cotizacion }}</h3>
                     <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                 </div>
 
-                <div class="col-12 col-md-4 text-center">
-                    <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
+                <div class="col-12 col-md-2 text-center">
+                    <h2 class="mb-0 text-nowrap" style="text-align: center">
                         COTIZACIÓN
                     </h2>
                 </div>
@@ -90,7 +89,7 @@
                                 style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
                                 @if($cotizacion->estado == '1')
                                     @if($cotizacion->tipo=='factura')
-                                        <a class="btn btn-default procesado"
+                                        <a class="btn btn-default btn-sm procesado"
                                         style="color: inherit !important; transition: 1s"
                                         href="{{ route('facturacion.show', $factura->id) }}"
                                         data-toggle="tooltip"
@@ -99,7 +98,7 @@
                                             <i class="fa fa-file-text-o fa-lg"></i>
                                         </a>
                                     @elseif($cotizacion->tipo=='boleta')
-                                        <a class="btn btn-default procesado"
+                                        <a class="btn btn-default btn-sm procesado"
                                         style="color: inherit !important; transition: 1s"
                                         href="{{ route('boleta.show', $boleta->id) }}"
                                         data-toggle="tooltip"
@@ -108,7 +107,7 @@
                                             <i class="fa fa-file-text-o fa-lg"></i>
                                         </a>
                                     @else
-                                        <a class="btn btn-default procesado"
+                                        <a class="btn btn-default btn-sm procesado"
                                         style="color: inherit !important; transition: 1s"
                                         href="{{ route('nota_venta.show', $nota_venta->id) }}"
                                         data-toggle="tooltip"
@@ -124,7 +123,7 @@
                                                 @csrf
                                                 <input type="hidden" name="almacen" value="{{ $almacen }}" />
                                                 <button type="submit"
-                                                        class="btn btn-info"
+                                                        class="btn btn-info btn-sm"
                                                         data-toggle="tooltip"
                                                         data-placement="bottom"
                                                         data-original-title="Facturar">
@@ -137,7 +136,7 @@
                                                 @csrf
                                                 <input type="hidden" name="almacen" value="{{ $almacen }}" />
                                                 <button type="submit"
-                                                        class="btn btn-info"
+                                                        class="btn btn-info btn-sm"
                                                         data-toggle="tooltip"
                                                         data-placement="bottom"
                                                         data-original-title="Boletear">
@@ -150,7 +149,7 @@
                                                 @csrf
                                                 <input type="hidden" name="almacen" value="{{ $almacen }}" />
                                                 <button type="submit"
-                                                        class="btn btn-info"
+                                                        class="btn btn-info btn-sm"
                                                         data-toggle="tooltip"
                                                         data-placement="bottom"
                                                         data-original-title="Generar Nota de Venta">
@@ -166,8 +165,8 @@
                                 <button type="button"
                                         id="btn-toggle-cotizacion"
                                         onclick="toggleBtnsCotizacion()"
-                                        class="btn btn-default"
-                                        style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                        class="btn btn-default btn-sm"
+                                        style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;margin-left: 3px">
                                     <i class="fa fa-chevron-left" id="btn-arrow-cotizacion"></i>
                                 </button>
                             @endcan
@@ -176,7 +175,7 @@
                     {{-- @endif --}}
 
                     <a href="{{ route('cotizacion.free_print', $cotizacion->id) }}"
-                    class="btn btn-secondary"
+                    class="btn btn-secondary btn-sm"
                     target="_blank"
                     data-toggle="tooltip"
                     data-placement="bottom"
@@ -188,7 +187,7 @@
                         <input type="text" name="name" maxlength="50" hidden value="Cotizacion_{{ $cotizacion->tipo }}">
                         <input type="text" hidden name="firma" value="0">
                         <button type="submit"
-                                class="btn btn-success"
+                                class="btn btn-success btn-sm"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 data-original-title="Descargar PDF">
@@ -198,7 +197,7 @@
 
                     <input type="text" value="{{ $cotizacion->id }}" name="id" id="id" hidden>
 
-                    <a class="btn btn-success"
+                    <a class="btn btn-success btn-sm"
                     href="{{ route('cotizacion.print', $cotizacion->id) }}"
                     target="_blank"
                     data-toggle="tooltip"
@@ -208,10 +207,10 @@
                     </a>
 
                     @if(Auth::user()->email_creado == 1)
-                        <form action="{{ route('email.cotizacion', $cotizacion->id) }}" method="post" style="padding-right: 0; padding-left: 0;" class="btn">
+                        <form action="{{ route('email.cotizacion', $cotizacion->id) }}" method="post" style="padding: 0;" class="btn">
                             @csrf
                             <button type="submit"
-                                    class="btn btn-secondary"
+                                    class="btn btn-secondary btn-sm"
                                     data-toggle="tooltip"
                                     data-placement="bottom"
                                     formtarget="_blank"
@@ -223,7 +222,7 @@
 
                     <div style="position: relative; display: inline-block;">
                         <div id="auto" onclick="divAuto()">
-                            <a class="btn btn-success"
+                            <a class="btn btn-success btn-sm"
                             style="background: green; border-color: green;"
                             data-toggle="tooltip"
                             data-placement="bottom"
@@ -235,7 +234,7 @@
                     @if(is_null($factura))
                         @can('cotizacion.editar')
                             <button type="button"
-                                class="btn btn-warning btn-editar"
+                                class="btn btn-warning btn-editar btn-sm"
                                 id="edit"
                                 onclick="click_editar()"
                                 data-toggle="tooltip"
@@ -246,7 +245,7 @@
                             </button>
 
                             <button type="button"
-                                    class="btn-no-editar no_mostrar btn btn-warning"
+                                    class="btn-no-editar no_mostrar btn btn-warning btn-sm"
                                     onclick="click_cancelar_editar()"
                                     data-toggle="tooltip"
                                     data-placement="bottom"
@@ -257,15 +256,15 @@
                         @endcan
                     @endif
                 </div>
-                <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 15px;">
-                    <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn" style="text-align: none; padding-right: 0; padding-left: 0;">
+                <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 17px;">
+                    <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn" style="text-align: none; padding-right: 0; padding-left: 0; margin-right: 4px;">
                         @csrf
                         <input type="tel" name="numero" value="{{ $cotizacion->cliente->celular }}" />
                         <input type="text" name="mensaje" id="texto_orden" hidden />
                         <input type="text" hidden name="url" value="{{ route('pdf_cotizacion', $cotizacion->id) }}?archivo=">
                         <input type="text" name="name_sin_cambio" hidden value="Cotizacion_{{ $cotizacion->tipo }}" />
                         <button type="submit"
-                                class="btn btn-success"
+                                class="btn btn-success btn-sm"
                                 style="background: green; border-color: green;"
                                 formtarget="_blank"
                                 data-toggle="tooltip"
@@ -411,264 +410,7 @@
                 <span hidden> {{$h = 1}} {{ $sume = 0}}</span>
                 <div class="div-editar no_mostrar">
                     @if($cotizacion->estado_vigente == 0 && $cotizacion->estado == 0)
-                        <form action="{{route('cotizacion.update', $cotizacion->id)}}" method="post"  enctype="multipart/form-data" id="coti_update">
-                            @csrf
-                            <div class="row">
-                                <div class="col-sm-6" align="center">
-                                    <div class="form-control ">
-                                        <div class="row input_small">
-                                            <div class="col-sm-4">
-                                                <strong>Señor(es)</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                            <input type="hidden" name="" id="cliente_id" value="{{$cotizacion->cliente->id}}">
-                                                <select class="select2_demo_client" name="cliente" id="cliente" required="" >
-                                                    <option selected value="{{$cotizacion->cliente->id}}">{{$cotizacion->cliente->nombre}} - {{$cotizacion->cliente->numero_documento}}</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <strong>Forma de Pago:</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <select class="form-control" name="forma_pago" required="required">
-                                                    @foreach($forma_pagos as $forma_pago)
-                                                        <option value="{{$forma_pago->id}}" @if($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>{{$forma_pago->nombre}} </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <strong>Garantia:</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <select class="form-control" name="garantia">
-                                                    @foreach($garantia as $garantias)
-                                                        <option value="{{$garantias->descripcion}}" @if($cotizacion->garantia == $garantias->descripcion) selected @endif>{{$garantias->descripcion}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6" align="center" style="padding-bottom: 15px">
-                                    <div class="form-control ">
-                                        <div class="row input_small">
-                                            <div class="col-sm-4">
-                                                <strong>Validez:</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <select  class="form-control" name="validez" required="required">
-                                                    @foreach($validez as $validezz)
-                                                        <option value="{{$validezz->descripcion}}" @if($cotizacion->validez == $validezz->descripcion) selected @endif>{{$validezz->descripcion}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <strong>Tipo de Moneda:</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <input class="form-control" readonly type="text" name="" id="" value="{{$cotizacion->moneda->nombre }}">
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <strong>Comisionista:</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                @if(isset($cotizacion->comisionista->cod_vendedor))
-                                                    <input class="form-control" readonly type="text" id="" value="{{$cotizacion->comisionista->cod_vendedor}} - {{$cotizacion->comisionista->personal->personal_l->nombres}} - {{$cotizacion->comisionista->comision}}%">
-                                                @else
-                                                    <input class="form-control" readonly type="text" id="" value="Sin Comisionista - 0">
-                                                @endif
-                                            </div>
-
-                                            <!-- Sección de Renovación -->
-                                            <div class="col-sm-4" style="margin-top: 15px; display: flex; align-items: center; justify-content: flex-start; padding-right: 15px; padding-left: 55px;">
-                                                <div class="switch-container">
-                                                    <strong>Renovación:</strong>
-                                                    <label class="switch">
-                                                        <input type="checkbox" id="estado_renovacion" name="estado_renovacion" value="1">
-                                                        <span class="slider"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-8" style="margin-top: 15px;">
-                                                <div id="renovacion_container" style="display: none;">
-                                                    <div class="row" style="margin: 0;">
-                                                        <div class="col-sm-7" style="padding-left: 0;">
-                                                            <label style="font-size:11px; color:#676a6c; margin-bottom:3px;">Nueva Fecha de Renovación</label>
-                                                            <input
-                                                                type="date"
-                                                                id="fecha_vencimiento"
-                                                                name="fecha_vencimiento"
-                                                                class="form-control form-control-sm"
-                                                                min="{{ $renovacion ? $renovacion->fecha_vencimiento->format('Y-m-d') : now()->addDay()->format('Y-m-d') }}"
-                                                            >
-                                                            <span id="dias_restantes_preview" style="font-size:11px; margin-top:3px; display:block;"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br style="padding-bottom: 5px">
-                                <div class="col-sm-12">
-                                    <div class="form-control">
-                                        <strong>Observaciones</strong>
-                                        <textarea class="form-control" name="observacion" id="">{{$cotizacion->observacion }}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <table cellspacing="0" class="table table-responsive" id="inp_s">
-                                <thead>
-                                    <tr>
-                                        <th><button class="addmore btn btn-success" type="button"><i class="fa fa-plus"></i></button></th>
-                                        <th>Item</th>
-                                        <th>Stock</th>
-                                        <th>Cantidad</th>
-                                        <th>Precio </th>
-                                        <th>Descuento</th>
-                                        <th>Precio U Desc</th>
-                                        <th>Precio U Com</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="tables">
-                                    @foreach($cotizacion_registro as $cotizacion_registros)
-                                        <tr>
-                                            <td>
-                                                <input type="hidden" name="elem_delete[]" value="{{$cotizacion_registros->id}}">
-                                                <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
-                                                <button type="button" class="btn btn-danger borrar e "><i class="fa fa-trash"></i></button>
-                                            </td>
-                                            <td>
-                                                <select class="monto0 select2_demo_3 select_change limp_select" required="" id="articulo{{$h}}"  autocomplete="off" onchange="ajax({{$h}})" >
-                                                    @if(isset($cotizacion_registros->producto->id))
-                                                        <option value="{{$cotizacion_registros->producto->id}} | {{$cotizacion_registros->producto->codigo_producto}} | {{$cotizacion_registros->producto->codigo_original}} | {{$cotizacion_registros->producto->nombre}}">{{$cotizacion_registros->producto->id}} | {{$cotizacion_registros->producto->codigo_producto}} | {{$cotizacion_registros->producto->codigo_original}} | {{$cotizacion_registros->producto->nombre}}</option>
-                                                    @else
-                                                        <option value="{{$cotizacion_registros->servicio->id}} | {{$cotizacion_registros->servicio->codigo_servicio}} | {{$cotizacion_registros->servicio->codigo_original}} | {{$cotizacion_registros->servicio->nombre}}">{{$cotizacion_registros->servicio->id}} | {{$cotizacion_registros->servicio->codigo_servicio}} | {{$cotizacion_registros->servicio->codigo_original}} | {{$cotizacion_registros->servicio->nombre}}</option>
-                                                    @endif
-                                                </select>
-                                                <textarea type='text' id='descripcion{{$h}}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control limp_txt" autocomplete="off" style="margin-top: 5px;" >{{$cotizacion_registros->descripcion_item}}</textarea>
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control limp" name="stock" id="stock{{$h}}" value="@if($cotizacion_registros->stock != null) {{$cotizacion_registros->stock}} @else 100 @endif" readonly>
-                                            </td>
-                                            <td>
-                                                <input type="number"  name="cantidad[]" id="cantidad{{$h}}" class="form-control limp" onkeyup="multi({{$h}})"  value="{{$cotizacion_registros->cantidad}}" max="{{$cotizacion_registros->stock}}">
-                                            </td>
-                                            <td>
-                                                <input type="text"  name="precio[]" id="precio{{$h}}" class="form-control limp" value="{{$cotizacion_registros->precio}}" readonly>
-                                            </td>
-                                            <td>
-                                                @if(isset($cotizacion_registros->producto->descuento2))
-                                                    <div style="position: relative;">
-                                                        <input class="text_des limp" type='text' id='descuento{{$h}}' name='descuento[]' readonly="readonly" value="{{$cotizacion_registros->producto->descuento2}}" required autocomplete="off"/>
-                                                    </div>
-                                                    <div  class="div_check">
-                                                        @if($cotizacion_registros->descuento > 0)
-                                                            <input class="check" type='checkbox' id='check{{$h}}' name='check[]' onclick="multi({{$h}})" style="" autocomplete="off" checked/>
-                                                            <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="{{$cotizacion_registros->producto->descuento2}}">
-                                                        @else
-                                                            <input class="check" type='checkbox' id='check{{$h}}' name='check[]' onclick="multi({{$h}})" style="" autocomplete="off" />
-                                                            <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="0">
-                                                        @endif
-                                                    </div>
-
-                                                    <input style="width: 76px" hidden="" type='text' id='tipo_afec{{$h}}' name='tipo_afec[]' readonly="readonly" class="monto0 form-control limp" onkeyup="multi({{$h}})" required  autocomplete="off" value="{{strtok($cotizacion_registros->producto->tipo_afec_i_producto->informacion," ")}}"  />
-                                                    <input class="celda" name="articulo[]" id="input_prod{{$h}}" value="{{$cotizacion_registros->producto->id}} | {{$cotizacion_registros->producto->codigo_producto}} | {{$cotizacion_registros->producto->codigo_original}} | {{$cotizacion_registros->producto->nombre}}" class="limp" hidden>
-                                                @else
-                                                    <div style="position: relative;">
-                                                        <input class="text_des limp" type='text' id='descuento{{$h}}' name='descuento[]' readonly="readonly" value="{{$cotizacion_registros->servicio->descuento}}" required autocomplete="off"/>
-
-                                                    </div>
-                                                    <div  class="div_check">
-                                                        @if($cotizacion_registros->descuento > 0)
-                                                            <input class="check" type='checkbox' id='check{{$h}}' name='check[]' onclick="multi({{$h}})" style="" autocomplete="off" checked />
-                                                            <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="{{$cotizacion_registros->descuento}}">
-                                                        @else
-                                                            <input class="check" type='checkbox' id='check{{$h}}' name='check[]' onclick="multi({{$h}})" style="" autocomplete="off" />
-                                                            <input type='hidden' id='check_descuento{{$h}}' name='check_descuento[]' class="form-control limp"  required value="0">
-                                                        @endif
-                                                    </div>
-
-                                                    <input style="width: 76px" hidden="" type='text' id='tipo_afec{{$h}}' name='tipo_afec[]' readonly="readonly" class="monto0 form-control limp" onkeyup="multi({{$h}})" required  autocomplete="off" value="{{strtok($cotizacion_registros->servicio->tipo_afec_i_serv->informacion," ")}}"  />
-                                                    <input  class="celda" name="articulo[]" id="input_prod{{$h}}" value="{{$cotizacion_registros->servicio->id}} | {{$cotizacion_registros->servicio->codigo_servicio}} | {{$cotizacion_registros->servicio->codigo_original}} | {{$cotizacion_registros->servicio->nombre}}" class="limp" hidden>
-                                                @endif
-                                                <input type='hidden' id='promedio_original{{$h}}' name='promedio_original[]' class="form-control limp" required value="{{$cotizacion_registros->promedio_original}}">
-                                            </td>
-                                            <td>
-                                                <input type="text" readonly name="precio_unitario_descuento[]" id="precio_unitario_descuento{{$h}}" class="form-control limp" value="{{$cotizacion_registros->precio_unitario_desc}}">
-                                            </td>
-                                            <td>
-
-                                                @if(isset($cotizacion->comisionista->cod_vendedor))
-                                                    <input style="width: 76px" type='hidden' name="comision[]" id='comision{{$h}}'  readonly="readonly" class="form-control"  required  autocomplete="off" value="{{$cotizacion->comisionista->comision}}" />
-                                                @else
-                                                    <input style="width: 76px" type='hidden' name="comision[]" id='comision{{$h}}'  readonly="readonly" class="form-control"  required  autocomplete="off" value="0" />
-                                                @endif
-                                                <input type="text" readonly name="precio_unitario_comision[]" id="precio_unitario_comision{{$h}}" class="form-control limp" value="{{$cotizacion_registros->precio_unitario_comi}}">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="total_inp" id="total{{$h}}" readonly class="form-control limp" value="{{($cotizacion_registros->cantidad*$cotizacion_registros->precio_unitario_comi)}}">
-                                                <input type='text' id='afectacion{{$h}}'  style="width: 76px"  name='afectacion' disabled="disabled" class="afectacion form-control limp" hidden="" required  autocomplete="off" value="{{$cotizacion_registros->precio_unitario_comi}}" />
-                                                {{-- <input style="width: 76px" type='text' id='precio_unitario_igv{{$h}}' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required autocomplete="off" /> --}}
-                                            </td>
-                                        </tr>
-                                        <span hidden>{{$h++}}</span>
-                                        <span hidden>{{ $sume = ($cotizacion_registros->precio_unitario_comi * $cotizacion_registros->cantidad)+$sume}}</span>
-                                    @endforeach
-                                </tbody>
-                                <tfooter>
-                                    <tr>
-                                        <td colspan="3" rowspan="3">
-                                            <h3 align="left" class="h3-total" id="left_h3">
-                                                <?php
-                                                    $v=new NumeroALetras() ;
-                                                    $letra=($v->toInvoice($end, 2));
-                                                // $end_final_point=strstr($end2, '.', false);
-                                                // $end_final=str_replace('.', '',$end_final_point);
-                                                ?>
-                                                Son : {{ucfirst(mb_strtolower($letra,'UTF-8'))}} {{$cotizacion->moneda->nombre }}
-                                            </h3>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Subtotal:</td>
-                                        <td colspan="2">
-                                            <input id='subtotal_gravado'  disabled="disabled"  hidden="" class="form-control limp_txt" required value="{{$sub_total}}"/>
-                                            <input type="text" id="sub_total" name="sub_total" disabled class="form-control limp_txt" value="{{$sub_total}}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Igv:</td>
-                                        <td colspan="2">
-                                            <input type="text" id="igv_input" name="igv_input" disabled class="form-control limp_txt" value="{{number_format(round($igv_p, 2),2)}}">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>Total:</td>
-                                        <td colspan="2">
-                                            <input type="text" id="total_final" name="total_final" disabled class="form-control limp_txt" value="{{number_format(round($end, 2),2)}}">
-                                        </td>
-                                    </tr>
-                                </tfooter>
-                            </table>
-                            <br>
-                            <div class="col-sm-12" align="right">
-                                <button  data-style="zoom-out" class="guardar ladda-button btn btn-primary btn-outline" type="submit" >Guardar</button>
-                                <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;" type="button"  >Guardar y Finalizar</button>
-                                <button class="btn btn-secondary ladda-button finalizar " id="finalizar" hidden="" data-style="zoom-out" >
-                                </button>
-                            </div>
-                        </form>
-                        @else
+                        @include('transaccion.venta.cotizacion.factura.edit')
                     @endif
                 </div>
                 <!-- /table-responsive -->
@@ -682,50 +424,12 @@
     </div>
 </div>
 <style>
-    .row {
-        justify-content: center;
+    .mostrar{
+        display: initial;
     }
-    .input_small > div {
-        margin-top: 2px ;
-        margin-bottom: 2px ;
+    .no_mostrar{
+        display: none;
     }
-    .input_small > div > input {
-        padding: 5px 10px;
-    }
-    .input_small > div > select{
-        padding: 5px 10px;
-    }
-    #auto{
-        cursor: pointer;
-        box-shadow: 0px 0px 1px #000;
-        display: inline-block;
-    }
-    /* #auto:hover{
-        opacity: .8;
-    } */
-    #div-mostrar{
-        margin: auto;
-        height: 0px;
-        transition: height .4s;
-        color:white;
-        text-align: right;
-    }
-    /* #auto:hover{
-        opacity: .8;
-    } */
-    /* #div-mostrar{
-        height: 50px;
-    } */
-    .form-control{border-radius: 10px; padding: 10px }
-    /* .ibox-tools a{color: white !important} */
-    .a{height: 37px; margin:0;border-radius: 0px;text-align: center;}
-    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;}
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-    input[type=number] { -moz-appearance:textfield; }
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         font-size: 12px;
     }
@@ -740,162 +444,6 @@
         display: block;
         padding: 3px 12px;
         border: 1px solid #e5e6e7;
-    }
-    .check{-webkit-appearance: none;height: 34px;background-color: #ffffff00;-moz-appearance: none;border: none;appearance: none;width: 90px;border-radius: 10px;}
-    .div_check{position: relative;top: -33px;left: 0px;background-color: #ffffff00;  top: -35;}
-    .check:checked {background: #0375bd6b;}
-    .text_des{border-radius: 10px;border: 1px solid #e5e6e7;width: 80px;padding: 6px 12px;}
-    .limp{
-        width: 90px;
-    }
-    .limp_txt{
-        width: 100%;
-    }
-    .mostrar{
-        display: ;
-    }
-    .no_mostrar{
-        display: none;
-    }
-    .select2-hidden-accessible{
-        width: 0px;
-        margin: 0px;
-        width: auto;
-    }
-    .select2-selection.select2-selection--single{
-        text-align: left;
-    }
-
-    //Estilos nuevos para la seccion de renovacion
-    .renovacion {
-        padding: 0;
-        margin-bottom: 15px;
-        margin-top: 8px;
-    }
-
-    .switch-container {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-        margin: 0;
-        flex-shrink: 0;
-    }
-
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: .3s;
-        border-radius: 24px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .3s;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    input:checked + .slider {
-        background-color: #1ab394;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 2px #1ab394;
-    }
-
-    input:checked + .slider:before {
-        transform: translateX(26px);
-    }
-
-    .switch-label {
-        font-size: 13px;
-        color: #676a6c;
-        font-weight: 500;
-        cursor: pointer;
-        user-select: none;
-        margin: 0;
-        line-height: 24px;
-        white-space: nowrap;
-    }
-
-    #renovacion_container {
-        animation: slideDown 0.3s ease-out;
-    }
-
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .renovacion select:focus {
-        outline: none;
-        box-shadow: none;
-        border-color: #e5e6e7;
-    }
-
-    .renovacion hr {
-        display: none;
-    }
-
-    .form-control-sm {
-        height: 34px;
-        padding: 0.375rem 0.75rem;
-        font-size: 13px;
-        line-height: 1.5;
-        border-radius: 1px;
-    }
-
-    #renovacion_container select {
-        font-size: 13px;
-        height: 34px;
-        padding: 0.375rem 0.75rem;
-        line-height: 1.5;
-        border: 1px solid #e5e6e7;
-        width: 100%;
-    }
-
-    #extra_selects select {
-        font-size: 13px;
-        height: 34px;
-        padding: 0.375rem 0.75rem;
-        line-height: 1.5;
-        margin-bottom: 0;
-        border: 1px solid #e5e6e7;
-        width: 100%;
-    }
-
-    .renovacion .row {
-        margin-bottom: 6px;
     }
 </style>
 
