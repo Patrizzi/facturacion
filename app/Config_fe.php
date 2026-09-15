@@ -138,7 +138,11 @@ class Config_fe extends Model
         foreach ($facturas_registros as $cont => $factura_registro) {
             if (isset($factura_registro->producto->codigo_producto)) {
                 $item_nombre = $factura_registro->producto->codigo_producto;
-                $desc_nombre = $factura_registro->producto->nombre;
+                if($factura_registro->producto->send_description_sunat == true){
+                    $desc_nombre = substr( $factura_registro->producto->nombre + $factura_registro->producto->descripcion, 0 , 500);
+                }else{
+                    $desc_nombre = $factura_registro->producto->nombre;
+                }
                 $afec = $factura_registro->producto->tipo_afec_i_producto->codigo;
                 $codigo_item = 'NIU';
             } else {

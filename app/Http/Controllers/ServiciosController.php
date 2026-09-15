@@ -97,7 +97,11 @@ class ServiciosController extends Controller
         } else {
             $name = "servicio.png";
         }
-
+        if ($request->get('check_description_sunat') == "on") {
+            $send_sunat_description = 1;
+        }else{
+            $send_sunat_description = 0;
+        }
         $isAjax = $request->ajax() || $request->has('_method');
         if ($isAjax) {
             try {
@@ -118,7 +122,9 @@ class ServiciosController extends Controller
                     'moneda_id' => $moneda_principal->id,
                     'foto' => $name,
                     'estado_activo' => '0',
-                    'estado_anular' => '0'
+                    'estado_anular' => '0',
+                    'send_sunat_description'=> $send_sunat_description
+
                 ]);
                 return response()->json([
                     'success' => true,
@@ -181,6 +187,12 @@ class ServiciosController extends Controller
         $servicios->estado_anular = '0';
         $servicios->estado_activo = '0';
         $servicios->tipo_afectacion_id = $request->get('afectacion');
+        if ($request->get('check_description_sunat') == "on") {
+            $send_sunat_description = 1;
+        }else{
+            $send_sunat_description = 0;
+        }
+        $servicios->send_sunat_description = $send_sunat_description;
 
         $servicios->save();
         return redirect()->route('servicios.show', $servicios->id);
@@ -257,6 +269,11 @@ class ServiciosController extends Controller
                 $destinationPath = public_path('/archivos/imagenes/servicios/');
                 $image1->move($destinationPath, $name);
             }
+            if ($request->get('send_sunat_description') == "on") {
+                $send_sunat_description = 1;
+            }else{
+                $send_sunat_description = 0;
+            }
             $servicio = Servicios::findOrFail($id);
             // Generar Cambio para precio nacional y precio extranjero ----------------------------------------------
             if ($isAjax) {
@@ -274,6 +291,7 @@ class ServiciosController extends Controller
                     'tipo_afectacion_id' => $request->tipo_afectacion_id,
                     'moneda_id' => $moneda_principal->id,
                     'foto' => $name ?? $servicio->foto,
+                    'send_sunat_description' => $send_sunat_description,
                     'estado_activo' => '0',
                 ]);
                 return response()->json([
@@ -304,12 +322,12 @@ class ServiciosController extends Controller
                 $servicio->descuento = $request->get('descuento');
                 $servicio->utilidad = $request->get('utilidad');
                 $servicio->precio_nacional = round($precio_nacional, 2);
-                $servicio->precio_extranjero = round($precio_extranjero, 2);
-
+                
                 if ($name) {
                     $servicio->foto = $name;
                 }
                 $servicio->tipo_afectacion_id = $request->get('afectacion');
+                $servicio->send_sunat_description = $send_sunat_description;
                 $servicio->save();
                 // return $servicio;
                 return redirect()->route('servicios.show', $id);

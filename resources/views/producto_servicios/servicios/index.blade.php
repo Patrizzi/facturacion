@@ -344,6 +344,7 @@
                                 data-estado_anular="${servicio.estado_anular}"
                                 data-fecha_creacion="${servicio.fecha_creacion}"
                                 data-familia="${servicio.familia.nombre}"
+                                data-check_description="${servicio.send_sunat_description}"
                             `;
                         }
                         if (permiso_ver) {

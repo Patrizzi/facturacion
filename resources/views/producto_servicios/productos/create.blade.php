@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"> --}}
 {{-- <link rel="stylesheet" href="{{ 'css/productos/create.css' }}"> --}}
 
 <!-- Modal EditarProducto - 29/05/2025 -->
@@ -410,6 +410,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Envio de la Descripcion de Sunat -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row align-items-center">
+                                        <label class="col-md-2 col-form-label" data-toggle="tooltip" data-placement="top" data-original-title="Se enviará el nombre + descripcion en Comprobantes a Sunat" >
+                                            <strong>Descripcion Sunat</strong>
+                                        </label>
+                                        
+                                        <div class="col-md-10">
+                                            <input type="checkbox" name="check_description_sunat" id="check_description_sunat">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -517,6 +531,9 @@
 
     #div_ayuda_utilidad, #div_ayuda_utilidad_edit {
         display: none;
+    }
+    .tooltip.fade.bs-tooltip-top.show{
+        z-index: 9999999;
     }
 </style>
 

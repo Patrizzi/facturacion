@@ -26,7 +26,9 @@ class Servicios extends Model
         'moneda_id',
         'foto',
         'estado_activo',
-        'estado_anular'
+        'estado_anular',
+        'send_sunat_description'
+
     ];
 
     protected $guarded = [];

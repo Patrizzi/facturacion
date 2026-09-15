@@ -281,6 +281,19 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Envio de la Descripcion de Sunat -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row align-items-center">
+                                    <label class="col-md-2 col-form-label" data-toggle="tooltip" data-placement="top" data-original-title="Se enviará el nombre + descripcion en Comprobantes a Sunat" >
+                                        <strong>Descripcion Sunat</strong>
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" name="" id="ver_check_description_sunat" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -329,6 +342,7 @@
         var familia_name = $(this).data('familia_name');
         var sub_familia_name = $(this).data('subfamilia_name');
         var tipo_afectacion = $(this).data('tipo_afectacion');
+        var check_description_sunat = $(this).data('check_description');
 
         $('#show_codigo_servicio').val(codigo_servicio);
         $('#codigo_original_show').val(codigo_original);
@@ -343,7 +357,11 @@
         $('#marca_show').val(marca_name);
         $('#sub_familia_show').val(sub_familia_name);
         $('#tipo_afectacion_show').val(tipo_afectacion);
-        
+        if(check_description_sunat == 1){
+            $('#ver_check_description_sunat').val('Si');
+        }else{
+            $('#ver_check_description_sunat').val('No');
+        }
         $('#fotoPreviaEdit').attr('src', "{{ asset('/archivos/imagenes/servicios') }}/" + foto);
         
         // Precios
