@@ -1,5 +1,6 @@
 <style>
     .table-responsive {
+<<<<<<< HEAD
         width: 100% !important;
         overflow-x: auto !important;
     }
@@ -7,6 +8,11 @@
         min-width: 1200px; /* Le da el ancho mínimo perfecto a la tabla general de comprobantes */
     }
     
+=======
+        overflow: visible !important;
+    }
+
+>>>>>>> origin/master
     select.form-control:not([size]):not([multiple]) {
         height: 100%;
     }

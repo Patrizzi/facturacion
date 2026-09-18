@@ -460,6 +460,7 @@ class ParameterCallController extends Controller
 
     public function search_product(Request $request)
     {
+<<<<<<< HEAD
         $moneda_request = Moneda::find($request->get('moneda'));
         $store = $request->get('almacen');
         $search = $request->articulo;
@@ -603,6 +604,185 @@ class ParameterCallController extends Controller
 
         // 5. Respuesta JSON Unificada y Correcta
         return response()->json($data_all, 200);
+=======
+        $money = $request->get('moneda');
+        $money_id = Moneda::where('id', $money)->first();
+        $store = $request->get('almacen');
+
+        $search = $request->articulo;
+        //Obtención del tipo de cambio
+        if($request->has('fecha_tipo_cambio') != null){
+            $fecha = Carbon::createFromFormat('d-m-Y', $request->get('fecha_tipo_cambio'))
+              ->format('Y-m-d');
+
+            $tipo_cambio = TipoCambio::where('fecha', $fecha)->first();
+        }else{
+            $tipo_cambio = TipoCambio::latest('created_at')->first();
+        }
+        // dd($tipo_cambio);
+        // OBTENCION DE LOS ARTICULOS A BUSCAR
+        $orderProduct = $search == '' ? 'desc' : 'asc';
+        $orderService = 'asc';
+
+        $products = Producto::orderby('nombre', $orderProduct)
+            ->select('id', 'codigo_producto', 'codigo_original', 'nombre')
+            ->where(function ($query) use ($search) {
+                $query->where('codigo_producto', 'like', '%' . $search . '%')
+                    ->orWhere('codigo_original', 'like', '%' . $search . '%')
+                    ->orWhere('nombre', 'like', '%' . $search . '%');
+            })
+            ->get();
+
+        $services = Servicios::orderby('nombre', $orderService)
+            ->select('id', 'codigo_servicio', 'codigo_original', 'nombre', 'estado_anular')
+            ->where(function ($query) use ($search) {
+                $query->where('codigo_servicio', 'like', '%' . $search . '%')
+                    ->orWhere('codigo_original', 'like', '%' . $search . '%')
+                    ->orWhere('nombre', 'like', '%' . $search . '%');
+            })
+            ->get();
+
+        if ($money_id->principal == 1) {
+            $moneda = Moneda::where('principal', '1')->first();
+            if (count($products) > 0) {
+                foreach ($products as $key1 => $single_product) {
+                    $product = Producto::find($single_product->id);
+                    if ($moneda->tipo == 'nacional') {
+                        $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') * ($product->utilidad - $product->descuento1) / 100;
+                        $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') + $utilidad), 2);
+                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
+                        $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_nacional'), 2);
+                    } else {
+                        $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * ($product->utilidad - $product->descuento1) / 100;
+                        $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') + $utilidad), 2);
+                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
+                        $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero'), 2);
+                    }
+                    $afectacion = explode(" ", $product->tipo_afec_i_producto->informacion);
+
+                    //Guardado de variables
+                    $data_all[] = [
+                        'identifier' => 'product',
+                        'id' => $product->id,
+                        'codigo' => $product->codigo_producto . " | " . $product->codigo_original,
+                        'nombre' => $product->nombre,
+                        'description' => $product->descripcion,
+                        'utility' => $utilidad,
+                        'price' => $array,
+                        'stock' => $array_cantidad,
+                        'average' => $array_promedio,
+                        'discount' => $product->descuento2,
+                        'afectacion' => $afectacion[0],
+                        'moneda' => $moneda,
+                    ];
+                }
+            }
+            if (count($services) > 0) {
+                foreach ($services as $key2 => $single_service) {
+                    $service = Servicios::find($single_service->id);
+                    if ($moneda->tipo == 'nacional') {
+                        //Calculo de array para precio, stock en (SERVICIO)
+                        $utilidad_serv = $service->precio_nacional * ($service->utilidad) / 100;
+                        $array2 = round($service->precio_nacional + $utilidad_serv, 2);
+                        $array_promedio_serv = ($service->precio_nacional);
+                    } else {
+                        $utilidad_serv = $service->precio_extranjero * ($service->utilidad) / 100;
+                        $array2 = round($service->precio_extranjero + $utilidad_serv, 2);
+                        $array_promedio_serv = ($service->precio_extranjero);
+                    }
+                    $afectacion = explode(" ", $service->tipo_afec_i_serv->informacion);
+                    $data_all[] = [
+                        'identifier' => 'service',
+                        'id' => $service->id,
+                        'codigo' => $service->codigo_servicio . " | " . $service->codigo_original,
+                        'nombre' => $service->nombre,
+                        'description' => $service->descripcion,
+                        'utility' => $utilidad_serv,
+                        'price' => $array2,
+                        'stock' => 100,
+                        'average' => $array_promedio_serv,
+                        'discount' => $service->descuento2,
+                        'afectacion' => $afectacion[0],
+                        'moneda' => $moneda,
+                    ];
+                }
+            }
+        } else {
+            $moneda = Moneda::where('principal', '0')->first();
+            if (count($products) > 0) {
+                foreach ($products as $key3 => $single_product) {
+                    $product = Producto::find($single_product->id);
+                    if ($moneda->tipo == 'extranjera') {
+                        $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') * ($product->utilidad - $product->descuento1) / 100;
+                        $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') + $utilidad) / $tipo_cambio->paralelo, 2);
+                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
+                        $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') / $tipo_cambio->paralelo, 2);
+                    } else {
+                        $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * ($product->utilidad - $product->descuento1) / 100;
+                        $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') + $utilidad) * $tipo_cambio->paralelo, 2);
+                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
+                        $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * $tipo_cambio->paralelo, 2);
+                    }
+                    $afectacion = explode(" ", $product->tipo_afec_i_producto->informacion);
+                    $data_all[] = [
+                        'identifier' => 'product',
+                        'id' => $product->id,
+                        'codigo' => $product->codigo_producto . " | " . $product->codigo_original,
+                        'nombre' => $product->nombre,
+                        'description' => $product->descripcion,
+                        'utility' => $utilidad,
+                        'price' => $array,
+                        'stock' => $array_cantidad,
+                        'average' => $array_promedio,
+                        'discount' => $product->descuento2,
+                        'afectacion' => $afectacion[0],
+                        'moneda' => $moneda,
+                    ];
+                }
+            }
+            if (count($services) > 0) {
+                foreach ($services as $key4 => $single_service) {
+                    $service = Servicios::find($single_service->id);
+                    if ($moneda->tipo == 'extranjera') {
+                        //Calculo de array para precio, stock en (SERVICIO)
+                        $utilidad_serv = $service->precio_nacional * ($service->utilidad) / 100;
+                        $array2 = round(($service->precio_nacional + $utilidad_serv) / $tipo_cambio->paralelo, 2);
+                        $array_promedio_serv = ($service->precio_nacional) / $tipo_cambio->paralelo;
+                    } else {
+                        $utilidad_serv = $service->precio_extranjero * ($service->utilidad) / 100;
+                        $array2 = round(($service->precio_extranjero + $utilidad_serv) * $tipo_cambio->paralelo, 2);
+                        $array_promedio_serv = $service->precio_extranjero / $tipo_cambio->paralelo;
+                    }
+                    $afectacion = explode(" ", $service->tipo_afec_i_serv->informacion);
+                    $data_all[] = [
+                        'identifier' => 'service',
+                        'id' => $service->id,
+                        'codigo' => $service->codigo_servicio . " | " . $service->codigo_original,
+                        'nombre' => $service->nombre,
+                        'description' => $service->descripcion,
+                        'utility' => $utilidad_serv,
+                        'price' => $array2,
+                        'stock' => 100,
+                        'average' => $array_promedio_serv,
+                        'discount' => $service->descuento2,
+                        'afectacion' => $afectacion[0],
+                        'moneda' => $moneda,
+                    ];
+                }
+            }
+        }
+        // * (data) es un array donde se alojaran todos los campos requeridos para devolverlos de forma correcta
+        if (count($products) == 0 && count($services) == 0) {
+            return response()->json([
+                'draw' => 0,
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => []
+            ]);
+        }
+
+        return response(json_encode($data_all), 200)->header('content-type', 'text/plain');
+>>>>>>> origin/master
     }
     public function search_product_manual(Request $request)
     {

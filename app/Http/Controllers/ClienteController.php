@@ -317,8 +317,11 @@ class ClienteController extends Controller
             'Codigo Postal',
             'Aniversario',
             'Fecha Registro',
+<<<<<<< HEAD
             'Vendedor Asignado',
             'Forma de Pago'
+=======
+>>>>>>> origin/master
         ];
 
         // Agregar headers de sucursales dinámicamente
@@ -329,7 +332,11 @@ class ClienteController extends Controller
         $headers[] = 'Retenedor';
 
         $rows = [$headers];
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> origin/master
         foreach ($clientes as $cliente) {
             $row = [
                 $cliente->nombre,
@@ -346,9 +353,13 @@ class ClienteController extends Controller
                 $cliente->tipo_cliente,
                 $cliente->cod_postal,
                 $cliente->aniversario,
+<<<<<<< HEAD
                 $cliente->fecha_registro,
                 $cliente->vendedor_asignado?->personal?->personal_l->nombres.' '.$cliente->vendedor_asignado?->personal?->personal_l->apellidos,
                 $cliente->forma_pago?->id,
+=======
+                $cliente->fecha_registro
+>>>>>>> origin/master
             ];
 
             $clientSucur = Cliente_sucursal::where('cliente_id', $cliente->id)->get();
@@ -461,8 +472,11 @@ class ClienteController extends Controller
             'Codigo Postal',
             'Aniversario',
             'Fecha Registro',
+<<<<<<< HEAD
             'Vendedor Asignado',
             'Forma de Pago'
+=======
+>>>>>>> origin/master
         ];
 
         // Agregar headers de sucursales dinámicamente
@@ -491,9 +505,13 @@ class ClienteController extends Controller
                 $cliente->tipo_cliente,
                 $cliente->cod_postal,
                 $cliente->aniversario,
+<<<<<<< HEAD
                 $cliente->fecha_registro,
                 $cliente->vendedor_asignado?->personal?->personal_l->nombres.' '.$cliente->vendedor_asignado?->personal?->personal_l->apellidos,
                 $cliente->forma_pago?->id,
+=======
+                $cliente->fecha_registro
+>>>>>>> origin/master
             ];
 
             $clientSucur = Cliente_sucursal::where('cliente_id', $cliente->id)->get();

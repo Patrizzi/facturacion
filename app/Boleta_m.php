@@ -244,6 +244,7 @@ class Boleta_m extends Model
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
+<<<<<<< HEAD
                 $q->orWhereHas('registros_m', function ($q) use ($filter) {
                     $q->where('descripcion_item', 'like', '%' . $filter . '%')
                         ->orWhereHas('producto', function ($q) use ($filter) {
@@ -257,6 +258,8 @@ class Boleta_m extends Model
                                 ->orWhere('codigo_original', 'like', '%' . $filter . '%');
                         });
                 });
+=======
+>>>>>>> origin/master
             });
         }
         $cotizaciones = $query->get();

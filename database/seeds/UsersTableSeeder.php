@@ -17,7 +17,11 @@ class UsersTableSeeder extends Seeder
            'name' => 'Administrador',
            'email' => 'desarrollo@jypsac.com',
            'personal_id' => '1',
+<<<<<<< HEAD
            'password' => bcrypt('@G^e^Fet&VGTsUBqLekW'),    /** CONTRASEÑAAAA */
+=======
+           'password' => bcrypt('@G^e^Fet&VGTsUBqLekW'),
+>>>>>>> origin/master
             'estado' => 1,
             'confi_id' => 1,
            'email_creado' => 0,

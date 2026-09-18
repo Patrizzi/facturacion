@@ -374,6 +374,7 @@ class Facturacion extends Model
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
+<<<<<<< HEAD
                 $q->orWhereHas('registros', function ($q) use ($filter) {
                     $q->where('descripcion_item', 'like', '%' . $filter . '%')
                         ->orWhereHas('producto', function ($q) use ($filter) {
@@ -387,6 +388,8 @@ class Facturacion extends Model
                                 ->orWhere('codigo_original', 'like', '%' . $filter . '%');
                         });
                 });
+=======
+>>>>>>> origin/master
             });
         }
         $facturas = $query->get();

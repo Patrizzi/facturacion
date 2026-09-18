@@ -234,7 +234,11 @@
                                                             aria-hidden="true"></i></button>
                                                 </div>
                                                 <button type="button" class="btn btn-sm btn-primary btn-outline" data-toggle="modal"
+<<<<<<< HEAD
                                                     data-target="#add_product_data" id="add_new_product">
+=======
+                                                    data-target="#add_product_data">
+>>>>>>> origin/master
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
@@ -410,10 +414,17 @@
                         <div class="col-lg-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover data_table_multiple"
+<<<<<<< HEAD
                                     style="font-size: 90%;border-top: 1px solid #e7eaec;padding: 0px">
                                     <thead>
                                         <tr>
                                             {{-- <th>ID</th> --}}
+=======
+                                    style="font-size: 90%;border-top: 1px solid #e7eaec;">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+>>>>>>> origin/master
                                             <th>CÓDIGO</th>
                                             <th>ARTÍCULO</th>
                                             <th>CANTIDAD</th>
@@ -1428,23 +1439,35 @@
                 search_multiple(busqueda);
             }, 500); // Espera 300 ms antes de ejecutar la acción
         });
+<<<<<<< HEAD
         $('#add_new_product').on('click', function(){
             search_multiple("");
             $('#search_product').val('');
         });
         function search_multiple(busqueda) {
             // Limpiar DataTable previo
+=======
+
+        function search_multiple(busqueda) {
+            // CLEAN DATABLE(?)
+>>>>>>> origin/master
             if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
                 $('.data_table_multiple').DataTable().clear().destroy();
             }
             $('.data_table_multiple tbody').empty();
 
+<<<<<<< HEAD
+=======
+            var almacen = $('[id="almacen_id"]').val();
+            var moneda = $('[id="moneda_id"]').val();
+>>>>>>> origin/master
             $.ajax({
                 type: "post",
                 url: "{{ route('pa.search_multiple') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'articulo': busqueda,
+<<<<<<< HEAD
                     'almacen': $('[id="almacen_id"]').val(),
                     'moneda': $('[id="moneda_id"]').val()
                 },
@@ -1459,6 +1482,38 @@
                     }
 
                     // Inicializar DataTable
+=======
+                    'almacen': almacen,
+                    'moneda': moneda
+                },
+                success: function(msg) {
+                    if (validarJson(msg)) {
+                        var data = JSON.parse(msg);
+                        if (data.length === 0) {
+                            toastr.warning("No se encontraron resultados",
+                                '', {
+                                    timeOut: 3000
+                                });
+                            return;
+                        }
+                    } else if (msg == "[]") {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    } else {
+                        toastr.warning("No se encontraron resultados",
+                            '', {
+                                timeOut: 3000
+                            });
+                        return;
+                    }
+                    var quantity = $('#quantity_modal').val();
+                    if (quantity == "") {
+                        quantity = 1;
+                    }
+>>>>>>> origin/master
                     $('.data_table_multiple').DataTable({
                         "bLengthChange": false,
                         "searching": false,
@@ -1466,6 +1521,7 @@
                         pageLength: 10,
                         responsive: true,
                         "aaData": data,
+<<<<<<< HEAD
                         "columns": [
                             { "data": "id" },
                             { "data": "codigo" },
@@ -1476,31 +1532,76 @@
                                 title: 'CANTIDAD',
                                 render: function(data, type, row) {
                                     return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
+=======
+                        "columns": [{
+                                "data": "id"
+                            },
+                            {
+                                "data": "codigo"
+                            },
+                            {
+                                "data": "nombre",
+                                "defaultContent": ""
+                            },
+                            {
+                                "data": "stock",
+                                "defaultContent": ""
+                            },
+                            {
+                                data: null,
+                                title: 'CANTIDAD',
+                                render: function(data, type, row, meta) {
+                                    return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
+
+>>>>>>> origin/master
                                 }
                             },
                             {
                                 data: 'price',
                                 title: 'PRECIO U.',
                                 render: function(data, type, row) {
+<<<<<<< HEAD
                                     const formattedPrice = $.fn.dataTable.render.number(',', '.', 2).display(data);
                                     return `${row.moneda.simbolo} ${formattedPrice}`;
+=======
+                                    const simbolo = row.moneda
+                                        .simbolo; // Obtén el símbolo de la moneda
+                                    const formattedPrice = $.fn.dataTable.render.number(',',
+                                        '.', 2).display(data); // Formatea el precio
+                                    return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
+>>>>>>> origin/master
                                 }
                             },
                             {
                                 data: null,
                                 title: 'PRECIO TOTAL',
+<<<<<<< HEAD
                                 render: function(data, type, row) {
                                     return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
                                 }
                             }
+=======
+                                render: function(data, type, row, meta) {
+                                    return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                                }
+                            },
+>>>>>>> origin/master
                         ]
                     });
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
+<<<<<<< HEAD
                         console.error('Error en la petición: ', eject.responseJSON);
                     }
                 }
+=======
+                        console.log('Error');
+                        // console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+>>>>>>> origin/master
             });
         }
         $('.data_table_multiple').on('input', '.input-cantidad', function() {
