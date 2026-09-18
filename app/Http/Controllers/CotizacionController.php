@@ -1635,6 +1635,7 @@ class CotizacionController extends Controller
         $garantia=Garantia::where('estado',0)->get();
         $validez=Validez::where('estado',0)->get();
         $forma_pagos = Forma_pago::get();
+        $tipo_operacion = Tipo_operacion_f::get();
         $banco=Banco::where('estado','0')->get();
         $banco_count=Banco::where('estado','0')->count();
         $cotizacion=Cotizacion::find($id);
@@ -1717,7 +1718,7 @@ class CotizacionController extends Controller
         // $compact = "' ','cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2'";
         // return $pdf;
 
-        return view('transaccion.venta.cotizacion.show2', compact('cotizacion', 'almacenes_list','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2','garantia','validez','nota_venta','forma_pagos','renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero'));
+        return view('transaccion.venta.cotizacion.show2', compact('cotizacion', 'almacenes_list','empresa','cotizacion_registro','sum','igv',"sub_total","regla",'banco','end','igv_p','almacen','nueva_cot','banco_count','i','boleta','factura','firma','end2','garantia','validez','nota_venta','forma_pagos','renovacion', 'fecha_vencimiento', 'dias_restantes_texto', 'dias_restantes_numero','tipo_operacion'));
     }
 
 public function print($id){

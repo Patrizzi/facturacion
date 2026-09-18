@@ -306,7 +306,7 @@
                                             <span id="spTotal"></span>
                                         </tr>
                                     </tbody>
-                                    <tbody>
+                                    <tbody id="left_h3">
                                         <input id='sub_total' hidden /></td>
                                         <input id='total' hidden /></td>
                                         <tr>
@@ -782,6 +782,7 @@
     </script>
 
     <script type="text/javascript">
+        let articulosAgregados = new Set();
         $('.demo3').click(function(e) {
             if (document.forms['form_sto'].reportValidity()) {
                 swal({
@@ -929,103 +930,101 @@
             $('select[name="forma_pago"]').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
         });
 
-    @if(isset($servicioGuia->id) && isset($ingresoEquipos))
-        $(document).ready(function() {
-                precargarEquiposServicio();
+        @if(isset($servicioGuia->id) && isset($ingresoEquipos))
+            $(document).ready(function() {
+                    precargarEquiposServicio();
 
-        });
-
-        function precargarEquiposServicio() {
-            var equipos = @json($ingresoEquipos);
-            // console.log('Equipos a cargar:', equipos);
-            // servicio especifico para servicio tecnico
-            var servicioSoporte = "{{ $servicios->where('codigo_servicio', 'SERV-00000048')->first()->id ?? '' }} | SERV-00000048 | SERV-00000048 | SERVICIO";
-
-            equipos.forEach(function(equipo, index) {
-
-                if (index > 0) {
-                    agregarNuevaFila();
-                    setTimeout(function() {
-                        procesarEquipo(equipo, index, servicioSoporte);
-                    }, 100);
-                } else {
-                    procesarEquipo(equipo, index, servicioSoporte);
-                }
             });
-        }
 
-        function procesarEquipo(equipo, index, servicioSoporte) {
-            var selectId = (index == 0) ? 'articulo' : `articulo${index + 1}`;
-            var descripcionId = (index == 0) ? 'descripcion0' : `descripcion${index + 1}`;
-            var cantidadId = (index == 0) ? 'cantidad0' : `cantidad${index + 1}`;
-            var equipoInput = `<input type="hidden" name="equipo_ids[]" value="${equipo.id}">`;
+            function precargarEquiposServicio() {
+                var equipos = @json($ingresoEquipos);
+                // console.log('Equipos a cargar:', equipos);
+                // servicio especifico para servicio tecnico
+                var servicioSoporte = "{{ $servicios->where('codigo_servicio', 'SERV-00000048')->first()->id ?? '' }} | SERV-00000048 | SERV-00000048 | SERVICIO";
 
-            $(`#${selectId}`).closest('td').append(equipoInput);
+                equipos.forEach(function(equipo, index) {
 
-            var $select = $(`#${selectId}`);
-            if ($select.length) {
-                $select.empty();
-
-                var newOption = new Option(servicioSoporte, servicioSoporte, true, true);
-                $select.append(newOption).trigger('change');
-
-                var descripcionTexto = `Equipo: ${equipo.nombre_equipo}`;
-                if (equipo.nro_serie) {
-                    descripcionTexto += ` | Serie: ${equipo.nro_serie}`;
-                }
-                $(`#${descripcionId}`).val(descripcionTexto);
-
-                $(`#${cantidadId}`).val(1);
-
-                inputs_campos(index);
-                ajax(index);
-
-            } else {
-                console.error('No se encontró el select:', selectId);
+                    if (index > 0) {
+                        agregarNuevaFila();
+                        setTimeout(function() {
+                            procesarEquipo(equipo, index, servicioSoporte);
+                        }, 100);
+                    } else {
+                        procesarEquipo(equipo, index, servicioSoporte);
+                    }
+                });
             }
-        }
 
-        function agregarNuevaFila() {
-            // Simular click en el botón addmore
-            var data = `
-                <tr>
-                    <td>
-                        <button type="button" class='delete borrar e btn btn-sm btn-primary'>
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
-                    </td>
-                    <td class="td_selected">
-                        <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})" autocomplete="off" required></select>
-                        <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
-                        <input hidden="hidden" class="celda" name="articulo[]" id="input_prod${i}">
-                    </td>
-                    <td>
-                        <input type='number' min='1' style="" id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required autocomplete="off"/>
-                    </td>
-                    <td class="full-height-scroll tooltip-demo">
-                        <input type='number' style="" id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
-                    </td>
-                    <td>
-                        <input style="" type='number' step="0.0000000000000001" id='precio_s_igv${i}' name='precio_s_igv[]' class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required autocomplete="off" />
-                        <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float' class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" autocomplete="off" />
-                    </td>
-                    <td>
-                        <input style="" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000000000000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required autocomplete="off" />
-                    </td>
-                    <td>
-                        <input type='number' id='total${i}' style="" name='total' disabled="disabled" class="total form-control " required autocomplete="off"/>
-                    </td>
-                </tr>
-            `;
-            $('.tables tbody:first').append(data);
-            $('#count_articles').val(i);
-            i++;
-            articlesSelect2();
-        }
-    @endif
-    </script>
+            function procesarEquipo(equipo, index, servicioSoporte) {
+                var selectId = (index == 0) ? 'articulo' : `articulo${index + 1}`;
+                var descripcionId = (index == 0) ? 'descripcion0' : `descripcion${index + 1}`;
+                var cantidadId = (index == 0) ? 'cantidad0' : `cantidad${index + 1}`;
+                var equipoInput = `<input type="hidden" name="equipo_ids[]" value="${equipo.id}">`;
 
-    <script>
+                $(`#${selectId}`).closest('td').append(equipoInput);
+
+                var $select = $(`#${selectId}`);
+                if ($select.length) {
+                    $select.empty();
+
+                    var newOption = new Option(servicioSoporte, servicioSoporte, true, true);
+                    $select.append(newOption).trigger('change');
+
+                    var descripcionTexto = `Equipo: ${equipo.nombre_equipo}`;
+                    if (equipo.nro_serie) {
+                        descripcionTexto += ` | Serie: ${equipo.nro_serie}`;
+                    }
+                    $(`#${descripcionId}`).val(descripcionTexto);
+
+                    $(`#${cantidadId}`).val(1);
+
+                    inputs_campos(index);
+                    ajax(index);
+
+                } else {
+                    console.error('No se encontró el select:', selectId);
+                }
+            }
+
+            function agregarNuevaFila() {
+                // Simular click en el botón addmore
+                var data = `
+                    <tr>
+                        <td>
+                            <button type="button" class='delete borrar e btn btn-sm btn-primary'>
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                        <td class="td_selected">
+                            <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})" autocomplete="off" required></select>
+                            <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
+                            <input hidden="hidden" class="celda" name="articulo[]" id="input_prod${i}">
+                        </td>
+                        <td>
+                            <input type='number' min='1' style="" id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required autocomplete="off"/>
+                        </td>
+                        <td class="full-height-scroll tooltip-demo">
+                            <input type='number' style="" id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                        </td>
+                        <td>
+                            <input style="" type='number' step="0.0000000000000001" id='precio_s_igv${i}' name='precio_s_igv[]' class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required autocomplete="off" />
+                            <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float' class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})" autocomplete="off" />
+                        </td>
+                        <td>
+                            <input style="" type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000000000000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required autocomplete="off" />
+                        </td>
+                        <td>
+                            <input type='number' id='total${i}' style="" name='total' disabled="disabled" class="total form-control " required autocomplete="off"/>
+                        </td>
+                    </tr>
+                `;
+                $('.tables tbody:first').append(data);
+                $('#count_articles').val(i);
+                i++;
+                articlesSelect2();
+            }
+        @endif
+  
         var i = 2;
         $(".addmore").on('click', function() {
             // console.log("add");
@@ -1038,7 +1037,7 @@
             </td>";
             <td class="td_selected">
                 <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})"  autocomplete="off" required></select>
-                <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
+                <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
                 <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
             </td>
             <td>
@@ -1062,6 +1061,11 @@
             $('.tables').append(data);
             $('#count_articles').val(i);
             i++;
+            const section = document.getElementById("left_h3");
+            section.scrollIntoView({
+                block: "end",
+                behavior: "smooth"
+            });
             //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
             articlesSelect2();
             toggle();
@@ -1347,7 +1351,6 @@
                 document.getElementById("total_final").value = subtotal;
                 document.getElementById("total_final").dispatchEvent(new Event('change'));
             } else {
-                limpiar_inputs();
                 $(".select2_demo_3").val(null).trigger("change");
                 $(".addmore").prop("disabled", false);
                 limpiar_inputs();

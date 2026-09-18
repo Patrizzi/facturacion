@@ -221,7 +221,7 @@
                                 value="{{ $sucursal->id }}" readonly="readonly">
                             <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}">
                         </div>
-                        <input type="hidden" name="" id="count_articles" value="">
+                        <input type="text" name="" id="count_articles" value="">
                         <div class="col-md-12">
                             <div class="table-responsive"> 
                                 <table cellspacing="0" class="table tables" id="inp_s">
@@ -259,34 +259,34 @@
                                                 <select class="monto0 select2_demo_3 select_change" required=""
                                                     id="articulo" onchange="ajax(0)" autocomplete="off"></select>
                                                 <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item"
-                                                    class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
+                                                    class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
                                                 <input style="width: 76px" hidden="" type='text' id='tipo_afec0'
                                                     name='tipo_afec[]' readonly="readonly" class="monto0 form-control"
                                                     onkeyup="multi(0)" required autocomplete="off" />
-                                                {{-- <input hidden="hidden" class="celda" name="articulo[]"
-                                                    id="input_prod1"> --}}
-                                                    <input hidden="hidden" class="celda input-articulo" name="articulo[]">
+                                                <input hidden="hidden" class="celda" name="articulo[]"
+                                                    id="input_prod1">
+                                                <input hidden="hidden" class="celda input-articulo" name="articulo[]">
                                             </td>
                                             <td>
                                                 <input style="min-width: 80px;margin: 0px" type='text' id='stock0'
-                                                    readonly="readonly" name='stock[]' class="form-control" required
+                                                    readonly="readonly" name='stock[]' class="form-control stock" required
                                                     autocomplete="off" />
                                             </td>
                                             <td>
                                                 <input style="min-width: 80px" type='number' id='cantidad0'
                                                     name='cantidad[]' max="" min="1"
-                                                    class="monto0 form-control" onkeyup="multi(0)" required
+                                                    class="monto0 form-control cantidad" onkeyup="multi(0)" required
                                                     autocomplete="off" />
                                             </td>
                                             <td>
                                                 <input style="min-width: 85px" type='text' id='precio0'
-                                                    name='precio[]' readonly="readonly" class="monto0 form-control"
+                                                    name='precio[]' readonly="readonly" class="monto0 form-control precio"
                                                     onkeyup="multi(0)" required autocomplete="off" />
                                             </td>
                                             <td>
                                                 <div style="position: relative;">
-                                                    <input class="text_des" type='text' id='descuento0'
-                                                        name='descuento[]' readonly="readonly" class="" required
+                                                    <input class="text_des descuento" type='text' id='descuento0'
+                                                        name='descuento[]' readonly="readonly"required
                                                         autocomplete="off" />
                                                 </div>
                                                 <div class="div_check">
@@ -296,12 +296,12 @@
                                                 <input type='hidden' id='check_descuento0' name='check_descuento[]'
                                                     class="form-control" required>
                                                 <input type='hidden' id='promedio_original0' name='promedio_original[]'
-                                                    class="form-control" required>
+                                                    class="form-control promedio_original" required>
                                             </td>
                                             <td>
                                                 <input style="min-width: 85px" type='text'
                                                     id='precio_unitario_descuento0' name='precio_unitario_descuento[]'
-                                                    readonly="readonly" class="precio_unitario_descuento0 form-control"
+                                                    readonly="readonly" class="precio_unitario_descuento form-control"
                                                     required autocomplete="off" />
                                             </td>
                                             <input type='hidden' name="comision[]" id='comision0' readonly="readonly"
@@ -310,7 +310,7 @@
                                             <td>
                                                 <input style="min-width: 85px" type='text'
                                                     id='precio_unitario_comision0' name='precio_unitario_comision[]'
-                                                    readonly="readonly" class="form-control" required
+                                                    readonly="readonly" class="form-control precio_unitario_comision" required
                                                     autocomplete="off" />
                                             </td>
                                             <td>
@@ -323,20 +323,15 @@
                                             </td>
                                             <td>
                                                 <input style="min-width: 85px" type='text' id='precio_unitario_igv0'
-                                                    name='precio_unitario_igv[]' readonly="readonly" class="form-control"
+                                                    name='precio_unitario_igv[]' readonly="readonly" class="form-control precio_unitario_igv"
                                                     required autocomplete="off" />
                                             </td>
                                             <span id="spTotal"></span>
                                         </tr>
                                     </tbody>
-                                    <tbody>
+                                    <tbody id="left_h3">
                                         <tr style="background-color: #f5f5f500;" align="center">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td colspan="6"></td>
                                             <td>Subtotal :</td>
                                             <td colspan="3">
                                                 <input id='sub_total' disabled="disabled" class="form-control"
@@ -346,23 +341,13 @@
                                             </td>
                                         </tr>
                                         <tr style="background-color: #f5f5f500;" align="center">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td colspan="6"></td>
                                             <td>IGV :</td>
                                             <td colspan="3"><input id='igv' disabled="disabled"
                                                     class="form-control" required /></td>
                                         </tr>
                                         <tr align="center">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td colspan="6"></td>
                                             <td>Total :</td>
                                             <td colspan="3"><input id='total_final' disabled="disabled"
                                                     class="form-control" required /></td>
@@ -389,70 +374,7 @@
         </div>
     </div>
 
-    <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
-    <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content" style="height: 575px;">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-6" style="margin-bottom: 15px">
-                            <input type="text" name="" id="search_product" class="form-control form-control-sm"
-                                placeholder="Buscar por código o nombre del producto o servicio" autocomplete="off">
-                        </div>
-                        <div class="col-sm-6" style="margin-bottom: 15px">
-                            <button data-toggle="button" class="btn btn-primary btn-outline btn-sm" type="button" aria-pressed="false" id="button_filter_stock">Con Stock</button>
-                        </div>
-                    </div>
-                    <div class="row" style="height: 90%">
-                        <div class="col-lg-12">
-                            <div class="table-responsive"  style="height: 100% !important">
-                                <table class="table table-striped table-hover data_table_multiple"
-                                    style="font-size: 90%;border-top: 1px solid #e7eaec;padding: 0px">
-                                    <thead>
-                                        <tr>
-                                            {{-- <th>ID</th> --}}
-                                            <th>CÓDIGO</th>
-                                            <th>ARTÍCULO</th>
-                                            <th style="text-align: center">STOCK</th>
-
-                                            <th>PRECIO U.  </th>
-                                            <th>PRECIO S/IGV</th>
-                                            <th>TOTAL EST.</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal-cart-footer d-flex justify-content-between align-items-center">
-                                <div class="dt-left-info"></div>
-                                <div class="dt-right-actions d-flex align-items-center">
-                                    <div class="subtotal-box text-right mr-4">
-                                        <div class="subtotal-label"><strong>TOTAL ESTIMADO</strong></div>
-                                        <div class="subtotal-value">
-                                            <span id="subtotal-simbolo">{{ $moneda->simbolo }}</span> <span id="subtotal-monto">0.00</span>
-                                            {{-- <span id="subtotal-items">(0 ítems)</span> --}}
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-outline-secondary rounded-pill mr-2" id="btn-cancelar-cotizacion" data-dismiss="modal">
-                                        Cancelar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+   @include('transaccion.venta._shared.modal_add_producto')
 
     <div id="loaderGif"></div>
 
@@ -668,199 +590,199 @@
 
     {{-- //Estilos para el check de activar renovacion --}}
     <style>
-    .renovacion {
-        padding: 0;
-        margin-bottom: 15px;
-        margin-top: 7px;
-    }
+        .renovacion {
+            padding: 0;
+            margin-bottom: 15px;
+            margin-top: 7px;
+        }
 
-    /* Switch estilo original */
-    .switch-container {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 5px;
-    }
+        /* Switch estilo original */
+        .switch-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
 
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-    }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: .3s;
-        border-radius: 24px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .3s;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    input:checked + .slider {
-        background-color: #1ab394;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 2px #1ab394;
-    }
-
-    input:checked + .slider:before {
-        transform: translateX(26px);
-    }
-
-    .switch-label {
-        font-size: 13px;
-        color: #676a6c;
-        font-weight: 500;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    #renovacion_container {
-        animation: slideDown 0.3s ease-out;
-        margin-top: 10px;
-    }
-
-    @keyframes slideDown {
-        from {
+        .switch input {
             opacity: 0;
-            transform: translateY(-10px);
+            width: 0;
+            height: 0;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 24px;
         }
-    }
 
-    .renovacion .row {
-        margin-bottom: 6px;
-    }
-    .bootstrap-touchspin {
-        background-color: #f4f5f7;
-        border-radius: 50px;
-        overflow: hidden;
-        border: none;
-        display: inline-flex;
-        align-items: center;
-        width: auto;
-    }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
 
-    .bootstrap-touchspin .touchspin-btn {
-        background-color: transparent !important;
-        border: none !important;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: none !important;
-    }
+        input:checked + .slider {
+            background-color: #1ab394;
+        }
 
-    .bootstrap-touchspin .touchspin-btn:hover {
-        background-color: #e9eaed !important;
-        border-radius: 50%;
-    }
+        input:focus + .slider {
+            box-shadow: 0 0 2px #1ab394;
+        }
 
-    .bootstrap-touchspin .touchspin1 {
-        background-color: transparent !important;
-        border: none !important;
-        text-align: center;
-        box-shadow: none !important;
-        width: 40px;
-        padding: 0;
-    }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
 
-    .bootstrap-touchspin .touchspin1:focus {
-        outline: none;
-        box-shadow: none;
-    }
+        .switch-label {
+            font-size: 13px;
+            color: #676a6c;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
 
-    .bootstrap-touchspin .input-group-btn {
-        display: flex;
-    }
-    .btn.btn-link.btn-sm.bootstrap-touchspin-up:hover,.btn.btn-link.btn-sm.bootstrap-touchspin-down:hover{
-        transform: none !important;
-        box-shadow: none !important;
-    }
-    .input-cantidad.js-touchspin-init{
-        font-size: 12px;
-    }
-    ul.pagination {
-        margin-bottom: 0px;
-    }
-    .precio_search{
-        vertical-align: middle !important;
-        /* text-align: center !important; */
+        #renovacion_container {
+            animation: slideDown 0.3s ease-out;
+            margin-top: 10px;
+        }
 
-    }
-    .precio_cantidad{
-        text-align: center !important;
-    }
-    .bootstrap-touchspin{
-        flex-wrap: nowrap;
-    }
-    .precio_dt{
-        text-align: right !important;
-        vertical-align: middle !important;
-    }
-    .modal-cart-footer{
-        position: absolute;
-        margin-left: 0px;
-        right: 15px;
-        bottom: 0px;
-    }
-    .small-description{
-        font-size: 9px !important;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    #DataTables_Table_0_info{
-        margin-bottom: 5px !important;
-    }
-    
-    .articulo-nombre {
-        max-width: 330px;
-        overflow: hidden;
-        white-space: nowrap;
-        position: relative;
-    }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .articulo-nombre.is-overflowing span {
-        display: inline-block;
-        animation: marquee 8s linear infinite;
-        padding-right: 40px; /* espacio antes de repetir */
-    }
+        .renovacion .row {
+            margin-bottom: 6px;
+        }
+        .bootstrap-touchspin {
+            background-color: #f4f5f7;
+            border-radius: 50px;
+            overflow: hidden;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            width: auto;
+        }
 
-    @keyframes marquee {
-        0%,30%   { transform: translateX(0); }
-        100% { transform: translateX(calc(-100% - 20px)); }
-    }
+        .bootstrap-touchspin .touchspin-btn {
+            background-color: transparent !important;
+            border: none !important;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none !important;
+        }
+
+        .bootstrap-touchspin .touchspin-btn:hover {
+            background-color: #e9eaed !important;
+            border-radius: 50%;
+        }
+
+        .bootstrap-touchspin .touchspin1 {
+            background-color: transparent !important;
+            border: none !important;
+            text-align: center;
+            box-shadow: none !important;
+            width: 40px;
+            padding: 0;
+        }
+
+        .bootstrap-touchspin .touchspin1:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .bootstrap-touchspin .input-group-btn {
+            display: flex;
+        }
+        .btn.btn-link.btn-sm.bootstrap-touchspin-up:hover,.btn.btn-link.btn-sm.bootstrap-touchspin-down:hover{
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .input-cantidad.js-touchspin-init{
+            font-size: 12px;
+        }
+        ul.pagination {
+            margin-bottom: 0px;
+        }
+        .precio_search{
+            vertical-align: middle !important;
+            /* text-align: center !important; */
+
+        }
+        .precio_cantidad{
+            text-align: center !important;
+        }
+        .bootstrap-touchspin{
+            flex-wrap: nowrap;
+        }
+        .precio_dt{
+            text-align: right !important;
+            vertical-align: middle !important;
+        }
+        .modal-cart-footer{
+            position: absolute;
+            margin-left: 0px;
+            right: 15px;
+            bottom: 0px;
+        }
+        .small-description{
+            font-size: 9px !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        #DataTables_Table_0_info{
+            margin-bottom: 5px !important;
+        }
+        
+        .articulo-nombre {
+            max-width: 330px;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .articulo-nombre.is-overflowing span {
+            display: inline-block;
+            animation: marquee 8s linear infinite;
+            padding-right: 40px; /* espacio antes de repetir */
+        }
+
+        @keyframes marquee {
+            0%,30%   { transform: translateX(0); }
+            100% { transform: translateX(calc(-100% - 20px)); }
+        }
     </style>
 
     <!-- Mainly scripts -->
@@ -888,6 +810,7 @@
 
 
     <script>
+        let articulosAgregados = new Set();
         $('#coti_store_Fac').on('submit', function() {
             $('#btn-finalizar').prop('disabled', true)
         });
@@ -943,10 +866,7 @@
             $('#inp_s').append(data);
             // $(".guardar").remove();
         });
-    </script>
-
-    {{-- Scripts realizados por el desarrollador --}}
-    <script type="text/javascript">
+ 
         // TODO Selección de cliente por medio de ajax para mostrar los datos del cliente en el formularios
         // $('').val();
 
@@ -1009,56 +929,57 @@
         var i = 2;
         $(".addmore").on('click', function() {
             var data = `[
-            <tr>
-                <td>
-                    <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash" aria-hidden="true"></i></button>
-                </td>";
-                <td class="td_selected">
-                    <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
-                    <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
-                    <input type='text' style="min-width: 85px" id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
-                    <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}">
-                </td>
-                <td>
-                    <input type="" style="min-width: 85px"  id='stock${i}' name='stock[]' readonly="readonly" class="form-control" required autocomplete="off"/>
-                </td>
-                <td>
-                    <input type='number' style="min-width: 80px" max="" min="1" id='cantidad${i}' name='cantidad[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
-                </td>
-                <td>
-                    <input type='text' style="min-width: 85px"  id='precio${i}' name='precio[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
-                </td>
-                <td>
-                    <div style="position: relative;" >
-                        <input class="text_des"type='text' id='descuento${i}' name='descuento[]' readonly="readonly" class="" required onkeyup="multi(${i})"  autocomplete="off"/>
-                    </div>
-                    <div  class="div_check">
-                        <input class="check"  type='checkbox' id='check${i}' name='check[]' onclick="multi(${i})" style="" autocomplete="off"/>
-                    </div>
-                    <input style="min-width: 85px" type='hidden'id='check_descuento${i}' name='check_descuento[]'  class="form-control"  required >
-                    <input type='hidden' id='promedio_original${i}' name='promedio_original[]'  class="form-control"  required >
-                </td>
-                <td>
-                    <input type='text' id='precio_unitario_descuento${i}' style="min-width: 85px"  name='precio_unitario_descuento[]' readonly="readonly" class=" form-control"  required  autocomplete="off" />
-                </td>
-                <input type='hidden' name="comision[]" id='comision${i}' style="min-width: 85px"  readonly="readonly" class="form-control comision_input" required autocomplete="off" onchange="multi(${i})" />
-                <td>
-                    <input type='text' id='precio_unitario_comision${i}' style="min-width: 85px"  name='precio_unitario_comision[]' readonly="readonly" class="form-control" required autocomplete="off" />
-                </td>
-                <td>
-                    <input type='text' id='total${i}' style="min-width: 85px"  name='total' disabled="disabled" class="total form-control" required autocomplete="off"/>
-                    <input type='text' id='afectacion${i}' style="min-width: 85px" hidden  name='afectacion' disabled="disabled" class="afectacion form-control" required autocomplete="off"/>
-                </td>
-                <td>
-                    <input style="min-width: 85px" type='text' id='precio_unitario_igv${i}' name='precio_unitario_igv[]' readonly="readonly" class="form-control" required autocomplete="off" />
-                <td>
-            </tr>
-        `;
+                <tr>
+                    <td>
+                        <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    </td>";
+                    <td class="td_selected">
+                        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
+                        <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
+                        <input type='text' style="min-width: 85px" id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
+                        <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}">
+                    </td>
+                    <td>
+                        <input type="" style="min-width: 85px"  id='stock${i}' name='stock[]' readonly="readonly" class="form-control stock" required autocomplete="off"/>
+                    </td>
+                    <td>
+                        <input type='number' style="min-width: 80px" max="" min="1" id='cantidad${i}' name='cantidad[]' class="monto${i} form-control cantidad" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    </td>
+                    <td>
+                        <input type='text' style="min-width: 85px"  id='precio${i}' name='precio[]' readonly="readonly" class="monto${i} form-control precio" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    </td>
+                    <td>
+                        <div style="position: relative;" >
+                            <input class="text_des" type='text' id='descuento${i}' name='descuento[]' readonly="readonly" required onkeyup="multi(${i})"  autocomplete="off"/>
+                        </div>
+                        <div  class="div_check">
+                            <input class="check"  type='checkbox' id='check${i}' name='check[]' onclick="multi(${i})" style="" autocomplete="off"/>
+                        </div>
+                        <input style="min-width: 85px" type='hidden'id='check_descuento${i}' name='check_descuento[]'  class="form-control"  required >
+                        <input type='hidden' id='promedio_original${i}' name='promedio_original[]'  class="form-control"  required >
+                    </td>
+                    <td>
+                        <input type='text' id='precio_unitario_descuento${i}' style="min-width: 85px"  name='precio_unitario_descuento[]' readonly="readonly" class="form-control precio_unitario_descuento"  required  autocomplete="off" />
+                    </td>
+                    <input type='hidden' name="comision[]" id='comision${i}' style="min-width: 85px"  readonly="readonly" class="form-control comision_input" required autocomplete="off" onchange="multi(${i})" />
+                    <td>
+                        <input type='text' id='precio_unitario_comision${i}' style="min-width: 85px"  name='precio_unitario_comision[]' readonly="readonly" class="form-control precio_unitario_comision" required autocomplete="off" />
+                    </td>
+                    <td>
+                        <input type='text' id='total${i}' style="min-width: 85px"  name='total' disabled="disabled" class="total form-control" required autocomplete="off"/>
+                        <input type='text' id='afectacion${i}' style="min-width: 85px" hidden  name='afectacion' disabled="disabled" class="afectacion form-control" required autocomplete="off"/>
+                    </td>
+                    <td>
+                        <input style="min-width: 85px" type='text' id='precio_unitario_igv${i}' name='precio_unitario_igv[]' readonly="readonly" class="form-control precio_unitario_igv" required autocomplete="off" />
+                    <td>
+                </tr>
+            `;
 
             $('.tables').append(data);
             $('#count_articles').val(i);
-
+            
             i++;
+            console.log(i);
             //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
             articlesSelect2();
 
@@ -1072,8 +993,14 @@
                     $('option[value="' + input_ds[j] + '"]').prop("disabled", true);
                 }
             };
-            $(".addmore").prop("disabled", true);
+            // $(".addmore").prop("disabled", true);
             $(".borrar").prop("disabled", false);
+
+            const section = document.getElementById("left_h3");
+            section.scrollIntoView({
+                block: "end",
+                behavior: "smooth"
+            });
 
         });
 
@@ -1242,6 +1169,7 @@
 
         //Función para el calculo de los totales de cada articulo y para los totales de la factura
         function multi(a) {
+            console.log(a);
             var total = 1;
             var totales = 0;
             var change = false; //
@@ -1379,6 +1307,13 @@
             var e = document.getElementsByClassName("e").length;
             var fila = $(this).parents("tr");
             var input_text_opt = fila.find('input[class="celda"]').val();
+            if (input_text_opt) {
+                var partes = input_text_opt.split('|').map(p => p.trim());
+                var id = partes[0];
+                articulosAgregados.delete(String(id));
+                reactivarBotonModal(id);
+                console.log(articulosAgregados);
+            }
             $('option[value="' + input_text_opt + '"]').prop("disabled", false);
             $(".addmore").prop("disabled", false);
             $(".select2_demo_3").select2({
@@ -1389,41 +1324,58 @@
                 fila.closest('tr').remove();
                 $(".borrar").prop("disabled", false);
                 $(".addmore").prop("disabled", false);
+
+                var multiplier = 100;
+                var totalInp = $('[name="afectacion"]');
+                var total_t = 0;
+
+                totalInp.each(function() {
+                    total_t += parseFloat($(this).val());
+                });
+
+                $('#subtotal_gravado').val(total_t);
+                //GRAVADO
+                var totalInpG = $('[name="total"]');
+                var total_tt = 0;
+
+                totalInpG.each(function() {
+                    total_tt += parseFloat($(this).val());
+                });
+                $('#sub_total').val(total_tt);
+
+                var igv_valor = ({{ $igv->renta }});
+                var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+                var subtotal = document.querySelector(`#sub_total`).value;
+                var igv_val = parseFloat(subtotal_gravado) * igv_valor / 100;
+                var igv = Math.round(igv_val * multiplier) / multiplier;
+                var end_2 = parseFloat(igv) + parseFloat(subtotal);
+                var end = Math.round(end_2 * multiplier) / multiplier;
+
+                document.getElementById("igv").value = igv;
+                document.getElementById("total_final").value = end;
             } else {
-                $(".borrar").prop("disabled", true);
                 $(".addmore").prop("disabled", false);
+                $(".select2_demo_3").val(null).trigger("change");
+                limpiar_inputs();
             }
-            var multiplier = 100;
-            var totalInp = $('[name="afectacion"]');
-            var total_t = 0;
-
-            totalInp.each(function() {
-                total_t += parseFloat($(this).val());
-            });
-
-            $('#subtotal_gravado').val(total_t);
-            //GRAVADO
-            var totalInpG = $('[name="total"]');
-            var total_tt = 0;
-
-            totalInpG.each(function() {
-                total_tt += parseFloat($(this).val());
-            });
-            $('#sub_total').val(total_tt);
-
-            var igv_valor = ({{ $igv->renta }});
-            var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
-            var subtotal = document.querySelector(`#sub_total`).value;
-            var igv_val = parseFloat(subtotal_gravado) * igv_valor / 100;
-            var igv = Math.round(igv_val * multiplier) / multiplier;
-            var end_2 = parseFloat(igv) + parseFloat(subtotal);
-            var end = Math.round(end_2 * multiplier) / multiplier;
-
-            document.getElementById("igv").value = igv;
-            document.getElementById("total_final").value = end;
+            
             articlesSelect2();
         });
-
+        function limpiar_inputs() {
+            $(`.select_change`).val("");
+            $(`.stock`).val("");
+            $(`.text_des`).val("");
+            $(`.cantidad`).val("");
+            $(`.precio`).val("");
+            $(`.descripcion`).val("");
+            $(`.precio_unitario_descuento`).val("");
+            $(`.precio_unitario_comision`).val("");
+            $(`.total`).val("");
+            $(`.precio_unitario_igv`).val("");
+            $(`#sub_total`).val("");
+            $(`#igv`).val("");
+            $(`#total_final`).val("");
+        }
         function select_tipo() {
             $(".select2_demo_client").select2("val", "");
         }
@@ -1540,7 +1492,7 @@
             search_multiple("");
             $('#search_product').val('');
         });
-        let articulosAgregados = new Set();
+        
         let filtrarConStock = false;
         function search_multiple(busqueda) {
             // Limpiar DataTable previo
@@ -1676,7 +1628,7 @@
                                 "width": "100px",
                                 "className": "precio_search precio_cantidad",
                                 render: function(data, type, row) {
-                                    const yaAgregado = articulosAgregados.has(row.id);
+                                    const yaAgregado = articulosAgregados.has(String(row.id));
                                     if (`${row.stock}` != 0) {
                                         return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}" ${yaAgregado ? 'disabled' : ''}> <i class="fa fa-plus"></i> Agregar</button>`;
                                     }else{ 
@@ -1715,21 +1667,21 @@
                 return;
             }
 
-            var count_artc = $('#count_articles').val();
-            var id =  $(this).data('id');
+            var id = $(this).data('id');
             var cod_prod = $(this).data('cod_producto');
             var cod_origi = $(this).data('cod_original');
-            var nombres =$(this).data('nombre');
+            var nombres = $(this).data('nombre');
 
-            articulosAgregados.add(id);
+            articulosAgregados.add(String(id));
 
             var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
-            const selectedValue = $('#articulo').val();
 
-            if (count_artc == "" && selectedValue == null) {
+            var valorPrimerSelect = $('#articulo').val();
+
+            if (valorPrimerSelect == null || valorPrimerSelect == "") {
+                // El select inicial está libre, úsalo directamente
                 $('#articulo').append(newOption).trigger('change');
-                $('#count_articles').val(1);
 
                 let debounceTimer;
                 clearTimeout(debounceTimer);
@@ -1737,23 +1689,53 @@
                     $(`#cantidad0`).val(cantidad);
                     multi(0);
                 }, 1000);
+
             } else {
-                $('.addmore').click();
-                var count_artc = $('#count_articles').val();
-                $(`#articulo${count_artc}`).append(newOption).trigger('change');
+                // El select inicial ya tiene algo, busca el último select numerado existente
+                var $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                var count_artc = $selectsNumerados.length > 0
+                    ? Math.max(...$selectsNumerados.map(function() {
+                        return parseInt($(this).attr('id').replace('articulo', ''));
+                    }).get())
+                    : null;
+
+                var $ultimoSelect = count_artc === null ? $('#articulo') : $(`#articulo${count_artc}`);
+                var valorActual = $ultimoSelect.val();
+
+                if (valorActual != null && valorActual != "") {
+                    $('.addmore').click();
+                    // Recalcular tras crear la fila
+                    $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                    count_artc = Math.max(...$selectsNumerados.map(function() {
+                        return parseInt($(this).attr('id').replace('articulo', ''));
+                    }).get());
+                    $ultimoSelect = $(`#articulo${count_artc}`);
+                }
+
+                $ultimoSelect.append(newOption).trigger('change');
 
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                    multi(`${count_artc}`);
+                    multi(count_artc);
                 }, 1000);
             }
-            $btn.prop('disabled', true);
 
+            $btn.prop('disabled', true);
             toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
         });
+        function obtenerUltimoIndice() {
+            var $selects = $('select[id^="articulo"]');
+            if ($selects.length === 0) return null;
 
+            var indices = $selects.map(function() {
+                var num = this.id.replace('articulo', '');
+                return num === '' ? -1 : parseInt(num); // -1 marca el caso "sin número", si existiera
+            }).get();
+
+            return Math.max(...indices);
+        }
         $('#total_final').on('input change', function(){
             var total = $(this).val();
             $('#subtotal-monto').html(total);
@@ -1800,6 +1782,15 @@
             filtrarConStock = !$btn.hasClass('active');
             search_multiple($('#buscador_articulo').val());
         });
+
+        function reactivarBotonModal(id) {
+            var $btn = $(`.btn-agregar-articulo[data-id="${id}"]`);
+            console.log($btn);
+            if ($btn.length) {
+                $btn.prop('disabled', false);
+            }
+        }
+
         function validarJson(data) {
             try {
                 JSON.parse(data);
