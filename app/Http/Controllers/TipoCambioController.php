@@ -1,0 +1,253 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\TipoCambio;
+use App\Moneda;
+use Carbon\Carbon;
+use App\CierrePeriodo;
+use App\Cliente;
+use Illuminate\Http\Request;
+
+class TipoCambioController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        // return CierrePeriodo::cierre_periodo(3.5);
+
+        $consulta=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();/*Consulta .sí se hizo hoy el cambio*/
+        // $moneda1=Moneda::where('principal',1)->first();
+        // $moneda2=Moneda::where('principal',0)->first();
+        // $tipo_cambio=TipoCambio::all();
+        // $tipo_cambio=TipoCambio::orderBy('id', 'DESC')->get(); -> no funciona en la tabla
+        // return $tipo_cambio;
+        $estadisticas = TipoCambio::get_statics();
+        // return $estadisticas;    
+        return view('configuracion_general.tipo_cambio.index',compact('estadisticas','consulta'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $moneda_principal=Moneda::where('principal',1)->first();
+        return view('configuracion_general.tipo_cambio.create',compact('moneda_principal'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //VALIDACION PARA EL CIERRE DEL PERIODO
+        $fecha=Carbon::now();
+        $fecha_m = $fecha->format('m');
+        $fecha_y = $fecha->format('Y');
+        $compra_tipo_cambio=$request->get('compra');
+        //verificacion de la ultima vez que se hizo el cieere de periodo
+
+        $periodo=CierrePeriodo::latest('id')->first();
+        if(empty($periodo)){
+            CierrePeriodo::cierre_periodo($compra_tipo_cambio);
+            goto salto;
+        }
+
+        $periodo_fecha=$periodo->created_at;
+        $periodo_fecha_m= $periodo_fecha->format('m');
+        $periodo_fecha_y= $periodo_fecha->format('Y');
+        //aqui va la fecha de la consulta
+        if($fecha_m != $periodo_fecha_m or $fecha_y != $periodo_fecha_y){
+            CierrePeriodo::cierre_periodo($compra_tipo_cambio);
+        }
+
+        salto:
+        /*varaibles del Index*/
+        $moneda1=Moneda::where('principal',1)->first();
+        $moneda2=Moneda::where('principal',0)->first();
+        $tipo_cambio=TipoCambio::all();
+        /**/
+        $moneda_principal=Moneda::where('principal',1)->first();
+        /*Recibiendo datos*/
+        $compra=$request->get('compra');
+        $venta=$request->get('venta');
+        $paralelo=$request->get('paralelo');
+        /**/
+        $consulta=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();/*Consulta .sí se hizo hoy el cambio*/
+
+        if($consulta){/*Consulta para que redirija error si hace doble tipo de cambio*/
+            $error= "no puede generar otro tipo de cambio , en el mismo dia";
+            return redirect()->route('tipo_cambio.index')->with('error', $error);
+        }
+
+        if ($moneda_principal->id =='1')/*pregunta si esta en Soles(Nacional)*/ {
+            if ($compra<$paralelo) {
+               $paralelo_recomendado=$compra-0.05;
+               $error= 'el tipo de Cambio "Paralelo"('.$paralelo.') debe ser menor al tipo de Cambio "Compra"('.$compra.'). ';
+               return view('configuracion_general.tipo_cambio.create',compact('error','moneda_principal','compra','venta','paralelo_recomendado'));
+           }
+       }
+        elseif ($moneda_principal->id =='2')/*pregunta si esta en Dolares(Extranjero)*/  {
+             if ($compra>$paralelo) {
+           $paralelo_recomendado=$compra+0.05;
+           $error= 'el tipo de Cambio "Paralelo"('.$paralelo.') debe ser Mayor al tipo de Cambio "Compra"('.$compra.')';
+           return view('configuracion_general.tipo_cambio.create',compact('error','moneda_principal','compra','venta','paralelo_recomendado'));
+             }
+        }
+
+       $cambio=new TipoCambio;
+       $cambio->compra=$request->get('compra');
+       $cambio->venta=$request->get('venta');
+       $cambio->paralelo=$request->get('paralelo');
+       $cambio->fecha=Carbon::now()->format('Y-m-d');
+       $cambio->save();
+
+       return response()->json([
+            'success' => true,
+            'message' => 'Tipo de cambio Guardado correctamente',
+        ]);
+    }
+
+    public function sunat_cambio(Request $request){
+        $moneda=Moneda::where('principal',1)->first();
+        // // https://www.deperu.com/api/rest/cotizaciondolar.json
+        // // https://www.youtube.com/watch?v=WTxYp9ECnPY
+        // $url = "https://www.deperu.com/api/rest/cotizaciondolar.json";
+        // $ch = curl_init($url);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // $response = curl_exec($ch);
+        // $info = curl_getinfo($ch);
+        // curl_close($ch);
+        // return $info
+        // // $http_status_code = intval(substr($header[0], 9, 3));
+        // // return $http_status_code;
+        // // $data = file_get_contents("https://www.deperu.com/api/rest/cotizaciondolar.json");
+        
+        // //VALIDACION DOBLE EN CASO DE QUE EL PRIMER TIPO DE CAMBIO(MEJOR) SE CAIGA;
+        // if ($info['http_code'] !== 200) {
+            $data = file_get_contents("https://www.sunat.gob.pe/a/txt/tipoCambio.txt");
+            $info = explode('|',$data);
+            // return $info[0]; 
+
+            if($moneda->tipo=="nacional"){
+                $num=$info[1]-0.05;
+            }else{
+                $num=$info[2]+0.05;
+            }
+            $num=round($num, 3);
+            $datos=array(
+                0 => $info[1],
+                1 => $info[2],
+                2 => $num,
+    
+            );
+            
+        // }else{
+        //     $header_size = $info['header_size'];
+        //     $headers = substr($response, 0, $header_size);
+        //     $data = substr($response, $header_size);
+            
+        //     $info = json_decode($data, true);
+        //     if($moneda->tipo=="nacional"){
+        //         $num=$info['Cotizacion'][0]['Venta']-0.05;
+        //     }else{
+        //         $num=$info['Cotizacion'][0]['Venta']+0.05;
+        //     }
+        //     $num=round($num, 3);
+        //     $datos=array(
+        //         0 => $info['Cotizacion'][0]['Compra'],
+        //         1 => $info['Cotizacion'][0]['Venta'],
+        //         2 => $num,
+    
+        //     );
+        // }     
+
+
+
+        echo json_encode($datos);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $tipo_cambio = TipoCambio::find($id);
+        $tipo_cambio->compra = $request->get('compra');
+        $tipo_cambio->venta = $request->get('venta');
+        $tipo_cambio->paralelo = $request->get('paralelo');
+        $tipo_cambio->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Tipo de cambio actualizado correctamente',
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    public function busquedaTipoCambio(Request $request)
+    {
+        $fecha = $request->input('fecha');
+        $tipoCambio = TipoCambio::where('fecha', $fecha)->first();
+
+        if ($tipoCambio) {
+            return response()->json([
+                'success' => true,
+                'tipo_cambio' => $tipoCambio,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró tipo de cambio para la fecha proporcionada.',
+            ], 404);
+        }
+    }
+
+}

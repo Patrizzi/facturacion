@@ -1,0 +1,26 @@
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 12px;text-align: left;}
+	.select2-container--default .select2-selection--single { border: none;}
+	.select2-container--default .select2-selection--single .select2-selection__rendered {font-size: 0.7rem;padding-left: 0px;color: inherit;}
+	span.select2.select2-container.select2-container--default{
+		width: 100% !important;
+		background-color: #FFFFFF;
+		background-image: none;
+		display: block;
+		padding: 3px 12px;
+		border: 1px solid #e5e6e7;
+	}
+
+    .btn-agregar:disabled {
+        background-color: #ddd !important; /* Gris claro */
+        border-color: #ddd !important;
+        color: #999 !important;
+        cursor: not-allowed;
+    }
+
+    .borrar2 {
+        background-color: #004085 !important; /* Azul hover de Bootstrap */
+        border-color: #0062cc !important;
+        color: white !important;
+    }
+

@@ -1,0 +1,1569 @@
+<?php
+// DB::listen(function($query){
+// 	echo "<pre>{$query->sql}</pre>";
+// });
+// a
+
+// Route::get('sentencia1', function (App\Sentencia $post) {
+// 	return $post->boleta();
+// });
+// Route::get('sentencia2', function (App\Sentencia $post) {
+// 	return $post->cotizacion();
+// });
+use App\Http\Controllers\RenovacionController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BoletaController;
+use App\Http\Controllers\BoletaMController;
+use App\Http\Controllers\CotizacionController;
+use App\Http\Controllers\CotizacionManualController;
+use App\Http\Controllers\FacturacionController;
+use App\Http\Controllers\FacturacionMController;
+use App\Http\Controllers\ParameterCallController;
+use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\GuiaServicioController;
+use App\Http\Controllers\GuiaServicioClienteController;
+use App\Http\Controllers\OrdenServicioController;
+use App\Http\Controllers\RolController;
+use App\Http\Controllers\GarantiaGuiaIngresoController;
+use App\Http\Controllers\GarantiaGuiaEgresoController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductosController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CajaChicaController;
+use App\Http\Controllers\ClienteSucursalController;
+use App\Http\Controllers\CobranzasComprobantesController;
+use App\Http\Controllers\ProjectManagerController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\NotaCreditoController;
+use App\Http\Controllers\NotaDebitoController;
+use App\Http\Controllers\GarantiaInformeTecnicoController;
+use App\Http\Controllers\GuiaRemisionController;
+use App\Http\Controllers\GuiaRemisionManualController;
+use App\Http\Controllers\NotaVentaController;
+use App\Http\Controllers\ServiciosController;
+use App\Http\Controllers\ServicioTecnico\CotizacionServicioGuiaController;
+use App\Http\Controllers\ServicioTecnico\OrdenServicioServGuiaController;
+use App\Http\Controllers\ServicioTecnico\ProcesoServicioGuiaController;
+use App\Http\Controllers\ServicioTecnico\ServicioGuiaInformeTecnicoController;
+use App\Http\Controllers\ServicioTecnico\ServicioGuiaController;
+use App\Http\Controllers\ServicioTecnico\ServicioGuiaEntregadosController;
+
+use App\Servicios;
+
+use function Complex\rho;
+
+//GLOBAL LOGIN
+Route::get('regenerateSession/{email}/{password}', [LoginController::class, 'regenerateSession'])->name('regenerateSession');
+Route::get('/', 'ViewController@home')->name('inicio')->middleware('auth');
+Route::group(
+    ['middleware' => ['auth', 'api', 'cambio_diario']],
+    function () {
+
+        // Route::view('/' , 'home')->name('inicio');
+
+        // RUTAS PROYECTOS
+        // Rutas ProjectManager
+        Route::prefix('project_managers')->name('project_managers.')->group(function () {
+            Route::get('gantt', 'ProjectManagerController@gantt')->name('gantt.index');
+
+            Route::get('{project_manager}/gantt', 'ProjectManagerController@gantt')->name('gantt.show');
+            Route::get('{project_manager}/cards', 'ProjectManagerController@cards')->name('cards');
+            Route::get('{project_manager}/report', 'ProjectManagerController@report')->name('report');
+        });
+
+        Route::resource('project_managers', 'ProjectManagerController');
+
+        // Rutas anidadas para Cards, Tasks, y Comments
+        Route::resource('project_managers.cards', 'ActivityController')
+            ->only('store', 'create', 'edit', 'update', 'destroy')
+            ->scoped([
+                'project_manager' => 'id'
+            ]);
+
+        Route::resource('project_managers.cards.tasks', 'TaskController')
+            ->only('index', 'store', 'create', 'edit', 'update', 'destroy')
+            ->scoped([
+                'card' => 'id'
+            ]);
+
+        Route::resource('project_managers.cards.tasks.comments', 'CommentController')
+            ->only('index', 'store', 'create')
+            ->scoped([
+                'task' => 'id'
+            ]);
+        // END
+
+        Route::post('configuracion_guias_ingresos', 'ConfiguracionGuiaIngresosController@store')->name('envio_confi_ingresos');
+
+        Route::post('/whatsapp', 'AgregadoRapidoController@send_whatsapp')->name('agregado.whatsapp_send');
+        Route::resource('/almacen', 'AlmacenController');
+        Route::post('/almacen_sunat/{id}', 'AlmacenController@cod_sunat')->name('almacen.cod_sunat');
+        Route::post('/almacen/estado','AlmacenController@change_state')->name('almacen.change_state');
+        Route::resource('/apariencia', 'ConfigController');
+        Route::post("/cotizacion_manual/guardar-nota/{id}", "CotizacionManualController@guardarNotaInformativa")->name("cotizacion_manual.guardar_nota");
+        Route::resource('/cotizacion_manual', 'CotizacionManualController');
+        Route::post('/cotizacion_manual/update/{id}', 'CotizacionManualController@update')->name('cotizacion_manual.update');
+        Route::post('/cotizacion_manual/codigo', 'CotizacionManualController@change_almacen_tipo')->name('cotizacion_manual.change_almacen_tipo');
+        Route::get('/cotizacion_manual/print/{id}', 'CotizacionManualController@print')->name('cotizacion_manual.print');
+        Route::get('/cotizacion_manual/facturar/{id}', 'CotizacionManualController@facturar')->name('cotizacion_manual.facturar');
+        Route::post('/cotizacion_manual/facturar_store', 'CotizacionManualController@facturar_store')->name('cotizacion_manual.facturar_store');
+        Route::get('/cotizacion_manual/boletear/{id}', 'CotizacionManualController@boletear')->name('cotizacion_manual.boletear');
+        Route::post('/cotizacion_manual/boletear_store', 'CotizacionManualController@boletear_store')->name('cotizacion_manual.boletear_store');
+        Route::get('/cotizacion_manual/free_print/{id}', 'CotizacionManualController@free_print')->name('cotizacion_manual.free_print');
+
+        Route::get('/cotizacion_manual/nota_venta/{id}', 'CotizacionManualController@gen_nota_venta')->name('cotizacion_manual.gen_nota_venta');
+        Route::post('/cotizacion_manual/nota_venta_store', 'CotizacionManualController@nota_venta_store')->name('cotizacion_manual.nota_venta_store');
+        Route::get('/cotizacion_manual/nota_venta/{id}', 'CotizacionManualController@gen_nota_venta')->name('cotizacion_manual.gen_nota_venta');
+        Route::post('/cotizacion_manual/nota_venta_store', 'CotizacionManualController@nota_venta_store')->name('cotizacion_manual.nota_venta_store');
+
+        Route::resource('/categoria', 'CategoriaController')->only(['index', 'create', 'store', 'update']);;
+        Route::resource('/vendedores', 'PersonalVentaController');
+        Route::put('vendedores/aprobar/{id}', 'PersonalVentaController@aprobar')->name('vendedores.aprobar');
+        Route::put('vendedores/procesado/{id}', 'PersonalVentaController@procesado')->name('vendedores.procesado');
+        Route::resource('/categoria', 'CategoriaController')->only(['index', 'create', 'store', 'update']);;
+        Route::resource('/vendedores', 'PersonalVentaController');
+        Route::put('vendedores/aprobar/{id}', 'PersonalVentaController@aprobar')->name('vendedores.aprobar');
+        Route::put('vendedores/procesado/{id}', 'PersonalVentaController@procesado')->name('vendedores.procesado');
+
+        Route::put('vendedores/estado/{id}', 'PersonalVentaController@estado')->name('vendedores.estado');
+
+        Route::resource('/registros', 'Ventas_registroController');
+
+        // COTIZACIONES - ajax para el llamado de datos
+        Route::get('/ventas/cotizaciones', 'Ventas_registroController@cotizacion_tab')->name('ventas.cotizacion');
+        Route::get('/ventas/cotizaciones-data', 'Ventas_registroController@cotizacion_registers')->name('ventas.cotizacion_registers');
+        Route::get('/ventas/cotizaciones-manual-data', 'Ventas_registroController@cotizacion_manual_registers')->name('ventas.cotizacion_manual_registers');
+        Route::get('/ventas/nota-venta-data', 'Ventas_registroController@nota_venta_registers')->name('ventas.nota_venta_registers');
+
+
+        //COTIZACION Y COTIZACION MANUAL EXPORTAR
+        Route::post('/ventas/cotizacion/exportar', [CotizacionController::class, 'exportar_cotizaciones'])->name('exportarCotizacion');
+        Route::post('/ventas/cotizacion_manual/exportar', [CotizacionManualController::class, 'exportar_cotizacionesM'])->name('exportarCotizacionM');
+
+        Route::get('/ventas/cotizaciones_manuales', 'Ventas_registroController@cotizacion_manual_tab')->name('ventas.cotizacion_manual');
+        Route::get('/ventas/notas_ventas', 'Ventas_registroController@nota_venta_tab')->name('ventas.nota_venta');
+
+        Route::post('/cliente/contac', 'ClienteController@storecontact')->name('cliente.storecontact');
+        Route::resource('/cliente', 'ClienteController');
+
+        Route::resource('/cliente_sucursal', 'ClienteSucursalController')->except('[store]');
+        Route::post('/cliente_sucursal/{id}', [ClienteSucursalController::class, 'store'])->name('cliente_sucursal.store');
+        Route::get('/exportar/clientes', [ClienteController::class, 'exportCliente'])->name('cliente.exportar');
+        Route::get('/exportar/clientes2', [ClienteController::class, 'exportCliente2'])->name('cliente.exportar2');
+        // Route::post('/cliente_sucursal/{id}','ClienteSucursalController@store')->name('cliente_sucursal.store');
+        // Route::post('/cliente_sucursal/departamento','ClienteController@ajax_dep')->name('sucursal_dep_cli.ajax_dep');
+
+        Route::post('/cliente_retenedores/{id}', 'ClienteRetenedoresController@update')->name('cliente_retenedores.reupdate');
+        Route::resource('/compra', 'CompraController');
+
+        // COTIZACIONES BOLETA - FACTURA
+        //boleta
+        Route::post('/cotizacion/create_boleta', 'CotizacionController@create_boleta')->name('cotizacion.create_boleta');
+        Route::post('/cotizacion/create_boleta_ms', 'CotizacionController@create_boleta_ms')->name('cotizacion.create_boleta_ms');
+        Route::put('/cotizacion/store_boleta/{id}', 'CotizacionController@store_boleta')->name('cotizacion.store_boleta');
+        //factura
+
+        // Route::get('cotizacion/fast_print', 'CotizacionController@fast_print')->name('cotizacion.fast_print');
+        Route::post('/cotizacion/create_factura', 'CotizacionController@create_factura')->name('cotizacion.create_factura');
+        // Route::post('/cotizacion/create_factura_ms' , 'CotizacionController@create_factura_ms')->name('cotizacion.create_factura_ms');
+
+        Route::put('/cotizacion/store_factura/{id}', 'CotizacionController@store_factura')->name('cotizacion.store_factura');
+        Route::get('/cotizacion/print_cotizacion/{id}', 'CotizacionController@print')->name('cotizacion.print');
+        Route::get('/cotizacion/free_print/{id}', 'CotizacionController@free_print')->name('cotizacion.free_print');
+        Route::post('/cotizacion/facturar/{id}', 'CotizacionController@facturar')->name('cotizacion.facturar');
+        Route::post('/cotizacion/facturar_store', 'CotizacionController@facturar_store')->name('cotizacion.facturar_store');
+
+        //BOLETA
+        Route::post('/cotizacion/boletear/{id}', 'CotizacionController@boletear')->name('cotizacion.boletear');
+        Route::post('/cotizacion/boletear_store', 'CotizacionController@boletear_store')->name('cotizacion.boletear_store');
+        Route::get('/cotizacion/print_cotizacion_servicio/{id}', 'CotizacionServiciosController@print')->name('cotizacion_servicio.print');
+        Route::post('ticket_ajax_coti', 'CotizacionController@ticket_ajax_cotizacion')->name('ticket_ajax_coti');
+
+        Route::post('/cotizacion/guardar-nota/{id}', 'CotizacionController@guardarNotaInformativa')->name('cotizacion.guardar_nota');
+
+        Route::resource('/cotizacion', 'CotizacionController');
+        Route::post('/cotizacion/update/{id}', 'CotizacionController@update')->name('cotizacion.update');
+
+        Route::post('cotizacion/nota_venta/{id}', 'CotizacionController@nota_venta_gen')->name('cotizacion.nota_venta');
+        Route::post('cotizacion/nota_venta_store', 'CotizacionController@nota_venta_store')->name('cotizacion.nota_venta_store');
+
+        // Route::put('/cotizacion/store/{id_moneda}','CotizacionController@store')->name('cotizacion.store');
+        Route::resource('/empresa/banco', 'BancoController'); //Banco
+        Route::post('/bancos/search', 'BancoController@search_registros')->name('bancos.registros_search');
+
+        //COTIZACIOBNES SERVICIO
+        //FACTURA
+        Route::post('/cotizacion_servicio/create_factura', 'CotizacionServiciosController@create_factura')->name('cotizacion_servicio.create_factura');
+        Route::post('/cotizacion_servicio/create_factura_ms', 'CotizacionServiciosController@create_factura_ms')->name('cotizacion_servicio.create_factura_ms');
+        Route::put('/cotizacion_servicio/store_factura/{id}', 'CotizacionServiciosController@store_factura')->name('cotizacion_servicio.store_factura');
+        Route::get('/cotizacion_servicio/facturar/{id}', 'CotizacionServiciosController@facturar')->name('cotizacion_servicio.facturar');
+        Route::post('/cotizacion_servicio/facturar_store', 'CotizacionServiciosController@facturar_store')->name('cotizacion_servicio.facturar_store');
+
+        // boleta
+        Route::post('/cotizacion_servicio/create_boleta', 'CotizacionServiciosController@create_boleta')->name('cotizacion_servicio.create_boleta');
+        Route::post('/cotizacion_servicio/create_boleta_ms', 'CotizacionServiciosController@create_boleta_ms')->name('cotizacion_servicio.create_boleta_ms');
+        Route::put('/cotizacion_servicio/store_boleta/{id}', 'CotizacionServiciosController@store_boleta')->name('cotizacion_servicio.store_boleta');
+        Route::get('/cotizacion_servicio/boletear/{id}', 'CotizacionServiciosController@boletear')->name('cotizacion_servicio.boletear');
+        Route::post('/cotizacion_servicio/boletear_store', 'CotizacionServiciosController@boletear_store')->name('cotizacion_servicio.boletear_store');
+
+        Route::resource('/cotizacion_servicio', 'CotizacionServiciosController')->except(['store']);
+        // Route::put('/cotizacion_servicio/store/{id_moneda}','CotizacionServiciosController@store')->name('cotizacion.store');
+        Route::post('ticket_ajax_coti_serv', 'CotizacionServiciosController@ticket_ajax_cotizacion')->name('ticket_ajax_coti_serv');
+        //FACTURACION SERVICIOS
+        Route::post('/facturacion_servicio/create_ms', 'FacturacionServicioController@create_ms')->name('facturacion_servicio.create_ms');
+        Route::post('/facturacion_servicio/create', 'FacturacionServicioController@create')->name('facturacion_servicio.create');
+        Route::resource('/facturacion_servicio', 'FacturacionServicioController')->except(['create']);
+
+        //BOLETA SERVICIOS
+        Route::post('/boleta_servicio/create_ms', 'BoletaServicioController@create_ms')->name('boleta_servicio.create_ms');
+        Route::post('/boleta_servicio/create', 'BoletaServicioController@create')->name('boleta_servicio.create');
+        Route::resource('/boleta_servicio', 'BoletaServicioController')->except(['create']);
+
+        //NOTA VENTA
+        Route::resource('/nota_venta', 'NotaVentaController')->except(['destroy', 'create']);
+        Route::post('/nota_venta/create', 'NotaVentaController@create')->name('nota_venta.create');
+        Route::post('/nota_venta/update/{id}', 'NotaVentaController@update')->name('nota_venta.update');
+        Route::post('/nota_venta/anulacion/{id}', 'NotaVentaController@anulacion')->name('nota_venta.anulacion');
+        Route::get('/nota_venta/print/{id}', 'NotaVentaController@print')->name('nota_venta.print');
+        Route::get('/nota_venta/ticket/{id}', 'NotaVentaController@ticket')->name('nota_venta.ticket');
+        Route::post('/nota_venta/precio_sugerido', 'NotaVentaController@precio_sugerido')->name('nota_venta.precio_sugerido');
+
+        //BOLETA SERVICIOS
+        Route::post('/boleta_servicio/create_ms', 'BoletaServicioController@create_ms')->name('boleta_servicio.create_ms');
+        Route::post('/boleta_servicio/create', 'BoletaServicioController@create')->name('boleta_servicio.create');
+        Route::resource('/boleta_servicio', 'BoletaServicioController')->except(['create']);
+        //NOTA VENTA
+        Route::resource('/nota_venta', 'NotaVentaController')->except(['destroy', 'create']);
+        Route::post('/nota_venta/create', 'NotaVentaController@create')->name('nota_venta.create');
+        Route::post('/nota_venta/update/{id}', 'NotaVentaController@update')->name('nota_venta.update');
+        Route::post('/nota_venta/anulacion/{id}', 'NotaVentaController@anulacion')->name('nota_venta.anulacion');
+        Route::get('/nota_venta/print/{id}', 'NotaVentaController@print')->name('nota_venta.print');
+        Route::get('/nota_venta/ticket/{id}', 'NotaVentaController@ticket')->name('nota_venta.ticket');
+        Route::post('/nota_venta/precio_sugerido', 'NotaVentaController@precio_sugerido')->name('nota_venta.precio_sugerido');
+
+        //BOLETA SERVICIOS
+        Route::post('/boleta_servicio/create_ms', 'BoletaServicioController@create_ms')->name('boleta_servicio.create_ms');
+        Route::post('/boleta_servicio/create', 'BoletaServicioController@create')->name('boleta_servicio.create');
+        Route::resource('/boleta_servicio', 'BoletaServicioController')->except(['create']);
+        //NOTA VENTA
+        Route::resource('/nota_venta', 'NotaVentaController')->except(['destroy', 'create']);
+        Route::post('/nota_venta/create', 'NotaVentaController@create')->name('nota_venta.create');
+        Route::post('/nota_venta/update/{id}', 'NotaVentaController@update')->name('nota_venta.update');
+        Route::post('/nota_venta/anulacion/{id}', 'NotaVentaController@anulacion')->name('nota_venta.anulacion');
+        Route::get('/nota_venta/print/{id}', 'NotaVentaController@print')->name('nota_venta.print');
+        Route::get('/nota_venta/ticket/{id}', 'NotaVentaController@ticket')->name('nota_venta.ticket');
+        Route::post('/nota_venta/precio_sugerido', 'NotaVentaController@precio_sugerido')->name('nota_venta.precio_sugerido');
+
+
+        //NOTA VENTA
+
+        //FACTURACION ELECTRONICA
+        //factura
+        Route::post('/facturacion_electronica_factura', 'FacturacionElectronicaController@factura')->name('facturacion_electronica.factura_sunat');
+        Route::post('/facturacion_electronica/send_all', 'FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
+        Route::post('/facturacion_electronica/validacion', 'FacturacionElectronicaController@validacion_sunat')->name('facturacion_electronica.validacion_sunat');
+        //factura manual
+        Route::post('/facturacion_electronica_factura_m', 'FacturacionElectronicaController@facturacion_m_e')->name('facturacion_electronica.facturacion_m_e');
+        Route::post('/facturacion_electronica_factura_m/send_all', 'FacturacionElectronicaController@fac_elec_man_all')->name('facturacion_electronica.fac_elec_man_all');
+        //boleta
+        Route::get('/facturacion_electronica_boleta', 'FacturacionElectronicaController@index_boleta')->name('facturacion_electronica.index_boleta');
+        Route::post('/facturacion_electronica_boleta', 'FacturacionElectronicaController@boleta')->name('facturacion_electronica.boleta_sunat');
+        Route::post('/facturacion_electronica_boleta/send_all', 'FacturacionElectronicaController@boleta_elec_all')->name('facturacion_electronica.boleta_elec_all');
+        Route::post('/facturacion_electronica/validacion_boleta', 'FacturacionElectronicaController@validacion_sunat_boleta')->name('facturacion_electronica.validacion_sunat_boleta');
+        //boleta manual
+        Route::post('/facturacion_electronica_boleta_m', 'FacturacionElectronicaController@boleta_m_e')->name('facturacion_electronica.boleta_m_e');
+        Route::post('/facturacion_electronica_boleta_m/send_all', 'FacturacionElectronicaController@boleta_m_e_all')->name('facturacion_electronica.boleta_m_e_all');
+        //guia remision
+        Route::get('/facturacion_electronica_guia_remision', 'FacturacionElectronicaController@index_guia_remision')->name('facturacion_electronica.index_guia_remision');
+        Route::post('/facturacion_electronica_guia_remision_prueba', 'FacturacionElectronicaController@guia_remision')->name('facturacion_electronica.guia_remision_sunat');
+        Route::post('/facturacion_electronica_guia_remision_prueba_all/send_all', 'FacturacionElectronicaController@guia_remision_elec_all')->name('facturacion_electronica.guia_remision_elec_all');
+        // * Guia Remision Manual
+        Route::post('/facturacion_electronica_guia_remision_m_prueba', 'FacturacionElectronicaController@guia_remision_m')->name('facturacion_electronica.guia_remision_m_sunat');
+        Route::post('/facturacion_electronica_guia_remision_m_prueba_all/send_all', 'FacturacionElectronicaController@guia_remision_m_all')->name('facturacion_electronica.guia_remision_m_all');
+        //  CONSULTA CDR??
+        Route::post('/f_e_consulta_guia', 'FacturacionElectronicaController@valid_cdr')->name('facturacion_electronica.valid_cdr');
+        Route::post('/f_e_consulta_guia_manual', 'FacturacionElectronicaController@valid_cdr_manual')->name('facturacion_electronica.valid_cdr_manual');
+
+        //FACTURACION ELECTRONICA
+        //factura
+        Route::post('/facturas_elecronicas', 'FacturacionElectronicaController@factura')->name('facturacion_electronica.index');
+        Route::get('/facturas_elecronicas/enviadas', 'FacturacionElectronicaController@facturas_enviadas')->name('facturacion_electronica.facturas_enviadas_list');
+
+        Route::post('/facturas_elecronicas/send_all', 'FacturacionElectronicaController@fac_elec_all')->name('facturacion_electronica.factura_elec_all');
+        Route::post('/facturas_elecronicas/validacion', 'FacturacionElectronicaController@validacion_sunat')->name('facturacion_electronica.validacion_sunat');
+
+        Route::get('facturas_elecronicas/enviadas/list', 'FacturacionElectronicaController@list_facturas_env')->name('facturas_electronicas.enviadas_lst');
+
+        //DETRACCIONES
+        Route::get('/facturas_elecronicas/detracciones', 'FacturacionElectronicaController@facturas_detracciones')->name('facturacion_electronica.facturas_detracciones');
+
+        //factura manual
+        Route::post('/facturas_m_elecronicas', 'FacturacionElectronicaController@facturacion_m_e')->name('facturacion_electronica.facturacion_m_e');
+        Route::post('/facturas_m_elecronicas/send_all', 'FacturacionElectronicaController@fac_elec_man_all')->name('facturacion_electronica.fac_elec_man_all');
+
+        Route::get('/facturas_m_elecronicas', 'FacturacionElectronicaController@index_facturas_manual')->name('facturacion_electronica.index_facturas_manual');
+        Route::get('/facturas_m_elecronicas/enviadas', 'FacturacionElectronicaController@facturas_manual_enviadas')->name('facturacion_electronica.facturas_manual_enviadas');
+
+        Route::get('facturas_m_elecronicas/enviadas/list', 'FacturacionElectronicaController@list_facturas_m_env')->name('facturacion_electronica.list_facturas_m_env');
+
+        //boleta
+        Route::get('/boletas_electronicas', 'FacturacionElectronicaController@index_boleta')->name('boletas_electronicas.index_boleta');
+        Route::get('/boletas_electronicas/enviadas', 'FacturacionElectronicaController@boletas_enviadas')->name('boletas_electronicas.boletas_enviadas_list');
+
+
+        Route::post('/boletas_electronicas', 'FacturacionElectronicaController@boleta')->name('facturacion_electronica.boleta_sunat');
+
+        Route::post('/boletas_electronicas/send_all', 'FacturacionElectronicaController@boleta_elec_all')->name('facturacion_electronica.boleta_elec_all');
+        Route::post('/boletas_electronicas/validacion_boleta', 'FacturacionElectronicaController@validacion_sunat_boleta')->name('facturacion_electronica.validacion_sunat_boleta');
+
+        Route::get('boletas_electronicas/enviadas/list', 'FacturacionElectronicaController@list_boletas_env')->name('boletas_electronicas.list_boletas_env');
+
+
+        //boleta manual
+        Route::get('/boletas_m_electronicas', 'FacturacionElectronicaController@index_boleta_manual')->name('boletas_electronicas.index_boleta_manual');
+        Route::get('/boletas_m_electronicas/enviadas', 'FacturacionElectronicaController@boletas_enviadas_m')->name('boletas_electronicas.boletas_enviadas_m');
+
+        Route::post('/facturacion_electronica_boleta_m', 'FacturacionElectronicaController@boleta_m_e')->name('facturacion_electronica.boleta_m_e');
+        Route::post('/facturacion_electronica_boleta_m/send_all', 'FacturacionElectronicaController@boleta_m_e_all')->name('facturacion_electronica.boleta_m_e_all');
+
+        Route::get('boletas_m_electronicas/enviadas/list', 'FacturacionElectronicaController@list_boeltas_m_env')->name('boletas_electronicas.list_boeltas_m_env');
+
+        //guia remision
+        Route::get('/guias_electronicas', 'FacturacionElectronicaController@index_guia_remision')->name('guias_electronicas.index_guia_remision');
+        Route::get('/guias_electronicas/enviadas', 'FacturacionElectronicaController@remision_enviadas')->name('guias_electronicas.remision_enviadas');
+        Route::get('guias_electronicas/enviadas/list', 'FacturacionElectronicaController@list_remision_env')->name('guias_electronicas.list_remision_env');
+
+
+        Route::post('/facturacion_electronica_guia_remision_prueba', 'FacturacionElectronicaController@guia_remision')->name('facturacion_electronica.guia_remision_sunat');
+        Route::post('/facturacion_electronica_guia_remision_prueba_all/send_all', 'FacturacionElectronicaController@guia_remision_elec_all')->name('facturacion_electronica.guia_remision_elec_all');
+        // * Guia Remision Manual
+        Route::get('/guias_m_electronicas', 'FacturacionElectronicaController@index_guia_remision_manual')->name('guias_electronicas.index_guia_remision_manual');
+        Route::get('/guias_m_electronicas/enviadas', 'FacturacionElectronicaController@remision_m_envidas')->name('guias_electronicas.remision_m_envidas');
+
+        Route::get('guias_m_electronicas/enviadas/list', 'FacturacionElectronicaController@list_remision_m_env')->name('guias_electronicas.list_remision_m_env');
+
+        Route::post('/facturacion_electronica_guia_remision_m_prueba', 'FacturacionElectronicaController@guia_remision_m')->name('facturacion_electronica.guia_remision_m_sunat');
+        Route::post('/facturacion_electronica_guia_remision_m_prueba_all/send_all', 'FacturacionElectronicaController@guia_remision_m_all')->name('facturacion_electronica.guia_remision_m_all');
+        //  CONSULTA CDR??
+        Route::post('/f_e_consulta_guia', 'FacturacionElectronicaController@valid_cdr')->name('facturacion_electronica.valid_cdr');
+        Route::post('/f_e_consulta_guia_manual', 'FacturacionElectronicaController@valid_cdr_manual')->name('facturacion_electronica.valid_cdr_manual');
+
+        //guia remision baja
+        Route::post('/facturacion_electronica_guia_remision_baja_prueba', 'FacturacionElectronicaController@guia_remision_baja')->name('facturacion_electronica.guia_remision_baja_sunat');
+        Route::post('/facturacion_electronica_guia_remision_baja_m_prueba', 'FacturacionElectronicaController@guia_remision_m_baja_sunat')->name('facturacion_electronica.guia_remision_m_baja_sunat');
+
+
+        //* NOTAS ELECTRONICAS
+
+        //Nota Credito
+        Route::get('/nota_credito_electrónica', 'FacturacionElectronicaController@index_nota_credito')->name('facturacion_electronica.index_nota_credito');
+        Route::get('/nota_credito_electrónica/enviadas', 'FacturacionElectronicaController@nota_credito_env')->name('facturacion_electronica.nota_credito_env');
+
+        Route::post('/facturacion_electronica_nota_credito', 'FacturacionElectronicaController@nota_credito')->name('facturacion_electronica.nota_credito');
+        Route::post('/facturacion_electronica_nota_credito/send_all', 'FacturacionElectronicaController@nota_credito_all')->name('facturacion_electronica.nota_credito_all');
+        Route::post('/facturacion_electronica_nota_credito_boleta', 'FacturacionElectronicaController@nota_credito_boleta')->name('facturacion_electronica.nota_credito_bol');
+
+        Route::get('/nota_credito_electronica/enviadas/list', 'FacturacionElectronicaController@list_nota_credito_env')->name('facturacion_electronica.list_nota_credito_env');
+
+        //Nota Debito
+        Route::get('/nota_debito_electronica', 'FacturacionElectronicaController@index_nota_debito')->name('facturacion_electronica.index_nota_debito');
+        Route::get('/nota_debito_electronica/enviadas', 'FacturacionElectronicaController@nota_debito_env')->name('facturacion_electronica.nota_debito_env');
+
+        Route::post('/facturacion_electronica_nota_debito', 'FacturacionElectronicaController@nota_debito')->name('facturacion_electronica.nota_debito');
+        Route::post('/facturacion_electronica_nota_debito_boleta', 'FacturacionElectronicaController@nota_debito_boleta')->name('facturacion_electronica.nota_debito_bol');
+
+
+
+
+
+
+        Route::get('/nota_debito_electronica/enviadas/list', 'FacturacionElectronicaController@list_nota_debito_env')->name('facturacion_electronica.list_nota_dedito_env');
+
+
+        Route::resource('/facturacion_electronica', 'FacturacionElectronicaController');
+
+
+        Route::resource('/facturacion_electronica', 'FacturacionElectronicaController');
+
+
+
+        //NOTA DE CREDITO
+        Route::post('/nota-credito/motivo', 'NotaCreditoController@motivo')->name('nota-credito.motivo');
+
+        Route::post('/nota-credito-create-nc/{id}', 'NotaCreditoController@create_nota_credito')->name('nota-credito.create_nota_credito');
+        Route::post('/nota-credito-create_boleta-nc/{id}', 'NotaCreditoController@create_boleta_nota_credito')->name('nota-credito.create_nota_credito_boleta');
+        Route::get('/nota-credito/print/{id}', 'NotaCreditoController@print')->name('nota_credito.print');
+        Route::get('/nota-credito/pdf/{id}', 'NotaCreditoController@pdf')->name('nota_credito.pdf');
+        Route::post('/nota-credito/anular', 'NotaCreditoController@anular')->name('nota_credito.anular');
+
+        Route::get('/nota-credito/create_boleta', 'NotaCreditoController@create_boleta')->name('nota-credito.create_boleta');
+        Route::post('/nota-credito/store-boleta/{id}', 'NotaCreditoController@store_boleta')->name('nota-credito.store_boleta');
+        Route::post('/nota-credito/store-factura/{id}', 'NotaCreditoController@store_factura')->name('nota-credito.store_factura');
+        Route::resource('/nota-credito', 'NotaCreditoController');
+
+
+        Route::post('/nota-debito-create-nc', 'NotaDebitoController@create_nota_debito')->name('nota-debito.create_nota_debito');
+        Route::post('/nota-debito-create_boleta-nc', 'NotaDebitoController@create_boleta_nota_debito')->name('nota-debito.create_nota_debito_boleta');
+
+        Route::post('/nota_debito_store_factura/{id}', 'NotaDebitoController@store')->name('nota-debito.nota_debito_store_factura');
+        Route::post('/nota_debito_store_boleta/{id}', 'NotaDebitoController@store_boleta')->name('nota-debito.nota_debito_bol');
+
+        Route::get('/nota-debito/create_boleta', 'NotaDebitoController@create_boleta')->name('nota-debito.create_boleta');
+        Route::resource('/nota-debito', 'NotaDebitoController');
+        Route::get('/nota-debito/pdf/{id}', 'NotaDebitoController@pdf')->name('nota_debito.pdf');
+        Route::get('/nota-debito/print/{id}', 'NotaDebitoController@print')->name('nota_debito.print');;
+
+        Route::resource('/debito', 'DebitoController');
+        Route::resource('/documento', 'DocumentoController');
+        Route::resource('/empresa', 'EmpresaController')->only(['index', 'update', 'store']);
+
+        // Route::get('facturacion/boleta/{id}' , 'FacturacionController@show_boleta')->name('boleta');
+        // Route::get('facturacion/create_boleta/' , 'FacturacionController@create_boleta')->name('create.boleta');
+        Route::get('/facturacion/print/{id}', 'FacturacionController@print')->name('facturacion.print');
+        Route::get('/facturacion/ticket/{id}', 'FacturacionController@ticket')->name('facturacion.ticket');
+        Route::post('/facturacion/create/ajax', 'FacturacionController@ajax')->name('facturacion.ajax');
+        // Route::post('/facturacion/create/sss','FacturacionController@ajax')->name('facturacion.ajax');
+        Route::post('/facturacion/create_ajax', 'FacturacionController@create_ajax')->name('facturacion.create_ajax');
+
+        Route::post('/facturacion/create_ms', 'FacturacionController@create_ms')->name('facturacion.create_ms');
+        // Route::post('/facturacion/store/{id}','FacturacionController@store')->name('facturacion.store');
+        Route::resource('/facturacion', 'FacturacionController')->except(['store', 'create']);
+        Route::post('/facturacion/create', 'FacturacionController@create')->name('facturacion.create');
+        Route::put('/facturacion/store/{id_moneda}', 'FacturacionController@store')->name('facturacion.store');
+        Route::post('/facturacion/update/{id}', 'FacturacionController@update')->name('facturacion.update');
+        Route::post('/facturacion/anular', 'FacturacionController@anulacion')->name('facturacion.anulacion');
+        Route::post('/facturacion/ajax_remision', 'FacturacionController@ajax_remision')->name('facturacion.ajx_remision');
+        //DESCARGA DE FACTURA EN EXCEL
+        Route::get('/export_excel/facturacion', [FacturacionController::class, 'exportExcel']);
+        // Route::post('ticket_ajax_boleta', 'BoletaController@ticket_ajax_boleta')->name('ticket_ajax_boleta');
+
+
+        //facturacion manual
+        //->Vista para facturacion manual próximamente...
+        Route::get('/facturacion_manual/print/{id}', 'FacturacionMController@print')->name('facturacion_manual.print');
+        Route::get('/facturacion_manual/ticket/{id}', 'FacturacionMController@ticket')->name('facturacion_manual.ticket');
+
+        Route::post('/facturacion_manual/codigo', 'FacturacionMController@change_almacen_tipo')->name('facturacion_manual.change_almacen_tipo');
+        Route::resource('facturacion_manual', 'FacturacionMController');
+        Route::post('/facturacion_manual/update/{id}', 'FacturacionMController@update')->name('facturacion_manual.update');
+        Route::post('/facturacion_manual/ajax_remision', 'FacturacionMController@ajax_remision')->name('facturacion_manual.ajx_remision');
+
+        //boleta manual manual
+        Route::resource('boleta_manual', 'BoletaMController');
+        Route::post('/boleta_manual/codigo', 'BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
+        Route::get('/boleta_manual/print/{id}', 'BoletaMController@print')->name('boleta_manual.print');
+        Route::get('/boleta_manual/ticket/{id}', 'BoletaMController@ticket')->name('boleta_manual.ticket');
+
+
+        Route::post('/boleta/create_ms', 'BoletaController@create_ms')->name('boleta.create_ms');
+        Route::get('/boleta/print/{id}', 'BoletaController@print')->name('boleta.print');
+        Route::resource('/boleta', 'BoletaController')->except(['store', 'create']);
+        Route::post('/boleta/create', 'BoletaController@create')->name('boleta.create');
+        Route::put('/boleta/store/{id_moneda}', 'BoletaController@store')->name('boleta.store');
+        Route::post('/boleta/update/{id}', 'BoletaController@update')->name('boleta.update');
+        Route::get('/boleta/ticket/{id}', 'BoletaController@ticket')->name('boleta.ticket');
+        /*Guia Remision*/
+        //para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria
+        Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
+        //boleta manual manual
+        Route::resource('boleta_manual', 'BoletaMController');
+        Route::post('/boleta_manual/update/{id}', 'BoletaMController@update')->name('boleta_manual.update');
+        Route::post('/boleta_manual/codigo', 'BoletaMController@change_almacen_tipo')->name('boleta_manual.change_almacen_tipo');
+        Route::get('/boleta_manual/print/{id}', 'BoletaMController@print')->name('boleta_manual.print');
+        Route::get('/boleta_manual/ticket/{id}', 'BoletaMController@ticket')->name('boleta_manual.ticket');
+
+
+        Route::post('/boleta/create_ms', 'BoletaController@create_ms')->name('boleta.create_ms');
+        Route::get('/boleta/print/{id}', 'BoletaController@print')->name('boleta.print');
+        Route::resource('/boleta', 'BoletaController')->except(['store', 'create']);
+        Route::post('/boleta/create', 'BoletaController@create')->name('boleta.create');
+        Route::put('/boleta/store/{id_moneda}', 'BoletaController@store')->name('boleta.store');
+        Route::get('/boleta/ticket/{id}', 'BoletaController@ticket')->name('boleta.ticket');
+        //* Guia Remision *//
+        //para guia agregar el store en create_moneda secundaria enviando este una acptacion de 2 variables put en store para la identificaion de la moneda principal o secundaria
+
+        Route::resource('/guia_remision', 'GuiaRemisionController')->except(['create']);
+        Route::post('/guia_remision/update/{id}', 'GuiaRemisionController@update')->name('guia_remision.update');
+        Route::post('/guia_remision/sucursal', 'GuiaRemisionController@ajax_sucursal')->name('guia_remision.ajax_sucursal');
+        Route::post('/guia_remision/create', 'GuiaRemisionController@create')->name('guia_remision.create');
+        // Route::post('/guia_remision/ajax_p','GuiaRemisionController@ajax_producto')->name('remision.ajax_producto');
+        Route::post('/guia_remision/peso_stock', 'GuiaRemisionController@peso_stock')->name('guia_remision.peso_stock');
+        Route::post('/guia_remision/guardar-nota/{id}', 'GuiaRemisionController@guardarNotaInformativa')->name('guia_remision.guardar_nota');
+        Route::post('/guia_remision/anular', 'GuiaRemisionController@destroy')->name('guia_remision.anular');
+        Route::get('/guia_remision/print/{id}', 'GuiaRemisionController@print')->name('guia_remision.print');
+
+        /* REMISION MANUAL */
+        Route::resource('/guia_remision_manual', 'GuiaRemisionManualController');
+        Route::post('/guia_remision_manual/update/{id}', 'GuiaRemisionManualController@update')->name('remision_m.update');
+        // Route::post('/guia_remision_manual/ajax_p','GuiaRemisionManualController@ajax_producto')->name('remision_m.ajax_producto');
+        Route::post('/guia_remision_manual/peso', 'GuiaRemisionManualController@peso_ajax')->name('remision_m.peso_ajax');
+        Route::post('/guia_remision_manual/almacen_guia', 'GuiaRemisionManualController@almacen_remision_m')->name('remision_m.almacen_remision_m');
+        Route::post('/guia_remision_manual/guardar-nota/{id}', 'GuiaRemisionManualController@guardarNotaInformativa')->name('remision_m.guardar_nota');
+        Route::post('/guia_remision_manual/anular', 'GuiaRemisionManualController@destroy')->name('remision_m.anular');
+        Route::get('/guia_remision_manual/print/{id}', 'GuiaRemisionManualController@print')->name('remision_m.print');
+
+
+        Route::post('stock_ajax', 'KardexSalidaController@stock_ajax')->name('stock_ajax');
+        Route::post('stock_ajax_distribucion', 'KardexEntradaDistribucionController@stock_ajax_distribucion')->name('stock_ajax_distribucion');
+        Route::get('/guia_distribucion', 'KardexEntradaDistribucionController@guia_interna')->name('guia_interna');
+        Route::post('ajax_direccion_almacen', 'KardexEntradaDistribucionController@ajax_direccion_almacen')->name('ajax_direccion_almacen');
+
+        Route::post('stock_ajax_traslado', 'KardexEntradaTrasladoAlmacenController@stock_ajax_traslado')->name('stock_ajax_traslado');
+        Route::post('stock_ajax', 'KardexSalidaController@stock_ajax')->name('stock_ajax');
+        Route::post('stock_ajax_distribucion', 'KardexEntradaDistribucionController@stock_ajax_distribucion')->name('stock_ajax_distribucion');
+        Route::get('/guia_distribucion', 'KardexEntradaDistribucionController@guia_interna')->name('guia_interna');
+        Route::post('ajax_direccion_almacen', 'KardexEntradaDistribucionController@ajax_direccion_almacen')->name('ajax_direccion_almacen');
+
+        Route::post('stock_ajax_traslado', 'KardexEntradaTrasladoAlmacenController@stock_ajax_traslado')->name('stock_ajax_traslado');
+
+        //Llamada general de los parámetros requeridos por el articulo (producto-servicio), por medio de ajax (parameter_call)
+        // Route::post('parameter_call', 'CotizacionController@parameter_call')->name('parameter_call');
+
+        // * Llamada general de los parámetros requeridos por el articulo (producto-servicio), por medio de ajax (parameter_call)
+        Route::post('parameter_call/description', 'ParameterCallController@description')->name('pa.description');
+        Route::post('parameter_call/getClients', 'ParameterCallController@getClients')->name('pa.clients');
+        Route::post('parameter_call/getArticles', 'ParameterCallController@getArticles')->name('pa.articles');
+        Route::post('parameter_call/getMoney', 'ParameterCallController@getMoney')->name('pa.money');
+        Route::post('parameter_call/checkEmailCredential', 'ParameterCallController@checkEmailCredential')->name('pa.check_email');
+        Route::post('parameter_call/getNFactura', 'ParameterCallController@getNFactura')->name('pa.nfactura');
+        Route::post('parameter_call/getNumberLetter', 'ParameterCallController@getNumberLetter')->name('pa.numberletters');
+        Route::post('parameter_call/ajax_remision', 'ParameterCallController@ajax_remision')->name('pa.ajax_remision');
+        Route::post('parameter_call/getPersonalVendedor', 'ParameterCallController@getPersonalVendedor')->name('pa.getPersonalVendedor');
+        Route::post('parameter_call/getFormaPago', 'ParameterCallController@getFormaPago')->name('pa.getFormaPago');
+        Route::post('parameter_call/getPersonalData', 'ParameterCallController@getPersonalData')->name('pa.getPersonalData');
+        Route::post('parameter_call/getPermissionxRolData', 'ParameterCallController@getPermissionxRolData')->name('pa.getPermissionxRolData');
+        Route::post('parameter_call/getUserData', 'ParameterCallController@getUserData')->name('pa.getUserData');
+        Route::post('parameter_call/getRolesXUserData', 'ParameterCallController@getRolesXUserData')->name('pa.getRolesXUserData');
+        
+
+        Route::post('descripcion_ajax_serv', 'CotizacionServiciosController@descripcion_ajax_serv')->name('descripcion_ajax_serv');
+
+        Route::post('ajax_periodo', 'PeriodoConsultaController@ajax_periodo')->name('ajax_periodo');
+        Route::post('ajax_movimiento', 'Consulta_MovimientoController@ajax_movimiento')->name('ajax_movimiento');
+
+        Route::post('ajax_periodo_ventas', 'PeriodoConsultaController@ajax_periodo_ventas')->name('ajax_periodo_ventas');
+        Route::post('ajax_movimiento_ventas', 'Consulta_MovimientoController@ajax_movimiento_ventas')->name('ajax_movimiento_ventas');
+        Route::post('ajax_movimiento_ventas_b', 'Consulta_MovimientoController@ajax_movimiento_ventas_b')->name('ajax_movimiento_ventas_b');
+
+        Route::get('guias_remision/seleccionar', 'GuiaRemisionController@seleccionar')->name('guia_remision.seleccionar');
+        Route::put('cotizacion/aprobar/{id}', 'CotizacionController@aprobar')->name('cotizacion.aprobar');
+        Route::get('/guias_remision/creates/{id}', 'GuiaRemisionController@cotizacion')->name('guias_remision.create');
+        // Route::get('/guia_remision/print/{id}' , 'GuiaRemisionController@print')->name('guias_remision.print');
+
+
+        Route::resource('/vehiculo', 'VehiculoController');
+        Route::post('/ajax_vehiculo_mtc', 'VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
+
+        Route::resource('/vehiculo', 'VehiculoController');
+        Route::post('/ajax_vehiculo_mtc', 'VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
+
+        Route::resource('/familia', 'FamiliaController');
+        Route::resource('/subfamilia', 'SubfamiliaController')->except(['store']);
+        Route::post('/subfamilia/store', 'SubfamiliaController@store')->name('subfamilia.store');
+        // Route::post('/subfamilia/{id}','SubfamiliaController@store')->name('subfamilia.store');
+        // Route::post('/subfamilia_update/{id}','SubfamiliaController@update')->name('subfamilia.update');
+        Route::post('/subfamilia_search', 'SubfamiliaController@search_ajax')->name('subfamilia.search_ajax');
+        Route::resource('/vehiculo', 'VehiculoController');
+        Route::post('/ajax_vehiculo_mtc', 'VehiculoController@scrapping_mtc')->name('vehiculo.ajax_mtc');
+
+        // Route::resource('/familia', 'FamiliaController');
+        // Route::resource('/subfamilia', 'SubfamiliaController');
+        // Route::post('/subfamilia/{id}', 'SubfamiliaController@store')->name('subfamilia.store');
+        Route::post('/subfamilia_update/{id}', 'SubfamiliaController@update')->name('subfamilia.update');
+        Route::post('/subfamilia_search', 'SubfamiliaController@search_ajax')->name('subfamilia.search_ajax');
+
+        //Agregado rapido
+        Route::post('agregado_rapido/marcas', 'AgregadoRapidoController@marcas_store')->name('agregado_rapido.marca_store');
+        Route::post('agregado_rapido/cliente', 'AgregadoRapidoController@cliente_store')->name('agregado_rapido.cliente_store');
+
+        Route::post('agregado_rapido/cliente/cotizacion', 'AgregadoRapidoController@cliente_cotizado')->name('agregado_rapido.cliente_cotizado');
+
+        Route::post('agregado_rapido/personal_store', 'AgregadoRapidoController@personal_store')->name('agregado_rapido.personal_store');
+
+        // * MailBox Configuracion
+        Route::resource('/configuracion_email', 'EmailConfiguracionesController');
+        // Route::get('/email_backup','EmailConfiguracionesController@email_backup')->name('email_backup');
+        Route::post('/email_backup/save', 'EmailConfiguracionesController@backup_save')->name('backup_save');
+        Route::post('/configuracion_email/update/{id}', 'EmailConfiguracionesController@update')->name('configuracion_email.update');
+        Route::post('/email/config/pdf', 'EmailConfiguracionesController@store')->name('email.config');
+        // * MailBox Borradores
+        Route::resource('/borradores_email', 'EmailBorradoresController');
+        // * MailBox Bandeja y Papelera
+        Route::resource('/email', 'EmailBandejaEnviosController')->except(['destroy']);
+
+        Route::post('email/delete', 'EmailBandejaEnviosController@delete')->name('email.delete');
+        Route::get('/trash', 'EmailBandejaEnviosController@trash')->name('email.trash');
+        Route::post('/trash/delete', 'EmailBandejaEnviosController@destroy')->name('email.destroy');
+        Route::post('/email/config', 'EmailBandejaEnviosController@configstore')->name('email.configstore');
+        Route::post('/email/config/{id}', 'EmailBandejaEnviosController@configupdate')->name('email.configupdate');
+        // * MailBox Configuracion
+        Route::resource('/configuracion_email', 'EmailConfiguracionesController');
+        // Route::get('/email_backup','EmailConfiguracionesController@email_backup')->name('email_backup');
+        Route::post('/email_backup/save', 'EmailConfiguracionesController@backup_save')->name('backup_save');
+        // Route::post('/configuracion_email/update/{id}','EmailConfiguracionesController@update')->name('configuracion_email.update');
+        Route::post('/email/config/pdf', 'EmailConfiguracionesController@store')->name('email.config');
+        // * MailBox Borradores
+        Route::resource('/borradores_email', 'EmailBorradoresController');
+        // * MailBox Bandeja y Papelera
+        Route::resource('/email', 'EmailBandejaEnviosController');
+
+        Route::post('email/delete', 'EmailBandejaEnviosController@delete')->name('email.delete');
+        Route::get('/trash', 'EmailBandejaEnviosController@trash')->name('email.trash');
+        // Route::post('/trash/delete','EmailBandejaEnviosController@destroy')->name('email.destroy');
+        Route::post('/email/config', 'EmailBandejaEnviosController@configstore')->name('email.configstore');
+        Route::post('/email/config/{id}', 'EmailBandejaEnviosController@configupdate')->name('email.configupdate');
+
+        // * MAILBOX ENVIOS TRANSACCIONES
+        Route::post('email/send', 'EmailBandejaEnviosController@send')->name('email.send');
+
+        Route::post('/email/cotizacion/{id}', 'EmailTransaccionesSend@cotizacion')->name('email.cotizacion');
+        Route::post('/email/cotizacion_manual/{id}', 'EmailTransaccionesSend@cotizacion_manual')->name('email.cotizacion_manual');
+        Route::post('/email/guia_remision/{id}', 'EmailTransaccionesSend@guia_remision')->name('email.guia_remision');
+        Route::post('/email/factura/{id}', 'EmailTransaccionesSend@factura')->name('email.factura');
+        Route::post('/email/factura_manual/{id}', 'EmailTransaccionesSend@factura_manual')->name('email.factura_manual');
+        Route::post('/email/boleta/{id}', 'EmailTransaccionesSend@boleta')->name('email.boleta');
+        Route::post('/email/boleta_manual/{id}', 'EmailTransaccionesSend@boleta_manual')->name('email.boleta_manual');
+        Route::post('/email/nota_venta/{id}', 'EmailTransaccionesSend@nota_venta')->name('email.nota_venta');
+        Route::post('/email/nota_credito/{id}', 'EmailTransaccionesSend@nota_credito')->name('email.nota_credito');
+        Route::post('/email/guia_ingreso/{id}', 'EmailTransaccionesSend@guia_ingreso')->name('email.guia_ingreso');
+        Route::post('/email/guia_egreso/{id}', 'EmailTransaccionesSend@guia_egreso')->name('email.guia_egreso');
+        Route::post('/email/informe_tecnico/{id}', 'EmailTransaccionesSend@informe_tecnico')->name('email.informe_tecnico');
+        Route::post('/email/guia_remision_m/{id}', 'EmailTransaccionesSend@guia_remision_m')->name('email.guia_remision_m');
+
+        //Garantias
+        Route::get('contacto_cliente', 'GarantiaGuiaIngresoController@contacto_cliente');
+        Route::get('contacto_cliente_actualizar', 'GarantiaGuiaIngresoController@contacto_cliente_actualizar');
+        Route::POST('garantia_guia_ingreso/email/enviar', 'GarantiaGuiaIngresoController@enviar')->name('garantia_ingreso.enviar');
+        Route::get('garantia_guia_ingreso/email/{id}', 'GarantiaGuiaIngresoController@email')->name('guia_ingreso.email');
+        Route::post('/email/cotizacion/{id}', 'EmailTransaccionesSend@cotizacion')->name('email.cotizacion');
+        Route::post('/email/cotizacion_manual/{id}', 'EmailTransaccionesSend@cotizacion_manual')->name('email.cotizacion_manual');
+        Route::post('/email/guia_remision/{id}', 'EmailTransaccionesSend@guia_remision')->name('email.guia_remision');
+        Route::post('/email/factura/{id}', 'EmailTransaccionesSend@factura')->name('email.factura');
+        Route::post('/email/factura_manual/{id}', 'EmailTransaccionesSend@factura_manual')->name('email.factura_manual');
+        Route::post('/email/boleta/{id}', 'EmailTransaccionesSend@boleta')->name('email.boleta');
+        Route::post('/email/boleta_manual/{id}', 'EmailTransaccionesSend@boleta_manual')->name('email.boleta_manual');
+        Route::post('/email/nota_venta/{id}', 'EmailTransaccionesSend@nota_venta')->name('email.nota_venta');
+        Route::post('/email/nota_credito/{id}', 'EmailTransaccionesSend@nota_credito')->name('email.nota_credito');
+        Route::post('/email/nota_debito/{id}', 'EmailTransaccionesSend@nota_debito')->name('email.nota_debito');
+        Route::post('/email/guia_ingreso/{id}', 'EmailTransaccionesSend@guia_ingreso')->name('email.guia_ingreso');
+        Route::post('/email/guia_egreso/{id}', 'EmailTransaccionesSend@guia_egreso')->name('email.guia_egreso');
+        Route::post('/email/informe_tecnico/{id}', 'EmailTransaccionesSend@informe_tecnico')->name('email.informe_tecnico');
+        Route::post('/email/guia_remision_m/{id}', 'EmailTransaccionesSend@guia_remision_m')->name('email.guia_remision_m');
+
+        //Garantias
+        Route::get('contacto_cliente', 'GarantiaGuiaIngresoController@contacto_cliente');
+        Route::get('contacto_cliente_actualizar', 'GarantiaGuiaIngresoController@contacto_cliente_actualizar');
+        Route::POST('garantia_guia_ingreso/email/enviar', 'GarantiaGuiaIngresoController@enviar')->name('garantia_ingreso.enviar');
+        Route::get('garantia_guia_ingreso/email/{id}', 'GarantiaGuiaIngresoController@email')->name('guia_ingreso.email');
+
+        Route::get('garantia_guia_ingreso/impresionIngreso/{id}', 'GarantiaGuiaIngresoController@print')->name('impresiones_ingreso');
+        Route::put('garantia_guia_ingreso/{guia}', 'GarantiaGuiaIngresoController@actualizar')->name('garantia_guia_ingreso.actualizar');
+        Route::resource('/garantia_guia_ingreso', 'GarantiaGuiaIngresoController')->except(['create']);
+        Route::post('/garantia_guia_ingreso/create', 'GarantiaGuiaIngresoController@create')->name('garantia_guia_ingreso.create');
+
+        //EXPORTACION EN GARANTIAS
+        Route::post('/garantias/guia_ingreso/exportar', [GarantiaGuiaIngresoController::class, 'exportar_garantia_ingreso'])->name('garantiasI.exportar');
+        Route::post('/garantias/guia_egreso/exportar', [GarantiaGuiaEgresoController::class, 'exportar_garantia_egreso'])->name('garantiasE.exportar');
+        Route::post('/garantias/informe-tecnico/exportar', [GarantiaInformeTecnicoController::class, 'exportGarantiaInformeTecnico'])->name('garantiasIT.exportar');
+
+
+        //AJAX DE TICKETS
+        Route::post('ticket_ajax_ingreso', 'GarantiaGuiaIngresoController@ticket_guia_ingreso')->name('ticket_ajax_ingreso');
+
+        Route::POST('garantia_guia_egreso/email/enviar', 'GarantiaGuiaEgresoController@enviar')->name('garantia_egreso.enviar');
+        Route::get('garantia_guia_egreso/email/{id}', 'GarantiaGuiaEgresoController@email')->name('guia_egreso.email');
+
+        Route::get('garantia_guia_egreso/impresionEgreso/{id}', 'GarantiaGuiaEgresoController@print')->name('impresiones_egreso');
+        Route::get('garantia_guia_egreso/guias', 'GarantiaGuiaEgresoController@guias')->name('garantia_guia_egreso.guias');
+        Route::resource('/garantia_guia_egreso', 'GarantiaGuiaEgresoController')->except(['create', 'edit', 'destroy']);
+        Route::post('garantia_guia_egreso/anular/{id}', 'GarantiaGuiaEgresoController@anular_guia_egreso')->name('garantia_guia_egreso.anular_guia_egreso');
+
+        Route::get('garantia_guia_egreso/create_egreso/{id}', 'GarantiaGuiaEgresoController@create_egreso')->name('garantia_guia_egreso.create_egreso');
+
+
+        Route::get('garantia_informe_tecnico/impresionInformeTecnico/{id}', 'GarantiaInformeTecnicoController@print')->name('impresiones_informe');
+        Route::get('garantia_informe_tecnico/{id}/actualizar', 'GarantiaInformeTecnicoController@actualizar')->name('garantia_informe_tecnico.actualizar');
+        Route::get('garantia_informe_tecnico/guias', 'GarantiaInformeTecnicoController@guias')->name('garantia_informe_tecnico.guias');
+
+        Route::resource('/garantia_informe_tecnico', 'GarantiaInformeTecnicoController')->except(['create', 'edit', 'destroy']);
+        Route::get('garantia_informe_tecnico/create_tecnico/{id}', 'GarantiaInformeTecnicoController@create_tecnico')
+            ->name('garantia_informe_tecnico.create_tecnico');
+        Route::post('garantia_informe_tecnico/anular/{id}', 'GarantiaInformeTecnicoController@anular_informe_tecnico')->name('garantia_informe_tecnico.anular_informe_tecnico');
+
+        //Consultas
+        Route::get('consultas/garantias-guias-ingreso', 'ConsultasController@garantias_guias_ingreso')->name('consultas.garantias.guias_ingreso');
+        Route::get('consultas/garantias-guias-egreso', 'ConsultasController@garantias_guias_egreso')->name('consultas.garantias.guias_egreso');
+        Route::get('consultas/garantias-informe-tecnico', 'ConsultasController@garantias_informe_tecnico')->name('consultas.garantias.informe_tecnico');
+
+        Route::get('contacto/{id}', 'ContactoController@index_id')->name('contacto.index_id');
+        Route::get('contacto/crear/{id}', 'ContactoController@crear')->name('contacto.crear');
+        Route::get('contacto/editar/{id}', 'ContactoController@editar')->name('contacto.editar');
+        Route::resource('/contacto', 'ContactoController');
+
+        Route::resource('/guia', 'GuiaController');
+        Route::resource('/horarios', 'HorariosController');
+        Route::resource('/igv', 'IgvController')->only(['index', 'edit', 'update']);
+        Route::resource('/fe_configuracion', 'FEConfigController')->only(['index', 'edit', 'update']);
+
+        //Inventarios
+        Route::resource('/inventario-inicial', 'InventarioInicialController');
+
+        // Route::post('/autocomplete/fetch', 'KardexEntradaController@fetch')->name('autocomplete.fetch');
+        // Route::get('autocomplete', 'KardexEntradaController@search');
+
+        Route::get('kardex_entrada_productos', 'KardexEntradaController@productos');
+
+        Route::resource('/kardex-entrada-Distribucion', 'KardexEntradaDistribucionController');
+        Route::get('/kardex_distribucion_guia_print/{id}', 'KardexEntradaDistribucionController@print')->name('kardex-distribucion.print');
+        Route::resource('/kardex-entrada', 'KardexEntradaController');
+        Route::post('/kardex-entrada/destroy', 'KardexEntradaController@destroy')->name('kardex-entrada.destroy');
+        Route::post('/kardex-entrada/inventario-inicial', 'KardexEntradaController@InventarioInicial')->name('kardex-entrada.i_inicial');
+
+
+        Route::post('/kardex-entrada-Traslado-almacen/create', 'KardexEntradaTrasladoAlmacenController@create')->name('kardex-entrada-Traslado-almacen.create');
+        Route::resource('/kardex-entrada-Traslado-almacen', 'KardexEntradaTrasladoAlmacenController')->except(['create']);
+
+        Route::post('/kardex-salida/create', 'KardexSalidaController@create')->name('kardex-salida.create');
+        Route::resource('/kardex-salida', 'KardexSalidaController')->except(['create']);
+        Route::resource('/periodo-consulta', 'PeriodoConsultaController');
+        Route::resource('/movimiento-consulta', 'Consulta_MovimientoController');
+        Route::resource('/cierre-periodo', 'CierrePeriodoController');
+        Route::get('/cierre-periodo/pdf/{id}', 'CierrePeriodoController@pdf')->name('cierre-periodo.pdf');
+
+        //Fin de inventarios
+
+        Route::resource('/motivo', 'MotivoController');
+        Route::resource('/marca', 'MarcaController');
+        Route::resource('/moneda', 'MonedaController');
+        // ADELANTOS
+        Route::post('/adelanto/search_registro', 'CreditosAdelantosController@view_adl_registro')->name('adelantos.ajax_registro');
+        // FACTURA
+        Route::post('/adelantos/lista_ajax_fact', 'CreditosAdelantosController@ajax_fact')->name('adelantos.ajax_fact');
+        Route::post('/adelantos/lista_ajax_fact_m', 'CreditosAdelantosController@ajax_fact_m')->name('adelantos.ajax_fact_m');
+        Route::post('/adelantos/store_factura', 'CreditosAdelantosController@store_adelanto_factura')->name('adelantos.store_adelanto_factura');
+
+        // BOLETA
+        Route::post('/adelantos/lista_ajax_bol', 'CreditosAdelantosController@ajax_bol')->name('adelantos.ajax_bol');
+        Route::post('/adelantos/lista_ajax_bol_m', 'CreditosAdelantosController@ajax_bol_m')->name('adelantos.ajax_bol_m');
+        Route::post('/adelantos/store_boleta', 'CreditosAdelantosController@store_adelanto_boleta')->name('adelantos.store_adelanto_boleta');
+        //Fin de inventarios
+
+        Route::resource('/motivo', 'MotivoController');
+        Route::resource('/marca', 'MarcaController');
+        Route::resource('/moneda', 'MonedaController');
+        // ADELANTOS
+        // Route::post('/adelanto/search_registro', 'CreditosAdelantosController@view_adl_registro')->name('adelantos.ajax_registro');
+        // // FACTURA
+        // Route::post('/adelantos/lista_ajax_fact', 'CreditosAdelantosController@ajax_fact')->name('adelantos.ajax_fact');
+        // Route::post('/adelantos/lista_ajax_fact_m', 'CreditosAdelantosController@ajax_fact_m')->name('adelantos.ajax_fact_m');
+        // Route::post('/adelantos/store_factura', 'CreditosAdelantosController@store_adelanto_factura')->name('adelantos.store_adelanto_factura');
+
+        // // BOLETA
+        // Route::post('/adelantos/lista_ajax_bol', 'CreditosAdelantosController@ajax_bol')->name('adelantos.ajax_bol');
+        // Route::post('/adelantos/lista_ajax_bol_m', 'CreditosAdelantosController@ajax_bol_m')->name('adelantos.ajax_bol_m');
+        // Route::post('/adelantos/store_boleta', 'CreditosAdelantosController@store_adelanto_boleta')->name('adelantos.store_adelanto_boleta');
+
+        // NOTA VENTA
+        Route::post('/adelantos/store_nota_venta', 'CreditosAdelantosController@store_nota_venta')->name('adelantos.store_nota_venta');
+
+
+
+
+        Route::get('/adelantos/comprobantes/facturas/{id}', 'CreditosAdelantosController@comprobante_facturas')->name('adelantos.comprobante');
+        Route::get('/adelantos/comprobantes_pdf/{id}', 'CreditosAdelantosController@comprobantes_pdf')->name('adelantos.comprobantes_pdf');
+
+        //* SISTEMA DE PAGOS DE COMPRABAMTES
+        Route::resource('/pagados', 'PagadosController'); // Pagados para Facturas y Facturas Manuales
+        Route::post('/pagados/store_boleta', 'PagadosController@store_boleta')->name('pagados.store_boleta'); // Pagados para Boleta y Boletas Manuales
+        Route::post('/pagados/store_n_venta', 'PagadosController@store_n_venta')->name('pagados.store_n_venta'); // Pagados para Boleta y Boletas Manuales
+
+        // ! COBRANZAS GENERALES DETALLE
+        //* Detalle de Pago
+        Route::post('/creditos_pago/detalle_comprobante/', 'ComprobantesPagosDetalleController@show')->name('cobranzas.show_detalle_pago');
+
+        //! COBRANZAS FACTURAS
+        Route::get('/creditos_pago/facturas', 'PagadosController@index_factura')->name('cobranzas.index_factura'); //! index de Facturas sin Pagar
+        // * Ajax datatable
+        Route::get('/creditos_pago/facturas/lista', 'CobranzasComprobantesController@lista_facturas_index')->name('cobranzas.lista_facturas_index');
+        // * Ajax Para obtenecion de cuotas de Facturas
+        Route::post('/pagados/lista_ajax_fact', 'PagadosController@lista_ajax_fact')->name('pagos.lista_ajax_fact');
+        //? index de Facturas Pagadas
+        Route::get('/creditos_pago/facturas/pagados', 'PagadosController@index_factura_pagados')->name('cobranzas.index_factura_pagados');
+        //* Show de Factura Comprobantes Pagos
+        Route::get('/creditos_pago/facturas/{id}', 'PagadosController@show_facturas')->name('pagos.show_facturas');
+        // * Ajax datatable
+        Route::get('/creditos_pago/facturas/pagados/lista', 'CobranzasComprobantesController@lista_facturas_pagados_index')->name('cobranzas.lista_facturas_pagados_index');
+        //* Impresion de Detalle
+        Route::get('/show_cuotas/factura/print/{id}', 'PagadosController@print_facturas_cuotas')->name('pagos.print_facturas_cuotas'); //Facturas
+        // Route::get('/pagos/facturas_m/cliente/{ruc}', 'PagadosController@show_cliente_factura_m')->name('pagos.show_cliente_factura_m');
+
+        //! COBRANZAS FACTURAS MANUALES
+        Route::get('/creditos_pago/facturas_manuales', 'PagadosController@index_facturas_m')->name('cobranzas.index_facturas_m'); //! index de Facturas Manuales sin Pagar
+        // * Ajax datatable
+        Route::get('/creditos_pago/facturas_manuales/lista', 'CobranzasComprobantesController@lista_facturas_manual_index')->name('cobranzas.lista_facturas_manual_index');
+        // * Ajax Para obtenecion de cuotas de Facturas Manuales
+        Route::post('/pagados/lista_ajax_fact_m', 'PagadosController@lista_ajax_fact_m')->name('pagos.lista_ajax_fact_m');
+        //? index de Facturas Manuales Pagadas
+        Route::get('/creditos_pago/facturas_manuales/pagados', 'PagadosController@index_factura_m_pagados')->name('cobranzas.index_facturas_m_pagados');
+        //* Show de Factura Manual Comprobantes Pagos
+        Route::get('/creditos_pago/facturas_manuales/{id}', 'PagadosController@show_facturas_manual')->name('pagos.show_facturas_m');
+        // * Ajax datatable
+        Route::get('/creditos_pago/facturas_manuales/pagados/lista', 'CobranzasComprobantesController@lista_facturas_manual_pagados_index')->name('cobranzas.lista_facturas_manual_pagados_index');
+        //* Impresion de Detalle
+        Route::get('/creditos_pago/facturas_manuales/print/{id}', 'PagadosController@print_facturas_m_cuotas')->name('pagos.print_facturas_m_cuotas');
+
+        // Route::get('/creditos_pago/facturas_manuales/resumen_cliente', 'PagadosController@index_facturas_m_clientes')->name('cobranzas.lista_facturas_manual_clientes_index'); //! index de Facturas Manuales Clientes
+
+        //! COBRANZAS BOLETAS
+        Route::get('/creditos_pago/boletas', 'PagadosController@index_boletas')->name('cobranzas.index_boletas'); //! index de Boletas sin Pagar
+        // * Ajax datatable
+        Route::get('/creditos_pago/boletas/lista', 'CobranzasComprobantesController@lista_boletas_index')->name('cobranzas.lista_boletas_index');
+        // * Ajax Para obtenecion de cuotas de Boleta
+        Route::post('/pagados/lista_ajax_boletas', 'PagadosController@lista_ajax_boleta')->name('pagos.lista_ajax_boleta');
+        //? index de Boletas Pagadas
+        Route::get('/creditos_pago/boletas/pagados', 'PagadosController@index_boleta_pagados')->name('cobranzas.index_boleta_pagados');
+        //* Show de Boletas Comprobantes Pagos
+        Route::get('/creditos_pago/boletas/{id}', 'PagadosController@show_boletas')->name('pagos.show_boletas');
+        // * Ajax datatable
+        Route::get('/creditos_pago/boletas/pagados/lista', 'CobranzasComprobantesController@lista_boletas_pagados_index')->name('cobranzas.lista_boletas_pagados_index');
+        //* Impresion de Detalle
+        Route::get('/creditos_pago/boletas/print/{id}', 'PagadosController@print_boleta_cuotas')->name('pagos.print_boleta_cuotas');
+
+        //! COBRANZAS BOLETAS MANUALES
+        Route::get('/creditos_pago/boletas_manuales', 'PagadosController@index_boletas_manual')->name('cobranzas.index_boletas_manual'); //! index de Boletas Manual sin Pagar
+        // * Ajax datatable
+        Route::get('/creditos_pago/boletas_manuales/lista', 'CobranzasComprobantesController@lista_boletas_manual_index')->name('cobranzas.lista_boletas_manual_index');
+        // * Ajax Para obtenecion de cuotas de Boleta Manual
+        Route::post('/pagados/lista_ajax_boletas_m', 'PagadosController@lista_ajax_boletas_m')->name('pagos.lista_ajax_boletas_m');
+        //? index de Boletas Manuales Pagadas
+        Route::get('/creditos_pago/boletas_manuales/pagados', 'PagadosController@index_boletas_m_pagados')->name('cobranzas.index_boletas_m_pagados');
+        //* Show de Boletas Comprobantes Pagos
+        Route::get('/creditos_pago/boletas_manuales/{id}', 'PagadosController@show_boletas_m')->name('pagos.show_boletas_m');
+        // * Ajax datatable
+        Route::get('/creditos_pago/boletas_manuales/pagados/lista', 'CobranzasComprobantesController@lista_boletas_manual_pagados_index')->name('cobranzas.lista_boletas_manual_pagados_index');
+        //* Impresion de Detalle
+        Route::get('/creditos_pago/boletas_manuales/print/{id}', 'PagadosController@print_boletas_m_cuotas')->name('pagos.print_boletas_m_cuotas');
+
+        //! COBRANZAS NOTAS DE VENTA
+        Route::get('/creditos_pago/nota_venta', 'PagadosController@index_nota_venta')->name('cobranzas.index_nota_venta'); //! index de Boletas sin Pagar
+        //* Ajax Datatable
+        Route::get('/creditos_pago/nota_venta/lista', 'CobranzasComprobantesController@lista_nota_venta_index')->name('cobranzas.lista_nota_venta_index');
+        // * Ajax para la obtencion de cuotas de Nota de Venta
+        Route::post('/pagados/lista_ajax_n_venta', 'PagadosController@lista_ajax_n_venta')->name('pagos.lista_ajax_n_venta');
+        //? index de Boletas Manuales Pagadas
+        Route::get('/creditos_pago/nota_venta/pagados', 'PagadosController@index_nota_venta_pagados')->name('cobranzas.index_nota_venta_pagados');
+        //* Show de Nota Venta Comprobantes Pagos
+        Route::get('/creditos_pago/nota_venta/{id}', 'PagadosController@show_nota_venta')->name('pagos.show_nota_venta');
+        //* Ajax datatable
+        Route::get('/creditos_pago/nota_venta/pagados/lista', 'CobranzasComprobantesController@lista_nota_venta_pagados_index')->name('cobranzas.lista_nota_venta_pagados_index');
+        //* Impresion de Detalle
+        Route::get('/creditos_pago/nota_venta/print/{id}', 'PagadosController@print_n_venta')->name('pagos.print_nota_venta'); //Nota de Venta
+
+
+        Route::post('/show_cuotas', 'PagadosController@show_cuotas')->name('pagos.show_cuota');
+
+        // Route::post('/pagados/store',)
+        Route::resource('/pedidos', 'PedidosController');
+        Route::resource('/personal', 'PersonalController');
+        Route::post('/personal_desactivar/{id}', 'PersonalController@desactivar_personal')->name('personal.desactivar_pe');
+        Route::get('/personal_inactivo', 'PersonalController@index_inactivo')->name('personal.index_inactivo');
+
+        Route::get('/personal2/creacion2', 'PersonalController@creacion2')->name('personal2.create2');
+
+        Route::get('/personal-laboral/{id}', 'PersonalDatosLaboralesController@idpersonal')->name('create.laboral');
+        Route::resource('/personal-datos-laborales', 'PersonalDatosLaboralesController');
+        //* Productos
+        Route::resource('/productos', 'ProductosController')->except('destroy');
+        Route::post('/productos_destroy', 'ProductosController@destroy')->name('productos.destroy');
+        Route::get('/productos_inactivo', 'ProductosController@index2')->name('productos.index2');
+        Route::get('/productos_anulado', 'ProductosController@index3')->name('productos.index3');
+        Route::post('/productos_ajax', 'ProductosController@index_ajax')->name('productos.index_ajax');
+
+        Route::post('productos/generate-codigo', 'ProductosController@generateCodigoProducto')->name('productos.generateCodigoProducto');
+        Route::get('/productos/{id}/edit', [ProductosController::class, 'edit'])->name('productos.edit');
+        Route::put('/productos/{id}', [ProductosController::class, 'update'])->name('productos.update');
+        Route::get('/export/all-products', [ProductosController::class, 'exportTodo'])->name('export.excel');
+        Route::get('/export/selected-products', [ProductosController::class, 'exportSelectedProducts'])->name('export.selected.products');
+        Route::get('/productos/stock-min', [ProductosController::class, 'getStockMin']);
+
+        Route::patch('/productos/desactivar/{producto_id}', [ProductosController::class, 'desactivarProducto'])->name('productos.desactivar');
+        Route::post('/producto/search_codigo', [ParameterCallController::class, 'producto_codigo_original'])->name('producto.codigo_original');
+
+
+
+        Route::resource('/promedios', 'PromediosController');
+
+        Route::post('/provedor/add', 'ProvedorController@store_kardex')->name('provedor.store_kardex');
+
+        //Agregado Rapido
+        Route::get('provedorruc', 'ProvedorController@ruc');
+        Route::get('clienteruc', 'ClienteController@ruc');
+        Route::get('clientedni', 'ClienteController@dni');
+        Route::resource('/provedor', 'ProvedorController')->except(['update']);
+        Route::get('/provedor/update/{id}', 'ProvedorController@update')->name('provedor.update');
+        Route::get('/proveedor/{id}/estado', 'ProvedorController@estado')->name('provedor.estado');
+
+        Route::resource('/servicios', 'ServiciosController')->except(['update']);
+        Route::post('/servicios/{id}', [ServiciosController::class, 'update'])->name('servicios.update');
+        Route::post('/codigo_servicio', [ServiciosController::class, 'generar_codigo_servicio'])->name('servicio.generar_codigo');
+        Route::patch('/servicios_destroy/{id}', 'ServiciosController@destroy')->name('servicios.destroy');
+        Route::get('/servicios_inactivo', 'ServiciosController@index2')->name('servicios.index2');
+        Route::resource('/unidad-medida', 'UnidadMedidaController');
+        Route::post('/unidad-medida/estado','UnidadMedidaController@change_state')->name('unidad_medida.change_state');
+
+        Route::resource('/transaccion-compra', 'TransaccionCompraController');
+
+        //Usuarios
+        Route::get('/usuario/lista', 'UsuarioController@lista')->name('usuario.lista');
+        Route::post('usuario/validar_cuenta', 'UsuarioController@validar_cuenta')->name('usuario.validar_cuenta');
+        Route::post('usuario/change_password', 'UsuarioController@change_password')->name('usuario.change_password');
+        // Route::post('usuario/activar/{id}', 'UsuarioController@activar')->name('usuario.activar');
+        Route::get('usuario/permiso/{id}', 'UsuarioController@permiso')->name('usuario.permiso');
+        Route::post('usuario/permisos/asignar/{id}', 'UsuarioController@asignar_permiso')->name('usuario.asignar_permiso');
+        Route::post('usuario/permisos/delegar/{id}', 'UsuarioController@delegar_permiso')->name('usuario.delegar_permiso');
+
+        Route::resource('/usuario', 'UsuarioController')->except(['create','update']);
+        Route::post('usuario/crear', 'UsuarioController@create')->name('usuario.create');
+        // Route::post('usuario/perfil', 'UsuarioController@create')->name('usuario.create');
+        Route::post('usuario/update/{id}', 'UsuarioController@update')->name('usuario.update');
+        Route::post('usuario/codigo_nuevo_correo/{id}', 'UsuarioController@codigo_nuevo_correo')->name('usuario.codigo_nuevo_correo');
+        
+        
+        Route::post('usuario/permiso_personalizado', 'UsuarioController@permiso_personalizado')->name('usuario.permiso_personalizado');
+        
+        Route::get('/perfil', 'UsuarioController@perfil')->name('usuario.perfil');
+        Route::resource('/venta', 'VentaController');
+
+        //Roles y Permisos
+        Route::resource('/roles', 'RolController');
+        
+        // Route::post('/roles/crearRol', [RolController::class, 'crearRol'])->name('roles.crearRol');
+        // Route::put('/roles/editarRol/{rol_id}', [RolController::class, 'editarRol'])->name('roles.editarRol');
+        Route::get('/gestRol/{rol_id}', [RolController::class, 'gestionarRol'])->name('roles.gestRol');
+        Route::put('/gestRol/asignarPermisos/{rol_id}', [RolController::class, 'asignarPermisos'])->name('roles.asignarPermisos');
+        Route::put('/gestRol/removerPermiso/{rol_id}/{permiso_id}', [RolController::class, 'removerPermiso'])->name('roles.removerPermiso');
+        Route::put('/gestRol/removerPermisos/{rol_id}', [RolController::class, 'removerPermisos'])->name('roles.removerPermisos');
+
+        Route::get('/cantidad_precio/servicio', 'CantidadPrecioController@index_servicio')->name('cantidad_precio.index_servicio');
+
+        Route::resource('/cantidad_precio', 'CantidadPrecioController');
+
+        //* CONFIGURACION GENERAL
+        Route::get('/configuracion_general', 'ConfiguracionGeneralController@configuracion_general')->name('configuracion.general');
+
+        //* GARANTIAS
+        Route::resource('/garantia', 'GarantiaController');
+        Route::post('/garantia/save_ajax', 'GarantiaController@create_with_ajax')->name('garantia.save_ajax');
+        Route::post('garantia/edit_ajax', 'GarantiaController@edit_ajax')->name('garantia.edit_ajax');
+        Route::post('garantia/update_states', 'GarantiaController@change_state')->name('garantia.change_state');
+
+        //* VALIDEZ
+        Route::resource('/validez', 'ValidezController');
+        Route::post('/validez/save_ajax', 'ValidezController@create_with_ajax')->name('validez.save_ajax');
+        Route::post('validez/edit_ajax', 'ValidezController@edit_ajax')->name('validez.edit_ajax');
+        Route::post('validez/update_states', 'ValidezController@change_state')->name('validez.change_state');
+
+        //* UNIDAD DE MEDIDA
+        Route::resource('/unidad-medida', 'UnidadMedidaController');
+        Route::post('/unidad_medida/save_ajax', 'UnidadMedidaController@create_with_ajax')->name('unidad_medida.save_ajax');
+        Route::post('unidad_medida/edit_ajax', 'UnidadMedidaController@edit_ajax')->name('unidad_medida.edit_ajax');
+
+        //* FAMILIAS
+        Route::resource('/familia', 'FamiliaController');
+        Route::post('/familia/save_ajax', 'FamiliaController@create_with_ajax')->name('familias.save_ajax');
+        Route::post('familia/update_states', 'FamiliaController@change_state')->name('familias.change_state');
+        Route::post('familia/edit_ajax', 'FamiliaController@edit_ajax')->name('familias.edit_ajax');
+        Route::resource('/subfamilia', 'SubfamiliaController');
+
+        Route::post('/subfamilia_search', 'SubfamiliaController@search_ajax')->name('subfamilia.search_ajax');
+
+        //* MOTIVOS
+        Route::resource('/motivo', 'MotivoController');
+        Route::post('/motivos/save_ajax', 'MotivoController@create_with_ajax')->name('motivos.save_ajax');
+        Route::post('motivos/edit_ajax', 'MotivoController@edit_ajax')->name('motivos.edit_ajax');
+        Route::post('motivos/update_states', 'MotivoController@change_state')->name('motivos.change_state');
+
+        //* MARCAS
+        Route::resource('/marca', 'MarcaController');
+        Route::post('/marca/save_ajax', 'MarcaController@create_with_ajax')->name('marcas.save_ajax');
+        Route::post('marca/update_states', 'MarcaController@change_state')->name('marcas.change_state');
+        Route::post('marca/edit_ajax', 'MarcaController@edit_ajax')->name('marcas.edit_ajax');
+        Route::resource('/moneda', 'MonedaController');
+
+        //* Categorias
+        Route::resource('/categoria', 'CategoriaController');
+        Route::post('/categoria/save_ajax', 'CategoriaController@create_with_ajax')->name('categorias.save_ajax');
+        Route::post('categoria/update_states', 'CategoriaController@change_state')->name('categorias.change_state');
+        Route::post('categoria/edit_ajax', 'CategoriaController@edit_ajax')->name('categorias.edit_ajax');
+
+        //* ALARMA
+        Route::resource('/alarma', 'AlarmaController');
+        Route::post('/alarma/save_ajax', 'AlarmaController@create_with_ajax')->name('alarma.save_ajax');
+        Route::post('alarma/edit_ajax', 'AlarmaController@edit_ajax')->name('alarma.edit_ajax');
+        Route::post('alarma/update_states', 'AlarmaController@change_state')->name('alarma.change_state');
+
+
+        Route::resource('/eventos', 'EventosController');
+        Route::post('/eventos/update', 'EventosController@update')->name('eventos.update');
+        Route::get('/mis_eventos', 'EventosController@evento_user')->name('eventos.user_indes');
+
+        Route::resource('/categorias_eventos', 'CategoriasEventosController')->except('update');
+
+        Route::post('/categories/update', 'CategoriasEventosController@update')->name('category.update');
+        Route::post('/eventos/call', 'EventosController@eventos_show')->name('eventos.call');
+        Route::post('/eventos/user_call', 'EventosController@eventos_show_user')->name('eventos.call_user');
+
+
+
+        Route::post('/categories/select_color', 'ParameterCallController@color_set')->name('category.color');
+        Route::post('/buscar_categoria', 'ParameterCallController@search_category')->name('category.search');
+        Route::post('/buscar_users', 'ParameterCallController@search_users')->name('pa.user_search');
+        Route::post('/buscar_tipo_op', 'ParameterCallController@search_tipo_operacion')->name('pa.tipo_op_search');
+
+
+
+        Route::get('/estadisticas', 'EstadisticasController@index')->name('estadisticas.index');
+        Route::get('/estadisticas/servicios', 'EstadisticasController@servicios')->name('estadisticas.servicios');
+        Route::get('/estadisticas/clientes', 'EstadisticasController@clientes')->name('estadisticas.clientes');
+        Route::get('/estadisticas/empleados', 'EstadisticasController@empleados')->name('estadisticas.empleados');
+
+        // NUEVAS RUTAS EN VENTAS (cotizacion, cotizacion_manua, nota_venta)
+        // Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('cotizacion.index3');
+        // Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('cotizacion_manual.index2');
+        // Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('nota_venta.index2');
+        Route::get('/ventas/cotizacion', 'CotizacionController@index3')->name('ventas.cotizacion');
+        Route::get('/ventas/cotizacion_manual', 'CotizacionManualController@index2')->name('ventas.cotizacion_manual');
+        Route::get('/ventas/nota_venta', 'NotaVentaController@index2')->name('ventas.nota_venta');
+        Route::get('/ventas/clientes', 'ClienteController@ventas_index')->name('ventas.clientes');
+        Route::get('/ventas/cliente_registers', 'Ventas_registroController@clientes_registers')->name('ventas.clientes_registers');
+        // Los registros están en cada seccion de cotizacion
+
+        Route::get('/creditos', 'CreditosAdelantosController@creditos')->name('cobranzas.creditos');
+        Route::get('/creditos_show/{id}', 'CreditosAdelantosController@creditos_show')->name('cobranzas.creditos_show');
+        Route::get('/creditos_show_FoB/{id}', 'CreditosAdelantosController@creditos_show_FoB')->name('cobranzas.creditos_show_FoB');
+        // COMPROBANTES (NEW VISTAS V2.1)
+        Route::get('/comprobantes/boleta', 'ComprobantesVentasController@index_boleta')->name('comprobantes.index_boleta');
+        Route::get('/comprobantes/boleta_registers', 'ComprobantesVentasController@boleta_registers')->name('comprobantes.boleta_registers');
+
+        Route::get('/comprobantes/boleta_manual', 'ComprobantesVentasController@index_boleta_manual')->name('comprobantes.index_boleta_manual');
+        Route::get('/comprobantes/boletaM_registers', 'ComprobantesVentasController@boletaM_registers')->name('comprobantes.boletaM_registers');
+
+        Route::get('/comprobantes/factura', 'ComprobantesVentasController@index_factura')->name('comprobantes.index_factura');
+        Route::get('/comprobantes/factura_registers', 'ComprobantesVentasController@factura_registers')->name('comprobantes.factura_registers');
+
+        Route::get('/comprobantes/factura_manual', 'ComprobantesVentasController@index_factura_manual')->name('comprobantes.index_factura_manual');
+        Route::get('/comprobantes/facturaM_registers', 'ComprobantesVentasController@facturaM_registers')->name('comprobantes.facturaM_registers');
+
+        Route::get('/comprobantes/nota_credito', 'ComprobantesVentasController@index_nota_credito')->name('comprobantes.index_nota_credito');
+        Route::get('/comprobantes/notaCredito_registers', 'ComprobantesVentasController@notaCredito_registers')->name('comprobantes.notaCredito_registers');
+
+        Route::get('/comprobantes/nota_debito', 'ComprobantesVentasController@index_nota_debito')->name('comprobantes.index_nota_debito');
+        Route::get('/comprobantes/notaDebito_registers', 'ComprobantesVentasController@notaDebito_registers')->name('comprobantes.notaDebito_registers');
+
+        Route::get('/comprobantes/guia_remision', 'ComprobantesVentasController@index_guia_remision')->name('comprobantes.index_guia_remision');
+        Route::get('/comprobantes/guiaRemision_registers', 'ComprobantesVentasController@guiaRemision_registers')->name('comprobantes.guiaRemision_registers');
+
+        Route::get('/comprobantes/guia_remision_manual', 'ComprobantesVentasController@index_guia_remision_manual')->name('comprobantes.index_guia_remision_manual');
+        Route::get('/comprobantes/guiaRemisionM_registers', 'ComprobantesVentasController@guiaRemisionM_registers')->name('comprobantes.guiaRemisionM_registers');
+
+        Route::post('/search_multiple', 'ParameterCallController@search_product')->name('pa.search_multiple');
+        Route::post('/search_multiple_manual', 'ParameterCallController@search_product_manual')->name('pa.search_multiple_manual');
+        Route::get('/boleta2/create', 'BoletaController@create2')->name("boleta2.create");
+
+
+        Route::post('/comprobantes/boleta/exportar', [BoletaController::class, 'exportarBoletas'])->name('boletas.exportar');
+        Route::post('/comprobantes/factura/exportar', [FacturacionController::class, 'exportarFacturas'])->name('facturas.exportar');
+        Route::post('/comprobantes/boleta_manual/exportar', [BoletaMController::class, 'exportarBoletasM'])->name('boletasM.exportar');
+        Route::post('/comprobantes/factura_manual/exportar', [FacturacionMController::class, 'exportarFacturasM'])->name('facturasM.exportar');
+        Route::post('/comprobantes/guias/exportar', [GuiaRemisionController::class, 'exportarGuias'])->name('guia_remision.exportar');
+        Route::post('/comprobantes/guias-manual/exportar', [GuiaRemisionManualController::class, 'exportarGuiasManual'])->name('guias.manual.exportar');
+        Route::get('/export/nota-venta', [NotaVentaController::class, 'exportNotasVentas'])->name('export.nota_venta');
+        Route::post('/export/notas-credito', [NotaCreditoController::class, 'exportNotasCredito'])->name('export.notas.credito');
+        Route::post('/export/notas-debito', [NotaDebitoController::class, 'exportNotasDebito'])->name('export.notas.debito');
+        
+        Route::post('/cobranzas/factura/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturas'])->name('cobranzas.facturas_exportar_sin_pago');
+        Route::post('/cobranzas/factura/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturas'])->name('cobranzas.facturas_exportar_pagadas');
+
+        Route::post('/cobranzas/factura_manual/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoFacturasM'])->name('cobranzas.facturasM_exportar_sin_pago');
+        Route::post('/cobranzas/factura_manual/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasFacturasM'])->name('cobranzas.facturasM_exportar_pagadas');
+
+        Route::post('/cobranzas/boleta/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoBoletas'])->name('cobranzas.boletas_exportar_sin_pago');
+        Route::post('/cobranzas/boleta/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasBoletas'])->name('cobranzas.boletas_exportar_pagadas');
+
+        Route::post('/cobranzas/boleta_manual/exportar/sin_pago', [CobranzasComprobantesController::class, 'exportarSinPagoBoletasM'])->name('cobranzas.boletasM_exportar_sin_pago');
+        Route::post('/cobranzas/boleta_manual/exportar/pagados', [CobranzasComprobantesController::class, 'exportarPagadasBoletasM'])->name('cobranzas.boletasM_exportar_pagadas');
+
+        // SERVICIO TECNICO NUEVO
+        Route::get('/servicio-tecnico', [ServicioGuiaController::class, 'index'])->name('servicio-guias.index');
+        Route::get('/servicio-tecnico/create', [ServicioGuiaController::class, 'create'])->name('servicio-guias.create');
+        Route::post('/servicio-tecnico/store', [ServicioGuiaController::class, 'store'])->name('servicio-guias.store');
+        Route::patch('/servicio-tecnico/entregar/{servicio_g_id}', [ServicioGuiaController::class, 'entregarServicioGuia'])->name('servicio-guias.entregar');
+        Route::get('/servicio-tecnico/proceso/{servicio_g_id}', [ProcesoServicioGuiaController::class, 'redirectProcesoServicioGuia'])->name('servicio-guias.proceso');
+        Route::post('/servicio-tecnico/servicio-ingreso/store-equipo', [ProcesoServicioGuiaController::class, 'agregarEquipos'])->name('servicio-guias.agregarEquipos');
+        Route::post('/servicio-tecnico/servicio-egreso/store-diagnostico', [ProcesoServicioGuiaController::class, 'storeServicioEgreso'])->name('servicio-guias.store-diagnostico');
+        Route::get('/servicio-tecnico/cotizacion-manual/{servicio_g_id}', [CotizacionServicioGuiaController::class, 'createServicioGuiaCotizacionM'])->name('servicio-guias.create-cotiManual');
+        Route::put('/servicio-tecnico/servicio-egreso/reparar-equipo', [ProcesoServicioGuiaController::class, 'repararEquipo'])->name('servicio-guias.reparar-equipo');
+        Route::get('/servicio-tecnico/orden-servicio', [OrdenServicioServGuiaController::class, 'index'])->name('servicio-guias-os.index');
+        Route::patch('/servicio-tecnico/orden-servicio/crear-orden/{servicio_g_id}', [OrdenServicioServGuiaController::class, 'crearOrdenServicioGuia'])->name('servicio-guias.crear-ordenServ');
+        Route::get('/servicio-tecnico/entregados', [ServicioGuiaEntregadosController::class, 'index'])->name('servicio-guias-entregados.index');
+        Route::post('/servicio-tecnico/store/informe-tecnico', [ProcesoServicioGuiaController::class, 'storeInformeTecnico'])->name('servicio-guias.store-it');
+        Route::get('/servicio-tecnicio/cotizaciones', [CotizacionServicioGuiaController::class, 'index'])->name('servicio-guias.cotizaciones-index');
+
+        Route::get('/servicio-guia/informe-tecnico/{id}', [ServicioGuiaController::class, 'showInformeTecnico'])->name('servicio_tecnico.servicios.servicio-guia.servicio_informe_tecnico_show');
+
+        Route::get('/cotizacion_manual/createCotizacionGuia/{guia_id}', [GuiaServicioController::class, 'crearCotizacion'])->name('cotizacionSGuia.create');
+        Route::post('/servicio/informe-tecnico/crear', [GuiaServicioController::class, 'crear'])->name('informeTecnico.crear');
+
+
+        // CAJA CHICA
+        Route::get('/consulta/tesoreria/caja-chica', [CajaChicaController::class, 'index'])->name('caja_chica.index');
+        Route::post('/consulta/tesoreria/caja-chica/abrir-caja', [CajaChicaController::class, 'abrirCaja'])->name('abrir.caja');
+        Route::post('/consulta/tesoreria/caja-chica/cerrar-caja', [CajaChicaController::class, 'cerrarCaja'])->name('cerrar.caja');
+        Route::post('/consulta/tesoreria/caja-chica/deposito', [CajaChicaController::class, 'depositoStore'])->name('deposito.store');
+        Route::post('/consulta/tesoreria/caja-chica/pago', [CajaChicaController::class, 'pagoStore'])->name('pago.store');
+        Route::get('/tesoreria/pdf/{id}', [CajachicaController::class, 'generarPdfTransaccion'])->name('transaccion.pdf');
+
+        // REPORTES
+        Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+
+        // Importacion
+        Route::post('/productos/importar', [ProductosController::class, 'importar'])->name('productos.importar');
+
+        //apartado de renovaciones
+
+        Route::prefix('ventas')->name('ventas.')->group(function () {
+
+            Route::get('/renovacion', [RenovacionController::class, 'index'])
+                ->name('renovacion.index');
+        });
+
+        Route::get('/ventas/renovacion/registros', 'Ventas_registroController@renovacion_registers')
+            ->name('ventas.renovacion_registers');
+
+        // Ruta para generar el PDF de ficha técnica de un producto
+        Route::get('/productos/{id}/ft-pdf', [ProductosController::class, 'ftPdf'])
+            ->name('productos.ftPdf');
+
+        // Ruta para generar el PDF de ficha técnica de un servicio
+        Route::get('/servicios/{id}/ft-pdf', [ServiciosController::class, 'ftPdf'])
+            ->name('servicios.ft_pdf');
+    }
+
+);
+
+Auth::routes([
+    'register' => false, // Registration
+    'reset' => false, // Password Reset
+    'verify' => false, // Email Verification
+]);
+Route::resource('/tipo_cambio', 'TipoCambioController')->middleware('auth');
+
+Route::post('sunat_cambio', 'TipoCambioController@sunat_cambio');
+
+// Routas de PDF
+Route::get('garantia_guia_ingreso/pdf/{id}', 'GarantiaGuiaIngresoController@pdf')->name('pdf_ingreso');
+Route::get('garantia_guia_egreso/pdf/{id}', 'GarantiaGuiaEgresoController@pdf')->name('pdf_egreso');
+Route::get('garantia_informe_tecnico/pdf/{id}', 'GarantiaInformeTecnicoController@pdf')->name('pdf_informe');
+Route::get('cotizacion/pdf/{id}', 'CotizacionController@pdf')->name('pdf_cotizacion');
+Route::get('renovacion/pdf/{id}', 'RenovacionController@pdf')->name('pdf_renovacion');
+Route::get('cotizacion_servicio/pdf/{id}', 'CotizacionServiciosController@pdf')->name('pdf_cotizacion_servicio');
+Route::get('guia_remision/pdf/{id}', 'GuiaRemisionController@pdf')->name('pdf_guia');
+Route::get('facturacion/pdf/{id}', 'FacturacionController@pdf')->name('pdf_fac');
+Route::get('facturacion_manual/pdf/{id}', 'FacturacionMController@pdf')->name('pdf_fac_m');
+Route::get('boleta/pdf/{id}', 'BoletaController@pdf')->name('pdf_bol');
+Route::get('/boleta_manual/pdf/{id}', 'BoletaMController@pdf')->name('boleta_manual.pdf');
+Route::post('periodo_consulta/pdf', 'PeriodoConsultaController@pdf')->name('periodo_consulta_pdf');
+Route::post('movimiento-consulta/pdf', 'Consulta_MovimientoController@pdf')->name('movimiento_consulta_pdf');
+Route::get('/nota_venta/pdf/{id}', 'NotaVentaController@pdf')->name('nota_venta_pdf');
+Route::get('/cotizacion_manual/pdf/{id}', 'CotizacionManualController@pdf')->name('cotizacion_manual_pdf');
+Route::get('/nota-credito/pdf/{id}', 'NotaCreditoController@pdf')->name('nota_credito.pdf');
+Route::get('/guia_remision_manual/pdf/{id}', 'GuiaRemisionManualController@pdf')->name('remision_m.pdf');
+
+Route::post('periodo_consulta/print', 'PeriodoConsultaController@print')->name('periodo_consulta_print');
+// Route::get('/home', 'HomeController@index')->name('home');
+
+// Route::get('api/v1/product/{id}', [ProductosController::class, 'onlyProduct']);
+// Route::get('api/v1/allproduct', [ProductosController::class, 'allProduct']);
+
+Route::get("/boleta3", "BOLETACONTROLLER@index3")->name('boleta3');
+//Nuevo inventario
+//Kardex:
+Route::get("/inventario2", "INVENTARIOINICIALCONTROLLER@index2")->name('inventario2');
+Route::get('/inventario/distribucion', 'KardexEntradaDistribucionController@index2')->name('inventario.distribucion');
+Route::get('/inventario/traslado', 'KardexEntradaTrasladoAlmacenController@index2')->name('inventario.traslado');
+Route::get('/inventario/salida', 'KardexSalidaController@index2')->name('inventario.salida');
+
+Route::get("/inventario/consultas", 'PeriodoConsultaController@index2')->name('inventario.consultas');
+Route::get('/inventario/cierre', 'CierrePeriodoController@index2')->name('inventario.cierre');
+Route::get('/inventario/movimiento', 'Consulta_MovimientoController@index2')->name('inventario.movimiento');
+
+//Correo:
+Route::get('/mailbox/nuevo/enviado', 'EmailBandejaEnviosController@index2')->name('correo.enviado');
+Route::get('/mailbox/nuevo/configuracion', 'EmailConfiguracionesController@index2')->name('correo.configuracion');
+Route::get('/mailbox/nuevo/borrador', 'EmailBorradoresController@index2')->name('correo.borradores');
+Route::get('/mailbox/nuevo/papelera', 'EmailBandejaEnviosController@index3')->name('correo.papelera');
+Route::get("/garantias", "GarantiaGuiaIngresoController@index2")->name('garantias');
+Route::get('/facturacion3', 'facturacioncontroller@index3')->name('facturacion3');
+Route::resource('/tipo_cambio', 'TipoCambioController');
+Route::get('busqueda_tipo_cambio', 'TipoCambioController@busquedaTipoCambio')->name('tipo_cambio.busqueda_tipo_cambio');
+
+// // ServicioController:
+// Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+// Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+// Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+// Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+// Route::get('/servicio', 'ServicioController@index')->name('servicio.index');
+// Route::get('/servicio/guia_salida', 'ServicioController@guia_salida')->name('servicio.guia_salida');
+// Route::get('/servicio/informe_tecnico', 'ServicioController@informe_tecnico')->name('servicio.informe_tecnico');
+// Route::get('/servicio/solicitud_servicio', 'ServicioController@solicitud_servicio')->name('servicio.solicitud_servicio');
+
+
+// Route::get('/servicio/vistaclientes', 'ServiciosController@vistaclientes')->name('servicio.vistaclientes');
+// Route::get('/guia', function () {
+//     return view('servicio.guia');
+// })->name('guia');
+
+
+// Route::get('/servicio/clientes', 'ServicioController@clientes')->name('servicio.clientes');
+// Route::get('/servicio/guia', 'ServicioController@guia')->name('servicio.guia');
+
+
+
+// Route::get('/clientes', [ClienteController::class, 'index']);
+// Route::get('/clientes/editar/{id}', [ClienteController::class, 'editex']);
+// Route::get('/guia', [ClienteController::class, 'guia'])->name('clientes.guia');
+
+
+// Route::get('/clientes', [ServicioController::class, 'index']);
+
+
+
+
+
+// GUIAS SERVICIO
+// Route::get('/servicio-guia', [ServicioController::class, 'index'])->name('servicio-guia.index');
+
+
+// Guia Servicios
+
+
+
+
+// Route::get('/consulta/venta/caja-chica', function () {return view('consulta.venta.caja_chica');})->name('caja_chica.index');
+
+// Route::get('/guia-remision-manual/registers', [GuiaRemisionManualController::class, 'guiaRemisionM_registers'])
+//     ->name('guiaRemisionM.registers');
+
+
+
+//RUTAS PARA IMPRIMIR EN CONJUNTO
+Route::get('venta/boleta/print-multiple', [BoletaController::class, 'printMultiple'])->name('boleta.print.multiple');
+Route::get('venta/boleta/boleta_manual/print-multiple', [BoletaMController::class, 'printMultiple'])->name('boletaM.print.multiple');
+
+Route::get('venta/facturacion/print-multiple', [FacturacionController::class, 'printMultiple'])->name('factura.print.multiple');
+Route::get('venta/facturacion/facturacion_manual/print-multiple', [FacturacionMController::class, 'printMultiple'])->name('facturaM.print.multiple');
+
+// Ruta para impresión múltiple de notas de crédito
+Route::get('/venta/nota_credito/print-multiple', [NotaCreditoController::class, 'printMultiple'])->name('notaCredito.print.multiple');
+Route::get('venta/nota_debito/print-multiple', [NotaDebitoController::class, 'printMultiple'])->name('notaDebito.print.multiple');
+
+
+
+
+
+
+Route::get('/ventas/cotizacion/print-multipler', [CotizacionController::class, 'printMultiple'])->name('cotizacion.print.multiple');
+Route::get('/ventas/cotizacion_manual/print-multiple', [CotizacionManualController::class, 'printMultiple'])->name('cotizacionM.print.multiple');
+
+Route::get('/garantias/guia_ingreso/print-multiple', [GarantiaGuiaIngresoController::class, 'printMultiple'])->name('garantiaGuiaI.print.multiple');
+Route::get('/garantias/guia_egreso/print-multiple', [GarantiaGuiaEgresoController::class, 'printMultiple'])->name('garantiaGuiaE.print.multiple');
+Route::get('/garantias/informe_tecnico/print-multiple', [GarantiaInformeTecnicoController::class, 'printMultiple'])->name('informeTecnico.print.multiple');
+
+// DESCARGAR PDF DE GUIA DE REMISION
+Route::get('venta/guia_remision/print-multiple', [GuiaRemisionController::class, 'printMultiple'])->name('guia_remision.print.multiple');
+Route::get('venta/guia_remision/guia_manual/print_multiple', [GuiaRemisionManualController::class, 'printMultiple'])->name('guia_remision_manual.print.multiple');
+Route::get('/ventas/nota_venta/print-multiple', [NotaVentaController::class, 'printMultiple'])->name('notaVenta.print.multiple');
+
+
+
+
+Route::match(
+    ['get', 'post'],
+    'comprobantes/guia-remision-manual/print-multiple',
+    [GuiaRemisionManualController::class, 'printMultiple']
+)->name('guia_remision_manual.print.multiple');
+
+
+
+
+/*Route::get('servicio_tecnico/servicios/servicio-guia/{id}/showman',
+    [ProcesoServicioGuiaController::class, 'showman']
+)->name('servicio_tecnico.servicios.servicio-guia.showman');*/
+
+Route::get('servicio_tecnico/servicios/servicio-informe-tecnico/{id}/show-cambios', [ServicioGuiaInformeTecnicoController::class, 'showInformeTecnicoConCambios'])->name('servicio_tecnico.servicios.servicio-informe-tecnico.show-cambios');
+
+// Ruta para descargar múltiples comprobantes dentro de un ZIP
+Route::get('boletas/download-multiple', [BoletaController::class, 'downloadMultiplePDFs'])
+    ->name('boletas.download.multiple');
+
+Route::get('comprobantes/boleta_manual/download-multiple', [BoletaMController::class, 'downloadMultiplePDFs'])
+    ->name('boletaM.download.multiple');
+
+Route::get('facturacion-manual/download-multiple', [FacturacionMController::class, 'downloadMultiplePDFs'])
+    ->name('facturaM.download.multiple');
+
+Route::get('comprobantes/factura/download-multiple', [FacturacionController::class, 'downloadMultiplePDFs'])
+    ->name('facturas.download.multiple');
+
+
+Route::get('notas_credito/download-multiple', [NotaCreditoController::class, 'downloadMultiplePDFs'])
+    ->name('notaC.download.multiple');
+
+Route::get('notas_debito/download-multiple', [NotaDebitoController::class, 'downloadMultiplePDFs'])
+    ->name('notaD.download.multiple');
+
+Route::get('comprobantes/guia_remision/download-multiple', [GuiaRemisionController::class, 'downloadMultiplePDFs'])
+    ->name('GuiaRemision.download.multiple');
+
+Route::get('comprobantes/guia_remision_manual/download-multiple', [GuiaRemisionManualController::class, 'downloadMultiplePDFs'])
+    ->name('guia_remision_manual.download.multiple');
+
+// Ruta para descargar múltiples ventas dentro de un ZIP
+Route::get('/ventas/cotizacion/dowload-multiple', [CotizacionController::class, 'downloadMultiplePDFs'])
+    ->name('cotizacion.download.multiple');
+
+Route::get('/ventas/cotizacion-manual/dowload-multiple', [CotizacionManualController::class, 'downloadMultiplePDFs'])
+    ->name('cotizacion-manual.download.multiple');
+
+Route::post('/ventas/nota-venta/download-multiple', [NotaVentaController::class, 'downloadMultiplePDFs'])
+    ->name('nota-venta.download.multiple');
+
+// Ruta para descargar múltiples garantias guias dentro de un ZIP
+Route::post('/garantia/guia-ingreso/descargar-multiple', [GarantiaGuiaIngresoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaI.download.multiple');
+
+Route::post('/garantia/guia-egreso/descargar-multiple', [GarantiaGuiaEgresoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaE.download.multiple');
+
+Route::post('/garantia/informe-tecnico/descargar-multiple', [GarantiaInformeTecnicoController::class, 'downloadMultiplePDFs'])
+    ->name('GarantiaIT.download.multiple');
+
+
+
+// Rutas para que el codigo QR lleve al pdf de guiaremision
+Route::get('guia_remision/{id}/pdfLink', [GuiaRemisionController::class, 'pdfLink'])
+    ->name('guia_remision.pdfLink');
+
+Route::get('guia_remision_manual/{id}/pdfLink', [GuiaRemisionManualController::class, 'pdfLink'])
+    ->name('guia_remision_manual.pdfLink');
+
+// Nueva ruta para imprimir, exportar y descargar pdf de renovaciones
+Route::get('/ventas/renovacion/print-multiple', [RenovacionController::class, 'printMultiple'])
+    ->name('renovaciones.print.multiple');
+
+Route::post('/ventas/renovacion/exportar', [RenovacionController::class, 'exportarRenovaciones'])
+    ->name('exportarRenovaciones');
+
+Route::get('/ventas/renovacion/download-multiple', [RenovacionController::class, 'downloadMultiplePDFs'])
+    ->name('renovaciones.download.multiple');
+
+
+
+// Mandar multiples pdf por wsp en comprobantes
+Route::get('boleta/share/{codigo}', [BoletaController::class, 'descargarPorCodigo'])
+    ->name('boleta_codificada');
+Route::post('/comprobantes/boleta/whatsapp/send-multiple', [BoletaController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.boleta.multiple');
+
+Route::get('boleta_manual/share/{codigo}', [BoletaMController::class, 'descargarPorCodigo'])
+    ->name('boleta_manual_codificada');
+Route::post('/comprobantes/boleta_manual/whatsapp/send-multiple', [BoletaMController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.boletaM.multiple');
+
+Route::get('factura/share/{codigo}', [FacturacionController::class, 'descargarPorCodigo'])
+    ->name('factura_codificada');
+Route::post('/comprobantes/factura/whatsapp/send-multiple', [FacturacionController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.factura.multiple');
+
+Route::get('factura_manual/share/{codigo}', [FacturacionMController::class, 'descargarPorCodigo'])
+    ->name('factura_manual_codificada');
+Route::post('/comprobantes/factura_manual/whatsapp/send-multiple', [FacturacionMController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.facturaM.multiple');
+
+Route::get('nota_credito/share/{codigo}', [NotaCreditoController::class, 'descargarPorCodigo'])
+    ->name('nota_credito_codificada');
+Route::post('/comprobantes/nota_credito/whatsapp/send-multiple', [NotaCreditoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.notaCredito.multiple');
+
+Route::get('nota_debito/share/{codigo}', [NotaDebitoController::class, 'descargarPorCodigo'])
+    ->name('nota_debito_codificada');
+Route::post('/comprobantes/nota_debito/whatsapp/send-multiple', [NotaDebitoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.notaDebito.multiple');
+
+Route::get('guia_remision/share/{codigo}', [GuiaRemisionController::class, 'descargarPorCodigo'])
+    ->name('guia_remision_codificada');
+Route::post('/comprobantes/guia_remision/whatsapp/send-multiple', [GuiaRemisionController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaRemision.multiple');
+
+Route::get('guia_remision_manual/share/{codigo}', [GuiaRemisionManualController::class, 'descargarPorCodigo'])
+    ->name('guia_remision_manual_codificada');
+Route::post('/comprobantes/guia_remision_manual/whatsapp/send-multiple', [GuiaRemisionManualController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaRemisionM.multiple');
+
+// Mandar multiples pdf por wsp en ventas
+Route::get('cotizacion/share/{codigo}', [CotizacionController::class, 'descargarPorCodigo'])
+    ->name('cotizacion_codificada');
+Route::post('/ventas/cotizacion/whatsapp/send-multiple', [CotizacionController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.cotizacion.multiple');
+
+Route::get('cotizacion_manual/share/{codigo}', [CotizacionManualController::class, 'descargarPorCodigo'])
+    ->name('cotizacion_manual_codificada');
+Route::post('/ventas/cotizacion_manual/whatsapp/send-multiple', [CotizacionManualController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.cotizacionM.multiple');
+
+Route::get('nota_venta/share/{codigo}', [NotaVentaController::class, 'descargarPorCodigo'])
+    ->name('nota_venta_codificada');
+Route::post('/ventas/nota_venta/whatsapp/send-multiple', [NotaVentaController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.notaVenta.multiple');
+
+Route::get('renovacion/share/{codigo}', [RenovacionController::class, 'descargarPorCodigo'])
+    ->name('renovacion_codificada');
+Route::post('/ventas/renovacion/whatsapp/send-multiple', [RenovacionController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.renovacion.multiple');
+
+// Mandar multiples pdf por wsp en garantias
+Route::get('garantia_guia_ingreso/share/{codigo}', [GarantiaGuiaIngresoController::class, 'descargarPorCodigo'])
+    ->name('garantia_guia_ingreso_codificada');
+Route::post('/garantias/guia_ingreso/whatsapp/send-multiple', [GarantiaGuiaIngresoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaIngreso.multiple');
+
+Route::get('garantia_guia_egreso/share/{codigo}', [GarantiaGuiaEgresoController::class, 'descargarPorCodigo'])
+    ->name('garantia_guia_egreso_codificada');
+Route::post('/garantias/guia_egreso/whatsapp/send-multiple', [GarantiaGuiaEgresoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.guiaEgreso.multiple');
+
+Route::get('garantia_informe_tecnico/share/{codigo}', [GarantiaInformeTecnicoController::class, 'descargarPorCodigo'])
+    ->name('garantia_informe_tecnico_codificada');
+Route::post('/garantias/informe_tecnico/whatsapp/send-multiple', [GarantiaInformeTecnicoController::class, 'whatsappSendMultiple'])
+    ->name('envioWhatsapp.informeTecnico.multiple');
+
+// Rutas para mandar por correo directamente desde el index de comprobantes
+Route::post('/boleta/enviar-correo-directo/{id}', [BoletaController::class, 'enviarCorreoDirecto'])
+    ->name('boleta.enviar-correo-directo');
+
+Route::post('/boleta_manual/enviar-correo-directo/{id}', [BoletaMController::class, 'enviarCorreoDirecto'])
+    ->name('boletaM.enviar-correo-directo');
+
+Route::post('/factura/enviar-correo-directo/{id}', [FacturacionController::class, 'enviarCorreoDirecto'])
+    ->name('factura.enviar-correo-directo');
+
+Route::post('/factura_manual/enviar-correo-directo/{id}', [FacturacionMController::class, 'enviarCorreoDirecto'])
+    ->name('facturaM.enviar-correo-directo');
+
+Route::post('/nota_credito/enviar-correo-directo/{id}', [NotaCreditoController::class, 'enviarCorreoDirecto'])
+    ->name('notaCredito.enviar-correo-directo');
+
+Route::post('/nota_debito/enviar-correo-directo/{id}', [NotaDebitoController::class, 'enviarCorreoDirecto'])
+    ->name('notaDebito.enviar-correo-directo');
+
+Route::post('/guia_remision/enviar-correo-directo/{id}', [GuiaRemisionController::class, 'enviarCorreoDirecto'])
+    ->name('guiaRemision.enviar-correo-directo');
+
+Route::post('/guia_remision_manual/enviar-correo-directo/{id}', [GuiaRemisionManualController::class, 'enviarCorreoDirecto'])
+    ->name('guiaRemisionM.enviar-correo-directo');
+
+// Rutas para mandar por correo directamente desde el index de ventas
+Route::post('/cotizacion/enviar-correo-directo/{id}', [CotizacionController::class, 'enviarCorreoDirecto'])
+    ->name('cotizacion.enviar-correo-directo');
+
+Route::post('/cotizacion_manual/enviar-correo-directo/{id}', [CotizacionManualController::class, 'enviarCorreoDirecto'])
+    ->name('cotizacionM.enviar-correo-directo');
+
+Route::post('/nota_venta/enviar-correo-directo/{id}', [NotaVentaController::class, 'enviarCorreoDirecto'])
+    ->name('notaVenta.enviar-correo-directo');
+
+// Rutas para envio multiple de correo para comprobantes
+Route::post('/boleta/enviar-correo-multiple', [BoletaController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.boleta.multiple');
+
+Route::post('/boleta_manual/enviar-correo-multiple', [BoletaMController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.boletaM.multiple');
+
+Route::post('/factura/enviar-correo-multiple', [FacturacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.factura.multiple');
+
+Route::post('/factura_manual/enviar-correo-multiple', [FacturacionMController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.facturaM.multiple');
+
+Route::post('/nota_credito/enviar-correo-multiple', [NotaCreditoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.notaCredito.multiple');
+
+Route::post('/nota_debito/enviar-correo-multiple', [NotaDebitoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.notaDebito.multiple');
+
+Route::post('/guia_remision/enviar-correo-multiple', [GuiaRemisionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.guia_remision.multiple');
+
+Route::post('/guia_remision_manual/enviar-correo-multiple', [GuiaRemisionManualController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.guia_remisionM.multiple');
+
+// Rutas para envio multiple de correo de renocavion
+Route::post('/cotizacion/enviar-correo-multiple', [CotizacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.cotizacion.multiple');
+
+Route::post('/cotizacion_manual/enviar-correo-multiple', [CotizacionManualController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.cotizacionM.multiple');
+
+Route::post('/nota_venta/enviar-correo-multiple', [NotaVentaController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.nota_venta.multiple');
+
+// Rutas para envio multiple de correo para garantias
+Route::post('/garantia_guia_ingreso/enviar-correo-multiple', [GarantiaGuiaIngresoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_guia_ingreso.multiple');
+
+Route::post('/garantia_guia_egreso/enviar-correo-multiple', [GarantiaGuiaEgresoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_guia_egreso.multiple');
+
+Route::post('/garantia_informe_tecnico/enviar-correo-multiple', [GarantiaInformeTecnicoController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.garantia_informe_tecnico.multiple');
+
+Route::get('/servicio-tecnico/informe-tecnico/print/{id}', [ServicioGuiaInformeTecnicoController::class, 'print'])
+    ->name('st_informe_tecnico.print');
+
+Route::get('/servicio-tecnico/informe-tecnico/pdf/{id}', [ServicioGuiaInformeTecnicoController::class, 'pdf'])
+    ->name('st_informe_tecnico.pdf');
+
+//seccion de renovacion de correo multiple
+Route::post('/cotizacion-renovacion/enviar-correo-multiple', [RenovacionController::class, 'enviarCorreoMultiple'])
+    ->name('envioCorreo.renovacion.multiple');
+
+//seccion de compartir rapido para renovaciones
+Route::get('/renovacion/pdf/{id}', 'RenovacionController@pdf')
+    ->name('renovacion.pdf');
+Route::get('/renovacion/share/{codigo}', 'RenovacionController@descargarPorCodigo')
+    ->name('renovacion_codificada');
+Route::post('/renovacion/enviar-correo-directo/{id}', 'RenovacionController@enviarCorreoDirecto')
+    ->name('renovacion.enviar-correo-directo');
+
+
+Route::get('/cotizacion/share/{codigo}', 'RenovacionController@descargarPorCodigo')
+    ->name('cotizacion_renovacion_codificada');
+
+Route::get('/cotizacion-manual/share/{codigo}', 'RenovacionController@descargarPorCodigo')
+    ->name('cotizacion_manual_renovacion_codificada');
+
+//Rutas para guardar notas informativas para comprobantes
+Route::post('/boleta/guardar-nota/{id}', 'BoletaController@guardarNotaInformativa')
+    ->name('boleta.guardar_nota');
+
+Route::post('/boleta_manual/guardar-nota/{id}', 'BoletaMController@guardarNotaInformativa')
+    ->name('boleta_manual.guardar_nota');
+
+Route::post('/factura/guardar-nota/{id}', 'FacturacionController@guardarNotaInformativa')
+    ->name('facturacion.guardar_nota');
+
+Route::post('/factura_manual/guardar-nota/{id}', 'FacturacionMController@guardarNotaInformativa')
+    ->name('facturacionM.guardar_nota');

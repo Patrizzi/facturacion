@@ -1,0 +1,312 @@
+body {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    font-family: "PT Sans Narrow", sans-serif;
+
+ /* Fuente aplicada aquí */
+    font-size: 16px;
+}
+.logo {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 190px;
+}
+
+.parent-element {
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-item {
+    height: 350px;
+}
+
+.carousel-text p {
+    font-size: 25px; /* Ajusta el tamaño del párrafo dentro del carrusel */
+}
+
+.align-item {
+    align-items: center;
+    align-content: center;
+}
+
+.div-small {
+    width: 60%;
+    align-items: center;
+    align-content: center;
+}
+
+.login-form .input-box label {
+    font-size: 16px; /* Ajusta el tamaño según lo que necesites */
+}
+
+
+
+/* Ajustar el contenedor del carrusel */
+.border-light {
+    margin-top: 140px; /* Baja el carrusel */
+    padding-bottom: 20px; /* Espacio inferior si es necesario */
+}
+
+
+
+
+.bg-leono {
+    background-color: blue;
+    color: white;
+}
+
+.bg-leono-light {
+    background-color: #4075f0;
+}
+
+.btn {
+    border-radius: 30px;
+    align-content: center;
+    /*padding: 10px 35px;*/
+    
+}
+
+.text-leono {
+    color: blue;
+    padding: 10px;
+    font-size: 20px;
+}
+
+/* Nueva clase para el margen superior del título */
+.title-margin {
+    margin-top: 10px; /* Ajusta este valor para mover el título más abajo sin aumentar su tamaño */
+}
+
+.float-indicators{
+    position: absolute;
+    top: 380px; /* Ajusta la posición vertical */
+    width: 100%; 
+    margin: 0 auto;
+}
+
+.carousel-indicators{
+    width: 155px;
+}
+
+/*.carousel-indicators button{
+    background-color: white;
+}
+
+.carousel-indicators button.active{
+    background-color: rgb(20, 20, 66);
+}*/
+
+.floating-close{
+    width: 20px;
+    height: 20px;
+    color: blue;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.correo{
+    border: none; /* Sin borde */
+    border-bottom: 1px solid black; /* Línea negra en la parte inferior */
+    width: 100%; /* Asegura que el input ocupe todo el ancho */
+    padding: 5px 0; /* Espacio vertical */
+    outline: none; /* Quitar el contorno al enfocar */
+    background: white; /* Fondo transparente */
+    transition: border-color 0.3s; /* Transición suave para el cambio de color */
+}
+
+.bi-check-circle-fill{
+    font-size: 40px;
+}
+
+.form-select-sm{
+    width: 120px;
+}
+
+.form-control-sm{
+    width: 120px;
+}
+
+
+
+
+
+/*Flavia*/
+.password-container {
+    position: relative;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group input {
+    padding-right: 40px; /* Espacio para el icono */
+}
+
+.toggle-password {
+    position: absolute;
+    top: 65%; /* Ajusta este valor para mover el ícono más abajo */
+    right: 10px; /* Espacio desde el borde derecho */
+    transform: translateY(-50%); /* Centra verticalmente el icono */
+    cursor: pointer;
+    z-index: 1; /* Asegura que el icono esté por encima del campo de entrada */
+}
+
+.input-box {
+    width: 96%; /* Asegura que el input ocupe todo el ancho disponible */
+    margin-bottom: 20px; /* Espacio entre los campos */
+}
+
+.input-box label {
+    display: block; /* Hace que el label ocupe toda la línea */
+    margin-bottom: 5px; /* Espacio entre el label y el input */
+}
+
+.input-box input {
+    border: none; /* Sin borde */
+    border-bottom: 1px solid black; /* Línea negra en la parte inferior */
+    width: 100%; /* Asegura que el input ocupe todo el ancho */
+    padding: 5px 0; /* Espacio vertical */
+    outline: none; /* Quitar el contorno al enfocar */
+    background: white; /* Fondo transparente */
+    transition: border-color 0.3s; /* Transición suave para el cambio de color */
+    padding-right: 40px;
+    margin-left: 13px;
+    padding-left: 5px;
+}
+
+
+
+/* Transición suave para el cambio de color *//* Transición suave para el cambio de color *//* Transición suave para el cambio de color *//* Transición suave para el cambio de color *//* Transición suave para el cambio de color *//* Transición suave para el cambio de color */
+
+
+
+.input-box input:focus {
+    border-bottom: 1px solid blue; /* Línea azul al enfocar */
+}
+
+.password-container {
+    position: relative; /* Necesario para el icono de la contraseña */
+}
+
+.contact-container {
+    position: fixed; /* Fijo para que permanezca en la esquina */
+    bottom: 20px; /* Espacio desde la parte inferior */
+    right: 30px; /* Espacio desde la parte derecha */
+    text-align: center; /* Centra el contenido */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+.contact-btn {
+    padding: 10px 20px;
+    background-color: white; /* Color de fondo */
+    color: blue; /* Color del texto */
+    border: 1px solid blue; /* Borde azul de 5px */
+    border-radius: 20px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    font-size: 14px; /* Tamaño de fuente */
+    transition: background-color 0.3s; /* Transición suave para el fondo */
+}
+
+.contact-btn:hover {
+    background-color: lightgray; /* Color de fondo al pasar el mouse */
+}
+
+/* Ocultar la información por defecto */
+.contact-info {
+    display: none; /* Oculto por defecto */
+    background-color: white; /* Color de fondo */
+    border-radius: 10px; /* Bordes redondeados */
+    position: absolute; /* Posición absoluta respecto al contenedor */
+    bottom: 50px; /* Espacio desde el botón */
+    right: 0; /* Alineado a la derecha */
+
+}
+
+/* Mostrar la información de contacto al hacer clic en el botón */
+.contact-container:focus-within .contact-info {
+    display: block; /* Muestra la información */
+}
+
+.contact-info li{
+    display: flex; /* Usa flexbox para alinear icono y texto */
+    align-items: center; /* Centra verticalmente */
+    justify-content: center;
+}
+
+footer {
+    padding: 20px; /* Espacio interno */
+    text-align: left; /* Alinea el texto a la izquierda */
+    position: fixed; /* Posicionamiento absoluto */
+    bottom: 0; /* Alinea el pie de página en la parte inferior */
+    left: 20px; /* Mueve el pie de página 50 píxeles hacia la derecha */
+    width: 100%;
+    z-index: 999;
+}
+
+footer p {
+    margin: 0; /* Elimina el margen por defecto */
+    color: #ffffff; /* Color gris claro */
+    font-size: 14px;
+}
+
+.btn-sesion{
+    background-color: blue;
+    color: white;
+}
+
+.btn-sesion:hover{
+    background-color: rgb(27, 27, 147);
+    color: white;
+}
+/*.form-check-input:focus{
+    background-color: blue;
+    color: white;
+}*/
+
+.border-radio{
+    border-radius: 20px;
+}
+
+.text-titulo{
+    color: blue;
+    text-align: center;
+    font-weight: bold;
+    margin: auto;
+    background-color: transparent;
+}
+
+@media (max-width: 780px){
+    .desaparece{
+        display: none;
+    }
+}
+
+.right-side{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+@media screen and (max-width: 992px) {
+    .div-small {
+width: 90%; 
+    }
+}
+
+.custom-label {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+.modal{
+    font-weight: bold;
+    font-size: 15px;
+}
+

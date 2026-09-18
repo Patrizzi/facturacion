@@ -1,0 +1,126 @@
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Filesystem Disk
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the default filesystem disk that should be used
+    | by the framework. The "local" disk, as well as a variety of cloud
+    | based disks are available to your application. Just store away!
+    |
+    */
+
+    'default' => env('FILESYSTEM_DRIVER', 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Cloud Filesystem Disk
+    |--------------------------------------------------------------------------
+    |
+    | Many applications store files both locally and in the cloud. For this
+    | reason, you may specify a default "cloud" driver here. This driver
+    | will be bound as the Cloud disk implementation in the container.
+    |
+    */
+
+    'cloud' => env('FILESYSTEM_CLOUD', 's3'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filesystem Disks
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure as many filesystem "disks" as you wish, and you
+    | may even configure multiple disks of the same driver. Defaults have
+    | been setup for each driver as an example of the required options.
+    |
+    | Supported Drivers: "local", "ftp", "sftp", "s3", "rackspace"
+    |
+    */
+
+    'disks' => [
+
+        'local' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/'),
+        ],
+
+        'marcas' => [
+            'driver' => 'local',
+            'root' => public_path('archivos/imagenes/marcas/'),
+        ],
+        'kardex_entrada' => [
+            'driver' => 'local',
+            'root' => public_path('archivos/kardex_entrada/'),
+        ],
+        'pagos' => [
+            'driver' => 'local',
+            'root' => public_path('archivos/pagos_sistema/'),
+        ],
+        // 'garantia_guia_ingreso' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('archivos/garantia_guia_ingreso/'),
+        // ],
+        // 'garantias_guias_egreso' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('archivos/garantias_guias_egreso/'),
+        // ],
+        // 'garantias_informe_tecnico' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('archivos/garantias_informe_tecnico/'),
+        // ],
+        // 'ventas_cotizacion' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('archivos/ventas_cotizacion/'),
+        // ],
+        // 'cotizacion_factura' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('archivos/cotizacion_factura/'),
+        // ],
+        // 'cotizacion_manual' => [
+        //     'driver' => 'local',
+        //     'root' => public_path('archivos/cotizacion_manual/'),
+        // ],
+        'mailbox' => [
+            'driver' => 'local',
+            'root' =>  public_path('archivos/'),
+        ],
+        'informe_tecnico_imagenes' => [
+            'driver' => 'local',
+            'root' => public_path('archivos/imagenes/informe_tecnico/'),
+        ],
+        // 'cierre_periodo' => [
+        //     'driver' => 'local',
+        //     'root' =>  public_path('archivos/cierre_periodo/'),
+        // ],
+        'public' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+        'facturas_electronicas' => [
+            'driver' => 'local',
+            'root' => public_path('facturas_electronicas/'),
+        ],
+        'boletas_electronicas' => [
+            'driver' => 'local',
+            'root' => public_path('boletas_electronicas/'),
+        ],
+
+
+        's3' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'url' => env('AWS_URL'),
+        ],
+
+    ],
+
+];

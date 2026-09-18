@@ -1,0 +1,70 @@
+@extends('layout')
+@section('title', 'Kardex Traslado Alamacen')
+@section('href_accion', route('kardex-entrada-Traslado-almacen.index'))
+@section('value_accion', 'Atras')
+@section('content')
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox-content p-xl">
+                <div class="row">
+                    <div class="col-sm-6">
+                     <address class="col-sm-6">
+                        <h5>Traslado de:</h5>
+                        <i class=" fa fa-user">:</i><strong > {{$mi_empresa->nombre}}</strong><br>
+                    Alamacén Emisor:</i> {{$kardex_entradas->almacen->nombre}}<br>
+                Alamacén Receptor:</i> {{$kardex_entradas->almacen->nombre}}<br>
+                <strong><i class="fa fa-clock-o" aria-hidden="true"></i></strong> {{$kardex_entradas->provedor->created_at}}</span>
+
+            </address></div>
+            <div class="2" style="width: 200px"></div>
+            <div class="col-sm-4" align="right">
+                <div class="form-control ruc" >
+                    <center>
+                        <h3 style="padding-top:10px ">RUC : {{$mi_empresa->ruc}}</h3>
+                        <h2>GUÍA DE TRASLADO </h2>
+                        <h4 class="text-navy">{{$kardex_entradas->codigo_guia}}</h4>
+                    </center>
+                </div></div>
+            </div>
+            <div class="table-responsive m-t">
+                <table class="table invoice-table" >
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th style="text-align: left;">Nombre/Descripción</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                     @foreach($kardex_entradas_registros as $kardex_entradas_registro)
+                     <tr>
+                        <td>  {{$kardex_entradas_registro->producto->codigo_producto}}</td>
+                        <td style="text-align: left;">
+                            {{$kardex_entradas_registro->producto->nombre}}/{{$kardex_entradas_registro->producto->codigo_original}} {{$kardex_entradas_registro->producto->descripcion}}
+                        </td>
+                        <td>{{$kardex_entradas_registro->cantidad_inicial}}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+</div>
+</div>
+
+
+
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="{{ asset('js/inspinia.js') }}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+@endsection
