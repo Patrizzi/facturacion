@@ -70,7 +70,7 @@
                     </a>
                 </div>
             </div>
-            <div class="ibox-content" style="padding-right: 3.1%; padding-left: 3.1%; padding-bottom: 10px;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="row align-items-center tooltip-demo">
                     <div class="col-12 col-md-5">
                         <h3 style="margin: 0;">{{ $cotizacion->cod_cotizacion }}</h3>
@@ -210,7 +210,7 @@
                             @can('cotizacion.editar')
                                 <button type="button" class="btn btn-warning btn-editar btn-sm" id="edit"
                                     onclick="click_editar()" data-toggle="tooltip" data-placement="bottom"
-                                    data-original-title="Editar cotización" style="white-space: nowrap; margin-right: 4px;">
+                                    data-original-title="Editar cotización" style="white-space: nowrap;">
                                     <i class="fa fa-pencil"></i>
                                 </button>
 
@@ -244,7 +244,7 @@
         </div>
         <div class="row">
             <div class="col-lg-12" style="margin-top: -26px;">
-                <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
+                <div class="ibox-content " style=" margin-bottom: 20px;padding-bottom: 50px;">
                     <br>
                     <div class="table-no mostrar">
                         <div class="row" align="center" style="padding-bottom: 5px">
@@ -315,7 +315,7 @@
                         value="{{ $cotizacion->moneda->nombre }}" readonly="readonly">
                     <input type="hidden" id="moneda_id" class="form-control " value="{{ $cotizacion->moneda_id }}"
                         readonly="readonly">
-                    <div class="table-no mostrar">
+                    <div class="table-no mostrar ">
                         <table class="table" cellspacing="0">
                             <thead>
                                 <tr>
@@ -375,27 +375,30 @@
                                         {{ $cotizacion->moneda->nombre }}
                                     </h3>
                                 </div>
-                                <div class="col-sm-4 form-control ">
-                                    <span style="display: block;float: left"> Subtotal:</span>
-                                    <span style="display: block;float: right;">
-                                        {{ $simbologia = $cotizacion->moneda->simbolo }}
-                                        {{ number_format($sub_total, 2) }}</span>
-                                    <br>
-                                    <span style="display: block;float: left"> Op. Gravada: </span>
-                                    <span style="display: block;float: right">{{ $simbologia }}
-                                        {{ number_format($cotizacion->op_gravada, 2) }}</span><br>
-                                    <span style="display: block;float: left"> Op. Inafecta: </span>
-                                    <span style="display: block;float: right">{{ $simbologia }}
-                                        {{ number_format($cotizacion->op_inafecta, 2) }}</span><br>
-                                    <span style="display: block;float: left"> Op. Exonerada: </span>
-                                    <span style="display: block;float: right">{{ $simbologia }}
-                                        {{ number_format($cotizacion->op_exonerada, 2) }} </span><br>
-                                    <span style="display: block;float: left"> I.G.V.: </span>
-                                    <span style="display: block;float: right">{{ $cotizacion->moneda->simbolo }}
-                                        {{ number_format(round($igv_p, 2), 2) }}</span><br>
-                                    <span style="display: block;float: left"> Importe Total: </span>
-                                    <span style="display: block;float: right">{{ $cotizacion->moneda->simbolo }}
-                                        {{ number_format($end, 2) }}</span>
+                                <div class="col-sm-4 ">
+                                    <div class="form-control">
+                                        <span style="display: inline-block;float: left"> Subtotal:</span>
+                                        <span style="display: inline-block;float: right;">
+                                            {{ $simbologia = $cotizacion->moneda->simbolo }}
+                                            {{ number_format($sub_total, 2) }}</span>
+                                        <br>
+                                        <span style="display: inline-block;float: left"> Op. Gravada: </span>
+                                        <span style="display: inline-block;float: right">{{ $simbologia }}
+                                            {{ number_format($cotizacion->op_gravada, 2) }}</span><br>
+                                        <span style="display: inline-block;float: left"> Op. Inafecta: </span>
+                                        <span style="display: inline-block;float: right">{{ $simbologia }}
+                                            {{ number_format($cotizacion->op_inafecta, 2) }}</span><br>
+                                        <span style="display: inline-block;float: left"> Op. Exonerada: </span>
+                                        <span style="display: inline-block;float: right">{{ $simbologia }}
+                                            {{ number_format($cotizacion->op_exonerada, 2) }} </span><br>
+                                        <span style="display: inline-block;float: left"> I.G.V.: </span>
+                                        <span style="display: inline-block;float: right">{{ $cotizacion->moneda->simbolo }}
+                                            {{ number_format(round($igv_p, 2), 2) }}</span><br>
+                                        <span style="display: inline-block;float: left"> Importe Total: </span>
+                                        <span style="display: inline-block;float: right">{{ $cotizacion->moneda->simbolo }}
+                                            {{ number_format($end, 2) }}</span>
+                                        <br>
+                                    </div>
                                 </div>
                             </div>
                         </footer>
@@ -472,7 +475,7 @@
         }
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
-            font-size: 12px;
+            /* font-size: 12px; */
         }
 
         .select2-container--default .select2-selection--single {
@@ -646,6 +649,17 @@
         #DataTables_Table_0_info{
             margin-bottom: 5px !important;
         }
+        span.select2.select2-container.select2-container--default.select2-container--below{
+            max-width: 400px !important;
+            min-width: 400px !important;
+        }
+        .word-style select,
+        .word-style input,
+        .word-style textarea,
+        .word-style span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+        }
     </style>
 
     <!-- Mainly scripts -->
@@ -780,6 +794,7 @@
     </script>
 
     <script type="text/javascript">
+        let articulosAgregados = new Set();
         //*Condicional para el tipo de factura
         var tipo_coti = $('#tipo_coti').val();
         var cliente_default = $('#cliente_id').val();
@@ -852,10 +867,10 @@
                 <tr>
                     <td>
                         <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
-                        <button class="btn btn-danger btn-sm e  borrar"><i class="fa fa-trash"></i></button>
+                        <button class="btn btn-primary btn-sm e  borrar"><i class="fa fa-trash"></i></button>
                     </td>
                     <td>
-                        <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
+                        <select class="monto0 select2_demo_3 select_change limp_select" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                         </select>
                         <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control limp_txt" autocomplete="off" style="margin-top: 5px;" ></textarea>
                         <input style="width: 76px" hidden="" type='text' id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(${i})" required  autocomplete="off"  />
@@ -1124,47 +1139,68 @@
             event.preventDefault();
             var e = document.getElementsByClassName("e").length;
             var fila = $(this).parents("tr");
+            var input_text_opt = fila.find('input[class="celda"]').val();
+            if (input_text_opt) {
+                var partes = input_text_opt.split('|').map(p => p.trim());
+                var id = partes[0];
+                articulosAgregados.delete(String(id));
+                reactivarBotonModal(id);
+                console.log(articulosAgregados);
+            }
+            $('option[value="' + input_text_opt + '"]').prop("disabled", false);
             $(".addmore").prop("disabled", false);
             if (e > 1) {
                 fila.closest('tr').remove();
                 $(".borrar").prop("disabled", false);
                 $(".addmore").prop("disabled", false);
+                // $(".guardar").prop("disabled", false);
+                // $(".finalizad").prop("disabled", false);
+
+                var multiplier = 100;
+                var igv = {{ $igv->renta }};
+                var for_tot = $('[name="total_inp"]');
+                var tot = 0;
+                for_tot.each(function() {
+                    tot += parseFloat($(this).val());
+                });
+                var total_ipt = Math.round(tot * multiplier) / multiplier;
+                $('#sub_total').val(total_ipt);
+                //solo gravado
+                var to_grava = $('[name="afectacion"]');
+                var t_grava = 0;
+                to_grava.each(function() {
+                    t_grava += parseFloat($(this).val());
+                });
+                var tot_gra_dec = Math.round(t_grava * multiplier) / multiplier;
+                // console.log(t_grava);
+                $('#subtotal_gravado').val(tot_gra_dec);
+                var igv = {{ $igv->renta }};
+                var igv_val = tot_gra_dec * (igv / multiplier);
+
+                var igv_dec_val = Math.round(igv_val * multiplier) / multiplier;
+                var end = igv_dec_val + parseFloat(total_ipt);
+                var end2 = Math.round(end * multiplier) / multiplier;
+                document.getElementById("igv_input").value = igv_dec_val;
+                document.getElementById("total_final").value = end2;
+                // console.log(tot);
+            ajax_l();
             } else {
                 $(".borrar").prop("disabled", true);
                 $(".addmore").prop("disabled", false);
-                $(".limp").val("");
-                $(".limp_txt").val("");
-                $(".select2_demo_3").val(null).trigger("change");
+                // $(".select2_demo_3").val(null).trigger("change");
+                limpiar_inputs();
             }
-            var multiplier = 100;
-            var igv = {{ $igv->renta }};
-            var for_tot = $('[name="total_inp"]');
-            var tot = 0;
-            for_tot.each(function() {
-                tot += parseFloat($(this).val());
-            });
-            var total_ipt = Math.round(tot * multiplier) / multiplier;
-            $('#sub_total').val(total_ipt);
-            //solo gravado
-            var to_grava = $('[name="afectacion"]');
-            var t_grava = 0;
-            to_grava.each(function() {
-                t_grava += parseFloat($(this).val());
-            });
-            var tot_gra_dec = Math.round(t_grava * multiplier) / multiplier;
-            // console.log(t_grava);
-            $('#subtotal_gravado').val(tot_gra_dec);
-            var igv = {{ $igv->renta }};
-            var igv_val = tot_gra_dec * (igv / multiplier);
-
-            var igv_dec_val = Math.round(igv_val * multiplier) / multiplier;
-            var end = igv_dec_val + parseFloat(total_ipt);
-            var end2 = Math.round(end * multiplier) / multiplier;
-            document.getElementById("igv_input").value = igv_dec_val;
-            document.getElementById("total_final").value = end2;
-            // console.log(tot);
-            ajax_l();
+            
         });
+        function limpiar_inputs(){             
+            $(".select_change").val("");
+            $(".limp").val("");
+            $(".celda").val("");
+            $(".limp_txt").val("");
+            $(".limp_select").val("");
+            $("#igv_input").val("");
+            $("#total_final").val("");
+        }
     </script>
 
     {{-- script para manejar las renovaciones --}}
@@ -1234,7 +1270,7 @@
             search_multiple("");
             $('#search_product').val('');
         });
-        let articulosAgregados = new Set();
+        
         let filtrarConStock = false;
         function search_multiple(busqueda) {
             // Limpiar DataTable previo
@@ -1501,6 +1537,13 @@
             filtrarConStock = !$btn.hasClass('active');
             search_multiple($('#buscador_articulo').val());
         });
+        function reactivarBotonModal(id) {
+            var $btn = $(`.btn-agregar-articulo[data-id="${id}"]`);
+            console.log($btn);
+            if ($btn.length) {
+                $btn.prop('disabled', false);
+            }
+        }
         function validarJson(data) {
             try {
                 JSON.parse(data);

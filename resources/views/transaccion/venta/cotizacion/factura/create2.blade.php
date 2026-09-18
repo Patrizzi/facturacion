@@ -221,7 +221,7 @@
                                 value="{{ $sucursal->id }}" readonly="readonly">
                             <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}">
                         </div>
-                        <input type="text" name="" id="count_articles" value="">
+                        <input type="hidden" name="" id="count_articles" value="">
                         <div class="col-md-12">
                             <div class="table-responsive"> 
                                 <table cellspacing="0" class="table tables" id="inp_s">
@@ -238,7 +238,7 @@
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
-                                            <th style="width: 500px">Artículo</th>
+                                            <th style="width: 400px">Artículo</th>
                                             <th style="min-width: 80px">Stock</th>
                                             <th style="min-width: 80px">Cantidad</th>
                                             <th>Precio</th>
@@ -257,14 +257,12 @@
                                             </td>
                                             <td class="td_selected">
                                                 <select class="monto0 select2_demo_3 select_change" required=""
-                                                    id="articulo" onchange="ajax(0)" autocomplete="off"></select>
+                                                    id="articulo" onchange="ajax(0)" autocomplete="off" style="width: 400px"></select>
                                                 <textarea type='text' id='descripcion0' name='descripcion_item[]' placeholder="Descripción de Item"
                                                     class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
                                                 <input style="width: 76px" hidden="" type='text' id='tipo_afec0'
                                                     name='tipo_afec[]' readonly="readonly" class="monto0 form-control"
                                                     onkeyup="multi(0)" required autocomplete="off" />
-                                                <input hidden="hidden" class="celda" name="articulo[]"
-                                                    id="input_prod1">
                                                 <input hidden="hidden" class="celda input-articulo" name="articulo[]">
                                             </td>
                                             <td>
@@ -388,7 +386,9 @@
         .form-group {
             margin-bottom: 1rem;
         }
-
+        .form-group > div > span.select2.select2-container.select2-container--default {
+            width: 100% !important;
+        }
         .form-inline-label {
             display: flex;
             align-items: center;
@@ -400,6 +400,7 @@
 
         .word-style select,
         .word-style input,
+        .word-style textarea,
         .word-style span {
             font-family: 'Outfit', sans-serif;
             font-size: 11px;
@@ -491,7 +492,6 @@
         }
 
         span.select2.select2-container.select2-container--default {
-            width: 100% !important;
             background-color: #FFFFFF;
             background-image: none;
             border-radius: 1px;
@@ -783,6 +783,11 @@
             0%,30%   { transform: translateX(0); }
             100% { transform: translateX(calc(-100% - 20px)); }
         }
+        /* span.select2.select2-container.select2-container--default.select2-container--below{
+            max-width: 400px !important;
+            width: 400px !important;
+            min-width: 400px !important;
+        } */
     </style>
 
     <!-- Mainly scripts -->
@@ -937,7 +942,7 @@
                         <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                         <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
                         <input type='text' style="min-width: 85px" id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
-                        <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}">
+                        <input type="hidden"  class="celda"  name="articulo[]" id="input_prod${i}">
                     </td>
                     <td>
                         <input type="" style="min-width: 85px"  id='stock${i}' name='stock[]' readonly="readonly" class="form-control stock" required autocomplete="off"/>
@@ -1013,6 +1018,7 @@
         function articlesSelect2() {
             var almacen = $('[id="almacen_id"]').val();
             $(".select2_demo_3").select2({
+                width: '400px',
                 placeholder: "Seleccionar Articulo",
                 ajax: {
                     minimumInputLength: 1,
@@ -1363,6 +1369,7 @@
         });
         function limpiar_inputs() {
             $(`.select_change`).val("");
+            $(`.celda`).val("");
             $(`.stock`).val("");
             $(`.text_des`).val("");
             $(`.cantidad`).val("");
@@ -1677,17 +1684,43 @@
             var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
 
-            var valorPrimerSelect = $('#articulo').val();
+            // var valorPrimerSelect = $('#articulo').select2('val');
+            var $primerSelect = $('#articulo');
+            var existePrimerSelect = $primerSelect.length > 0;
+            var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
 
-            if (valorPrimerSelect == null || valorPrimerSelect == "") {
-                // El select inicial está libre, úsalo directamente
-                $('#articulo').append(newOption).trigger('change');
+            // console.log('valorPrimerSelect '+ tieneOpcionSeleccionada);
+            if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
+                // Busca todos los selects existentes (incluyendo #articulo si existe)
+                var $selectsExistentes = $('select[id^="articulo"]');
+
+                if ($selectsExistentes.length === 0) {
+                    // No queda NINGÚN select en el formulario: crear uno desde cero
+                    $('.addmore').prop('disabled', false).click();
+                    $selectsExistentes = $('select[id^="articulo"]');
+                }
+
+                var $selectDestino = $selectsExistentes.last();
+                var idAttr = $selectDestino.attr('id');
+                var count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+                var valorDestino = $selectDestino.val();
+
+                if (valorDestino != null && valorDestino != "") {
+                    // El último select ya tiene algo: crea uno nuevo
+                    $('.addmore').prop('disabled', false).click();
+                    $selectsExistentes = $('select[id^="articulo"]');
+                    $selectDestino = $selectsExistentes.last();
+                    idAttr = $selectDestino.attr('id');
+                    count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+                }
+
+                $selectDestino.append(newOption).trigger('change');
 
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
-                    $(`#cantidad0`).val(cantidad);
-                    multi(0);
+                    $(`#cantidad${count_artc}`).val(cantidad);
+                    multi(count_artc);
                 }, 1000);
 
             } else {
@@ -1698,12 +1731,10 @@
                         return parseInt($(this).attr('id').replace('articulo', ''));
                     }).get())
                     : null;
-
                 var $ultimoSelect = count_artc === null ? $('#articulo') : $(`#articulo${count_artc}`);
                 var valorActual = $ultimoSelect.val();
-
                 if (valorActual != null && valorActual != "") {
-                    $('.addmore').click();
+                    $('.addmore').prop('disabled', false).click();
                     // Recalcular tras crear la fila
                     $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
                     count_artc = Math.max(...$selectsNumerados.map(function() {

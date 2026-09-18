@@ -308,7 +308,7 @@
         cursor: pointer;
     }
 
-    .select2-container--default .select2-selection--single,
+    /* .select2-container--default .select2-selection--single,
     .select2-container.select2-container--default {
         width: 100% !important;
     }
@@ -316,10 +316,10 @@
     .select2-container.select2-container--default.select2-container--open {
         width: 100% !important;
         z-index: 9999;
-    }
+    } */
 </style>
 
-<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+{{-- <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script> --}}
 
 <script>
     $('#add_cliente').on('click', function(e) {
