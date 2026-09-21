@@ -356,72 +356,45 @@
         </div>
     </div>
 
-    <!-- Modal AGREGAR CON UN CLICK UN ARTICULO -->
-    <div class="modal fade bd-example-modal-lg" id="add_product_data" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content" style="height: 575px;">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Agregado Rápido de Artículos</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-6" style="margin-bottom: 15px">
-                            <input type="text" name="" id="search_product" class="form-control form-control-sm"
-                                placeholder="Buscar por código o nombre del producto o servicio" autocomplete="off">
-                        </div>
-                        <div class="col-sm-6" style="margin-bottom: 15px">
-                            <button data-toggle="button" class="btn btn-primary btn-outline btn-sm" type="button" aria-pressed="false" id="button_filter_stock">Con Stock</button>
-                        </div>
-                    </div>
-                    <div class="row" style="height: 90%">
-                        <div class="col-lg-12">
-                            <div class="table-responsive"  style="height: 100% !important">
-                                <table class="table table-striped table-hover data_table_multiple"
-                                    style="font-size: 90%;border-top: 1px solid #e7eaec;padding: 0px">
-                                    <thead>
-                                        <tr>
-                                            {{-- <th>ID</th> --}}
-                                            <th>CÓDIGO</th>
-                                            <th>ARTÍCULO</th>
-                                            <th style="text-align: center">STOCK</th>
-
-                                            <th>PRECIO U.  </th>
-                                            <th>PRECIO S/IGV</th>
-                                            <th>TOTAL EST.</th>
-                                            <th>ACCIONES</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="modal-cart-footer d-flex justify-content-between align-items-center">
-                                <div class="dt-left-info"></div>
-                                <div class="dt-right-actions d-flex align-items-center">
-                                    <div class="subtotal-box text-right mr-4">
-                                        <div class="subtotal-label"><strong>TOTAL ESTIMADO</strong></div>
-                                        <div class="subtotal-value">
-                                            <span id="subtotal-simbolo">{{$moneda->where('principal', 1 )->pluck('simbolo')->first()}}</span> <span id="subtotal-monto">0.00</span>
-                                            {{-- <span id="subtotal-items">(0 ítems)</span> --}}
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-outline-secondary rounded-pill mr-2" id="btn-cancelar-cotizacion" data-dismiss="modal">
-                                        Cancelar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    @include('transaccion.venta.cotizacion.manual._shared.modal_add_producto')
+    
     <div id="loaderGif"></div>
+
+        <style>
+        .form-label .required {
+            color: red;
+            margin-left: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group > div > span.select2.select2-container.select2-container--default {
+            width: 100% !important;
+        }
+        .form-inline-label {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+    <style>
+        /* @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap'); */
+
+        .word-style select,
+        .word-style input,
+        .word-style textarea,
+        .word-style span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+        }
+
+        .required {
+            color: red;
+            margin-left: 2px;
+        }
+    </style>
+
 
     <style>
         .input-group>.select2-container--bootstrap {
@@ -441,9 +414,17 @@
             color: white !important;
         }
 
-        /*.form-control {
-            border-radius: 10px
-        }*/
+        /* .col-form-label {
+                    margin-top: 15px !important;
+                }
+
+                .col-sm-5 {
+                    margin-top: 15px !important;
+                }
+
+                .form-control {
+                    border-radius: 10px
+                } */
 
         .text_des {
             border-radius: 10px;
@@ -452,26 +433,27 @@
             padding: 6px 12px;
         }
 
-        .a {
-            color: red
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            font-size: 12px;
-        }
-
-        .select2-container--default .select2-selection--single {
+        .check {
+            -webkit-appearance: none;
+            height: 34px;
+            background-color: #ffffff00;
+            -moz-appearance: none;
             border: none;
+            appearance: none;
+            width: 80px;
+            border-radius: 10px;
         }
 
-        span.select2.select2-container.select2-container--default {
-            width: 100% !important;
-            background-color: #FFFFFF;
-            background-image: none;
-            border-radius: 1px;
-            display: block;
-            padding: 3px 12px;
-            border: 1px solid #e5e6e7;
+        .div_check {
+            position: relative;
+            top: -33px;
+            left: 0px;
+            background-color: #ffffff00;
+            top: -35;
+        }
+
+        .check:checked {
+            background: #0375bd6b;
         }
 
         input[type=number]::-webkit-inner-spin-button,
@@ -482,6 +464,27 @@
 
         input[type=number] {
             -moz-appearance: textfield;
+        }
+
+        label.col-form-label::marker {
+            list-style: none;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none;
+        }
+
+        span.select2.select2-container.select2-container--default {
+            background-color: #FFFFFF;
+            background-image: none;
+            border-radius: 1px;
+            display: block;
+            padding: 3px 12px;
+            border: 1px solid #e5e6e7;
+        }
+
+        .a {
+            color: red
         }
 
         #loaderGif {
@@ -496,26 +499,49 @@
             z-index: 20;
         }
 
-        .dataTables_wrapper {
-            padding-bottom: 0px;
-        }
-        .td_selected{
-            /* width: 50%;    */
-            /* max-width: 50%;    */
-        }
-        .row_articulo{
-            width: 45% !important;
-            max-width: 45% !important;
-        }
-        .td_selected>span.select2.select2-container.select2-container--default {
-            width: 100%;
+        .not-active {
+            pointer-events: none;
+            cursor: default;
         }
 
-        @media only screen and (max-width: 1498px) {
-            .td_selected>span.select2.select2-container.select2-container--default {
-                width: 100% !important;
-                min-width: 376px !important;
-            }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .form-check {
+            margin: 20px 12px;
+        }
+
+        .select2-hidden-accessible {
+            width: 0px;
+            margin: 0px;
+            width: auto;
         }
 
         @media (min-width: 992px) {
@@ -523,6 +549,7 @@
                 max-width: 1000px;
             }
         }
+
         .dataTables_wrapper {
             padding: 0px;
         }
@@ -546,199 +573,199 @@
 
     {{-- //Estilos para el check de activar renovacion --}}
     <style>
-    .renovacion {
-        padding: 0;
-        margin-bottom: 15px;
-        margin-top: 7px;
-    }
+        .renovacion {
+            padding: 0;
+            margin-bottom: 15px;
+            margin-top: 7px;
+        }
 
-    /* Switch estilo original */
-    .switch-container {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 5px;
-    }
+        /* Switch estilo original */
+        .switch-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
 
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 24px;
-    }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: .3s;
-        border-radius: 24px;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background-color: white;
-        transition: .3s;
-        border-radius: 50%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    input:checked + .slider {
-        background-color: #1ab394;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 2px #1ab394;
-    }
-
-    input:checked + .slider:before {
-        transform: translateX(26px);
-    }
-
-    .switch-label {
-        font-size: 13px;
-        color: #676a6c;
-        font-weight: 500;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    #renovacion_container {
-        animation: slideDown 0.3s ease-out;
-        margin-top: 10px;
-    }
-
-    @keyframes slideDown {
-        from {
+        .switch input {
             opacity: 0;
-            transform: translateY(-10px);
+            width: 0;
+            height: 0;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 24px;
         }
-    }
 
-    .renovacion .row {
-        margin-bottom: 6px;
-    }
-     .bootstrap-touchspin {
-        background-color: #f4f5f7;
-        border-radius: 50px;
-        overflow: hidden;
-        border: none;
-        display: inline-flex;
-        align-items: center;
-        width: auto;
-    }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
 
-    .bootstrap-touchspin .touchspin-btn {
-        background-color: transparent !important;
-        border: none !important;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: none !important;
-    }
+        input:checked + .slider {
+            background-color: #1ab394;
+        }
 
-    .bootstrap-touchspin .touchspin-btn:hover {
-        background-color: #e9eaed !important;
-        border-radius: 50%;
-    }
+        input:focus + .slider {
+            box-shadow: 0 0 2px #1ab394;
+        }
 
-    .bootstrap-touchspin .touchspin1 {
-        background-color: transparent !important;
-        border: none !important;
-        text-align: center;
-        box-shadow: none !important;
-        width: 40px;
-        padding: 0;
-    }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
 
-    .bootstrap-touchspin .touchspin1:focus {
-        outline: none;
-        box-shadow: none;
-    }
+        .switch-label {
+            font-size: 13px;
+            color: #676a6c;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
 
-    .bootstrap-touchspin .input-group-btn {
-        display: flex;
-    }
-    .btn.btn-link.btn-sm.bootstrap-touchspin-up:hover,.btn.btn-link.btn-sm.bootstrap-touchspin-down:hover{
-        transform: none !important;
-        box-shadow: none !important;
-    }
-    .input-cantidad.js-touchspin-init{
-        font-size: 12px;
-    }
-    ul.pagination {
-        margin-bottom: 0px;
-    }
-    .precio_search{
-        vertical-align: middle !important;
-        /* text-align: center !important; */
+        #renovacion_container {
+            animation: slideDown 0.3s ease-out;
+            margin-top: 10px;
+        }
 
-    }
-    .precio_cantidad{
-        text-align: center !important;
-    }
-    .bootstrap-touchspin{
-        flex-wrap: nowrap;
-    }
-    .precio_dt{
-        text-align: right !important;
-        vertical-align: middle !important;
-    }
-    .modal-cart-footer{
-        position: absolute;
-        margin-left: 0px;
-        right: 15px;
-        bottom: 0px;
-    }
-    .small-description{
-        font-size: 9px !important;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    #DataTables_Table_0_info{
-        margin-bottom: 5px !important;
-    }
-    
-    .articulo-nombre {
-        max-width: 330px;
-        overflow: hidden;
-        white-space: nowrap;
-        position: relative;
-    }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    .articulo-nombre.is-overflowing span {
-        display: inline-block;
-        animation: marquee 8s linear infinite;
-        padding-right: 40px; /* espacio antes de repetir */
-    }
+        .renovacion .row {
+            margin-bottom: 6px;
+        }
+        .bootstrap-touchspin {
+            background-color: #f4f5f7;
+            border-radius: 50px;
+            overflow: hidden;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            width: auto;
+        }
 
-    @keyframes marquee {
-        0%,30%   { transform: translateX(0); }
-        100% { transform: translateX(calc(-100% - 20px)); }
-    }
+        .bootstrap-touchspin .touchspin-btn {
+            background-color: transparent !important;
+            border: none !important;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: none !important;
+        }
+
+        .bootstrap-touchspin .touchspin-btn:hover {
+            background-color: #e9eaed !important;
+            border-radius: 50%;
+        }
+
+        .bootstrap-touchspin .touchspin1 {
+            background-color: transparent !important;
+            border: none !important;
+            text-align: center;
+            box-shadow: none !important;
+            width: 40px;
+            padding: 0;
+        }
+
+        .bootstrap-touchspin .touchspin1:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .bootstrap-touchspin .input-group-btn {
+            display: flex;
+        }
+        .btn.btn-link.btn-sm.bootstrap-touchspin-up:hover,.btn.btn-link.btn-sm.bootstrap-touchspin-down:hover{
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .input-cantidad.js-touchspin-init{
+            font-size: 12px;
+        }
+        ul.pagination {
+            margin-bottom: 0px;
+        }
+        .precio_search{
+            vertical-align: middle !important;
+            /* text-align: center !important; */
+
+        }
+        .precio_cantidad{
+            text-align: center !important;
+        }
+        .bootstrap-touchspin{
+            flex-wrap: nowrap;
+        }
+        .precio_dt{
+            text-align: right !important;
+            vertical-align: middle !important;
+        }
+        .modal-cart-footer{
+            position: absolute;
+            margin-left: 0px;
+            right: 15px;
+            bottom: 0px;
+        }
+        .small-description{
+            font-size: 9px !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        #DataTables_Table_0_info{
+            margin-bottom: 5px !important;
+        }
+        
+        .articulo-nombre {
+            max-width: 330px;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .articulo-nombre.is-overflowing span {
+            display: inline-block;
+            animation: marquee 8s linear infinite;
+            padding-right: 40px; /* espacio antes de repetir */
+        }
+
+        @keyframes marquee {
+            0%,30%   { transform: translateX(0); }
+            100% { transform: translateX(calc(-100% - 20px)); }
+        }
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -1004,7 +1031,7 @@
                             <input type='number' min='1' style="" id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required autocomplete="off"/>
                         </td>
                         <td class="full-height-scroll tooltip-demo">
-                            <input type='number' style="" id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                            <input type='number' style="" id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control p_inp" required autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
                         </td>
                         <td>
                             <input style="" type='number' step="0.0000000000000001" id='precio_s_igv${i}' name='precio_s_igv[]' class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required autocomplete="off" />
@@ -1044,7 +1071,7 @@
                 <input type='number' min='1'   id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
             </td>
             <td class="full-height-scroll tooltip-demo">
-                <input type='number'   id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                <input type='number'   id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control p_inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
             </td>
             <td>
                 <input  type='number' step="0.0000000000000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
@@ -1079,6 +1106,7 @@
         //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
         function articlesSelect2() {
             $(".select2_demo_3").select2({
+                width: '400px',
                 placeholder: "Seleccionar Articulo",
                 ajax: {
                     minimumInputLength: 1,
@@ -1412,6 +1440,9 @@
             $(`.igv`).val("");
             $(`.total_final`).val("");
             $(`.p_inp`).val("");
+            $(`#subtotal_view`).val("");
+            $(`#igv_view`).val("");
+            $(`#total_view`).val("");
         }
         let status = 0;
 

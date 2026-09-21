@@ -340,12 +340,12 @@
                                         <td>{{ $i++ }} </td>
                                         @if (isset($cotizacion_registros->producto_id))
                                             <td>{{ $cotizacion_registros->producto->codigo_producto }}</td>
-                                            <td><strong>{{ $cotizacion_registros->producto->nombre }}</strong>
+                                            <td>{{ $cotizacion_registros->producto->nombre }}
                                                 <br><small>{{ $cotizacion_registros->descripcion_item }}</small></td>
                                         @else
-                                            <td><strong>{{ $cotizacion_registros->servicio->codigo_servicio }}</strong></td>
+                                            <td>{{ $cotizacion_registros->servicio->codigo_servicio }}</td>
                                             <td>{{ $cotizacion_registros->servicio->nombre }}
-                                                <br>{{ $cotizacion_registros->descripcion_item }}</td>
+                                                <br><small>{{ $cotizacion_registros->descripcion_item }}</small></td>
                                         @endif
 
                                         <td>{{ $cotizacion_registros->cantidad }}</td>
@@ -419,12 +419,6 @@
         </div>
     </div>
     <style>
-        /* .limp{
-            width: 90px;
-        }
-        .limp_txt{
-            width: 100%;
-        } */
         .check {
             -webkit-appearance: none;
             height: 34px;
@@ -468,7 +462,7 @@
             padding-right: 0; 
             padding-left: 0; 
             margin-top: 10px;
-            margin-right: 4px;
+            margin-right: 0px;
         }
         .no_mostrar {
             display: none;

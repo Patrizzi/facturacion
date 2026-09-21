@@ -783,11 +783,6 @@
             0%,30%   { transform: translateX(0); }
             100% { transform: translateX(calc(-100% - 20px)); }
         }
-        /* span.select2.select2-container.select2-container--default.select2-container--below{
-            max-width: 400px !important;
-            width: 400px !important;
-            min-width: 400px !important;
-        } */
     </style>
 
     <!-- Mainly scripts -->

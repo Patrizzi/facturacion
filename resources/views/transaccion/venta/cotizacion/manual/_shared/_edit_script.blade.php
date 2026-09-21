@@ -41,7 +41,7 @@
 
     function divAuto() {
         if (clic == 1) {
-            document.getElementById("div-mostrar").style.height = "50px";
+            document.getElementById("div-mostrar").style.height = "40px";
             clic = clic + 1;
         } else {
             document.getElementById("div-mostrar").style.height = "0px";
