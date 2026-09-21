@@ -4,9 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotización</title>{{--
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" > --}}
-    <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
+    <title>Cotización</title>
     <style type="text/css">
         .form-control,
         .single-line {
@@ -53,10 +51,12 @@
                     <strong>N° Contacto:</strong>&nbsp;{{ $cotizacion->cliente->celular }}
                     @if (isset($cotizacion->cliente->telefono))
                         / {{ $cotizacion->cliente->celular }}
-                    @endif<br>
+                    @endif
+                    <br>
                     {{-- Datos de la renovacion --}}
-                    @if($renovacion && $fecha_vencimiento)
-                        <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;
+                    @if ($renovacion && $fecha_vencimiento)
+                        <strong>F.
+                            Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;
                         <strong>Días restantes:</strong>&nbsp;{{ $dias_restantes_texto }}<br>
                     @endif
                 </td>
@@ -89,7 +89,8 @@
                         <td style="width: 380px !important;">DESCRIPCION</td>
                         <td style="text-align: center;">CANT.</td>
                         <td style="text-align:right;width: 60px;">P. UNIT.</td>
-                        <td style="text-align:right;width: 60px;">TOTAL <span hidden="hidden">{{ $simbologia = $cotizacion->moneda->simbolo }}</span></td>
+                        <td style="text-align:right;width: 60px;">TOTAL <span
+                                hidden="hidden">{{ $simbologia = $cotizacion->moneda->simbolo }}</span></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,16 +98,21 @@
                         <tr style="border-bottom-width:   0px white">
                             <td style="text-align: center">{{ $i++ }} </td>
                             @if (isset($cotizacion_registros->producto_id))
-                                <td style="text-align: center">{{ $cotizacion_registros->producto->codigo_producto }}</td>
+                                <td style="text-align: center">{{ $cotizacion_registros->producto->codigo_producto }}
+                                </td>
                                 <td style="">{{ $cotizacion_registros->producto->nombre }}
-                                    <br>{{ $cotizacion_registros->descripcion_item }}</span></td>
+                                    <br><small>{{ $cotizacion_registros->descripcion_item }}</small>
+                                </td>
                             @else
-                                <td style="text-align: center">{{ $cotizacion_registros->servicio->codigo_servicio }}</td>
+                                <td style="text-align: center">{{ $cotizacion_registros->servicio->codigo_servicio }}
+                                </td>
                                 <td style="">{{ $cotizacion_registros->servicio->nombre }}
-                                    <br>{{ $cotizacion_registros->descripcion_item }}</span></td>
+                                    <br><small>{{ $cotizacion_registros->descripcion_item }}</small>
+                                </td>
                             @endif
                             <td style="text-align: center;">{{ $cotizacion_registros->cantidad }}</td>
-                            <td style="text-align: right">{{ number_format($cotizacion_registros->precio_unitario_comi, 2) }}</td>
+                            <td style="text-align: right">
+                                {{ number_format($cotizacion_registros->precio_unitario_comi, 2) }}</td>
                             <td style="text-align: right">
                                 {{ number_format($cotizacion_registros->cantidad * $cotizacion_registros->precio_unitario_comi, 2) }}
                             </td>
@@ -127,7 +133,7 @@
                             //  $end_final_point=strstr($end2, '.', false);
                             //  $end_final=str_replace('.', '',$end_final_point);
                             ?>
-                            Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $cotizacion->moneda->nombre }}
+                            Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $cotizacion->moneda->nombre }}
                         </h3>
                     </td>
                     <td style="width: auto; ;border: 1px #3D3D3D solid;border-top-right-radius: 8px 0 0 8px;margin-top: 0px;border-right: none;margin-right: 15px;border-collapse:collapse;"
@@ -162,7 +168,7 @@
     <style>
         * {
             color: black;
-            font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            font-family: "Oufit", sans-serif;
             color: black
         }
 
@@ -193,6 +199,340 @@
             background-color: transparent;
             border-top-width: 0px;
 
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+        }
+
+        table th,
+        table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table tbody+tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        table .table {
+            background-color: #fff;
+        }
+
+        table-sm th,
+        .table-sm td {
+            padding: 0.3rem;
+        }
+
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+        .table-bordered thead th,
+        .table-bordered thead td {
+            border-bottom-width: 2px;
+        }
+
+        .table-borderless th,
+        .table-borderless td,
+        .table-borderless thead th,
+        .table-borderless tbody+tbody {
+            border: 0;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        .table-primary,
+        .table-primary>th,
+        .table-primary>td {
+            background-color: #b8daff;
+        }
+
+        .table-hover .table-primary:hover {
+            background-color: #9fcdff;
+        }
+
+        .table-hover .table-primary:hover>td,
+        .table-hover .table-primary:hover>th {
+            background-color: #9fcdff;
+        }
+
+        .table-secondary,
+        .table-secondary>th,
+        .table-secondary>td {
+            background-color: #d6d8db;
+        }
+
+        .table-hover .table-secondary:hover {
+            background-color: #c8cbcf;
+        }
+
+        .table-hover .table-secondary:hover>td,
+        .table-hover .table-secondary:hover>th {
+            background-color: #c8cbcf;
+        }
+
+        .table-success,
+        .table-success>th,
+        .table-success>td {
+            background-color: #c3e6cb;
+        }
+
+        .table-hover .table-success:hover {
+            background-color: #b1dfbb;
+        }
+
+        .table-hover .table-success:hover>td,
+        .table-hover .table-success:hover>th {
+            background-color: #b1dfbb;
+        }
+
+        .table-info,
+        .table-info>th,
+        .table-info>td {
+            background-color: #bee5eb;
+        }
+
+        .table-hover .table-info:hover {
+            background-color: #abdde5;
+        }
+
+        .table-hover .table-info:hover>td,
+        .table-hover .table-info:hover>th {
+            background-color: #abdde5;
+        }
+
+        .table-warning,
+        .table-warning>th,
+        .table-warning>td {
+            background-color: #ffeeba;
+        }
+
+        .table-hover .table-warning:hover {
+            background-color: #ffe8a1;
+        }
+
+        .table-hover .table-warning:hover>td,
+        .table-hover .table-warning:hover>th {
+            background-color: #ffe8a1;
+        }
+
+        .table-danger,
+        .table-danger>th,
+        .table-danger>td {
+            background-color: #f5c6cb;
+        }
+
+        .table-hover .table-danger:hover {
+            background-color: #f1b0b7;
+        }
+
+        .table-hover .table-danger:hover>td,
+        .table-hover .table-danger:hover>th {
+            background-color: #f1b0b7;
+        }
+
+        .table-light,
+        .table-light>th,
+        .table-light>td {
+            background-color: #fdfdfe;
+        }
+
+        .table-hover .table-light:hover {
+            background-color: #ececf6;
+        }
+
+        .table-hover .table-light:hover>td,
+        .table-hover .table-light:hover>th {
+            background-color: #ececf6;
+        }
+
+        .table-dark,
+        .table-dark>th,
+        .table-dark>td {
+            background-color: #c6c8ca;
+        }
+
+        .table-hover .table-dark:hover {
+            background-color: #b9bbbe;
+        }
+
+        .table-hover .table-dark:hover>td,
+        .table-hover .table-dark:hover>th {
+            background-color: #b9bbbe;
+        }
+
+        .table-active,
+        .table-active>th,
+        .table-active>td {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        .table-hover .table-active:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        .table-hover .table-active:hover>td,
+        .table-hover .table-active:hover>th {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        .table .thead-dark th {
+            color: #fff;
+            background-color: #212529;
+            border-color: #32383e;
+        }
+
+        .table .thead-light th {
+            color: #495057;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .table-dark {
+            color: #fff;
+            background-color: #212529;
+        }
+
+        .table-dark th,
+        .table-dark td,
+        .table-dark thead th {
+            border-color: #32383e;
+        }
+
+        .table-dark.table-bordered {
+            border: 0;
+        }
+
+        .table-dark.table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .table-dark.table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.075);
+        }
+
+
+
+
+        .d-table {
+            display: table !important;
+        }
+
+        .d-table-row {
+            display: table-row !important;
+        }
+
+        .d-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-sm-table {
+            display: table !important;
+        }
+
+        .d-sm-table-row {
+            display: table-row !important;
+        }
+
+        .d-sm-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-md-table {
+            display: table !important;
+        }
+
+        .d-md-table-row {
+            display: table-row !important;
+        }
+
+        .d-md-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-lg-table {
+            display: table !important;
+        }
+
+        .d-lg-table-row {
+            display: table-row !important;
+        }
+
+        .d-lg-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-xl-table {
+            display: table !important;
+        }
+
+        .d-xl-table-row {
+            display: table-row !important;
+        }
+
+        .d-xl-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-print-table {
+            display: table !important;
+        }
+
+        .d-print-table-row {
+            display: table-row !important;
+        }
+
+        .d-print-table-cell {
+            display: table-cell !important;
+        }
+
+        .table {
+            border-collapse: collapse !important;
+        }
+
+        .table td,
+        .table th {
+            background-color: #fff !important;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6 !important;
+        }
+
+        .blockquote-footer {
+            display: block;
+            font-size: 80%;
+            color: #6c757d;
+        }
+
+        .blockquote-footer::before {
+            content: "\2014 \00A0";
         }
     </style>
 </body>

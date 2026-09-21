@@ -1341,7 +1341,7 @@
 
                 $('#subtotal_gravado').val(total_t);
                 //GRAVADO
-                var totalInpG = $('[name="total"]');
+                var filtrarConStock = $('[name="total"]');
                 var total_tt = 0;
 
                 totalInpG.each(function() {

@@ -9756,7 +9756,7 @@ body.md-skin {
     h3,
     h4,
     h5 {
-        font-size: var(--size-big);
+        font-size: 85% !important;
     }
 
     body,
@@ -9775,9 +9775,11 @@ body.md-skin {
     span a,
     button,
     a img,
-    small,
     a p {
-        font-size: var(--size-small) !important;
+        font-size: 85% !important;
+    }
+    small{
+      font-size: 85% !important;
     }
 }
 

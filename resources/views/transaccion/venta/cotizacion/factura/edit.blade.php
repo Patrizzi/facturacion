@@ -183,7 +183,7 @@
                             <th>Total</th>
                         </tr>
                     </thead>
-                    <input type="text" name="" id="count_articles" value="{{$cotizacion_registro->count()+1}}">
+                    <input type="hidden" name="" id="count_articles" value="{{$cotizacion_registro->count()+1}}">
                     <tbody>
                         @foreach ($cotizacion_registro as $cotizacion_registros)
                             <tr>

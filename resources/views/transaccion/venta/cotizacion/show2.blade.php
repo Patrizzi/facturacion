@@ -252,14 +252,17 @@
                                 <div class="form-control">
                                     <h3>Contacto Cliente</h3>
                                     <div align="left">
-                                        <strong>Señor(es):</strong> &nbsp;{{ $cotizacion->cliente->nombre }}<br>
-                                        <strong>{{ $cotizacion->cliente->documento_identificacion }} :</strong>
-                                        &nbsp;{{ $cotizacion->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                        <strong>Dirección:</strong>&nbsp; {{ $cotizacion->cliente->direccion }}<br>
-                                        <strong>N° Contacto:</strong>&nbsp;{{ $cotizacion->cliente->celular }}
-                                        @if (isset($cotizacion->cliente->telefono))
-                                            / {{ $cotizacion->cliente->telefono }}<br>
-                                        @endif
+                                        <strong>Señor(es):</strong> &nbsp;<span>{{ $cotizacion->cliente->nombre }}</span><br>
+                                        <strong><span>{{ $cotizacion->cliente->documento_identificacion }}</span> :</strong>
+                                        &nbsp;<span>{{ $cotizacion->cliente->numero_documento }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        <strong>Dirección:</strong>&nbsp; <span>{{ $cotizacion->cliente->direccion }}</span><br>
+                                        <strong>N° Contacto:</strong>&nbsp;
+                                        <span>
+                                            {{ $cotizacion->cliente->celular }}
+                                            @if (isset($cotizacion->cliente->telefono))
+                                                / {{ $cotizacion->cliente->telefono }}<br>
+                                            @endif
+                                        </span>
                                         {{-- DATOS DE RENOVACIÓN --}}
                                         @if ($renovacion)
                                             <strong>F.
@@ -274,25 +277,25 @@
                                     <h3>Condiciones Generales</h3>
                                     <div align="left">
                                         <strong>Forma De Pago:</strong>
-                                        &nbsp;{{ $cotizacion->forma_pago->nombre }}&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong>
-                                        &nbsp;{{ \Carbon\Carbon::parse($cotizacion->updated_at)->format('d-m-Y H:i:s') }}<br>
+                                        &nbsp;<span>{{ $cotizacion->forma_pago->nombre }}</span>&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong>
+                                        &nbsp;<span>{{ \Carbon\Carbon::parse($cotizacion->updated_at)->format('d-m-Y H:i:s') }}</span><br>
                                         <strong>Validez :</strong>
-                                        &nbsp;{{ $cotizacion->validez }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
+                                        &nbsp;<span>{{ $cotizacion->validez }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
                                         <strong>Garantía:</strong>
-                                        &nbsp;{{ $cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        &nbsp;<span>{{ $cotizacion->garantia }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         <strong>Tipo de Moneda:</strong>
-                                        &nbsp;{{ $cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        &nbsp;<span>{{ $cotizacion->moneda->nombre }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         <strong>Comisionista:</strong> &nbsp;
 
                                         @if (isset($cotizacion->comisionista->cod_vendedor))
-                                            {{ $cotizacion->comisionista->cod_vendedor }} -
+                                            <span>{{ $cotizacion->comisionista->cod_vendedor }} -
                                             {{ $cotizacion->comisionista->personal->personal_l->nombres }} -
-                                            {{ $cotizacion->comisionista->comision }}%
+                                            {{ $cotizacion->comisionista->comision }}%</span>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                             <input type="hidden" name="" id="comisionista"
                                                 value="{{ $cotizacion->comisionista->comision }}">
                                         @else
-                                            Sin Comisionista - 0
+                                            <span>Sin Comisionista - 0</span>
                                             <input type="hidden" name="" id="comisionista" value="0">
                                         @endif
                                     </div>
@@ -337,12 +340,12 @@
                                         <td>{{ $i++ }} </td>
                                         @if (isset($cotizacion_registros->producto_id))
                                             <td>{{ $cotizacion_registros->producto->codigo_producto }}</td>
-                                            <td>{{ $cotizacion_registros->producto->nombre }}
-                                                <br>{{ $cotizacion_registros->descripcion_item }}</span></td>
+                                            <td><strong>{{ $cotizacion_registros->producto->nombre }}</strong>
+                                                <br><small>{{ $cotizacion_registros->descripcion_item }}</small></td>
                                         @else
-                                            <td>{{ $cotizacion_registros->servicio->codigo_servicio }}</td>
+                                            <td><strong>{{ $cotizacion_registros->servicio->codigo_servicio }}</strong></td>
                                             <td>{{ $cotizacion_registros->servicio->nombre }}
-                                                <br>{{ $cotizacion_registros->descripcion_item }}</span></td>
+                                                <br>{{ $cotizacion_registros->descripcion_item }}</td>
                                         @endif
 
                                         <td>{{ $cotizacion_registros->cantidad }}</td>
@@ -362,14 +365,11 @@
                             <div class="row">
                                 <div class="col-sm-8">
                                     <h3 align="left">
-                                        <?php use Luecano\NumeroALetras\NumeroALetras;
-                                        $v = new NumeroALetras();
-                                        $letra = $v->toInvoice($end, 2);
-                                        // $letra=($v->convertirEurosEnLetras($end));
-                                        // $letra_final = ucfirst(strstr($letra, 'soles',true));
-                                        // $end_final_point=strstr($end2, '.', false);
-                                        // $end_final=str_replace('.', '',$end_final_point);
-                                        //
+                                        <?php 
+                                            use Luecano\NumeroALetras\NumeroALetras;
+                                            
+                                            $v = new NumeroALetras();
+                                            $letra = $v->toInvoice($end, 2);
                                         ?>
                                         Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }}
                                         {{ $cotizacion->moneda->nombre }}
@@ -664,7 +664,7 @@
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    {{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
@@ -794,7 +794,16 @@
     </script>
 
     <script type="text/javascript">
+        // var input_text_opt = $('input[class="celda"]').find();
         let articulosAgregados = new Set();
+        $('.celda').each(function() {
+            var valor = $(this).val();
+            var partes = valor.split('|').map(p => p.trim());
+            var id = partes[0];
+            articulosAgregados.add(String(id));
+        });
+
+        
         //*Condicional para el tipo de factura
         var tipo_coti = $('#tipo_coti').val();
         var cliente_default = $('#cliente_id').val();
@@ -1067,7 +1076,7 @@
             if (checkBox.checked == true && descuento > 0) {
                 var precio_uni = precio - (promedio_original * (descuento / multiplier));
                 var precio_uni_dec = Math.round(precio_uni * multiplier) / multiplier;
-                document.getElementBId(`check_descuento${a}`).value = descuento;
+                document.getElementById(`check_descuento${a}`).value = descuento;
                 document.getElementById(`precio_unitario_descuento${a}`).value = precio_uni_dec;
                 var comision_mul = precio_uni_dec + (precio_uni_dec * (comision / 100));
                 var comision_final = Math.round(comision_mul * multiplier) / multiplier;
@@ -1145,7 +1154,7 @@
                 var id = partes[0];
                 articulosAgregados.delete(String(id));
                 reactivarBotonModal(id);
-                console.log(articulosAgregados);
+                // console.log(articulosAgregados);
             }
             $('option[value="' + input_text_opt + '"]').prop("disabled", false);
             $(".addmore").prop("disabled", false);
@@ -1185,15 +1194,15 @@
                 // console.log(tot);
             ajax_l();
             } else {
-                $(".borrar").prop("disabled", true);
+                // $(".borrar").prop("disabled", true);
                 $(".addmore").prop("disabled", false);
-                // $(".select2_demo_3").val(null).trigger("change");
+                $(".select2_demo_3").val(null).trigger("change");
                 limpiar_inputs();
             }
             
         });
         function limpiar_inputs(){             
-            $(".select_change").val("");
+            $(".select_change").select2("val", "");
             $(".limp").val("");
             $(".celda").val("");
             $(".limp_txt").val("");
@@ -1201,10 +1210,7 @@
             $("#igv_input").val("");
             $("#total_final").val("");
         }
-    </script>
-
-    {{-- script para manejar las renovaciones --}}
-    <script>
+     
         document.addEventListener("DOMContentLoaded", function() {
             const checkRenovacion = document.getElementById("estado_renovacion");
             const contenedorRenovacion = document.getElementById("renovacion_container");
@@ -1406,7 +1412,8 @@
                                 "width": "100px",
                                 "className": "precio_search precio_cantidad",
                                 render: function(data, type, row) {
-                                    const yaAgregado = articulosAgregados.has(row.id);
+                                    const yaAgregado = articulosAgregados.has(String(row.id));
+                                    console.log(yaAgregado);
                                     if (`${row.stock}` != 0) {
                                         return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}" ${yaAgregado ? 'disabled' : ''}> <i class="fa fa-plus"></i> Agregar</button>`;
                                     }else{ 
@@ -1452,7 +1459,7 @@
             var cod_origi = $(this).data('cod_original');
             var nombres =$(this).data('nombre');
 
-            articulosAgregados.add(id);
+            articulosAgregados.add(String(id));
 
             // console.log("value: " + selectedValue);    
             if (count_artc == "" && count_artc == 0) {

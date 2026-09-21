@@ -1385,7 +1385,7 @@ class CotizacionController extends Controller
     }
     public function update(Request $request, $id){
 
-        // return $request;
+        // return $request->get('check_descuento')[4];
         $cotizacion = Cotizacion::where('id',$id)->first();
         //*UPDATE HEADER COTIZACION
         $cotizacion = Cotizacion::find($id);
@@ -1448,13 +1448,13 @@ class CotizacionController extends Controller
                 // Update registros
                 if($request->get('n_registros_ori')[$h] == "existente"){
                     $cotizacion_r_update = Cotizacion_factura_registro::find($request->get('elem_delete')[$h]);
-                    $check_desc = $cotizacion_r_update->descuento;
+                    // $check_desc = $cotizacion_r_update->descuento;
                 }else{
                     $cotizacion_r_update = new Cotizacion_factura_registro;
-                    $check_desc = $request->get('check_descuento')[$i];
                 }
-                if(isset($producto)){
+                $check_desc = $request->get('check_descuento')[$h];
 
+                if(isset($producto)){
                     $cotizacion_r_update->cotizacion_id = $cotizacion->id;
                     $cotizacion_r_update->producto_id = $producto->id;
                     if($request->get('descripcion_item')[$h] == null){
@@ -1524,8 +1524,6 @@ class CotizacionController extends Controller
                 }else{
                     //SERVICIOS
                     $servicio=Servicios::where('codigo_servicio',$articulo_id[$h])->where('estado_anular',0)->first();
-
-
                     $cotizacion_r_update->cotizacion_id = $cotizacion->id;
                     $cotizacion_r_update->servicio_id = $servicio->id;
                     if($request->get('descripcion_item')[$h] == null){
@@ -1797,41 +1795,25 @@ public function print($id){
 }
 public function pdf(Request $request,$id){
     $name = $request->get('name');
-    $banco=Banco::where('estado','0')->get();
-    $banco_count=Banco::where('estado','0')->count();
-    $cotizacion=Cotizacion::find($id);
-    $regla=$cotizacion->tipo;
-    $sub_total=0;
-    $igv=Igv::first();
-    /*registros boleta y factura*/
-    // if($regla=='factura'){
-    $cotizacion_registro=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
-    // }elseif($regla=='boleta'){
-    //     $cotizacion_registro=Cotizacion_boleta_registro::where('cotizacion_id',$id)->get();
-    // }
-    /* FIN registros boleta y factura*/
-    /*de numeros a Letras*/
-    // foreach($cotizacion_registro as $cotizacion_registros){
-    $sub_total = $cotizacion->op_gravada+$cotizacion->op_exonerada+$cotizacion->op_inafecta;
-    $igv_p=round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
-    // if ($regla=='factura') {
-    $end=round($sub_total, 2)+round($igv_p, 2);
-    $end2=number_format(round($sub_total, 2)+round($igv_p, 2),2);
-    // }elseif ($regla=='boleta'){
-    //     $end=round($sub_total, 2);
-    //     $end2=number_format(round($sub_total, 2),2);
-
-    // }
-    // }
-
+    $banco = Banco::where('estado','0')->get();
+    $banco_count = $banco->count();;
+    $cotizacion = Cotizacion::with(['cliente', 'forma_pago', 'moneda'])->findOrFail($id);
+    $regla = $cotizacion->tipo;
+    $sub_total = 0;
+    $igv = Igv::first();
+    $cotizacion_registro = Cotizacion_factura_registro::with(['producto', 'servicio'])->where('cotizacion_id',$id)->get();
+    $sub_total  =  $cotizacion->op_gravada+$cotizacion->op_exonerada+$cotizacion->op_inafecta;
+    $igv_p = round($cotizacion->op_gravada, 2)*$igv->igv_total/100;
+    $end = round($sub_total, 2)+round($igv_p, 2);
+    $end2 = number_format(round($sub_total, 2)+round($igv_p, 2),2);
     /* Finde numeros a Letras*/
-    $empresa=Empresa::first();
-    $sum=0;
-    $i=1;
-    $regla=$cotizacion->tipo;
+    $empresa = Empresa::first();
+    $sum = 0;
+    $i = 1;
+    $regla = $cotizacion->tipo;
 
     // VERIFICAR SI EXISTE RENOVACIÓN
-    $renovacion = RenovacionVentas::where('cotizacion_id', $id)
+    $renovacion  =  RenovacionVentas::where('cotizacion_id', $id)
         ->where('estado', 1)
         ->first();
 
@@ -1859,11 +1841,20 @@ public function pdf(Request $request,$id){
     // return "1";
     // return view('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2'));
     if($request->get('firma') == "0"){
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2','renovacion','fecha_vencimiento','dias_restantes_texto','dias_restantes_numero'));
+        $pdf=PDF::setOptions([
+            // 'isRemoteEnabled'       => false,  // nada de peticiones HTTP
+            'isFontSubsettingEnabled' => true, // PDF más liviano
+            'dpi'                   => 96,
+        ])->
+        loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','end2','renovacion','fecha_vencimiento','dias_restantes_texto','dias_restantes_numero'));
         return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
     }else{
         $firma= EmailConfiguraciones::where('id_usuario',$cotizacion->user_id)->pluck('firma_digital')->first();
-        $pdf=PDF::loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2', 'renovacion','fecha_vencimiento','dias_restantes_texto','dias_restantes_numero'));
+        $pdf=PDF::setOptions([
+            'isRemoteEnabled'       => false,  // nada de peticiones HTTP
+            'isFontSubsettingEnabled' => true, // PDF más liviano
+            'dpi'                   => 96,
+        ])->loadView('transaccion.venta.cotizacion.pdf2',compact('cotizacion','empresa','cotizacion_registro','regla','sum','igv','sub_total','banco','i','end','igv_p','banco_count','firma','end2', 'renovacion','fecha_vencimiento','dias_restantes_texto','dias_restantes_numero'));
         return $pdf->download($cotizacion->cod_cotizacion.'.pdf');
     }
 }
