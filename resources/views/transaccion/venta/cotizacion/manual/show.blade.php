@@ -268,20 +268,28 @@
                                                 {{ $cotizacion_m_regs->producto->codigo_producto }}
                                             </td>
                                             <td>
-                                                {{ $cotizacion_m_regs->producto->nombre }} @if (isset($cotizacion_m_regs->descripcion_item))
-                                                    | {{ $cotizacion_m_regs->descripcion_item }}
-                                                @else
-                                                @endif </span>
+                                                {{ $cotizacion_m_regs->producto->nombre }} 
+                                                @if (isset($cotizacion_m_regs->descripcion_item))
+                                                    @if($cotizacion_m_regs->producto->send_sunat_description == true)
+                                                        | {{ $cotizacion_m_regs->descripcion_item }}
+                                                    @else
+                                                        <br><small>{{ $cotizacion_m_regs->descripcion_item }}</small>
+                                                    @endif
+                                                @endif 
                                             </td>
                                         @else
                                             <td>
                                                 {{ $cotizacion_m_regs->servicio->codigo_servicio }}
                                             </td>
                                             <td>
-                                                {{ $cotizacion_m_regs->servicio->nombre }} @if (isset($cotizacion_m_regs->descripcion_item))
-                                                    | {{ $cotizacion_m_regs->descripcion_item }}
-                                                @else
-                                                @endif </span>
+                                                {{ $cotizacion_m_regs->servicio->nombre }} 
+                                                @if (isset($cotizacion_m_regs->descripcion_item))
+                                                    @if($cotizacion_m_regs->servicio->send_sunat_description == true)
+                                                        | {{ $cotizacion_m_regs->descripcion_item }}
+                                                    @else
+                                                        <br><small>{{ $cotizacion_m_regs->descripcion_item }}</small>
+                                                    @endif
+                                                @endif 
                                             </td>
                                         @endif
                                         <td>{{ $cotizacion_m_regs->cantidad }}</td>
@@ -417,7 +425,7 @@
         }
 
         span.select2.select2-container.select2-container--default {
-            width: 100% !important;
+            /* width: 100% !important; */
             background-color: #FFFFFF;
             background-image: none;
             border-radius: 1px;
@@ -552,8 +560,8 @@
         }
 
         .row_articulo {
-            width: 45% !important;
-            max-width: 45% !important;
+            width: 400px !important;
+            /* max-width: 45% !important; */
         }
 
         @media (min-width: 992px) {
@@ -591,8 +599,8 @@
         }
 
         span.select2.select2-container.select2-container--default.select2-container--below {
-            max-width: 400px !important;
-            min-width: 400px !important;
+            /* max-width: 400px !important;
+            min-width: 400px !important; */
         }
 
         .word-style select,
@@ -602,11 +610,26 @@
             font-family: 'Outfit', sans-serif;
             font-size: 11px;
         }
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Opciones del desplegable: sin salto de línea, sin recortar */
+        .select2-nowrap .select2-results__option {
+            white-space: nowrap;
+        }
+
+        /* El desplegable nunca más angosto que el select */
+        .select2-nowrap {
+            min-width: 400px;
+        }
     </style>
 
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    {{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
@@ -626,13 +649,15 @@
     <!-- Sweet alert -->
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script>
         $('.demo3').click(function(e) {
             if (document.forms['coti_man_update'].reportValidity()) {
                 swal({
                         title: "¿Estas seguro que deseas Finalizar?",
-                        text: "Una vez Finalizado, no podras modificar Cotizacion Manual",
+                        text: "Una vez F.inalizado, no podras modificar Cotizacion Manual",
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#3686ff",

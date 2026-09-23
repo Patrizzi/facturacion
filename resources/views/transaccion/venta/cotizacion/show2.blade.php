@@ -477,7 +477,6 @@
         }
 
         span.select2.select2-container.select2-container--default {
-            width: 100% !important;
             background-color: #FFFFFF;
             background-image: none;
             border-radius: 1px;
@@ -644,8 +643,8 @@
             margin-bottom: 5px !important;
         }
         span.select2.select2-container.select2-container--default.select2-container--below{
-            max-width: 400px !important;
-            min-width: 400px !important;
+            /* max-width: 400px !important; */
+            /* min-width: 400px !important; */
         }
         .word-style select,
         .word-style input,
@@ -653,6 +652,23 @@
         .word-style span {
             font-family: 'Outfit', sans-serif;
             font-size: 11px;
+        }
+
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .select2-nowrap .select2-results__option {
+            white-space: nowrap;
+        }
+
+        .select2-nowrap {
+            min-width: 400px;
+        }
+        .limp{
+            min-width: 85px !important;
         }
     </style>
 
@@ -803,6 +819,7 @@
         var cliente_default = $('#cliente_id').val();
         $(".select2_demo_client").select2({
             placeholder: "Seleccionar Cliente",
+            width: '100%',
             ajax: {
                 minimumInputLength: 1,
                 url: "{{ route('pa.clients') }}",
@@ -845,23 +862,23 @@
             }
         }
 
-        function ajax_l() {
-            var numeros = $('[id="total_final"]').val();
-            var moneda = $('[id="moneda"]').val();
-            $.ajax({
-                type: "post",
-                url: "{{ route('pa.numberletters') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'numeros': numeros,
-                    'moneda': moneda
-                },
-                success: function(msg) {
-                    console.log(msg);
-                    $('.h3-total').html(msg);
-                }
-            });
-        }
+        // function ajax_l() {
+        //     var numeros = $('[id="total_final"]').val();
+        //     var moneda = $('[id="moneda"]').val();
+        //     $.ajax({
+        //         type: "post",
+        //         url: "{{ route('pa.numberletters') }}",
+        //         data: {
+        //             '_token': $('input[name=_token]').val(),
+        //             'numeros': numeros,
+        //             'moneda': moneda
+        //         },
+        //         success: function(msg) {
+        //             console.log(msg);
+        //             $('.h3-total').html(msg);
+        //         }
+        //     });
+        // }
 
         //AUMENTO DE INPUTS
         var i = $('#count_articles').val();
@@ -931,6 +948,7 @@
 
         function articlesSelect2() {
             $(".select2_demo_3").select2({
+                width: "400px",
                 placeholder: "Seleccionar Articulo",
                 ajax: {
                     minimumInputLength: 1,
@@ -1136,7 +1154,7 @@
             document.getElementById("igv_input").value = igv_dec_val;
             document.getElementById("total_final").value = end2;
             // console.log(tot);
-            ajax_l();
+            // ajax_l();
         }
         $(document).on('click', '.borrar', function(event) {
             event.preventDefault();
@@ -1186,9 +1204,12 @@
                 document.getElementById("igv_input").value = igv_dec_val;
                 document.getElementById("total_final").value = end2;
                 // console.log(tot);
-            ajax_l();
+                // ajax_l();
             } else {
                 // $(".borrar").prop("disabled", true);
+                if(input_text_opt == ""){
+                    return;
+                }
                 $(".addmore").prop("disabled", false);
                 $(".select2_demo_3").val(null).trigger("change");
                 limpiar_inputs();
@@ -1197,12 +1218,14 @@
         });
         function limpiar_inputs(){             
             $(".select_change").select2("val", "");
+            $('.check').prop('checked', false)
             $(".limp").val("");
             $(".celda").val("");
             $(".limp_txt").val("");
             $(".limp_select").val("");
             $("#igv_input").val("");
             $("#total_final").val("");
+            $("#sub_total").val("");
         }
      
         document.addEventListener("DOMContentLoaded", function() {
@@ -1354,7 +1377,7 @@
                                 render: function(data, type, row) {
                                     return `
                                         <div class="articulo-nombre"><span class=""><strong>${row.nombre}</strong></span></div>
-                                        <small class="small-description">${row.description}</small>
+                                        <div class="small-description"><small>${row.description}</small></div>
                                     `;
                                 } 
                             },
@@ -1446,8 +1469,6 @@
                 return;
             }
 
-            var count_artc = $('#count_articles').val();
-            console.log("count: " + count_artc);
             var id =  $(this).data('id');
             var cod_prod = $(this).data('cod_producto');
             var cod_origi = $(this).data('cod_original');
@@ -1455,36 +1476,72 @@
 
             articulosAgregados.add(String(id));
 
-            // console.log("value: " + selectedValue);    
-            if (count_artc == "" && count_artc == 0) {
+            var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
+            const newOption = new Option(concat_data, concat_data, true, true);
 
-                var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
-                const newOption = new Option(concat_data, concat_data, true, true);
-                const selectedValue = $('#articulo').val();
-                console.log("id 1: ");    
-                $('#articulo').append(newOption).trigger('change');
-                $('#count_articles').val(1);
+            var $primerSelect = $('#articulo');
+            var existePrimerSelect = $primerSelect.length > 0;
+            var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
 
-                let debounceTimer;
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    $(`#cantidad0`).val(cantidad);
-                    multi(0);
-                }, 1000);
-            } else {
-                $('.addmore').click();
-                var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
-                const newOption = new Option(concat_data, concat_data, true, true);
-                const selectedValue = $(`#articulo${count_artc}`).val();
-                console.log("id 2: ");
-                var count_artc = $('#count_articles').val();
-                $(`#articulo${count_artc}`).append(newOption).trigger('change');
+            if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
+                // Busca todos los selects existentes (incluyendo #articulo si existe)
+                var $selectsExistentes = $('select[id^="articulo"]');
+
+                if ($selectsExistentes.length === 0) {
+                    // No queda NINGÚN select en el formulario: crear uno desde cero
+                    $('.addmore').prop('disabled', false).click();
+                    $selectsExistentes = $('select[id^="articulo"]');
+                }
+
+                var $selectDestino = $selectsExistentes.last();
+                var idAttr = $selectDestino.attr('id');
+                var count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+                var valorDestino = $selectDestino.val();
+
+                if (valorDestino != null && valorDestino != "") {
+                    // El último select ya tiene algo: crea uno nuevo
+                    $('.addmore').prop('disabled', false).click();
+                    $selectsExistentes = $('select[id^="articulo"]');
+                    $selectDestino = $selectsExistentes.last();
+                    idAttr = $selectDestino.attr('id');
+                    count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+                }
+
+                $selectDestino.append(newOption).trigger('change');
 
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
-                    multi(`${count_artc}`);
+                    multi(count_artc);
+                }, 1000);
+
+            } else {
+                var $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                var count_artc = $selectsNumerados.length > 0
+                    ? Math.max(...$selectsNumerados.map(function () {
+                        return parseInt($(this).attr('id').replace('articulo', ''));
+                    }).get())
+                    : null;
+                var $ultimoSelect = count_artc === null ? $('#articulo') : $(`#articulo${count_artc}`);
+                var valorActual = $ultimoSelect.val();
+                if (valorActual != null && valorActual != "") {
+                    $('.addmore').prop('disabled', false).click();
+                    // Recalcular tras crear la fila
+                    $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                    count_artc = Math.max(...$selectsNumerados.map(function () {
+                        return parseInt($(this).attr('id').replace('articulo', ''));
+                    }).get());
+                    $ultimoSelect = $(`#articulo${count_artc}`);
+                }
+
+                $ultimoSelect.append(newOption).trigger('change');
+
+                let debounceTimer;
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    $(`#cantidad${count_artc}`).val(cantidad);
+                    multi(count_artc);
                 }, 1000);
             }
             $btn.prop('disabled', true);
@@ -1528,6 +1585,16 @@
                     }
                 });
             }, 50);
+            setTimeout(function () {
+                $('.small-description').each(function () {
+                    const el = this; // elemento DOM nativo, no jQuery
+                    if (el.scrollWidth > el.clientWidth) {
+                        $(el).addClass('is-overflowing');
+                    } else {
+                        $(el).removeClass('is-overflowing');
+                    }
+                });
+            }, 30);
         }
         $('#add_product_data').on('shown.bs.modal', function () {
             activarSliderSiDesborda();

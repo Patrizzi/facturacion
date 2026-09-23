@@ -1,12 +1,25 @@
 <script>
+    let articulosAgregados = new Set();
+    $('.celda').each(function() {
+        var valor = $(this).val();
+        var partes = valor.split('|').map(p => p.trim());
+        var id = partes[0];
+        articulosAgregados.add(String(id));
+    });
+
     //*Condicional para el tipo de factura
     var tipo_coti = $('#tipo_coti').val();
     var cliente_default = $('#cliente_id').val();
-    $(".select2_tipo_op").select2();
-    $(".select2_moneda").select2();
-    
+    $(".select2_tipo_op").select2({
+        width: "100%",
+    });
+    $(".select2_moneda").select2({
+        width: "100%",
+    });
+
     $(".select2_demo_client").select2({
         placeholder: "Seleccionar Cliente",
+        width: "100%",
         ajax: {
             minimumInputLength: 1,
             url: "{{ route('pa.clients') }}",
@@ -87,45 +100,48 @@
         });
     }
 
-    var i = {{ $cotizacion_m_reg->count() }};
+    var i = $('#count_articles').val();
     $(".addmore").on('click', function() {
         console.log(i)
         var data = `[
-        <tr>
-            <td>
-                <button type="button" class='delete borrar e btn btn-danger'>
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>
-            </td>";
-            <td>
-                <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
-                <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})"  autocomplete="off" required></select>
-                <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
-                <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
-            </td>
-            <td>
-                <input type='number' min='1' style="min-width: 100px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
-            </td>
-            <td class="full-height-scroll tooltip-demo">
-                <input type='text' style="min-width: 100px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
-            </td>
-            <td>
-                <input style="min-width: 100px" type='text' id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
-                <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="form-control precio_s_igv_float" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
-            </td>
-            <td>
-                <input style="min-width: 100px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
-            </td>
-            <td>
-                <input type='text' id='total${i}'  style="min-width: 100px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
-            </td>
-        </tr>
-        `;
+            <tr>
+                <td>
+                    <button type="button" class='delete borrar e btn btn-primary btn-sm'>
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                </td>";
+                <td>
+                    <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
+                    <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})"  autocomplete="off" required></select>
+                    <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
+                    <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
+                </td>
+                <td>
+                    <input type='number' min='1' style="min-width: 100px"  id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                </td>
+                <td class="full-height-scroll tooltip-demo">
+                    <input type='text' style="min-width: 100px"  id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                </td>
+                <td>
+                    <input style="min-width: 100px" type='text' id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                    <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="form-control precio_s_igv_float" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
+                </td>
+                <td>
+                    <input style="min-width: 100px" type='text' id='precio_c_igv${i}' name='precio_c_igv[]'  class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                </td>
+                <td>
+                    <input type='text' id='total${i}'  style="min-width: 100px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                </td>
+            </tr>
+         `;
         $('.tables').append(data);
+        $('#count_articles').val(i);
+        console.log(i);
         i++;
-        //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
         articlesSelect2();
-        toggle();
+        $(".borrar").prop("disabled", false);
+        $(".addmore").prop("disabled", false);
+        
         const section = document.getElementById("left_h3");
         console.log(section);
         section.scrollIntoView({
@@ -138,6 +154,7 @@
     function articlesSelect2() {
         $(".select2_demo_3").select2({
             placeholder: "Seleccionar Articulo",
+            width: "400px",
             ajax: {
                 minimumInputLength: 1,
                 url: "{{ route('pa.articles') }}",
@@ -370,6 +387,13 @@
         var e = document.getElementsByClassName("e").length;
         var fila = $(this).parents("tr");
         var input_text_opt = fila.find('input[class="celda"]').val();
+        if (input_text_opt) {
+            var partes = input_text_opt.split('|').map(p => p.trim());
+            var id = partes[0];
+            articulosAgregados.delete(String(id));
+            reactivarBotonModal(id);
+            // console.log(articulosAgregados);
+        }
         $('option[value="' + input_text_opt + '"]').prop("disabled", false);
         $(".addmore").prop("disabled", false);
 
@@ -388,11 +412,13 @@
             var sub_igv_tt = Math.round(sub_igv_t * multiplier) / multiplier;
             $('#sub_total').val(sub_igv_tt);
             document.getElementById("subtotal").value = sub_igv_tt;
+            document.getElementById("subtotal_view").value = sub_igv_tt;
 
             //OPERACION PARA CALULCAR EL IGV
             var only_igv = (parseFloat(sub_igv_tt) * (igv / multiplier))
             var igv_decimal = Math.round(only_igv * multiplier) / multiplier;
             document.getElementById("igv").value = igv_decimal;
+            document.getElementById("igv_view").value = igv_decimal;
 
             // Operacion para total
             var totalInp = $('[name="total"]');
@@ -406,29 +432,32 @@
 
             console.log(total_tt);
             $('#total').val(total_tt);
+            $('#total_final_view').val(total_tt);
 
             var subtotal = document.querySelector(`#total`).value;
             document.getElementById("total_final").value = subtotal;
         } else {
-            limpiar_inputs();
-            $(".select2_demo_3").val(null).trigger("change");
+            if(input_text_opt == ""){
+                return;
+            }
             $(".addmore").prop("disabled", false);
+            $(".select2_demo_3").val(null).trigger("change");
             limpiar_inputs();
 
         }
-        articlesSelect2();
+        // articlesSelect2();
     });
 
     function limpiar_inputs() {
         $(`.precio_s_igv`).val("");
         $(`.precio_c_igv`).val("");
         $(`.cantidad`).val("");
-        $(`.total`).val("");
-        $(`.subtotal`).val("");
-        $(`.igv`).val("");
-        $(`.total_final`).val("");
         $(`.p_inp`).val("");
         $(`.txt-limp`).val("");
+        $('#subtotal_view').val("");
+        $('#igv_view').val("");
+        $('#total_final_view').val("");
+        $('.total').val("");
 
     }
 
@@ -483,5 +512,343 @@
             $(`.money_change`).prop('disabled', false);
             $(`.button_money`).removeClass('not-active');
         }, 10000);
+    }
+
+    // MODAL BUSQUEDA DE PRODUCTO
+    let debounceTimer;
+    $('#search_product').on('input', function(e) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            var busqueda = $(this).val();
+            search_multiple(busqueda);
+        }, 500); // Espera 300 ms antes de ejecutar la acción
+    });
+    $('#add_new_product').on('click', function() {
+        search_multiple("");
+        $('#search_product').val('');
+    });
+
+    let filtrarConStock = false;
+    function search_multiple(busqueda) {
+        // CLEAN DATABLE(?)
+        if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
+            $('.data_table_multiple').DataTable().clear().destroy();
+        }
+        $('.data_table_multiple tbody').empty();
+
+        var almacen = $('[id="almacen_id"]').val();
+        var moneda = $('[id="moneda_id"]').val();
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.search_multiple_manual') }}",
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'articulo': busqueda,
+                'almacen': almacen,
+                'stock': filtrarConStock ? 1 : 0,
+                'moneda': moneda
+            },
+            success: function(msg) {
+                // Intentar parsear si el backend no manda las cabeceras application/json correctas
+                let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+                // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
+                if (!data || data.length === 0) {
+                    toastr.warning("No se encontraron resultados", '', {
+                        timeOut: 3000
+                    });
+                    return;
+                }
+
+                $('.data_table_multiple').DataTable({
+                    "bLengthChange": false,
+                    "searching": false,
+                    "autoWidth": false,
+                    pageLength: 7,
+                    responsive: true,
+                    "aaData": data,
+                    drawCallback: function(settings) {
+                        $(".touchspin1").each(function() {
+                            const $input = $(this);
+                            // Evitar doble inicialización si el plugin ya envolvió este input
+                            if (!$input.hasClass('js-touchspin-init')) {
+                                $input.addClass('js-touchspin-init').TouchSpin({
+                                    buttondown_class: 'btn btn-link btn-sm',
+                                    buttonup_class: 'btn btn-link btn-sm',
+                                    min: 1,
+                                });
+                            }
+                        });
+                        activarSliderSiDesborda();
+                    },
+                    dom: '<"top"f>rt<"dt-left-info"ip>', // i = info ("Mostrando X-Y de Z"), p = paginación
+                    language: {
+                        info: "Mostrando _START_-_END_ de _TOTAL_ artículos",
+                        infoEmpty: "No hay artículos",
+                        paginate: {
+                            previous: '<i class="fa fa-chevron-left"></i>',
+                            next: '<i class="fa fa-chevron-right"></i>'
+                        }
+                    },
+                    pagingType: "simple_numbers",
+                    "columns": [
+                        // { "data": "id" },
+                        {
+                            "data": "codigo",
+                            "width": "130px",
+                            render: function(data, type, row) {
+                                return `
+                                        <span class="codigo-toggle" 
+                                            data-producto="${row.codigo_producto}" 
+                                            data-original="${row.codigo_original ?? ''}" 
+                                            data-showing="producto"
+                                            style="cursor:pointer; display:inline-block; min-width:80px;">
+                                            <span class="badge badge-info">${row.codigo_producto}</span>
+                                        </span>
+                                    `;
+                            }
+                        },
+                        {
+                            "data": "nombre",
+                            "defaultContent": "",
+                            render: function(data, type, row) {
+                                return `
+                                        <div class="articulo-nombre"><span><strong>${row.nombre}</strong></span></div>
+                                        <div class="small-description"><small>${row.description}</small></div>
+                                    `;
+                            }
+                        },
+                        {
+                            "data": "stock",
+                            "className": "precio_search precio_cantidad",
+                            "defaultContent": "",
+                            render: function(data, type, row) {
+                                let claseCss;
+                                return `<span class="badge badge-plain">${row.stock}</span>`;
+                            }
+                        },
+                        {
+                            data: null,
+                            title: 'CANTIDAD',
+                            "className": "precio_cantidad",
+                            "width": "100px",
+                            render: function(data, type, row) {
+                                return `
+                                        <input class="touchspin1 form-control-sm input-cantidad" type="text" value="1" name="demo1" min="1" data-simbolo="${row.moneda.simbolo}" value="1" data-price="${row.price}" data-id="${row.id}">
+                                    `;
+                            }
+                        },
+                        {
+                            data: 'price',
+                            title: 'P. UNITARIO',
+                            "width": "100px",
+                            "className": "precio_dt",
+                            render: function(data, type, row) {
+                                const formattedPrice = $.fn.dataTable.render.number(',',
+                                    '.', 2).display(data);
+                                return `${row.moneda.simbolo} ${formattedPrice}`;
+                            }
+                        },
+                        {
+                            data: null,
+                            title: 'TOTAL',
+                            "width": "100px",
+                            "className": "precio_dt",
+                            render: function(data, type, row) {
+                                return `<span class="total" data-id="${row.id}" data-simbolo="${row.moneda.simbolo}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                            }
+                        },
+                        {
+                            "width": "100px",
+                            "className": "precio_search precio_cantidad",
+                            render: function(data, type, row) {
+                                const yaAgregado = articulosAgregados.has(String(row.id));
+                                return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}"> <i class="fa fa-plus"></i> Agregar</button>`;
+                            }
+                        }
+                    ]
+                });
+            },
+            error: function(eject) {
+                if (eject.status === 400) {
+                    // console.log(eject.responseJSON.error);
+                    console.log('Error');
+                }
+            },
+            cache: true
+        });
+    }
+    $('.data_table_multiple').on('input change', '.input-cantidad', function() {
+        const cantidad = parseFloat($(this).val()) || 0;
+        const price = parseFloat($(this).data('price'));
+        const simbolo = $(this).data('simbolo');
+        const total = cantidad * price;
+        const id = $(this).data('id');
+        $(`.total[data-id="${id}"]`).text(`${simbolo} ` + `${total.toFixed(2)}`);
+    });
+
+    $('.data_table_multiple').on('click', '.btn-agregar-articulo', function(e) {
+        var $btn = $(this);
+        var $row = $(this).closest('tr');
+
+        var stock = $row.find("td:eq(3)").text();
+        var cantidad = $row.find('input').val();
+
+        var count_artc = $('#count_articles').val();
+        var id = $(this).data('id');
+        var cod_prod = $(this).data('cod_producto');
+        var cod_origi = $(this).data('cod_original');
+        var nombres = $(this).data('nombre');
+
+        articulosAgregados.add(String(id));
+
+        var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
+            const newOption = new Option(concat_data, concat_data, true, true);
+
+            var $primerSelect = $('#articulo');
+            var existePrimerSelect = $primerSelect.length > 0;
+            var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
+
+            if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
+                // Busca todos los selects existentes (incluyendo #articulo si existe)
+                var $selectsExistentes = $('select[id^="articulo"]');
+
+            if ($selectsExistentes.length === 0) {
+                // No queda NINGÚN select en el formulario: crear uno desde cero
+                $('.addmore').prop('disabled', false).click();
+                $selectsExistentes = $('select[id^="articulo"]');
+            }
+
+            var $selectDestino = $selectsExistentes.last();
+            var idAttr = $selectDestino.attr('id');
+            var count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+            var valorDestino = $selectDestino.val();
+
+            if (valorDestino != null && valorDestino != "") {
+                // El último select ya tiene algo: crea uno nuevo
+                $('.addmore').prop('disabled', false).click();
+                $selectsExistentes = $('select[id^="articulo"]');
+                $selectDestino = $selectsExistentes.last();
+                idAttr = $selectDestino.attr('id');
+                count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+            }
+
+            $selectDestino.append(newOption).trigger('change');
+
+            let debounceTimer;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                $(`#cantidad${count_artc}`).val(cantidad);
+                multi(count_artc);
+            }, 1000);
+
+        } else {
+            var $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+            var count_artc = $selectsNumerados.length > 0
+                ? Math.max(...$selectsNumerados.map(function () {
+                    return parseInt($(this).attr('id').replace('articulo', ''));
+                }).get())
+                : null;
+            var $ultimoSelect = count_artc === null ? $('#articulo') : $(`#articulo${count_artc}`);
+            var valorActual = $ultimoSelect.val();
+            if (valorActual != null && valorActual != "") {
+                $('.addmore').prop('disabled', false).click();
+                // Recalcular tras crear la fila
+                $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                count_artc = Math.max(...$selectsNumerados.map(function () {
+                    return parseInt($(this).attr('id').replace('articulo', ''));
+                }).get());
+                $ultimoSelect = $(`#articulo${count_artc}`);
+            }
+
+            $ultimoSelect.append(newOption).trigger('change');
+
+            let debounceTimer;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                $(`#cantidad${count_artc}`).val(cantidad);
+                multi(count_artc);
+            }, 1000);
+        }
+
+        toastr.info("Se agregó el Articulo correctamente", '', {
+            timeOut: 3000
+        });
+    });
+
+    $('#total_final').on('input change', function() {
+        var total = $(this).val();
+        $('#subtotal-monto').html(total);
+    });
+
+    setInterval(function() {
+        $('.codigo-toggle').each(function() {
+            const $el = $(this);
+            const showing = $el.data('showing');
+
+            if (showing === 'producto') {
+                $el.fadeOut(150, function() {
+                    $el.html(`<span class="badge badge-info">${$el.data('original')}</span>`)
+                        .fadeIn(150);
+                });
+                $el.data('showing', 'original');
+            } else {
+                $el.fadeOut(150, function() {
+                    $el.html(`<span class="badge badge-info">${$el.data('producto')}</span>`)
+                        .fadeIn(150);
+                });
+                $el.data('showing', 'producto');
+            }
+        });
+    }, 5000); // cambia cada 2 segundos
+
+    function activarSliderSiDesborda() {
+        setTimeout(function() {
+            $('.articulo-nombre').each(function() {
+                const el = this; // elemento DOM nativo, no jQuery
+                console.log(el);
+                if (el.scrollWidth > el.clientWidth) {
+                    $(el).addClass('is-overflowing');
+                } else {
+                    $(el).removeClass('is-overflowing');
+                }
+            });
+        }, 50);
+        setTimeout(function() {
+            $('.small-description').each(function() {
+                const el = this; // elemento DOM nativo, no jQuery
+                console.log(el);
+                if (el.scrollWidth > el.clientWidth) {
+                    $(el).addClass('is-overflowing');
+                } else {
+                    $(el).removeClass('is-overflowing');
+                }
+            });
+        }, 10);
+    }
+    $('#add_product_data').on('shown.modal', function() {
+        activarSliderSiDesborda();
+    });
+
+    $('#button_filter_stock').on('click', function() {
+        const $btn = $(this);
+        filtrarConStock = !$btn.hasClass('active');
+        search_multiple($('#buscador_articulo').val());
+    });
+
+    function reactivarBotonModal(id) {
+        var $btn = $(`.btn-agregar-articulo[data-id="${id}"]`);
+        console.log($btn);
+        if ($btn.length) {
+            $btn.prop('disabled', false);
+        }
+    }
+
+    function validarJson(data) {
+        try {
+            JSON.parse(data);
+            return true; // es JSON válido
+        } catch (e) {
+            return false; // no es JSON
+        }
     }
 </script>

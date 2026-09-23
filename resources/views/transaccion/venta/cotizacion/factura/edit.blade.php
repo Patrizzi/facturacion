@@ -342,7 +342,7 @@
                         @endforeach
                     </tbody>
                     <tbody id="left_h3">
-                        <input id='sub_total' hidden /></td>
+                        {{-- <input id='sub_total' hidden /></td> --}}
                         <input id='total' hidden /></td>
                         <tr>
                             <td colspan="6"></td>

@@ -664,108 +664,6 @@
         .renovacion .row {
             margin-bottom: 6px;
         }
-        .bootstrap-touchspin {
-            background-color: #f4f5f7;
-            border-radius: 50px;
-            overflow: hidden;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            width: auto;
-        }
-
-        .bootstrap-touchspin .touchspin-btn {
-            background-color: transparent !important;
-            border: none !important;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: none !important;
-        }
-
-        .bootstrap-touchspin .touchspin-btn:hover {
-            background-color: #e9eaed !important;
-            border-radius: 50%;
-        }
-
-        .bootstrap-touchspin .touchspin1 {
-            background-color: transparent !important;
-            border: none !important;
-            text-align: center;
-            box-shadow: none !important;
-            width: 40px;
-            padding: 0;
-        }
-
-        .bootstrap-touchspin .touchspin1:focus {
-            outline: none;
-            box-shadow: none;
-        }
-
-        .bootstrap-touchspin .input-group-btn {
-            display: flex;
-        }
-        .btn.btn-link.btn-sm.bootstrap-touchspin-up:hover,.btn.btn-link.btn-sm.bootstrap-touchspin-down:hover{
-            transform: none !important;
-            box-shadow: none !important;
-        }
-        .input-cantidad.js-touchspin-init{
-            font-size: 12px;
-        }
-        ul.pagination {
-            margin-bottom: 0px;
-        }
-        .precio_search{
-            vertical-align: middle !important;
-            /* text-align: center !important; */
-
-        }
-        .precio_cantidad{
-            text-align: center !important;
-        }
-        .bootstrap-touchspin{
-            flex-wrap: nowrap;
-        }
-        .precio_dt{
-            text-align: right !important;
-            vertical-align: middle !important;
-        }
-        .modal-cart-footer{
-            position: absolute;
-            margin-left: 0px;
-            right: 15px;
-            bottom: 0px;
-        }
-        .small-description{
-            font-size: 9px !important;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        #DataTables_Table_0_info{
-            margin-bottom: 5px !important;
-        }
-        
-        .articulo-nombre {
-            max-width: 330px;
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-        }
-
-        .articulo-nombre.is-overflowing span {
-            display: inline-block;
-            animation: marquee 8s linear infinite;
-            padding-right: 40px; /* espacio antes de repetir */
-        }
-
-        @keyframes marquee {
-            0%,30%   { transform: translateX(0); }
-            100% { transform: translateX(calc(-100% - 20px)); }
-        }
     </style>
 
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
@@ -1613,7 +1511,7 @@
                                 render: function(data, type, row) {
                                     return `
                                         <div class="articulo-nombre"><span class=""><strong>${row.nombre}</strong></span></div>
-                                        <small class="small-description">${row.description}</small>
+                                        <div class="small-description"><small>${row.description}</small></div>
                                     `;
                                 } 
                             },
@@ -1770,6 +1668,16 @@
                     }
                 });
             }, 50);
+            setTimeout(function () {
+                $('.small-description').each(function () {
+                    const el = this; // elemento DOM nativo, no jQuery
+                    if (el.scrollWidth > el.clientWidth) {
+                        $(el).addClass('is-overflowing');
+                    } else {
+                        $(el).removeClass('is-overflowing');
+                    }
+                });
+            }, 30);
         }
         $('#add_product_data').on('shown.bs.modal', function () {
             activarSliderSiDesborda();
