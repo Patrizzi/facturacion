@@ -336,7 +336,7 @@
                         <div><b>Peso bruto total carga:</b> {{ number_format($guia_registro->sum('peso'), 2) }} kg
                         </div>
                         <div><b>N° Bultos o Pallets:</b> -</div>
-                        <div><b>Modalidad:</b> -</div>
+                        <div><b>Modalidad:</b> @if($guia_remision->tipo_transporte == 1) Transporte Público @else Transporte Privado @endif</div>
                         <div><b>Fecha Emisión:</b> {{ $guia_remision->fecha_emision ?? '' }}</div>
                         <div><b>Inicio traslado:</b> {{ $guia_remision->fecha_entrega ?? '' }}</div>
                     </div>
