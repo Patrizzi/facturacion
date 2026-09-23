@@ -741,6 +741,7 @@ Route::group(
             Route::get('/garantia-producto', 'LotesGarantiasController@garantiaProducto')->name('lotes-garantias.garantia-producto');
             Route::get('/garantia-cliente', 'LotesGarantiasController@garantiaCliente')->name('lotes-garantias.garantia-cliente');
         });
+        require base_path('routes/lotes_garantias_ajax.php');
 
         //Fin de inventarios
 
