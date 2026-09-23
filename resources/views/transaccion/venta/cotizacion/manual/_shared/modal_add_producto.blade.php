@@ -50,7 +50,7 @@
                                     <div class="subtotal-value">
                                         <span
                                             id="subtotal-simbolo">{{ $moneda->where('principal', 1)->pluck('simbolo')->first() }}</span>
-                                        <span id="subtotal-monto">{{$end ?? 0.00}}</span>
+                                        <span id="subtotal-monto">{{round($end ?? 0 ,2)}}</span>
                                         {{-- <span id="subtotal-items">(0 ítems)</span> --}}
                                     </div>
                                 </div>

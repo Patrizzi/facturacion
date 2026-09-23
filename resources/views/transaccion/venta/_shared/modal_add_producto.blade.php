@@ -49,7 +49,7 @@
                                     <div class="subtotal-label"><strong>TOTAL ESTIMADO</strong></div>
                                     <div class="subtotal-value">
                                         <span
-                                            id="subtotal-simbolo">{{ $moneda->simbolo ?? ($cotizacion->moneda->simbolo ?? $moneda->where('principal', 1)->pluck('simbolo')->first()) }}</span>
+                                            id="subtotal-simbolo">{{ $moneda->simbolo ?? ($cotizacion->moneda->simbolo ?? $monedas->where('principal', 1)->pluck('simbolo')->first()) ?? "" }}</span>
                                         <span id="subtotal-monto">0.00</span>
                                         {{-- <span id="subtotal-items">(0 ítems)</span> --}}
                                     </div>

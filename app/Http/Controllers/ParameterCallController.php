@@ -513,7 +513,11 @@ class ParameterCallController extends Controller
                     if ($moneda->tipo == 'nacional') {
                         $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') * ($product->utilidad - $product->descuento1) / 100;
                         $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') + $utilidad), 2);
-                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
+                        if(isset($store)){
+                            $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
+                        }else{
+                            $array_cantidad = Stock_producto::where('producto_id', $product->id)->pluck('stock')->first();
+                        }
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_nacional'), 2);
                     } else {
                         $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * ($product->utilidad - $product->descuento1) / 100;
@@ -582,7 +586,11 @@ class ParameterCallController extends Controller
                     if ($moneda->tipo == 'extranjera') {
                         $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') * ($product->utilidad - $product->descuento1) / 100;
                         $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') + $utilidad) / $tipo_cambio->paralelo, 2);
-                        $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
+                        if(isset($store)){
+                            $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
+                        }else{
+                            $array_cantidad = Stock_producto::where('producto_id', $product->id)->pluck('stock')->first();
+                        }
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_nacional') / $tipo_cambio->paralelo, 2);
                     } else {
                         $utilidad = Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * ($product->utilidad - $product->descuento1) / 100;

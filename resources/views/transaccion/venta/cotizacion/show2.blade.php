@@ -724,12 +724,14 @@
                 console.log('campos incompletos')
             }
         });
-        $(document).ready(function() {});
+        // $(document).ready(function() {});
         $(document).ready(function() {
             // Bind normal buttons
             Ladda.bind('.ladda-button', {
                 timeout: 8000
             });
+            var total = $('#total_final').val();
+            $('#subtotal-monto').html(total);
         });
 
         $.ajaxSetup({

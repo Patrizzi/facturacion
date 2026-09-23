@@ -158,14 +158,14 @@ class NotaVentaController extends Controller
 
         $clientes=Cliente::all();
         $garantia=Garantia::where('estado',0)->get();
-        $moneda=Moneda::all();
+        $monedas=Moneda::all();
         $forma_pagos= Forma_pago::all();
         $servicios = Servicios::where('estado_anular', 0)->get();
         $productos=Producto::where('estado_anular', 1)->get();
         $user_login =auth()->user();
         $igv = Igv::first();
         $empresa=Empresa::first();
-        return view('transaccion.venta.nota_venta.create',compact('garantia','empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta','almacen','igv'));
+        return view('transaccion.venta.nota_venta.create',compact('garantia','empresa','clientes','forma_pagos','monedas','productos','servicios','user_login','cod_nota_venta','almacen','igv'));
 
   }
 

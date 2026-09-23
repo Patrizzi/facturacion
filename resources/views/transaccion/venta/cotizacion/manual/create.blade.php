@@ -954,35 +954,35 @@
         $(".addmore").on('click', function() {
             // console.log("add");
             var data = `[
-        <tr>
-            <td>
-                <button type="button" class='delete borrar e btn btn-sm btn-primary'>
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>
-            </td>";
-            <td class="td_selected">
-                <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})"  autocomplete="off" required></select>
-                <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
-                <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
-            </td>
-            <td>
-                <input type='number' min='1'   id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
-            </td>
-            <td class="full-height-scroll tooltip-demo">
-                <input type='number'   id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control p_inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
-            </td>
-            <td>
-                <input  type='number' step="0.0000000000000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
-                <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
-            </td>
-            <td>
-                <input  type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000000000000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
-            </td>
-            <td>
-                <input type='number' id='total${i}'    name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
-            </td>
-        </tr>
-        `;
+                <tr>
+                    <td>
+                        <button type="button" class='delete borrar e btn btn-sm btn-primary'>
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </td>";
+                    <td class="td_selected">
+                        <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})"  autocomplete="off" required></select>
+                        <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
+                        <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
+                    </td>
+                    <td>
+                        <input type='number' min='1'   id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    </td>
+                    <td class="full-height-scroll tooltip-demo">
+                        <input type='number'   id='precio_oficial${i}' name='precio_oficial[]' ondblclick="copy(${i})" class="precio_oficial${i} form-control p_inp" required  autocomplete="off" readonly data-toggle="tooltip" data-placement="top" title="Doble click (Copiar)" />
+                    </td>
+                    <td>
+                        <input  type='number' step="0.0000000000000001" id='precio_s_igv${i}' name='precio_s_igv[]'  class="precio_s_igv monto${i} form-control" onkeyup="multi_s_igv(${i}),multi(${i})" required  autocomplete="off" />
+                        <input hidden type='text' id='precio_s_igv_float${i}' name='precio_s_igv_float'  class="precio_s_igv_float form-control" onkeyup="multi_s_igv(${i}),multi(${i})"   autocomplete="off" />
+                    </td>
+                    <td>
+                        <input  type='number' id='precio_c_igv${i}' name='precio_c_igv[]' step="0.0000000000000001" class="precio_c_igv p_inp monto${i} form-control" onkeyup="multi_c_igv(${i}),multi(${i})" required  autocomplete="off" />
+                    </td>
+                    <td>
+                        <input type='number' id='total${i}'    name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                    </td>
+                </tr>
+            `;
             $('.tables').append(data);
             $('#count_articles').val(i);
             i++;
@@ -1588,12 +1588,7 @@
 
             var stock = $row.find("td:eq(3)").text();
             var cantidad = $row.find('input').val();
-
-            if (parseFloat(cantidad) > parseFloat(stock)) {
-                toastr.warning("Cantidad mayor al stock", '', { timeOut: 3000 });
-                return;
-            }
-
+            
             var count_artc = $('#count_articles').val();
             var id =  $(this).data('id');
             var cod_prod = $(this).data('cod_producto');

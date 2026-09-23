@@ -775,7 +775,7 @@
         });
     });
 
-    $('#total_final').on('input change', function() {
+    $('#total_final_view').on('input change', function() {
         var total = $(this).val();
         $('#subtotal-monto').html(total);
     });
@@ -805,7 +805,6 @@
         setTimeout(function() {
             $('.articulo-nombre').each(function() {
                 const el = this; // elemento DOM nativo, no jQuery
-                console.log(el);
                 if (el.scrollWidth > el.clientWidth) {
                     $(el).addClass('is-overflowing');
                 } else {
@@ -816,7 +815,6 @@
         setTimeout(function() {
             $('.small-description').each(function() {
                 const el = this; // elemento DOM nativo, no jQuery
-                console.log(el);
                 if (el.scrollWidth > el.clientWidth) {
                     $(el).addClass('is-overflowing');
                 } else {
