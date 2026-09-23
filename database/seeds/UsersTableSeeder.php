@@ -46,7 +46,5 @@ class UsersTableSeeder extends Seeder
         //     'email_creado' => 0,
         //     'almacen_id' => 1
         // ]);
-
-
     }
 }

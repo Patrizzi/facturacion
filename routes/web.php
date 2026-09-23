@@ -732,6 +732,16 @@ Route::group(
         Route::resource('/cierre-periodo', 'CierrePeriodoController');
         Route::get('/cierre-periodo/pdf/{id}', 'CierrePeriodoController@pdf')->name('cierre-periodo.pdf');
 
+        // Control de Lotes y Garantías
+        Route::prefix('inventario/lotes-garantias')->group(function () {
+            Route::get('/', 'LotesGarantiasController@inventarioInicial')->name('lotes-garantias.index');
+            Route::get('/inventario-inicial', 'LotesGarantiasController@inventarioInicial')->name('lotes-garantias.inventario-inicial');
+            Route::get('/detalle-lote', 'LotesGarantiasController@detalleLote')->name('lotes-garantias.detalle-lote');
+            Route::get('/busqueda-serie', 'LotesGarantiasController@busquedaSerie')->name('lotes-garantias.busqueda-serie');
+            Route::get('/garantia-producto', 'LotesGarantiasController@garantiaProducto')->name('lotes-garantias.garantia-producto');
+            Route::get('/garantia-cliente', 'LotesGarantiasController@garantiaCliente')->name('lotes-garantias.garantia-cliente');
+        });
+
         //Fin de inventarios
 
         Route::resource('/motivo', 'MotivoController');
