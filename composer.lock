@@ -1555,20 +1555,20 @@
         },
         {
             "name": "greenter/greenter",
-            "version": "v5.1.2",
+            "version": "v5.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thegreenter/greenter.git",
-                "reference": "adac7c52806ed439a7a3a6092a5eaf3e604078c7"
+                "reference": "f24e546d3e62e0ce4c2ebfbe23c7e8c9d464d51f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thegreenter/greenter/zipball/adac7c52806ed439a7a3a6092a5eaf3e604078c7",
-                "reference": "adac7c52806ed439a7a3a6092a5eaf3e604078c7",
+                "url": "https://api.github.com/repos/thegreenter/greenter/zipball/f24e546d3e62e0ce4c2ebfbe23c7e8c9d464d51f",
+                "reference": "f24e546d3e62e0ce4c2ebfbe23c7e8c9d464d51f",
                 "shasum": ""
             },
             "require": {
-                "bacon/bacon-qr-code": "^2.0",
+                "bacon/bacon-qr-code": "^2.0||^3.0",
                 "greenter/gre-api": "^1.0",
                 "greenter/xmldsig": "^5.0",
                 "mikehaertl/phpwkhtmltopdf": "^2.4",
@@ -1643,7 +1643,7 @@
             "support": {
                 "forum": "https://community.greenter.dev/",
                 "issues": "https://github.com/thegreenter/greenter/issues",
-                "source": "https://github.com/thegreenter/greenter/tree/v5.1.1"
+                "source": "https://github.com/thegreenter/greenter/tree/v5.3.0"
             },
             "funding": [
                 {
@@ -1651,7 +1651,7 @@
                     "type": "yape"
                 }
             ],
-            "time": "2024-11-19T23:54:19+00:00"
+            "time": "2026-06-08T17:49:04+00:00"
         },
         {
             "name": "greenter/xmldsig",
@@ -10238,12 +10238,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.2.5|^8.0"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
