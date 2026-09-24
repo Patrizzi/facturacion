@@ -1577,3 +1577,6 @@ Route::post('/factura/guardar-nota/{id}', 'FacturacionController@guardarNotaInfo
 
 Route::post('/factura_manual/guardar-nota/{id}', 'FacturacionMController@guardarNotaInformativa')
     ->name('facturacionM.guardar_nota');
+
+// Rutas de Lotes y Garantías
+require base_path('routes/lotes_garantias_ajax.php');

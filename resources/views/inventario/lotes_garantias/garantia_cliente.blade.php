@@ -151,4 +151,40 @@
         }
     });
 </script>
+<script>
+const GarantiaClienteModule = (function () {
+    function validarGarantiaCliente() {
+        const formData = new FormData(document.getElementById('formGarantiaCliente'));
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route("lotes-garantias.ajax.garantia-cliente") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.valido) {
+                document.getElementById('gcFechaVenta').value = data.fecha_venta;
+                document.getElementById('resGcFecVenc').textContent = data.garantia.fecha_vencimiento;
+                document.getElementById('resGcTiempoTotal').textContent = data.garantia.tiempo_garantia;
+                document.getElementById('resGcTiempoTransc').textContent = data.garantia.tiempo_transcurrido;
+
+                const badge = document.getElementById('resGcEstado');
+                badge.textContent = data.garantia.estado;
+                badge.className = `badge ${data.garantia.es_vigente ? 'badge-success' : 'badge-danger'}`;
+            } else {
+                alert(data.message || 'No se pudo validar la garantía del cliente.');
+            }
+        })
+        .catch(err => console.error('Error validando garantía:', err));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnValidar = document.querySelector('#formGarantiaCliente button.btn-primary');
+        if (btnValidar) {
+            btnValidar.addEventListener('click', validarGarantiaCliente);
+        }
+    });
+})();
+</script>
 @endsection
