@@ -1247,7 +1247,7 @@ class Config_fe extends Model
             $envio
                 ->setCodTraslado($motivo_tr) // Cat.20
                 ->setModTraslado('01') // Cat.18 // PUBLICO O PRIVADO
-                ->setFecTraslado($guia->fecha_entrega)
+                ->setFecTraslado(new DateTime())
                 ->setFecEntregaBienes($guia->fecha_entrega)
                 ->setPesoTotal($peso_total)
                 ->setUndPesoTotal('KGM')    //unidad de medida
