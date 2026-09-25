@@ -36,7 +36,7 @@ class Cliente extends Model
             $cliente->empresa = $cliente->nombre;
             $cliente->save();
         }
-        if (empty($cliente->ubigeo)) {
+        if (empty($cliente->cod_postal)) {
             $cliente->cod_postal = '150101';
             $cliente->save();
         }
