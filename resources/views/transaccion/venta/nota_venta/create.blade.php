@@ -145,22 +145,22 @@
                                                 <select class="monto0 select2_demo_3 select_change" required=""
                                                     id="articulo" onchange="ajax(0)" autocomplete="off"></select>
                                                 <input type="hidden" class="celda" name="articulo[]" id="input_prod1">
-                                                <input type="text" name='descripcion_item[]' class="form-control"
+                                                <input type="text" name='descripcion_item[]' class="form-control descripcion"
                                                     autocomplete="off" placeholder="Descripcion del artículo"
                                                     style="margin-top: 5px" />
                                             </td>
                                             <td>
                                                 <input style="min-width: 96px" type='text' id='cantidad0'
-                                                    name='cantidad[]' max="" class="monto0 form-control"
+                                                    name='cantidad[]' max="" class="monto0 form-control cantidad"
                                                     onkeyup="multi(0)" required autocomplete="off" value="1" />
                                             </td>
                                             <td>
-                                                <input type="text" style="min-width: 96px" class="form-control"
+                                                <input type="text" style="min-width: 96px" class="form-control precio_sugerido"
                                                     readonly id="precio_sugerido0" ondblclick="copy(0)">
                                             </td>
                                             <td>
                                                 <input style="min-width: 96px" type='text' id='precio0'
-                                                    name='precio[]' class="monto0 form-control" onkeyup="multi(0)"
+                                                    name='precio[]' class="monto0 form-control precio" onkeyup="multi(0)"
                                                     required autocomplete="off" />
                                             </td>
                                             <td>
@@ -411,13 +411,13 @@
                         <input type="text"  {{-- id='descripcion0' --}}  name='descripcion_item[]' class="form-control"   autocomplete="off" placeholder="Descripcion del artículo" style="margin-top: 5px" />
                     </td>
                     <td>
-                        <input type='text' style="min-width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                        <input type='text' style="min-width: 96px" value="1" id='cantidad${i}' name='cantidad[]'  class="monto${i} form-control cantidad" onkeyup="multi(${i})" required  autocomplete="off"/>
                     </td>
                     <td>
-                        <input type="text" style="min-width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
+                        <input type="text" style="min-width: 96px" class="form-control precio_sugerido" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
                     </td>
                     <td>
-                        <input type='text' style="min-width: 96px"  id='precio${i}' name='precio[]' class="monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                        <input type='text' style="min-width: 96px"  id='precio${i}' name='precio[]' class="monto${i} form-control precio" onkeyup="multi(${i})" required  autocomplete="off"/>
                     </td>
                     <td>
                         <input type='text' id='total${i}'  style="min-width: 96px"  name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
@@ -592,7 +592,9 @@
             if(e > 1){
                 fila.closest('tr').remove();
             }else{
-                    
+                $(".select2_demo_3").val(null).trigger("change");
+                $(".addmore").prop("disabled", false);
+                limpiar_inputs();
             }
 
 
@@ -614,6 +616,15 @@
             // // document.getElementById("igv").value = igv;
             // document.getElementById("total_final").value = end;
         });
+        function limpiar_inputs(){
+        $('#celda').val("");
+        $('#descripcion').val("");
+        $('#cantidad').val("");
+        $('#precio_sugerido').val("");
+        $('#precio_total').val("");
+        $('#total').val("");
+        $('#total_final').val("");
+        }
     </script>
 
     <script>
