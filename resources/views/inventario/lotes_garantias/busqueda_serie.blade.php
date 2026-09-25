@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                             <div class="col-md-2 col-sm-12 mb-2 d-flex">
-                                <button type="button" class="btn btn-primary btn-block mr-1 font-weight-bold" style="background-color: #2641f8; border-color: #2641f8;">
+                                <button type="submit" class="btn btn-primary btn-block mr-1 font-weight-bold" style="background-color: #2641f8; border-color: #2641f8;">
                                     <i class="fa fa-search mr-1"></i> Buscar
                                 </button>
                                 <button type="reset" class="btn btn-outline-secondary" title="Limpiar formulario">
@@ -191,4 +191,85 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+const BusquedaSerieModule = (function () {
+    function setText(id, value) {
+        document.getElementById(id).textContent = value || '--';
+    }
+
+    function renderHistorial(historial) {
+        const tbody = document.querySelector('#formBusquedaSerie').closest('.wrapper').querySelector('table tbody');
+        if (!historial || historial.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">No existen otras series relacionadas.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = historial.map(function (item) {
+            return '<tr>' +
+                '<td>' + item.id + '</td>' +
+                '<td class="font-weight-bold"><code>' + item.numero_serie + '</code></td>' +
+                '<td>' + item.codigo_producto + '</td>' +
+                '<td>' + (item.codigo_lote || '--') + '</td>' +
+                '<td><span class="badge badge-light border">' + item.estado + '</span></td>' +
+                '<td>' + (item.fecha_venta || '--') + '</td>' +
+                '<td>' + (item.fecha_vencimiento_garantia || '--') + '</td>' +
+                '<td>' + (item.ubicacion || '--') + '</td>' +
+                '<td><strong>' + (item.calidad || 'A') + '</strong></td>' +
+            '</tr>';
+        }).join('');
+    }
+
+    function buscarSerie() {
+        const formData = new FormData(document.getElementById('formBusquedaSerie'));
+
+        fetch('{{ route("lotes-garantias.ajax.busqueda-serie") }}', {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function (response) {
+            return response.json().then(function (data) {
+                if (!response.ok) {
+                    throw new Error(data.message || 'No fue posible realizar la búsqueda.');
+                }
+                return data;
+            });
+        })
+        .then(function (data) {
+            const serie = data.serie;
+            setText('resLote', serie.lote.codigo);
+            setText('resProveedor', serie.lote.proveedor);
+            setText('resUnidades', serie.lote.unidades);
+            setText('resFechaProduccion', serie.lote.fecha_produccion);
+            setText('resFechaVenta', serie.garantia.fecha_venta);
+            setText('resFechaVencimiento', serie.garantia.fecha_vencimiento);
+            setText('resDiasRestantes', serie.garantia.dias_restantes);
+            setText('resCondicion', serie.estado.condicion);
+            setText('resUbicacion', serie.estado.ubicacion);
+            setText('resCalidad', serie.estado.calidad);
+            setText('resUltimoMovimiento', serie.estado.ultimo_movimiento);
+
+            const badge = document.getElementById('resEstadoGarantia');
+            badge.textContent = serie.garantia.estado;
+            badge.className = 'badge ' + (serie.garantia.estado === 'Vigente' ? 'badge-success' : 'badge-danger');
+            renderHistorial(data.historial_relacionadas);
+        })
+        .catch(function (error) {
+            window.alert(error.message);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('formBusquedaSerie').addEventListener('submit', function (event) {
+            event.preventDefault();
+            buscarSerie();
+        });
+    });
+
+    return { buscar: buscarSerie };
+})();
+</script>
 @endsection
