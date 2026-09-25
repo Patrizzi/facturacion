@@ -215,4 +215,77 @@
         </div>
     </div>
 </div>
+<script>
+const GarantiaProductoModule = (function () {
+    function consultarGarantia() {
+        const formData = new FormData(document.getElementById('formGarantiaProducto'));
+        formData.append('_token', '{{ csrf_token() }}');
+
+        fetch('{{ route("lotes-garantias.ajax.garantia-producto") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // Cuadro 1: Garantía
+                document.getElementById('gpFechaCompra').textContent = data.garantia.fecha_compra;
+                document.getElementById('gpFechaVencimiento').textContent = data.garantia.fecha_vencimiento;
+                document.getElementById('gpTiempoTotal').textContent = data.garantia.tiempo_total;
+
+                // Cuadro 2: Producto
+                document.getElementById('gpNumLote').textContent = data.producto.num_lote;
+                document.getElementById('gpCodInterno').textContent = data.producto.cod_interno;
+                document.getElementById('gpMarca').textContent = data.producto.marca;
+                document.getElementById('gpProducto').textContent = data.producto.producto;
+
+                // Cuadro 3: Proveedor
+                document.getElementById('gpCodProv').textContent = data.proveedor.cod_prov;
+                document.getElementById('gpNomProv').textContent = data.proveedor.nom_prov;
+                document.getElementById('gpNumDoc').textContent = data.proveedor.num_factura;
+                document.getElementById('gpGuiaRemision').textContent = data.proveedor.guia_remision;
+                const bProv = document.getElementById('gpEstadoGarantia');
+                bProv.textContent = data.proveedor.estado_garantia;
+                bProv.className = `badge ${data.proveedor.estado_garantia === 'Vigente' ? 'badge-success' : 'badge-danger'}`;
+
+                // Tabla resumen
+                renderTabla(data.resumen_tabla);
+            } else {
+                alert(data.message || 'Error en la consulta');
+            }
+        });
+    }
+
+    function renderTabla(items) {
+        const tbody = document.querySelector('table tbody');
+        if (!items || items.length === 0) return;
+        tbody.innerHTML = items.map(i => `
+            <tr>
+                <td><code>${i.serie}</code></td>
+                <td>${i.codigo}</td>
+                <td>${i.marca}</td>
+                <td class="text-left font-weight-bold">${i.producto}</td>
+                <td>${i.fecha_venta}</td>
+                <td>${i.fecha_venc_garantia}</td>
+                <td><span class="badge ${i.estado_garantia === 'Vigente' ? 'badge-success' : 'badge-danger'}">${i.estado_garantia}</span></td>
+            </tr>
+        `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('formGarantiaProducto').addEventListener('submit', function (e) {
+            e.preventDefault();
+            consultarGarantia();
+        });
+        
+        // Connect the search button inside the form to trigger submit
+        const searchBtn = document.querySelector('#formGarantiaProducto button.btn-primary');
+        if (searchBtn && searchBtn.getAttribute('type') === 'button') {
+            searchBtn.addEventListener('click', function () {
+                consultarGarantia();
+            });
+        }
+    });
+})();
+</script>
 @endsection
