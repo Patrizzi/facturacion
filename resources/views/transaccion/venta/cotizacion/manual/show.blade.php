@@ -205,7 +205,7 @@
                                         <strong>Señor(es):</strong> &nbsp;{{ $cotizacion->cliente->nombre }}<br>
                                         <strong>{{ $cotizacion->cliente->documento_identificacion }} :</strong>
                                         &nbsp;{{ $cotizacion->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <strong>Fecha:</strong> &nbsp;{{ $cotizacion->updated_at }}<br>
+                                        <strong>Fecha:</strong> &nbsp;{{ Carbon\Carbon::parse($cotizacion->updated_at)->format('d-m-Y h:i:s') }}<br>
                                         <strong>Dirección:</strong>&nbsp; {{ $cotizacion->cliente->direccion }}<br>
                                         <strong>Teléfono:</strong>&nbsp;
                                         {{ $cotizacion->cliente->telefono }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -278,7 +278,7 @@
                                     <div align="left">
                                         <strong>Forma De Pago:</strong>
                                         &nbsp;<span>{{ $cotizacion->forma_pago->nombre }}</span>&nbsp;&nbsp;&#09;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;<strong>Fecha:</strong>
-                                        &nbsp;<span>{{ \Carbon\Carbon::parse($cotizacion->updated_at)->format('d-m-Y H:i:s') }}</span><br>
+                                        &nbsp;<span>{{ Carbon::parse($cotizacion->updated_at)->format('d-m-Y H:i:s') }}</span><br>
                                         <strong>Validez :</strong>
                                         &nbsp;<span>{{ $cotizacion->validez }}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#09;&Tab;&Tab;&#8287;
                                         <strong>Garantía:</strong>
@@ -292,6 +292,8 @@
                                             {{ $cotizacion->comisionista->personal->personal_l->nombres }} -
                                             {{ $cotizacion->comisionista->comision }}%</span>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+
+
                                             <input type="hidden" name="" id="comisionista"
                                                 value="{{ $cotizacion->comisionista->comision }}">
                                         @else

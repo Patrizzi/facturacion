@@ -17,12 +17,12 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
-            <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+            <div class="ibox-title d-flex justify-content-between" style="">
                 <div style="margin-top: 5px; margin-bottom: 8px; margin-left: 10px;">
-                    @if (auth()->user()->almacen_id == NULL)
+                    @if (auth()->user()->almacen_id == null)
                         <span class="dropdown">
-                            <a id="" class="no-hover-icon" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+                            <a id="" class="no-hover-icon" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false" style="cursor: pointer;">
                                 <i class="fa fa-arrow-left text-muted"></i>
                             </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs" aria-labelledby="">
@@ -61,45 +61,54 @@
                     </a>
                 </div>
             </div>
-            <div class="ibox-content" style="padding-right: 3.1%; padding-left: 3.1%; padding-bottom: 10px;">
+            <div class="ibox-content" style="padding-bottom: 10px">
                 <div class="row align-items-center tooltip-demo">
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-4">
                         <h3 style="margin: 0;">{{ $nota_venta->cod_nota_venta }}</h3>
                         <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
 
                     <div class="col-12 col-md-4 text-center">
-                        <h2 class="mb-0 text-nowrap" style="margin-left: 200px;">
+                        <h2 class="mb-0 text-nowrap" style="text-align: center">
                             NOTA DE VENTA
                         </h2>
                     </div>
 
-                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                        
+                    <div class="col-12 col-md-4 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
 
-                        <a href="{{ route('nota_venta_pdf', $nota_venta->id) }}"
-                        class="btn btn-success"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        data-original-title="Descargar PDF">
+                        {{-- @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null)
+                            <div class="d-flex align-items-center" style="overflow: hidden;">
+                                @can('nota_venta.editar')
+                                    <div id="btn-slider-nota-venta"
+                                        style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+
+                                    </div>
+
+                                    <button type="button" type="button"
+                                            id="btn btn-toggle-nota-venta"
+                                            onclick="toggleBtnsNotaVenta()"
+                                            class="btn btn-sm btn-default"
+                                            style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
+                                        <i class="fa fa-chevron-left" id="btn-arrow-nota-venta"></i>
+                                    </button>
+                                @endcan
+                            </div>
+
+                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+                        @endif --}}
+
+                        <a href="{{ route('nota_venta_pdf', $nota_venta->id) }}" class="btn btn-sm btn-success"
+                            data-toggle="tooltip" data-placement="bottom" data-original-title="Descargar PDF">
                             <i class="fa fa-file-pdf-o fa-lg"></i>
                         </a>
 
-                        <a href="{{ route('nota_venta.ticket', $nota_venta->id) }}"
-                        class="btn btn-info"
-                        target="_blank"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        data-original-title="Ticket">
+                        <a href="{{ route('nota_venta.ticket', $nota_venta->id) }}" class="btn btn-sm btn-info"
+                            target="_blank" data-toggle="tooltip" data-placement="bottom" data-original-title="Ticket">
                             <i class="fa fa-ticket fa-lg"></i>
                         </a>
 
-                        <a class="btn btn-success"
-                        href="{{ route('nota_venta.print', $nota_venta->id) }}"
-                        target="_blank"
-                        data-toggle="tooltip"
-                        data-placement="bottom"
-                        data-original-title="Imprimir">
+                        <a class="btn btn-sm btn-success" href="{{ route('nota_venta.print', $nota_venta->id) }}"
+                            target="_blank" data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
                             <i class="fa fa-print fa-lg"></i>
                         </a>
 
@@ -107,82 +116,54 @@
                             <form action="{{ route('email.nota_venta', $nota_venta->id) }}" method="post"
                                 style="padding-right: 0; padding-left: 0;" class="btn">
                                 @csrf
-                                <button type="submit"
-                                        class="btn btn-secondary"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        formtarget="_blank"
-                                        data-original-title="Enviar por correo">
+                                <button type="submit" class="btn btn-sm btn-secondary" data-toggle="tooltip"
+                                    data-placement="bottom" formtarget="_blank" data-original-title="Enviar por correo">
                                     <i class="fa fa-envelope fa-lg"></i>
                                 </button>
                             </form>
                         @endif
-
                         <div style="position: relative; display: inline-block;">
                             <div id="auto" onclick="divAuto()">
-                                <a class="btn btn-success"
-                                style="background: green; border-color: green;"
-                                data-toggle="tooltip"
-                                data-placement="bottom"
-                                data-original-title="Enviar a">
+                                <a class="btn btn-sm btn-success" style="background: green; border-color: green;"
+                                    data-toggle="tooltip" data-placement="bottom" data-original-title="Enviar a">
                                     <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
                                 </a>
                             </div>
                         </div>
-                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0 && $nota_venta->id_cotizacion == null && $nota_venta->id_cotizacion_m == null)
-                            <div class="d-flex align-items-center" style="overflow: hidden;">
-                                @can('nota_venta.editar')
-                                    <div id="btn-slider-nota-venta"
-                                        style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
+                        @if (
+                            $nota_venta->estado == 0 &&
+                                $nota_venta->estado_vigente == 0 &&
+                                $nota_venta->id_cotizacion == null &&
+                                $nota_venta->id_cotizacion_m == null)
+                            @can('nota_venta.editar')
+                                <button type="button" class="btn btn-editar btn-sm btn-warning" onclick="click_editar()"
+                                    data-toggle="tooltip" data-placement="bottom" data-original-title="Editar nota de venta"
+                                    style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
 
-                                        <button class="btn-editar btn btn-warning"
-                                                onclick="click_editar()"
-                                                data-toggle="tooltip"
-                                                data-placement="bottom"
-                                                data-original-title="Editar nota de venta"
-                                                style="white-space: nowrap; margin-right: 4px;">
-                                            <i class="fa fa-pencil"></i>
-                                        </button>
-
-                                        <button class="btn-no-editar no_mostrar btn btn-warning"
-                                                onclick="click_cancelar_editar()"
-                                                data-toggle="tooltip"
-                                                data-placement="bottom"
-                                                data-original-title="Cancelar edición"
-                                                style="white-space: nowrap; margin-right: 4px;">
-                                            <i class="fa fa-times"></i>
-                                        </button>
-                                    </div>
-
-                                    <button type="button"
-                                            id="btn-toggle-nota-venta"
-                                            onclick="toggleBtnsNotaVenta()"
-                                            class="btn btn-default"
-                                            style="background: #fff; border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
-                                        <i class="fa fa-chevron-right" id="btn-arrow-nota-venta"></i>
-                                    </button>
-                                @endcan
-                            </div>
-
-                            <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
+                                <button type="button" class="btn btn-no-editar no_mostrar btn-sm btn-warning"
+                                    onclick="click_cancelar_editar()" data-toggle="tooltip" data-placement="bottom"
+                                    data-original-title="Cancelar edición" style="white-space: nowrap; margin-right: 4px;">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            @endcan
                         @endif
                     </div>
-                    <div id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 18px;">
+                    <div id="div-mostrar"
+                        style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 18px;">
                         <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                             style="text-align: none; padding-right: 0; padding-left: 0;">
                             @csrf
                             <input type="tel" name="numero" value="{{ $nota_venta->cliente->celular }}" />
                             <input type="text" name="mensaje" hidden value="" />
-                            <input type="text" hidden name="url" value="{{ route('nota_venta_pdf', $nota_venta->id) }}">
+                            <input type="text" hidden name="url"
+                                value="{{ route('nota_venta_pdf', $nota_venta->id) }}">
                             <input type="text" name="name_sin_cambio" hidden
                                 value="PDF-DOC-{{ $nota_venta->cod_nota_venta }}-{{ $empresa->ruc }}" />
-                            <button type="submit"
-                                    class="btn btn-success"
-                                    style="background: green; border-color: green;"
-                                    formtarget="_blank"
-                                    data-toggle="tooltip"
-                                    data-placement="bottom"
-                                    data-original-title="Enviar por Whatsapp">
+                            <button type="submit" class="btn btn-success"
+                                style="background: green; border-color: green;" formtarget="_blank" data-toggle="tooltip"
+                                data-placement="bottom" data-original-title="Enviar por Whatsapp">
                                 <i class="fa fa-send fa-lg"></i>
                             </button>
                         </form>
@@ -192,66 +173,69 @@
         </div>
         <div class="row">
             <div class="col-lg-12" style="margin-top: -26px;">
-                <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <div class="row" style="align-items: center; justify-content: center">
-                        @include('layout_cabecera_ventas')
-                        <div class="col-sm-4">
-                            <div class="form-control" align="center" style="height: auto;">
-                                <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                <h2 style="font-size: 19px">NOTA DE VENTA</h2>
-                                <h5>{{ $nota_venta->cod_nota_venta }} </h5>
-                            </div>
-                        </div>
-                    </div><br>
-                    <div class="row" align="center" style="padding-bottom: 5px">
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Contacto Cliente</h3>
-                                <div align="left">
-                                    <strong>Señor(es):</strong> &nbsp;{{ $nota_venta->cliente->nombre }}<br>
-                                    <strong>{{ $nota_venta->cliente->documento_identificacion }} :</strong>
-                                    &nbsp;{{ $nota_venta->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <strong>Fecha:</strong> &nbsp;{{ $nota_venta->updated_at }}<br>
+                <div class="ibox-content " style=" margin-bottom: 20px;padding-bottom: 50px;">
+                    <br>
+                    <div class="table-no mostrar">
+                        <div class="row " align="center" style="padding-bottom: 5px">
+                            <div class="col-sm-6" align="center">
+                                <div class="form-control">
+                                    <h3>Contacto Cliente</h3>
+                                    <div align="left">
+                                        <strong>Señor(es):</strong> &nbsp;{{ $nota_venta->cliente->nombre }}<br>
+                                        <strong>{{ $nota_venta->cliente->documento_identificacion }} :</strong>
+                                        &nbsp;{{ $nota_venta->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <br>
+                                        <strong>Fecha:</strong>
+                                        &nbsp;{{ Carbon\Carbon::parse($nota_venta->updated_at)->format('d-m-Y h:i:s') }}<br>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6" align="center">
-                            <div class="form-control">
-                                <h3>Condiciones Generales</h3>
-                                <div align="left">
-                                    <strong>Garantia:</strong> &nbsp;@if (isset($nota_venta->id_cotizacion)) {{ $nota_venta->garantia }}
-                                    @else
-                                        {{ $nota_venta->garantia }} @if (preg_match('/\d+/', $nota_venta->garantia))
-                                            Mes(es)
+                            <div class="col-sm-6" align="center">
+                                <div class="form-control">
+                                    <h3>Condiciones Generales</h3>
+                                    <div align="left">
+                                        <strong>Garantia:</strong>&nbsp;
+                                        @if (isset($nota_venta->id_cotizacion))
+                                            {{ $nota_venta->garantia }}
+                                        @else
+                                            {{ $nota_venta->garantia }} @if (preg_match('/\d+/', $nota_venta->garantia))
+                                                Mes(es)
+                                            @endif
                                         @endif
-                                    @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                    <strong>Tipo de Moneda:</strong>
-                                    &nbsp;{{ $nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
-                                    <input type="hidden" name="moneda" id="moneda"
-                                        value="{{ $nota_venta->moneda->nombre }}">
-                                    <input type="hidden" id="moneda_id" value="{{ $nota_venta->moneda->id }}">
+                                        <br>
+                                        <strong>Moneda:</strong>
+                                        &nbsp;{{ $nota_venta->moneda->nombre }}
+                                        <input type="hidden" name="moneda" id="moneda"
+                                            value="{{ $nota_venta->moneda->nombre }}">
+                                        <input type="hidden" id="moneda_id" value="{{ $nota_venta->moneda->id }}">
+                                        <br>
+                                        <strong>Forma de Pago</strong>
+                                        {{ $nota_venta->forma_pago }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-12" align="center">
-                            <div class="form-control" style="border: none;height: auto">
-                                <div align="left">
-                                    <strong>observaciones:</strong> &nbsp;{{ $nota_venta->observacion }}<br>
+                            <div class="col-sm-12" align="center">
+                                <div class="form-control" style="border: none;height: auto">
+                                    <div align="left">
+                                        <strong>Observaciones:</strong> &nbsp;{{ $nota_venta->observacion }}<br>
+                                    </div>
                                 </div>
                             </div>
+                            <br>
                         </div>
-
-                    </div><br>
-                    <div class="table-responsive">
-                        <div class="table-no">
+                    </div>
+                    <br>
+                    <div class="mostrar table-no">
+                        <div class="table-responsive">
                             <table class="table ">
                                 <thead>
                                     <tr>
-                                        <th>ITEM </th>
-                                        <th>Descripcion</th>
-                                        <th>Cantidad</th>
-                                        <th>P.Unitario</th>
-                                        <th>Total <span
+                                        <th style="width: 5%">ITEM </th>
+                                        <th style="width: 45%">Descripcion</th>
+                                        <th style="width: 5%;text-align: center">Cantidad</th>
+                                        <th style="width: 10%;text-align: center">P.Unitario</th>
+                                        <th style="width: 10%;text-align: center">Total 
+                                            <span
                                                 hidden="hidden">{{ $simbologia = $nota_venta->moneda->simbolo }}</span>
                                         </th>
                                     </tr>
@@ -261,11 +245,28 @@
                                     @foreach ($nota_venta_re as $nota_venta_reg)
                                         <tr>
                                             <td>{{ $i++ }} </td>
-                                            <td>{{ $nota_venta_reg->producto }}<br>{{ $nota_venta_reg->descripcion }}</td>
-                                            <td>{{ $nota_venta_reg->cantidad }}</td>
-                                            <td>{{ $simbologia }} {{ round($nota_venta_reg->precio_nacional, 2) }}</td>
-                                            <td>{{ $simbologia }}
-                                                {{ round($nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional, 2) }}
+                                            <td>{{ $nota_venta_reg->producto }}<br>{{ $nota_venta_reg->descripcion }}
+                                            </td>
+                                            <td style="text-align: center"> {{ $nota_venta_reg->cantidad }}</td>
+                                            <td style="">
+                                                <div style="display: flex;justify-content: space-between">
+                                                    <div>
+                                                        {{ $simbologia }}
+                                                    </div>
+                                                    <div>
+                                                        {{ round($nota_venta_reg->precio_nacional, 2) }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="">
+                                                <div style="display: flex;justify-content: space-between">
+                                                    <div>
+                                                        {{ $simbologia }}
+                                                    </div>
+                                                    <div>  
+                                                        {{ round($nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional, 2) }}
+                                                    </div>
+                                                </div>
                                             </td>
                                             <span
                                                 hidden>{{ $sume = round($nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional + $sume, 2) }}</span>
@@ -273,7 +274,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <div class="row" style="width: 100%">
+                            <span hidden>{{ $h = 0 }}</span>
+                        </div>
+                        <div class="row" style="padding-top: 120px">
                                 <div class="col-sm-8">
                                     <h3 align="left" class="">
                                         <?php
@@ -281,7 +284,8 @@
                                         $v = new NumeroALetras();
                                         $letra = $v->toInvoice($end, 2);
                                         ?>
-                                        Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $nota_venta->moneda->nombre }}
+                                        Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }}
+                                        {{ $nota_venta->moneda->nombre }}
                                     </h3>
                                 </div>
                                 <div class="col-sm-4">
@@ -293,116 +297,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        {{-- //SOLO EDITAR  --}}
-                        <span hidden>{{ $h = 0 }}</span>
-                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0)
-                            <div class="div-editar no_mostrar">
-                                <form action="{{ route('nota_venta.update', $nota_venta->id) }}" method="post"
-                                    id="nota_vent_update">
-                                    @csrf
-                                    <div class="table-responsive">
-                                        <table class="table tables" id="inp_s">
-                                            <thead>
-                                                <tr>
-                                                    <th><button type="button" class='addmore btn btn-success'> <i
-                                                                class="fa fa-plus-square" aria-hidden="true"></i>
-                                                        </button>&nbsp;</th>
-                                                    <th style="width: 51%">Descripcion</th>
-                                                    <th style="width: 8%;">Cantidad</th>
-                                                    <th>P. Sugerido</th>
-                                                    <th>P.Unitario</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($nota_venta_re as $nota_venta_reg)
-                                                    <tr>
-                                                        <td>
-                                                            <button type="button" class='delete borrar e btn btn-danger'> <i
-                                                                    class="fa fa-trash" aria-hidden="true"></i> </button>
-                                                        </td>
-                                                        <td>
-                                                            <select class="select2_demo_3 form-control" name="articulo[]" id="article_text{{ $h }}" onchange="ajax({{$h}})">
-                                                                <option value="{{$nota_venta_reg->producto}}">{{$nota_venta_reg->producto}}</option>
-                                                            </select>
-                                                            {{-- <input maxlength="190" class="form-control limp"
-                                                                list="browsers{{ $h }}" name="articulo[]" required
-                                                                autocomplete="off" value="{{ $nota_venta_reg->producto }}"
-                                                                id="article_text{{ $h }}">
-                                                            <datalist id="browsers{{ $h }}">
-                                                                @foreach ($productos as $index)
-                                                                    <option>{{ $index->nombre }} \\ {{ $index->descripcion }}
-                                                                    </option>
-                                                                @endforeach
-                                                                @foreach ($servicios as $servicio)
-                                                                    <option>{{ $servicio->nombre }} \\
-                                                                        {{ $servicio->descripcion }}</option>
-                                                                @endforeach
-                                                            </datalist> --}}
-                                                            </input>
-                                                            <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo">{{ $nota_venta_reg->descripcion }}</textarea>
-                                                        </td>
-                                                        <input type="hidden" name="elem_delete[]"
-                                                            value="{{ $nota_venta_reg->id }}">
-                                                        <input type="hidden" name="n_registros_ori[]" id="n_registros_ori"
-                                                            value="existente">
-                                                        <td><input type="text" value="{{ $nota_venta_reg->cantidad }}"
-                                                                class="cantidad{{ $h }} form-control limp"
-                                                                id="cantidad{{ $h }}" name="cantidad[]"
-                                                                onkeyup="multi({{ $h }})"></td>
-                                                        <td><input type="text" style="width: 96px" class="form-control"
-                                                                readonly id="precio_sugerido{{ $h }}"
-                                                                ondblclick="copy({{ $h }})"></td>
-                                                        <td><input type="text" style="width: 96px"
-                                                                value="{{ $nota_venta_reg->precio_nacional }}"
-                                                                class="precio{{ $h }} form-control limp"
-                                                                id="precio{{ $h }}" name="precio[]"
-                                                                onkeyup="multi({{ $h }})"></td>
-                                                        <td><input type="text" style="width: 96px"
-                                                                value="{{ $nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional }}"
-                                                                class="form-control limp" name="total"
-                                                                id="total{{ $h }}" readonly></td>
-                                                    </tr>
-                                                    <span hidden>{{ $h++ }}</span>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col-sm-12" align="right">
-                                        <button data-style="zoom-out" class="guardar ladda-button btn btn-primary btn-outline"
-                                            type="submit">Guardar</button>
-                                        <button class="btn btn-primary  demo3 float-right" style="margin-left: 10px;"
-                                            type="button">Guardar y Finalizar</button>
-                                        <button class="btn btn-secondary ladda-button finalizar " id="finalizar"
-                                            hidden="" data-style="zoom-out">
-                                        </button>
-                                    </div>
-                                    <br>
-                                </form>
-                                <div class="row" style="width: 100%">
-                                    <div class="col-sm-8">
-                                        <h3 align="left" class="h3-total">
-                                            <?php
-                                            $end = round($sume, 2);
-                                            $v = new NumeroALetras();
-                                            $letra = $v->toInvoice($end, 2);
-                                            ?>
-                                            Son : {{ ucfirst(mb_strtolower($letra,'UTF-8')) }} {{ $nota_venta->moneda->nombre }}
-                                        </h3>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-control" align="center">
-                                            <p class=" a"> Importe Total</p>
-                                            <span>{{ $nota_venta->moneda->simbolo }}</span>
-                                            <span class="impor_t">{{ $sume }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        @else
-                        @endif
-                    </div><!-- /table-responsive -->
+                    </div>
+                    @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0)
+                        @include('transaccion.venta.nota_venta.edit')
+                    @endif
                     <br><br><br><br>
 
 
@@ -419,10 +317,10 @@
 
     {{--  --}}
     <style>
-        .form-control {
-            margin-top: 5px;
-            border-radius: 5px
-        }
+        /* .form-control {
+                                                margin-top: 5px;
+                                                border-radius: 5px
+                                            } */
 
         p#texto {
             text-align: center;
@@ -475,33 +373,58 @@
             height: 50px;
         }
 
-        .form-control-plaintext {
-            display: table-column !important;
+        .dataTables_wrapper {
+            padding: 0px;
         }
 
-        .form-control {
-            border-radius: 10px;
-            padding: 10px
+        #DataTables_Table_0_wrapper {
+            display: flex;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            height: 100% !important;
         }
 
-        .ibox-tools a {
-            color: white !important
+        #DataTables_Table_0_wrapper>.top {
+            display: none;
         }
 
-        .a {
-            height: 37px;
-            margin: 0;
-            border-radius: 0px;
-            text-align: center;
+        #DataTables_Table_0_wrapper>.row>.col-sm-12 {
+            padding: 0px !important;
         }
 
-        .table>thead>tr>th,
-        .table>tbody>tr>th,
-        .table>tfoot>tr>th,
-        .table>thead>tr>td,
-        .table>tbody>tr>td,
-        .table>tfoot>tr>td {
-            border-top-width: 0px;
+        .data_table_multiple {
+            border: 1px solid #e7eaec;
+            margin-bottom: 0px !important;
+        }
+
+        #DataTables_Table_0_info {
+            margin-bottom: 5px !important;
+        }
+
+        span.select2.select2-container.select2-container--default.select2-container--below {
+            /* max-width: 400px !important; */
+            /* min-width: 400px !important; */
+        }
+
+        .word-style select,
+        .word-style input,
+        .word-style textarea,
+        .word-style span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none;
+        }
+
+        span.select2.select2-container.select2-container--default {
+            background-color: #FFFFFF;
+            background-image: none;
+            border-radius: 1px;
+            display: block;
+            padding: 3px 12px;
+            border: 1px solid #e5e6e7;
         }
 
         .mostrar {
@@ -515,7 +438,8 @@
         .table-responsive {
             /* overflow-x: revert; */
         }
-        span.select2.select2-container.select2-container--default{
+
+        span.select2.select2-container.select2-container--default {
             width: 100% !important;
         }
     </style>
@@ -541,6 +465,8 @@
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script>
         $('.demo3').click(function() {
@@ -579,6 +505,38 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+        $(".select2_demo_client").select2({
+            placeholder: "Seleccionar Cliente",
+            width: '100%',
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.clients') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 10,
+                data: function(params) {
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term, // search term
+                        tipo_coti: tipo_coti,
+                        select_default: cliente_default
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nombre + ' | ' + item.numero_documento,
+                            };
+
+                        })
+                    };
+                },
+                cache: true
+            }
+
         });
 
         function mostrarMensaje(mensaje) {
@@ -637,7 +595,7 @@
                     dataType: 'json',
                     type: "POST",
                     // delay: 1500,
-                    data: function (params) {
+                    data: function(params) {
                         return {
                             _token: "{{ csrf_token() }}",
                             search: params.term, // search term
@@ -645,7 +603,7 @@
                             tipo_doc: 'manual'
                         };
                     },
-                    processResults: function (data) {
+                    processResults: function(data) {
                         //validador de articulos multiples
                         let data_length = data.length;
                         let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
@@ -663,10 +621,12 @@
                         //     }
                         // }
                         return {
-                            results: $.map(data, function (item) {
+                            results: $.map(data, function(item) {
                                 return {
-                                    id:  item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
-                                    text: item.id + " | " + item.codigo + " | " + item.codigo_original + " | " + item.nombre,
+                                    id: item.id + " | " + item.codigo + " | " + item.codigo_original +
+                                        " | " + item.nombre,
+                                    text: item.id + " | " + item.codigo + " | " + item.codigo_original +
+                                        " | " + item.nombre,
                                     disabled: item.disabled
                                 };
                             })
@@ -677,13 +637,14 @@
                 }
             });
         }
-        function ajax (a){
 
-                var articulo = document.getElementById(`article_text${a}`).value;
+        function ajax(a) {
+
+            var articulo = document.getElementById(`article_text${a}`).value;
 
             var almacen = $('[id="almacen_id"]').val();
             var moneda = $('[id="moneda_id"]').val();
-            var igv = {{$igv->igv_total}}
+            var igv = {{ $igv->igv_total }}
             $.ajax({
                 type: "post",
                 url: "{{ route('pa.description') }}",
@@ -693,22 +654,22 @@
                     'almacen': almacen,
                     'moneda': moneda
                 },
-                success: function (msg) {
-                    if(msg.price == 0 && msg.amount == 0){
+                success: function(msg) {
+                    if (msg.price == 0 && msg.amount == 0) {
                         $(`#precio_sugerido${a}`).val(msg.price)
-                    }else{
-                        var new_price = msg.price + (msg.price * igv/100 );
+                    } else {
+                        var new_price = msg.price + (msg.price * igv / 100);
                         $(`#precio_sugerido${a}`).val(Math.round(new_price * 100) / 100);
                     }
                     multi(a);
                     $(`.addmore`).prop("disabled", false);
                 },
                 error: function(eject) {
-                    if(eject.status===400){
+                    if (eject.status === 400) {
                         console.log(eject.responseJSON.error);
                     }
                 },
-                cache:true
+                cache: true
             });
         }
     </script>
@@ -897,9 +858,10 @@
 
             }
         });
+
         function toggleBtnsNotaVenta() {
             const slider = document.getElementById('btn-slider-nota-venta');
-            const arrow = document.getElementById('btn-arrow');
+            const arrow = document.getElementById('btn-arrow-nota-venta');
             const isOpen = slider.style.width !== '0px' && slider.style.width !== '0';
 
             if (isOpen) {

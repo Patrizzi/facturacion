@@ -617,13 +617,13 @@
             // document.getElementById("total_final").value = end;
         });
         function limpiar_inputs(){
-        $('#celda').val("");
-        $('#descripcion').val("");
-        $('#cantidad').val("");
-        $('#precio_sugerido').val("");
-        $('#precio_total').val("");
-        $('#total').val("");
-        $('#total_final').val("");
+            $('.celda').val("");
+            $('.descripcion').val("");
+            $('.cantidad').val("");
+            $('.precio_sugerido').val("");
+            $('.precio_total').val("");
+            $('.total').val("");
+            $('.#total_final').val("");
         }
     </script>
 

@@ -251,8 +251,11 @@ class NotaVentaController extends Controller
         $count_reg = count($nota_venta_re);
         $almacen=Almacen::all();
         $igv = Igv::first();
+        $monedas=Moneda::all();
+        $forma_pagos= Forma_pago::all();
+        $garantia = Garantia::where('estado', 0)->get();
         // return var_dump($nota_venta_re[0]->precio_nacional+"3");
-        return view('transaccion.venta.nota_venta.show',compact('nota_venta', 'almacen','nota_venta_re','empresa','banco','banco_count','servicios','productos','count_reg','igv'));
+        return view('transaccion.venta.nota_venta.show',compact('nota_venta', 'almacen','nota_venta_re','empresa','banco','banco_count','servicios','productos','count_reg','igv','monedas','forma_pagos','garantia'));
 
     }
     /**
