@@ -19,6 +19,7 @@
                 </div>
                 <div class="ibox-content">
                     <form id="formBusquedaSerie">
+                        @csrf
                         <div class="form-row align-items-end">
                             <div class="col-md-5 col-sm-12 mb-2">
                                 <label class="font-weight-bold" style="font-size: 13px;">Número de Serie:</label>
@@ -224,6 +225,7 @@ const BusquedaSerieModule = (function () {
 
     function buscarSerie() {
         const formData = new FormData(document.getElementById('formBusquedaSerie'));
+        formData.append('_token', '{{ csrf_token() }}');
 
         fetch('{{ route("lotes-garantias.ajax.busqueda-serie") }}', {
             method: 'POST',

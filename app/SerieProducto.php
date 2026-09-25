@@ -29,6 +29,10 @@ class SerieProducto extends Model
 
     public function lote()
     {
-        return $this->belongsTo(Lote::class, 'lote_id');
+        if (class_exists(Lote::class)) {
+            return $this->belongsTo(Lote::class, 'lote_id');
+        }
+
+        return $this->belongsTo(Producto::class, 'producto_id')->whereRaw('1 = 0');
     }
 }

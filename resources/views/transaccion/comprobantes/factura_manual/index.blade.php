@@ -381,11 +381,7 @@
                             // No incluimos 99 porque no queremos que aparezca
                         };
 
-<<<<<<< HEAD
-                        let end = `<div style="display: flex; gap: 5px; align-items: center; justify-content: center;">`;
-=======
                         let end = "";
->>>>>>> origin/master
 
                         const estadoSunat = parseInt(full[9]);
                         const estadoCredito = parseInt(full[10]);

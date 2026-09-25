@@ -52,11 +52,7 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="tab1" role="tabpanel">
                             <!-- Aquí se agrega el contenido del modal -->
-<<<<<<< HEAD
-                            <div class="col-md-12" style="border-bottom: 1px solid #dee2e6;">
-=======
                             <div class="col-md-12">
->>>>>>> origin/master
                                 <br>
                                 <div class="row mb-3">
                                     <!-- DOCUMENTO IDENTIFICACION -->

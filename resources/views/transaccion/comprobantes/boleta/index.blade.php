@@ -181,13 +181,10 @@
                                                     <option value="2">P. Total</option>
                                                 </select>
                                             </div>
-<<<<<<< HEAD
-=======
                                             <div class="col-lg-3 col-md-6 col-sm-12">
                                                 <input type="search" class="form-control" placeholder="Buscar:"
                                                     id="search_all_column">
                                             </div>
->>>>>>> origin/master
                                             <div class="col-lg-2 col-md-6 col-sm-12">
                                                 <select class="form-control" name="" id="select_estado_sunat">
                                                     <option value="" selected>Estado Sunat</option>
@@ -196,13 +193,6 @@
                                                     <option value="2">Anulado</option>
                                                 </select>
                                             </div>
-<<<<<<< HEAD
-                                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                                <input type="search" class="form-control" placeholder="Buscar:"
-                                                    id="search_all_column">
-                                            </div>
-=======
->>>>>>> origin/master
                                             <div class="col-lg-1 col-md-6 col-sm-12">
                                                 <button type="button" class="btn btn-block btn-primary"
                                                     id="filter_buttons">Buscar</button>
@@ -423,11 +413,7 @@
                             // No incluimos 99 porque no queremos que aparezca
                         };
 
-<<<<<<< HEAD
-                        let end = `<div style="display: flex; gap: 5px; align-items: center; justify-content: center;">`;
-=======
                         let end = "";
->>>>>>> origin/master
 
                         const estadoSunat = parseInt(full[9]);
                         const estadoCredito = parseInt(full[10]);
@@ -462,15 +448,8 @@
                                     </button> `;
                         }
 
-<<<<<<< HEAD
-                        
                         return end;
 
-
-=======
-                        return end;
-
->>>>>>> origin/master
                     }
                 },
                 {
