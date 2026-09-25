@@ -24,6 +24,10 @@ class Facturacion_registro extends Model
         return $this->belongsTo(Facturacion::class,'facturacion_id');
     }
 
+    public function lote(){
+        return $this->belongsTo(Lote::class,'lote_id');
+    }
+
     public function getArticuloDescripcionAttribute(){
         if (!empty($this->attributes['producto_id'])) {
             return optional($this->producto)->nombre . ' ' . $this->attributes['descripcion_item'];

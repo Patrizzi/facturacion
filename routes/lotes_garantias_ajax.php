@@ -12,8 +12,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('inventario/lotes-garantias/ajax')->group(function () {
-    // DEV 1: Detalle de Lote (se activará cuando Dev 1 cree su controlador)
-    // Route::post('/detalle-lote', 'LotesGarantias\DetalleLoteController@ajaxLotes')->name('lotes-garantias.ajax.detalle-lote');
+    // DEV 1: Detalle de Lote (Alessandro / Dev 1)
+    Route::post('/detalle-lote', 'LotesGarantias\DetalleLoteController@ajaxLotes')
+        ->name('lotes-garantias.ajax.detalle-lote');
+    Route::post('/series-por-lote', 'LotesGarantias\DetalleLoteController@ajaxSeriesPorLote')
+        ->name('lotes-garantias.ajax.series-por-lote');
 
     // DEV 2: Búsqueda por Serie (Ivan)
     Route::post('/busqueda-serie', 'LotesGarantias\BusquedaSerieController@ajaxBuscarSerie')

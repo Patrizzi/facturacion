@@ -23,6 +23,10 @@ class Boleta_registro extends Model
         return $this->belongsTo(Boleta::class,'boleta_id');
     }
 
+    public function lote(){
+        return $this->belongsTo(Lote::class,'lote_id');
+    }
+
     public function getArticuloDescripcionAttribute(){
         if (!empty($this->attributes['producto_id'])) {
             return optional($this->producto)->nombre . ' ' . $this->attributes['descripcion_item'];
