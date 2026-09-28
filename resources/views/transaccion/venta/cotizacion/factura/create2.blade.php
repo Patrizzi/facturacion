@@ -263,7 +263,7 @@
                                                 <input style="width: 76px" hidden="" type='text' id='tipo_afec0'
                                                     name='tipo_afec[]' readonly="readonly" class="monto0 form-control"
                                                     onkeyup="multi(0)" required autocomplete="off" />
-                                                <input hidden="hidden" class="celda input-articulo" name="articulo[]">
+                                                <input type="text" class="celda" name="articulo[]">
                                             </td>
                                             <td>
                                                 <input style="min-width: 80px;margin: 0px" type='text' id='stock0'
@@ -838,7 +838,7 @@
                         <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                         <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
                         <input type='text' style="min-width: 85px" id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
-                        <input type="hidden"  class="celda"  name="articulo[]" id="input_prod${i}">
+                        <input type="text"  class="celda"  name="articulo[]" id="input_prod${i}">
                     </td>
                     <td>
                         <input type="" style="min-width: 85px"  id='stock${i}' name='stock[]' readonly="readonly" class="form-control stock" required autocomplete="off"/>
@@ -880,7 +880,7 @@
             $('#count_articles').val(i);
             
             i++;
-            console.log(i);
+            // console.log(i);
             //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
             articlesSelect2();
 
@@ -1060,7 +1060,7 @@
             var comision_r = comision_v_r[1]; //obtiene el precio del objeto [0] al revez
             var comision_v = reverseString(comision_v_r[1]); //convierte el precio al revez a la normalidad
             var campos_num = document.getElementsByClassName("total").length;
-            console.log("total" + campos_num);
+            // console.log("total" + campos_num);
             var comisiones_input = document.querySelectorAll('input.comision_input');
             comisiones_input.forEach(element => {
                 element.value = parseFloat(comision_v);
@@ -1071,7 +1071,7 @@
 
         //Función para el calculo de los totales de cada articulo y para los totales de la factura
         function multi(a) {
-            console.log(a);
+            // console.log(a);
             var total = 1;
             var totales = 0;
             var change = false; //
@@ -1212,6 +1212,7 @@
             if (input_text_opt) {
                 var partes = input_text_opt.split('|').map(p => p.trim());
                 var id = partes[0];
+                console.log(id);
                 articulosAgregados.delete(String(id));
                 reactivarBotonModal(id);
                 console.log(articulosAgregados);
@@ -1240,7 +1241,7 @@
                 var filtrarConStock = $('[name="total"]');
                 var total_tt = 0;
 
-                totalInpG.each(function() {
+                filtrarConStock.each(function() {
                     total_tt += parseFloat($(this).val());
                 });
                 $('#sub_total').val(total_tt);
@@ -1304,7 +1305,7 @@
                 },
                 success: function(msg) {
                     //Cambio de moneda
-                    console.log(msg);
+                    // console.log(msg);
                     // document.getElementById("moneda_id").value = msg.id;
                     // document.getElementById("moneda").value = msg.nombre;
                     $('[id="moneda_id"]').val(msg.id);
@@ -1721,7 +1722,7 @@
 
         function reactivarBotonModal(id) {
             var $btn = $(`.btn-agregar-articulo[data-id="${id}"]`);
-            console.log($btn);
+            // console.log($btn);
             if ($btn.length) {
                 $btn.prop('disabled', false);
             }
@@ -1832,14 +1833,14 @@
                         if (opcionId && opcionId == data.comisionista.id) {
                             $('#comisionista').val($(this).val());
                             opcionEncontrada = true;
-                            console.log('✓ Comisionista encontrado:', $(this).val());
+                            // console.log('✓ Comisionista encontrado:', $(this).val());
                             return false;
                         }
                     });
 
                     // Si NO existe, crear la opción dinámicamente desde el JSON
                     if (!opcionEncontrada) {
-                        console.log('⚠ Comisionista no encontrado. Creando desde JSON...');
+                        // console.log('⚠ Comisionista no encontrado. Creando desde JSON...');
 
                         // Crear nueva opción con los datos del JSON
                         const nuevaOpcion = new Option(
@@ -1855,7 +1856,7 @@
                         // Insertar después de "Sin Comisión"
                         $('#comisionista').append(nuevaOpcion);
 
-                        console.log('✓ Opción creada:', textoComisionista);
+                        // console.log('✓ Opción creada:', textoComisionista);
                     }
 
                     // Seleccionar el comisionista (ahora que existe)
@@ -1965,7 +1966,7 @@
                         <select class="monto0 select2_demo_3 select_change" id='articulo${index}' onchange="ajax(${index})" required></select>
                         <textarea id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" style="margin-top: 5px;"></textarea>
                         <input type='text' style="min-width: 85px" id='tipo_afec${index}' name='tipo_afec[]' readonly class="monto${index} form-control" onkeyup="multi(${index})" required hidden/>
-                        <input hidden class="celda input-articulo" name="articulo[]">
+                        <input hidden class="celda" name="articulo[]">
                     </td>
                     <td><input type="" style="min-width: 85px" id='stock${index}' name='stock[]' readonly class="form-control" required/></td>
                     <td><input type='number' style="min-width: 80px" min="1" id='cantidad${index}' name='cantidad[]' class="monto${index} form-control" onkeyup="multi(${index})" required/></td>

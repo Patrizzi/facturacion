@@ -587,34 +587,33 @@
             var e = document.getElementsByClassName("e").length;
             var fila = $(this).parents("tr");
             var input_text_opt = fila.find('input[class="celda"]').val();
+            if (input_text_opt) {
+                var partes = input_text_opt.split('|').map(p => p.trim());
+                var id = partes[0];
+                console.log(id);
+                articulosAgregados.delete(String(id));
+                console.log(articulosAgregados);
+            }
             $('option[value="' + input_text_opt + '"]').prop("disabled", false);
 
             if(e > 1){
                 fila.closest('tr').remove();
+                var totalInp = $('[name="total"]');
+                var total_t = 0;
+
+                totalInp.each(function() {
+                    total_t += parseFloat($(this).val());
+                });
+                // var end = 
+                // $('#sub_total').val(total_t);
+                document.getElementById("total_final").value = total_t;
             }else{
                 $(".select2_demo_3").val(null).trigger("change");
                 $(".addmore").prop("disabled", false);
                 limpiar_inputs();
             }
+            articlesSelect2();
 
-
-            // var totalInp = $('[name="total"]');
-            // var total_t = 0;
-
-            // totalInp.each(function() {
-            //     total_t += parseFloat($(this).val());
-            // });
-            // $('#sub_total').val(total_t);
-
-            // var igv_valor = 18;
-            // var subtotal = document.querySelector(`#sub_total`).value;
-            // var igv = parseFloat(subtotal) * igv_valor / 100;
-            // // var end=parseFloat(igv)+parseFloat(subtotal);
-
-            // // console.log(typeof igv);
-            // // console.log(typeof end);
-            // // document.getElementById("igv").value = igv;
-            // document.getElementById("total_final").value = end;
         });
         function limpiar_inputs(){
             $('.celda').val("");
@@ -622,8 +621,9 @@
             $('.cantidad').val("");
             $('.precio_sugerido').val("");
             $('.precio_total').val("");
+            $('.precio').val("");
             $('.total').val("");
-            $('.#total_final').val("");
+            $('#total_final').val("");
         }
     </script>
 
@@ -837,7 +837,6 @@
                                 "width": "100px",
                                 "className": "precio_search precio_cantidad",
                                 render: function(data, type, row) {
-                                    const yaAgregado = articulosAgregados.has(String(row.id));
                                     return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}"> <i class="fa fa-plus"></i> Agregar</button>`;
                                 }
                             }
@@ -866,45 +865,87 @@
             var $btn = $(this);
             var $row = $(this).closest('tr');
 
-            var stock = $row.find("td:eq(3)").text();
             var cantidad = $row.find('input').val();
-
-            var count_artc = $('#count_articles').val();
+            
+            // var count_artc = $('#count_articles').val();
             var id =  $(this).data('id');
             var cod_prod = $(this).data('cod_producto');
             var cod_origi = $(this).data('cod_original');
             var nombres =$(this).data('nombre');
 
-            articulosAgregados.add(id);
+            articulosAgregados.add(String(id));
 
             var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
             const newOption = new Option(concat_data, concat_data, true, true);
-            const selectedValue = $('#articulo').val();
+            // const selectedValue = $('#articulo').val();
 
-            if (count_artc == "" && selectedValue == null) {
-                console.log("1");
-                $('#articulo').append(newOption).trigger('change');
-                $('#count_articles').val(1);
+            var $primerSelect = $('#articulo');
+            var existePrimerSelect = $primerSelect.length > 0;
+            var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
 
-                let debounceTimer;
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    $(`#cantidad0`).val(cantidad);
-                    multi(0);
-                }, 1000);
-            } else {
-                console.log("2");
-                $('.addmore').click();
-                var count_artc = $('#count_articles').val();
-                $(`#articulo${count_artc}`).append(newOption).trigger('change');
+            // console.log('valorPrimerSelect '+ tieneOpcionSeleccionada);
+            if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
+                // Busca todos los selects existentes (incluyendo #articulo si existe)
+                var $selectsExistentes = $('select[id^="articulo"]');
+
+                if ($selectsExistentes.length === 0) {
+                    // No queda NINGÚN select en el formulario: crear uno desde cero
+                    $('.addmore').prop('disabled', false).click();
+                    $selectsExistentes = $('select[id^="articulo"]');
+                }
+
+                var $selectDestino = $selectsExistentes.last();
+                var idAttr = $selectDestino.attr('id');
+                var count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+                var valorDestino = $selectDestino.val();
+
+                if (valorDestino != null && valorDestino != "") {
+                    // El último select ya tiene algo: crea uno nuevo
+                    $('.addmore').prop('disabled', false).click();
+                    $selectsExistentes = $('select[id^="articulo"]');
+                    $selectDestino = $selectsExistentes.last();
+                    idAttr = $selectDestino.attr('id');
+                    count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+                }
+
+                $selectDestino.append(newOption).trigger('change');
 
                 let debounceTimer;
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(() => {
                     $(`#cantidad${count_artc}`).val(cantidad);
+                    multi(count_artc);
+                }, 1000);
+
+            } else {
+                // El select inicial ya tiene algo, busca el último select numerado existente
+                var $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                var count_artc = $selectsNumerados.length > 0
+                    ? Math.max(...$selectsNumerados.map(function() {
+                        return parseInt($(this).attr('id').replace('articulo', ''));
+                    }).get())
+                    : null;
+                var $ultimoSelect = count_artc === null ? $('#articulo') : $(`#articulo${count_artc}`);
+                var valorActual = $ultimoSelect.val();
+                if (valorActual != null && valorActual != "") {
+                    $('.addmore').prop('disabled', false).click();
+                    // Recalcular tras crear la fila
+                    $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                    count_artc = Math.max(...$selectsNumerados.map(function() {
+                        return parseInt($(this).attr('id').replace('articulo', ''));
+                    }).get());
+                    $ultimoSelect = $(`#articulo${count_artc}`);
+                }
+
+                $ultimoSelect.append(newOption).trigger('change');
+
+                let debounceTimer;
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    $(`#cantidad${count_artc}`).val(cantidad);
+                    multi(count_artc);
                 }, 1000);
             }
-
             toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
         });
 
