@@ -111,7 +111,7 @@ class ParameterCallController extends Controller
             } else {
                 if ($moneda->tipo == 'nacional') {
                     //Calculo de array para precio, stock en (SERVICIO)
-                    $utilidad_serv = $service->precio_nacional * ($service->utilidad) / 100;
+                    $utilidad_serv = $service->precio_nacional ?? 0 * ($service->utilidad) / 100;
                     $array2 = round($service->precio_nacional + $utilidad_serv, 2);
                     $array_promedio_serv = ($service->precio_nacional);
                 } else {

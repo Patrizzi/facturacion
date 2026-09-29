@@ -25,7 +25,7 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label"><strong>Moneda:</strong></label>
                     <div class="col-md-10">
-                        <select name="moneda" class="form-control" required id="moneda_id" onchange="changeMoney()">
+                        <select name="moneda" class="form-control" required id="moneda_id" onchange="changeMoney()" readonly>
                             @foreach ($monedas as $moneda)
                                 <option value="{{ $moneda->id }}"@if ($moneda->id == $nota_venta->moneda_id) selected @endif>
                                     {{ $moneda->nombre }}</option>
@@ -47,7 +47,6 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label"><strong>Forma Pago:</strong></label>
                     <div class="col-md-10">
-                        {{$nota_venta->forma_pago}}
                         <select class="form-control" name="forma_pago" required="required">
                             @foreach ($forma_pagos as $forma_pago)
                                 <option value="{{ $forma_pago->id }}" @if($nota_venta->forma_pago == $forma_pago->id) selected @endif>{{ $forma_pago->nombre }}

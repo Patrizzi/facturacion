@@ -649,7 +649,8 @@
                                 return {
                                     id: item.id,
                                     text: item.nombre,
-                                    disabled: item.disabled
+                                    disabled: item.disabled,
+                                    tipo: item.tipo
                                 };
                             })
                         };
@@ -659,15 +660,27 @@
                     passive: true
                 }
             });
+
         }
 
         function ajax(a) {
+            let item = $('#article_text' + a).select2('data')[0];
+            if(item.tipo){
+                if(item.tipo == "producto"){
+                    $('#tipo_articulo_' + a).val("product");
+                }else{
+                    console.log(item);
+                    $('#tipo_articulo_' + a).val("service");
+                }
+                 $('#input_prod' + a).val($('#article_text' + a).val());
+            }
+
             var articulo = document.getElementById(`input_prod${a}`).value;
             var tipo = document.getElementById(`tipo_articulo_${a}`).value;
             // console.log("tipo "+tipo);
 
             var almacen = $('[id="almacen_id"]').val();
-            var moneda = $('[id="moneda_id"]').val();
+            var moneda = $('[name="almacen"]').val();
             var igv = {{ $igv->igv_total }}
             $.ajax({
                 type: "post",
@@ -681,7 +694,7 @@
                     'tipo': tipo
                 },
                 success: function(msg) {
-                    $(`#tipo_articulo_${a}`).val(msg.id)
+                    // $(`#tipo_articulo_${a}`).val(msg.id)
                     if (msg.price == 0 && msg.amount == 0) {
                         $(`#precio_sugerido${a}`).val(msg.price)
                     } else {
