@@ -707,22 +707,21 @@
             var data = `[
                 <tr>
                     <td>
-                        <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        <button type="button" class='delete borrar e btn btn-primary btn-sm'><i class="fa fa-trash" aria-hidden="true"></i></button>
                     </td>";
                     <td>
                         <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
-
                         <select name="articulo[]" class="monto0 select2_demo_3 select_change" id='article_text${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                         </select>
-                        <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo"></textarea>
-                        <input type="text" id="tipo_articulo_${i}"></input>
-                        <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
+                        <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo" style="margin-top: 5px" row="1"></textarea>
+                        <input type="hidden" id="tipo_articulo_${i}"></input>
+                        <input type="hidden" class="celda"  id="input_prod${i}" >
                     </td>
                     <td>
                         <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1"/>
                     </td>
                     <td>
-                        <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
+                        <input type="text" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
                     </td>
                     <td>
                         <input type='text'  id='precio${i}' name='precio[]' class="precio${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
@@ -753,7 +752,7 @@
                 total_t += parseFloat($(this).val());
             });
             var red = parseFloat(Math.round((total_t) * 100) / 100).toFixed(2);
-            // document.querySelector(`#impor_t`).value = total_t;
+            document.querySelector(`#total_final_view`).value = red;
             $('.impor_t').html(red);
             // ajax_l();
         }
@@ -781,6 +780,10 @@
             event.preventDefault();
             var e = document.getElementsByClassName("e").length;
             var fila = $(this).parents("tr");
+            var input_text_opt = fila.find('input[class="celda"]').val();
+            if (input_text_opt) {
+                articulosAgregados.delete(String(input_text_opt));
+            }
             $(".addmore").prop("disabled", false);
             // ELIMINAR TR
             if (e > 1) {
@@ -950,7 +953,6 @@
                                 "width": "100px",
                                 "className": "precio_search precio_cantidad",
                                 render: function(data, type, row) {
-                                    const yaAgregado = articulosAgregados.has(String(row.id));
                                     return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}" data-type="${row.identifier}"> <i class="fa fa-plus"></i> Agregar</button>`;
                                 }
                             }
@@ -1023,6 +1025,8 @@
                 }
                 // $(`#tipo_articulo_${count_artc}`).val(type);
                 $(`#tipo_articulo_${count_artc}`).val(tipo);
+                $(`#input_prod${count_artc}`).val(id);
+                
                 $selectDestino.append(newOption).trigger('change');
 
                 let debounceTimer;
@@ -1054,6 +1058,7 @@
                 }
 
                 $(`#tipo_articulo_${count_artc}`).val(tipo);
+                $(`#input_prod${count_artc}`).val(id);
                 $ultimoSelect.append(newOption).trigger('change');
 
                 let debounceTimer;

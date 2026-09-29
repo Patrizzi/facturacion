@@ -172,10 +172,7 @@
                                     </tbody>
                                     <tfoot>
                                         <tr class="text-center">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td colspan="4"></td>
                                             <td><strong>Total:</strong></td>
                                             <td>
                                                 <input id='sub_total' hidden name="costo_sub_total" readonly="readonly"

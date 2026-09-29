@@ -96,7 +96,7 @@
                             <th>Total</th>
                         </tr>
                     </thead>
-                    <input type="text" name="" id="count_articles" value="{{ $nota_venta_re->count() + 1 }}">
+                    <input type="hidden" name="" id="count_articles" value="{{ $nota_venta_re->count() + 1 }}">
                     <tbody>
                         @foreach ($nota_venta_re as $nota_venta_reg)
                             <tr>
@@ -111,8 +111,7 @@
                                     </select>
                                     <textarea style="margin-top: 5px" name="article_descripcion[]" id="" class="form-control"
                                         placeholder="Descripcion del artículo">{{ $nota_venta_reg->descripcion }}</textarea>
-                                    <input type="hidden" class="celda" name="articulo[]"
-                                        id="input_prod{{ $h }}" value="{{ $nota_venta_reg->producto }}">
+                                    <input type="hidden" class="celda" id="input_prod{{ $h }}" value="{{ $nota_venta_reg->producto }}">
                                 </td>
                                 <input type="hidden" name="elem_delete[]" value="{{ $nota_venta_reg->id }}">
                                 <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
@@ -135,6 +134,16 @@
                             </tr>
                             <span hidden>{{ $h++ }}</span>
                         @endforeach
+                    </tbody>
+                    <tbody>
+                        <tr class="text-center">
+                            <td colspan="4"></td>
+                            <td><strong>Total:</strong></td>
+                            <td>
+                                <input id='total_final_view' name="costo_total" readonly="readonly"
+                                    class="form-control" required value="{{$end}}" />
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
