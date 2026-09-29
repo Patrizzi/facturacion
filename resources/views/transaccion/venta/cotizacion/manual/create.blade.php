@@ -268,7 +268,7 @@
                                                     class="form-control" autocomplete="off" style="margin-top: 5px;"></textarea>
                                                 {{-- <input hidden="hidden" class="celda" name="articulo[]"
                                                     id="input_prod1"> --}}
-                                                <input type="text" class="celda" name="articulo[]">
+                                                <input type="hidden" class="celda" name="articulo[]">
                                             </td>
 
                                             <td>
@@ -963,7 +963,7 @@
                     <td class="td_selected">
                         <select class="select2_demo_3 select_change" id='articulo${i}' onchange="inputs_campos(${i}),ajax(${i})"  autocomplete="off" required></select>
                         <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
-                        <input type="text"  class="celda"  name="articulo[]" id="input_prod${i}" >
+                        <input type="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
                     </td>
                     <td>
                         <input type='number' min='1'   id='cantidad${i}' name='cantidad[]' class="cantidad monto${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
