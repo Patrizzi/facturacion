@@ -110,7 +110,7 @@
                                         </option>
                                     </select>
                                     <textarea style="margin-top: 5px" name="article_descripcion[]" id="" class="form-control"
-                                        placeholder="Descripcion del artículo">{{ $nota_venta_reg->descripcion }}</textarea>
+                                        placeholder="Descripcion del artículo" rows="1">{{ $nota_venta_reg->descripcion }}</textarea>
                                     <input type="hidden" class="celda" id="input_prod{{ $h }}" value="{{ $nota_venta_reg->producto }}">
                                 </td>
                                 <input type="hidden" name="elem_delete[]" value="{{ $nota_venta_reg->id }}">

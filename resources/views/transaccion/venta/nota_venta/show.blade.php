@@ -231,8 +231,8 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 5%">ITEM </th>
-                                        <th style="width: 45%">Descripcion</th>
-                                        <th style="width: 5%;text-align: center">Cantidad</th>
+                                        <th style="width: 40%">Descripcion</th>
+                                        <th style="width: 8%;text-align: center">Cantidad</th>
                                         <th style="width: 10%;text-align: center">P.Unitario</th>
                                         <th style="width: 10%;text-align: center">Total 
                                             <span
@@ -245,7 +245,7 @@
                                     @foreach ($nota_venta_re as $nota_venta_reg)
                                         <tr>
                                             <td>{{ $i++ }} </td>
-                                            <td>{{ $nota_venta_reg->producto }}<br>{{ $nota_venta_reg->descripcion }}
+                                            <td>{{ $nota_venta_reg->producto }}<br><small>{{ $nota_venta_reg->descripcion }}</small>
                                             </td>
                                             <td style="text-align: center"> {{ $nota_venta_reg->cantidad }}</td>
                                             <td style="">
@@ -713,7 +713,7 @@
                         <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
                         <select name="articulo[]" class="monto0 select2_demo_3 select_change" id='article_text${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                         </select>
-                        <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo" style="margin-top: 5px" row="1"></textarea>
+                        <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo" style="margin-top: 5px" rows="1"></textarea>
                         <input type="hidden" id="tipo_articulo_${i}"></input>
                         <input type="hidden" class="celda"  id="input_prod${i}" >
                     </td>
