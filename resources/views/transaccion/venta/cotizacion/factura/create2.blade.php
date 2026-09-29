@@ -263,7 +263,7 @@
                                                 <input style="width: 76px" hidden="" type='text' id='tipo_afec0'
                                                     name='tipo_afec[]' readonly="readonly" class="monto0 form-control"
                                                     onkeyup="multi(0)" required autocomplete="off" />
-                                                <input type="text" class="celda" name="articulo[]">
+                                                <input type="hidden" class="celda" name="articulo[]">
                                             </td>
                                             <td>
                                                 <input style="min-width: 80px;margin: 0px" type='text' id='stock0'
@@ -838,7 +838,7 @@
                         <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
                         <textarea type='text' id='descripcion${i}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control descripcion" autocomplete="off" style="margin-top: 5px;"></textarea>
                         <input type='text' style="min-width: 85px" id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden  autocomplete="off" />
-                        <input type="text"  class="celda"  name="articulo[]" id="input_prod${i}">
+                        <input type="hidden"  class="celda"  name="articulo[]" id="input_prod${i}">
                     </td>
                     <td>
                         <input type="" style="min-width: 85px"  id='stock${i}' name='stock[]' readonly="readonly" class="form-control stock" required autocomplete="off"/>
