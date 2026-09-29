@@ -37,6 +37,7 @@ use App\Guia_remision;
 use App\TransportePublico;
 use PDO;
 use App\config_acceso_sunat;
+use Carbon\Carbon;
 use Greenter\Model\Sale\Detraction;
 use Greenter\XMLSecLibs\Certificate\X509Certificate;
 use Greenter\XMLSecLibs\Certificate\X509ContentType;
@@ -1248,7 +1249,7 @@ class Config_fe extends Model
                 ->setCodTraslado($motivo_tr) // Cat.20
                 ->setModTraslado('01') // Cat.18 // PUBLICO O PRIVADO
                 ->setFecTraslado(new DateTime())
-                ->setFecTraslado(new DateTime())
+                ->setFecEntregaBienes(Carbon::parse($guia->fecha_entrega))
                 ->setPesoTotal($peso_total)
                 ->setUndPesoTotal('KGM')    //unidad de medida
                 ->setLlegada(new Direction($cli_postal, $cli_direc))    //arreglar el ubigeo de llegada  salida
