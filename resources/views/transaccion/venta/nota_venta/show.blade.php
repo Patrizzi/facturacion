@@ -210,7 +210,7 @@
                                         <input type="hidden" id="moneda_id" value="{{ $nota_venta->moneda->id }}">
                                         <br>
                                         <strong>Forma de Pago</strong>
-                                        {{ $nota_venta->forma_pago }}
+                                        {{ $nota_venta->forma_pago_nombre }}
                                     </div>
                                 </div>
                             </div>
@@ -247,24 +247,24 @@
                                             <td>{{ $i++ }} </td>
                                             <td>{{ $nota_venta_reg->producto }}<br><small>{{ $nota_venta_reg->descripcion }}</small>
                                             </td>
-                                            <td style="text-align: center"> {{ $nota_venta_reg->cantidad }}</td>
-                                            <td style="">
+                                            <td style="text-align: center;vertical-align: middle"> {{ $nota_venta_reg->cantidad }}</td>
+                                            <td style="vertical-align: middle">
                                                 <div style="display: flex;justify-content: space-between">
                                                     <div>
                                                         {{ $simbologia }}
                                                     </div>
                                                     <div>
-                                                        {{ round($nota_venta_reg->precio_nacional, 2) }}
+                                                        {{ number_format(round($nota_venta_reg->precio_nacional, 2),2) }}
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td style="">
+                                            <td style="vertical-align: middle">
                                                 <div style="display: flex;justify-content: space-between">
                                                     <div>
                                                         {{ $simbologia }}
                                                     </div>
                                                     <div>  
-                                                        {{ round($nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional, 2) }}
+                                                        {{ number_format(round($nota_venta_reg->cantidad * $nota_venta_reg->precio_nacional, 2),2) }}
                                                     </div>
                                                 </div>
                                             </td>
@@ -644,18 +644,16 @@
                         let data_length = data.length;
                         let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
                         let articles_selected_count_ajax = articles_selected_ajax.length;
-
                         return {
                             results: $.map(data, function(item) {
                                 return {
-                                    id: item.id + " | " + item.codigo + " | " + item.codigo_original +
-                                        " | " + item.nombre,
-                                    text: item.id + " | " + item.codigo + " | " + item.codigo_original +
-                                        " | " + item.nombre,
+                                    id: item.id,
+                                    text: item.nombre,
                                     disabled: item.disabled
                                 };
                             })
                         };
+                        
                     },
                     cache: true,
                     passive: true
@@ -666,7 +664,7 @@
         function ajax(a) {
             var articulo = document.getElementById(`input_prod${a}`).value;
             var tipo = document.getElementById(`tipo_articulo_${a}`).value;
-            console.log("tipo "+tipo);
+            // console.log("tipo "+tipo);
 
             var almacen = $('[id="almacen_id"]').val();
             var moneda = $('[id="moneda_id"]').val();
@@ -683,6 +681,7 @@
                     'tipo': tipo
                 },
                 success: function(msg) {
+                    $(`#tipo_articulo_${a}`).val(msg.id)
                     if (msg.price == 0 && msg.amount == 0) {
                         $(`#precio_sugerido${a}`).val(msg.price)
                     } else {
@@ -757,25 +756,25 @@
             // ajax_l();
         }
 
-        function ajax_l() {
-            var numeros = $('.impor_t').html();
+        // function ajax_l() {
+        //     var numeros = $('.impor_t').html();
 
-            console.log("antes_ajax" + numeros);
-            var moneda = document.querySelector(`#moneda`).value;
-            $.ajax({
-                type: "post",
-                url: "{{ route('pa.numberletters') }}",
-                data: {
-                    '_token': $('input[name=_token]').val(),
-                    'numeros': numeros,
-                    'moneda': moneda
-                },
-                success: function(msg) {
-                    console.log(msg);
-                    $('.h3-total').html(msg);
-                }
-            });
-        }
+        //     console.log("antes_ajax" + numeros);
+        //     var moneda = document.querySelector(`#moneda`).value;
+        //     $.ajax({
+        //         type: "post",
+        //         url: "{{ route('pa.numberletters') }}",
+        //         data: {
+        //             '_token': $('input[name=_token]').val(),
+        //             'numeros': numeros,
+        //             'moneda': moneda
+        //         },
+        //         success: function(msg) {
+        //             console.log(msg);
+        //             $('.h3-total').html(msg);
+        //         }
+        //     });
+        // }
         $(document).on('click', '.borrar', function(event) {
             event.preventDefault();
             var e = document.getElementsByClassName("e").length;

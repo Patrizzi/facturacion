@@ -44,7 +44,7 @@ class NotaVenta extends Model
         return $new_emision;
     }
 
-    public function getFormaPagoAttribute(){
+    public function getFormaPagoNombreAttribute(){
         $forma_pago = Forma_pago::find($this->attributes['forma_pago']);
         return $forma_pago->nombre;
 

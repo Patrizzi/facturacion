@@ -220,7 +220,7 @@
                             <h4 style="font-weight: bold; margin-bottom: 10px;">Condiciones Generales</h4>
                             <p style="margin: 2px 0;"><strong>Garantía:</strong> {{ $nota_venta->garantia ?? 'A CONVENIR' }}</p>
                             <p style="margin: 2px 0;"><strong>Tipo de Moneda:</strong> {{ $nota_venta->moneda->nombre ?? 'soles' }}</p>
-                            <p style="margin: 2px 0;"><strong>Condiciones de Pago:</strong> {{ $nota_venta->forma_pago ?? 'Contado' }}</p>
+                            <p style="margin: 2px 0;"><strong>Condiciones de Pago:</strong> {{ $nota_venta->forma_pago_nombre ?? 'Contado' }}</p>
                             <p style="margin: 2px 0;"><strong>Vendedor:</strong> {{ $nota_venta->user->name ?? 'Administrador' }}</p>
                         </div>
                     </div>

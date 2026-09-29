@@ -84,7 +84,7 @@
                                     <div align="left">
                                         <strong>Señor(es):</strong> &nbsp;{{ $nota_venta->cliente->nombre }}<br>
                                         <strong>{{ $nota_venta->cliente->documento_identificacion }} :</strong>
-                                        &nbsp;{{ $nota_venta->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;{{ $nota_venta->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         <strong>Fecha:</strong> &nbsp;{{ $nota_venta->created_at }}<br>
                                     </div>
                                 </div>
@@ -101,6 +101,8 @@
                                         @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         <strong>Tipo de Moneda:</strong>
                                         &nbsp;{{ $nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        <strong>Forma de Pago:</strong>
+                                        &nbsp;{{ $nota_venta->forma_pago_nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </div>
                                 </div>
                             </div>

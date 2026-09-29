@@ -64,8 +64,8 @@
                     <center><strong style="align-content: center;margin: 5px">Contacto Cliente </strong></center><br>
                     <strong>Señor(es):</strong>&nbsp;{{ $nota_venta->cliente->nombre }}<br>
                     <strong>{{ $nota_venta->cliente->documento_identificacion }}
-                        :</strong>&nbsp;{{ $nota_venta->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <strong>Fecha:</strong>&nbsp;{{ $nota_venta->created_at }}<br>
+                        :</strong>&nbsp;{{ $nota_venta->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    <strong>Fecha:</strong>&nbsp;{{ Carbon\Carbon::parse($nota_venta->updated_at)->format('d-m-Y h:i:s') }}<br>
                 </td>
                 <th style="width: 5%;border-color: white"></th>
                 <td colspan="2" style="border: 1px #3D3D3D solid;border-radius: 8px;width: auto">
@@ -80,6 +80,8 @@
                     @endif&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
                     <strong>Tipo de Moneda:</strong>
                     &nbsp;{{ $nota_venta->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                    <strong>Forma de Pago:</strong> 
+                    {{ $nota_venta->forma_pago_nombre }}
                 </td>
             </tr>
         </table>
@@ -162,35 +164,374 @@
     </div>
 </body>
 {{--  --}}
-<style>
-    * {
-        font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-        color: black;
-    }
+ <style>
+        * {
+            color: black;
+            font-family: "Oufit", sans-serif;
+            color: black
+        }
 
-    .table-bordered .blanco {
-        border: none;
-    }
+        .cero {
+            margin-bottom: 0px;
 
-    .blanco {
-        border: none;
-        border: medium transparent;
-    }
+        }
 
-    .border {
-        border-color: #3D3D3D;
-        border-width: 1px;
-        border-style: solid;
-    }
+        .table-bordered .blanco {
+            border: none;
+        }
 
-    .table {
-        width: 100%;
-        max-width: 100%;
-        margin-bottom: 1rem;
-        background-color: transparent;
-        border-top-width: 0px;
+        .blanco {
+            border: none;
+            border-color: #3D3D3D;
+        }
 
-    }
-</style>
+        .border {
+            border-color: #3D3D3D;
+            border-width: 1px;
+            border-style: solid;
+        }
 
+        .table {
+            /* width: 100%;
+                max-width: 100%; */
+            margin-bottom: 1rem;
+            background-color: transparent;
+            border-top-width: 0px;
+
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+        }
+
+        table th,
+        table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table tbody+tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        table .table {
+            background-color: #fff;
+        }
+
+        table-sm th,
+        .table-sm td {
+            padding: 0.3rem;
+        }
+
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6;
+        }
+
+        .table-bordered thead th,
+        .table-bordered thead td {
+            border-bottom-width: 2px;
+        }
+
+        .table-borderless th,
+        .table-borderless td,
+        .table-borderless thead th,
+        .table-borderless tbody+tbody {
+            border: 0;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        .table-primary,
+        .table-primary>th,
+        .table-primary>td {
+            background-color: #b8daff;
+        }
+
+        .table-hover .table-primary:hover {
+            background-color: #9fcdff;
+        }
+
+        .table-hover .table-primary:hover>td,
+        .table-hover .table-primary:hover>th {
+            background-color: #9fcdff;
+        }
+
+        .table-secondary,
+        .table-secondary>th,
+        .table-secondary>td {
+            background-color: #d6d8db;
+        }
+
+        .table-hover .table-secondary:hover {
+            background-color: #c8cbcf;
+        }
+
+        .table-hover .table-secondary:hover>td,
+        .table-hover .table-secondary:hover>th {
+            background-color: #c8cbcf;
+        }
+
+        .table-success,
+        .table-success>th,
+        .table-success>td {
+            background-color: #c3e6cb;
+        }
+
+        .table-hover .table-success:hover {
+            background-color: #b1dfbb;
+        }
+
+        .table-hover .table-success:hover>td,
+        .table-hover .table-success:hover>th {
+            background-color: #b1dfbb;
+        }
+
+        .table-info,
+        .table-info>th,
+        .table-info>td {
+            background-color: #bee5eb;
+        }
+
+        .table-hover .table-info:hover {
+            background-color: #abdde5;
+        }
+
+        .table-hover .table-info:hover>td,
+        .table-hover .table-info:hover>th {
+            background-color: #abdde5;
+        }
+
+        .table-warning,
+        .table-warning>th,
+        .table-warning>td {
+            background-color: #ffeeba;
+        }
+
+        .table-hover .table-warning:hover {
+            background-color: #ffe8a1;
+        }
+
+        .table-hover .table-warning:hover>td,
+        .table-hover .table-warning:hover>th {
+            background-color: #ffe8a1;
+        }
+
+        .table-danger,
+        .table-danger>th,
+        .table-danger>td {
+            background-color: #f5c6cb;
+        }
+
+        .table-hover .table-danger:hover {
+            background-color: #f1b0b7;
+        }
+
+        .table-hover .table-danger:hover>td,
+        .table-hover .table-danger:hover>th {
+            background-color: #f1b0b7;
+        }
+
+        .table-light,
+        .table-light>th,
+        .table-light>td {
+            background-color: #fdfdfe;
+        }
+
+        .table-hover .table-light:hover {
+            background-color: #ececf6;
+        }
+
+        .table-hover .table-light:hover>td,
+        .table-hover .table-light:hover>th {
+            background-color: #ececf6;
+        }
+
+        .table-dark,
+        .table-dark>th,
+        .table-dark>td {
+            background-color: #c6c8ca;
+        }
+
+        .table-hover .table-dark:hover {
+            background-color: #b9bbbe;
+        }
+
+        .table-hover .table-dark:hover>td,
+        .table-hover .table-dark:hover>th {
+            background-color: #b9bbbe;
+        }
+
+        .table-active,
+        .table-active>th,
+        .table-active>td {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        .table-hover .table-active:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        .table-hover .table-active:hover>td,
+        .table-hover .table-active:hover>th {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+
+        .table .thead-dark th {
+            color: #fff;
+            background-color: #212529;
+            border-color: #32383e;
+        }
+
+        .table .thead-light th {
+            color: #495057;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .table-dark {
+            color: #fff;
+            background-color: #212529;
+        }
+
+        .table-dark th,
+        .table-dark td,
+        .table-dark thead th {
+            border-color: #32383e;
+        }
+
+        .table-dark.table-bordered {
+            border: 0;
+        }
+
+        .table-dark.table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .table-dark.table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.075);
+        }
+
+
+
+
+        .d-table {
+            display: table !important;
+        }
+
+        .d-table-row {
+            display: table-row !important;
+        }
+
+        .d-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-sm-table {
+            display: table !important;
+        }
+
+        .d-sm-table-row {
+            display: table-row !important;
+        }
+
+        .d-sm-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-md-table {
+            display: table !important;
+        }
+
+        .d-md-table-row {
+            display: table-row !important;
+        }
+
+        .d-md-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-lg-table {
+            display: table !important;
+        }
+
+        .d-lg-table-row {
+            display: table-row !important;
+        }
+
+        .d-lg-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-xl-table {
+            display: table !important;
+        }
+
+        .d-xl-table-row {
+            display: table-row !important;
+        }
+
+        .d-xl-table-cell {
+            display: table-cell !important;
+        }
+
+        .d-print-table {
+            display: table !important;
+        }
+
+        .d-print-table-row {
+            display: table-row !important;
+        }
+
+        .d-print-table-cell {
+            display: table-cell !important;
+        }
+
+        .table {
+            border-collapse: collapse !important;
+        }
+
+        .table td,
+        .table th {
+            background-color: #fff !important;
+        }
+
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #dee2e6 !important;
+        }
+
+        .blockquote-footer {
+            display: block;
+            font-size: 80%;
+            color: #6c757d;
+        }
+
+        .blockquote-footer::before {
+            content: "\2014 \00A0";
+        }
+    </style>
 </html>

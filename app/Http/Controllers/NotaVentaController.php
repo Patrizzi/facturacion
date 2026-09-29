@@ -306,7 +306,12 @@ class NotaVentaController extends Controller
         $banco_count=$banco->count();
         $archivo = $nota_venta->cod_nota_venta.'-'.$empresa->ruc;
         // return view('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
-        $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+        // $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+        $pdf = PDF::setOptions([
+            // 'isRemoteEnabled'       => false,  // nada de peticiones HTTP
+            'isFontSubsettingEnabled' => true, // PDF más liviano
+            'dpi'                   => 96,
+        ])->loadView('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
         return $pdf->download('NotaV '.$nota_venta->cod_nota_venta.'.pdf');
     }
     public function edit($id)
@@ -323,11 +328,14 @@ class NotaVentaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $requesXt;
-
-
+        // return $request;
         // return $sep_esc;
         $nota_venta = NotaVenta::where('id',$id)->first();
+        $nota_venta->garantia = $request->garantia;
+        $nota_venta->forma_pago = $request->forma_pago;
+        $nota_venta->observacion = $request->observacion;
+        $nota_venta->moneda_id = $request->moneda;
+        $nota_venta->save();
         if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0){
             $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
             // REGISTROS EXISTENTES

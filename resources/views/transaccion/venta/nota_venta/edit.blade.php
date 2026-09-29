@@ -47,9 +47,10 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label"><strong>Forma Pago:</strong></label>
                     <div class="col-md-10">
+                        {{$nota_venta->forma_pago}}
                         <select class="form-control" name="forma_pago" required="required">
                             @foreach ($forma_pagos as $forma_pago)
-                                <option value="{{ $forma_pago->id }}">{{ $forma_pago->nombre }}
+                                <option value="{{ $forma_pago->id }}" @if($nota_venta->forma_pago == $forma_pago->id) selected @endif>{{ $forma_pago->nombre }}
                                 </option>
                             @endforeach
                             <select>
@@ -59,6 +60,7 @@
                     <label class="col-md-2 col-form-label"><strong>Garantía:</strong></label>
                     <div class="col-md-10">
                         <select class="form-control" name="garantia">
+                            <option selected value="{{$nota_venta->garantia}}">{{$nota_venta->garantia}}</option>
                             @foreach ($garantia as $garantias)
                                 <option value="{{ $garantias->descripcion }}">
                                     {{ $garantias->descripcion }}</option>
@@ -112,6 +114,7 @@
                                     <textarea style="margin-top: 5px" name="article_descripcion[]" id="" class="form-control"
                                         placeholder="Descripcion del artículo" rows="1">{{ $nota_venta_reg->descripcion }}</textarea>
                                     <input type="hidden" class="celda" id="input_prod{{ $h }}" value="{{ $nota_venta_reg->producto }}">
+                                    <input type="hidden" id="tipo_articulo_{{$h}}" value="product"></input>
                                 </td>
                                 <input type="hidden" name="elem_delete[]" value="{{ $nota_venta_reg->id }}">
                                 <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
