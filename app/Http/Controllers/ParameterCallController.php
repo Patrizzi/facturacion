@@ -34,6 +34,7 @@ use Swift_TransportException;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -61,9 +62,17 @@ class ParameterCallController extends Controller
         }
         // return $id;
         //Obtención de los datos del articulo (producto-servicio)
-        $product = Producto::where('id', $id[0])->where('codigo_producto', $id[1])->where('codigo_original', $id[2])->first();
-        $service = Servicios::where('id', $id[0])->where('codigo_servicio', $id[1])->where('codigo_original', $id[2])->first();
-        // return $product;
+        if($request->nota_venta != "true"){
+            $product = Producto::where('id', $id[0])->where('codigo_producto', $id[1])->where('codigo_original', $id[2])->first();
+            $service = Servicios::where('id', $id[0])->where('codigo_servicio', $id[1])->where('codigo_original', $id[2])->first();
+        }else{
+            if($request->get('tipo') == "product"){
+                $product = Producto::where('id', $article)->first();
+            }else{
+                $service = Servicios::where('id', $article)->first();
+            }
+        }
+        // return $request->get('tipo');
         // OPCIONE PARA BUSCAR SIN ERRORES, CODIGO[2] ES UNICO PRODUCTO TIENE 8 CEROS Y SERVICIO 6 CEROS
         // $product=Producto::where('codigo_producto',$id[2])->first();
         // $service=Servicios::where('codigo_servicio',$id[2])->first();
@@ -481,7 +490,27 @@ class ParameterCallController extends Controller
         $orderService = 'asc';
 
         $productQuery = Producto::select('id', 'codigo_producto', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);
-        $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);;
+        if ($request->boolean('stock')) {
+            if (isset($store)) {
+                $productQuery->whereExists(function ($q) use ($store) {
+                    $q->select(DB::raw(1))
+                    ->from('stock_almacen') // ajusta al nombre real de tu tabla
+                    ->whereColumn('stock_almacen.producto_id', 'productos.id') // ajusta nombres
+                    ->where('stock_almacen.almacen_id', $store)
+                    ->where('stock_almacen.stock', '>', 0);
+                });
+            } else {
+                $productQuery->whereExists(function ($q) {
+                    $q->select(DB::raw(1))
+                    ->from('stock_producto') // ajusta al nombre real de tu tabla
+                    ->whereColumn('stock_producto.producto_id', 'productos.id')
+                    ->where('stock_producto.stock', '>', 0);
+                });
+            }
+        }
+
+
+        $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 0);
         if(empty($search)){
             $productQuery->orderby('nombre', $orderProduct)->take(27);
             $serviceQuery->orderby('nombre', $orderProduct)->take(27);
@@ -526,9 +555,6 @@ class ParameterCallController extends Controller
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero'), 2);
                     }
                     $afectacion = explode(" ", $product->tipo_afec_i_producto->informacion);
-                    if ($request->boolean('stock') && (!$array_cantidad || $array_cantidad <= 0)) {
-                        continue;
-                    }
                     //Guardado de variables
                     $data_all[] = [
                         'identifier' => 'product',
@@ -597,9 +623,6 @@ class ParameterCallController extends Controller
                         $array = round((Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') + $utilidad) * $tipo_cambio->paralelo, 2);
                         $array_cantidad = Stock_almacen::where('producto_id', $product->id)->where('almacen_id', $store)->pluck('stock')->first();
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * $tipo_cambio->paralelo, 2);
-                    }
-                    if ($request->boolean('stock') && (!$array_cantidad || $array_cantidad <= 0)) {
-                        continue;
                     }
                     $afectacion = explode(" ", $product->tipo_afec_i_producto->informacion);
                     $data_all[] = [
@@ -682,7 +705,25 @@ class ParameterCallController extends Controller
 
 
         $productQuery = Producto::select('id', 'codigo_producto', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);
-        $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 1);;
+        if ($request->boolean('stock')) {
+            if (isset($store)) {
+                $productQuery->whereExists(function ($q) use ($store) {
+                    $q->select(DB::raw(1))
+                    ->from('stock_almacen') // ajusta al nombre real de tu tabla
+                    ->whereColumn('stock_almacen.producto_id', 'productos.id') // ajusta nombres
+                    ->where('stock_almacen.almacen_id', $store)
+                    ->where('stock_almacen.stock', '>', 0);
+                });
+            } else {
+                $productQuery->whereExists(function ($q) {
+                    $q->select(DB::raw(1))
+                    ->from('stock_producto') // ajusta al nombre real de tu tabla
+                    ->whereColumn('stock_producto.producto_id', 'productos.id')
+                    ->where('stock_producto.stock', '>', 0);
+                });
+            }
+        }
+        $serviceQuery = Servicios::select('id', 'codigo_servicio', 'codigo_original', 'nombre','estado_anular')->where('estado_anular', 0);
         if(empty($search)){
             $productQuery->orderby('nombre', $orderProduct)->take(27);
             $serviceQuery->orderby('nombre', $orderProduct)->take(27);
@@ -722,9 +763,6 @@ class ParameterCallController extends Controller
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero'), 2);
                     }
                     $afectacion = explode(" ", $product->tipo_afec_i_producto->informacion);
-                    if ($request->boolean('stock') && (!$array_cantidad || $array_cantidad <= 0)) {
-                        continue;
-                    }
                     //Guardado de variables
                     $data_all[] = [
                         'identifier' => 'product',
@@ -791,9 +829,6 @@ class ParameterCallController extends Controller
                         $array_promedio = round(Stock_producto::where('producto_id', $product->id)->avg('precio_extranjero') * $tipo_cambio->paralelo, 2);
                     }
                     $afectacion = explode(" ", $product->tipo_afec_i_producto->informacion);
-                    if ($request->boolean('stock') && (!$array_cantidad || $array_cantidad <= 0)) {
-                        continue;
-                    }
                     $data_all[] = [
                         'identifier' => 'product',
                         'id' => $product->id,

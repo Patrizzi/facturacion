@@ -298,11 +298,12 @@
                                 </div>
                             </div>
                     </div>
-                    @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0)
-                        @include('transaccion.venta.nota_venta.edit')
-                    @endif
-                    <br><br><br><br>
-
+                    <span hidden>{{ $h = 0 }}</span>
+                    <div class="div-editar no_mostrar">
+                        @if ($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0)
+                            @include('transaccion.venta.nota_venta.edit')
+                        @endif
+                    </div>
 
                     <br>
                     @include('layout_bancos')
@@ -317,10 +318,6 @@
 
     {{--  --}}
     <style>
-        /* .form-control {
-                                                margin-top: 5px;
-                                                border-radius: 5px
-                                            } */
 
         p#texto {
             text-align: center;
@@ -373,6 +370,17 @@
             height: 50px;
         }
 
+        .row_articulo {
+            width: 400px !important;
+            /* max-width: 45% !important; */
+        }
+
+        @media (min-width: 992px) {
+            #add_product_data>.modal-lg {
+                max-width: 1000px;
+            }
+        }
+
         .dataTables_wrapper {
             padding: 0px;
         }
@@ -413,7 +421,21 @@
             font-family: 'Outfit', sans-serif;
             font-size: 11px;
         }
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
+        /* Opciones del desplegable: sin salto de línea, sin recortar */
+        .select2-nowrap .select2-results__option {
+            white-space: nowrap;
+        }
+
+        /* El desplegable nunca más angosto que el select */
+        .select2-nowrap {
+            min-width: 400px;
+        }
         .select2-container--default .select2-selection--single {
             border: none;
         }
@@ -442,6 +464,12 @@
         span.select2.select2-container.select2-container--default {
             width: 100% !important;
         }
+
+        @media (min-width: 992px) {
+            #add_product_data>.modal-lg {
+                max-width: 1000px;
+            }
+        }
     </style>
 
 
@@ -469,6 +497,13 @@
     <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script>
+        let articulosAgregados = new Set();
+        $('.celda').each(function() {
+            var valor = $(this).val();
+            var partes = valor.split('|').map(p => p.trim());
+            var id = partes[0];
+            articulosAgregados.add(String(id));
+        });
         $('.demo3').click(function() {
             if (document.forms['nota_vent_update'].reportValidity()) {
                 swal({
@@ -589,6 +624,7 @@
         function articlesSelect2() {
             $(".select2_demo_3").select2({
                 placeholder: "Seleccionar Articulo",
+                width: "400px",
                 ajax: {
                     minimumInputLength: 1,
                     url: "{{ route('pa.articles') }}",
@@ -608,18 +644,7 @@
                         let data_length = data.length;
                         let articles_selected_ajax = document.getElementsByClassName("select2_demo_3");
                         let articles_selected_count_ajax = articles_selected_ajax.length;
-                        // for(var z=0;z<articles_selected_count_ajax;z++){
-                        //     var selected_ajax=document.getElementsByClassName("select2_demo_3 select_change")[z].value;
-                        //     for(var y=0;y<data_length;y++){
-                        //         if(selected_ajax == data[y].id+ " | " + data[y].codigo + " | " + data[y].codigo_original + " | " + data[y].nombre){
-                        //             if(data[y].tipo == 'producto'){
-                        //                 data[y].disabled=true;
-                        //             }else{
-                        //                 data[y].disabled=false;
-                        //             }
-                        //         }
-                        //     }
-                        // }
+
                         return {
                             results: $.map(data, function(item) {
                                 return {
@@ -639,8 +664,9 @@
         }
 
         function ajax(a) {
-
-            var articulo = document.getElementById(`article_text${a}`).value;
+            var articulo = document.getElementById(`input_prod${a}`).value;
+            var tipo = document.getElementById(`tipo_articulo_${a}`).value;
+            console.log("tipo "+tipo);
 
             var almacen = $('[id="almacen_id"]').val();
             var moneda = $('[id="moneda_id"]').val();
@@ -652,7 +678,9 @@
                     '_token': $('input[name=_token]').val(),
                     'articulo': articulo,
                     'almacen': almacen,
-                    'moneda': moneda
+                    'moneda': moneda,
+                    'nota_venta': true,
+                    'tipo': tipo
                 },
                 success: function(msg) {
                     if (msg.price == 0 && msg.amount == 0) {
@@ -674,33 +702,36 @@
         }
     </script>
     <script>
-        var i = {{ $h }};
+        var i = $('#count_articles').val();
         $(".addmore").on('click', function() {
             var data = `[
-        <tr>
-            <td>
-                <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
-            </td>";
-            <td>
-                <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
+                <tr>
+                    <td>
+                        <button type="button" class='delete borrar e btn btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    </td>";
+                    <td>
+                        <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="nuevo">
 
-                <select name="articulo[]" class="monto0 select2_demo_3 select_change" id='article_text${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
-                </select>
-                <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo"></textarea>
-            </td>
-            <td>
-                <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1"/>
-            </td>
-            <td>
-                <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
-            </td>
-            <td>
-                <input type='text'  id='precio${i}' name='precio[]' class="precio${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
-            </td>
-            <td>
-                <input type='text' id='total${i}'    name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
-            </td>
-        </tr>`;
+                        <select name="articulo[]" class="monto0 select2_demo_3 select_change" id='article_text${i}' onchange="ajax(${i})"  autocomplete="off" required></select>
+                        </select>
+                        <textarea name="article_descripcion[]" id="" class="form-control" placeholder="Descripcion del artículo"></textarea>
+                        <input type="text" id="tipo_articulo_${i}"></input>
+                        <input hidden="hidden"  class="celda"  name="articulo[]" id="input_prod${i}" >
+                    </td>
+                    <td>
+                        <input type='text'  id='cantidad${i}' name='cantidad[]' class="cantidad${i} form-control" onkeyup="multi(${i})" required  autocomplete="off" value="1"/>
+                    </td>
+                    <td>
+                        <input type="text" style="width: 96px" class="form-control" readonly id="precio_sugerido${i}" ondblclick="copy(${i})">
+                    </td>
+                    <td>
+                        <input type='text'  id='precio${i}' name='precio[]' class="precio${i} form-control" onkeyup="multi(${i})" required  autocomplete="off"/>
+                    </td>
+                    <td>
+                        <input type='text' id='total${i}'    name='total' disabled="disabled" class="total form-control "  required  autocomplete="off"/>
+                    </td>
+                </tr>
+            `;
             $('.tables').append(data);
             articlesSelect2();
             i++;
@@ -724,7 +755,7 @@
             var red = parseFloat(Math.round((total_t) * 100) / 100).toFixed(2);
             // document.querySelector(`#impor_t`).value = total_t;
             $('.impor_t').html(red);
-            ajax_l();
+            // ajax_l();
         }
 
         function ajax_l() {
@@ -768,8 +799,351 @@
                 total_t += parseFloat($(this).val());
             });
             $('.impor_t').html(total_t);
-            ajax_l();
+            // ajax_l();
         });
+
+        // MODAL BUSQUEDA DE PRODUCTO
+        let debounceTimer;
+        $('#search_product').on('input', function(e) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                var busqueda = $(this).val();
+                search_multiple(busqueda);
+            }, 500); // Espera 300 ms antes de ejecutar la acción
+        });
+        $('#add_new_product').on('click', function() {
+            search_multiple("");
+            $('#search_product').val('');
+        });
+
+        let filtrarConStock = false;
+        function search_multiple(busqueda) {
+            // CLEAN DATABLE(?)
+            if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
+                $('.data_table_multiple').DataTable().clear().destroy();
+            }
+            $('.data_table_multiple tbody').empty();
+
+            var almacen = $('[name="almacen"]').val();
+            var moneda = $('[id="moneda_id"]').find(":selected").val();
+            console.log(moneda);
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.search_multiple_manual') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'articulo': busqueda,
+                    'almacen': almacen,
+                    'stock': filtrarConStock ? 1 : 0,
+                    'moneda': moneda
+                },
+                success: function(msg) {
+                    // Intentar parsear si el backend no manda las cabeceras application/json correctas
+                    let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+                    // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
+                    if (!data || data.length === 0) {
+                        toastr.warning("No se encontraron resultados", '', {
+                            timeOut: 3000
+                        });
+                        return;
+                    }
+
+                    $('.data_table_multiple').DataTable({
+                        "bLengthChange": false,
+                        "searching": false,
+                        "autoWidth": false,
+                        pageLength: 7,
+                        responsive: true,
+                        "aaData": data,
+                        drawCallback: function(settings) {
+                            $(".touchspin1").each(function() {
+                                const $input = $(this);
+                                // Evitar doble inicialización si el plugin ya envolvió este input
+                                if (!$input.hasClass('js-touchspin-init')) {
+                                    $input.addClass('js-touchspin-init').TouchSpin({
+                                        buttondown_class: 'btn btn-link btn-sm',
+                                        buttonup_class: 'btn btn-link btn-sm',
+                                        min: 1,
+                                    });
+                                }
+                            });
+                            activarSliderSiDesborda();
+                        },
+                        dom: '<"top"f>rt<"dt-left-info"ip>', // i = info ("Mostrando X-Y de Z"), p = paginación
+                        language: {
+                            info: "Mostrando _START_-_END_ de _TOTAL_ artículos",
+                            infoEmpty: "No hay artículos",
+                            paginate: {
+                                previous: '<i class="fa fa-chevron-left"></i>',
+                                next: '<i class="fa fa-chevron-right"></i>'
+                            }
+                        },
+                        pagingType: "simple_numbers",
+                        "columns": [
+                            // { "data": "id" },
+                            {
+                                "data": "codigo",
+                                "width": "130px",
+                                render: function(data, type, row) {
+                                    return `
+                                            <span class="codigo-toggle" 
+                                                data-producto="${row.codigo_producto}" 
+                                                data-original="${row.codigo_original ?? ''}" 
+                                                data-showing="producto"
+                                                style="cursor:pointer; display:inline-block; min-width:80px;">
+                                                <span class="badge badge-info">${row.codigo_producto}</span>
+                                            </span>
+                                        `;
+                                }
+                            },
+                            {
+                                "data": "nombre",
+                                "defaultContent": "",
+                                render: function(data, type, row) {
+                                    return `
+                                            <div class="articulo-nombre"><span><strong>${row.nombre}</strong></span></div>
+                                            <div class="small-description"><small>${row.description}</small></div>
+                                        `;
+                                }
+                            },
+                            {
+                                "data": "stock",
+                                "className": "precio_search precio_cantidad",
+                                "defaultContent": "",
+                                render: function(data, type, row) {
+                                    let claseCss;
+                                    return `<span class="badge badge-plain">${row.stock}</span>`;
+                                }
+                            },
+                            {
+                                data: null,
+                                title: 'CANTIDAD',
+                                "className": "precio_cantidad",
+                                "width": "100px",
+                                render: function(data, type, row) {
+                                    return `
+                                            <input class="touchspin1 form-control-sm input-cantidad" type="text" value="1" name="demo1" min="1" data-simbolo="${row.moneda.simbolo}" value="1" data-price="${row.price}" data-id="${row.id}">
+                                        `;
+                                }
+                            },
+                            {
+                                data: 'price',
+                                title: 'P. UNITARIO',
+                                "width": "100px",
+                                "className": "precio_dt",
+                                render: function(data, type, row) {
+                                    const formattedPrice = $.fn.dataTable.render.number(',',
+                                        '.', 2).display(data);
+                                    return `${row.moneda.simbolo} ${formattedPrice}`;
+                                }
+                            },
+                            {
+                                data: null,
+                                title: 'TOTAL',
+                                "width": "100px",
+                                "className": "precio_dt",
+                                render: function(data, type, row) {
+                                    return `<span class="total" data-id="${row.id}" data-simbolo="${row.moneda.simbolo}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                                }
+                            },
+                            {
+                                "width": "100px",
+                                "className": "precio_search precio_cantidad",
+                                render: function(data, type, row) {
+                                    const yaAgregado = articulosAgregados.has(String(row.id));
+                                    return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}" data-type="${row.identifier}"> <i class="fa fa-plus"></i> Agregar</button>`;
+                                }
+                            }
+                        ]
+                    });
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        // console.log(eject.responseJSON.error);
+                        console.log('Error');
+                    }
+                },
+                cache: true
+            });
+        }
+        $('.data_table_multiple').on('input change', '.input-cantidad', function() {
+            const cantidad = parseFloat($(this).val()) || 0;
+            const price = parseFloat($(this).data('price'));
+            const simbolo = $(this).data('simbolo');
+            const total = cantidad * price;
+            const id = $(this).data('id');
+            $(`.total[data-id="${id}"]`).text(`${simbolo} ` + `${total.toFixed(2)}`);
+        });
+
+        $('.data_table_multiple').on('click', '.btn-agregar-articulo', function(e) {
+            var $btn = $(this);
+            var $row = $(this).closest('tr');
+
+            var stock = $row.find("td:eq(3)").text();
+            var cantidad = $row.find('input').val();
+
+            var count_artc = $('#count_articles').val();
+            var id = $(this).data('id');
+            var cod_prod = $(this).data('cod_producto');
+            var cod_origi = $(this).data('cod_original');
+            var nombres = $(this).data('nombre');
+            var tipo = $(this).data('type');
+            articulosAgregados.add(String(id));
+
+            // var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
+            const newOption = new Option(nombres, nombres, true, true);
+
+            var $primerSelect = $('#article_text');
+            var existePrimerSelect = $primerSelect.length > 0;
+            var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
+
+            if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
+                console.log("first");
+                    // Busca todos los selects existentes (incluyendo #articulo si existe)
+                var $selectsExistentes = $('select[id^="article_text"]');
+
+                if ($selectsExistentes.length === 0) {
+                    // No queda NINGÚN select en el formulario: crear uno desde cero
+                    $('.addmore').prop('disabled', false).click();
+                    $selectsExistentes = $('select[id^="article_text"]');
+                }
+
+                var $selectDestino = $selectsExistentes.last();
+                var idAttr = $selectDestino.attr('id');
+                var count_artc = idAttr === 'article_text' ? 0 : parseInt(idAttr.replace('article_text', ''));
+                var valorDestino = $selectDestino.val();
+                
+                if (valorDestino != null && valorDestino != "") {
+                    // El último select ya tiene algo: crea uno nuevo
+                    $('.addmore').prop('disabled', false).click();
+                    $selectsExistentes = $('select[id^="article_text"]');
+                    $selectDestino = $selectsExistentes.last();
+                    idAttr = $selectDestino.attr('id');
+                    count_artc = idAttr === 'article_text' ? 0 : parseInt(idAttr.replace('article_text', ''));
+                }
+                // $(`#tipo_articulo_${count_artc}`).val(type);
+                $(`#tipo_articulo_${count_artc}`).val(tipo);
+                $selectDestino.append(newOption).trigger('change');
+
+                let debounceTimer;
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    $(`#cantidad${count_artc}`).val(cantidad);
+                    multi(count_artc);
+                }, 1000);
+
+            } else {
+                console.log("two");
+                var $selectsNumerados = $('select[id^="article_text"]').not('#article_text');
+                var count_artc = $selectsNumerados.length > 0
+                    ? Math.max(...$selectsNumerados.map(function () {
+                        return parseInt($(this).attr('id').replace('article_text', ''));
+                    }).get())
+                    : null;
+                var $ultimoSelect = count_artc === null ? $('#article_text') : $(`#article_text${count_artc}`);
+                
+                var valorActual = $ultimoSelect.val();
+                if (valorActual != null && valorActual != "") {
+                    $('.addmore').prop('disabled', false).click();
+                    // Recalcular tras crear la fila
+                    $selectsNumerados = $('select[id^="article_text"]').not('#article_text');
+                    count_artc = Math.max(...$selectsNumerados.map(function () {
+                        return parseInt($(this).attr('id').replace('article_text', ''));
+                    }).get());
+                    $ultimoSelect = $(`#article_text${count_artc}`);
+                }
+
+                $(`#tipo_articulo_${count_artc}`).val(tipo);
+                $ultimoSelect.append(newOption).trigger('change');
+
+                let debounceTimer;
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    $(`#cantidad${count_artc}`).val(cantidad);
+                    multi(count_artc);
+                }, 1000);
+            }
+
+            toastr.info("Se agregó el Articulo correctamente", '', {
+                timeOut: 3000
+            });
+        });
+
+        $('#total_final_view').on('input change', function() {
+            var total = $(this).val();
+            $('#subtotal-monto').html(total);
+        });
+
+        setInterval(function() {
+            $('.codigo-toggle').each(function() {
+                const $el = $(this);
+                const showing = $el.data('showing');
+
+                if (showing === 'producto') {
+                    $el.fadeOut(150, function() {
+                        $el.html(`<span class="badge badge-info">${$el.data('original')}</span>`)
+                            .fadeIn(150);
+                    });
+                    $el.data('showing', 'original');
+                } else {
+                    $el.fadeOut(150, function() {
+                        $el.html(`<span class="badge badge-info">${$el.data('producto')}</span>`)
+                            .fadeIn(150);
+                    });
+                    $el.data('showing', 'producto');
+                }
+            });
+        }, 5000); // cambia cada 2 segundos
+
+        function activarSliderSiDesborda() {
+            setTimeout(function() {
+                $('.articulo-nombre').each(function() {
+                    const el = this; // elemento DOM nativo, no jQuery
+                    if (el.scrollWidth > el.clientWidth) {
+                        $(el).addClass('is-overflowing');
+                    } else {
+                        $(el).removeClass('is-overflowing');
+                    }
+                });
+            }, 50);
+            setTimeout(function() {
+                $('.small-description').each(function() {
+                    const el = this; // elemento DOM nativo, no jQuery
+                    if (el.scrollWidth > el.clientWidth) {
+                        $(el).addClass('is-overflowing');
+                    } else {
+                        $(el).removeClass('is-overflowing');
+                    }
+                });
+            }, 10);
+        }
+        $('#add_product_data').on('shown.modal', function() {
+            activarSliderSiDesborda();
+        });
+
+        $('#button_filter_stock').on('click', function() {
+            const $btn = $(this);
+            filtrarConStock = !$btn.hasClass('active');
+            search_multiple($('#buscador_articulo').val());
+        });
+
+        function reactivarBotonModal(id) {
+            var $btn = $(`.btn-agregar-articulo[data-id="${id}"]`);
+            console.log($btn);
+            if ($btn.length) {
+                $btn.prop('disabled', false);
+            }
+        }
+
+        function validarJson(data) {
+            try {
+                JSON.parse(data);
+                return true; // es JSON válido
+            } catch (e) {
+                return false; // no es JSON
+            }
+        }
+
     </script>
     <script>
         var clic = 1;
@@ -873,6 +1247,53 @@
                 arrow.classList.remove('fa-chevron-left');
                 arrow.classList.add('fa-chevron-right');
             }
+        }
+
+         let status = 0;
+        function changeMoney() {
+            console.log("moneda cambiada");
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.money') }}",
+                data: {
+                    '_token': $('input[name=_token]').val(),
+                    'status': status,
+                },
+                beforeSend: function() {
+                    $('#loaderGif').show();
+                },
+                complete: function(data) {
+                    /*
+                    * Se ejecuta al termino de la petición
+                    * */
+                },
+                success: function(msg) {
+                    //Cambio de moneda
+                    $(`#moneda_id`).val(msg.id);
+                    $(`#moneda`).val(msg.nombre);
+                    $(`#subtotal-simbolo`).val(msg.simbolo);
+                    
+                    $(`#button_changeMoney`).html(msg.other);
+                    if (status == 1) {
+                        status = 0;
+                    } else {
+                        status = 1;
+                    }
+                    $('#loaderGif').hide();
+                    let articles_selected = document.getElementsByClassName("select2_demo_3");
+                    let articles_selected_count = articles_selected.length;
+                    for (let z = 0; z < articles_selected_count; z++) {
+                        let selected = document.getElementsByClassName("select2_demo_3 select_change")[z]
+                            .getAttribute('id');
+                        if (selected == 'article_text') {
+                            ajax(0);
+                        } else {
+                            ajax(selected.substring(8));
+                        }
+                    }
+                    disabled_money();
+                },
+            });
         }
     </script>
 @endsection

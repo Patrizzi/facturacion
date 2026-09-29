@@ -77,7 +77,7 @@
         document.getElementById(`input_prod${a}`).value = articulo;
 
         var almacen = $('[id="almacen_id"]').val();
-        var moneda = $('[id="moneda_id"]').val();
+        var moneda = $('[name="moneda"]').val();
 
         $.ajax({
             type: "post",
@@ -235,7 +235,7 @@
 
 
         var almacen = $('[id="almacen_id"]').val();
-        var moneda = $('[id="moneda_id"]').val();
+        var moneda = $('[name="moneda"]').val();
         $.ajax({
             type: "post",
             url: "{{ route('pa.description') }}",
@@ -460,8 +460,9 @@
         $('.total').val("");
 
     }
-
+    let status = 0;
     function changeMoney() {
+        console.log("moneda cambiada");
         $.ajax({
             type: "post",
             url: "{{ route('pa.money') }}",
@@ -481,6 +482,8 @@
                 //Cambio de moneda
                 $(`#moneda_id`).val(msg.id);
                 $(`#moneda`).val(msg.nombre);
+                $(`#subtotal-simbolo`).val(msg.simbolo);
+                
                 $(`#button_changeMoney`).html(msg.other);
                 if (status == 1) {
                     status = 0;
@@ -537,7 +540,8 @@
         $('.data_table_multiple tbody').empty();
 
         var almacen = $('[id="almacen_id"]').val();
-        var moneda = $('[id="moneda_id"]').val();
+        var moneda = $('[name="moneda"]').val();
+        console.log(moneda);
         $.ajax({
             type: "post",
             url: "{{ route('pa.search_multiple_manual') }}",
