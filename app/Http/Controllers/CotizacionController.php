@@ -3982,7 +3982,7 @@ if($validacion==1){
         try {
             $email = $request->get('email');
             $cotizacion_ids = $request->get('cotizacion_ids', []);
-            if (empty($cotizacion_ids)) {
+otaven            if (empty($cotizacion_ids)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No se seleccionaron cotizaciones para enviar.'

@@ -294,6 +294,13 @@
             border: 1px solid #e7eaec;
             margin-bottom: 0px !important;
         }   
+        .word-style select,
+        .word-style input,
+        .word-style textarea,
+        .word-style span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
+        }
     </style>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
@@ -574,7 +581,7 @@
 
             // document.getElementById("igv").value = igv_decimal;
             document.getElementById("total_final").value = end2;
-
+            document.getElementById("total_final").dispatchEvent(new Event('change'));
         }
     </script>
 
@@ -946,7 +953,7 @@
             toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
         });
 
-        $('#total_final_view').on('input change', function() {
+        $('#total_final').on('input change', function() {
             var total = $(this).val();
             $('#subtotal-monto').html(total);
         });

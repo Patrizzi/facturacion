@@ -813,7 +813,9 @@
             totalInp.each(function() {
                 total_t += parseFloat($(this).val());
             });
-            $('.impor_t').html(total_t);
+            var multiplier2 = 100;
+            var total_tt = Math.round(total_t * multiplier2) / multiplier2;
+            $('#total_final_view').val(total_tt);
             // ajax_l();
         });
 

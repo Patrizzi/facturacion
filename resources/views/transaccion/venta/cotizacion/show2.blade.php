@@ -1157,6 +1157,7 @@
             var end2 = Math.round(end * multiplier) / multiplier;
             document.getElementById("igv_input").value = igv_dec_val;
             document.getElementById("total_final").value = end2;
+            document.getElementById("total_final").dispatchEvent(new Event('change'));
             // console.log(tot);
             // ajax_l();
         }

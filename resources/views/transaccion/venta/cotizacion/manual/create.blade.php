@@ -1221,7 +1221,7 @@
 
             var subtotal = document.querySelector(`#total`).value;
             document.getElementById("total_final").value = subtotal;
-
+            document.getElementById("total_view").dispatchEvent(new Event('change'));
         }
 
         $(document).on('click', '.borrar', function(event) {
@@ -1282,7 +1282,7 @@
 
                 var subtotal = document.querySelector(`#total`).value;
                 document.getElementById("total_final").value = subtotal;
-                document.getElementById("total_final").dispatchEvent(new Event('change'));
+                document.getElementById("total_view").dispatchEvent(new Event('change'));
             } else {
                 $(".select2_demo_3").val(null).trigger("change");
                 $(".addmore").prop("disabled", false);
@@ -1677,7 +1677,7 @@
             toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
         });
 
-        $('#total_final').on('input change', function(){
+        $('#total_view').on('input change', function(){
             var total = $(this).val();
             $('#subtotal-monto').html(total);
         });

@@ -350,6 +350,8 @@
         var subtotal = document.querySelector(`#total`).value;
         document.getElementById("total_final").value = parseFloat(subtotal).toFixed(8);
         document.getElementById("total_final_view").value = total_tt.toFixed(2);
+        document.getElementById("total_final_view").dispatchEvent(new Event('change'));
+        
 
     }
 
