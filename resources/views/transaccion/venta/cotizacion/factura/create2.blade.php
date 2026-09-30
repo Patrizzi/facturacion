@@ -221,7 +221,7 @@
                                 value="{{ $sucursal->id }}" readonly="readonly">
                             <input type="hidden" id="moneda_id" class="form-control " value="{{ $moneda->id }}">
                         </div>
-                        <input type="hidden" name="" id="count_articles" value="">
+                        <input type="hidden" name="" id="count_articles" value="2">
                         <div class="col-md-12">
                             <div class="table-responsive"> 
                                 <table cellspacing="0" class="table tables" id="inp_s">
@@ -827,8 +827,9 @@
         }
 
         //Creador para la agregacion de articulos (Productos-Servicios) en vista
-        var i = 2;
         $(".addmore").on('click', function() {
+            var i = parseInt($('#count_articles').val()); //Esto se setea en 2 aunque cambie
+            console.log("Inicio: "+i);
             var data = `[
                 <tr>
                     <td>
@@ -877,10 +878,8 @@
             `;
 
             $('.tables').append(data);
-            $('#count_articles').val(i);
-            
-            i++;
-            // console.log(i);
+            $('#count_articles').val( i+1 );            
+            console.log("Final: "+i);
             //Llamada para la ejecucion de articlesSelect (funcionamiento de los select nuevos creados)
             articlesSelect2();
 
@@ -1653,17 +1652,17 @@
             $btn.prop('disabled', true);
             toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
         });
-        function obtenerUltimoIndice() {
-            var $selects = $('select[id^="articulo"]');
-            if ($selects.length === 0) return null;
+        // function obtenerUltimoIndice() {
+        //     var $selects = $('select[id^="articulo"]');
+        //     if ($selects.length === 0) return null;
 
-            var indices = $selects.map(function() {
-                var num = this.id.replace('articulo', '');
-                return num === '' ? -1 : parseInt(num); // -1 marca el caso "sin número", si existiera
-            }).get();
+        //     var indices = $selects.map(function() {
+        //         var num = this.id.replace('articulo', '');
+        //         return num === '' ? -1 : parseInt(num); // -1 marca el caso "sin número", si existiera
+        //     }).get();
 
-            return Math.max(...indices);
-        }
+        //     return Math.max(...indices);
+        // }
         $('#total_final').on('input change', function(){
             var total = $(this).val();
             $('#subtotal-monto').html(total);
@@ -1747,14 +1746,21 @@
                 if (cotiDuplicada.comisionista) {
                     window.comisionDuplicada = parseFloat(cotiDuplicada.comisionista.comision);
                 }
-
+                var $toast = toastr.info('Cargando datos de la cotización...', '', {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    tapToDismiss: false
+                });
                 setTimeout(function() {
-                    cargarDatosCotizacion(cotiDuplicada);
+                    cargarDatosCotizacion(cotiDuplicada, function(){
+                        toastr.clear($toast);
+                        toastr.success('Cotización cargada');
+                    });
                 }, 800);
             }
         });
         //funcion a base para subir los datos
-        function cargarDatosCotizacion(data) {
+        function cargarDatosCotizacion(data, onDone) {
             // 1. TIPO
             let tipoCoti = '1';
             if (data.tipo === 'boleta') tipoCoti = '3';
@@ -1913,95 +1919,107 @@
                     if (monedaActual !== monedaDuplicada) {
                         $('[name="moneda"]').val(monedaDuplicada).trigger('change');
                         setTimeout(function() {
-                            cargarArticulos(data);
+                            cargarArticulos(data, onDone);
                         }, 1500);
                     } else {
                         setTimeout(function() {
-                            cargarArticulos(data);
+                            cargarArticulos(data, onDone);
                         }, 1000);
                     }
                 }, 600);
             } else {
                 setTimeout(function() {
-                    cargarArticulos(data);
+                    cargarArticulos(data, onDone);
                 }, 1000);
             }
         }
         //final p
-        function cargarArticulos(data) {
-            let registros = data.coti_factura_registro || [];
-            if (registros.length === 0) return;
-            cargarArticulosSecuencial(registros, 0);
+        function cargarArticulos(data, onDone) {
+            let registros = data.coti_factura_registro || []; // 0 1 2 3
+            if (registros.length === 0){
+                if (onDone) onDone();
+                return;
+            }
+            cargarArticulosSecuencial(registros, 0 , 0, onDone);
         }
 
-        function cargarArticulosSecuencial(registros, index) {
-            if (index >= registros.length) return;
+        function cargarArticulosSecuencial(registros, index, index_td, onDone) {
+            if (index >= registros.length) {
+                if (onDone) onDone();   // terminó el último artículo
+                return;
+            }
+
 
             const registro = registros[index];
 
             if (index === 0) {
-                cargarArticuloEnFila(registro, 0, function() {
+                cargarArticuloEnFila(registro, 0, index_td,function() {
                     setTimeout(function() {
-                        cargarArticulosSecuencial(registros, index + 1);
+                        cargarArticulosSecuencial(registros, index + 1, index_td + 1, onDone);
                     }, 400);
                 });
             } else {
-                crearNuevaFila(index, function() {
-                    cargarArticuloEnFila(registro, index, function() {
+                if(index_td === 1){
+                    index_td = index_td + 1;
+                }
+                console.log("index "+index_td);
+                crearNuevaFila(index, index_td, function() {
+                    cargarArticuloEnFila(registro, index, index_td, function() {
                         setTimeout(function() {
-                            cargarArticulosSecuencial(registros, index + 1);
+                            cargarArticulosSecuencial(registros, index + 1, index_td + 1, onDone);
                         }, 400);
                     });
                 });
             }
         }
 
-        function crearNuevaFila(index, callback) {
+        function crearNuevaFila(index, index_td, callback) {
+            
             var data = `
                 <tr>
                     <td>
                         <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash"></i></button>
                     </td>
                     <td class="td_selected">
-                        <select class="monto0 select2_demo_3 select_change" id='articulo${index}' onchange="ajax(${index})" required></select>
-                        <textarea id='descripcion${index}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" style="margin-top: 5px;"></textarea>
-                        <input type='text' style="min-width: 85px" id='tipo_afec${index}' name='tipo_afec[]' readonly class="monto${index} form-control" onkeyup="multi(${index})" required hidden/>
-                        <input hidden class="celda" name="articulo[]">
+                        <select class="monto0 select2_demo_3 select_change" id='articulo${index_td}' onchange="ajax(${index_td})" required></select>
+                        <textarea id='descripcion${index_td}' name='descripcion_item[]' placeholder="Descripción de Item" class="form-control" style="margin-top: 5px;"></textarea>
+                        <input type='text' style="min-width: 85px" id='tipo_afec${index_td}' name='tipo_afec[]' readonly class="monto${index_td} form-control" onkeyup="multi(${index_td})" required hidden/>
+                        <input type="hidden" class="celda" name="articulo[]" id="input_prod${index_td}">
                     </td>
-                    <td><input type="" style="min-width: 85px" id='stock${index}' name='stock[]' readonly class="form-control" required/></td>
-                    <td><input type='number' style="min-width: 80px" min="1" id='cantidad${index}' name='cantidad[]' class="monto${index} form-control" onkeyup="multi(${index})" required/></td>
-                    <td><input type='text' style="min-width: 85px" id='precio${index}' name='precio[]' readonly class="monto${index} form-control" onkeyup="multi(${index})" required/></td>
+                    <td><input type="" style="min-width: 85px" id='stock${index_td}' name='stock[]' readonly class="form-control" required/></td>
+                    <td><input type='number' style="min-width: 80px" min="1" id='cantidad${index_td}' name='cantidad[]' class="monto${index_td} form-control" onkeyup="multi(${index_td})" required/></td>
+                    <td><input type='text' style="min-width: 85px" id='precio${index_td}' name='precio[]' readonly class="monto${index_td} form-control" onkeyup="multi(${index_td})" required/></td>
                     <td>
                         <div style="position: relative;">
-                            <input class="text_des" type='text' id='descuento${index}' name='descuento[]' readonly required onkeyup="multi(${index})"/>
+                            <input class="text_des" type='text' id='descuento${index_td}' name='descuento[]' readonly required onkeyup="multi(${index_td})"/>
                         </div>
                         <div class="div_check">
-                            <input class="check" type='checkbox' id='check${index}' name='check[]' onclick="multi(${index})"/>
+                            <input class="check" type='checkbox' id='check${index_td}' name='check[]' onclick="multi(${index_td})"/>
                         </div>
-                        <input style="min-width: 85px" type='hidden' id='check_descuento${index}' name='check_descuento[]' class="form-control" required>
-                        <input type='hidden' id='promedio_original${index}' name='promedio_original[]' class="form-control" required>
+                        <input style="min-width: 85px" type='hidden' id='check_descuento${index_td}' name='check_descuento[]' class="form-control" required>
+                        <input type='hidden' id='promedio_original${index_td}' name='promedio_original[]' class="form-control" required>
                     </td>
-                    <td><input type='text' id='precio_unitario_descuento${index}' style="min-width: 85px" name='precio_unitario_descuento[]' readonly class="form-control" required/></td>
-                    <input type='hidden' name="comision[]" id='comision${index}' style="min-width: 85px" readonly class="form-control comision_input" required onchange="multi(${index})"/>
-                    <td><input type='text' id='precio_unitario_comision${index}' style="min-width: 85px" name='precio_unitario_comision[]' readonly class="form-control" required/></td>
+                    <td><input type='text' id='precio_unitario_descuento${index_td}' style="min-width: 85px" name='precio_unitario_descuento[]' readonly class="form-control" required/></td>
+                    <input type='hidden' name="comision[]" id='comision${index_td}' style="min-width: 85px" readonly class="form-control comision_input" required onchange="multi(${index_td})"/>
+                    <td><input type='text' id='precio_unitario_comision${index_td}' style="min-width: 85px" name='precio_unitario_comision[]' readonly class="form-control" required/></td>
                     <td>
-                        <input type='text' id='total${index}' style="min-width: 85px" name='total' disabled class="total form-control" required/>
-                        <input type='text' id='afectacion${index}' style="min-width: 85px" hidden name='afectacion' disabled class="afectacion form-control" required/>
+                        <input type='text' id='total${index_td}' style="min-width: 85px" name='total' disabled class="total form-control" required/>
+                        <input type='text' id='afectacion${index_td}' style="min-width: 85px" hidden name='afectacion' disabled class="afectacion form-control" required/>
                     </td>
-                    <td><input style="min-width: 85px" type='text' id='precio_unitario_igv${index}' name='precio_unitario_igv[]' readonly class="form-control" required/></td>
+                    <td><input style="min-width: 85px" type='text' id='precio_unitario_igv${index_td}' name='precio_unitario_igv[]' readonly class="form-control" required/></td>
                 </tr>
             `;
-
             $('.tables tbody:first').append(data);
-            $('#count_articles').val(index);
+            $('#count_articles').val(index_td+1);
 
             setTimeout(function() {
                 articlesSelect2();
                 if (callback) callback();
             }, 250);
+            console.log("callback "+callback);
         }
 
-        function cargarArticuloEnFila(registro, index, callback) {
+        function cargarArticuloEnFila(registro, index, index_td,callback) {
             let articuloId, codigo, codigoOriginal, nombre;
 
             if (registro.producto_id && registro.producto) {
@@ -2020,24 +2038,24 @@
             }
 
             const articuloTexto = `${articuloId} | ${codigo} | ${codigoOriginal} | ${nombre}`;
-            const selectId = index === 0 ? '#articulo' : `#articulo${index}`;
+            const selectId = index_td === 0 ? '#articulo' : `#articulo${index_td}`;
 
             if ($(selectId).length === 0) {
                 if (callback) callback();
                 return;
             }
-
+            articulosAgregados.add(String(articuloId));
             const option = new Option(articuloTexto, articuloTexto, true, true);
             $(selectId).append(option).trigger('change');
 
             // Esperar a que ajax() termine
             setTimeout(function() {
-                const descId = index === 0 ? '#descripcion0' : `#descripcion${index}`;
-                const cantId = index === 0 ? '#cantidad0' : `#cantidad${index}`;
-                const descuentoId = index === 0 ? '#descuento0' : `#descuento${index}`;
-                const checkId = index === 0 ? '#check0' : `#check${index}`;
-                const checkDescuentoId = index === 0 ? '#check_descuento0' : `#check_descuento${index}`;
-                const comisionId = index === 0 ? '#comision0' : `#comision${index}`;
+                const descId = index_td === 0 ? '#descripcion0' : `#descripcion${index_td}`;
+                const cantId = index_td === 0 ? '#cantidad0' : `#cantidad${index_td}`;
+                const descuentoId = index_td === 0 ? '#descuento0' : `#descuento${index_td}`;
+                const checkId = index_td === 0 ? '#check0' : `#check${index_td}`;
+                const checkDescuentoId = index_td === 0 ? '#check_descuento0' : `#check_descuento${index_td}`;
+                const comisionId = index_td === 0 ? '#comision0' : `#comision${index_td}`;
 
                 // DESCRIPCIÓN
                 if (registro.descripcion_item) {
@@ -2083,7 +2101,7 @@
 
                     // Recalcular después de establecer la comisión
                     setTimeout(function() {
-                        multi(index);
+                        multi(index_td);
                         if (callback) {
                             setTimeout(callback, 250);
                         }

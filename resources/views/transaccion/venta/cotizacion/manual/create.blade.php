@@ -1749,16 +1749,22 @@
             var cotiDuplicada = @json($cotiDuplicada ?? null);
             // $('#loaderGif').show();
             if (cotiDuplicada) {
-                // console.log('🔄 Cotización a duplicar:', cotiDuplicada);
+                var $toast = toastr.info('Cargando datos de la cotización...', '', {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    tapToDismiss: false
+                });
 
-                // ⏰ Esperar más tiempo para que TODOS los selects se inicialicen
                 setTimeout(function() {
-                    cargarDatosCotizacionManual(cotiDuplicada);
-                }, 2000); // ← Aumentado a 2 segundos
+                    cargarDatosCotizacionManual(cotiDuplicada, function(){
+                        toastr.clear($toast);
+                        toastr.success('Cotización cargada');
+                    });
+                }, 800); // ← Aumentado a 2 segundos
             }
         });
 
-        function cargarDatosCotizacionManual(data) {
+        function cargarDatosCotizacionManual(data, onDone) {
             // console.log('📋 Cargando datos...');
 
             if (data.cliente) {
@@ -1870,25 +1876,26 @@
 
             // 10. ARTÍCULOS - Esperar más antes de cargar
             setTimeout(function() {
-                cargarArticulosManual(data);
+                cargarArticulosManual(data, onDone);
             }, 2000); // ← Aumentado
 
         }
 
-        function cargarArticulosManual(data) {
+        function cargarArticulosManual(data, onDone) {
             let registros = data.coti_manual_registros || [];
 
             if (registros.length === 0) {
-                // console.log('⚠️ No hay artículos');
+                if (onDone) onDone();
                 return;
             }
 
             // console.log('📦 Artículos a cargar:', registros.length);
-            cargarArticulosSecuencialManual(registros, 0);
+            cargarArticulosSecuencialManual(registros, 0, onDone);
         }
 
-        function cargarArticulosSecuencialManual(registros, index) {
+        function cargarArticulosSecuencialManual(registros, index, onDone) {
             if (index >= registros.length) {
+                if (onDone) onDone(); 
                 // console.log('✅ Todos los artículos cargados');
                 return;
             }
@@ -1899,14 +1906,14 @@
             if (index === 0) {
                 cargarArticuloEnFilaManual(registro, 0, function() {
                     setTimeout(function() {
-                        cargarArticulosSecuencialManual(registros, index + 1);
+                        cargarArticulosSecuencialManual(registros, index + 1, onDone);
                     }, 800); // ← Tiempo entre artículos
                 });
             } else {
                 crearNuevaFilaManual(index, function() {
                     cargarArticuloEnFilaManual(registro, index, function() {
                         setTimeout(function() {
-                            cargarArticulosSecuencialManual(registros, index + 1);
+                            cargarArticulosSecuencialManual(registros, index + 1, onDone);
                         }, 800);
                     });
                 });
@@ -1958,7 +1965,7 @@
 
         function cargarArticuloEnFilaManual(registro, index, callback) {
             // console.log(`  📝 Procesando fila ${index}:`, registro);
-            $('#loaderGif').show();
+            // $('#loaderGif').show();
             let articuloId, codigo, codigoOriginal, nombre;
 
             if (registro.producto_id && registro.producto) {
@@ -2021,7 +2028,7 @@
                 }, 500);
 
             }, 2500);
-            $('#loaderGif').hide();
+            // $('#loaderGif').hide();
         }
     </script>
 
