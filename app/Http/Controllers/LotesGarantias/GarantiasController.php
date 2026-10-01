@@ -47,7 +47,8 @@ class GarantiasController extends Controller
             if (class_exists('\App\SerieProducto')) {
                 $querySerie = \App\SerieProducto::where('numero_serie', $serialProducto);
                 if (class_exists('\App\Lote') && \Illuminate\Support\Facades\Schema::hasTable('lotes')) {
-                    $querySerie->with('lote');
+                    // Eager Loading para prevenir N+1 queries en la trazabilidad del proveedor
+                    $querySerie->with('lote.kardexEntradaRegistro.kardex_entrada.provedor');
                 }
                 $serie = $querySerie->first();
             }
@@ -79,11 +80,10 @@ class GarantiasController extends Controller
                 'producto' => optional($producto)->nombre ?? 'Producto General'
             ],
             'proveedor' => [
-                'cod_prov' => 'P-0001',
-                'nom_prov' => 'Proveedor Principal',
-                'num_guia' => 'G-0034',
-                'num_factura' => 'F-1234',
-                'guia_remision' => 'G-1234',
+                'cod_prov' => $serie?->lote?->kardexEntradaRegistro?->kardex_entrada?->provedor?->id ?? $serie?->lote?->kardexEntradaRegistro?->kardex_entrada?->provedor?->ruc ?? 'Sin registro',
+                'nom_prov' => $serie?->lote?->kardexEntradaRegistro?->kardex_entrada?->provedor?->nombre ?? $serie?->lote?->kardexEntradaRegistro?->kardex_entrada?->provedor?->razon_social ?? 'N/A',
+                'num_factura' => $serie?->lote?->kardexEntradaRegistro?->kardex_entrada?->factura ?? 'N/A',
+                'guia_remision' => $serie?->lote?->kardexEntradaRegistro?->kardex_entrada?->guia_remision ?? 'N/A',
                 'estado_garantia' => $vigencia['estado']
             ],
             'resumen_tabla' => [

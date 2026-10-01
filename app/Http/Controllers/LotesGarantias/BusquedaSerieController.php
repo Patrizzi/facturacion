@@ -23,7 +23,8 @@ class BusquedaSerieController extends Controller
             ], 422);
         }
 
-        $query = SerieProducto::query();
+        // 1. Eager Loading para prevenir N+1 queries
+        $query = SerieProducto::with('facturacionRegistro.facturacion.cliente');
 
         if ($numeroSerie !== '') {
             $query->where('numero_serie', 'like', '%' . $numeroSerie . '%');
@@ -64,6 +65,14 @@ class BusquedaSerieController extends Controller
             }
         }
 
+        // 2. Extracción de Datos (Null Safety con PHP 8)
+        $clienteData = [
+            'nombre_cliente' => $serie->facturacionRegistro?->facturacion?->cliente?->nombre ?? 'En Stock',
+            'telefono'       => $serie->facturacionRegistro?->facturacion?->cliente?->telefono ?? '--',
+            'email'          => $serie->facturacionRegistro?->facturacion?->cliente?->email ?? $serie->facturacionRegistro?->facturacion?->cliente?->correo ?? '--',
+            'numero_factura' => $serie->facturacionRegistro?->facturacion?->codigo_fac ?? 'No asignado',
+        ];
+
         $historial = SerieProducto::where('codigo_producto', $serie->codigo_producto)
             ->where('id', '!=', $serie->id)
             ->latest()
@@ -90,6 +99,7 @@ class BusquedaSerieController extends Controller
             'serie' => [
                 'numero_serie' => $serie->numero_serie,
                 'codigo_producto' => $serie->codigo_producto,
+                'cliente' => $clienteData,
                 'lote' => [
                     'codigo' => optional($lote)->lote ?: ($serie->codigo_lote ?: '--'),
                     'proveedor' => optional($lote)->proveedor_nombre ?: '--',
