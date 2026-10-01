@@ -76,7 +76,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-tag"></i></span>
                                     </div>
-                                    <input type="text" class="form-control" name="codigo_producto" placeholder="Ej: P-12345...">
+                                    <input type="text" class="form-control" name="codigo_producto" id="codigo_producto" value="{{ request('codigo_producto') }}" placeholder="Ej: P-12345...">
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         {{-- Botones de Acción --}}
                         <div class="form-group row mb-4">
                             <div class="col-sm-8 offset-sm-4 d-flex">
-                                <button type="button" class="btn btn-primary font-weight-bold mr-2" style="background-color: #2641f8; border-color: #2641f8;">
+                                <button type="button" id="btnValidarGarantia" class="btn btn-primary font-weight-bold mr-2" style="background-color: #2641f8; border-color: #2641f8;">
                                     <i class="fa fa-search mr-1"></i> Validar Garantía
                                 </button>
                                 <button type="reset" class="btn btn-outline-secondary font-weight-bold">
@@ -183,6 +183,25 @@ const GarantiaClienteModule = (function () {
         const btnValidar = document.querySelector('#formGarantiaCliente button.btn-primary');
         if (btnValidar) {
             btnValidar.addEventListener('click', validarGarantiaCliente);
+
+            // Lógica de precarga y búsqueda automática (UX Improvement)
+            const params = new URLSearchParams(window.location.search);
+            const codProducto = params.get('codigo_producto');
+            const numDocumentoInput = document.querySelector('input[name="num_documento"]');
+
+            if (codProducto) {
+                // 1. Validación DOM y precarga del campo
+                const inputCodigo = document.querySelector('input[name="codigo_producto"]');
+                if (inputCodigo) {
+                    inputCodigo.value = codProducto;
+                }
+
+                // 2. Auto-disparo si el comprobante ya está ingresado
+                const numDocumentoInput = document.querySelector('input[name="num_documento"]');
+                if (numDocumentoInput && numDocumentoInput.value.trim() !== '') {
+                    setTimeout(() => btnValidar.click(), 300);
+                }
+            }
         }
     });
 })();
