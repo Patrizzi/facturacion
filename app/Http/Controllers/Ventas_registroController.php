@@ -807,7 +807,7 @@ class Ventas_registroController extends Controller
                 $n_venta->cliente->numero_documento,
                 $n_venta->cliente->nombre,
                 $n_venta->fecha_emision,
-                $n_venta->forma_pago,
+                $n_venta->forma_pago_nombre,
                 $n_venta->total,
                 $n_venta->id,
                 $n_venta->estado_vigente,

@@ -1861,7 +1861,7 @@ public function pdf(Request $request,$id){
     //envio hacia facturar cambiar en caso incluya algo
 public function facturar(Request $request,$id)
 {
-
+    
     // REDIRECCION PARA MOSTRAR EL inventario_inicial
     $existe_id=kardex_entrada::where('estado',2)->first();
     if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
