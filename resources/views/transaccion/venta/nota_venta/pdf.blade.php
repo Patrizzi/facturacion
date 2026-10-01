@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nota de Venta</title>{{--
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" > --}}
-    <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet"> --}}
 </head>
 <style type="text/css">
     .form-control,
