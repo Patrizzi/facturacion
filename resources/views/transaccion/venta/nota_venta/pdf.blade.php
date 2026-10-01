@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nota de Venta</title>{{--
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" > --}}
-    <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/estilos_pdf.css') }}" rel="stylesheet"> --}}
 </head>
 <style type="text/css">
     .form-control,
@@ -31,23 +31,7 @@
 <body class="white-bg">
     <table style="width: 100%;border-collapse:separate;margin-bottom: -10px">
         <tr>
-            <td style="width: 30%;border-color: white" rowspan="2" valign="top">
-                <center><img align="center" src="{{ asset('img/logos/') }}/{{ $empresa->foto }}"
-                        style="margin-top: 0px;" width="80%" /></center>
-            </td>
-            <td style="width: 30%;border-color: white;text-align: center;margin: 15px 10px" rowspan="2"
-                valign="top">
-                <strong>{{ $empresa->razon_social }}</strong><br>
-                <span style="font-size: 80%">
-                    @if ($empresa->telefono != "0")
-                        Telef: {{ $empresa->telefono }} /
-                    @endif Celular: {{ $empresa->movil }} <br>
-                    Correo: {{ $empresa->correo }}<br>
-                    Web: {{ $empresa->pagina_web }} <br>
-                    {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
-                    {{ $empresa->pais }}
-                </span>
-            </td>
+            @include('layout_cabecera_ventas_pdf')
             <td style="width: 30%; ;border: 1px #808080 solid;border-radius: 8px;margin-top: 0px" align="right">
                 <center>
                     <h3 style="text-align: center;margin: 0px"> R.U.C {{ $empresa->ruc }}</h3><br>
