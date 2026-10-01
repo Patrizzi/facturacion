@@ -11,6 +11,10 @@ class Cotizacion extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'precio_total'
+    ];
+
     public function cliente()
     {
         return $this->belongsTo(Cliente::class, 'cliente_id');
@@ -226,5 +230,14 @@ class Cotizacion extends Model
 
     public function coti_boleta_registro(){
         return $this->hasMany(Cotizacion_boleta_registro::class, 'cotizacion_id');
+    }
+
+    public function getPrecioTotalAttribute(){
+        $igv = Igv::first();
+        $subtotal = $this->attributes['op_gravada'] + $this->attributes['op_inafecta'] + $this->attributes['op_exonerada'];
+        $subtotal_gravado = $this->attributes['op_gravada'];
+        $igv_p = round($subtotal_gravado, 2) * ($igv->igv_total / 100);
+        $end = round($subtotal, 2) + round($igv_p, 2);
+        return $end;    
     }
 }
