@@ -740,6 +740,7 @@ Route::group(
             Route::get('/busqueda-serie', 'LotesGarantiasController@busquedaSerie')->name('lotes-garantias.busqueda-serie');
             Route::get('/garantia-producto', 'LotesGarantiasController@garantiaProducto')->name('lotes-garantias.garantia-producto');
             Route::get('/garantia-cliente', 'LotesGarantiasController@garantiaCliente')->name('lotes-garantias.garantia-cliente');
+            Route::post('/consulta-comprobante', 'LotesGarantias\GarantiasController@buscarPorComprobante')->name('lotes-garantias.consulta-comprobante');
         });
         require base_path('routes/lotes_garantias_ajax.php');
 
