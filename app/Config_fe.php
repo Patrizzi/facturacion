@@ -2165,12 +2165,16 @@ class Config_fe extends Model
 
         $empresa = Empresa::first();
         $igv = Igv::first();
-
+        if ($factura->cliente->empresa == null) {
+            $razon = $factura->cliente->nombre;
+        } else {
+            $razon = $factura->cliente->empresa;
+        }
         // Cliente
         $client = (new Client())
             ->setTipoDoc('6')   //pagina 42 del pdf sunat 2.1
             ->setNumDoc($factura->cliente->numero_documento) //ruc del receptor
-            ->setRznSocial($factura->cliente->empresa); //nombre empresa
+            ->setRznSocial($razon); //nombre empresa
 
         // Emisor
         $address = (new Address())
