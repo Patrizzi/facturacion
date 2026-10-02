@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Facturacion_registro extends Model
 {
@@ -16,12 +17,21 @@ class Facturacion_registro extends Model
         return $this->belongsTo(Producto::class,'producto_id');
     }
 
+    public function serie(): BelongsTo
+    {
+        return $this->belongsTo(SerieProducto::class, 'serie_id');
+    }
+
     public function servicio(){
         return $this->belongsTo(Servicios::class,'servicio_id');
     }
 
     public function factura_ids(){
         return $this->belongsTo(Facturacion::class,'facturacion_id');
+    }
+
+    public function lote(){
+        return $this->belongsTo(Lote::class,'lote_id');
     }
 
     public function getArticuloDescripcionAttribute(){

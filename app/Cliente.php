@@ -25,6 +25,12 @@ class Cliente extends Model
         return $this->belongsTo(Personal_venta::class, 'vendedor_id');
     }
 
+<<<<<<< HEAD
+    public function forma_pago(){
+        return $this->belongsTo(Forma_pago::class, 'forma_pago_id');
+    }
+=======
+>>>>>>> origin/master
 
     public static function cliente_update($id_cliente)
     {

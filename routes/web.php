@@ -732,6 +732,20 @@ Route::group(
         Route::resource('/cierre-periodo', 'CierrePeriodoController');
         Route::get('/cierre-periodo/pdf/{id}', 'CierrePeriodoController@pdf')->name('cierre-periodo.pdf');
 
+        // Control de Lotes y Garantías
+        Route::prefix('inventario/lotes-garantias')->group(function () {
+            Route::get('/', 'LotesGarantiasController@inventarioInicial')->name('lotes-garantias.index');
+            Route::get('/inventario-inicial', 'LotesGarantiasController@inventarioInicial')->name('lotes-garantias.inventario-inicial');
+            Route::get('/detalle-lote', 'LotesGarantiasController@detalleLote')->name('lotes-garantias.detalle-lote');
+            Route::get('/busqueda-serie', 'LotesGarantiasController@busquedaSerie')->name('lotes-garantias.busqueda-serie');
+            Route::get('/garantia-producto', 'LotesGarantiasController@garantiaProducto')->name('lotes-garantias.garantia-producto');
+            Route::get('/garantia-cliente', 'LotesGarantiasController@garantiaCliente')->name('lotes-garantias.garantia-cliente');
+        });
+        require base_path('routes/lotes_garantias_ajax.php');
+
+        // Rutas AJAX modulares para Control de Lotes y Garantías
+        require base_path('routes/lotes_garantias_ajax.php');
+
         //Fin de inventarios
 
         Route::resource('/motivo', 'MotivoController');
@@ -1567,3 +1581,6 @@ Route::post('/factura/guardar-nota/{id}', 'FacturacionController@guardarNotaInfo
 
 Route::post('/factura_manual/guardar-nota/{id}', 'FacturacionMController@guardarNotaInformativa')
     ->name('facturacionM.guardar_nota');
+
+// Rutas de Lotes y Garantías
+require base_path('routes/lotes_garantias_ajax.php');

@@ -107,6 +107,31 @@ return [
                 ],
             ],
             [
+                'label' => 'Control de Lotes y Garantías',
+                'children' => [
+                    [
+                        'label' => 'Inventario Inicial',
+                        'route' => 'lotes-garantias.inventario-inicial',
+                    ],
+                    [
+                        'label' => 'Detalle de Lote',
+                        'route' => 'lotes-garantias.detalle-lote',
+                    ],
+                    [
+                        'label' => 'Búsqueda por Serie',
+                        'route' => 'lotes-garantias.busqueda-serie',
+                    ],
+                    [
+                        'label' => 'Garantía de Producto',
+                        'route' => 'lotes-garantias.garantia-producto',
+                    ],
+                    [
+                        'label' => 'Garantía de Cliente',
+                        'route' => 'lotes-garantias.garantia-cliente',
+                    ],
+                ],
+            ],
+            [
                 'permission' => 'inventario.consulta',
                 'label' => 'Consultas de inventario',
                 'route' => 'periodo-consulta.index',

@@ -32,6 +32,14 @@ class SideMenu extends Component {
                 ->permissions('inventario-productos_kardex-entrada_producto.index')
                 ->build(),
         ];
+
+        $inventarioLotesGarantiasSubmenus = [
+            $this->menu()->text('Inventario Inicial')->route('lotes-garantias.inventario-inicial')->build(),
+            $this->menu()->text('Detalle de Lote')->route('lotes-garantias.detalle-lote')->build(),
+            $this->menu()->text('Búsqueda por Serie')->route('lotes-garantias.busqueda-serie')->build(),
+            $this->menu()->text('Garantía de Producto')->route('lotes-garantias.garantia-producto')->build(),
+            $this->menu()->text('Garantía de Cliente')->route('lotes-garantias.garantia-cliente')->build(),
+        ];
         $inventarioComercializacionSubmenus = [
             $this->menu()->text('Cotizaciones')->route('cotizacion.index')->build(),
             $this->menu()->text('Cotizaciones M.')->route('cotizacion_manual.index')->build(),
@@ -61,6 +69,9 @@ class SideMenu extends Component {
                 $inventarioSubmenus = [
                     $this->menu()->text('Kardex-Producto')->permissions('inventario-productos_kardex')
                         ->submenus($inventarioKardexSubmenus)
+                        ->build(),
+                    $this->menu()->text('Control de Lotes y Garantías')
+                        ->submenus($inventarioLotesGarantiasSubmenus)
                         ->build(),
                     $this->menu()->text('Consultas de inventario')->route('periodo-consulta.index')
                         ->permissions('inventario-toma_de_inventario.index')
