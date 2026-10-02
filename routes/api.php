@@ -163,3 +163,6 @@ Route::group(['middleware' => ['web', 'auth','cambio_diario']], function () {
 
 
 Route::post('/consulta-comprobante', [ParameterCallController::class, 'consulta_comprobante'])->name('pa.consulta_comprobante');
+
+Route::post('/reclamo-cliente', [\App\Http\Controllers\ReclamoClienteController::class, 'store'])
+    ->name('reclamo_cliente.store');
