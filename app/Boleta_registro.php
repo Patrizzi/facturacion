@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Boleta_registro extends Model
 {
@@ -14,6 +15,11 @@ class Boleta_registro extends Model
 
      public function producto(){
         return $this->belongsTo(Producto::class,'producto_id');
+    }
+
+    public function serie(): BelongsTo
+    {
+        return $this->belongsTo(SerieProducto::class, 'serie_id');
     }
 
     public function servicio(){
