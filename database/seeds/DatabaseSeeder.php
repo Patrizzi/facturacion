@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ConfiTableSeeder::class);
         $this->call(UsersTableSeeder::class);           //solo 1
         $this->call(EstadoSeeder::class);
+        $this->call(EstadosProductoSeeder::class);
         $this->call(MonedasSeeder::class);
         $this->call(UnidadMedidaSeeder::class);
         $this->call(BancoTableSeeder::class);
