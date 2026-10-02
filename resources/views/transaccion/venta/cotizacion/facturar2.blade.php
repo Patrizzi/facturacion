@@ -13,6 +13,20 @@
             onsubmit="return valida(this)">
             @csrf
             <div class="ibox">
+                <div class="ibox-title">
+                    <a href="{{ route('cotizacion.show', $cotizacion->id)}}" class="no-hover-icon" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false" style="cursor: pointer;">
+                        <i class="fa fa-arrow-left text-muted"></i>
+                    </a>
+                    <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up text-muted"></i>
+                        </a>
+                        <a class="" href="{{ route('ventas.cotizacion') }}">
+                            <i class="fa fa-times text-muted"></i>
+                        </a>
+                    </div>
+                </div>
                 <div class="ibox-content">
                         <div class="row">
                             <div class="col-md-4">
@@ -64,6 +78,87 @@
                                         <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
                                             data-toggle="modal" data-target="#cuotas_modal"><i
                                                 class="fa fa-calendar"></i></button>
+                                         <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1"
+                                            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="alert alert-danger alert-dismissible fade show"
+                                                            role="alert" id="alert_campos" style="display: none">
+                                                            <strong style="font-size:11px">Rellenar todos los
+                                                                campos</strong>
+                                                            <button type="button" class="close_model_rc close"
+                                                                onclick="cerrar_but_rc()" style="padding: 6;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="alert alert-danger alert-dismissible fade show"
+                                                            role="alert" id="suma_campos" style="display: none">
+                                                            <strong style="font-size:11px">La suma de las cuotas es
+                                                                diferente del monto total</strong>
+                                                            <button type="button" class="close_model_mt close"
+                                                                onclick="cerrar_but_mt()" style="padding: 6;">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="row_number">
+                                                            <div class="pago_modal row">
+                                                                <div class="col-sm-1"><label>Fecha:</label></div>
+                                                                <div class="col-sm-4">
+                                                                    <input type="date" name="fecha_pago[]"
+                                                                        id="fecha_pago0"
+                                                                        class="fecha_pago form-control"
+                                                                        min="{{ $fecha_1 }}">
+                                                                </div>
+                                                                <div class="col-sm-1"><label>Monto:</label></div>
+                                                                <div class="col-sm-4">
+                                                                    <div class="input-group mb-3"
+                                                                        style="padding-right:15px">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text"
+                                                                                id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
+                                                                        </div>
+                                                                        <input type="text" name="monto_pago[]"
+                                                                            id="monto_pago0"
+                                                                            class="monto_pago form-control"
+                                                                            onkeypress="return filterFloat(event,this);">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                    <label><button type="button" aria-hidden="true"
+                                                                            id="add_pago"
+                                                                            class="add_pago btn btn-success"><i
+                                                                                class="fa fa-plus-square-o fa-lg">
+                                                                            </i></button></label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer" style="display: block">
+                                                        <div class="row">
+                                                            <div class="col-sm-6" style="">
+                                                                <label for=""><strong>Precio Total:
+                                                                        &nbsp;</strong>{{ $cotizacion->moneda->simbolo }}&nbsp;</label><label
+                                                                    id="cuotas_footer"></label>
+                                                            </div>
+                                                            <div class="col-sm-6" align="right">
+                                                                <button type="button" id="button_cuotas_save"
+                                                                    class="btn btn-primary">Guardar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -127,19 +222,143 @@
                                     <table class="table tables">
                                         <thead>
                                             <tr>
-                                                <th>Código</th>
-                                                <th>Cantidad</th>
+                                                <th style="width: 120px">Código</th>
                                                 <th>Descripcion</th>
-                                                <th>Stock </th>
-                                                <th>Precio U.</th>
-                                                <th>Precio T.</th>
+                                                <th style="width: 110px">Cantidad</th>
+                                                <th style="width: 110px">Stock </th>
+                                                <th style="width: 150px">Precio U.</th>
+                                                <th style="width: 150px">Precio T.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <?php
+                                                $stock_total = true;
+                                            ?>
+                                            @foreach ($cotizacion_registros as $index => $cotizacion_registro)
+                                                <tr>
+                                                    @if (isset($cotizacion_registro->producto_id))
+                                                        <td>
+                                                            <input type="text" class="form-control" name="" id="" value="{{ $cotizacion_registro->producto->codigo_producto }}" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" readonly value="{{ $cotizacion_registro->producto->nombre }}" name="" id="" class="form-control">
+                                                            <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2"
+                                                                cols="2" style="margin-top: 5px">{{ $cotizacion_registro->descripcion_item }}</textarea>
+                                                            <input type="text" class="form-control" name="numero_serie[{{ $index }}]" placeholder="N° Serie" style="margin-top: 5px">
+                                                        </td>
+                                                    @else
+                                                        <td>
+                                                            <input type="text" class="form-control" name="" id="" value="{{ $cotizacion_registro->servicio->codigo_servicio }}" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" readonly value="{{ $cotizacion_registro->servicio->nombre }}" name="" id="" class="form-control">
+                                                            <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2"
+                                                                cols="2" style="margin-top: 5px">{{ $cotizacion_registro->descripcion_item }}</textarea>
 
+                                                            <input type="text" class="form-control" name="numero_serie[{{ $index }}]" placeholder="N° de Serie" style="margin-top: 5px">
+                                                        </td>
+                                                    @endif
+                                                    <td>
+                                                        <input  type="text" class="form-control" name="" id="" value="{{ $cotizacion_registro->cantidad }}" readonly>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" readonly value="{{ $array_cantidad[$index] }}" name="" id="" class="form-control" @if($array_cantidad[$index] < $cotizacion_registro->cantidad) style="border-color: red" {{$stock_total = false}} @endif>
+                                                    </td>
+                                                    {{-- MODIFICAR ESTA PARTE CON LOGICA DE REPROGRAMACION PARA UN NUEVO PRODUCTO DIRECTAMENTE DESDE KARDEX --}}
+                                                    <td style="display: none;">
+                                                        {{ $desc_array = round($array[$index] - ($array_promedio[$index] * $cotizacion_registro->descuento) / 100, 2) }}
+                                                        {{ $comis_array = round($desc_array + $desc_array * ($comi / 100), 2) }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group m-b">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                            </div>
+                                                            <input type="text" readonly class="form-control" value="{{ round($comis_array, 2) }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group m-b">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                            </div>
+                                                            <input type="text" readonly class="form-control" value="{{ number_format(round($comis_array * $cotizacion_registro->cantidad, 2), 2) }}">
+                                                        </div>
+                                                    </td>
+
+                                                    <td style="display: none">
+                                                        {{ $sub_total = $cotizacion->op_gravada + $cotizacion->op_exonerada + $cotizacion->op_inafecta }}
+                                                        {{ $sub_total_gravado = $cotizacion->op_gravada }}
+                                                        S/.{{ $igv_p = round($sub_total_gravado, 2) * ($igv->igv_total / 100) }}
+                                                        {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
+                                                        {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="3" style="vertical-align: middle">
+                                                    <?php 
+                                                        use Luecano\NumeroALetras\NumeroALetras;
+                                                        $v = new NumeroALetras();
+                                                        $letra = $v->toInvoice($end, 2);
+                                                        // $end_final_point=strstr($end2, '.',false);
+                                                        // $end_final=str_replace('.', '',$end_final_point);
+                                                    ?>
+                                                    <strong>Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $cotizacion->moneda->nombre }}</strong>
+                                                    <!-- {{-- {{$end2}} --}} -->
+                                                </td>
+                                                <td style="vertical-align: middle"><strong>Subtotal: </strong></td>
+                                                <td colspan="2">
+                                                    <div class="input-group m-b">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                        </div>
+                                                        <input id='subtotal_gravado' disabled="disabled" hidden=""
+                                                        class="form-control limp_txt" required value="{{ $sub_total }}" />
+                                                        <input type="text" id="sub_total" name="sub_total" disabled class="form-control limp_txt"
+                                                            value="{{ $sub_total }}">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"></td>
+                                                <td style="vertical-align: middle"><strong>Igv:</strong></td>
+                                                <td colspan="2">
+                                                    <div class="input-group m-b">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                        </div>
+                                                        <input type="text" id="igv_input" name="igv_input" disabled class="form-control limp_txt"
+                                                        value="{{ number_format(round($igv_p, 2), 2) }}">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"></td>
+                                                <td style="vertical-align: middle"><strong>Total :</strong></td>
+                                                <td colspan="2">
+                                                    <div class="input-group m-b">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                        </div>
+                                                        <input type="text" id="total_final" name="total_final" disabled
+                                                        class="form-control limp_txt" value="{{ number_format(round($end, 2), 2) }}">
+                                                    </div>
+                                                </td>
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                            <br>
+                            <br>
+                            <div class="col-sm-12" align="right">
+                                <button class="btn btn-primary boton_submit" style="margin-top: 5px;margin-right: 8px" type="button" @if($stock_total == false) disabled @endif
+                                    id="boton">
+                                    <i class="fa fa-cloud-upload"></i>&nbsp;Guardar
+                                </button>
+                                <button type="submit" hidden id="submit_button">Guardar DB</button>
                             </div>
                         </div>
                     </div>
@@ -223,87 +442,7 @@
                                                 <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
                                                     data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
                                             </div>
-                                            <!-- Modal -->
-                                            <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1"
-                                                role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas
-                                                            </h5>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="alert alert-danger alert-dismissible fade show"
-                                                                role="alert" id="alert_campos" style="display: none">
-                                                                <strong style="font-size:11px">Rellenar todos los
-                                                                    campos</strong>
-                                                                <button type="button" class="close_model_rc close"
-                                                                    onclick="cerrar_but_rc()" style="padding: 6;">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="alert alert-danger alert-dismissible fade show"
-                                                                role="alert" id="suma_campos" style="display: none">
-                                                                <strong style="font-size:11px">La suma de las cuotas es
-                                                                    diferente del monto total</strong>
-                                                                <button type="button" class="close_model_mt close"
-                                                                    onclick="cerrar_but_mt()" style="padding: 6;">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="row_number">
-                                                                <div class="pago_modal row">
-                                                                    <div class="col-sm-1"><label>Fecha:</label></div>
-                                                                    <div class="col-sm-4">
-                                                                        <input type="date" name="fecha_pago[]"
-                                                                            id="fecha_pago0"
-                                                                            class="fecha_pago form-control"
-                                                                            min="{{ $fecha_1 }}">
-                                                                    </div>
-                                                                    <div class="col-sm-1"><label>Monto:</label></div>
-                                                                    <div class="col-sm-4">
-                                                                        <div class="input-group mb-3"
-                                                                            style="padding-right:15px">
-                                                                            <div class="input-group-prepend">
-                                                                                <span class="input-group-text"
-                                                                                    id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
-                                                                            </div>
-                                                                            <input type="text" name="monto_pago[]"
-                                                                                id="monto_pago0"
-                                                                                class="monto_pago form-control"
-                                                                                onkeypress="return filterFloat(event,this);">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-sm-2">
-                                                                        <label><button type="button" aria-hidden="true"
-                                                                                id="add_pago"
-                                                                                class="add_pago btn btn-success"><i
-                                                                                    class="fa fa-plus-square-o fa-lg">
-                                                                                </i></button></label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer" style="display: block">
-                                                            <div class="row">
-                                                                <div class="col-sm-6" style="">
-                                                                    <label for=""><strong>Precio Total:
-                                                                            &nbsp;</strong>{{ $cotizacion->moneda->simbolo }}&nbsp;</label><label
-                                                                        id="cuotas_footer"></label>
-                                                                </div>
-                                                                <div class="col-sm-6" align="right">
-                                                                    <button type="button" id="button_cuotas_save"
-                                                                        class="btn btn-primary">Guardar</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                           
                                             <div class="col-sm-2">
                                                 <strong>Tipo de Moneda:</strong>
                                             </div>
@@ -429,15 +568,7 @@
                             <div class="col-sm-8">
                                 <div align="left">
                                     <h3>
-                                        <?php use Luecano\NumeroALetras\NumeroALetras;
-                                        $v = new NumeroALetras();
-                                        $letra = $v->toInvoice($end, 2);
-                                        // $end_final_point=strstr($end2, '.',false);
-                                        // $end_final=str_replace('.', '',$end_final_point);
-                                        ?>
-                                        Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }}
-                                        {{ $cotizacion->moneda->nombre }}
-                                        <!-- {{-- {{$end2}} --}} -->
+                                        
                                     </h3>
                                 </div>
                             </div>
@@ -511,6 +642,9 @@
             font-family: 'Outfit', sans-serif;
             font-size: 11px;
         }
+        .m-b{
+            margin-bottom: 0px;
+        }
     </style>
 
     <!-- Mainly scripts -->
@@ -519,13 +653,37 @@
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <!-- Jquery Validate -->
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <!-- Steps -->
+    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <!-- Sweet alert -->
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+
+    @if($stock_total == false)
+        <script>
+            $(document).ready(function() {
+                toastr.error('Producto con Stock Insuficiente', '', {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    tapToDismiss: false
+                });
+            });
+        </script>
+    @endif
+
+
     <script type="text/javascript">
         $(document).ready(function() {
 
