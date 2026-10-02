@@ -260,7 +260,7 @@
                                                                         id="input_disabled_precio_{{ $e }}"
                                                                         name="input_disabled_precio_{{ $e }}"
                                                                         value="{{ $facturacion_registros->precio_unitario_comi }}"
-                                                                        step="0.01" min="0.01" readonly
+                                                                        step="0.000000001" min="0.01" readonly
                                                                         onchange="multi({{ $e }})"></td>
                                                                 <td><input type="text" readonly
                                                                         value="{{ $facturacion_registros->precio_unitario_comi * $facturacion_registros->cantidad }}"
