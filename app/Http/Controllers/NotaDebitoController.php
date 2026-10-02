@@ -56,19 +56,21 @@ class NotaDebitoController extends Controller
      */
     public function create()
     {
-        //cambiar de 0 a 1 en f_electronica
-        $facturas=Facturacion::where('f_electronica',1)->where('estado',0)->where('nota_debito',0)->get();
         
-        $factura_manual=Facturacion_m::where('f_electronica',1)->where('estado',0)->where('nota_debito',0)->get();
+        //cambiar de 0 a 1 en f_electronica
+        $facturas=Facturacion::where('f_electronica',1)->where('estado',1)->where('nota_debito',0)->get();
+        
+        $factura_manual=Facturacion_m::where('f_electronica',1)->where('estado',1)->where('nota_debito',0)->get();
         $igv=Igv::first();
+        // return $factura_manual;
         return view('transaccion.venta.nota_debito.lista_facturacion',compact('facturas','factura_manual','igv'));
     }
 
     public function create_boleta()
     {
         //cambiar de 0 a 1 en f_electronica
-        $boletas=Boleta::where('b_electronica',1)->where('estado',0)->where('nota_debito',0)->get();
-        $boleta_manual = Boleta_m::where('b_electronica',1)->where('estado',0)->where('nota_debito',0)->get();;
+        $boletas=Boleta::where('b_electronica',1)->where('estado',1)->where('nota_debito',0)->get();
+        $boleta_manual = Boleta_m::where('b_electronica',1)->where('estado',1)->where('nota_debito',0)->get();;
         $igv=Igv::first();
         return view('transaccion.venta.nota_debito.lista_boleta',compact('boletas','boleta_manual','igv'));
     }
