@@ -351,7 +351,12 @@ class FacturacionMController extends Controller
         }
         $facturacion->tipo_operacion_id= $request->get('tipo_operacion');
         $facturacion->tipo_documento_id = 2;
-
+        // Retención
+        $retencion = $request->get('check_retencion');
+        if($retencion == "on"){
+            $facturacion->retencion = true;
+            $facturacion->porcentaje_retencion = $request->get('porcentaje_retencion');
+        }
         $facturacion->save();
 
         // modificación para que se cierre el codigo en almacen

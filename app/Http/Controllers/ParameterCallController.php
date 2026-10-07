@@ -234,7 +234,8 @@ class ParameterCallController extends Controller
                 "id" => $default_cli->id,
                 "nombre" => $default_cli->nombre,
                 "numero_documento" => $default_cli->numero_documento,
-                "tipo_pago_id" => $default_cli->forma_pago_id
+                "tipo_pago_id" => $default_cli->forma_pago_id,
+                "retencion" => $default_cli->retencion ?? ""
             );
         }
         foreach ($employees as $employee) {
@@ -242,7 +243,8 @@ class ParameterCallController extends Controller
                 "id" => $employee->id,
                 "nombre" => $employee->nombre,
                 "numero_documento" => $employee->numero_documento,
-                "tipo_pago_id" => $employee->forma_pago_id
+                "tipo_pago_id" => $employee->forma_pago_id,
+                "retencion" => $employee->retencion ?? ""
             );
         }
         return response()->json($response);
