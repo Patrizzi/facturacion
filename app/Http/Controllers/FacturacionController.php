@@ -699,6 +699,11 @@ class FacturacionController extends Controller
         $facturacion->tipo = 'producto';
         $facturacion->tipo_operacion_id = $request->get('tipo_operacion');
         $facturacion->tipo_documento_id = 2;
+        $retencion = $request->get('check_retencion');
+        if($retencion == "on"){
+            $facturacion->retencion = true;
+            $facturacion->porcentaje_retencion = $request->get('porcentaje_retencion');
+        }
         $facturacion->save();
 
         $precio_final_igv = $request->get('precio_final_igv');
@@ -1144,7 +1149,7 @@ class FacturacionController extends Controller
 
         // $archivo=$name.'_'.$id;
         // return view('transaccion.venta.facturacion.pdf',compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco','banco_count','i'));
-
+        // return $cuotas;
         $pdf = PDF::loadView('transaccion.venta.facturacion.pdf', compact('facturacion', 'empresa', 'facturacion_registro', 'sum', 'igv', 'sub_total', 'banco', 'banco_count', 'i','detraccion','cuotas','textoQR','qrCode'));
         return $pdf->download('Factura - ' . $facturacion->codigo_fac . '.pdf');
 
@@ -1250,6 +1255,14 @@ class FacturacionController extends Controller
         $factura->op_inafecta = 0;
         $factura->op_exonerada = 0;
         $factura->op_gratuita = 0;
+        $retencion = $request->get('check_retencion');
+        if($retencion == "on"){
+            $factura->retencion = true;
+            $factura->porcentaje_retencion = $request->get('porcentaje_retencion');
+        }else{
+            $factura->retencion = false;
+            $factura->porcentaje_retencion = 0;
+        }
         $factura->save();
 
         //validacion dependiendo de la amoneda escogida
@@ -1602,6 +1615,7 @@ class FacturacionController extends Controller
                     $facturacion_registro = new Facturacion_registro();
                     $facturacion_registro->facturacion_id = $facturacion->id;
                     $facturacion_registro->servicio_id = $servicio->id;
+                    $facturacion_registro->numero_serie = $request->get('numero_serie')[$i];
                     //Precio -----------------------------------------------------------------------------------------
                     if ($moneda->id == $facturacion->moneda_id) {
                         if ($moneda->tipo == 'nacional') {

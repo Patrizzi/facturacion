@@ -42,7 +42,12 @@
     $('.select2_tipodetrac').select2();
     // Boton acceder a la edicion
 
-
+    var elem_2 = document.querySelector('.js-switch');
+    window.switchery_2 = new Switchery(elem_2, {
+        size: 'small', 
+        color: '#ED5565'
+    });
+    multi_retencion();
     function seleccionado_fp() {
         var opt = $('#forma_pago').val();
         if (opt == "1") {
@@ -88,6 +93,8 @@
                         return {
                             id: item.id,
                             text: item.nombre + ' | ' + item.numero_documento,
+                            tipo_pago: item.tipo_pago_id,
+                            retencion: item.retencion
                         };
 
                     })
@@ -97,6 +104,69 @@
         }
     });
     $('.select2_demo_client').val(cliente_default).trigger('change');
+    $('.select2_demo_client').on('select2:select', function(e) {
+        $('#guia_remi_input').val('0');
+        var s = document.getElementById("guia_list");
+        var numChilds = s.children.length;
+        for (var i = 0; i < numChilds; i++) {
+            s.children[0].remove()
+        }
+        var data = e.params.data;
+
+        // Si el tipo de pago es desde cliente cambiar
+        $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true);
+        seleccionado_fp();
+        if(data.retencion != ""){
+            $('#modulo_retencion').css('display', 'block');
+            $('#porcentaje_ret').val(data.retencion.porcentaje)
+            window.switchery_2.enable(); 
+        }else{
+            $('#modulo_retencion').css('display', 'none');
+            var retencion_check = document.querySelector('.js-switch');
+            if( retencion_check.checked == true){
+                window.switchery_2.element.click();
+            }
+            window.switchery_2.disable(); 
+        }
+        $.ajax({
+            type: "post",
+            url: "{{ route('facturacion.ajx_remision') }}",
+            data: {
+                '_token': '{{ csrf_token() }}',
+                'id_cliente': data.id,
+            },
+            success: function(msg) {
+                var miSpan = document.getElementById('lista_gr');
+                while (miSpan.firstChild) {
+                    miSpan.removeChild(miSpan.firstChild);
+                }
+                $('#guia_save_inp').val("0");
+
+                if (typeof(msg) == "object") {
+                    for (let index = 0; index < msg.length; index++) {
+                        $('#guia_list').append("<option value='" + msg[index] + "'>");
+                    }
+                }
+            },
+            error: function(eject) {
+                if (eject.status === 400) {
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache: true
+        });
+    });
+
+    function multi_retencion(){
+        var ret_porc = $('#porcentaje_ret').val();
+        var total = $('#total_final').val();
+        var op_ret = total * (parseInt(ret_porc) / 100);
+        var sub_zero = Math.round(op_ret * 100) / 100;
+        $('#tota_reten').val(sub_zero);
+    }
+    $('#porcentaje_ret').on('keyup', function() {
+        multi_retencion();
+    });
     // Para lista de Guia Remision
     $('#guia_remi_input').on('change', function() {
         var valor = this.value;
@@ -504,6 +574,7 @@
         if (parseFloat(end2) > 700) {
             console.log('mayor a 700');
             $('#detraccion').attr('disabled', false);
+            window.switchery_2.enable();
             $('#button_detracc').attr('data-target', '#modal_detraccion');
         } else {
             var select_det = $('.select2_tipo_op').val();
@@ -513,6 +584,11 @@
             } else {
                 $('#detraccion').attr('disabled', true);
                 $('#button_detracc').attr('data-target', '#modal_detraccion');
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable();
             }
         }
 
@@ -644,12 +720,18 @@
                 // input.setAttribute('required', 'required');
             });
             $('.select2_tipo_op').val('12').trigger('change.select2');
+            var retencion_check = document.querySelector('.js-switch');
+            if( retencion_check.checked == true){
+                window.switchery_2.element.click();
+            }
+            window.switchery_2.disable(); 
         } else {
             var inputs = document.querySelectorAll('.ipt_detrac');
             inputs.forEach(function(input) {
                 // input.removeAttribute('required');
             });
             $('.select2_tipo_op').val('1').trigger('change.select2');
+            window.switchery_2.enable(); 
         }
     });
 

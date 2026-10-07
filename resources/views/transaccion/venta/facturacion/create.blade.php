@@ -180,20 +180,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Detracción -->
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"><strong>Detracción:</strong></label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" id="detraccion" name="detraccion_value" disabled>
-                                        <option value="0">Desactiva</option>
-                                        <option value="1">Activa</option>
-                                    </select>
+                            <div class="row" id="detraccion_retencion">
+                                <!-- Detracción -->
+                                <div class="col-md-6" id="modulo_detraccion">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Detracción:</strong></label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" id="detraccion" name="detraccion_value" disabled>
+                                                <option value="0">Desactiva</option>
+                                                <option value="1">Activa</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
+                                            <a href="" id="button_detracc" data-toggle="modal"
+                                                style="margin: auto"><i
+                                                    class="fa fa-question-circle"
+                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999;pointer-events: none"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
-                                    <a href="" id="button_detracc" data-toggle="modal"
-                                        style="margin: auto"><i
-                                            class="fa fa-question-circle"
-                                            style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999;pointer-events: none"></i></a>
+                                <div class="col-sm-6" id="modulo_retencion"  style="display: none">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Retención:</strong></label>
+                                        <div class="col-sm-6">
+                                            <input type="checkbox" name="check_retencion" id="retencion_check" class="js-switch">
+                                        </div>
+                                        <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
+                                            <a href="" id="button_retencion" data-toggle="modal"
+                                                data-target="#modal_retencion" style="margin: auto"><i
+                                                    class="fa fa-question-circle"
+                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -428,7 +446,8 @@
                     </div>
                     {{-- Detraccion --}}
                     @include('transaccion.venta.facturacion._shared.modal_detraccion')
-
+                    {{-- Retencion --}}
+                    @include('transaccion.venta.facturacion._shared.modal_retencion')
                 </form>
             </div>
         </div>
@@ -568,7 +587,7 @@
             vertical-align: top;
         }
 
-        .detracc_campo_required {
+        .detracc_campo_required, .retenc_campo_required {
             display: none;
             /* font-size: 9px; */
             color: red;
@@ -610,7 +629,12 @@
     <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script type="text/javascript">
-
+        var elem_2 = document.querySelector('.js-switch');
+        window.switchery_2 = new Switchery(elem_2, {
+            size: 'small', 
+            color: '#ED5565'
+        });
+        switchery_2.disable();
         // DETRACCION
         $('#detraccion').on('change', function() {
             var selected = this.value;
@@ -622,12 +646,19 @@
                     // input.setAttribute('required', 'required');
                 });
                 $('.select2_tipo_op').val('12').trigger('change.select2');
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable(); 
             } else {
                 var inputs = document.querySelectorAll('.ipt_detrac');
                 inputs.forEach(function(input) {
                     // input.removeAttribute('required');
                 });
                 $('.select2_tipo_op').val('1').trigger('change.select2');
+                window.switchery_2.enable(); 
+
             }
         });
         $(".select2_demo_comisionista").select2({
@@ -701,6 +732,18 @@
                 $('#detraccion').attr('disabled', false);
             }
         });
+
+        function multi_retencion(){
+            var ret_porc = $('#porcentaje_ret').val();
+            var total = $('#total_final').val();
+            var op_ret = total * (parseInt(ret_porc) / 100);
+            var sub_zero = Math.round(op_ret * 100) / 100;
+            $('#tota_reten').val(sub_zero);
+        }
+        $('#porcentaje_ret').on('keyup', function() {
+            multi_retencion();
+        });
+
         $(".select2_demo_client").select2({
             theme: "bootstrap",
             placeholder: "Seleccionar Cliente",
@@ -724,7 +767,8 @@
                             return {
                                 id: item.id,
                                 text: item.nombre + ' | ' + item.numero_documento,
-                                tipo_pago: item.tipo_pago_id
+                                tipo_pago: item.tipo_pago_id,
+                                retencion: item.retencion
                             };
 
                         })
@@ -752,7 +796,12 @@
             // Si el tipo de pago es desde cliente cambiar
             $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true);
             seleccionado_fp();
-
+            if(data.retencion != ""){
+                $('#modulo_retencion').css('display', 'block');
+                $('#porcentaje_ret').val(data.retencion.porcentaje)
+            }else{
+                $('#modulo_retencion').css('display', 'none');
+            }
             $.ajax({
                 type: "post",
                 url: "{{ route('facturacion.ajx_remision') }}",
@@ -1172,6 +1221,7 @@
             if(parseFloat(end2) > 700){
                 console.log('mayor a 700');
                 $('#detraccion').attr('disabled', false);
+                window.switchery_2.enable();
                 $('#button_detracc').attr('data-target', '#modal_detraccion');
             }else{
                 var select_det = $('.select2_tipo_op').val();
@@ -1182,6 +1232,11 @@
                     $('#detraccion').attr('disabled', true);
                     $('#button_detracc').attr('data-target', '#modal_detraccion');
                 }
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable();
             }
 
             // var total = document.getElementById("total_final").value;
@@ -1201,6 +1256,7 @@
                 // document.getElementById(`${monto}`).value = end2;
             }
             multi_detraccion();
+            multi_retencion();
             resetModalCuotas()
             $(document).on('input', '.monto_pago', function() {
                 actualizarSaldoRestante();
