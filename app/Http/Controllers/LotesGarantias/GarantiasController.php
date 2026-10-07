@@ -1,17 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\LotesGarantias;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\LotesGarantias\ConsultaGarantiaRequest;
-use Illuminate\Http\Request;
-use App\Services\GarantiaService;
-use App\Producto;
+use App\Boleta_registro;
 use App\Facturacion;
 use App\Facturacion_registro;
 use App\Guia_remision;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\LotesGarantias\ConsultaGarantiaRequest;
+use App\Lote;
+use App\NotaVentaRegistro;
+use App\Producto;
 use App\SerieProducto;
+use App\Services\GarantiaService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class GarantiasController extends Controller
 {
@@ -25,7 +31,7 @@ class GarantiasController extends Controller
     /**
      * Endpoint para Consulta de Garantía de Producto
      */
-    public function ajaxGarantiaProducto(ConsultaGarantiaRequest $request)
+    public function ajaxGarantiaProducto(ConsultaGarantiaRequest $request): JsonResponse
     {
         // La validación ya pasó automáticamente mediante ConsultaGarantiaRequest
         $codigoProducto = trim((string) $request->input('codigo_producto'));
@@ -36,11 +42,11 @@ class GarantiasController extends Controller
         // Buscar serie si existe con carga ansiosa de la cadena de suministro
         $serie = null;
         if (!empty($serialProducto)) {
-            $serie = class_exists('\App\SerieProducto') 
-                ? \App\SerieProducto::with([
+            $serie = class_exists('\App\SerieProducto')
+                ? SerieProducto::with([
                     'lote.kardexEntradaRegistro.kardex_entrada.provedor',
                     'lote.proveedor'
-                ])->where('numero_serie', $serialProducto)->first() 
+                ])->where('numero_serie', $serialProducto)->first()
                 : null;
         }
 
@@ -49,7 +55,7 @@ class GarantiasController extends Controller
         $vigencia = $this->garantiaService->calcularVigencia($fechaCompra, $mesesGarantia);
 
         // Trazabilidad dinámica de la cadena de suministro mediante Eloquent ORM
-        $lote = $serie ? $serie->lote : ($producto ? \App\Lote::with(['kardexEntradaRegistro.kardex_entrada.provedor', 'proveedor'])->where('producto_id', $producto->id)->latest()->first() : null);
+        $lote = $serie ? $serie->lote : ($producto ? Lote::with(['kardexEntradaRegistro.kardex_entrada.provedor', 'proveedor'])->where('producto_id', $producto->id)->latest()->first() : null);
         $kardexRegistro = $lote ? $lote->kardexEntradaRegistro : null;
         $kardexEntrada = $kardexRegistro ? ($kardexRegistro->kardex_entrada ?? $kardexRegistro->kardex_entrada_reg_id) : null;
         $proveedor = ($kardexEntrada && $kardexEntrada->provedor) ? $kardexEntrada->provedor : ($lote ? $lote->proveedor : null);
@@ -98,7 +104,7 @@ class GarantiasController extends Controller
     /**
      * Endpoint para Consulta de Garantía de Cliente (Sección Corta)
      */
-    public function ajaxGarantiaCliente(Request $request)
+    public function ajaxGarantiaCliente(Request $request): JsonResponse
     {
         $tipoDoc = $request->get('tipo_documento', 'factura');
         $numDoc = trim($request->get('num_documento'));
@@ -109,10 +115,8 @@ class GarantiasController extends Controller
         }
 
         $fechaVenta = null;
-        $productoEncontrado = false;
 
         if ($tipoDoc === 'factura') {
-            // Buscar factura por correlativo o identificador
             $factura = Facturacion::where('codigo_fac', 'LIKE', "%{$numDoc}%")
                 ->orWhere('id', $numDoc)
                 ->first();
@@ -132,10 +136,8 @@ class GarantiasController extends Controller
                 if (!$itemFactura) {
                     return response()->json(['success' => false, 'message' => 'El código de producto no corresponde a la factura ingresada.'], 422);
                 }
-                $productoEncontrado = true;
             }
-        } else {
-            // Guía de remisión
+        } elseif ($tipoDoc === 'guia') {
             $guia = Guia_remision::where('codigo_guia', 'LIKE', "%{$numDoc}%")->first();
             if (!$guia) {
                 return response()->json(['success' => false, 'message' => 'No se encontró la guía de remisión especificada.'], 404);
@@ -159,6 +161,72 @@ class GarantiasController extends Controller
                 'estado' => $vigencia['estado'],
                 'es_vigente' => $vigencia['es_vigente']
             ]
+        ]);
+    }
+
+    /**
+     * Valida y busca el estado de garantía de una serie a partir de un comprobante emitido.
+     */
+    public function buscarPorComprobante(Request $request): JsonResponse
+    {
+        $numeroComprobante = trim((string) $request->input('numero_comprobante', ''));
+        $numeroSerie = trim((string) $request->input('numero_serie', ''));
+
+        if ($numeroComprobante === '' || $numeroSerie === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Debe indicar el comprobante y la serie a consultar.',
+            ], 422);
+        }
+
+        $factura = Facturacion::where('codigo_fac', $numeroComprobante)->first();
+        if (! $factura) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El comprobante no existe o no corresponde a una factura válida.',
+            ], 404);
+        }
+
+        $registro = Facturacion_registro::query()
+            ->with(['factura_ids', 'producto'])
+            ->where('facturacion_id', $factura->id)
+            ->where('numero_serie', $numeroSerie)
+            ->first();
+
+        if (! $registro) {
+            $registro = Boleta_registro::query()
+                ->with(['boleta_i', 'producto'])
+                ->where('boleta_id', $factura->id)
+                ->where('numero_serie', $numeroSerie)
+                ->first();
+        }
+
+        if (! $registro) {
+            $registro = NotaVentaRegistro::query()
+                ->where('numero_serie', $numeroSerie)
+                ->first();
+        }
+
+        if (! $registro) {
+            return response()->json([
+                'success' => false,
+                'message' => 'La serie ingresada no corresponde al comprobante proporcionado.',
+            ], 422);
+        }
+
+        $fechaInicio = $registro->fecha_venta ?? $factura->fecha_emision ?? $factura->created_at ?? now();
+        $mesesCobertura = $registro->garantia_meses ?? $registro->producto->garantia_meses ?? 12;
+        $fechaVencimiento = Carbon::parse($fechaInicio)->addMonths((int) $mesesCobertura)->endOfDay();
+        $estado = Carbon::now()->lte($fechaVencimiento) ? 'VIGENTE' : 'EXPIRADA';
+
+        return response()->json([
+            'success' => true,
+            'estado' => $estado,
+            'fecha_vencimiento' => $fechaVencimiento->toDateString(),
+            'numero_serie' => $registro->numero_serie,
+            'message' => $estado === 'VIGENTE'
+                ? 'La garantía está vigente para la serie consultada.'
+                : 'La garantía ha expirado para la serie consultada.',
         ]);
     }
 }
