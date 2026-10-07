@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-4"><strong>G. Remisión: </strong>
+                                    <label class="col-form-label col-md-4"><strong>G. Remi: </strong>
                                         <small class="tooltip-demo"><i class="fa fa-info-circle" data-toggle="tooltip"
                                                 data-placement="bottom"
                                                 title="Ej: TE01-999  *  Mayusculas y separar solo con espacios en blanco"></i></small></label>
@@ -193,20 +193,38 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row" style="justify-content: start !important">
-                            <label class="col-form-label col-md-2"> <strong>Detracción:</strong> </label>
-                            <div class="col-sm-8">
-                                <select class="form-control" id="detraccion" name="detraccion_value" @if($facturacion->detracciones == null) disabled @endif>
-                                    <option value="0" @if($facturacion->detracciones == null) selected @endif>Desactiva</option>
-                                    <option value="1" @if($facturacion->detracciones != null) selected @endif>Activa</option>
-                                </select>
+                        <div class="row" style="justify-content: flex-start !important;">
+                            <div class="col-md-6">
+                                <div class="form-group row" >
+                                    <label class="col-form-label col-md-4"> <strong>Detracción:</strong> </label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="detraccion" name="detraccion_value" @if($facturacion->detracciones == null) disabled @endif>
+                                            <option value="0" @if($facturacion->detracciones == null) selected @endif>Desactiva</option>
+                                            <option value="1" @if($facturacion->detracciones != null) selected @endif>Activa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2" style="display: flex">
+                                        <a href="" id="button_detracc" data-toggle="modal"
+                                            @if ( $facturacion->detracciones != null ) data-target="#modal_detraccion"  @else data-target="#" @endif style="margin: auto"><i
+                                                class="fa fa-question-circle"
+                                                style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-2" style="display: flex">
-                                <a href="" id="button_detracc" data-toggle="modal"
-                                    @if ( $facturacion->detracciones != null ) data-target="#modal_detraccion"  @else data-target="#" @endif style="margin: auto"><i
-                                        class="fa fa-question-circle"
-                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
-                                </a>
+                            <div class="col-sm-6" id="modulo_retencion" @if($facturacion->cliente->retencion != true) style="display: none" @endif >
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Retención:</strong></label>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" name="check_retencion" id="retencion_check" class="js-switch" @if($facturacion->retencion == true) checked @endif>
+                                    </div>
+                                    <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
+                                        <a href="" id="button_retencion" data-toggle="modal"
+                                            data-target="#modal_retencion" style="margin: auto"><i
+                                                class="fa fa-question-circle"
+                                                style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -429,6 +447,8 @@
                 @include('transaccion.venta.facturacion._shared.modal_cuota_edit')
                 {{-- Modal dentro del Form para que se envien los datos de DETRACCION --}}
                 @include('transaccion.venta.facturacion._shared._edit_modal_detraccion')
+                {{-- Modal Retencion --}}
+                @include('transaccion.venta.facturacion._shared._edit_modal_retencion')
             </form>
         </div>
     </div>

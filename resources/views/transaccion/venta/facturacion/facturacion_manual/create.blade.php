@@ -112,7 +112,7 @@
                                         value="{{ auth()->user()->name }}">
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" id="detraccion_retencion">
                                 <div class="col-md-6" id="detraccion_retencion">
                                     <!-- Detracción -->
                                     <div class="form-group row">
@@ -138,7 +138,7 @@
                                             <input type="checkbox" name="check_retencion" id="retencion_check" class="js-switch">
                                         </div>
                                         <div class="col-sm-2" style="display: flex">
-                                            <a href="" id="button_detracc" data-toggle="modal"
+                                            <a href="" id="button_retencion" data-toggle="modal"
                                                 data-target="#modal_retencion" style="margin: auto"><i
                                                     class="fa fa-question-circle"
                                                     style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
@@ -469,156 +469,9 @@
                     </div>
                     <!-- Modal de Cuotas -->
                     <!-- Modal DETRACCIONES DENTRO DEL FORM, EN EL CONTROLLER CONDICIONAL PARA TOMAR O NO DETRACCION-->
-                    <div class="modal fade" id="modal_detraccion" role="dialog"
-                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Configuración de
-                                        Detracciones</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="detraccion_valores">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <h3 class="text-center text-bold">Por indicaciones de Sunat la
-                                                    detracción se envía en Soles.</h3>
-                                                <div class="row">
-                                                    <div class="col-sm-8">
-                                                        <label for=""><strong>Tipo de
-                                                                Detracción</strong></label>
-                                                        <select class="select2_tipodetrac ipt_detrac"
-                                                            name="tipo_detraccion" id="select_tipo_pago">
-                                                            <option value="">Seleccionar Tipo</option>
-                                                            @foreach ($detraccion as $detra)
-                                                                <option value="{{ $detra->id }}">
-                                                                    {{ $detra->codigo }} -
-                                                                    {{ $detra->descripcion }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <div class="detracc_campo_required">
-                                                            <small>Selecciona un campo</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <label for=""><strong>Porcentaje de
-                                                                Detracción</strong></label>
-                                                        <input type="text" class="form-control ipt_detrac"
-                                                            name="porcentaje_detraccion" id="porcentaje_detc">
-                                                        <div class="detracc_campo_required">
-                                                            <small>Rellena este campo</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <hr style="margin-top: 5px; margin-bottom: 5px">
-                                                <div class="row">
-                                                    <div class="col-sm-8">
-                                                        <label for=""><strong>Medio de
-                                                                Pago</strong></label>
-                                                        <select class="select2_mediopago ipt_detrac"
-                                                            name="medio_pago_detraccion" id="">
-                                                            <option value="">Seleccionar medio de Pago
-                                                            </option>
-                                                            @foreach ($medio_pago as $m_pago)
-                                                                <option value="{{ $m_pago->id }}">
-                                                                    {{ $m_pago->codigo }} -
-                                                                    {{ $m_pago->descripcion }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <div class="detracc_campo_required">
-                                                            <small>Selecciona un campo</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <label for=""><strong>Total de
-                                                                Detracción</strong></label>
-                                                        <div class="input-group m-b">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-addon">S/.</span>
-                                                            </div>
-                                                            <input type="text" class="form-control ipt_detrac"
-                                                                name="total_detraccion" id="tota_detra"
-                                                                placeholder="0.00" readonly>
-                                                        </div>
-
-                                                        <div class="detracc_campo_required">
-                                                            <small>Rellena este campo</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {{-- <div class="col-sm-6">
-
-                                                </div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="save_detraccion()">Verificar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('transaccion.venta.facturacion._shared.modal_detraccion')
                     {{-- Modal de Retencion --}}
-                    <div class="modal fade bd-example-modal-lg" id="modal_retencion" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Calculo de Retención</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="detraccion_valores">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <h3 class="text-center text-bold">El monto enviado a Sunat depende de la moneda seleccionada</h3>
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <label for=""><strong>Porcentaje de
-                                                                Retención</strong></label>
-                                                        <input type="text" class="form-control ipt_reten"
-                                                            name="porcentaje_retencion" id="porcentaje_ret">
-                                                        <div class="retenc_campo_required">
-                                                            <small>Rellena este campo</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <hr style="margin-top: 5px; margin-bottom: 5px">
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <label for=""><strong>Total de
-                                                                Retencion</strong></label>
-                                                        <div class="input-group m-b">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-addon" id="simbolo_retencion">{{ $moneda->simbolo }}</span>
-                                                            </div>
-                                                            <input type="text" class="form-control ipt_ret"
-                                                                name="total_retencion" id="tota_reten"
-                                                                placeholder="0.00" readonly>
-                                                        </div>
-
-                                                        <div class="retenc_campo_required">
-                                                            <small>Rellena este campo</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {{-- <div class="col-sm-6">
-
-                                                </div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('transaccion.venta.facturacion._shared.modal_retencion')
                 </form>
             </div>
         </div>
@@ -973,12 +826,18 @@
             // Si el tipo de pago es desde cliente cambiar
             $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true);
             // Retencion
-            console.log(data);
+            // console.log(data);
             if(data.retencion != ""){
                 $('#modulo_retencion').css('display', 'block');
                 $('#porcentaje_ret').val(data.retencion.porcentaje)
+                window.switchery_2.enable(); 
             }else{
                 $('#modulo_retencion').css('display', 'none');
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable(); 
             }
 
             seleccionado_fp();
@@ -1333,6 +1192,10 @@
                     $('#detraccion').attr('disabled', true);
                     $('#button_detracc').attr('data-target', '#modal_detraccion');
                 }
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable();
             }
 
             var monto_c = document.getElementsByClassName('monto_pago');
@@ -1950,12 +1813,10 @@
                 });
                 $('.select2_tipo_op').val('12').trigger('change.select2');
                 var retencion_check = document.querySelector('.js-switch');
-                // window.switchery_2.onchange = function() {
-                    if( rentecion_check.checked == true){
-                        window.switchery_2.element.click();
-                    }
-                    window.switchery_2.disable(); 
-                // };
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable(); 
             } else {
                 var inputs = document.querySelectorAll('.ipt_detrac');
                 inputs.forEach(function(input) {

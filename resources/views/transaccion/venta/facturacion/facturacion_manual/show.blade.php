@@ -344,7 +344,7 @@
                                             {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
                                             <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion}} %):</strong>
                                             {{ $simbologia }} {{ $facturacion->monto_retencion}} <br>
-                                            <strong>Monto Neto a Pgar:</strong>
+                                            <strong>Monto Neto a Pagar:</strong>
                                             {{ $simbologia }}  {{ $facturacion->monto_retencion_pagar}} <br>
                                         </div>
                                     </div>
