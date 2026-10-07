@@ -137,15 +137,6 @@
                                             <h5>Meses</h5>
                                             <div>
                                                 <select data-placeholder="Elegir" class="chosen-select" multiple style="width:350px;" tabindex="4">
-<<<<<<< HEAD
-                                                    <option value="2024">Enero</option>
-                                                    <option value="2023">Febrero</option>
-                                                    <option value="2022">Marzo</option>
-                                                    <option value="2021">Abril</option>
-                                                    <option value="2020">Mayo</option>
-                                                    <option value="2019">Junio</option>
-                                                    <option value="2018">Junio</option>
-=======
                                                     <option value="Enero">Enero</option>
                                                     <option value="Febrero">Febrero</option>
                                                     <option value="Marzo">Marzo</option>
@@ -158,7 +149,6 @@
                                                     <option value="Octubre">Octubre</option>
                                                     <option value="Noviembre">Noviembre</option>
                                                     <option value="Diciembre">Diciembre</option>
->>>>>>> 3c31a6d1d8e94ccd9a2603750800f6c9e0d4e6eb
                                                 </select>
                                             </div>
                                         </div>

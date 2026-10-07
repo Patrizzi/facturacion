@@ -6,10 +6,7 @@ use App\Almacen;
 use App\Banco;
 use App\Boleta;
 use App\Boleta_m;
-<<<<<<< HEAD
 use App\Cliente;
-=======
->>>>>>> origin/master
 use App\ComprobantesVentas;
 use App\Facturacion;
 use App\Facturacion_m;
@@ -62,19 +59,11 @@ class ComprobantesVentasController extends Controller
         // FILTRADO
         $filter = $request->get('value');
         $sortColumns = [
-<<<<<<< HEAD
             0 => 'created_at',
             1 => 'id',
             2 => 'codigo_boleta',
             3 => 'cliente.numero_documento',
             4 => 'cliente.nombre',
-=======
-            0 => 'id',
-            1 => 'id',
-            2 => 'codigo_boleta',
-            3 => 'cliente.nombre',
-            4 => 'cliente.numero_documento',
->>>>>>> origin/master
             5 => 'fecha_emision',
             6 => 'forma_pago.nombre',
             7 => 'total_conv',
@@ -84,11 +73,7 @@ class ComprobantesVentasController extends Controller
         $estado_s = $request->estado_s;
 
         $query = Boleta::with(['cliente', 'moneda', 'forma_pago'])
-<<<<<<< HEAD
             ->whereBetween('created_at', [$startDate, $endDate]);
-=======
-            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
->>>>>>> origin/master
 
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where
@@ -102,7 +87,6 @@ class ComprobantesVentasController extends Controller
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
-<<<<<<< HEAD
                 $q->orWhereHas('registros', function ($q) use ($filter) {
                     $q->where('descripcion_item', 'like', '%' . $filter . '%')
                         ->orWhereHas('producto', function ($q) use ($filter) {
@@ -116,8 +100,6 @@ class ComprobantesVentasController extends Controller
                                 ->orWhere('codigo_original', 'like', '%' . $filter . '%');
                         });
                 });
-=======
->>>>>>> origin/master
             });
         }
 
@@ -130,7 +112,6 @@ class ComprobantesVentasController extends Controller
             $query->whereIn('estado_pago', [0, 1, 2]);
         }
         $recordsTotal = $query->count();
-<<<<<<< HEAD
 
         // Ordenamiento dinámico seguro
         $sortColumnIndex = $order[0]['column'] ?? 0;
@@ -149,36 +130,14 @@ class ComprobantesVentasController extends Controller
             $query->orderBy($sortColumnName, $sortDirection);
         }
 
-=======
-        //codigo agregado:
-        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
->>>>>>> origin/master
         // Si se requieren todos los registros (length = -1), no aplicar paginación
         if ($length == -1) {
             $boletas = $query->get();
         } else {
-<<<<<<< HEAD
             $query->take($length)
                 ->skip($start);
             $boletas = $query->get();
         }
-=======
-            $sortColumnName = $sortColumns[$order[0]['column']];
-            $query->orderBy($sortColumnName, $order[0]['dir'])
-                ->take($length)
-                ->skip($start);
-            $boletas = $query->get();
-        }
-        // codigo quitado:
-        // $sortColumnName = $sortColumns[$order[0]['column']];
-        // $query->orderBy($sortColumnName, $order[0]['dir'])
-        //     ->take($length)
-        //     ->skip($start);
-
-
-
-        $boletas = $query->get();
->>>>>>> origin/master
         $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
@@ -279,19 +238,11 @@ class ComprobantesVentasController extends Controller
         // FILTRADO
         $filter = $request->get('value');
         $sortColumns = [
-<<<<<<< HEAD
             0 => 'created_at',
             1 => 'id',
             2 => 'codigo_boleta',
             3 => 'cliente.numero_documento',
             4 => 'cliente.nombre',
-=======
-            0 => 'id',
-            1 => 'id',
-            2 => 'codigo_boleta',
-            3 => 'cliente.nombre',
-            4 => 'cliente.numero_documento',
->>>>>>> origin/master
             5 => 'fecha_emision',
             6 => 'forma_pago.nombre',
             7 => 'total_conv',
@@ -301,11 +252,7 @@ class ComprobantesVentasController extends Controller
         $estado_s = $request->estado_s;
 
         $query = Boleta_m::with(['cliente', 'moneda', 'forma_pago'])
-<<<<<<< HEAD
             ->whereBetween('created_at', [$startDate, $endDate]);
-=======
-            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
->>>>>>> origin/master
 
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where
@@ -319,7 +266,6 @@ class ComprobantesVentasController extends Controller
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
-<<<<<<< HEAD
                 $q->orWhereHas('registros_m', function ($q) use ($filter) {
                     $q->where('descripcion_item', 'like', '%' . $filter . '%')
                         ->orWhereHas('producto', function ($q) use ($filter) {
@@ -333,8 +279,6 @@ class ComprobantesVentasController extends Controller
                                 ->orWhere('codigo_original', 'like', '%' . $filter . '%');
                         });
                 });
-=======
->>>>>>> origin/master
             });
         }
         if (!empty($estado_pago)) {
@@ -347,7 +291,6 @@ class ComprobantesVentasController extends Controller
         }
 
         $recordsTotal = $query->count();
-<<<<<<< HEAD
 
         // Ordenamiento dinámico seguro
         $sortColumnIndex = $order[0]['column'] ?? 0;
@@ -366,36 +309,14 @@ class ComprobantesVentasController extends Controller
             $query->orderBy($sortColumnName, $sortDirection);
         }
 
-=======
-        //codigo agregado:
-        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
->>>>>>> origin/master
         // Si se requieren todos los registros (length = -1), no aplicar paginación
         if ($length == -1) {
             $boletas = $query->get();
         } else {
-<<<<<<< HEAD
             $query->take($length)
                 ->skip($start);
             $boletas = $query->get();
         }
-=======
-            $sortColumnName = $sortColumns[$order[0]['column']];
-            $query->orderBy($sortColumnName, $order[0]['dir'])
-                ->take($length)
-                ->skip($start);
-            $boletas = $query->get();
-        }
-        // codigo quitado:
-        // $sortColumnName = $sortColumns[$order[0]['column']];
-        // $query->orderBy($sortColumnName, $order[0]['dir'])
-        //     ->take($length)
-        //     ->skip($start);
-
-
-
-        $boletas = $query->get();
->>>>>>> origin/master
         $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
@@ -501,19 +422,11 @@ class ComprobantesVentasController extends Controller
         // FILTRADO
         $filter = $request->get('value');
         $sortColumns = [
-<<<<<<< HEAD
             0 => 'created_at',
             1 => 'id',
             2 => 'codigo_fac',
             3 => 'cliente.numero_documento',
             4 => 'cliente.nombre',
-=======
-            0 => 'id',
-            1 => 'id',
-            2 => 'codigo_fac',
-            3 => 'cliente.nombre',
-            4 => 'cliente.numero_documento',
->>>>>>> origin/master
             5 => 'fecha_emision',
             6 => 'forma_pago.nombre',
             7 => 'total_conv',
@@ -523,11 +436,7 @@ class ComprobantesVentasController extends Controller
         $estado_s = $request->estado_s;
 
         $query = Facturacion::with(['cliente', 'moneda', 'forma_pago'])
-<<<<<<< HEAD
             ->whereBetween('created_at', [$startDate, $endDate]);
-=======
-            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
->>>>>>> origin/master
 
         if (!empty($filter)) {
             // Agrupar las condiciones de búsqueda en una única cláusula where
@@ -541,7 +450,6 @@ class ComprobantesVentasController extends Controller
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
-<<<<<<< HEAD
                 $q->orWhereHas('registros', function ($q) use ($filter) {
                     $q->where('descripcion_item', 'like', '%' . $filter . '%')
                         ->orWhereHas('producto', function ($q) use ($filter) {
@@ -555,8 +463,6 @@ class ComprobantesVentasController extends Controller
                                 ->orWhere('codigo_original', 'like', '%' . $filter . '%');
                         });
                 });
-=======
->>>>>>> origin/master
             });
         }
         if (!empty($estado_pago)) {
@@ -569,7 +475,6 @@ class ComprobantesVentasController extends Controller
         }
         $recordsTotal = $query->count();
 
-<<<<<<< HEAD
         // Ordenamiento dinámico seguro
         $sortColumnIndex = $order[0]['column'] ?? 0;
         $sortDirection = $order[0]['dir'] ?? 'desc';
@@ -587,35 +492,14 @@ class ComprobantesVentasController extends Controller
             $query->orderBy($sortColumnName, $sortDirection);
         }
 
-=======
-        //codigo agregado:
-        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
->>>>>>> origin/master
         // Si se requieren todos los registros (length = -1), no aplicar paginación
         if ($length == -1) {
             $facturas = $query->get();
         } else {
-<<<<<<< HEAD
             $query->take($length)
                 ->skip($start);
             $facturas = $query->get();
         }
-=======
-            $sortColumnName = $sortColumns[$order[0]['column']];
-            $query->orderBy($sortColumnName, $order[0]['dir'])
-                ->take($length)
-                ->skip($start);
-            $facturas = $query->get();
-        }
-        // codigo quitado:
-        // $sortColumnName = $sortColumns[$order[0]['column']];
-        // $query->orderBy($sortColumnName, $order[0]['dir'])
-        //     ->take($length)
-        //     ->skip($start);
-
-
-        $facturas = $query->get();
->>>>>>> origin/master
         $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
@@ -722,19 +606,11 @@ class ComprobantesVentasController extends Controller
         // FILTRADO
         $estado_s = $request->get('estado_s');
         $sortColumns = [
-<<<<<<< HEAD
             0 => 'created_at',
             1 => 'id',
             2 => 'codigo_fac',
             3 => 'cliente.numero_documento',
             4 => 'cliente.nombre',
-=======
-            0 => 'id',
-            1 => 'id',
-            2 => 'codigo_fac',
-            3 => 'clientes.nombre',
-            4 => 'clientes.numero_documento',
->>>>>>> origin/master
             5 => 'fecha_emision',
             6 => 'forma_pago.nombre',
             7 => 'total_conv',
@@ -743,11 +619,7 @@ class ComprobantesVentasController extends Controller
         $endDate = Carbon::createFromFormat('d/m/Y', explode(' - ', $request->daterange)[1])->endOfDay();
 
         $query = Facturacion_m::with(['cliente', 'moneda', 'forma_pago'])
-<<<<<<< HEAD
             ->whereBetween('created_at', [$startDate, $endDate]);
-=======
-            ->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc');
->>>>>>> origin/master
 
         if (!empty($filter) || $filter != "") {
             // Agrupar las condiciones de búsqueda en una única cláusula where
@@ -761,7 +633,6 @@ class ComprobantesVentasController extends Controller
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
-<<<<<<< HEAD
                 $q->orWhereHas('registros_m', function ($q) use ($filter) {
                     $q->where('descripcion_item', 'like', '%' . $filter . '%')
                         ->orWhereHas('producto', function ($q) use ($filter) {
@@ -775,8 +646,6 @@ class ComprobantesVentasController extends Controller
                                 ->orWhere('codigo_original', 'like', '%' . $filter . '%');
                         });
                 });
-=======
->>>>>>> origin/master
             });
         }
         if (!empty($estado_pago)) {
@@ -790,7 +659,6 @@ class ComprobantesVentasController extends Controller
 
         $recordsTotal = $query->count();
 
-<<<<<<< HEAD
         // Ordenamiento dinámico seguro
         $sortColumnIndex = $order[0]['column'] ?? 0;
         $sortDirection = $order[0]['dir'] ?? 'desc';
@@ -808,35 +676,14 @@ class ComprobantesVentasController extends Controller
             $query->orderBy($sortColumnName, $sortDirection);
         }
 
-=======
-        //codigo agregado:
-        // ** INICIO - AGREGADO PARA FUNCIONALIDAD DE CHECKBOX MÚLTIPLE **
->>>>>>> origin/master
         // Si se requieren todos los registros (length = -1), no aplicar paginación
         if ($length == -1) {
             $facturas = $query->get();
         } else {
-<<<<<<< HEAD
             $query->take($length)
                 ->skip($start);
             $facturas = $query->get();
         }
-=======
-            $sortColumnName = $sortColumns[$order[0]['column']];
-            $query->orderBy($sortColumnName, $order[0]['dir'])
-                ->take($length)
-                ->skip($start);
-            $facturas = $query->get();
-        }
-        // codigo quitado:
-        // $sortColumnName = $sortColumns[$order[0]['column']];
-        // $query->orderBy($sortColumnName, $order[0]['dir'])
-        //     ->take($length)
-        //     ->skip($start);
-
-
-        $facturas = $query->get();
->>>>>>> origin/master
         $json = [
             'draw' => $draw,
             'recordsTotal' => $recordsTotal,
