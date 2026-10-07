@@ -37,7 +37,10 @@ class GarantiasController extends Controller
         $codigoProducto = trim((string) $request->input('codigo_producto'));
         $serialProducto = trim((string) ($request->input('serial_producto') ?? $request->input('numero_serie')));
 
-        $producto = Producto::with(['marcas_i_producto'])->where('codigo_producto', $codigoProducto)->first();
+        $producto = null;
+        if (!empty($codigoProducto)) {
+            $producto = Producto::with(['marcas_i_producto'])->where('codigo_producto', $codigoProducto)->first();
+        }
 
         // Buscar serie si existe con carga ansiosa de la cadena de suministro
         $serie = null;
@@ -48,10 +51,18 @@ class GarantiasController extends Controller
                     'lote.proveedor'
                 ])->where('numero_serie', $serialProducto)->first()
                 : null;
+
+            // Si no se proporcionó código de producto pero la serie lo tiene, asociarlo
+            if (!$producto && $serie && !empty($serie->codigo_producto)) {
+                $producto = Producto::with(['marcas_i_producto'])->where('codigo_producto', $serie->codigo_producto)->first();
+            }
         }
 
         $fechaCompra = $serie && $serie->fecha_venta ? $serie->fecha_venta : Carbon::now()->subMonths(2)->toDateString();
-        $mesesGarantia = $producto->garantia ?? 12;
+        $mesesGarantia = (int)(optional($producto)->garantia ?? 12);
+        if ($mesesGarantia <= 0) {
+            $mesesGarantia = 12;
+        }
         $vigencia = $this->garantiaService->calcularVigencia($fechaCompra, $mesesGarantia);
 
         // Trazabilidad dinámica de la cadena de suministro mediante Eloquent ORM
@@ -74,10 +85,10 @@ class GarantiasController extends Controller
                 'tiempo_total' => $vigencia['tiempo_garantia']
             ],
             'producto' => [
-                'num_lote' => optional($lote)->lote ?? 'L-001',
-                'cod_interno' => $producto->codigo_producto ?? '3242',
-                'marca' => optional($producto->marcas_i_producto)->nombre ?? 'Marca Oficial',
-                'producto' => $producto->nombre ?? 'Producto General'
+                'num_lote' => optional($lote)->lote ?? ($serie->codigo_lote ?? 'L-001'),
+                'cod_interno' => optional($producto)->codigo_producto ?? ($serie->codigo_producto ?? '3242'),
+                'marca' => optional(optional($producto)->marcas_i_producto)->nombre ?? 'Marca Oficial',
+                'producto' => optional($producto)->nombre ?? 'Producto General'
             ],
             'proveedor' => [
                 'cod_prov' => $codProv,
@@ -90,9 +101,9 @@ class GarantiasController extends Controller
             'resumen_tabla' => [
                 [
                     'serie' => $serialProducto ?: 'S/N',
-                    'codigo' => $producto->codigo_producto ?? $codigoProducto,
-                    'marca' => optional($producto->marcas_i_producto)->nombre ?? '--',
-                    'producto' => $producto->nombre ?? '--',
+                    'codigo' => optional($producto)->codigo_producto ?? ($codigoProducto ?: ($serialProducto ?: 'S/N')),
+                    'marca' => optional(optional($producto)->marcas_i_producto)->nombre ?? '--',
+                    'producto' => optional($producto)->nombre ?? '--',
                     'fecha_venta' => $vigencia['fecha_compra'],
                     'fecha_venc_garantia' => $vigencia['fecha_vencimiento'],
                     'estado_garantia' => $vigencia['estado']
@@ -145,8 +156,11 @@ class GarantiasController extends Controller
             $fechaVenta = Carbon::parse($guia->created_at)->format('Y-m-d');
         }
 
-        $producto = Producto::where('codigo_producto', $codigoProducto)->first();
-        $mesesGarantia = $producto->garantia ?? 12;
+        $producto = !empty($codigoProducto) ? Producto::where('codigo_producto', $codigoProducto)->first() : null;
+        $mesesGarantia = (int)(optional($producto)->garantia ?? 12);
+        if ($mesesGarantia <= 0) {
+            $mesesGarantia = 12;
+        }
 
         $vigencia = $this->garantiaService->calcularVigencia($fechaVenta, $mesesGarantia);
 

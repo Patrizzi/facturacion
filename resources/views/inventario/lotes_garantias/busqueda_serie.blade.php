@@ -19,6 +19,7 @@
                 </div>
                 <div class="ibox-content">
                     <form id="formBusquedaSerie">
+                        @csrf
                         <div class="form-row align-items-end">
                             <div class="col-md-5 col-sm-12 mb-2">
                                 <label class="font-weight-bold" style="font-size: 13px;">Número de Serie:</label>
@@ -56,7 +57,7 @@
     {{-- 3 Tarjetas de Resumen Organizadas: Lote, Garantía y Estado (Página 2-3 PDF 2) --}}
     <div class="row">
         {{-- Tarjeta 1: Lote --}}
-        <div class="col-lg-4 col-md-12 mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="ibox border-left border-primary shadow-sm h-100 mb-0">
                 <div class="ibox-title py-2 d-flex justify-content-between align-items-center">
                     <h5 class="text-primary font-weight-bold mb-0"><i class="fa fa-cubes mr-2"></i>Lote</h5>
@@ -86,7 +87,7 @@
         </div>
 
         {{-- Tarjeta 2: Garantía --}}
-        <div class="col-lg-4 col-md-12 mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="ibox border-left border-success shadow-sm h-100 mb-0">
                 <div class="ibox-title py-2 d-flex justify-content-between align-items-center">
                     <h5 class="text-success font-weight-bold mb-0"><i class="fa fa-shield mr-2"></i>Garantía</h5>
@@ -116,7 +117,7 @@
         </div>
 
         {{-- Tarjeta 3: Estado y Calidad --}}
-        <div class="col-lg-4 col-md-12 mb-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="ibox border-left border-info shadow-sm h-100 mb-0">
                 <div class="ibox-title py-2 d-flex justify-content-between align-items-center">
                     <h5 class="text-info font-weight-bold mb-0"><i class="fa fa-map-marker mr-2"></i>Estado y Ubicación</h5>
@@ -139,6 +140,36 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
                             <span class="text-muted">Último Movimiento:</span>
                             <span class="font-weight-bold text-dark" id="resUltimoMovimiento">--</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {{-- Tarjeta 4: Cliente --}}
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="ibox border-left border-warning shadow-sm h-100 mb-0">
+                <div class="ibox-title py-2 d-flex justify-content-between align-items-center">
+                    <h5 class="text-warning font-weight-bold mb-0"><i class="fa fa-user mr-2"></i>Cliente</h5>
+                    <span class="badge badge-light border">Venta</span>
+                </div>
+                <div class="ibox-content py-3">
+                    <ul class="list-group list-group-flush" style="font-size: 13px;">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span class="text-muted">Nombre:</span>
+                            <span class="font-weight-bold text-dark text-right" id="resClienteNombre">--</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span class="text-muted">N° Factura/Boleta:</span>
+                            <span class="font-weight-bold text-dark text-right" id="resClienteFactura">--</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span class="text-muted">Teléfono:</span>
+                            <span class="font-weight-bold text-dark text-right" id="resClienteTelefono">--</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span class="text-muted">Correo:</span>
+                            <span class="font-weight-bold text-dark text-right" id="resClienteCorreo">--</span>
                         </li>
                     </ul>
                 </div>
@@ -224,6 +255,7 @@ const BusquedaSerieModule = (function () {
 
     function buscarSerie() {
         const formData = new FormData(document.getElementById('formBusquedaSerie'));
+        formData.append('_token', '{{ csrf_token() }}');
 
         fetch('{{ route("lotes-garantias.ajax.busqueda-serie") }}', {
             method: 'POST',
@@ -251,6 +283,11 @@ const BusquedaSerieModule = (function () {
             setText('resUbicacion', serie.estado.ubicacion);
             setText('resCalidad', serie.estado.calidad);
             setText('resUltimoMovimiento', serie.estado.ultimo_movimiento);
+
+            setText('resClienteNombre', serie.cliente.nombre_cliente);
+            setText('resClienteTelefono', serie.cliente.telefono);
+            setText('resClienteCorreo', serie.cliente.email);
+            setText('resClienteFactura', serie.cliente.numero_factura);
 
             const badge = document.getElementById('resEstadoGarantia');
             badge.textContent = serie.garantia.estado;

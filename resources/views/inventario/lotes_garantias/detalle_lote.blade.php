@@ -141,7 +141,7 @@
                             </div>
                         </div>
                         <div class="col-md-5 col-sm-12 text-md-right text-left">
-                            <a href="{{ route('lotes-garantias.garantia-cliente') }}" class="btn btn-primary font-weight-bold shadow-sm" style="background-color: #2641f8; border-color: #2641f8; border-radius: 6px;">
+                            <a href="{{ route('lotes-garantias.garantia-cliente') }}?codigo_producto={{ request('codigo_producto') }}" class="btn btn-primary font-weight-bold shadow-sm" style="background-color: #2641f8; border-color: #2641f8; border-radius: 6px;">
                                 <i class="fa fa-user-circle mr-1"></i> Consulta Garantía Cliente
                             </a>
                             <a href="{{ route('lotes-garantias.garantia-producto') }}" class="btn btn-outline-secondary font-weight-bold ml-1" style="border-radius: 6px;">

@@ -199,12 +199,12 @@
             </div>
             <div class="modal-body">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Buscar por código, serie o descripción del producto...">
+                    <input type="text" id="modalInputBusqueda" class="form-control" placeholder="Buscar por código, serie o descripción del producto...">
                     <div class="input-group-append">
-                        <button class="btn btn-primary" type="button" style="background-color: #2641f8; border-color: #2641f8;">Buscar</button>
+                        <button class="btn btn-primary" id="btnModalBuscar" type="button" style="background-color: #2641f8; border-color: #2641f8;">Buscar</button>
                     </div>
                 </div>
-                <div class="text-center py-4 text-muted">
+                <div class="text-center py-4 text-muted" id="modalResultadosContent">
                     <i class="fa fa-inbox fa-2x mb-2 d-block"></i>
                     <span>No hay resultados de búsqueda preliminares.</span>
                 </div>
@@ -285,7 +285,46 @@ const GarantiaProductoModule = (function () {
                 consultarGarantia();
             });
         }
+        const btnModalBuscar = document.getElementById('btnModalBuscar');
+        const modalInput = document.getElementById('modalInputBusqueda');
+        
+        if (btnModalBuscar) {
+            btnModalBuscar.addEventListener('click', function() {
+                const query = modalInput.value.trim();
+                const container = document.getElementById('modalResultadosContent');
+                
+                if (!query) {
+                    container.innerHTML = '<span class="text-danger font-weight-bold">Por favor ingrese un término de búsqueda.</span>';
+                    return;
+                }
+
+                container.innerHTML = '<i class="fa fa-spinner fa-spin fa-2x mb-2 text-primary d-block"></i><span>Procesando búsqueda...</span>';
+
+                setTimeout(function() {
+                    const inputCodigo = document.querySelector('input[name="codigo_producto"]');
+                    const inputSerial = document.querySelector('input[name="serial_producto"]');
+                    
+                    inputCodigo.value = query;
+                    inputSerial.value = '';
+                    
+                    $('#modalBusquedaProductos').modal('hide');
+                    
+                    container.innerHTML = '<i class="fa fa-inbox fa-2x mb-2 d-block"></i><span>Búsqueda enviada correctamente.</span>';
+                    modalInput.value = '';
+                    
+                    consultarGarantia();
+                }, 400);
+            });
+            
+            modalInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    btnModalBuscar.click();
+                }
+            });
+        }
     });
 })();
+
 </script>
 @endsection
