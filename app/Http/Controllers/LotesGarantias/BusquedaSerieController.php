@@ -3,27 +3,21 @@
 namespace App\Http\Controllers\LotesGarantias;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LotesGarantias\BusquedaSerieRequest;
 use App\SerieProducto;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class BusquedaSerieController extends Controller
 {
-    public function ajaxBuscarSerie(Request $request)
+    public function ajaxBuscarSerie(BusquedaSerieRequest $request)
     {
+        // La validación ya pasó automáticamente mediante BusquedaSerieRequest
         $numeroSerie = trim((string) $request->input('numero_serie', ''));
         $codigoProducto = trim((string) $request->input('codigo_producto', ''));
 
-        if ($numeroSerie === '' && $codigoProducto === '') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Debe ingresar un número de serie o código de producto para buscar.',
-            ], 422);
-        }
-
-        // 1. Eager Loading para prevenir N+1 queries
+        // Eager Loading para prevenir N+1 queries
         $query = SerieProducto::with('facturacionRegistro.facturacion.cliente');
 
         if ($numeroSerie !== '') {

@@ -14,11 +14,7 @@ class SerieProducto extends Model
         'codigo_producto',
         'lote_id',
         'codigo_lote',
-        'estado',
-        'fecha_venta',
-        'fecha_vencimiento_garantia',
-        'ubicacion',
-        'calidad',
+        'estado_id',
         'fecha_ultimo_movimiento',
     ];
 
@@ -34,5 +30,23 @@ class SerieProducto extends Model
         }
 
         return $this->belongsTo(Producto::class, 'producto_id')->whereRaw('1 = 0');
+    }
+
+    public function estadoProducto()
+    {
+        return $this->belongsTo(EstadoProducto::class, 'estado_id');
+    }
+
+    public function garantias()
+    {
+        return $this->hasMany(GarantiaSerie::class, 'serie_id');
+    }
+
+    public function garantiaActual()
+    {
+        return $this->hasOne(GarantiaSerie::class, 'serie_id')
+            ->where('estado_garantia', 'Vigente')
+            ->orderBy('fecha_vencimiento', 'desc')
+            ->orderBy('id', 'desc');
     }
 }

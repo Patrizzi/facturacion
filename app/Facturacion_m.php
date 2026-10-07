@@ -290,6 +290,19 @@ class Facturacion_m extends Model
                 $q->orWhereHas('forma_pago', function ($q) use ($filter) {
                     $q->where('nombre', 'like', '%' . $filter . '%');
                 });
+                $q->orWhereHas('registros_m', function ($q) use ($filter) {
+                    $q->where('descripcion_item', 'like', '%' . $filter . '%')
+                        ->orWhereHas('producto', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_producto', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        })
+                        ->orWhereHas('servicio', function ($q) use ($filter) {
+                            $q->where('nombre', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_servicio', 'like', '%' . $filter . '%')
+                                ->orWhere('codigo_original', 'like', '%' . $filter . '%');
+                        });
+                });
             });
         }
         $cotizaciones = $query->get();

@@ -234,7 +234,7 @@
                                                             aria-hidden="true"></i></button>
                                                 </div>
                                                 <button type="button" class="btn btn-sm btn-primary btn-outline" data-toggle="modal"
-                                                    data-target="#add_product_data">
+                                                    data-target="#add_product_data" id="add_new_product">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </th>
@@ -410,10 +410,10 @@
                         <div class="col-lg-12">
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover data_table_multiple"
-                                    style="font-size: 90%;border-top: 1px solid #e7eaec;">
+                                    style="font-size: 90%;border-top: 1px solid #e7eaec;padding: 0px">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            {{-- <th>ID</th> --}}
                                             <th>CÓDIGO</th>
                                             <th>ARTÍCULO</th>
                                             <th>CANTIDAD</th>
@@ -1428,52 +1428,37 @@
                 search_multiple(busqueda);
             }, 500); // Espera 300 ms antes de ejecutar la acción
         });
-
+        $('#add_new_product').on('click', function(){
+            search_multiple("");
+            $('#search_product').val('');
+        });
         function search_multiple(busqueda) {
-            // CLEAN DATABLE(?)
+            // Limpiar DataTable previo
             if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
                 $('.data_table_multiple').DataTable().clear().destroy();
             }
             $('.data_table_multiple tbody').empty();
 
-            var almacen = $('[id="almacen_id"]').val();
-            var moneda = $('[id="moneda_id"]').val();
             $.ajax({
                 type: "post",
                 url: "{{ route('pa.search_multiple') }}",
                 data: {
                     '_token': $('input[name=_token]').val(),
                     'articulo': busqueda,
-                    'almacen': almacen,
-                    'moneda': moneda
+                    'almacen': $('[id="almacen_id"]').val(),
+                    'moneda': $('[id="moneda_id"]').val()
                 },
                 success: function(msg) {
-                    if (validarJson(msg)) {
-                        var data = JSON.parse(msg);
-                        if (data.length === 0) {
-                            toastr.warning("No se encontraron resultados",
-                                '', {
-                                    timeOut: 3000
-                                });
-                            return;
-                        }
-                    } else if (msg == "[]") {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
-                        return;
-                    } else {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
+                    // Intentar parsear si el backend no manda las cabeceras application/json correctas
+                    let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+
+                    // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
+                    if (!data || data.length === 0) {
+                        toastr.warning("No se encontraron resultados", '', { timeOut: 3000 });
                         return;
                     }
-                    var quantity = $('#quantity_modal').val();
-                    if (quantity == "") {
-                        quantity = 1;
-                    }
+
+                    // Inicializar DataTable
                     $('.data_table_multiple').DataTable({
                         "bLengthChange": false,
                         "searching": false,
@@ -1481,56 +1466,41 @@
                         pageLength: 10,
                         responsive: true,
                         "aaData": data,
-                        "columns": [{
-                                "data": "id"
-                            },
-                            {
-                                "data": "codigo"
-                            },
-                            {
-                                "data": "nombre",
-                                "defaultContent": ""
-                            },
-                            {
-                                "data": "stock",
-                                "defaultContent": ""
-                            },
+                        "columns": [
+                            { "data": "id" },
+                            { "data": "codigo" },
+                            { "data": "nombre", "defaultContent": "" },
+                            { "data": "stock", "defaultContent": "" },
                             {
                                 data: null,
                                 title: 'CANTIDAD',
-                                render: function(data, type, row, meta) {
+                                render: function(data, type, row) {
                                     return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
-
                                 }
                             },
                             {
                                 data: 'price',
                                 title: 'PRECIO U.',
                                 render: function(data, type, row) {
-                                    const simbolo = row.moneda
-                                        .simbolo; // Obtén el símbolo de la moneda
-                                    const formattedPrice = $.fn.dataTable.render.number(',',
-                                        '.', 2).display(data); // Formatea el precio
-                                    return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
+                                    const formattedPrice = $.fn.dataTable.render.number(',', '.', 2).display(data);
+                                    return `${row.moneda.simbolo} ${formattedPrice}`;
                                 }
                             },
                             {
                                 data: null,
                                 title: 'PRECIO TOTAL',
-                                render: function(data, type, row, meta) {
+                                render: function(data, type, row) {
                                     return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
                                 }
-                            },
+                            }
                         ]
                     });
                 },
                 error: function(eject) {
                     if (eject.status === 400) {
-                        console.log('Error');
-                        // console.log(eject.responseJSON.error);
+                        console.error('Error en la petición: ', eject.responseJSON);
                     }
-                },
-                cache: true
+                }
             });
         }
         $('.data_table_multiple').on('input', '.input-cantidad', function() {

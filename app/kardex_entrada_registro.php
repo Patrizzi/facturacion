@@ -20,6 +20,11 @@ class kardex_entrada_registro extends Model
         return $this->belongsTo(Kardex_entrada::class,'kardex_entrada_id');
     }
 
+    public function kardex_entrada()
+    {
+        return $this->belongsTo(Kardex_entrada::class, 'kardex_entrada_id');
+    }
+
     public static function stock_producto_precio(){
 
         $stock_productos=Stock_producto::get();

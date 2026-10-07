@@ -26,7 +26,13 @@ class EventServiceProvider extends ServiceProvider
         ],
         Authenticated::class => [
             CreatePermissionsOnLogin::class,
-        ]
+        ],
+        \App\Events\KardexEntradaProcesado::class => [
+            \App\Listeners\GenerarLoteYSeriesListener::class,
+        ],
+        \App\Events\ComprobanteVentaEmitido::class => [
+            \App\Listeners\DescontarStockLoteYSeriesListener::class,
+        ],
     ];
 
     /**
