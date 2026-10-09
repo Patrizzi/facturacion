@@ -48,6 +48,7 @@
         color: '#ED5565'
     });
     multi_retencion();
+
     function seleccionado_fp() {
         var opt = $('#forma_pago').val();
         if (opt == "1") {

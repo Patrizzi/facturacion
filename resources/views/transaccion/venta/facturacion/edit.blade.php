@@ -198,7 +198,7 @@
                                 <div class="form-group row" >
                                     <label class="col-form-label col-md-4"> <strong>Detracción:</strong> </label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" id="detraccion" name="detraccion_value" @if($facturacion->detracciones == null) disabled @endif>
+                                        <select class="form-control" id="detraccion" name="detraccion_value">
                                             <option value="0" @if($facturacion->detracciones == null) selected @endif>Desactiva</option>
                                             <option value="1" @if($facturacion->detracciones != null) selected @endif>Activa</option>
                                         </select>
