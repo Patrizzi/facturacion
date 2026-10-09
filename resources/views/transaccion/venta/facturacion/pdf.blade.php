@@ -228,9 +228,9 @@
                                 <strong>Importe Total Facturado:</strong>
                                 {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
                                 <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion}} %):</strong>
-                                {{ $simbologia }} {{ $facturacion->monto_retencion}} <br>
+                                {{ $simbologia }} {{ number_format(round($facturacion->monto_retencion,2),2)}} <br>
                                 <strong>Monto Neto a Pagar:</strong>
-                                {{ $simbologia }}  {{ $facturacion->monto_retencion_pagar}} <br>
+                                {{ $simbologia }}  {{ number_format(round($facturacion->monto_retencion_pagar,2),2)}} <br>
                             </td>
                         @endif
                     @endif
