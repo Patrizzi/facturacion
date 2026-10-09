@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Nota de Credito- Impresion</title>
+
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <script src="@yield('vue_js', '#')" defer></script>
+    <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/steps/jquery.steps.css')}}" rel="stylesheet">
+
+    <style>
+        .form-control,
+        .single-line {
+            background-color: #FFFFFF;
+            background-image: none;
+            border: 1px solid #808080;
+            border-radius: 10px;
+            color: inherit;
+            display: block;
+            padding: 6px 12px;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            width: 100%;
+        }
+
+        @media print {
+            @page {
+                size: 420mm 297mm landscape;
+                margin: 0;
+            }
+
+            html,
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .print-pad {
+                padding: 12mm 15mm;
+            }
+
+            .avoid-break {
+                page-break-inside: avoid;
+            }
+        }
+
+        @media screen {
+            .print-pad {
+                padding: 12mm 15mm;
+            }
+        }
+
+        #watermark {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 0;
+        }
+
+        #watermark p {
+            position: absolute;
+            color: rgba(120, 120, 120, .31);
+            font-weight: bolder;
+            font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+            font-size: 95px !important;
+            pointer-events: none;
+            transform: rotate(-45deg);
+            top: 45%;
+            right: 40%;
+            z-index: 100;
+        }
+
+        .table>thead>tr>th,
+        .table>tbody>tr>td {
+            border-top-width: 0;
+        }
+
+        .a {
+            height: 37px;
+            margin: 0;
+            border-radius: 0;
+            text-align: center;
+        }
+
+        .ibox-tools a {
+            color: #fff !important
+        }
+
+        html,
+        body {
+            background: #ffffff !important;
+        }
+
+        .white-bg,
+        .ibox-content,
+        .wrapper,
+        .container,
+        .print-pad {
+            background: #ffffff !important;
+        }
+
+        .form-control,
+        .single-line {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+
+        @media print {
+            @page {
+                margin: 0;
+            }
+
+            html,
+            body {
+                background: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .white-bg,
+            .ibox-content,
+            .wrapper,
+            .container,
+            .print-pad {
+                background: #ffffff !important;
+                box-shadow: none !important;
+            }
+
+            .form-control,
+            .single-line {
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+        }
+
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-box {
+            width: 120px;
+            height: 120px;
+            border: 2px solid #3D3D3D;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            background: white;
+        }
+
+        .qr-image {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+
+        .qr-placeholder {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+
+    <script>
+        function cerrar() {
+            window.close();
+        }
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.focus();
+                window.print();
+            }, 150);
+            setTimeout(cerrar, 1000);
+        });
+
+    </script>
+</head>
+
+<body class="white-bg">
+    <div class="print-pad">
+        <div class="ibox-content p-xl" style="margin-bottom:20px; padding-bottom:50px;">
+            <div class="row">
+                @include('layout_cabecera_ventas')
+                <div class="col-sm-4">
+                    <div class="form-control ruc" style="height:125px">
+                        <center>
+                            <h3 style="padding-top:10px">R.U.C : {{$empresa->ruc}}</h3>
+                            <h2>NOTA DE CREDITO</h2>
+                            {{$notas_credito->codigo_n_c}}
+                        </center>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row" align="center" style="padding-bottom:5px">
+                @if($notas_credito->n_electronica == 2)
+                <div id="watermark">
+                    <p>Anulado</p>
+                </div>
+                @endif
+
+                <div class="col-sm-6" align="center">
+                    <div class="form-control">
+                        <div align="left">
+                            @if($estado==0)
+                            <strong>Cliente:</strong>
+                            @if(isset($notas_credito->nota_i_facturacion->cliente_id)){{$notas_credito->nota_i_facturacion->cliente->nombre}}
+                            @else{{$notas_credito->nota_i_facturacion->cotizacion->cliente->nombre}}@endif <br>
+                            <strong>R.U.C:</strong>
+                            @if(isset($notas_credito->nota_i_facturacion->cliente_id)){{$notas_credito->nota_i_facturacion->cliente->numero_documento}}
+                            @else{{$notas_credito->nota_i_facturacion->cotizacion->cliente->numero_documento}}@endif <br>
+                            <strong>Direccion:</strong>
+                            @if(isset($notas_credito->nota_i_facturacion->cliente_id)){{$notas_credito->nota_i_facturacion->cliente->direccion}}
+                            @else{{$notas_credito->nota_i_facturacion->cotizacion->cliente->direccion}}@endif <br>
+                            <strong>Condiciones de Pago:</strong>
+                            @if(isset($notas_credito->nota_i_facturacion->cliente_id)){{$notas_credito->nota_i_facturacion->forma_pago->nombre }}
+                            @else{{$notas_credito->nota_i_facturacion->cotizacion->forma_pago->nombre }}@endif
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Tipo de Moneda:</strong>
+                            @if(isset($notas_credito->nota_i_facturacion->cliente_id)){{$notas_credito->nota_i_facturacion->moneda->nombre }}
+                            @else{{$notas_credito->nota_i_facturacion->cotizacion->moneda->nombre }}@endif<br>
+                            @elseif($estado==1)
+                            <strong>Cliente:</strong>
+                            @if(isset($notas_credito->nota_i_boleta->cliente_id)){{$notas_credito->nota_i_boleta->cliente->nombre}}
+                            @else{{$notas_credito->nota_i_boleta->cotizacion->cliente->nombre}}@endif <br>
+                            <strong>R.U.C:</strong>
+                            @if(isset($notas_credito->nota_i_boleta->cliente_id)){{$notas_credito->nota_i_boleta->cliente->numero_documento}}
+                            @else{{$notas_credito->nota_i_boleta->cotizacion->cliente->numero_documento}}@endif <br>
+                            <strong>Direccion:</strong>
+                            @if(isset($notas_credito->nota_i_boleta->cliente_id)){{$notas_credito->nota_i_boleta->cliente->direccion}}
+                            @else{{$notas_credito->nota_i_boleta->cotizacion->cliente->direccion}}@endif <br>
+                            <strong>Condiciones de Pago:</strong>
+                            @if(isset($notas_credito->nota_i_boleta->cliente_id)){{$notas_credito->nota_i_boleta->forma_pago->nombre }}
+                            @else{{$notas_credito->nota_i_boleta->cotizacion->forma_pago->nombre }}@endif
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Tipo de Moneda:</strong>
+                            @if(isset($notas_credito->nota_i_boleta->cliente_id)){{$notas_credito->nota_i_boleta->moneda->nombre }}
+                            @else{{$notas_credito->nota_i_boleta->cotizacion->moneda->nombre }}@endif<br>
+                            @elseif($estado==3)
+                            <strong>Cliente:</strong>
+                            @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->cliente->nombre}}
+                            @else{{$notas_credito->nota_i_boleta_manual->cotizacion->cliente->nombre}}@endif <br>
+                            <strong>R.U.C:</strong>
+                            @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->cliente->numero_documento}}
+                            @else{{$notas_credito->nota_i_boleta_manual->cotizacion->cliente->numero_documento}}@endif <br>
+                            <strong>Direccion:</strong>
+                            @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->cliente->direccion}}
+                            @else{{$notas_credito->nota_i_boleta_manual->cotizacion->cliente->direccion}}@endif <br>
+                            <strong>Condiciones de Pago:</strong>
+                            @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->forma_pago->nombre }}
+                            @else{{$notas_credito->nota_i_boleta_manual->cotizacion->forma_pago->nombre }}@endif
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Tipo de Moneda:</strong>
+                            @if(isset($notas_credito->nota_i_boleta_manual->cliente_id)){{$notas_credito->nota_i_boleta_manual->moneda->nombre }}
+                            @else{{$notas_credito->nota_i_boleta_manual->cotizacion->moneda->nombre }}@endif<br>
+                            @else
+                            <strong>Cliente:</strong>
+                            @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->cliente->nombre}}
+                            @else{{$notas_credito->nota_i_fac_manual->cotizacion->cliente->nombre}}@endif <br>
+                            <strong>R.U.C:</strong>
+                            @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->cliente->numero_documento}}
+                            @else{{$notas_credito->nota_i_fac_manual->cotizacion->cliente->numero_documento}}@endif <br>
+                            <strong>Direccion:</strong>
+                            @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->cliente->direccion}}
+                            @else{{$notas_credito->nota_i_fac_manual->cotizacion->cliente->direccion}}@endif <br>
+                            <strong>Condiciones de Pago:</strong>
+                            @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->forma_pago->nombre }}
+                            @else{{$notas_credito->nota_i_fac_manual->cotizacion->forma_pago->nombre }}@endif
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong>Tipo de Moneda:</strong>
+                            @if(isset($notas_credito->nota_i_fac_manual->cliente_id)){{$notas_credito->nota_i_fac_manual->moneda->nombre }}
+                            @else{{$notas_credito->nota_i_fac_manual->cotizacion->moneda->nombre }}@endif<br>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6" align="center">
+                    <div class="form-control">
+                        <div align="left">
+                            @if($estado==0)
+                            <strong>Documento:</strong> {{$notas_credito->nota_i_facturacion->codigo_fac}}<br>
+                            @elseif($estado==1)
+                            <strong>Documento:</strong> {{$notas_credito->nota_i_boleta->codigo_boleta}}<br>
+                            @elseif($estado==3)
+                            <strong>Documento:</strong> {{$notas_credito->nota_i_boleta_manual->codigo_boleta}}<br>
+                            @else
+                            <strong>Documento:</strong> {{$notas_credito->nota_i_fac_manual->codigo_fac}}<br>
+                            @endif
+
+                            <strong>Tipo de operacion:</strong>
+                            @switch($notas_credito->motivo)
+                            @case(01) Anulacion de la operacion @break
+                            @case(02) Anulacion por error en el ruc @break
+                            @case(03) Correcion por error en la descripcion @break
+                            @case(06) Devolucion total @break
+                            @endswitch
+                            <br>
+                            <strong>Tipo de sustento:</strong> {{$notas_credito->tipo}}<br>
+                            <strong>Fecha Emision:</strong>
+                            @if(isset($notas_credito->fecha_emision)) {{$notas_credito->fecha_emision}} @else {{$notas_credito->created_at}} @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12" align="center">
+                    <div class="form-control" style="border:none;height:auto">
+                        <div align="left"></div>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:8%">ITEM</th>
+                            <th style="width:15%">Codigo Producto</th>
+                            <th>Descripción</th>
+                            <th style="width:11%">Cantidad</th>
+                            <th style="text-align:center;width:8%">Pr. Unit</th>
+                            <th style="text-align:center;width:8%">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php($u=1)
+                        @foreach($notas_credito_registros as $e => $notas_credito_registro)
+                        <tr>
+                            <td>{{$u++}}</td>
+                            @if(isset($notas_credito_registro->producto_id))
+                            <td>{{$notas_credito_registro->producto->codigo_producto}}</td>
+                            @else
+                            <td>{{$notas_credito_registro->servicio->codigo_servicio}}</td>
+                            @endif
+                            <td>
+                                {{$notas_credito_registro->descripcion}}
+                                {{$doc_reg[$e]->descripcion_item}}
+                            </td>
+                            <td>{{$notas_credito_registro->cantidad}}</td>
+                            <td>{{ number_format($notas_credito_registro->precio, 2) }}</td>
+                            <td>{{ number_format($notas_credito_registro->precio * $notas_credito_registro->cantidad, 2) }}</td>
+                            <td style="display:none">
+                                {{ $sub_total = $notas_credito_registro->nota_credito_ids->op_gravada + $notas_credito_registro->nota_credito_ids->op_inafecta + $notas_credito_registro->nota_credito_ids->op_exonerada }}
+                                {{ $sub_total_gravado = $notas_credito_registro->nota_credito_ids->op_gravada }}
+                                {{ $igv_p = $sub_total_gravado * ($igv->igv_total / 100) }}
+                                {{ $end = $sub_total + $igv_p }}
+                                {{ $end2 = number_format(round($end, 2), 2) }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <br><br><br><br>
+
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h3 align="left">
+                                <?php
+                                    $v = new CifrasEnLetras();
+                                    $letra = ($v->convertirEurosEnLetras($end));
+                                    $letra_final = ucfirst(strstr($letra, 'soles', true));
+                                    $end_final_point = strstr($end2, '.', false);
+                                    $end_final = str_replace('.', '', $end_final_point);
+                                ?>
+                                Son: {{$letra_final}} con {{$end_final}}/100
+                                @if(isset($notas_credito->facturacion_id))
+                                {{$notas_credito->nota_i_facturacion->moneda->nombre}}
+                                @elseif(isset($notas_credito->boleta_id))
+                                {{$notas_credito->nota_i_boleta->moneda->nombre}}
+                                @elseif(isset($notas_credito->boleta_m_id))
+                                {{$notas_credito->nota_i_boleta_manual->moneda->nombre}}
+                                @else
+                                {{$notas_credito->nota_i_fac_manual->moneda->nombre}}
+                                @endif
+                            </h3>
+                        </div>
+                        <div class="col-sm-4 qr-container">
+                            <div class="qr-box">
+                                @if(!@empty($qrCode))
+                                    <img src="{{ $qrCode }}" alt="Codigo QR" class="qr-image">
+                                @else
+                                    <span class="qr-placeholder">QR</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4 form-control">
+                    <span style="display:block; float:left"> Subtotal:</span>
+                    <span style="display:block; float:right;">
+                        @if(isset($notas_credito->facturacion_id))
+                        {{$simbologia=$notas_credito->nota_i_facturacion->moneda->simbolo}}
+                        @elseif(isset($notas_credito->boleta_id))
+                        {{$simbologia=$notas_credito->nota_i_boleta->moneda->simbolo}}
+                        @elseif(isset($notas_credito->boleta_m_id))
+                        {{$simbologia=$notas_credito->nota_i_boleta_manual->moneda->simbolo}}
+                        @else
+                        {{$simbologia=$notas_credito->nota_i_fac_manual->moneda->simbolo}}
+                        @endif
+                        {{ number_format($sub_total, 2) }}
+                    </span>
+                    <br>
+                    <span style="display:block; float:left"> Op. Gravada: </span>
+                    <span style="display:block; float:right">{{$simbologia}} {{number_format($notas_credito->op_gravada,2)}}</span><br>
+                    <span style="display:block; float:left"> Op. Inafecta: </span>
+                    <span style="display:block; float:right">{{$simbologia}} {{ number_format($notas_credito->op_inafecta,2)}}</span><br>
+                    <span style="display:block; float:left"> Op. Exonerada: </span>
+                    <span style="display:block; float:right">{{$simbologia}} {{number_format($notas_credito->op_exonerada,2)}} </span><br>
+                    <span style="display:block; float:left"> I.G.V.: </span>
+                    <span style="display:block; float:right">{{$simbologia}} {{number_format(round($igv_p, 2),2)}}</span><br>
+                    <span style="display:block; float:left"> Importe Total: </span>
+                    <span style="display:block; float:right">{{$simbologia}} {{number_format(round($end, 2),2)}}</span>
+                </div>
+            </div>
+
+            <br><br>
+        </div>
+    </div>
+
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="js/inspinia.js"></script>
+</body>
+</html>

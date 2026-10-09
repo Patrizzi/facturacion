@@ -1,0 +1,674 @@
+@extends('layout')
+@section('title', 'cliente ver')
+@section('data-toggle', 'modal')
+@section('href_accion', '#ModalCliente')
+@section('value_accion', 'Agregar')
+@section('button2', 'Atras')
+@section('config',route('cliente.index'))
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+@section('content')
+
+@extends('layout_agregado_rapido')
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-7">
+      <div class="ibox">
+        <div class="ibox-content">
+@if($errors->any())
+<div class="alert alert-danger" style="margin-top: 10px;margin-bottom: 0px;">
+    <a class="alert-link" href="#">
+        @foreach ($errors->all() as $error)
+        <li class="error" style="color: red">{{ $error }}</li>
+        @endforeach
+    </a>
+</div>
+@endif
+        <div class="">
+          <ul class="nav nav-tabs">
+            <li><a class="nav-link active" href="#tab-father-1" data-toggle="tab" >Contactos</a></li>
+            <li><a class="nav-link" href="#tab-father-2" data-toggle="tab" >Sucursales</a></li>
+          </ul>
+        </div>
+        <div class="tab-content">
+          <div id="tab-father-1" class="tab-pane active" role="tab-panel">
+            <div class="clients-list">
+              <ul class="nav nav-tabs">
+                <li><a class="nav-link active" data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i> Contactos</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-2"><i class="fa fa-plus"></i> Agregar Contacto</a></li>
+                <li><a class="nav-link" data-toggle="tab" href="#tab-3"> ¿Es Empresa Retenedora?</a></li>
+                <li style="align-self: center;margin-left: auto"><span class="float-right small text-muted">{{$contacto_cantidad}} Elementos</span></li>
+              </ul>
+              <div class="tab-content">
+                {{-- Contactos --}}
+                <div id="tab-1" class="tab-pane active">
+                  <div class="full-height-scroll">
+                    <div class="table-responsive">
+                      <table class="table table-striped table-hover" style="font-size: 13px">
+                        <tbody>
+                          @foreach($contacto_show as $contacto)
+                          <tr data-toggle="modal" data-target="#exampleModal{{$contacto->id}}" >
+                            <td class="client-avatar"><img src="https://www.flaticon.es/premium-icon/icons/svg/3772/3772240.svg"> </td>
+                            <td>{{$contacto->nombre}}</td>
+                            <td>{{$contacto->cargo}}</td>
+                            <td class="contact-type"><i class="fa fa-envelope"> </i></td>
+                            <td> {{$contacto->email}}</td>
+                            <td class="contact-type"><img src="{{asset('img/icons/telefono.svg')}}" width="18px"> </td>
+                            <td>{{$contacto->telefono}} </td>
+                            <td class="contact-type"><img src="{{asset('img/icons/celular.svg')}}" width="18px"></td>
+                            <td>{{$contacto->celular}}</td>
+                            @if($contacto->estado==0)
+                            <td class="client-status"><span class="label label-primary">Activo</span></td>
+                            @elseif($contacto->estado==1)
+                            <td class="client-status"><span class="label label-warning">desactivo</span></td>
+                            @endif
+                          </tr>
+                          <!-- Modal -->
+                          <div class="modal fade" id="exampleModal{{$contacto->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document" style="margin-left: 490px;">
+                              <div class="modal-content" style="width: 702px;">
+                                <div class="modal-body" style="padding-top: 0px;">
+                                  <div>
+                                    <div >
+                                      <form action="{{ route('contacto.update',$contacto->id) }}"  enctype="multipart/form-data" method="post">
+                                        @csrf
+                                        @method('PATCH')
+                                        {{-- nuevoInput identificador --}}
+                                        <input type="hidden" name="contacto_id" value="{{$contacto->id}}">
+                                        <div >
+                                         <div class="client-avatar"><img src="https://www.flaticon.es/premium-icon/icons/svg/3772/3772240.svg"> </div>
+                                         <div class="row marketing">
+                                          <div class="col-lg-6">
+                                            <h4>Nombre del Contacto:</h4>
+                                            <input class="form-control" type="text" value="{{$contacto->nombre}}" name="nombre" >
+                                            <h4>Cargo:</h4>
+                                            <p><input class="form-control " type="text" value="{{$contacto->cargo}}" name="cargo" >
+                                            </div>
+                                            <div class="col-lg-6">
+                                              <h4 class="row"><div class="col-sm-6">Telefono:</div><div class="">Celular:</div></h4 >
+                                              <div class="row" style="padding-left: 15px">
+                                                <input class="form-control col-sm-5" name="telefono" type="text" placeholder="Telefono" value="{{$contacto->telefono}}"> &nbsp; -  &nbsp;<input class="form-control col-sm-5" name="celular" type="text" placeholder="Celular" value="{{$contacto->celular}}" >
+                                              </div>
+                                              <h4>Email:</h4>
+                                              <input class="form-control" name="email" type="text" value="{{$contacto->email}}"  >
+                                              <input class="form-control" name="clientes_id" type="hidden" value="{{$cliente_show->id}}"  >
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                              <h4>Estado</h4>
+                                              @if($contacto_cantidad_estado==1)
+                                              @if($contacto->estado==0)
+                                              <select name="estado" id="" class="form-control" readonly="">
+                                                <option value="0"> Activo</option>
+                                                <option value="1"> Desactivo</option>
+                                              </select>
+                                              @elseif($contacto->estado==1)
+                                              <select name="estado" id="" class="form-control" >
+                                                <option value="1"> Desactivo</option>
+                                                <option value="0"> Activo</option>
+                                              </select>
+                                              @endif
+                                              @else
+                                              <select name="estado" id="" class="form-control" >
+                                                @if($contacto->estado==0)
+                                                <option value="0"> Activo</option>
+                                                <option value="1"> Desactivo</option>
+                                                @elseif($contacto->estado==1)
+                                                <option value="1"> Desactivo</option>
+                                                <option value="0"> Activo</option>
+                                                @endif
+                                              </select>
+                                              @endif
+                                            </div>
+                                            <div class="col-lg-6">
+                                              <h4 style="color: white">Grabar</h4>
+                                              <input class="btn btn-primary" type="submit" value="Grabar">
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- / Modal -->
+                          @endforeach
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                {{-- FIN Contactos --}}
+
+                {{-- Agregar Contactos --}}
+                <div id="tab-2" class="tab-pane">
+                  <div class="full-height-scroll">
+                    <div>
+                     <form action="{{ route('contacto.store',$cliente_show->id) }}"  enctype="multipart/form-data" method="post">
+                       @csrf
+                       <div style="padding-top: 20px">
+                        <div class="row marketing">
+                          <div class="col-lg-6">
+                            <h4>Nombre del Contacto:</h4>
+                            <input class="form-control" type="text" name="nombre" >
+                            <h4>Cargo:</h4>
+                            <p><input class="form-control " type="text" name="cargo" value="Empleado">
+                            </div>
+                            <div class="col-lg-6">
+                              <h4>Telefono/Celular:</h4>
+                              <div class="row" style="padding-left: 15px">
+                                <input class="form-control col-sm-5" name="telefono" type="text" placeholder="Telefono" value="000000"> &nbsp; -  &nbsp;<input class="form-control col-sm-5" name="celular" type="text" placeholder="Celular"  value="0000">
+                              </div>
+                              <h4>Email:</h4>
+                              <input class="form-control" name="email" type="text"  value="sincorreo@gmail.com" >
+                              <input type="hidden" name="clientes_id" value="{{$cliente_show->id}}">
+                            </div>
+                            <div class="col-lg-6">
+                              <p><input class="btn btn-primary" type="submit" value="Grabar"></p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                {{--FIN Agregar Contactos --}}
+                {{-- Empresa Retenedora --}}
+                <div id="tab-3" class="tab-pane">
+                  <div class="full-height-scroll">
+                    <div>
+                      <form action="{{ route('cliente_retenedores.reupdate',$cliente_show->id) }}"  enctype="multipart/form-data" method="post">
+                       @csrf
+                       <input type="hidden" value="{{ $cliente_show->id }}" name="cliente_id">
+                       <div style="padding-top: 20px">
+                        <div class="row marketing">
+                          <div class="col-lg-6">
+                            <h4>Porcentaje:</h4>
+                            <div class="input-gro-b">
+                              <div class="input-group-prepend">
+                                <span class="input-group-addon">%</span>
+                              </div>
+                              <input required type="number" @if(isset($cliente_rete)) value="{{$cliente_rete->porcentaje}}" @endif class="form-control" name="porcentaje">
+                            </div>
+                          </div>
+                          <div class="col-lg-6">
+                            <h4>Estado:</h4>
+                            <input type="checkbox" class="js-switch" name="estado" @if(isset($cliente_rete)) @if($cliente_rete->estado==0)checked=""@endif  @endif  {{--  @if($categoria->estado==0) checked="" @endif --}} />
+
+                          </div>
+
+                          <div class="col-lg-6">
+                            <p><input class="ladda-button btn btn-primary" type="submit" value="Grabar"></p>
+                          </div>
+
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              {{--Fin Empresa Retenedora --}}
+            </div>
+
+          </div>
+          </div>
+          <div id="tab-father-2" class="tab-pane" role="tab-panel" >
+            <div class="sucursal-tabs">
+              <ul class="nav nav-tabs">
+                <li style="margin: auto;margin-left: 0px;"><a class="nav-link active" data-toggle="tab" href="#tab-sucursal-1"><i class="fa fa-home"></i> Sucursal</a></li>
+                <li style="" align="right"><span><button style="padding: 1em;" type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_sucursal"><i class="fa fa-plus"></i></button></span></li>
+              </ul>
+              <div class="tab-content">
+                <div id="tab-sucursal-1" class="tab-pane active">
+                  <div class="">
+                    <table class="footable table table-stripped toggle-arrow-tiny">
+                      <thead>
+                        <tr>
+                          <th data-toggle="true" >Nombre</th>
+                          <th style="width: 30%;">Direccion</th>
+                          <th data-hide="all">Pais</th>
+                          <th data-hide="all">Departamento</th>
+                          <th data-hide="all">Provincia</th>
+                          <th data-hide="all">Distrito</th>
+                          <th>Codigo Ubigeo</th>
+                          <th>Editar</th>
+                          <th>Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if(count($cliente_sucursal) == 0)
+                        <tr>
+                          <td colspan="9" style="text-align: center">Sin registros</td>
+                        </tr>
+                        @endif
+                        @foreach($cliente_sucursal as $sucursales)
+                        <tr>
+                          <td>{{$sucursales->nombre}}</td>
+                          <td>{{$sucursales->direccion}}</td>
+                          <td rowspan="2">{{$sucursales->pais}}</td>
+                          <td>{{$sucursales->departamento}}</td>
+                          <td>{{$sucursales->provincia}}</td>
+                          <td>{{$sucursales->distrito}}</td>
+                          <td>{{$sucursales->cod_postal}}</td>
+                          <td style="vertical-align: middle"><button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#edit_sucursal{{$sucursales->id}}"><i class="fa fa-pencil"></i></button></td>
+                          @if($sucursales->estado==0)
+                            <td class="client-status"><span class="label label-primary">Activo</span></td>
+                          @elseif($sucursales->estado==1)
+                            <td class="client-status"><span class="label label-warning">Desactivo</span></td>
+                          @endif
+
+                        </tr>
+                        <div class="modal fade bd-example-modal-lg" id="edit_sucursal{{$sucursales->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Editar Sucursal {{$sucursales->nombre}} de {{$cliente_show->nombre}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <form action="{{route('cliente_sucursal.update', $sucursales->id)}}" method="post">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-body">
+                                  <div class="row">
+                                    <div class="col-sm-12">
+                                      <h4><p>Nombre</p></h4>
+                                      <input type="text" class="form-control" name="nombre" id="" value="{{$sucursales->nombre}}" >
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div class="row">
+                                    <div class="col-sm-8">
+                                      <h4><p>Direccion</p></h4>
+                                      <input type="text" class="form-control" name="direccion" id="" required value="{{$sucursales->direccion}}" onkeyup="this.value=NumText(this.value)">
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <h4><p>Pais</p></h4>
+                                      <input type="text" class="form-control" name="pais" id="" value="Perú" readonly required value="{{$sucursales->pais}}">
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div class="row">
+                                    <div class="col-sm-4">
+                                      <h4><p>Departamento</p></h4>
+                                      <input class="form-control" type="text" name="departamento" id="" required value="{{$sucursales->departamento}}">
+                                      {{-- <select class="select_departamento form-control" name="departamento" id=""></select> --}}
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <h4><p>Provincia</p></h4>
+                                      <input class="form-control" type="text" name="provincia" id="" required value="{{$sucursales->provincia}}">
+                                      {{-- <select class="select_provincia form-control" name="provincia" id=""></select> --}}
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <h4><p>Distrito</p></h4>
+                                      <input class="form-control" type="text" name="distrito" id="" required value="{{$sucursales->distrito}}">
+                                      {{-- <select class="select_distrito form-control" name="distrito" id=""></select> --}}
+                                    </div>
+                                  </div>
+                                  <br>
+                                  <div class="row">
+                                    <div class="col-sm-4 tooltip-demo">
+                                      <h4><p>
+                                        Codigo Ubigeo
+                                        <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+                                      </p></h4>
+                                      <input type="text" class="form-control" name="cod_postal" id="" required value="{{$sucursales->cod_postal}}" maxlength="6" minlength="6">
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <h4><p>Estado</p></h4>
+                                        <input  type="checkbox" @if($sucursales->estado == 0) checked @else @endif name="estado_id" class="js-switch-edit{{$sucursales->id}}" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                  <button type="submit" class="btn btn-primary ladda-button">Guardar</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        @endforeach
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+{{-- Cliente  --}}
+<div class="col-sm-5">
+  <div class="ibox selected">
+    <div class="ibox-content">
+      <div class="tab-content">
+        <div id="contact-1" class="tab-pane active">
+          <div class="r-b-lg">
+            <div class="col-lg-4 text-center">
+              <h3>{{$cliente_show->nombre}}</h3>
+            </div>
+            <div class="col-lg-8" align="left">
+              <ul>
+                <li>{{$cliente_show->documento_identificacion}}: {{$cliente_show->numero_documento}}</li>
+                <li>{{$cliente_show->tipo_cliente}}</li>
+                <li>Fecha Registrada: {{$cliente_show->fecha_registro}}</li>
+              </ul>
+            </div>
+            <div class="col-lg-12">
+             <button class="btn btn-primary btn-sm btn-block" id="boton" style="margin-top: 5px" type="submit" onclick="editar_cliente()"><i
+              class="fa fa-edit"></i> Editar
+            </button>
+            <script>
+              function editar_cliente() {
+                var table_clientes = document.getElementById("table_clientes");
+                var form_cliente = document.getElementById("form_cliente");
+                var boton=document.getElementById("boton");
+
+                if( table_clientes.hasAttribute("hidden") )
+                {
+                  table_clientes.removeAttribute("hidden", "");
+                  boton.innerHTML='<i class="fa fa-edit"></i> Editar';
+                  form_cliente.setAttribute("hidden", "");
+                }
+                else{
+                  table_clientes.setAttribute("hidden", "");
+                  boton.innerHTML='Cancelar';
+                  form_cliente.removeAttribute("hidden", "");
+
+                }
+              }
+            </script>
+          </div>
+        </div>
+        <div class="client-detail">
+          <div class="full-height-scroll tooltip-demo" >
+
+            <table class="table table-striped table-hover" style="font-size: 13px" id="table_clientes" >
+              <tbody>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/direccion.svg')}}"> </td>
+                  <td><textarea  readonly="" disabled="" class="form-control">{{$cliente_show->direccion}} </textarea></td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/correo.svg')}}"> </td>
+                  <td><input type="text" value="{{$cliente_show->email}}" readonly="" disabled="" class="form-control"></td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ubicacion.svg')}}"> </td>
+                  <td><input type="text" value="{{$cliente_show->pais}} / {{$cliente_show->departamento}}" readonly="" disabled="" class="form-control"></td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/aniversario.svg')}}"> </td>
+                  <td><input type="text" value="{{$cliente_show->aniversario}}" readonly="" disabled="" class="form-control"></td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/telefono.svg')}}"> </td>
+                  <td><input type="text" value="{{$cliente_show->telefono}}" readonly="" disabled="" class="form-control"></td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/llamadas.svg')}}"> </td>
+                  <td><input type="text" value="{{$cliente_show->celular}}" readonly="" disabled="" class="form-control"></td>
+                </tr>
+              </tbody>
+            </table>
+            {{-- Edita Cliente Hidden --}}
+            <form action="{{ route('cliente.update',$cliente_show->id) }}"  enctype="multipart/form-data" method="post">
+              @csrf
+              @method('PATCH')
+              <table class="table table-striped table-hover" style="font-size: 13px" id="form_cliente" hidden="" >
+                <tbody>
+                  <tr>
+                    <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ruc.svg')}}"> </td>
+                    <td colspan="2"> <span><strong>@if($cliente_show->documento_identificacion == "RUC") Nombres y Apelidos @else Razon Social @endif</strong></span> <input type="text" name="nombre" class="form-control" placeholder="Nombre" value="{{$cliente_show->nombre}}"></td>
+                  </tr>
+                  <tr>
+                    <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ruc.svg')}}"> </td>
+                    <td> <span><strong>Tipo de Doc.</strong></span> <select class="form-control" name="documento_identificacion" >
+                      <option value="{{$cliente_show->documento_identificacion}}">{{$cliente_show->documento_identificacion}}</option>
+                      <option disabled="">----------------</option>
+                      <option value="RUC">RUC</option>
+                      <option value="DNI">DNI</option>
+                      <option value="pasaporte">Pasaporte</option>
+                    </select>
+                  </td>
+                  <td> <span><strong>N° de Doc.</strong></span> <input type="text"  name="numero_documento" placeholder="Numero Documento" value="{{$cliente_show->numero_documento}}" class="form-control"></td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/direccion.svg')}}"> </td>
+                  <td colspan="2"> <span><strong>Direccion</strong></span> <textarea  name="direccion" placeholder="Direccion" class="form-control">{{$cliente_show->direccion}} </textarea></td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/correo.svg')}}"> </td>
+                  <td colspan="2"> <span><strong>Email</strong></span> <input type="text"  name="email" placeholder="Correo" value="{{$cliente_show->email}}" class="form-control"></td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ubicacion.svg')}}"> </td>
+                  <td><span><strong>Pais</strong></span> <input type="text"  name="pais" placeholder="Pais" value="{{$cliente_show->pais}} " class="form-control">
+                  </td>
+                  <td> <span><strong>Departamento</strong></span> <input type="text" name="departamento" placeholder="Departamento" value="{{$cliente_show->departamento}}"  class="form-control">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ubicacion.svg')}}"> </td>
+                  <td><span><strong>Ciudad</strong></span><input type="text" placeholder="Ciudad" name="ciudad" value="{{$cliente_show->ciudad}}" class="form-control">
+                  <td><span><strong>Cod. Ubigeo</strong></span><input type="number" placeholder="Codigo Ubigeo" placeholder="Codigo Ubigeo" name="ubigeo" value="{{$cliente_show->cod_postal}}" class="form-control"></td>
+                  </tr>
+                  <tr>
+                    <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/telefono.svg')}}"> </td>
+                    <td><span><strong>Telefono</strong></span><input type="text" placeholder="Telefono"  name="telefono" value="{{$cliente_show->telefono}}" class="form-control"></td>
+                    <td><span><strong>Celular</strong></span><input type="text"  placeholder="Celular" name="celular" value="{{$cliente_show->celular}}" class="form-control"></td>
+                  </tr>
+                  <tr>
+                    <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/aniversario.svg')}}"> </td>
+                    <td><span><strong>Fecha Aniv.</strong></span><input type="date" name="aniversario" value="{{$cliente_show->aniversario}}" class="form-control" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Fecha de Aniversario"></td>
+                    <td><span><strong>Fecha Reg.</strong></span><input type="date" placeholder="" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Fecha de Registro" name="fecha_registro" value="{{$cliente_show->fecha_registro}}" class="form-control"></td>
+                  </tr>
+                  <tr>
+                    <td class="client-avatar"> <img src="{{ asset('/archivos/imagenes/clientes_svg/ruc.svg')}}"> </td>
+                    <td><span><strong>Vendedor Asignado</strong></span> 
+                      <select name="vendedor_id" id="vendedor_id" class="form-control">
+                        <option value="">Sin Vendedor fijo</option>
+                        @foreach ($vendedores as $vend)
+                          <option value="{{$vend->id}}" @if($cliente_show->vendedor_id == $vend->id) selected @endif  >{{$vend->personal->personal_l->nombres}} {{$vend->personal->personal_l->apellidos}}</option>
+                        @endforeach
+                      </select>
+                    </td>
+                    <td><span><strong>Forma Pago Aut.</strong></span> 
+                      <select name="forma_pago_id" id="forma_pago_id" class="form-control">
+                          <option value="">Sin forma de pago fija</option>
+                          @foreach ($forma_pago as $forma)
+                            <option value="{{$forma->id}}" @if($cliente_show->forma_pago_id == $forma->id) selected @endif  >{{$forma->nombre}}</option>
+                          @endforeach
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="client-avatar"><img src="{{ asset('/archivos/imagenes/clientes_svg/ruc.svg')}}"> </td>
+                    <td><span><strong>Tipo Cliente</strong></span> <select class="form-control" name="tipo_cliente">
+                      <option value="{{$cliente_show->tipo_cliente}}" selected>{{$cliente_show->tipo_cliente_search}}</option>
+                      <option disabled="">--------------------</option>
+                      <option value="Cliente Frecuente">Cliente Frecuente</option>
+                      <option value="Cliente Revendedor">Cliente Revendedor</option>
+                      <option value="Cliente VIP">Cliente VIP</option>
+                    </select>
+                  </td>
+                  <td colspan="3" align="center" style="vertical-align: bottom"><button class="btn btn-primary" type="submit"> Guardar</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+          <hr/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+{{-- Fin Cliente --}}
+</div>
+</div>
+{{-- modal agregar sucursal --}}
+<div class="modal fade bd-example-modal-lg" id="add_sucursal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Sucurales de {{$cliente_show->nombre}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="{{route('cliente_sucursal.store', $cliente_show->id)}}" method="post">
+        @csrf
+        <input type="hidden" name="cliente_id" value="{{$cliente_show->id}}">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <h4><p>Nombre</p></h4>
+              <input type="text" class="form-control" name="nombre" id="">
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-8">
+              <h4><p>Direccion</p></h4>
+              <input type="text" class="form-control" name="direccion" id="" required onkeyup="this.value=NumText(this.value)">
+            </div>
+            <div class="col-sm-4">
+              <h4><p>Pais</p></h4>
+              <input type="text" class="form-control" name="pais" id="" value="Perú" readonly required>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4">
+              <h4><p>Departamento</p></h4>
+              <input class="form-control" type="text" name="departamento" id="" required>
+              {{-- <select class="select_departamento form-control" name="departamento" id=""></select> --}}
+            </div>
+            <div class="col-sm-4">
+              <h4><p>Provincia</p></h4>
+              <input class="form-control" type="text" name="provincia" id="" required>
+              {{-- <select class="select_provincia form-control" name="provincia" id=""></select> --}}
+            </div>
+            <div class="col-sm-4">
+              <h4><p>Distrito</p></h4>
+              <input class="form-control" type="text" name="distrito" id="" required>
+              {{-- <select class="select_distrito form-control" name="distrito" id=""></select> --}}
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-sm-4 tooltip-demo">
+              <h4><p>
+                Codigo Ubigeo
+                <a href="https://account.geodir.co/recursos/ubigeo-inei-peru.html" target="_blank"><i class="fa fa-question-circle" style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999" ></i></a>
+              </p></h4>
+              <input type="text" class="form-control" name="cod_postal" id="" required maxlength="6" minlength="6">
+            </div>
+            <div class="col-sm-4">
+              <h4><p>Estado</p></h4>
+              <input  type="checkbox" checked name="estado_id" class="js-switch-sucursal" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{{-- modal agregar sucursal --}}
+<style>
+  .form-control{border-radius: 5px}
+  .sucursal-tabs{
+    padding-top: 1.5em;
+  }
+  .select2.select2-container.select2-container--default{
+    width: 100% !important;
+    /* height: 100% !important; */
+  }
+  .select2-container--default .select2-selection--single{
+    height: 2.5em;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 32px !important;
+  }
+</style>
+<!-- Mainly scripts -->
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<!-- Custom and plugin javascript -->
+<script src="{{ asset('js/inspinia.js') }}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+<script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+
+<!-- Jquery Validate -->
+<script src="{{asset('js/plugins/validate/jquery.validate.min.js')}}"></script>
+
+<!-- Steps -->
+<script src="{{asset('js/plugins/steps/jquery.steps.min.js')}}"></script>
+<script src="{{asset('js/plugins/footable/footable.all.min.js')}}"></script>
+
+{{-- scritp de modal agregar --}}
+
+
+<!-- Switchery -->
+<link href="{{asset('css/plugins/switchery/switchery.css')}}" rel="stylesheet">
+<script src="{{asset('js/plugins/switchery/switchery.js')}}"></script>
+<script type="text/javascript">
+    $('.nav-tabs a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+
+    $(function () {
+        $('.footable').footable();
+    });
+
+    $("ul.nav-tabs > li > a").on("shown.bs.tab", function (e) {
+        //fire initialize of footable because the footable plugin only processes tables that are visible
+        $('.footable').trigger('footable_initialize');
+    });
+</script>
+<script>
+  var elem= document.querySelector('.js-switch-sucursal');
+  var switchery = new Switchery(elem, { color: '#4cc0f7' });
+
+
+
+  var elem_p = document.querySelector('.js-switch');
+  var switchery_2 = new Switchery(elem_p, { color: '#ED5565' });
+
+
+</script>
+@foreach($cliente_sucursal as $suc_js)
+<script>
+var elem_edit{{$suc_js->id}} = document.querySelector(`.js-switch-edit{{$suc_js->id}}`);
+var switchery_edit = new Switchery(elem_edit{{$suc_js->id}}, { color: '#EF5565' });
+</script>
+@endforeach
+<script>
+  function NumText(string){//solo letras y numeros
+    return string.replace(/-/g, "");
+  }
+</script>
+
+@endsection

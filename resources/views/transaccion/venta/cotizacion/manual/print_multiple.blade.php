@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/steps/jquery.steps.css')}}" rel="stylesheet">
+
+    <SCRIPT LANGUAGE="JavaScript">
+        function cerrar() {
+            window.close();
+        }
+    </SCRIPT>
+    <style>
+    @media print {
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+    }
+    </style>
+</head>
+
+<body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
+    @php
+        use Luecano\NumeroALetras\NumeroALetras;
+    @endphp
+
+    @foreach($cotizacionesData as $index => $cotizacionData)
+        @php
+            $cotizacion = $cotizacionData['cotizacion'];
+            $cotizacion_m_reg = $cotizacionData['cotizacion_m_reg'];
+            $sub_total = $cotizacionData['sub_total'];
+            $igv = $cotizacionData['igv'];
+            $end = $cotizacionData['end'];
+            $renovacion = $cotizacionData['renovacion'];
+            $fecha_vencimiento = $cotizacionData['fecha_vencimiento'];
+            $dias_restantes_texto = $cotizacionData['dias_restantes_texto'];
+            $dias_restantes_numero = $cotizacionData['dias_restantes_numero'];
+            $j = 1;
+        @endphp
+
+        <div class="animated fadeInRight" @if($index > 0) style="page-break-before: always;" @endif>
+            <div class="">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox-content p-xl" style="margin-bottom: 20px;padding-bottom: 50px;">
+                            <div class="row" style="align-items: center; justify-content: center">
+                                @include('layout_cabecera_ventas')
+                                <div class="col-sm-4">
+                                    <div class="form-control" align="center" style="height: auto;">
+                                        <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
+                                        <h2 style="font-size: 19px">COTIZACIÓN ELECTRÓNICA</h2>
+                                        <h5>{{ $cotizacion->cod_cotizacion }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row" align="center" style="padding-bottom: 5px;">
+                                <div class="col-sm-6" align="center">
+                                    <div class="form-control">
+                                        <h3>Contacto Cliente</h3>
+                                        <div align="left">
+                                            <strong>Señor(es):</strong> &nbsp;{{ $cotizacion->cliente->nombre }}<br>
+                                            <strong>{{ $cotizacion->cliente->documento_identificacion }} :</strong>
+                                            &nbsp;{{ $cotizacion->cliente->numero_documento }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <strong>Fecha:</strong> &nbsp;{{ $cotizacion->fecha_emision }}<br>
+                                            <strong>Dirección:</strong>&nbsp; {{ $cotizacion->cliente->direccion }}<br>
+                                            <strong>Teléfono:</strong>&nbsp; {{ $cotizacion->cliente->telefono }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <strong>Celular:</strong>&nbsp; {{ $cotizacion->cliente->celular }}<br>
+                                            {{-- DATOS DE RENOVACIÓN --}}
+                                            @if($renovacion && $fecha_vencimiento)
+                                                <strong>F. Vencimiento:</strong>&nbsp;{{ $fecha_vencimiento->format('d-m-Y') }}&nbsp;&nbsp;&nbsp;&nbsp;<strong>Días restantes:</strong>&nbsp;{{ $dias_restantes_texto }}<br>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" align="center">
+                                    <div class="form-control">
+                                        <h3>Condiciones Generales</h3>
+                                        <div align="left">
+                                            <strong>Forma De Pago:</strong> &nbsp;{{ $cotizacion->forma_pago->nombre }}<br>
+                                            <strong>Validez :</strong> &nbsp;{{ $cotizacion->validez }}<br>
+                                            <strong>Garantía:</strong> &nbsp;{{ $cotizacion->garantia }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                            <strong>Tipo de Moneda:</strong> &nbsp;{{ $cotizacion->moneda->nombre }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12" align="center">
+                                    <div class="form-control" style="border: none;height: auto">
+                                        <div align="left">
+                                            <strong>observaciones:</strong> &nbsp;{{ $cotizacion->observacion }}<br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:center;width: 50px;">ITEM </th>
+                                            <th style="text-align:center;width: 120px;">CÓDIGO </th>
+                                            <th>DESCRIPCIÓN</th>
+                                            <th style="text-align:center;width: 70px">CANT.</th>
+                                            <th style="text-align:right;width: 110px">P. UNIT.</th>
+                                            <th style="text-align:right;width: 110px;">TOTAL
+                                                <span>{{ $cotizacion->moneda->simbolo }}</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($cotizacion_m_reg as $cotizacion_registros)
+                                            <tr>
+                                                <td style="text-align: center">{{ $j++ }}</td>
+                                                @if(isset($cotizacion_registros->producto->codigo_producto))
+                                                    <td style="text-align: center">
+                                                        {{ $cotizacion_registros->producto->codigo_producto }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $cotizacion_registros->producto->nombre }} | {{ $cotizacion_registros->descripcion_item }}
+                                                    </td>
+                                                @else
+                                                    <td style="text-align: center">
+                                                        {{ $cotizacion_registros->servicio->codigo_servicio }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $cotizacion_registros->servicio->nombre }} | {{ $cotizacion_registros->descripcion_item }}
+                                                    </td>
+                                                @endif
+                                                <td style="text-align: center">{{ $cotizacion_registros->cantidad }}</td>
+                                                <td style="text-align: right">{{ round($cotizacion_registros->precio, 8) }}</td>
+                                                <td style="text-align: right">{{ number_format($cotizacion_registros->cantidad * $cotizacion_registros->precio, 8) }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div><!-- /table-responsive -->
+
+                            <footer>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <h3 align="left">
+                                            @php
+                                                $v = new NumeroALetras();
+                                                $letra = $v->toInvoice($end, 2);
+                                            @endphp
+                                            Son : {{ ucfirst(strtolower($letra)) }} {{ $cotizacion->moneda->nombre }}
+                                        </h3>
+                                    </div>
+                                    <div class="col-sm-4 form-control">
+                                        <span style="display: block;float: left"> Subtotal:</span>
+                                        <span style="display: block;float: right;">{{$simbologia = $cotizacion->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
+                                        <br>
+                                        <span style="display: block;float: left"> Op. Gravada: </span>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($cotizacion->op_gravada,2),2)}}</span><br>
+                                        <span style="display: block;float: left"> Op. Inafecta: </span>
+                                        <span style="display: block;float: right">{{$simbologia}} {{ number_format(round($cotizacion->op_inafecta,2),2)}}</span><br>
+                                        <span style="display: block;float: left"> Op. Exonerada: </span>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($cotizacion->op_exonerada,2),2)}} </span><br>
+                                        <span style="display: block;float: left"> I.G.V.: </span>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format(round($igv, 2),2)}}</span><br>
+                                        <span style="display: block;float: left"> Importe Total: </span>
+                                        <span style="display: block;float: right">{{$simbologia}} {{number_format($end,2)}}</span>
+                                    </div>
+                                </div>
+                            </footer>
+                            <br>
+                            @include('layout_bancos')
+                            <br>
+                            @include('layout_firma_pie_hoja')
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
+    <style>
+        .form-control{
+            margin-top: 5px;
+            border-radius: 5px
+        }
+
+        p#texto{
+            text-align: center;
+            color:black;
+        }
+
+        input#archivoInput{
+            position:absolute;
+            top:0px;
+            left:0px;
+            right:0px;
+            bottom:0px;
+            width:100%;
+            height:100%;
+            opacity: 0;
+        }
+    </style>
+
+    <style type="text/css">
+        .form-control{
+            border-radius: 10px;
+            padding: 10px;
+            border-color: #3D3D3D
+        }
+
+        .ibox-tools a{
+            color: white !important
+        }
+
+        .a{
+            height: 37px;
+            margin:0;
+            border-radius: 0px;
+            text-align: center;
+        }
+
+        .table > thead > tr > th,
+        .table > tbody > tr > th,
+        .table > tfoot > tr > th,
+        .table > thead > tr > td,
+        .table > tbody > tr > td,
+        .table > tfoot > tr > td {
+            border-top-width: 0px;
+            border-color: #3D3D3D
+        }
+
+        *{
+            color: black;
+        }
+
+        p.form-control{
+            border-color: #3D3D3D;
+        }
+
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+
+    <!-- Mainly scripts -->
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+    <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="{{ asset('js/inspinia.js') }}"></script>
+
+    {{-- IMPRIMIR --}}
+    <script type="text/javascript">
+        window.print();
+    </script>
+
+</body>
+</html>

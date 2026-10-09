@@ -1,0 +1,220 @@
+.toast.success {
+    background-color: #28a745;
+}
+
+.toast {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    min-width: 250px;
+    max-width: 400px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+    z-index: 9999;
+}
+
+.toast.error {
+    background-color: #dc3545;
+}
+
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+th.no-sort::after,
+th.no-sort::before {
+    display: none !important;
+}
+
+
+.pie-md {
+    max-width: 17%;
+    max-height: 50%;
+}
+
+div.dataTables_length {
+    display: none;
+}
+
+/* El Buscar */
+div.dataTables_filter {
+    display: none;
+}
+
+/* CSV, Excel, PDF, Print */
+div.dt-buttons {
+    display: none;
+}
+
+/* Tamaño de los botones del index */
+.tam {
+    min-width: 150px;
+    min-height: 150px;
+}
+
+input#archivoInput {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 100%;
+    /*height:100%;*/
+    opacity: 0;
+    padding: 30px;
+}
+
+input#archivoInput:hover {
+    cursor: pointer;
+}
+
+.custom-file-label {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.custom-file-label::after {
+    content: "Select"
+}
+
+.custom-file-input:hover {
+    cursor: pointer;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+.fa-question-circle:hover {
+    color: blue;
+}
+
+.select2.select2-container.select2-container--default {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.select2-container--default .select2-selection--single {
+    height: 100% !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 32px !important;
+}
+
+.cb-codigo,
+.cb-product {
+    width: 14px;
+    height: 14px;
+    padding: 2px;
+    border: 1.5px solid #1e3a8a;
+    border-radius: 50%;
+}
+
+.cb-codigo div,
+.cb-product div {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border-radius: 50%;
+}
+
+.cb-codigo input:checked~div,
+.cb-product input:checked~div {
+    background-color: #1e3a8a;
+}
+
+.tab-pane.active.show {
+    border-right: 1px solid #e7eaec;
+    border-left: 1px solid #e7eaec;
+    border-bottom: 1px solid #e7eaec;
+}
+
+.pie-md {
+    /* max-width: 17%; */
+    /* max-height: 50%; */
+}
+
+table {
+    width: 100% !important;
+}
+
+div.dataTables_length {
+    display: none;
+}
+
+/* El Buscar */
+div.dataTables_filter {
+    display: none;
+}
+
+/* CSV, Excel, PDF, Print */
+div.dt-buttons {
+    display: none;
+}
+
+/* Tamaño de los botones del index */
+.tam {
+    min-width: 150px;
+    min-height: 150px;
+}
+
+input#archivoInput {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 100%;
+    /*height:100%;*/
+    opacity: 0;
+    padding: 30px;
+}
+
+input#archivoInput:hover {
+    cursor: pointer;
+}
+
+.custom-file-label {
+    word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.custom-file-label::after {
+    content: "Select"
+}
+
+.custom-file-input:hover {
+    cursor: pointer;
+}
+
+.form-control {
+    border-radius: 5px;
+}
+
+.fa-question-circle:hover {
+    color: blue;
+}
+
+.td_status {
+    text-align: center !important;
+}
+.drop-actions > li > a{
+    margin-right: 10px !important;
+    margin-left: 0px !important;
+}
+
+.drop-header > div > a{
+    margin: 6px 10px 6px 0px !important;
+}

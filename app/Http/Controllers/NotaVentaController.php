@@ -1,0 +1,1028 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\Almacen;
+use App\Banco;
+use App\Cliente;
+use App\ComprobantesVentas;
+use App\Cotizacion;
+use App\CotizacionManual;
+use App\Empresa;
+use App\Forma_pago;
+use App\Garantia;
+use App\Moneda;
+use App\TipoCambio;
+use App\NotaVenta;
+use App\NotaVentaRegistro;
+use App\Personal;
+use App\Producto;
+use App\Servicios;
+use App\Igv;
+use App\kardex_entrada;
+use App\Stock_producto;
+use App\Ventas_registro;
+use PDF;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use ZipArchive;
+use App\EmailBandejaEnvios;
+use App\EmailBandejaEnviosArchivos;
+use App\EmailConfiguraciones;
+use App\Exports\NotaVentaExport;
+
+class NotaVentaController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+
+        $nota_venta=NotaVenta::all();
+        $totales = [];
+        foreach($nota_venta as $index =>  $nota_ventas){
+            $total = 0;
+            $suma = 0;
+            $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota_ventas->id)->get();
+            foreach($nota_venta_reg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+            }
+            $suma += $total;
+            $totales[$index] = $suma;
+        }
+
+        // return $totales;
+        $almacen =Almacen::all();
+        $conteo_almacen=Almacen::where('estado',0)->count();
+        $almacen_primero =Almacen::first();
+        $user_login =auth()->user();
+        return view('transaccion.venta.nota_venta.index',compact('nota_venta','conteo_almacen','almacen_primero','user_login','almacen','totales'));
+    }
+
+    public function precio_sugerido(Request $request){
+        $item = $request->item;
+        $moneda_nota = $request->moneda;
+        $pro_serv = explode(" \ ", $item);
+
+        $moneda=Moneda::where('principal',1)->first();
+        $moneda_registrada=$moneda_nota;
+        // return $moneda_seleccion;
+        if(isset($pro_serv[1])){
+            $producto = Producto::where('nombre',$pro_serv[0])->where('descripcion',$pro_serv[1])->first();
+            $servicios = Servicios::where('nombre',$pro_serv[0])->where('descripcion',$pro_serv[1])->first();
+        }else{
+            $producto = Producto::where('nombre',$pro_serv[0])->first();
+            $servicios = Servicios::where('nombre',$pro_serv[0])->first();
+        }
+
+        // if(!isset($producto) && !isset($servicios)){
+        //     $pro_precio = 0;
+        //     // return $pro_precio;
+        // }
+        $igv = Igv::first();
+        $cambio=TipoCambio::where('fecha',Carbon::now()->format('Y-m-d'))->first();
+        if(isset($producto)){
+            $producto_pre = Stock_producto::where('producto_id',$producto->id)->first();
+
+
+            if($moneda->id == $moneda_registrada){
+                if ($moneda->tipo == 'nacional') {
+                    $utilidad=$producto_pre->precio_nacional*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
+                    $precio_base=round($producto_pre->precio_nacional+$utilidad,2);
+
+                }else {
+                    $utilidad=$producto_pre->precio_extranjero*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
+                    $precio_base=round($producto_pre->precio_extranjero+$utilidad,2);
+                }
+            }else{
+                if ($moneda->tipo == 'extranjera') {
+                    $utilidad=$producto_pre->precio_extranjero*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
+                    $precio_base=round(($producto_pre->precio_extranjero+$utilidad) *$cambio->paralelo ,2);
+                }else{
+                            //promedio original ojo revisar que es precio nacional --------------------------------------------------------
+                    $utilidad=$producto_pre->precio_extranjero*($producto_pre->producto->utilidad-$producto_pre->producto->descuento1)/100;
+                    $precio_base=round(($producto_pre->precio_extranjero+$utilidad) / $cambio->paralelo ,2);
+                }
+            }
+            $igv = $precio_base * ($igv->igv_total/100);
+            $pro_precio = round($precio_base + $igv,2);
+        }elseif(isset($servicios)){
+            if($moneda->id == $moneda_registrada){
+                if($moneda->tipo =='nacional'){
+                    //Calculo de array para precio, stock en (SERVICIO)
+                    $utilidad_serv=$servicios->precio_nacional*($servicios->utilidad)/100;
+                    $precio_base=($servicios->precio_nacional + $utilidad_serv);
+                }else{
+                    $utilidad_serv=$servicios->precio_extranjero*($servicios->utilidad)/100;
+                    $precio_base=($servicios->precio_extranjero + $utilidad_serv);
+                }
+            }else{
+                if($moneda->tipo =='extranjera'){
+                    //Calculo de array para precio, stock en (SERVICIO)
+                    $utilidad_serv=$servicios->precio_nacional*($servicios->utilidad)/100;
+                    $precio_base=($servicios->precio_nacional + $utilidad_serv)/$cambio->paralelo;
+                }else{
+                    $utilidad_serv=$servicios->precio_extranjero*($servicios->utilidad)/100;
+                    $precio_base=( $servicios->precio_extranjero + $utilidad_serv)/$cambio->paralelo;
+                }
+            }
+            $igv = $precio_base * ($igv->igv_total/100);
+            $pro_precio = round($precio_base + $igv,2);
+        }else{
+            $pro_precio = 0;
+        }
+
+        return $pro_precio;
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        $almacen=Almacen::where('id',$request->almacen)->first();
+        $count_nota_venta=NotaVenta::where('almacen_id',$request->almacen)->count();
+        $count_nota_venta++;
+        $sucursal_nr = str_pad($request->almacen, 3, "0", STR_PAD_LEFT);
+        $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
+        $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
+
+
+        $clientes=Cliente::all();
+        $garantia=Garantia::where('estado',0)->get();
+        $moneda=Moneda::all();
+        $forma_pagos= Forma_pago::all();
+        $servicios = Servicios::where('estado_anular', 0)->get();
+        $productos=Producto::where('estado_anular', 1)->get();
+        $user_login =auth()->user();
+        $igv = Igv::first();
+        $empresa=Empresa::first();
+        return view('transaccion.venta.nota_venta.create',compact('garantia','empresa','clientes','forma_pagos','moneda','productos','servicios','user_login','cod_nota_venta','almacen','igv'));
+
+  }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        // return $request;
+        $cantidad_p = $request->input('cantidad');
+        $count_cantidad_p=count($cantidad_p);
+        for($i=0 ; $i<$count_cantidad_p;$i++){
+            $articulos[$i]= $request->input('articulo')[$i];
+            $producto_id_name[$i]=strstr($articulos[$i], '|');
+            $producto_id_2[$i]=strstr($producto_id_name[$i], ' ');
+            $producto_id_3[$i]=substr(strstr($producto_id_2[$i], ' '),2);
+            $producto_name[$i]=explode(' | ',$producto_id_3[$i])[2];
+
+        }
+        // return $producto_name;
+        // return explode(' | ',$producto_id_name[0]);
+        //contador de valores de articulos
+        $articulo = $request->articulo;
+        $count_articulo=count($articulo);
+
+        $almacen=Almacen::where('id',$request->almacen)->first();
+        $count_nota_venta=NotaVenta::where('almacen_id',$request->almacen)->count();
+        $count_nota_venta++;
+        $sucursal_nr = str_pad($request->almacen, 3, "0", STR_PAD_LEFT);
+        $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
+        $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
+
+        $submit = $request->get('submit');
+        $nota_venta=new NotaVenta;
+        $nota_venta->cod_nota_venta=$cod_nota_venta;
+        $nota_venta->cliente_id=$request->cliente;
+        $nota_venta->almacen_id=$request->almacen;
+        $nota_venta->forma_pago=$request->forma_pago;
+        $nota_venta->garantia=$request->garantia;
+        $nota_venta->moneda_id=$request->moneda;
+        $nota_venta->fecha_emision=$request->fecha_emision;
+        $nota_venta->observacion=$request->observacion;
+        $nota_venta->user_registrado=auth()->user()->id;
+        if($submit == 2){
+            $nota_venta->estado_vigente = 1;
+        }
+        $nota_venta->save();
+
+        for($i=0;$i<$count_articulo;$i++){
+            $reg_nota_v= new NotaVentaRegistro();
+            $reg_nota_v->nota_venta_id=$nota_venta->id;
+            $reg_nota_v->producto= $producto_name[$i];
+            $reg_nota_v->descripcion=$request->get('descripcion_item')[$i];
+            $reg_nota_v->cantidad=$request->get('cantidad')[$i];
+            $reg_nota_v->precio_nacional=$request->get('precio')[$i];
+            $reg_nota_v->save();
+        }
+
+
+     return redirect()->route('nota_venta.show',$nota_venta->id);
+        // return $nota_venta;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, $id)
+    {
+
+        $servicios = Servicios::all();
+        $productos=Producto::all();
+        $empresa=Empresa::first();
+        $nota_venta=NotaVenta::where('id',$id)->first();
+        $nota_venta_re=NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+        $count_reg = count($nota_venta_re);
+        $almacen=Almacen::all();
+        $igv = Igv::first();
+        // return var_dump($nota_venta_re[0]->precio_nacional+"3");
+        return view('transaccion.venta.nota_venta.show',compact('nota_venta', 'almacen','nota_venta_re','empresa','banco','banco_count','servicios','productos','count_reg','igv'));
+
+    }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function print($id)
+    {
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        // $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        // $existe_id=NotaVenta::where('id',$id)->first();
+        // if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
+
+        $empresa=Empresa::first();
+
+        $nota_venta = NotaVenta::where('id',$id)->first();
+        $nota_venta_re = NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+
+        return view('transaccion.venta.nota_venta.print',compact('nota_venta','nota_venta_re','empresa','banco','banco_count'));
+    }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pdf($id){
+        // REDIRECCION PARA MOSTRAR EL inventario_inicial
+        // $existe_id=kardex_entrada::where('estado',2)->first();
+        // if(empty($existe_id)){ return redirect()->route('kardex-entrada.index'); }
+
+        //REDIRECCION PARA NO MOSTRAR ERROR LARAVEL DE ID SHOW
+        // $existe_id=NotaVenta::where('id',$id)->first();
+        // if(empty($existe_id)){ return redirect()->route('nota_venta.index'); }
+
+        $empresa=Empresa::first();
+
+        $nota_venta = NotaVenta::where('id',$id)->first();
+        $nota_venta_re = NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $banco=Banco::where('estado',0)->get();
+        $banco_count=$banco->count();
+        $archivo = $nota_venta->cod_nota_venta.'-'.$empresa->ruc;
+        // return view('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+        $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf',compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+        return $pdf->download('NotaV '.$nota_venta->cod_nota_venta.'.pdf');
+    }
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        // return $requesXt;
+
+
+        // return $sep_esc;
+        $nota_venta = NotaVenta::where('id',$id)->first();
+        if($nota_venta->estado == 0 && $nota_venta->estado_vigente == 0){
+            $nota_registros = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
+            // REGISTROS EXISTENTES
+            $n_registros_ori = $request->get('n_registros_ori');
+            $n_r_ori_c = count($n_registros_ori);
+
+            $var =$request->get('elem_delete');
+            // return array_count_values();
+            // ELIMINAR LOS QUE ESTAN DELETE
+            if( isset( $var )){
+                $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->whereNotIn('id', $request->get('elem_delete'))->get();
+            }else{
+                $nota_registros_delete = NotaVentaRegistro::where('nota_venta_id',$nota_venta->id)->get();
+            }
+            // return $nota_registros_delete;
+            for ($i=0; $i < count($nota_registros_delete) ; $i++) {
+                NotaVentaRegistro::Destroy($nota_registros_delete[$i]->id);
+            }
+            //nuevos registros
+            for ($h=0; $h < $n_r_ori_c ; $h++) {
+                if (strpos($request->get('articulo')[$h], ' | ') == true) {
+                    $art = $request->get('articulo')[$h];
+                    $sep_esc = explode(' | ',$art);
+                    $producto_id = $sep_esc[3];
+                }else{
+                    $producto_id = $request->get('articulo')[$h];
+                }
+
+                if($request->get('n_registros_ori')[$h] == "existente"){
+                    $nota_venta_upd_new = NotaVentaRegistro::find($request->get('elem_delete')[$h]);
+                    $nota_venta_upd_new->producto= $producto_id;
+                    $nota_venta_upd_new->descripcion= $request->get('article_descripcion')[$h];
+                    $nota_venta_upd_new->cantidad= $request->get('cantidad')[$h];
+                    $nota_venta_upd_new->precio_nacional= $request->get('precio')[$h];
+                    $nota_venta_upd_new->save();
+                }else{
+
+                    $nota_venta_upd =new NotaVentaRegistro;
+                    $nota_venta_upd->nota_venta_id = $nota_venta->id;
+                    $nota_venta_upd->producto= $producto_id;
+                    $nota_venta_upd->descripcion= $request->get('article_descripcion')[$h];
+                    $nota_venta_upd->cantidad= $request->get('cantidad')[$h];
+                    $nota_venta_upd->precio_nacional= $request->get('precio')[$h];
+                    $nota_venta_upd->save();
+                }
+            }
+            $submit=$request->get('submit');
+            if($submit == 2){
+                $nota_venta_esta_v=NotaVenta::find($nota_venta->id);
+                $nota_venta_esta_v->estado_vigente = 1;
+                $nota_venta_esta_v->save();
+            }
+        }
+        return back();
+    }
+    public function anulacion(Request $request, $id){
+        $nota_venta = NotaVenta::find($id);
+        $nota_venta->observacion =  $request->get('observacion');
+        $nota_venta->estado = 1;
+        $nota_venta->save();
+        return back();
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+    public function ticket(Request $request, $id)
+    {
+        $nota_venta=NotaVenta::find($id);
+        $nota_registro=NotaVentaRegistro::where('nota_venta_id',$id)->get();
+        $empresa=Empresa::first();
+        $moneda = Moneda::where('id',$nota_venta->moneda_id)->first();
+        $igv=Igv::first();
+        return view('transaccion.venta.nota_venta.ticket',compact('nota_venta','nota_registro','empresa','igv','moneda'));
+    }
+
+
+    //* NUEVA VISTA PARA /VENTAS - NOTA VENTA
+    public function index2(){
+        $mes_año = Carbon::now()->format('d-m-Y');
+        $count_month_ventas = ComprobantesVentas::count_month_ventas($mes_año);
+
+
+        $almacen = Almacen::get();
+        $moneda = Moneda::get();
+        $count_all_ventas = ComprobantesVentas::count_day_ventas();
+
+        return view('transaccion.venta.nota_venta.index2',compact('count_month_ventas', 'almacen' ,'count_all_ventas','moneda'));
+    }
+
+    public function exportNotasVentas(Request $request)
+    {
+        $ids = $request->json('nota_ids');
+
+        if (!empty($ids)) {
+            $export = new NotaVentaExport($ids);
+        } else {
+            $request->validate([
+                'daterange' => 'required|string'
+            ]);
+
+            [$start, $end] = explode(' - ', $request->daterange);
+
+            $export = new NotaVentaExport(null, [
+                'start'  => Carbon::createFromFormat('d/m/Y', $start)->startOfDay(),
+                'end'    => Carbon::createFromFormat('d/m/Y', $end)->endOfDay(),
+                'filter' => $request->input('value'),
+                'tipo'   => $request->input('tipo_coti'),
+            ]);
+        }
+
+        return Excel::download(
+            $export,
+            'Notas de Venta_' . now('America/Lima')->format('Y-m-d') . '.xlsx'
+        );
+    }
+
+
+    public function printMultiple(Request $request)
+    {
+        try {
+            $notaIds = $request->input('nota_ids', []);
+
+            // Si viene por query string (GET)
+            if (empty($notaIds)) {
+                $notaIds = $request->query('nota_ids', []);
+            }
+
+            // Asegurar que sea array
+            if (!is_array($notaIds)) {
+                $notaIds = explode(',', $notaIds);
+            }
+
+            // Filtrar IDs válidos
+            $notaIds = array_filter($notaIds, function($id) {
+                return !empty($id) && is_numeric($id) && $id > 0;
+            });
+
+            if (empty($notaIds)) {
+                // Si es una petición AJAX o viene de JavaScript
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'error' => 'No se seleccionaron notas de venta para imprimir.'
+                    ], 400);
+                }
+                return back()->withErrors(['No se seleccionaron notas de venta para imprimir.']);
+            }
+
+            $notas = NotaVenta::with(['cliente', 'moneda', 'almacen'])
+                ->whereIn('id', $notaIds)
+                ->get();
+
+            if ($notas->isEmpty()) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'error' => 'No se encontraron las notas de venta seleccionadas.'
+                    ], 404);
+                }
+                return back()->withErrors(['No se encontraron las notas de venta seleccionadas.']);
+            }
+
+            // Recopilar datos para múltiples notas de venta
+            $notasData = [];
+            $empresa = Empresa::first();
+            $igv = Igv::first();
+
+            foreach ($notas as $nota) {
+                $nota_venta_reg = NotaVentaRegistro::where('nota_venta_id', $nota->id)->get();
+
+                // Calcular totales
+                $sub_total = 0;
+                $total_igv = 0;
+                $total_general = 0;
+
+                foreach ($nota_venta_reg as $registro) {
+                    $sub_total += $registro->precio_nacional * $registro->cantidad;
+                }
+
+                $total_igv = $sub_total * ($igv->igv_total / 100);
+                $total_general = $sub_total + $total_igv;
+
+                $notasData[] = [
+                    'nota_venta' => $nota,
+                    'nota_venta_reg' => $nota_venta_reg,
+                    'sub_total' => $sub_total,
+                    'total_igv' => $total_igv,
+                    'total_general' => $total_general
+                ];
+            }
+
+            // Si es petición AJAX, retornar JSON
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $notasData,
+                    'empresa' => $empresa
+                ]);
+            }
+
+            return view('transaccion.venta.nota_venta.print_multiple', compact(
+                'notasData',
+                'empresa',
+                'igv'
+            ));
+
+        } catch (\Exception $e) {
+            Log::error('Error en printMultiple: ' . $e->getMessage());
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'error' => 'Error al procesar la impresión múltiple: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->withErrors(['Error al procesar la impresión múltiple: ' . $e->getMessage()]);
+        }
+    }
+
+    public function downloadMultiplePDFs(Request $request)
+    {
+        try {
+            $notaVentaIds = $request->input('nota_venta_ids', []);
+
+            if (empty($notaVentaIds) || !is_array($notaVentaIds)) {
+                return back()->with('error', 'No se seleccionaron notas de venta para descargar.');
+            }
+
+            if (count($notaVentaIds) === 1) {
+                return $this->downloadSinglePDF($notaVentaIds[0]);
+            }
+
+            $notasVenta = NotaVenta::whereIn('id', $notaVentaIds)->get();
+
+            if ($notasVenta->count() !== count($notaVentaIds)) {
+                return back()->with('error', 'Algunas notas de venta seleccionadas no existen.');
+            }
+
+            $tempDir = storage_path('app/temp');
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $zipName = 'Notas_Venta_' . date('Y-m-d_H-i-s') . '.zip';
+            $tempZip = $tempDir . DIRECTORY_SEPARATOR . $zipName;
+
+            if (file_exists($tempZip)) {
+                @unlink($tempZip);
+            }
+
+            $zip = new ZipArchive();
+
+            if ($zip->open($tempZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+                return back()->with('error', 'Error al crear el archivo ZIP');
+            }
+
+            $banco = Banco::where('estado', '0')->get();
+            $banco_count = $banco->count();
+            $empresa = Empresa::first();
+
+            foreach ($notasVenta as $nota_venta) {
+                try {
+                    $nota_venta_re = NotaVentaRegistro::where('nota_venta_id', $nota_venta->id)->get();
+
+                    $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf', compact(
+                        'empresa',
+                        'nota_venta',
+                        'nota_venta_re',
+                        'banco',
+                        'banco_count'
+                    ));
+
+                    $pdfContent = $pdf->output();
+
+                    $codigoNotaVenta = preg_replace('/[^a-zA-Z0-9_-]/', '_', $nota_venta->cod_nota_venta);
+                    $fileName = 'NotaV_' . $codigoNotaVenta . '.pdf';
+                    $zip->addFromString($fileName, $pdfContent);
+
+                } catch (\Exception $e) {
+                    continue;
+                }
+            }
+
+            $zip->close();
+            unset($zip);
+            clearstatcache(true, $tempZip);
+            usleep(100000);
+
+            if (!file_exists($tempZip) || filesize($tempZip) == 0) {
+                @unlink($tempZip);
+                return back()->with('error', 'El archivo ZIP no se creó correctamente');
+            }
+
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipName . '"');
+            header('Content-Length: ' . filesize($tempZip));
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: public');
+
+            readfile($tempZip);
+            @unlink($tempZip);
+
+            exit;
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al descargar notas de venta: ' . $e->getMessage());
+        }
+    }
+
+    private function downloadSinglePDF($id)
+    {
+        try {
+            $nota_venta = NotaVenta::find($id);
+            if (!$nota_venta) {
+                return back()->with('error', 'Nota de venta no encontrada.');
+            }
+
+            $empresa = Empresa::first();
+            $nota_venta_re = NotaVentaRegistro::where('nota_venta_id', $id)->get();
+            $banco = Banco::where('estado', '0')->get();
+            $banco_count = $banco->count();
+
+            // Generar PDF
+            $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf', compact(
+                'empresa',
+                'nota_venta',
+                'nota_venta_re',
+                'banco',
+                'banco_count'
+            ));
+
+            return $pdf->download('NotaV_' . $nota_venta->cod_nota_venta . '.pdf');
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al generar el PDF: ' . $e->getMessage());
+        }
+    }
+
+    public function whatsappSendMultiple(Request $request)
+    {
+        $numero = $request->numero;
+        $notaVentaIds = $request->nota_venta_ids;
+
+        $mensaje = "";
+
+        foreach ($notaVentaIds as $id) {
+            $nota_venta = NotaVenta::find($id);
+            if ($nota_venta) {
+                $codigo = substr(md5($id . env('APP_KEY') . 'nota_venta'), 0, 22);
+
+                $pdfUrl = url("nota_venta/share/{$codigo}");
+
+                $mensaje .= "{$pdfUrl}\n";
+            }
+        }
+
+        $mensajeCodificado = urlencode($mensaje);
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensajeCodificado}";
+
+        return redirect()->away($whatsappUrl);
+    }
+
+    public function descargarPorCodigo($codigo)
+    {
+        $notaVentas = NotaVenta::all();
+
+        foreach ($notaVentas as $not) {
+            if (substr(md5($not->id . env('APP_KEY') . 'nota_venta'), 0, 22) === $codigo) {
+                return redirect()->route('nota_venta_pdf', $not->id);
+            }
+        }
+
+        abort(404);
+    }
+
+    public function enviarCorreoDirecto(Request $request, $id)
+    {
+        try {
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $empresa = Empresa::first();
+            $nota_venta = NotaVenta::where('id', $id)->first();
+            $nota_venta_re = NotaVentaRegistro::where('nota_venta_id', $id)->get();
+            $banco = Banco::where('estado', 0)->get();
+            $banco_count = $banco->count();
+
+            // Generar PDF
+            $archivo = 'PDF-DOC-' . $nota_venta->cod_nota_venta . '-' . $empresa->ruc . '.pdf';
+            $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf', compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+            $content = $pdf->download();
+            $especif = $date . $archivo;
+            Storage::disk('mailbox')->put($especif, $content);
+
+            // Preparar correos
+            $emails = $request->get('emails', []);
+            $emails = array_filter($emails);
+
+            if (empty($emails)) {
+                Storage::disk('mailbox')->delete($especif);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Debes ingresar al menos un correo.'
+                ], 400);
+            }
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Nota de Venta - " . $nota_venta->cod_nota_venta;
+            $mensaje_html = "Estimado cliente, adjuntamos la nota de venta " . $nota_venta->cod_nota_venta;
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            // Agregar email backup si existe
+            $correos_envios = array_merge($emails, [$config_email->email_backup]);
+            $mails_array = array_filter($correos_envios);
+
+            // Preparar archivos
+            $pdfile = public_path() . '/archivos/' . $especif;
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            // Adjuntar PDF
+            $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                // Guardar en bandeja de envíos
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = implode(', ', $emails);
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                // Guardar PDF en archivos
+                $archivo_pdf = new EmailBandejaEnviosArchivos;
+                $archivo_pdf->id_bandeja_envios = $mail->id;
+                $archivo_pdf->archivo = $archivo;
+                $archivo_pdf->fecha_hora = $date;
+                $archivo_pdf->save();
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Correo enviado exitosamente a: ' . implode(', ', $emails)
+                ]);
+            }
+
+            // Si falla el envío
+            Storage::disk('mailbox')->delete($especif);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($especif)) {
+                Storage::disk('mailbox')->delete($especif);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function enviarCorreoMultiple(Request $request)
+    {
+        try {
+            $email = $request->get('email');
+            $nota_venta_ids = $request->get('nota_ids', []);
+
+            if (empty($nota_venta_ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se seleccionaron notas de venta para enviar.'
+                ], 400);
+            }
+
+            if (empty($email)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El correo electrónico es requerido.'
+                ], 400);
+            }
+
+            $id_usuario = auth()->user()->id;
+            $config_email = EmailConfiguraciones::where('id_usuario', $id_usuario)->first();
+
+            if (!$config_email) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tienes configuración de email. Ve a configuración.'
+                ], 400);
+            }
+
+            $fecha = Carbon::now();
+            $data_g = str_replace(' ', '_', $fecha);
+            $date = str_replace(':', '-', $data_g);
+
+            $empresa = Empresa::first();
+
+            // Configuración de email
+            $yourEmail = $config_email->email;
+            $firma = $config_email->firma;
+            $alto = $config_email->alto_firma;
+            $ancho = $config_email->ancho_firma;
+
+            $titulo = "Notas de Venta - " . count($nota_venta_ids) . " documento(s)";
+            $mensaje_html = "Estimado cliente, adjuntamos las notas de venta solicitadas.";
+            $mensaje = view('email_html.email_send_layout', compact('empresa', 'mensaje_html', 'firma', 'alto', 'ancho'));
+
+            // Agregar email backup si existe
+            $correos_envios = [$email, $config_email->email_backup];
+            $mails_array = array_filter($correos_envios);
+
+            // Configurar transporte de email
+            $transport = (new \Swift_SmtpTransport($config_email->smtp, $config_email->port, $config_email->encryption))
+                ->setUsername($config_email->email)
+                ->setPassword($config_email->password);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+
+            $message = (new \Swift_Message($yourEmail))
+                ->setFrom([$yourEmail => $titulo])
+                ->setTo($mails_array)
+                ->setBody($mensaje, 'text/html');
+
+            $archivos_temporales = [];
+
+            // Generar y adjuntar cada PDF
+            foreach ($nota_venta_ids as $nota_venta_id) {
+                $nota_venta = NotaVenta::where('id', $nota_venta_id)->first();
+                if (!$nota_venta) continue;
+
+                $nota_venta_re = NotaVentaRegistro::where('nota_venta_id', $nota_venta_id)->get();
+                $banco = Banco::where('estado', 0)->get();
+                $banco_count = $banco->count();
+
+                // Generar PDF
+                $archivo = 'PDF-DOC-' . $nota_venta->cod_nota_venta . '-' . $empresa->ruc . '.pdf';
+                $pdf = PDF::loadView('transaccion.venta.nota_venta.pdf', compact('empresa','nota_venta','nota_venta_re','banco','banco_count'));
+                $content = $pdf->download();
+                $especif = $date . $archivo;
+                Storage::disk('mailbox')->put($especif, $content);
+
+                $pdfile = public_path() . '/archivos/' . $especif;
+                $message->attach(\Swift_Attachment::fromPath($pdfile));
+
+                $archivos_temporales[] = $especif;
+            }
+
+            // Enviar correo
+            if ($mailer->send($message)) {
+                $texto = strip_tags($mensaje_html);
+
+                // Guardar en bandeja de envíos
+                $mail = new EmailBandejaEnvios;
+                $mail->id_usuario = auth()->user()->id;
+                $mail->destinatario = $yourEmail;
+                $mail->remitente = $email;
+                $mail->asunto = $titulo;
+                $mail->mensaje = $mensaje_html;
+                $mail->mensaje_sin_html = $texto;
+                $mail->estado = '0';
+                $mail->fecha_hora = Carbon::now();
+                $mail->save();
+
+                foreach ($archivos_temporales as $archivo_temp) {
+                    $archivo_pdf = new EmailBandejaEnviosArchivos;
+                    $archivo_pdf->id_bandeja_envios = $mail->id;
+                    $archivo_pdf->archivo = $archivo_temp;
+                    $archivo_pdf->fecha_hora = $date;
+                    $archivo_pdf->save();
+                }
+
+                $this->limpiarArchivosViejos(2880);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Se enviaron ' . count($nota_venta_ids) . ' nota(s) de venta exitosamente a: ' . $email
+                ]);
+            }
+
+            // Si falla el envío, limpiar archivos
+            foreach ($archivos_temporales as $archivo_temp) {
+                Storage::disk('mailbox')->delete($archivo_temp);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al enviar el correo. Verifica tu configuración.'
+            ], 500);
+
+        } catch (\Exception $e) {
+            if (isset($archivos_temporales) && !empty($archivos_temporales)) {
+                foreach ($archivos_temporales as $archivo_temp) {
+                    Storage::disk('mailbox')->delete($archivo_temp);
+                }
+            }
+            return response()->json([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    private function limpiarArchivosViejos($minutos = 2880)
+    {
+        try {
+            $disk = Storage::disk('mailbox');
+            $archivos = $disk->allFiles();
+
+            foreach ($archivos as $file) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}/', $file)) {
+                    $lastModified = $disk->lastModified($file);
+                    $tiempoTranscurrido = now()->timestamp - $lastModified;
+
+                    if ($tiempoTranscurrido > ($minutos * 60)) {
+                        $disk->delete($file);
+                    }
+                }
+            }
+
+        } catch (\Exception $e) {
+        }
+    }
+}
+            /*foreach($nota_venta_reg as $nota_venta_regs){
+                $total += $nota_venta_regs->precio_nacional * $nota_venta_regs->cantidad;
+             }
+
+            // condicional soles
+            if($moneda->id == "1"){ //Si es soles retorno soles
+                if($notaV->moneda->id == "1"){ //soles
+                    $subtotal = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;
+                    $totales +=  $subtotal + ($notaV->op_gravada * ($igv->igv_total/100));
+                }else{  //dolares
+                    $subtotal_sin = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;
+                    $subtotal = $subtotal_sin * $notaV->cambio;
+                    $subtotal_dol = $notaV->op_gravada * $notaV->cambio;
+                    $totales +=  $subtotal + ($subtotal_dol * ($igv->igv_total/100));
+                }
+                // $total = "1";
+                // return $total;
+            }else{ // Si no retorno Dolares
+
+                if($notaV->moneda->id == "1"){ //dolares
+                    $subtotal_sin = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;
+                    $subtotal = $subtotal_sin / $notaV->cambio;
+                    $subtotal_dol = $notaV->op_gravada / $notaV->cambio;
+                    $totales +=  $subtotal + ($notaV->op_gravada / ($igv->igv_total/100));
+                }else{  //soels
+                    $subtotal = $notaV->op_gravada + $notaV->op_inafecta + $notaV->op_exonerada;
+                    $totales +=  $subtotal + ($notaV->op_gravada * ($igv->igv_total/100));
+                }
+                // $total = "2";
+            }
+        }*/

@@ -1,0 +1,1009 @@
+.toast {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    min-width: 280px;
+    max-width: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background-color: #28a745;
+}
+
+.toast.error {
+    background-color: #dc3545;
+}
+
+.toast.warning {
+    background-color: #ffc107;
+    color: #212529; /* texto oscuro para contraste */
+}
+
+/* Ícono */
+.toast-icon {
+    font-size: 20px;
+}
+
+/* Botón cerrar */
+.toast-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+}
+
+/*
+   BASE NECESARIA
+*/
+* {
+    box-sizing: border-box;
+}
+
+/*
+   LAYOUT Y GRID
+*/
+.container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 20px 10px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -10px;
+}
+
+.col-3 { flex: 0 0 25%; padding: 10px; }
+.col-4 { flex: 0 0 33.333333%; padding: 10px; }
+.col-5 { flex: 0 0 41.666667%; padding: 10px; }
+.col-6 { flex: 0 0 50%; padding: 2px 12px; }
+.col-8 { flex: 0 0 66.666667%; padding: 10px; }
+.col-12 { flex: 0 0 100%; padding: 10px; }
+
+/*
+   CARTAS DE TOTAL INGRESO Y EGRESO
+*/
+.summary-card {
+    border: 2px solid;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.summary-card.success {
+    border-color: #333;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.summary-card.danger {
+    border-color: #333;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/*
+   FORMULARIOS
+*/
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 16px 24px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #0077b6;
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+}
+
+.form-control[readonly] {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+.form-control-lg {
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+.form-select {
+  /* Igualamos padding y font-size a .form-control */
+  padding: 16px 24px;
+  font-size: 14px;
+  /* Forzamos la misma altura: 16px arriba + 16px abajo + 14px de texto + 2px de borde */
+  height: 1000px;
+  /* Asegura que el contenido (texto + flecha) quede centrado */
+  line-height: 14px;
+  /* Conserva tu flecha SVG a la derecha */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M10.293 3.293 6 7.586 1.707 3.293A1 1 0 0 0 .293 4.707l5 5a1 1 0 0 0 1.414 0l5-5a1 1 0 1 0-1.414-1.414z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 24px center;
+  background-size: 12px;
+  box-sizing: border-box;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.input-group {
+    display: flex;
+    align-items: stretch;
+}
+
+.input-group .form-control {
+    border-radius: 0;
+    border-right: none;
+}
+
+.input-group .form-control:first-child {
+    border-radius: 6px 0 0 6px;
+}
+
+.input-group .form-control:last-child {
+    border-radius: 0 6px 6px 0;
+    border-right: 1px solid #ddd;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px 12px;
+    border-radius: 6px 0 0 6px;
+    font-size: 14px;
+    color: #666;
+}
+
+/*
+   BOTONES
+*/
+
+#cajaCerrada{
+    display: flex;
+}
+
+#botones-cajaAbierta{
+    display: flex;
+}
+
+.btn-filtar{
+    background-color: #1A43B3;
+    color: white;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.btn-agregar {
+    background-color: #1A43B3;
+    color: white;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.btn-abrirCaja {
+    background-color: #1A43B3;
+    color: white;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.btn-cerrarCaja {
+    background-color: #EC4858;
+    color: white;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+.btn-cerrarCaja:hover { background-color: #c82333; }
+
+.btn-agregar-personal{
+    background-color: #0077b6;
+    color: white;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.btn-pagar-personal{
+    background-color: #1A43B3;
+    color: white;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.btn-ver{
+    background-color: #1A43B3;
+    color: white;
+    display: inline-block;
+    padding: 7px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+.btn-pdf {
+    background-color: #FF4837;
+    color: white;
+    display: inline-block;
+    padding: 7px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+}
+
+.btn-ver-comprobante:hover {
+    background-color: #F3F3F1;
+}
+
+
+/*BOTONES DE LOS MODAL*/
+
+.btn-secondary { background-color: #6c757d; color: white; }
+.btn-secondary:hover { background-color: #545b62; }
+
+.btn-outline-dark {
+    background-color: transparent;
+    color: #333;
+    border: 1px solid #333;
+}
+.btn-outline-dark:hover { background-color: #333; color: white; }
+
+.btn-outline-secondary {
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+.btn-outline-secondary:hover { background-color: #6c757d; color: white; }
+
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-lg { padding: 12px 24px; font-size: 16px; }
+
+/*
+    TABLA - FIX CENTRADO VERTICAL
+*/
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.table th,
+.table td {
+    padding: 12px 15px !important;
+    text-align: center !important;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle !important;
+    height: 50px !important;
+    line-height: 1.4 !important;
+    font-size: 13px;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/*
+   BADGES
+*/
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.badge.bg-warning { background-color: #ffc107; color: #333; }
+.badge.bg-info { background-color: #17a2b8; color: white; }
+
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-close:hover { color: #333; }
+.btn-close::before { content: "×"; font-size: 24px; line-height: 1; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.px-4 { padding: 0 1.5rem; }
+.px-5 { padding: 0 3rem; }
+.gap-2 { gap: 0.5rem; }
+
+.d-flex { display: flex; }
+.justify-content-end { justify-content: flex-end; }
+.justify-content-center { justify-content: center; }
+.align-items-end { align-items: flex-end; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-fill { flex: 1; }
+
+.text-center { text-align: center; }
+.text-start { text-align: left; }
+.fw-bold { font-weight: bold; }
+.text-muted { color: #6c757d; }
+.small { font-size: 0.875rem; }
+
+
+/*
+   PAGINACION
+*/
+
+.dataTables_wrapper .dataTables_length select {
+    height: 38px !important;
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    border: 1px solid #ddd !important;
+    border-radius: 6px !important;
+    background-color: white !important;
+    min-width: 80px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    display: flex;
+    justify-content: center;
+}
+
+.input-group-text.middle {
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #666;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-left: none;
+    border-right: none;
+}
+
+.input-group .form-control:first-child {
+    border-radius: 6px 0 0 6px;
+    border-right: none;
+}
+
+.input-group .form-control:last-child {
+    border-radius: 0 6px 6px 0;
+    border-left: none;
+    border-right: 1px solid #ddd;
+}
+
+/* === Estilos para el select equivalente a “.form-control form-control-lg form-select” === */
+.col-6 .form-group select {
+  /* Ancho completo como .form-control */
+  width: 100%;
+  /* Padding igual a .form-control-lg: */
+  padding: 12px 15px;
+  /* Borde y radio iguales a los inputs grandes */
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  /* Misma tipografía que los inputs */
+  font-size: 16px;
+  line-height: 1.5;
+  /* Espacio extra a la derecha para el ícono de flecha */
+  padding-right: 40px;
+  /* Desactivar estilo nativo en navegadores modernos */
+  appearance: none;
+  /* Transición suave de borde/sombra al enfocar */
+  transition: border-color 0.3s, box-shadow 0.3s;
+  /* Fondo blanco */
+  background-color: #fff;
+  /* Icono “flecha” tipo SVG (mismo que .form-select original) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M10.293 3.293 6 7.586 1.707 3.293A1 1 0 0 0 .293 4.707l5 5a1 1 0 0 0 1.414 0l5-5a1 1 0 1 0-1.414-1.414z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  /* Cursor de flecha en todo el select */
+  cursor: pointer;
+}
+
+/* Cuando el select está en foco (equivalente a .form-control:focus) */
+.col-6 .form-group select:focus {
+  outline: none;
+  border-color: #0077b6;
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+}
+
+/* Estado inválido: imita .is-invalid */
+.col-6 .form-group select.is-invalid {
+  border-color: #dc3545;
+}
+
+/* Mostrar mensaje de error (invalid-feedback) justo después del select */
+.col-6 .form-group select.is-invalid + .invalid-feedback {
+  display: block;
+}
+
+
+/* ===== .dropdown-container ===== */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* ===== .dropdown-menu (mini‐dropdown) ===== */
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  min-width: 160px;
+  z-index: 1000;
+  padding: 8px 0;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* =========================
+   A. ESTILOS PARA EL MODAL
+   ========================= */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+}
+
+/* Cuando .show se agrega desde JS, mostramos el modal */
+.modal.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tamaño y contenedor interno */
+.modal-dialog {
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  margin: 0 auto;
+}
+
+/* Contenido del modal (la “ventana” blanca) */
+.modal-content {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  width: 100%;
+}
+
+/* -------------------------
+   A.1 Cabecera del modal
+   ------------------------- */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #dee2e6;
+}
+.modal-header .modal-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+.modal-header .icon-pago {
+  display: inline-block;
+  margin-right: 8px;
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%23333' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M17 9V2H7v7H2l10 13 10-13h-5z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* Botón de cerrar (X) */
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 24px; height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-close:hover {
+  color: #333;
+}
+.btn-close::before {
+  content: "×";
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* -------------------------
+   A.2 Cuerpo del modal
+   ------------------------- */
+.modal-body-payment {
+  padding: 24px;
+  background-color: #f8f9fa;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Cada fila de formulario */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Cada grupo (label + campo) */
+.form-group {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiquetas */
+.form-label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #333;
+}
+
+/* Inputs de solo lectura (gris suave) */
+.form-control-readonly {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #495057;
+}
+
+.input-nombres, .input-dni  {
+  background-color: #FFFFFC;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #495057;
+}
+
+/* Inputs editables estándar */
+.form-control,
+textarea.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.form-control:focus,
+textarea.form-control:focus {
+  outline: none;
+  border-color: #1A43B3;
+  box-shadow: 0 0 0 3px rgba(0,119,182,0.1);
+}
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Input de tipo “file” */
+.form-control-file {
+  font-size: 14px;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 6px 10px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* ------------------------------------------------------
+   A.2.1 Nombres + Ícono filtro + DNI (grupo especial)
+   ------------------------------------------------------ */
+.nombres-group .input-with-icon {
+  display: flex;
+  align-items: stretch;
+}
+.nombres-group .input-with-icon .form-control {
+  border-radius: 0;
+  border-right: none;
+}
+.nombres-group .input-with-icon .form-control:first-child {
+  border-radius: 6px 0 0 6px;
+}
+.nombres-group .input-with-icon .form-control:last-child {
+  border-radius: 0 6px 6px 0;
+  border-left: none;
+  border-right: 1px solid #ddd;
+}
+
+/* Botón de filtro “pequeño” */
+.btn-filter {
+  background-color: hsl(0, 0%, 100%);
+  border: 1px solid #ced4da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  cursor: pointer;
+}
+.btn-filter .icon-filter {
+  display: inline-block;
+  width: 16px; height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%23666' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 .8 1.6l-6 7.2V19a1 1 0 0 1-2 0v-6.2L3.2 4.6A1 1 0 0 1 3 4z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* ------------------------------------------------------
+   A.2.2 Monto (etiqueta y campo con “S/”)
+   ------------------------------------------------------ */
+.monto-group .input-group {
+  display: flex;
+  align-items: stretch;
+}
+.monto-input-group .input-group-text {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #495057;
+  border-radius: 6px 0 0 6px;
+}
+.monto-input-group .form-control-readonly {
+  border-radius: 0 6px 6px 0;
+  border-left: none;
+}
+
+/* =========================
+   B. MÉTODOS DE PAGO
+   ========================= */
+/* Ocultar el input radio real */
+.btn-check {
+  display: none;
+}
+
+/* Cada etiqueta que actúa como botón */
+.btn-method {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 8px 16px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  user-select: none;
+}
+
+.btn-method:hover {
+  background-color: #333;
+  color: #fff;
+}
+.btn-check:checked + .btn-method {
+  background-color: #333;
+  color: #fff;
+}
+
+.btn-group-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-method {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-check:checked + .btn-method {
+    color: white;
+}
+
+.metodo-yape:hover,
+.btn-check:checked + .metodo-yape {
+    background-color: #1A43B3; /* morado */
+}
+
+.metodo-plin:hover,
+.btn-check:checked + .metodo-plin {
+    background-color: #1A43B3; /* celeste */
+}
+
+.metodo-transferencia:hover,
+.btn-check:checked + .metodo-transferencia {
+    background-color: #1A43B3; /* azul */
+}
+
+.metodo-efectivo:hover,
+.btn-check:checked + .metodo-efectivo {
+    background-color: #1A43B3   ; /* verde */
+}
+
+/* =========================
+   C. FOOTER DEL MODAL
+   ========================= */
+.modal-footer-payment {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0px;
+  padding: 0px 24px;
+}
+.btn-cancel{
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display:flex;
+  transform: translateX(15px);
+}
+.btn-confirm {
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display:flex;
+  transform: translateX(26px);
+}
+.btn-cancel {
+  background-color: #6c757d;
+  color: #fff;
+}
+.btn-confirm {
+  background-color: #1A43B3;
+  color: #fff;
+}
+
+/* =========================
+   D. UTILIDADES
+   ========================= */
+.w-100 {
+  width: 100%;
+}
+/* Ajustes de responsivo, si deseas */
+@media (max-width: 576px) {
+  .form-row {
+    flex-direction: column;
+  }
+  .nombres-group .input-with-icon {
+    flex-direction: column;
+  }
+  .nombres-group .input-with-icon .btn-filter {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+}
+/* Modal selector */
+#modalSelectColaborador .modal-dialog-md {
+  max-width: 600px;
+}
+#modalSelectColaborador .modal-body-payment {
+  padding: 24px;
+  background-color: #f8f9fa;
+}
+#modalSelectColaborador table tbody tr {
+  cursor: pointer;
+}
+#modalSelectColaborador table tbody tr:hover {
+  background-color: #e9ecef;
+}
+
+/* 1) Menos espacio entre botones */
+.btn-group-methods {
+  display: flex;
+  gap: 4px;         /* antes 8px, ahora 4px */
+  flex-wrap: nowrap; /* forzamos a una sola línea */
+}
+
+/* 2) Botones más compactos */
+.method-wrapper {
+  flex: 0 1 auto;    /* sólo tan ancho como necesite el contenido */
+}
+
+.btn-method {
+  padding: 6px 12px; /* antes 8px 16px, ahora 6px 12px */
+  font-size: 13px;   /* ligeramente más pequeño */
+  white-space: nowrap;
+}
+
+/* 3) Opcional: reducir el radio de las esquinas */
+.btn-method {
+  border-radius: 4px; /* antes 6px */
+}
+
+/* inputs y selects comparten altura */
+.form-control,
+.form-select {
+  width: 100%;
+  padding: 6px 12px;     /* + padding vertical */
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  /* opcional: fijas una altura mínima si no quieres que baje más */
+  min-height: 3rem;
+  line-height: 1.2;        /* centra el texto verticalmente */
+}
+
+.form-row {
+  margin-bottom: 8px; /* antes 16px */
+  gap: 12px;          /* antes 16px */
+}

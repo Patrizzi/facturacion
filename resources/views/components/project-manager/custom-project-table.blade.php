@@ -1,0 +1,1 @@
+<x-data-table :collection="$collection" :headers-and-methods="$h_m" />

@@ -1,0 +1,152 @@
+<div class="modal fade bd-example-modal-lg" id="modal_detalle_pago" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Detalle Pago de la cuota</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="header-cuota-detalle">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group" style="margin-bottom: 0px">
+                                    <label for=""><strong>Tipo de Pago</strong></label>
+                                    <span class="input-group-prepend">
+                                        <button class="btn btn-primary btn-block" readonly="true">Pago
+                                            con <span id="detalle_tipo_pago"></span></button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group" style="margin-bottom: 0px">
+                                    <label for=""><strong>Moneda y Monto Total de la
+                                            Cuota</strong></label>
+                                    <p class="form-control" id="monto_total_cuota" style="margin-bottom: 0px"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group" style="margin-bottom: 0px">
+                                    <label for=""><strong>Estado de la Cuota</strong></label>
+                                    <p class="form-control" id="estado_cuota" style="margin-bottom: 0px"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs" role="tablist" style="justify-content: space-around">
+                            <li style="width: 50%"><a class="nav-link active text-center" data-toggle="tab"
+                                    href="#tab-detalles">Detalle del Pago</a></li>
+                            <li style="width: 50%"><a class="nav-link text-center" data-toggle="tab"
+                                    href="#tab-otros">Otros Detalles <span id="count_otros"></span></a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" id="tab-detalles" class="tab-pane active">
+                                <div class="panel-body">
+                                    <div id="body-header-detalle">
+                                        <div id="detalle_pago_cheque" style="display: none">
+                                            <div>
+                                                @include('cobranzas._shared.modal_detalle.cheque')
+                                            </div>
+                                        </div>
+
+                                        <div id="detalle_pago_tarjeta" style="display: none">
+                                            <div>
+                                                @include('cobranzas._shared.modal_detalle.tarjeta')
+                                            </div>
+                                        </div>
+
+                                        <div id="detalle_pago_efectivo" style="display: none">
+                                            <div>
+                                                @include('cobranzas._shared.modal_detalle.efectivo')
+                                            </div>
+                                        </div>
+
+                                        <div id="detale_pago_transferencia" style="display: none">
+                                            <div>
+                                                @include('cobranzas._shared.modal_detalle.transferencia')
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" id="tab-otros" class="tab-pane">
+                                <div class="panel-body">
+                                    <div id="otros-nulos" class="text-center">
+                                        <h3 class="text-center">Sin otros detalles</h3>
+                                    </div>
+                                    <div class="detalle-otros-pago" style="display: none">
+                                        <p>Se pagaron junto a otros comprobantes</p>
+                                        <hr>
+                                        <div id="otros-comprobantes-registros">
+
+                                        </div>
+                                        <div id="otros-comprobantes-footer">
+                                            <div class="row">
+                                                <div class="col-sm  -8">
+                                                    <h4 class="text-right">Total Pagado:</h4>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <div class="input-group  input-group-sm" id="tot_simbolo">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="simbolor_label"
+                                                                style="justify-content: center">S/</span>
+                                                        </div>
+                                                        <label class="form-control form-control" id="otros_tota_totas"
+                                                            aria-describedby="inputGroup-sizing-sm">0.00</label>
+                                                        <input class="form-control form-control-sm" type="hidden"
+                                                            id="otros_tota_totas2">
+                                                        <input class="form-control form-control-sm" type="hidden"
+                                                            id="gran_total_input">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal" id="modal_comprobante_view" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 850px !important">
+        <div class="modal-content">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Comprobante</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{-- Ver comprobante del pago --}}
+                    <div id="comprobante_pago_view_pdf">
+                        <iframe id="iframePdf" src="" width="100%" height="100%"
+                            style="border: none;min-height: 690px !important;"></iframe>
+                    </div>
+                    <div id="comprobante_pago_view_imagen" style="display: none">
+                        <img id="comprobante_image_viewer" alt="" style="max-width: 100% !important;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

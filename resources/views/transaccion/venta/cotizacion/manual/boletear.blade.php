@@ -1,0 +1,588 @@
+@extends('layout')
+@section('title', 'Cotizacion Manual Boletear')
+@section('breadcrumb', 'Cotizacion Manual Boletear')
+@section('breadcrumb2', 'Cotizacion Manual Boletear')
+@section('href_accion', back())
+@section('value_accion', 'Inicio')
+
+{{-- @section('button2', 'Nueva Cotización') --}}
+{{-- @section('config', route('cotizacion_manual.create')) --}}
+
+@section('content')
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <form action="{{route('cotizacion_manual.boletear_store')}}"  enctype="multipart/form-data" method="post" onsubmit="return valida(this)">
+    @csrf
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
+                    <div class="row">
+                        @include('layout_cabecera_ventas')
+                        <div class="col-sm-4 ">
+                            <div class="form-control ruc" style="height: 125px">
+                                <center>
+                                    <h3 style="padding-top:10px ">R.U.C {{$empresa->ruc}}</h3>
+                                    <h2>BOLETA ELECTRÓNICA</h2>
+                                    <input type="text" value="{{$cotizacion->id}}" name="id_cotizador" hidden="hidden">
+                                    <p>{{$boleta_numero}}</p>
+                                    {{-- <input type="text" value="{{$cotizacion->comisionista_id}}" name="id_comisionista" hidden="hidden"> --}}
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-6" align="left">
+                            <div class="form-control">
+                                <div align="left">
+                                    <div class="row">
+                                        <div class="col-sm-2"><strong>Cliente:</strong></div>
+                                        <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->nombre}}" readonly></div>
+                                        <br>
+                                        <div class="col-sm-2"><strong>R.U.C:</strong></div>
+                                        <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->numero_documento}}" readonly></div>
+                                        <br>
+                                        <div class="col-sm-2"><strong>Dirección:</strong></div>
+                                        <div class="col-sm-10"><input type="text" class="form-control" name="" value="  {{$cotizacion->cliente->direccion}}" readonly></div>
+                                        <br>
+                                        <div class="col-sm-2"><strong>Condiciones de Pago:</strong></div>
+                                        <div class="col-sm-3" id="colum-col">
+                                            <select class="form-control" name="forma_pago"  id ="forma_pago" onchange="seleccionado_fp()">
+                                                <option value="{{$cotizacion->forma_pago->id}}">{{$cotizacion->forma_pago->nombre}}</option>
+                                                <option disabled>--------------------</option>
+                                                @foreach($forma_pagos as $forma_pago)
+                                                    <option value="{{$forma_pago->id}}">{{$forma_pago->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2" id="credito_pago" style="display: none;">
+                                            <button  type="button" class='cuota_modal btn btn-info' id="cuota_modal"  data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <strong>Tipo de Moneda:</strong>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control" value="{{$cotizacion->moneda->nombre}}" name="" readonly>
+                                            <input type="text" name="tipo_moneda" value="{{$cotizacion->moneda->id }}" hidden="hidden">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" align="center">
+                            <div class="form-control">
+                                <div align="left">
+                                    <div class="row">
+                                        <div class="col-sm-2"><strong>Orden de Compra:</strong></div>
+                                        <div class="col-sm-10"><input type="text" class="form-control" value="0" name="orden_compra"></div>
+                                        <br>
+                                        <div class="col-sm-2"><strong>Guía de Remisión:</strong></div>
+                                        <div class="col-sm-10"><input type="text" class="form-control" value="0" name="guia_remision" ></div>
+                                        <br>
+                                        <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
+                                        <div class="col-sm-10"><input type="date" class="form-control" value="{{date("Y-m-d")}}"  readonly="readonly" name=fecha_emision></div>
+
+                                        <div class="col-sm-2" id="ven_1p" style="visibility: initial;">
+                                            <strong>Fecha de Vencimiento:</strong>
+                                        </div>
+                                        <div  class="col-sm-10"  id="ven_3p" style="visibility: initial;">
+                                            <input type="date" name="fecha_vencimiento" id="fecha_vencimiento" class="form-control" value="{{date("Y-m-d")}}">
+                                        </div>
+                                        <br>
+                                        <br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-sm-12 " style="height:  120px">
+                            <div class="form-control">
+                                <strong>Observaciones:</strong><br>
+                                <textarea class="form-control" name="observacion">{{$cotizacion->observacion}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%">Código de Item</th>
+                                    <th style="width:10%">Cantidad</th>
+                                    <th>Descripción</th>
+                                    <th style="width:10%;text-align: right">Valor Unitario</th>
+                                    <th style="width: 10%;text-align: right">Valor Venta </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($cotizacion_registros as $index => $cotizacion_registro)
+                                    <tr>
+                                        @if(isset($cotizacion_registro->producto_id))
+                                            <td>{{$cotizacion_registro->producto->codigo_producto}}</td>
+                                            <td>{{$cotizacion_registro->cantidad}}</td>
+                                            <td>
+                                                {{$cotizacion_registro->producto->nombre}}
+                                                {{-- <span style="font-size: 10px">{{$cotizacion_registro->producto->descripcion}}</span>  --}}
+                                                <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
+                                                <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° Serie">
+                                            </td>
+                                        @else
+                                            <td>{{$cotizacion_registro->servicio->codigo_servicio}}</td>
+                                            <td>{{$cotizacion_registro->cantidad}}</td>
+                                            <td>
+                                                {{$cotizacion_registro->servicio->nombre}}
+                                                {{-- <span style="font-size: 10px">{{$cotizacion_registro->producto->descripcion}}</span>  --}}
+                                                <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2" cols="2">{{$cotizacion_registro->descripcion_item}}</textarea>
+                                                <input type="text" class="form-control col-sm-4" name="numero_serie[{{$index}}]" placeholder="N° Serie">
+                                            </td>
+                                        @endif
+                                        <td style="text-align: right">{{round($cotizacion_registro->precio,8)}}</td>
+                                        <td style="text-align: right">{{round($cotizacion_registro->precio * $cotizacion_registro->cantidad,8)}}</td>
+                                    </tr>
+                                    <td style="display: none">
+                                        {{$sub_total=($cotizacion->op_gravada)+($cotizacion->op_exonerada)+($cotizacion->op_inafecta)}}
+                                        {{$igv_p=$cotizacion->op_gravada * ($igv->igv_total/100) }}
+                                        {{$end= $sub_total + $igv_p}}
+                                        {{$end2=number_format(round($sub_total + $igv_p, 2),2)}}
+                                    </td>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div align="left">
+                                <h3 >
+                                    <?php $v=new CifrasEnLetras() ;
+                                    $letra=($v->convertirEurosEnLetras($end));
+                                    $letra_final = ucfirst(strstr($letra, 'soles',true));
+                                    $end_final_point=strstr($end2, '.',false);
+                                    $end_final=str_replace('.', '',$end_final_point);
+                                    ?>
+                                    Son: {{$letra_final}} con {{$end_final}}/100 {{$cotizacion->moneda->nombre}}
+                                    <!-- {{-- {{$end2}} --}} -->
+                                </h3>
+                            </div>
+                        </div>
+                        <!-- {{-- <div class=""> --}} -->
+                        <div class="col-sm-4 form-control" >
+                            <span style="display: block;float: left"> Subtotal:</span>
+                            <span style="display: block;float: right;"> {{$simbologia = $cotizacion->moneda->simbolo}} {{number_format(round($sub_total, 2),2)}}</span><br>
+                            <input type="text" hidden="" name="sub_total_sin_igv" value="{{number_format(round($sub_total, 2),2)}}" >
+                            <span style="display: block;float: left"> Op. Agravada: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format(round($cotizacion->op_gravada,2),2)}}</span><br>
+                            <span style="display: block;float: left"> Op. Inafecta: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{ number_format(round($cotizacion->op_inafecta,2),2)}}</span><br>
+                            <span style="display: block;float: left"> Op. Exonerada: </span>
+                            <span style="display: block;float: right">{{$simbologia}} {{number_format(round($cotizacion->op_exonerada,2),2)}}</span><br>
+                            <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv">
+                            <span style="display: block;float: left"> I.G.V.: </span>
+                            <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
+                            <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv">
+                            <span style="display: block;float: left"> Importe Total: </span>
+                            <span style="display: block;float: right">{{$cotizacion->moneda->simbolo}} {{number_format(round($end),2)}}</span>
+                            <input type="text" value="{{round($end,2)}}" hidden="hidden" name="precio_final_igv" id="total">
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-8">
+
+                        </div>
+                        <div class="col-sm-4" align="center">
+                            <button class="btn btn-primary " style="margin-top: 5px" type="button"  id="boton"><i class="fa fa-cloud-upload" aria-hidden="true" >Guardar</i></button>&nbsp;
+                            <button type="submit" hidden id="button_submit">Save BD</button>
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        @include('layout_bancos')
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger alert-dismissible fade show" role="alert"   id="alert_campos" style="display: none">
+            <strong style="font-size:11px">Rellenar todos los campos</strong>
+            <button type="button" class="close_model_rc close" onclick="cerrar_but_rc()" style="padding: 6;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert"  id="suma_campos" style="display: none" >
+            <strong style="font-size:11px">La suma de las cuotas exceden el monto total</strong>
+            <button type="button" class="close_model_mt close" onclick="cerrar_but_mt()" style="padding: 6;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="row_number">
+              <div class="pago_modal row">
+                  <div class="col-sm-1"><label>Fecha:</label></div>
+                  <div class="col-sm-4">
+                      <input type="date" name="fecha_pago[]" id="fecha_pago0"  class="fecha_pago form-control" min="{{$fecha_1}}" >
+                  </div>
+                  <div class="col-sm-1"><label>Monto:</label></div>
+                  <div class="col-sm-4">
+                      <div class="input-group mb-3" style="padding-right:15px">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon3">{{$cotizacion->moneda->simbolo}}</span>
+                        </div>
+                        <input type="text" name="monto_pago[]" id="monto_pago0" class="monto_pago form-control" onkeypress="return filterFloat(event,this);"  >
+                      </div>
+                  </div>
+                  <div class="col-sm-2">
+                      <label ><button type="button"  aria-hidden="true" id="add_pago" class="add_pago btn btn-success"><i class="fa fa-plus-square-o fa-lg" > </i></button></label>
+              </div>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="display: block">
+            <div class="row">
+                <div class="col-sm-6" style="">
+                    <label for=""><strong>Precio Total: &nbsp;</strong>{{$cotizacion->moneda->simbolo}}&nbsp;</label><label id="cuotas_footer"></label>
+                </div>
+                <div class="col-sm-6" align="right">
+                    <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+    </form>
+</div>
+
+
+<style type="text/css">
+    .ruc{border-radius: 10px; height: 150px;}
+    .form-control{border-radius: 10px;margin-bottom: 1em;}
+</style>
+
+<!-- Mainly scripts -->
+<script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.js') }}"></script>
+<script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
+<script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
+
+<script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
+<script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
+<!-- Custom and plugin javascript -->
+<script src="{{ asset('js/inspinia.js') }}"></script>
+<script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+ {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+  <script type="text/javascript">
+    $(document).ready(function() {
+        if({{$cotizacion->forma_pago_id}} == 1){
+            document.getElementById('credito_pago').style.display = "none";
+            document.getElementById('colum-col').className = "col-sm-5";
+            document.getElementById('ven_1p').style.visibility = "initial";
+            document.getElementById('ven_3p').style.visibility = "initial";
+            document.getElementById('fecha_vencimiento').removeAttribute('disabled');
+
+        }else{
+            document.getElementById('credito_pago').style.display = "block";
+            document.getElementById('ven_1p').style.visibility = "hidden";
+            document.getElementById('ven_3p').style.visibility = "hidden";
+            document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
+        }
+
+    });
+</script>
+<script>
+    function valida(f) {
+        var boton=document.getElementById("boton");
+        var completo = true;
+        var incompleto = false;
+        if( f.elements[0].value == "" )
+           { alert(incompleto); }
+       else{boton.type = 'button';}
+   }
+</script>
+{{-- FIN Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
+<script type="text/javascript">
+    function most_tot(){
+       var monto_0 = document.getElementById("monto_pago0").value;
+        if(monto_0.length == 0){
+            var total_final = document.getElementById('total').value;
+            document.getElementById("monto_pago0").value = total_final;
+        }
+    }
+</script>
+{{-- <script type="text/javascript">
+    $(document).ready(function() {
+    // show the alert
+    setTimeout(function() {
+        $(".alert").alert('close');
+    }, 2000);
+});
+</script> --}}
+<script>
+    // funcion dinamica de actualizar el total a cuotas
+    function actualizarSaldoRestante() {
+        var total = parseFloat(document.getElementById('total').value) || 0;
+        var sumaMontos = 0;
+
+        // Sumar todos los montos ingresados
+        $('.monto_pago').each(function() {
+            var valor = parseFloat($(this).val()) || 0;
+            sumaMontos += valor;
+        });
+
+        var saldoRestante = total - sumaMontos;
+        var multiplier = 100;
+        saldoRestante = Math.round(saldoRestante * multiplier) / multiplier;
+
+        if (saldoRestante > 0) {
+            $('#cuotas_footer').html(saldoRestante).css('color', 'red');
+            $('#cuotas_footer').parent().find('strong').html('Total Restante: &nbsp;');
+        } else if (saldoRestante === 0) {
+            $('#cuotas_footer').html('0.00').css('color', 'green');
+            $('#cuotas_footer').parent().find('strong').html('¡Completo! &nbsp;');
+        } else {
+            $('#cuotas_footer').html(Math.abs(saldoRestante)).css('color', 'orange');
+            $('#cuotas_footer').parent().find('strong').html('Exceso: &nbsp;');
+        }
+    }
+
+        var total = document.getElementById('total').value;
+        var x = 1;
+        $(".add_pago").on('click', function () {
+        var total = document.getElementById('total').value;
+        var data = `
+        <div class="delete_modal${x} row">
+        <div class="col-sm-1"><label>Fecha:</label></div>
+        <div class="col-sm-4">
+            <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control" min="{{$fecha_1}}" >
+        </div>
+        <div class="col-sm-1"><label>Monto:</label></div>
+        <div class="col-sm-4">
+            <div class="input-group mb-3" style="padding-right:15px">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">{{$cotizacion->moneda->simbolo}}</span>
+              </div>
+              <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"   onkeypress="return filterFloat(event,this);" >
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <label ><button type="button"  class="xd btn btn-danger" onclick="eliminar(${x})"><i class="fa fa-trash-o fa-lg" > </i></button></label>
+        </div>
+        </div>`;
+        $('.row_number').append(data);
+
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+
+       // document.getElementById(`monto_pago${x}`).value = (total/inp_mont);
+
+        x++;
+        if(inp_mont>6){
+            $('.add_pago').attr('disabled');
+        }
+        var multiplier2 = 100;
+        var monto_c = document.getElementsByClassName('monto_pago');
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        for (var i = 0; i < inp_mont; i++) {
+            var monto = monto_c[i].id;
+            var fin = (total/inp_mont)
+                document.getElementById("monto_pago0").value = '';
+                // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
+        }
+        var inp_mont = document.getElementsByClassName('monto_pago').length;
+        if(inp_mont>5){
+            document.getElementById('add_pago').setAttribute('disabled', "true");
+        }else{
+            document.getElementById('add_pago').removeAttribute('disabled');
+        }
+        actualizarSaldoRestante();
+        });
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
+        });
+    </script>
+    <script type="text/javascript">
+        // $(".delete_pago").on('click', function () {
+        function eliminar(x){
+            $(`.delete_modal${x}`).remove();
+            var monto_c = document.getElementsByClassName('monto_pago');
+            var inp_mont = document.getElementsByClassName('monto_pago').length;
+            var multiplier2 = 100;
+
+            for (var i = 0; i < inp_mont; i++) {
+                var monto = monto_c[i].id;
+                var total = document.getElementById('total').value;
+                var fin = (total/inp_mont)
+                document.getElementById("monto_pago0").value = '' ;
+                // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
+            }
+            if(inp_mont>5){
+                document.getElementById('add_pago').setAttribute('disabled', "true");
+            }else if(inp_mont == 1){
+                document.getElementById("monto_pago0").value = total;
+            }else{
+                document.getElementById('add_pago').removeAttribute('disabled');
+            }
+            actualizarSaldoRestante();
+        };
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
+        });
+    </script>
+    <script>
+        $("#boton").on(" click",function(buton){
+            var forma_pago = $("#forma_pago option:selected").val();
+            if(forma_pago == 2){
+                var monto_c = document.getElementsByClassName('monto_pago');
+                var monto_fc = document.getElementsByClassName('fecha_pago');
+                var inp_mont = document.getElementsByClassName('monto_pago').length;
+                // var total =  $("#cuotas_footer").html();
+                var total = parseFloat(document.getElementById('total').value) || 0;
+                var fin = 0.00;
+                var comp = 0;
+                for (var i = 0; i < inp_mont; i++) {
+                    fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+                }
+                var fin_r = Math.round(fin * 100) / 100;
+                // console.log(total);
+                for (var i = 0; i < inp_mont; i++) {
+                    var fecha = monto_fc[i].id;
+                    var monto = monto_c[i].id;
+
+                    var input_text = document.getElementById(`${monto}`).value;
+                    var date_text = document.getElementById(`${fecha}`).value;
+                    if( input_text.length  == 0 || date_text.length  == 0){
+                        $('#cuotas_modal').modal('show');
+                        document.getElementById('alert_campos').style.display = "flex";
+                        setTimeout(mostrarMensaje, 3000);
+                        return;
+                    }
+                }
+                if(fin_r != total){
+                    $('#cuotas_modal').modal('show');
+                    document.getElementById('suma_campos').style.display = "flex";
+                    setTimeout(mostrarMensaje, 3000);
+                }else{
+                    document.getElementById('button_submit').click();
+                }
+            }else{
+                document.getElementById('button_submit').click();
+            }
+        });
+
+    </script>
+    <script >
+        function cerrar_but_rc(){
+            document.getElementById('alert_campos').style.display = "none";
+        }
+        function cerrar_but_mt(){
+            document.getElementById('suma_campos').style.display = "none";
+        }
+    </script>
+    <script type="text/javascript">
+        function seleccionado_fp(){
+            var opt = $('#forma_pago').val();
+                if(opt=="1"){
+                    // $('#consulta_p_input').prop('disabled', false);
+
+                    document.getElementById('credito_pago').style.display = "none";
+                    document.getElementById('colum-col').className = "col-sm-5";
+                    document.getElementById('ven_1p').style.visibility = "initial";
+                    document.getElementById('ven_3p').style.visibility = "initial";
+                    document.getElementById('fecha_vencimiento').removeAttribute('disabled');
+                }else{
+                    document.getElementById('credito_pago').style.display = "block";
+                    document.getElementById('colum-col').className = "col-sm-3";
+                    document.getElementById('ven_1p').style.visibility = "hidden";
+                    document.getElementById('ven_3p').style.visibility = "hidden";
+                    document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
+                }
+        }
+    </script>
+    <script type="text/javascript">
+       $(document).ready(function() {
+            var total = document.getElementById('total').value;
+            document.getElementById("monto_pago0").value = total
+            $("#cuotas_footer").html(total);
+        });
+        $(document).on('click','#button_cuotas_save', function(event){
+            var monto_c = document.getElementsByClassName('monto_pago');
+            var monto_fc = document.getElementsByClassName('fecha_pago');
+            console.log(monto_c)
+            var inp_mont = document.getElementsByClassName('monto_pago').length;
+            // var total =  $("#cuotas_footer").html();
+            var total = parseFloat(document.getElementById('total').value) || 0;
+            var fin = 0.00;
+            for (var i = 0; i < inp_mont; i++) {
+                fin = parseFloat(fin) + parseFloat(monto_c[i].value);
+            }
+            var fin_r = Math.round(fin * 100) / 100;
+            for (var i = 0; i < inp_mont; i++) {
+                var fecha = monto_fc[i].id;
+                var monto = monto_c[i].id;
+
+                var input_text = document.getElementById(`${monto}`).value;
+                var date_text = document.getElementById(`${fecha}`).value;
+                if( input_text.length  == 0 || date_text.length  == 0){
+                    console.log("a");
+                    document.getElementById('alert_campos').style.display = "flex";
+                    setTimeout(mostrarMensaje,3000);
+                    return;
+                }
+            }
+            if(fin_r != total){
+                document.getElementById('suma_campos').style.display = "flex";
+            }else{
+                console.log('e')
+                $('#cuotas_modal').modal('hide')
+            }
+            setTimeout(mostrarMensaje,3000);
+        });
+
+        function mostrarMensaje(){
+            // $("#alert_campos").show(200);
+            $("#alert_campos").hide(3000);
+            $("#suma_campos").hide(3000);
+        }
+        function filterFloat(evt,input){
+            var key = window.Event ? evt.which : evt.keyCode;
+            var chark = String.fromCharCode(key);
+            var tempValue = input.value+chark;
+
+            if(key >= 48 && key <= 57){
+                if(filter(tempValue)=== false){
+                    return false;
+                }else{
+                    return true;
+                }
+            }else{
+                if(key == 8 || key == 13 || key == 0) {
+                    return true;
+                }else if(key == 46){
+                    if(filter(tempValue)=== false){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }else{
+                    return false;
+                }
+            }
+        }
+        function filter(__val__){
+            var preg = /^([0-9]+\.?[0-9]{0,2})$/;
+            if(preg.test(__val__) === true){
+                return true;
+            }else{
+            return false;
+            }
+        }
+    </script>
+@endsection
