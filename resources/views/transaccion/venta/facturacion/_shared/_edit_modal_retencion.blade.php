@@ -33,7 +33,7 @@
                                     <div class="input-group m-b">
                                         <div class="input-group-prepend">
                                             <span class="input-group-addon"
-                                                id="simbolo_retencion">{{ $moneda->simbolo }}</span>
+                                                id="simbolo_retencion">{{ $facturacion->moneda->simbolo }}</span>
                                         </div>
                                         <input type="text" class="form-control ipt_ret" name="total_retencion"
                                             id="tota_reten" placeholder="0.00" readonly>
