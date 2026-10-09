@@ -240,6 +240,15 @@ class Config_fe extends Model
                 );
             }
 
+            if($factura->retencion == true){
+                $invoice->setDescuentos([
+                    (new Charge())
+                        ->setCodTipo('62')
+                        ->setMontoBase($total)
+                        ->setFactor($factura->porcentaje_retencion / 100)
+                        ->setMonto(round($factura->monto_retencion,2))
+                ]);
+            }
 
             $formatter = new NumeroALetras();
             $valor = $formatter->toInvoice($total, 2, $factura->moneda->nombre);
@@ -307,6 +316,15 @@ class Config_fe extends Model
                 }
             }
 
+            if($factura->retencion == true){
+                $invoice->setDescuentos([
+                    (new Charge())
+                        ->setCodTipo('62')
+                        ->setMontoBase($total)
+                        ->setFactor($factura->porcentaje_retencion / 100)
+                        ->setMonto(round($factura->monto_retencion,2))
+                ]);
+            }
             $formatter = new NumeroALetras();
             $valor = $formatter->toInvoice($total, 2, $factura->moneda->nombre);
 

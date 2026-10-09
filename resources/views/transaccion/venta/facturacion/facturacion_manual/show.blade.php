@@ -299,8 +299,15 @@
                             </div>
                         </div>
                         <br>
+                        @php 
+                            if($detraccion != "not" && $facturacion->retencion == true){
+                                $columna_add = "1";
+                            }else{
+                                $columna_add = "0";
+                            }
+                        @endphp
                         <div class="row">
-                            @if ($detraccion == 'not')
+                            @if ($columna_add == "1")
                                 <div class="col-sm-12 form-control" style="height:  100px">
                                     <strong>Observaciones:</strong><br>
                                     {{ $facturacion->observacion }}
@@ -308,22 +315,40 @@
                             @else
                                 <div class="col-sm-6 ">
                                     <div class="form-control" style="height: 100% !important">
-                                        <strong>Informacion de Detraccion:</strong><br>
-                                        <strong>Tipo de Detraccion:</strong>
-                                        {{ $detraccion->tipo_detraccion->descripcion }} -
-                                        {{ $detraccion->porcentaje_detraccion }} %<br>
-                                        <strong>Medio de Pago:</strong>
-                                        {{ $detraccion->medio_pago->descripcion }} <br>
-                                        <strong>Monto de Detraccion:</strong>
-                                        S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6 ">
-                                    <div class="form-control" style="height: 100% !important">
                                         <strong>Observaciones:</strong><br>
                                         {{ $facturacion->observacion }}
                                     </div>
                                 </div>
+                                @if($detraccion != "not")
+                                    <div class="col-sm-6 ">
+                                        <div class="form-control" style="height: 100% !important">
+                                            <strong>Informacion de Detraccion:</strong><br>
+                                            <strong>Tipo de Detraccion:</strong>
+                                            {{ $detraccion->tipo_detraccion->descripcion }} -
+                                            {{ $detraccion->porcentaje_detraccion }} %<br>
+                                            <strong>Medio de Pago:</strong>
+                                            {{ $detraccion->medio_pago->descripcion }} <br>
+                                            <strong>Monto de Detraccion:</strong>
+                                            S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
+                                        </div>
+                                    </div>
+                                @else
+                                    @php
+                                        // Calculo de retencióñ
+                                        $total_fact = $facturacion->total_precio_sin_forma; 
+                                    @endphp
+                                    <div class="col-sm-6 ">
+                                        <div class="form-control" style="height: 100% !important">
+                                            <strong>Informacion de Retención:</strong><br>
+                                            <strong>Importe Total Facturado:</strong>
+                                            {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
+                                            <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion}} %):</strong>
+                                            {{ $simbologia }} {{ number_format(round($facturacion->monto_retencion,2),2)}} <br>
+                                            <strong>Monto Neto a Pagar:</strong>
+                                            {{ $simbologia }}  {{ number_format(round($facturacion->monto_retencion_pagar,2),2)}} <br>
+                                        </div>
+                                    </div>
+                                @endif
                             @endif
                         </div>
                         <br>
@@ -505,7 +530,7 @@
             vertical-align: top;
         }
 
-        .detracc_campo_required {
+        .detracc_campo_required, .retenc_campo_required {
             display: none;
             /* font-size: 9px; */
             color: red;
@@ -646,6 +671,8 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 
     <script type="text/javascript">
         function mostrarPassword() {

@@ -90,8 +90,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-4"><strong>G. Remisión: </strong>
-                                            <small class="tooltip-demo"><i class="fa fa-info-circle" data-toggle="tooltip"
+                                        <label class="col-form-label col-md-4" style="vertical-align: middle;display: flex;"><strong>G. Remi.: </strong>
+                                            <small class="tooltip-demo" style="margin: auto;"><i class="fa fa-info-circle" data-toggle="tooltip"
                                                     data-placement="bottom"
                                                     title="Ej: TE01-999  *  Mayusculas y separar solo con espacios en blanco"></i></small></label>
                                         <div class="col-md-8">
@@ -112,20 +112,38 @@
                                         value="{{ auth()->user()->name }}">
                                 </div>
                             </div>
-                            <!-- Detracción -->
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label"><strong>Detracción:</strong></label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" id="detraccion" name="detraccion_value" disabled>
-                                        <option value="0">Desactiva</option>
-                                        <option value="1">Activa</option>
-                                    </select>
+                            <div class="row" id="detraccion_retencion">
+                                <div class="col-md-6" id="detraccion_retencion">
+                                    <!-- Detracción -->
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Detracción:</strong></label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" id="detraccion" name="detraccion_value" disabled>
+                                                <option value="0">Desactivo</option>
+                                                <option value="1">Activo</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2" style="display: flex">
+                                            <a href="" id="button_detracc" data-toggle="modal"
+                                                data-target="#modal_detraccion" style="margin: auto"><i
+                                                    class="fa fa-question-circle"
+                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm-2" style="display: flex">
-                                    <a href="" id="button_detracc" data-toggle="modal"
-                                        data-target="#modal_detraccion" style="margin: auto"><i
-                                            class="fa fa-question-circle"
-                                            style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                <div class="col-md-6" id="modulo_retencion" style="display: none">
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"><strong>Retencion:</strong></label>
+                                        <div class="col-sm-6" style="text-align: center">
+                                            <input type="checkbox" name="check_retencion" id="retencion_check" class="js-switch">
+                                        </div>
+                                        <div class="col-sm-2" style="display: flex">
+                                            <a href="" id="button_retencion" data-toggle="modal"
+                                                data-target="#modal_retencion" style="margin: auto"><i
+                                                    class="fa fa-question-circle"
+                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -133,7 +151,7 @@
                         <div class="col-md-6">
                             <!-- Tipo de Operación -->
                             <div class="form-group row">
-                                <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
+                                <label class="col-form-label col-md-2"><strong>T. Op.</strong></label>
                                 <div class="col-md-10">
                                     <select class="select2_tipo_op" name="tipo_operacion">
                                         @foreach ($tipo_operacion as $t_op)
@@ -159,7 +177,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-4"><strong>Forma Pago:</strong></label>
+                                        <label class="col-form-label col-md-4"><strong>F. Pago:</strong></label>
                                         <div class="col-md-6 pago_first_column">
                                             <select class="form-control" name="forma_pago" id="forma_pago"
                                                 onchange="seleccionado_fp()" required>
@@ -451,101 +469,9 @@
                     </div>
                     <!-- Modal de Cuotas -->
                     <!-- Modal DETRACCIONES DENTRO DEL FORM, EN EL CONTROLLER CONDICIONAL PARA TOMAR O NO DETRACCION-->
-                    <div class="modal fade" id="modal_detraccion" role="dialog"
-                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">Configuración de
-                                        Detracciones</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="detraccion_valores">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <h3 class="text-center text-bold">Por indicaciones de Sunat la
-                                                    detracción se envía en Soles.</h3>
-                                                <div class="row">
-                                                    <div class="col-sm-8">
-                                                        <label for=""><strong>Tipo de
-                                                                Detracción</strong></label>
-                                                        <select class="select2_tipodetrac ipt_detrac"
-                                                            name="tipo_detraccion" id="select_tipo_pago">
-                                                            <option value="">Seleccionar Tipo</option>
-                                                            @foreach ($detraccion as $detra)
-                                                                <option value="{{ $detra->id }}">
-                                                                    {{ $detra->codigo }} -
-                                                                    {{ $detra->descripcion }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <div class="detracc_campo_required">
-                                                            <small>Selecciona un campo</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <label for=""><strong>Porcentaje de
-                                                                Detracción</strong></label>
-                                                        <input type="text" class="form-control ipt_detrac"
-                                                            name="porcentaje_detraccion" id="porcentaje_detc">
-                                                        <div class="detracc_campo_required">
-                                                            <small>Rellena este campo</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <hr style="margin-top: 5px; margin-bottom: 5px">
-                                                <div class="row">
-                                                    <div class="col-sm-8">
-                                                        <label for=""><strong>Medio de
-                                                                Pago</strong></label>
-                                                        <select class="select2_mediopago ipt_detrac"
-                                                            name="medio_pago_detraccion" id="">
-                                                            <option value="">Seleccionar medio de Pago
-                                                            </option>
-                                                            @foreach ($medio_pago as $m_pago)
-                                                                <option value="{{ $m_pago->id }}">
-                                                                    {{ $m_pago->codigo }} -
-                                                                    {{ $m_pago->descripcion }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        <div class="detracc_campo_required">
-                                                            <small>Selecciona un campo</small>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <label for=""><strong>Total de
-                                                                Detracción</strong></label>
-                                                        <div class="input-group m-b">
-                                                            <div class="input-group-prepend">
-                                                                <span class="input-group-addon">S/.</span>
-                                                            </div>
-                                                            <input type="text" class="form-control ipt_detrac"
-                                                                name="total_detraccion" id="tota_detra"
-                                                                placeholder="0.00" readonly>
-                                                        </div>
-
-                                                        <div class="detracc_campo_required">
-                                                            <small>Rellena este campo</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {{-- <div class="col-sm-6">
-
-                                                </div> --}}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                    <button type="button" class="btn btn-primary"
-                                        onclick="save_detraccion()">Verificar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @include('transaccion.venta.facturacion._shared.modal_detraccion')
+                    {{-- Modal de Retencion --}}
+                    @include('transaccion.venta.facturacion._shared.modal_retencion')
                 </form>
             </div>
         </div>
@@ -680,7 +606,7 @@
             vertical-align: top;
         }
 
-        .detracc_campo_required {
+        .detracc_campo_required, .retenc_campo_required {
             display: none;
             /* font-size: 9px; */
             color: red;
@@ -736,11 +662,12 @@
             placeholder: "Seleccionar Almacen",
         });
 
-        // var elem_2 = document.querySelector('.js-switch');
-        // var switchery_2 = new Switchery(elem_2, {
-        //     color: '#ED5565'
-        // });
-        // switchery_2.disable();
+        var elem_2 = document.querySelector('.js-switch');
+        window.switchery_2 = new Switchery(elem_2, {
+            size: 'small', 
+            color: '#ED5565'
+        });
+        switchery_2.disable();
 
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
@@ -835,6 +762,16 @@
                 $('#detraccion').attr('disabled', false);
             }
         });
+        function multi_retencion(){
+            var ret_porc = $('#porcentaje_ret').val();
+            var total = $('#total_final').val();
+            var op_ret = total * (parseInt(ret_porc) / 100);
+            var sub_zero = Math.round(op_ret * 100) / 100;
+            $('#tota_reten').val(sub_zero);
+        }
+        $('#porcentaje_ret').on('keyup', function() {
+            multi_retencion();
+        });
     </script>
 
 
@@ -866,7 +803,8 @@
                             return {
                                 id: item.id,
                                 text: item.nombre + ' | ' + item.numero_documento,
-                                tipo_pago: item.tipo_pago_id
+                                tipo_pago: item.tipo_pago_id,
+                                retencion: item.retencion
                             };
                         })
                     };
@@ -887,6 +825,21 @@
 
             // Si el tipo de pago es desde cliente cambiar
             $('#forma_pago').find('option[value="'+data.tipo_pago+'"]').attr("selected",true);
+            // Retencion
+            // console.log(data);
+            if(data.retencion != ""){
+                $('#modulo_retencion').css('display', 'block');
+                $('#porcentaje_ret').val(data.retencion.porcentaje)
+                window.switchery_2.enable(); 
+            }else{
+                $('#modulo_retencion').css('display', 'none');
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable(); 
+            }
+
             seleccionado_fp();
 
             $.ajax({
@@ -1227,6 +1180,8 @@
             if(parseFloat(end2) > 700){
                 console.log('mayor a 700');
                 $('#detraccion').attr('disabled', false);
+                window.switchery_2.enable();
+                
                 $('#button_detracc').attr('data-target', '#modal_detraccion');
             }else{
                 var select_det = $('.select2_tipo_op').val();
@@ -1237,6 +1192,10 @@
                     $('#detraccion').attr('disabled', true);
                     $('#button_detracc').attr('data-target', '#modal_detraccion');
                 }
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable();
             }
 
             var monto_c = document.getElementsByClassName('monto_pago');
@@ -1252,6 +1211,7 @@
             $("#cuotas_footer").html(end2);
             resetModalCuotas()
             multi_detraccion();
+            multi_retencion();
         }
         $(document).on('click', '#button_cuotas_save', function(event) {
 
@@ -1665,6 +1625,7 @@
                     $(`#moneda_id`).val(msg.id);
                     $(`#moneda`).val(msg.nombre);
                     $(`#subtotal-simbolo`).val(msg.simbolo);
+                    $(`#simbolo_retencion`).html(msg.simbolo);
                     $(`#button_changeMoney`).html(msg.other);
 
                     resetModalCuotas()
@@ -1851,12 +1812,18 @@
                     // input.setAttribute('required', 'required');
                 });
                 $('.select2_tipo_op').val('12').trigger('change.select2');
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable(); 
             } else {
                 var inputs = document.querySelectorAll('.ipt_detrac');
                 inputs.forEach(function(input) {
                     // input.removeAttribute('required');
                 });
                 $('.select2_tipo_op').val('1').trigger('change.select2');
+                window.switchery_2.enable(); 
             }
         });
 

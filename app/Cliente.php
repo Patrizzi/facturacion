@@ -95,4 +95,8 @@ class Cliente extends Model
                 break;
         }
     }
+
+    public function retencion(){
+        return $this->hasOne(ClienteRetenedores::class, 'cliente_id', 'id');
+    }
 }

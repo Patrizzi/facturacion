@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-4"><strong>G. Remisión: </strong>
+                                    <label class="col-form-label col-md-4"><strong>G. Remi: </strong>
                                         <small class="tooltip-demo"><i class="fa fa-info-circle" data-toggle="tooltip"
                                                 data-placement="bottom"
                                                 title="Ej: TE01-999  *  Mayusculas y separar solo con espacios en blanco"></i></small></label>
@@ -87,20 +87,38 @@
                             </div>
                         </div>
                         <!-- Detracción -->
-                        <div class="form-group row" style="justify-content: start !important">
-                            <label class="col-form-label col-md-2"> <strong>Detracción:</strong> </label>
-                            <div class="col-sm-8">
-                                <select class="form-control" id="detraccion" name="detraccion_value" @if($facturacion->detracciones == null) disabled @endif>
-                                    <option value="0" @if($facturacion->detracciones == null) selected @endif>Desactiva</option>
-                                    <option value="1" @if($facturacion->detracciones != null) selected @endif>Activa</option>
-                                </select>
+                        <div class="row" style="justify-content: flex-start !important;">
+                            <div class="col-md-6">
+                                <div class="form-group row" >
+                                    <label class="col-form-label col-md-4"> <strong>Detracción:</strong> </label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="detraccion" name="detraccion_value">
+                                            <option value="0" @if($facturacion->detracciones == null) selected @endif>Desactiva</option>
+                                            <option value="1" @if($facturacion->detracciones != null) selected @endif>Activa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2" style="display: flex">
+                                        <a href="" id="button_detracc" data-toggle="modal"
+                                            @if ( $facturacion->detracciones != null ) data-target="#modal_detraccion"  @else data-target="#" @endif style="margin: auto"><i
+                                                class="fa fa-question-circle"
+                                                style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-2" style="display: flex">
-                                <a href="" id="button_detracc" data-toggle="modal"
-                                    @if ( $facturacion->detracciones != null) data-target="#modal_detraccion"  @else data-target="#" @endif style="margin: auto"><i
-                                        class="fa fa-question-circle"
-                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
-                                </a>
+                            <div class="col-sm-6" id="modulo_retencion" @if($facturacion->cliente->retencion != true) style="display: none" @endif >
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Retención:</strong></label>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" name="check_retencion" id="retencion_check" class="js-switch" @if($facturacion->retencion == true) checked @endif>
+                                    </div>
+                                    <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
+                                        <a href="" id="button_retencion" data-toggle="modal"
+                                            data-target="#modal_retencion" style="margin: auto"><i
+                                                class="fa fa-question-circle"
+                                                style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -366,7 +384,7 @@
                                 <td colspan="5" class="text-right align-middle" ><strong>Subtotal :</strong></td>
                                 <td colspan="2">
                                     <input id='sub_total_view' type="number" name="" readonly
-                                        class="form-control inp" required value="{{ number_format(round($facturacion->sub_total_precio_sin_forma, 2), 2) }}" />
+                                        class="form-control inp" required value="{{ round($facturacion->sub_total_precio_sin_forma, 2) }}" />
                                     <input type="hidden" name="sub_total_sin_igv" id="sub_total" value="{{ $facturacion->sub_total_precio_sin_forma }}">
                                     <input id='subtotal_gravado' type="hidden" name="subtotal_gravado" readonly
                                         class="form-control inp" required  value="{{ $facturacion->op_gravada }}"/>
@@ -376,7 +394,7 @@
                                 <td colspan="5" class="text-right align-middle"><strong>IGV :</strong></td>
                                 <td colspan="2">
                                     <input id='igv_view' type="number" disabled="disabled"
-                                        class="form-control inp" required value="{{number_format(round($facturacion->igv_sin_forma,2),2)}}" />
+                                        class="form-control inp" required value="{{round($facturacion->igv_sin_forma,2)}}" />
                                     <input type="hidden"  name="igv" id="igv" value="{{$facturacion->igv_sin_forma}}">
                                 </td>
                             </tr>
@@ -384,7 +402,7 @@
                                 <td colspan="5" class="text-right align-middle"><strong>Total :</strong></td>
                                 <td colspan="2">
                                     <input id='total_final_view' type="number" name=""
-                                        readonly="readonly" class="form-control inp" required value="{{number_format(round($facturacion->total_precio_sin_forma,2),2)}}" />
+                                        readonly="readonly" class="form-control inp" required value="{{round($facturacion->total_precio_sin_forma,2)}}" />
                                     <input type="hidden" name="costo_total" id="total_final" value="{{$facturacion->total_precio_sin_forma}}">    
                                 </td>
                             </tr>
@@ -410,6 +428,8 @@
                 @include('transaccion.venta.facturacion._shared.modal_cuota_edit')
                 {{-- Modal dentro del Form para que se envien los datos de DETRACCION --}}
                 @include('transaccion.venta.facturacion._shared._edit_modal_detraccion')
+                {{-- retencion --}}
+                @include('transaccion.venta.facturacion._shared._edit_modal_retencion')
             </form>
         </div>
     </div>

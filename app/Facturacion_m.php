@@ -643,4 +643,22 @@ class Facturacion_m extends Model
                 // 'updated_at' => now(),
             ]);
     }
+
+    public function getMontoRetencionAttribute(){
+        $total = $this->total_precio_sin_forma;
+        $porcentaje = $this->porcentaje_retencion;
+
+        $total_retencion = $total * ($porcentaje / 100);
+        return $total_retencion;
+    }
+
+    public function getMontoRetencionPagarAttribute(){
+        $total = $this->total_precio_sin_forma;
+        $porcentaje = $this->porcentaje_retencion;
+
+        $total_retencion = $total * ($porcentaje / 100);
+
+        $pagar_retencion = $total - $total_retencion;
+        return $pagar_retencion;
+    }
 }
