@@ -55,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
         kardex_entrada_registro::observe(KardexEntradaRegistroObserver::class);
         \App\Facturacion_registro::observe(\App\Observers\FacturacionRegistroObserver::class);
         \App\Boleta_registro::observe(\App\Observers\BoletaRegistroObserver::class);
+        \App\NotaVentaRegistro::observe(\App\Observers\NotaVentaRegistroObserver::class);
         // TipoCambio::observe(new TipoCambioObserver());
         View::composer('layout', function ($view) {
             $tipoCambio = TipoCambio::where('fecha', Carbon::now()->format('Y-m-d'))->first();

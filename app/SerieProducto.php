@@ -49,4 +49,19 @@ class SerieProducto extends Model
             ->orderBy('fecha_vencimiento', 'desc')
             ->orderBy('id', 'desc');
     }
+
+    public function facturacionRegistro()
+    {
+        return $this->hasOne(Facturacion_registro::class, 'serie_id');
+    }
+
+    public function boletaRegistro()
+    {
+        return $this->hasOne(Boleta_registro::class, 'serie_id');
+    }
+
+    public function notaVentaRegistro()
+    {
+        return $this->hasOne(NotaVentaRegistro::class, 'serie_id');
+    }
 }

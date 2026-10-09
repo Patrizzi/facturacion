@@ -93,32 +93,50 @@ class BoletaRegistroObserver
                     }
                 }
 
-                // 2. Actualizar estado de las series asociadas a "Vendido"
+                // 2. Actualizar estado de las series asociadas a "Vendido" y persistir Garantía
                 $estadoVendido = EstadoProducto::where('nombre_estado', 'Vendido')->first();
                 $estadoVendidoId = $estadoVendido ? $estadoVendido->id : null;
                 $now = Carbon::now();
 
+                $serie = null;
                 if (!empty($registro->serie_id)) {
                     $serie = SerieProducto::where('id', $registro->serie_id)
                         ->lockForUpdate()
                         ->first();
-
-                    if ($serie) {
-                        $serie->estado_id = $estadoVendidoId;
-                        $serie->fecha_ultimo_movimiento = $now;
-                        $serie->save();
-                    }
                 } elseif (!empty($registro->numero_serie)) {
                     $serie = SerieProducto::where('numero_serie', $registro->numero_serie)
                         ->where('producto_id', $registro->producto_id)
                         ->lockForUpdate()
                         ->first();
+                }
 
-                    if ($serie) {
-                        $serie->estado_id = $estadoVendidoId;
-                        $serie->fecha_ultimo_movimiento = $now;
-                        $serie->save();
+                if ($serie) {
+                    $serie->estado_id = $estadoVendidoId;
+                    $serie->fecha_ultimo_movimiento = $now;
+                    $serie->save();
+
+                    // Persistencia transaccional de la garantía de la serie
+                    $producto = $registro->producto;
+                    $mesesGarantia = (int) (optional($producto)->garantia ?? optional($producto)->garantia_meses ?? 12);
+                    if ($mesesGarantia <= 0) {
+                        $mesesGarantia = 12;
                     }
+
+                    $boleta = $registro->boleta_i;
+                    $fechaVenta = $boleta && $boleta->fecha_emision
+                        ? Carbon::parse($boleta->fecha_emision)->toDateString()
+                        : ($registro->created_at ? Carbon::parse($registro->created_at)->toDateString() : Carbon::today()->toDateString());
+                    $fechaVencimiento = Carbon::parse($fechaVenta)->addMonths($mesesGarantia)->toDateString();
+
+                    \App\GarantiaSerie::updateOrCreate(
+                        ['serie_id' => $serie->id],
+                        [
+                            'estado_garantia'   => 'Vigente',
+                            'fecha_venta'       => $fechaVenta,
+                            'fecha_vencimiento' => $fechaVencimiento,
+                            'duracion_meses'    => $mesesGarantia,
+                        ]
+                    );
                 }
             });
         } catch (Throwable $e) {
