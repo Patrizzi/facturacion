@@ -530,7 +530,7 @@
             vertical-align: top;
         }
 
-        .detracc_campo_required {
+        .detracc_campo_required, .retenc_campo_required {
             display: none;
             /* font-size: 9px; */
             color: red;
@@ -671,6 +671,8 @@
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
 
     <script type="text/javascript">
         function mostrarPassword() {
