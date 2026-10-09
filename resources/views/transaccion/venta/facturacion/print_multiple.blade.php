@@ -7,7 +7,7 @@
     {{-- <title>Facturas/Print Multiple</title> --}}
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style%20copy.css') }}" rel="stylesheet">
 
     <style>
         html,
@@ -157,6 +157,9 @@
         }
         .lol{
             font-size: 75% !important;
+        }
+        .form-control {
+            /* font-size: 100%; */
         }
     </style>
 </head>
@@ -350,7 +353,7 @@
                             </div>
                         @else
                             @php
-                                // Calculo de retencióñ
+                                // Calculo de retención
                                 $total_fact = $factura->total_precio_sin_forma; 
                             @endphp
                             <div class="col-sm-6 ">

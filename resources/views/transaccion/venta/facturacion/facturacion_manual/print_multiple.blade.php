@@ -7,7 +7,7 @@
     {{-- <title>Facturas Manuales/Print Multiple</title> --}}
 
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style%20copy.css') }}" rel="stylesheet">
 
     <style>
         html,
@@ -17,8 +17,8 @@
         }
 
         body {
-            font-size: 9px;
-            line-height: 1.25;
+            /* font-size: 9px;
+            line-height: 1.25; */
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
             margin: 0 !important;
@@ -84,20 +84,25 @@
         }
 
         @media print {
-            @page {
+            /* @page {
                 size: auto;
                 margin: 0;
+            } */
+
+             body {
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
-            body {
-                padding: 12mm 10mm !important;
+            .avoid-break {
+                page-break-inside: avoid;
             }
 
             .page-break {
                 page-break-before: always;
             }
 
-            .wrapper,
+            /* .wrapper,
             .white-bg,
             .ibox,
             .ibox-content,
@@ -121,7 +126,7 @@
 
             * {
                 outline: 0 !important;
-            }
+            } */
         }
 
         .qr-container {
@@ -152,6 +157,9 @@
             font-size: 12px;
             color: #999;
             text-align: center;
+        }
+        .lol{
+            font-size: 75% !important;
         }
     </style>
 </head>
@@ -186,7 +194,7 @@
                         <div class="form-control ruc" style="height:125px">
                             <center>
                                 <h3 style="padding-top:10px">R.U.C : {{$empresa->ruc}}</h3>
-                                <h2>FACTURA ELECTRÓNICA</h2>
+                                <h2 style="font-size:19px">FACTURA ELECTRÓNICA</h2>
                                 <h5>{{$factura->codigo_fac}}</h5>
                             </center>
                         </div>
@@ -281,44 +289,75 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 form-control">
-                        <span style="display:block; float:left">Sub Total:</span>
-                        <span style="display:block; float:right">{{$simbologia=$factura->moneda->simbolo}} {{number_format($sub_total,2)}}</span>
-                        <br>
-                        <span style="display:block; float:left">Op. Gravada:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_gravada,2),2)}}</span><br>
-                        <span style="display:block; float:left">Op. Inafecta:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_inafecta,2),2)}}</span><br>
-                        <span style="display:block; float:left">Op. Exonerada:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_exonerada,2),2)}}</span><br>
-                        <span style="display:block; float:left">I.G.V.:</span>
-                        <span style="display:block; float:right">{{$factura->moneda->simbolo}} {{number_format(round($igv_p,2),2)}}</span><br>
-                        <span style="display:block; float:left">Importe Total:</span>
-                        <span style="display:block; float:right">{{$factura->moneda->simbolo}} {{number_format(round($end,2),2)}}</span>
+                    <div class="col-sm-4">
+                        <div class="form-control">
+                            <span style="display:block; float:left">Sub Total:</span>
+                            <span style="display:block; float:right">{{$simbologia=$factura->moneda->simbolo}} {{number_format($sub_total,2)}}</span>
+                            <br>
+                            <span style="display:block; float:left">Op. Gravada:</span>
+                            <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_gravada,2),2)}}</span><br>
+                            <span style="display:block; float:left">Op. Inafecta:</span>
+                            <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_inafecta,2),2)}}</span><br>
+                            <span style="display:block; float:left">Op. Exonerada:</span>
+                            <span style="display:block; float:right">{{$simbologia}} {{number_format(round($factura->op_exonerada,2),2)}}</span><br>
+                            <span style="display:block; float:left">I.G.V.:</span>
+                            <span style="display:block; float:right">{{$factura->moneda->simbolo}} {{number_format(round($igv_p,2),2)}}</span><br>
+                            <span style="display:block; float:left">Importe Total:</span>
+                            <span style="display:block; float:right">{{$factura->moneda->simbolo}} {{number_format(round($end,2),2)}}</span><br>
+                        </div>
                     </div>
                 </div>
                 <br>
+                @php 
+                    if($detraccion != "not" || $factura->retencion == 1){
+                        $columna_add = "1";
+                    }else{
+                        $columna_add = "0";
+                    }
+                @endphp
                 <div class="row">
-                    @if ($detraccion == 'not')
-                    <div class="col-sm-12 form-control" style="height:120px">
-                        <strong>Observaciones:</strong><br>
-                        {{$factura->observacion}}
-                    </div>
-                    @else
-                    <div class="col-sm-6">
-                        <div class="form-control" style="height:100px !important">
-                            <strong>Información de Detracción:</strong><br>
-                            <strong>Tipo de Detracción:</strong> {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
-                            <strong>Medio de Pago:</strong> {{$detraccion->medio_pago->descripcion}} <br>
-                            <strong>Monto de Detracción:</strong> S/. {{number_format($detraccion->monto_detraccion, 2)}} <br>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-control" style="height:100px !important">
+                    @if ($columna_add == "0")
+                        <div class="col-sm-12 form-control" style="height:  100px">
                             <strong>Observaciones:</strong><br>
-                            {{$factura->observacion}}
+                            <span>{{ $factura->observacion }}</span>
                         </div>
-                    </div>
+                    @else
+                        <div class="col-sm-6 ">
+                            <div class="form-control" style="height: 100% !important">
+                                <strong>Observaciones:</strong><br>
+                                <span>{{ $factura->observacion }}</span>
+                            </div>
+                        </div>
+                        @if($detraccion != "not")
+                            <div class="col-sm-6 ">
+                                <div class="form-control" style="height: 100% !important">
+                                    <strong>Informacion de Detraccion:</strong><br>
+                                    <strong>Tipo de Detraccion:</strong>
+                                    {{ $detraccion->tipo_detraccion->descripcion }} -
+                                    {{ $detraccion->porcentaje_detraccion }} %<br>
+                                    <strong>Medio de Pago:</strong>
+                                    {{ $detraccion->medio_pago->descripcion }} <br>
+                                    <strong>Monto de Detraccion:</strong>
+                                    S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
+                                </div>
+                            </div>
+                        @else
+                            @php
+                                // Calculo de retención
+                                $total_fact = $factura->total_precio_sin_forma; 
+                            @endphp
+                            <div class="col-sm-6 ">
+                                <div class="form-control" style="height: 100% !important">
+                                    <strong>Informacion de Retención:</strong><br>
+                                    <strong>Importe Total facturado:</strong>
+                                    <span>{{ $simbologia }} {{ number_format(round($end, 2), 2) }}</span><br>
+                                    <strong>Monto Retenido ({{ $factura->porcentaje_retencion}} %):</strong>
+                                    <span>{{ $simbologia }} {{ $factura->monto_retencion}} </span><br>
+                                    <strong>Monto Neto a Pagar:</strong>
+                                    <span>{{ $simbologia }}  {{ $factura->monto_retencion_pagar}} </span><br>
+                                </div>
+                            </div>
+                        @endif
                     @endif
                 </div>
                 <br>
