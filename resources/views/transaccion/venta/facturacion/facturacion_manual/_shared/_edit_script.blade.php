@@ -43,6 +43,14 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     }
+
+    var elem_2 = document.querySelector('.js-switch');
+    window.switchery_2 = new Switchery(elem_2, {
+        size: 'small', 
+        color: '#ED5565'
+    });
+    multi_retencion();
+
     // Clientes
     $(".select2_demo_client").select2({
         theme: "bootstrap",
@@ -58,7 +66,8 @@
                 return {
                     _token: "{{ csrf_token() }}",
                     search: params.term, // search term
-                    tipo_coti: tipo_coti
+                    tipo_coti: tipo_coti,
+                    retencion: item.retencion
                 };
             },
             processResults: function(data) {
@@ -84,6 +93,18 @@
             s.children[0].remove()
         }
         var data = e.params.data;
+         if(data.retencion != ""){
+            $('#modulo_retencion').css('display', 'block');
+            $('#porcentaje_ret').val(data.retencion.porcentaje)
+            window.switchery_2.enable(); 
+        }else{
+            $('#modulo_retencion').css('display', 'none');
+            var retencion_check = document.querySelector('.js-switch');
+            if( retencion_check.checked == true){
+                window.switchery_2.element.click();
+            }
+            window.switchery_2.disable(); 
+        }
         $.ajax({
             type: "post",
             url: "{{ route('facturacion_manual.ajx_remision') }}",
@@ -112,6 +133,17 @@
             cache: true
         });
     });
+    function multi_retencion(){
+        var ret_porc = $('#porcentaje_ret').val();
+        var total = $('#total_final').val();
+        var op_ret = total * (parseInt(ret_porc) / 100);
+        var sub_zero = Math.round(op_ret * 100) / 100;
+        $('#tota_reten').val(sub_zero);
+    }
+    $('#porcentaje_ret').on('keyup', function() {
+        multi_retencion();
+    });
+
     // Tipo Operacion
     $('.select2_tipo_op').select2();
     // Almacen
@@ -686,6 +718,7 @@
         if (parseFloat(end2) > 700) {
             console.log('mayor a 700');
             $('#detraccion').attr('disabled', false);
+            window.switchery_2.enable();
             $('#button_detracc').attr('data-target', '#modal_detraccion');
         } else {
             var select_det = $('.select2_tipo_op').val();
@@ -695,6 +728,11 @@
             } else {
                 $('#detraccion').attr('disabled', true);
                 $('#button_detracc').attr('data-target', '#modal_detraccion');
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable();
             }
             var det_op = $('#detraccion').val();
             if(det_op == 1){
@@ -732,6 +770,7 @@
         $("#cuotas_footer").html(end2);
         resetModalCuotas()
         multi_detraccion();
+        multi_retencion();
     }
 
     // MODAL BUSQUEDA DE PRODUCTO
@@ -1061,12 +1100,18 @@
                 // input.setAttribute('required', 'required');
             });
             $('.select2_tipo_op').val('12').trigger('change.select2');
+            var retencion_check = document.querySelector('.js-switch');
+            if( retencion_check.checked == true){
+                window.switchery_2.element.click();
+            }
+            window.switchery_2.disable(); 
         } else {
             var inputs = document.querySelectorAll('.ipt_detrac');
             inputs.forEach(function(input) {
                 // input.removeAttribute('required');
             });
             $('.select2_tipo_op').val('1').trigger('change.select2');
+            window.switchery_2.enable(); 
         }
     });
 

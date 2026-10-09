@@ -613,6 +613,7 @@
             // document.getElementById(`${monto}`).value = end2;
         }
         multi_detraccion();
+        multi_retencion();
         resetModalCuotas()
         $(document).on('input', '.monto_pago', function() {
             actualizarSaldoRestante();

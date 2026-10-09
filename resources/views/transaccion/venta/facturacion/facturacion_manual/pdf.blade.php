@@ -210,38 +210,50 @@
             <br>
             <br>
             <br>
-            @if ($detraccion == 'not')
-                <table style="width: 100%;height: 120px;border-collapse:separate">
-                    <tr>
+            @php 
+                if($detraccion != "not" || $facturacion->retencion == 1){
+                    $columna_add = "1";
+                }else{
+                    $columna_add = "0";
+                }
+            @endphp
+            <table style="width: 100%;height: 120px;border-collapse:separate">
+                <tr>
+                    @if($columna_add == "0")
                         <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
                             <strong>Observaciones:</strong><br>
-                            {{ $facturacion->observacion }}
+                            {{$facturacion->observacion}}
                         </td>
-
-                    </tr>
-                </table>
-            @else
-                <table style="width: 100%;border-collapse:separate;margin-top: -20px;margin-bottom: -20px">
-                    <tr>
-                        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
-                            <strong>Informacion de Detraccion:</strong><br>
-                            <strong>Tipo de Detraccion:</strong>
-                            {{ $detraccion->tipo_detraccion->descripcion }} - {{ $detraccion->porcentaje_detraccion }}
-                            %<br>
-                            <strong>Medio de Pago:</strong>
-                            {{ $detraccion->medio_pago->descripcion }} <br>
-                            <strong>Monto de Detraccion:</strong>
-                            S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
+                    @else
+                        <td colspan="2"  style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+                            <strong>Observaciones:</strong><br>
+                            {{$facturacion->observacion}}
                         </td>
                         <th style="width: 5%;border-color: white"></th>
-                        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
-                            <strong>Observaciones:</strong><br>
-                            {{ $facturacion->observacion }}
-                        </td>
-                    </tr>
-                    <br>
-                </table>
-            @endif
+                        @if($detraccion != "not")
+                            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
+                                <strong>Informacion de Detraccion:</strong><br>
+                                <strong>Tipo de Detraccion:</strong>
+                                {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
+                                <strong>Medio de Pago:</strong>
+                                {{$detraccion->medio_pago->descripcion}} <br>
+                                <strong>Monto de Detraccion:</strong>
+                                S/. {{number_format($detraccion->monto_detraccion,2)}} <br>
+                            </td>
+                        @else
+                            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
+                                <strong>Informacion de Retencion:</strong><br>
+                                <strong>Importe Total Facturado:</strong>
+                                {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
+                                <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion}} %):</strong>
+                                {{ $simbologia }} {{ $facturacion->monto_retencion}} <br>
+                                <strong>Monto Neto a Pagar:</strong>
+                                {{ $simbologia }}  {{ $facturacion->monto_retencion_pagar}} <br>
+                            </td>
+                        @endif
+                    @endif
+                </tr>
+            </table>
             @if ($cuotas != 'not')
                 <br>
                 <strong>
