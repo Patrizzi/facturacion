@@ -12,6 +12,10 @@
         <form action="{{ route('cotizacion.facturar_store') }}" enctype="multipart/form-data" method="post"
             onsubmit="return valida(this)">
             @csrf
+            <input type="text" value="{{ $cotizacion->id }}" name="id_cotizador"
+                hidden="hidden">
+            <input type="text" value="{{ $cotizacion->comisionista_id }}"
+                name="id_comisionista" hidden="hidden">
             <div class="ibox">
                 <div class="ibox-title">
                     <a href="{{ route('cotizacion.show', $cotizacion->id)}}" class="no-hover-icon" data-toggle="dropdown" aria-haspopup="true"
@@ -53,7 +57,7 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
                                     <div class="col-md-10">
-                                        <input type="text" name="" class="form-control" value="{{$cotizacion->cliente->empresa}}"  id="" readonly>
+                                        <input type="text" name="" class="form-control" value="{{$cotizacion->cliente->nombre.' - '.$cotizacion->cliente->numero_documento}}"  id="" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -161,36 +165,71 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label"><strong>Detracción:</strong></label>
-                                        <div class="col-sm-8">
-                                            {{-- {{$cotizacion->precio_total}} --}}
-                                            {{-- @if($) disabled @endif --}}
-                                            <select class="form-control" id="detraccion" name="detraccion_value" @if($cotizacion->precio_total < 700 ) disabled @endif >
-                                                <option value="0">Desactiva</option>
-                                                <option value="1">Activa</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
-                                            <a href="" id="button_detracc" data-toggle="modal"
-                                                style="margin: auto"><i
-                                                    class="fa fa-question-circle"
-                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999;pointer-events: none"></i></a>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label"><strong>Detracción:</strong></label>
+                                            <div class="col-sm-6">
+                                                {{-- {{$cotizacion->precio_total}} --}}
+                                                {{-- @if($) disabled @endif --}}
+                                                <select class="form-control" id="detraccion" name="detraccion_value" @if($cotizacion->precio_total < 700 ) disabled @endif >
+                                                    <option value="0">Desactiva</option>
+                                                    <option value="1">Activa</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
+                                                <a href="" id="button_detracc" data-toggle="modal"
+                                                    style="margin: auto"><i
+                                                        class="fa fa-question-circle"
+                                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999;pointer-events: none"></i></a>
+                                            </div>
                                         </div>
                                     </div>
-                            </div>
-                            <div class="col-md-6">
-                                {{-- Cliente --}}
-                                <div class="form-group row">
-                                    <label class="col-form-label col-md-2"><strong>O. Compra:</strong></label>
-                                    <div class="col-md-10">
-                                        <input type="text" class="form-control" value="0" name="orden_compra">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label"><strong>Retención:</strong></label>
+                                            <div class="col-sm-6">
+                                                <input type="checkbox" name="check_retencion" id="retencion_check" class="js-switch" >
+                                            </div>
+                                            <div class="col-sm-2" style="display: flex" id="popup_retencion" style="">
+                                                <a href="" id="button_retencion" data-toggle="modal"
+                                                    data-target="#modal_retencion" style="margin: auto"><i
+                                                        class="fa fa-question-circle"
+                                                        style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-2"><strong>G. Remision:</strong></label>
+                                    <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
                                     <div class="col-md-10">
-                                        <input type="text" class="form-control" name="guia_remision" value="0">
+                                        <select class="select2_tipo_op" name="tipo_operacion">
+                                            @foreach ($tipo_operacion as $t_op)
+                                                <option value="{{ $t_op->id }}">{{ $t_op->codigo }} - {{ $t_op->informacion }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                {{-- Cliente --}}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>O. Compra:</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" value="0" name="orden_compra">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>G. Remision:</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" name="guia_remision" value="0">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -222,7 +261,7 @@
                                     <table class="table tables">
                                         <thead>
                                             <tr>
-                                                <th style="width: 120px">Código</th>
+                                                <th style="width: 130px">Código</th>
                                                 <th>Descripcion</th>
                                                 <th style="width: 110px">Cantidad</th>
                                                 <th style="width: 110px">Stock </th>
@@ -343,8 +382,9 @@
                                                         <div class="input-group-prepend">
                                                             <span class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
                                                         </div>
-                                                        <input type="text" id="total_final" name="total_final" disabled
+                                                        <input type="text" id="" name="" disabled
                                                         class="form-control limp_txt" value="{{ number_format(round($end, 2), 2) }}">
+                                                        <input type="hidden"  name="total_final" id="total_final" value="{{round($end, 2)}}">
                                                     </div>
                                                 </td>
                                         </tbody>
@@ -364,274 +404,13 @@
                     </div>
                 </div>
             </div>
+            {{-- Detraccion --}}
+            @include('transaccion.venta.cotizacion._shared.modal_detraccion')
+            {{-- Retencion --}}
+            @include('transaccion.venta.cotizacion._shared.modal_retencion')
         </form>
     </div>
-
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <form action="{{ route('cotizacion.facturar_store') }}" enctype="multipart/form-data" method="post"
-            onsubmit="return valida(this)">
-            @csrf
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                        <div class="row">
-                            <div class="col-sm-4 text-left" align="left">
-                                <address class="col-sm-4" align="left">
-                                    <img src="{{ asset('img/logos') }}/{{ $empresa->foto }}" alt="" width="300px">
-                                </address>
-                            </div>
-                            <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                                <strong>{{ $empresa->razon_social }}</strong>
-                                <br>
-                                Tel.: {{ $empresa->telefono }} / Móvil: {{ $empresa->movil }}
-                                <br>
-                                {{ $empresa->correo }}
-                                <br>
-                                {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
-                                {{ $empresa->pais }}
-
-
-                            </div>
-                            <div class="col-sm-4 ">
-                                <div class="form-control ruc" style="height: 125px">
-                                    <center>
-                                        <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                        <h2>FACTURA ELECTRÓNICA</h2>
-                                        <input type="text" value="{{ $cotizacion->id }}" name="id_cotizador"
-                                            hidden="hidden">
-                                        <p>{{ $cod_fac }}</p>
-                                        <input type="text" value="{{ $cotizacion->comisionista_id }}"
-                                            name="id_comisionista" hidden="hidden">
-                                    </center>
-                                </div>
-                            </div>
-                        </div><br>
-                        <!-- Body -->
-                        <div class="row">
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <div align="left">
-                                        <div class="row ">
-                                            <div class="col-sm-2"><strong>Cliente:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    name="" value="  {{ $cotizacion->cliente->nombre }}" readonly>
-                                            </div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>R.U.C:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    name="" value="  {{ $cotizacion->cliente->numero_documento }}"
-                                                    readonly></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>Dirección:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    name="" value="  {{ $cotizacion->cliente->direccion }}"
-                                                    readonly></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>Condiciones de Pago:</strong></div>
-                                            <div class="col-sm-3" id="colum-col">
-                                                <select class="form-control" name="forma_pago" id ="forma_pago"
-                                                    onchange="seleccionado_fp()">
-                                                    @foreach ($forma_pagos as $forma_pago)
-                                                        <option value="{{ $forma_pago->id }}"
-                                                            @if ($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>
-                                                            {{ $forma_pago->nombre }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-2" id="credito_pago" style="display: none;">
-                                                <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
-                                                    data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                            </div>
-                                           
-                                            <div class="col-sm-2">
-                                                <strong>Tipo de Moneda:</strong>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <input type="text" class="form-control"
-                                                    value="{{ $cotizacion->moneda->nombre }}" name="" readonly>
-                                                <input type="text" name="tipo_moneda"
-                                                    value="{{ $cotizacion->moneda->id }}" hidden="hidden">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <div align="left">
-                                        <div class="row">
-                                            <div class="col-sm-2"><strong>Orden de Compra:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    value="0" name="orden_compra"></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>Guía de Remisión:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    name="guia_remision" value="0"></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
-                                            <div class="col-sm-10"><input type="date" class="form-control"
-                                                    value="{{ date('Y-m-d') }}" readonly="readonly" name=fecha_emision>
-                                            </div>
-
-                                            <div class="col-sm-2" id="ven_1p" style="visibility: initial;">
-                                                <strong>Fecha de Vencimiento:</strong>
-                                            </div>
-                                            <div class="col-sm-10" id="ven_3p" style="visibility: initial;">
-                                                <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
-                                                    class="form-control" value="{{ date('Y-m-d') }}">
-                                            </div>
-                                            <br>
-                                            <br>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- <div class="row"> -->
-                            <div class="col-sm-12 " style="height:  120px">
-                                <div class="form-control">
-                                    <strong>Observaciones:</strong><br>
-                                    <textarea class="form-control" name="observacion">{{ $cotizacion->observacion }}</textarea>
-                                </div>
-                            </div>
-                            <!-- </div> -->
-                        </div>
-
-                        <br>
-                        <div class="table-responsive">
-                            <table class="table ">
-                                <thead>
-                                    <tr>
-                                        <th style="width:10%">Código de Item</th>
-                                        <th style="width:10%">Cantidad</th>
-                                        <th>Descripción</th>
-                                        <th>Stock</th>
-                                        <th style="width:10%">Valor Unitario</th>
-                                        <th style="width: 10%">Valor Venta </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($cotizacion_registros as $index => $cotizacion_registro)
-                                        {{-- @if ($validor[$index] == 1) --}}
-                                        <tr>
-                                            @if (isset($cotizacion_registro->producto_id))
-                                                <td>{{ $cotizacion_registro->producto->codigo_producto }}</td>
-                                                <td>{{ $cotizacion_registro->cantidad }}</td>
-                                                <td>
-                                                    {{ $cotizacion_registro->producto->nombre }}
-                                                    {{-- <span style="font-size: 10px">{{$cotizacion_registro->producto->descripcion}}</span>  --}}
-                                                    <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2"
-                                                        cols="2">{{ $cotizacion_registro->descripcion_item }}</textarea>
-                                                    <input type="text" class="form-control col-sm-4"
-                                                        name="numero_serie[{{ $index }}]" placeholder="N° Serie">
-                                                </td>
-                                            @else
-                                                <td>{{ $cotizacion_registro->servicio->codigo_servicio }}</td>
-                                                <td>{{ $cotizacion_registro->cantidad }}</td>
-                                                <td>
-                                                    {{ $cotizacion_registro->servicio->nombre }}
-                                                    {{-- <span style="font-size: 10px">{{$cotizacion_registro->servicio_id}}</span> --}}
-                                                    <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2"
-                                                        cols="2">{{ $cotizacion_registro->descripcion_item }}</textarea>
-
-                                                    <input type="text" class="form-control col-sm-4"
-                                                        name="numero_serie[{{ $index }}]"
-                                                        placeholder="N° de Serie">
-                                                </td>
-                                            @endif
-
-                                            <td>{{ $array_cantidad[$index] }}</td>
-                                            {{-- <td>{{$array[$index]}}</td> --}}
-                                            {{-- MODIFICAR ESTA PARTE CON LOGICA DE REPROGRAMACION PARA UN NUEVO PRODUCTO DIRECTAMENTE DESDE KARDEX --}}
-                                            <td style="display: none;">
-                                                {{ $desc_array = round($array[$index] - ($array_promedio[$index] * $cotizacion_registro->descuento) / 100, 2) }}
-                                                {{ $comis_array = round($desc_array + $desc_array * ($comi / 100), 2) }}
-                                            </td>
-                                            <td>{{ $cotizacion->moneda->simbolo }} {{ round($comis_array, 2) }}</td>
-                                            <td style="text-align: right;">{{ $cotizacion->moneda->simbolo }}
-                                                {{ number_format(round($comis_array * $cotizacion_registro->cantidad, 2), 2) }}
-                                            </td>
-
-                                            <td style="display: none">
-                                                {{ $sub_total = $cotizacion->op_gravada + $cotizacion->op_exonerada + $cotizacion->op_inafecta }}
-                                                {{ $sub_total_gravado = $cotizacion->op_gravada }}
-                                                S/.{{ $igv_p = round($sub_total_gravado, 2) * ($igv->igv_total / 100) }}
-                                                {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                                {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                            </td>
-                                        </tr>
-                                        {{-- @endif --}}
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <div align="left">
-                                    <h3>
-                                        
-                                    </h3>
-                                </div>
-                            </div>
-                            <!-- {{-- <div class=""> --}} -->
-                            <div class="col-sm-4 form-control">
-                                <span style="display: block;float: left"> Subtotal:</span>
-                                <span style="display: block;float: right;">
-                                    {{ $simbologia = $cotizacion->moneda->simbolo }}
-                                    {{ number_format(round($sub_total, 2), 2) }}</span><br>
-                                <input type="text" hidden="" name="sub_total_sin_igv"
-                                    value="{{ number_format(round($sub_total, 2), 2) }}">
-                                <span style="display: block;float: left"> Op. Agravada: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($cotizacion->op_gravada, 2) }}</span><br>
-                                <span style="display: block;float: left"> Op. Inafecta: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($cotizacion->op_inafecta, 2) }}</span><br>
-                                <span style="display: block;float: left"> Op. Exonerada: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($cotizacion->op_exonerada, 2) }}</span><br>
-                                {{-- <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv"> --}}
-                                <span style="display: block;float: left"> I.G.V.: </span>
-                                <span style="display: block;float: right">{{ $cotizacion->moneda->simbolo }}
-                                    {{ number_format(round($igv_p, 2), 2) }}</span><br>
-                                {{-- <input type="text" value="{{$end}}" hidden="hidden" name="precio_final_igv"> --}}
-                                <span style="display: block;float: left"> Importe Total: </span>
-                                <span style="display: block;float: right">{{ $cotizacion->moneda->simbolo }}
-                                    {{ number_format($end, 2) }}</span>
-                                <input type="text" value="{{ $end }}" hidden="hidden"
-                                    name="precio_final_igv" id="total">
-                                <br>
-                            </div>
-                            <!-- {{-- </div> --}} -->
-                        </div>
-
-                        <input type="text" name="name" maxlength="50" hidden=""
-                            value="{{ $cotizacion->cod_cotizacion }}">
-                        <input type="text" name="id" maxlength="50" hidden=""
-                            value="{{ $cotizacion->id }}">
-                        <input type="text" name="remitente" hidden=""
-                            value="{{ $cotizacion->cliente->email }}">
-                        <div class="row" align="center">
-
-                            <div class="col-sm-4">
-                            </div>
-                            <div class="col-sm-4">
-                            </div>
-
-                            <div class="col-sm-4" align="center">
-                                <button class="btn btn-primary boton_submit" style="margin-top: 5px" type="button"
-                                    id="boton"><i class="fa fa-cloud-upload"
-                                        aria-hidden="true">Guardar</i></button>&nbsp;
-                                <button type="submit" hidden id="submit_button">Guardar DB</button>
-                            </div>
-                        </div>
-                        <br>
-
-                        @include('layout_bancos')
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
+ 
 
 
     <style type="text/css">
@@ -644,6 +423,42 @@
         }
         .m-b{
             margin-bottom: 0px;
+        }
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+         .select2-container--default .select2-selection--single .select2-selection__rendered {
+            font-size: 12px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none;
+        }
+
+        span.select2.select2-container.select2-container--default {
+            width: 100% !important;
+            background-color: #FFFFFF;
+            background-image: none;
+            border-radius: 1px;
+            display: block;
+            padding: 3px 12px;
+            border: 1px solid #e5e6e7;
+        }
+        span.select2-container.select2-container--default.select2-container--open {
+            z-index: 999999;
+        }
+        .detracc_campo_required, .retenc_campo_required {
+            display: none;
+            /* font-size: 9px; */
+            color: red;
         }
     </style>
 
@@ -669,6 +484,7 @@
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     <!-- TouchSpin -->
     <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
 
     @if($stock_total == false)
@@ -696,7 +512,8 @@
                 }
             });
 
-
+            multi_retencion();
+            seleccionado_fp();
         });
     </script>
     <script>
@@ -716,16 +533,21 @@
         function most_tot() {
             var monto_0 = document.getElementById("monto_pago0").value;
             if (monto_0.length == 0) {
-                var total_final = document.getElementById('total').value;
+                var total_final = document.getElementById('total_final').value;
                 document.getElementById("monto_pago0").value = total_final;
             }
         }
     </script>
  
     <script>
+        var elem_2 = document.querySelector('.js-switch');
+        window.switchery_2 = new Switchery(elem_2, {
+            size: 'small', 
+            color: '#ED5565'
+        });
         // funcion dinamica de actualizar el total a cuotas
         function actualizarSaldoRestante() {
-            var total = parseFloat(document.getElementById('total').value) || 0;
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
             var sumaMontos = 0;
 
             // Sumar todos los montos ingresados
@@ -750,10 +572,10 @@
             }
         }
 
-        var total = document.getElementById('total').value;
+        var total = document.getElementById('total_final').value;
         var x = 1;
         $(".add_pago").on('click', function() {
-            var total = document.getElementById('total').value;
+            var total = document.getElementById('total_final').value;
             var data = `
             <div class="delete_modal${x} row">
             <div class="col-sm-1"><label>Fecha:</label></div>
@@ -804,7 +626,114 @@
             actualizarSaldoRestante();
         });
     </script>
+    @if($cotizacion->precio_total < 700 ) 
+        <script>
+            switchery_2.disable();
+        </script>    
+    @endif
     <script type="text/javascript">
+        $('#detraccion').on('change', function() {
+            var selected = this.value;
+            console.log(selected);
+            if (selected == "1") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.setAttribute('required', 'required');
+                });
+                $('.select2_tipo_op').val('12').trigger('change.select2');
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable(); 
+            } else {
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.removeAttribute('required');
+                });
+                $('.select2_tipo_op').val('1').trigger('change.select2');
+                window.switchery_2.enable(); 
+
+            }
+        });
+        $('.select2_tipo_op').select2();
+        $('.select2_mediopago').select2();
+        $('.select2_tipodetrac').select2();
+		
+        $('.select2_tipodetrac').on('select2:select', function(e) {
+
+            var data = e.params.data;
+            var id_data = data.id;
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.tipo_op_search') }}",
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'id_tipo_detra': data.id,
+                },
+                success: function(msg) {
+                    // console.log(msg.tasa)
+                    $('#porcentaje_detc').val(msg.tasa);
+                    multi_detraccion();
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        });
+        function multi_detraccion() {
+
+            var moneda = `{{$cotizacion->moneda->id}}`;
+
+            if (moneda == 1) { //soles
+                var total = $('#total_final').val();
+                var porc_det = $('#porcentaje_detc').val();
+                var op_det = total * (porc_det / 100);
+                var sub_zero = Math.round(op_det * 100) / 100;
+                console.log(sub_zero);
+                $('#tota_detra').val(sub_zero);
+            } else { //dolares
+                var total_dol = $('#total_final').val();
+
+                var tipo_cam = $('#tc_paralelo').html();
+                console.log(tipo_cam);
+                var total = total_dol * tipo_cam;
+                console.log(total);
+                var porc_det = $('#porcentaje_detc').val();
+                var op_det = total * (porc_det / 100);
+                var sub_zero = Math.round(op_det * 100) / 100;
+                console.log(sub_zero);
+                $('#tota_detra').val(sub_zero);
+            }
+        }
+
+        $('#porcentaje_detc').on('keyup', function() {
+            multi_detraccion();
+        });
+        $('.select2_tipo_op').on('select2:select', function(e) {
+            var id = e.params.data.id;
+            var split_id = id.split(' ');
+            if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                console.log('a');
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+                $('#detraccion').attr('disabled', false);
+            }
+        });
+
+        function multi_retencion(){
+            var ret_porc = $('#porcentaje_ret').val();
+            var total = $('#total_final').val();
+            var op_ret = total * (parseInt(ret_porc) / 100);
+            var sub_zero = Math.round(op_ret * 100) / 100;
+            $('#tota_reten').val(sub_zero);
+        }
+        $('#porcentaje_ret').on('keyup', function() {
+            multi_retencion();
+        });
         // $(".delete_pago").on('click', function () {
         function eliminar(x) {
             $(`.delete_modal${x}`).remove();
@@ -814,7 +743,7 @@
 
             for (var i = 0; i < inp_mont; i++) {
                 var monto = monto_c[i].id;
-                var total = document.getElementById('total').value;
+                var total = document.getElementById('total_final').value;
                 var fin = (total / inp_mont)
                 document.getElementById("monto_pago0").value = '';
                 // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
@@ -840,7 +769,7 @@
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                var total = parseFloat(document.getElementById('total').value) || 0;
+                var total = parseFloat(document.getElementById('total_final').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
@@ -893,22 +822,22 @@
                 // $('#consulta_p_input').prop('disabled', false);
 
                 document.getElementById('credito_pago').style.display = "none";
-                document.getElementById('colum-col').className = "col-sm-5";
-                document.getElementById('ven_1p').style.visibility = "initial";
-                document.getElementById('ven_3p').style.visibility = "initial";
+                // document.getElementById('colum-col').className = "col-sm-5";
+                // document.getElementById('ven_1p').style.visibility = "initial";
+                // document.getElementById('ven_3p').style.visibility = "initial";
                 document.getElementById('fecha_vencimiento').removeAttribute('disabled');
             } else {
                 document.getElementById('credito_pago').style.display = "block";
-                document.getElementById('colum-col').className = "col-sm-3";
-                document.getElementById('ven_1p').style.visibility = "hidden";
-                document.getElementById('ven_3p').style.visibility = "hidden";
+                // document.getElementById('colum-col').className = "col-sm-3";
+                // document.getElementById('ven_1p').style.visibility = "hidden";
+                // document.getElementById('ven_3p').style.visibility = "hidden";
                 document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
             }
         }
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var total = document.getElementById('total').value;
+            var total = document.getElementById('total_final').value;
             document.getElementById("monto_pago0").value = total
             $("#cuotas_footer").html(total);
         });
@@ -919,7 +848,7 @@
             var monto_fc = document.getElementsByClassName('fecha_pago');
             console.log(monto_c)
             var inp_mont = document.getElementsByClassName('monto_pago').length;
-            var total = parseFloat(document.getElementById('total').value) || 0;
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
             var fin = 0.00;
             var comp = 0;
             for (var i = 0; i < inp_mont; i++) {

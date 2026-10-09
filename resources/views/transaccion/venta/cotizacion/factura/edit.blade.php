@@ -17,7 +17,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group row">
-                        <label class="col-form-label col-md-4"><strong>Fecha Emision:</strong></label>
+                        <label class="col-form-label col-md-4"><strong>Emision:</strong></label>
                         <div class="col-md-8">
                             <input type="text" class="form-control" value="{{ $cotizacion->fecha_emision }}"
                                 readonly>
@@ -70,7 +70,7 @@
                     <div class="form-group row">
                         <label class="col-form-label col-md-4"><strong>Tipo:</strong></label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" value="{{ $cotizacion->fecha_emision }}"
+                            <input type="text" class="form-control" value="{{ $cotizacion->tipo }}"
                                 readonly>
                         </div>
                     </div>
