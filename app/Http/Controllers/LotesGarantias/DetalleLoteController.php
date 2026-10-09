@@ -230,18 +230,22 @@ class DetalleLoteController extends Controller
             ], 404);
         }
 
-        $series = SerieProducto::where('lote_id', $loteId)
+        $series = SerieProducto::with(['estadoProducto', 'garantiaActual'])
+            ->where('lote_id', $loteId)
             ->orderBy('id', 'asc')
             ->get()
-            ->map(function ($serie) {
+            ->map(function (SerieProducto $serie) {
+                $fechaVenta = $serie->garantiaActual?->fecha_venta;
+                $fechaVencimiento = $serie->garantiaActual?->fecha_vencimiento;
+
                 return [
                     'id' => $serie->id,
                     'numero_serie' => $serie->numero_serie,
-                    'estado' => $serie->estado ?: 'En Stock',
-                    'ubicacion' => $serie->ubicacion ?: 'Almacén Principal',
-                    'calidad' => $serie->calidad ?: 'A',
-                    'fecha_venta' => $serie->fecha_venta ? Carbon::parse($serie->fecha_venta)->format('Y-m-d') : '--',
-                    'fecha_vencimiento_garantia' => $serie->fecha_vencimiento_garantia ? Carbon::parse($serie->fecha_vencimiento_garantia)->format('Y-m-d') : '--',
+                    'estado' => $serie->estadoProducto?->nombre_estado ?? 'En Stock',
+                    'ubicacion' => $serie->estadoProducto?->ubicacion ?? 'Almacén Principal',
+                    'calidad' => $serie->estadoProducto?->calidad ?? 'A',
+                    'fecha_venta' => $fechaVenta ? Carbon::parse($fechaVenta)->format('Y-m-d') : '--',
+                    'fecha_vencimiento_garantia' => $fechaVencimiento ? Carbon::parse($fechaVencimiento)->format('Y-m-d') : '--',
                 ];
             });
 

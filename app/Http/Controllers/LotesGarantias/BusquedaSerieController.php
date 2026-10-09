@@ -18,7 +18,11 @@ class BusquedaSerieController extends Controller
         $codigoProducto = trim((string) $request->input('codigo_producto', ''));
 
         // Eager Loading para prevenir N+1 queries
-        $query = SerieProducto::with('facturacionRegistro.facturacion.cliente');
+        $query = SerieProducto::with([
+            'facturacionRegistro.factura_ids.cliente',
+            'boletaRegistro.boleta_i.cliente',
+            'notaVentaRegistro.notaVenta.cliente',
+        ]);
 
         if ($numeroSerie !== '') {
             $query->where('numero_serie', 'like', '%' . $numeroSerie . '%');
@@ -59,12 +63,29 @@ class BusquedaSerieController extends Controller
             }
         }
 
-        // 2. Extracción de Datos (Null Safety con PHP 8)
+        $facturacion = $serie->facturacionRegistro?->factura_ids;
+        $boleta = $serie->boletaRegistro?->boleta_i;
+        $notaVenta = $serie->notaVentaRegistro?->notaVenta;
+
+        $cliente = null;
+        $numeroComprobante = null;
+
+        if ($facturacion?->cliente) {
+            $cliente = $facturacion->cliente;
+            $numeroComprobante = $facturacion->codigo_fac;
+        } elseif ($boleta?->cliente) {
+            $cliente = $boleta->cliente;
+            $numeroComprobante = $boleta->codigo_boleta;
+        } elseif ($notaVenta?->cliente) {
+            $cliente = $notaVenta->cliente;
+            $numeroComprobante = $notaVenta->cod_nota_venta;
+        }
+
         $clienteData = [
-            'nombre_cliente' => $serie->facturacionRegistro?->facturacion?->cliente?->nombre ?? 'En Stock',
-            'telefono'       => $serie->facturacionRegistro?->facturacion?->cliente?->telefono ?? '--',
-            'email'          => $serie->facturacionRegistro?->facturacion?->cliente?->email ?? $serie->facturacionRegistro?->facturacion?->cliente?->correo ?? '--',
-            'numero_factura' => $serie->facturacionRegistro?->facturacion?->codigo_fac ?? 'No asignado',
+            'nombre_cliente' => $cliente?->nombre ?? 'En Stock',
+            'telefono'       => $cliente?->telefono ?? '--',
+            'email'          => $cliente?->email ?? $cliente?->correo ?? '--',
+            'numero_factura' => $numeroComprobante ?? 'No asignado',
         ];
 
         $historial = SerieProducto::where('codigo_producto', $serie->codigo_producto)
