@@ -319,9 +319,9 @@
                                         <strong>Importe Total facturaciondo:</strong>
                                         <span>{{ $simbologia }} {{ number_format(round($end, 2), 2) }}</span><br>
                                         <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion }} %):</strong>
-                                        <span>{{ $simbologia }} {{ $facturacion->monto_retencion }} </span><br>
+                                        <span>{{ $simbologia }} {{ number_format(round($facturacion->monto_retencion,2),2 ) }} </span><br>
                                         <strong>Monto Neto a Pagar:</strong>
-                                        <span>{{ $simbologia }} {{ $facturacion->monto_retencion_pagar }}
+                                        <span>{{ $simbologia }} {{ number_format(round($facturacion->monto_retencion_pagar,2),2 ) }}
                                         </span><br>
                                     </div>
                                 </div>

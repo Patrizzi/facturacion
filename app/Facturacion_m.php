@@ -649,7 +649,7 @@ class Facturacion_m extends Model
         $porcentaje = $this->porcentaje_retencion;
 
         $total_retencion = $total * ($porcentaje / 100);
-        return number_format( round($total_retencion, 2),2);
+        return $total_retencion;
     }
 
     public function getMontoRetencionPagarAttribute(){
@@ -659,6 +659,6 @@ class Facturacion_m extends Model
         $total_retencion = $total * ($porcentaje / 100);
 
         $pagar_retencion = $total - $total_retencion;
-        return number_format( round($pagar_retencion, 2),2);
+        return $pagar_retencion;
     }
 }
