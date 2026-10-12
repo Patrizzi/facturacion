@@ -55,4 +55,14 @@ class LotesGarantiasController extends Controller
     {
         return view('inventario.lotes_garantias.garantia_cliente');
     }
+
+    /**
+     * Muestra el formulario para registrar un reclamo de garantía.
+     */
+    public function reclamoCliente(Request $request)
+    {
+        return view('inventario.lotes_garantias.reclamo_cliente', [
+            'codigoProducto' => (string) $request->query('codigo_producto', ''),
+        ]);
+    }
 }

@@ -740,6 +740,9 @@ Route::group(
             Route::get('/busqueda-serie', 'LotesGarantiasController@busquedaSerie')->name('lotes-garantias.busqueda-serie');
             Route::get('/garantia-producto', 'LotesGarantiasController@garantiaProducto')->name('lotes-garantias.garantia-producto');
             Route::get('/garantia-cliente', 'LotesGarantiasController@garantiaCliente')->name('lotes-garantias.garantia-cliente');
+            Route::get('/reclamo-cliente', 'LotesGarantiasController@reclamoCliente')->name('lotes-garantias.reclamo-cliente');
+            Route::post('/reclamo-cliente', [\App\Http\Controllers\ReclamoClienteController::class, 'store'])
+                ->name('lotes-garantias.reclamo-cliente.store');
             Route::post('/consulta-comprobante', 'LotesGarantias\GarantiasController@buscarPorComprobante')->name('lotes-garantias.consulta-comprobante');
         });
         // Rutas AJAX modulares para Control de Lotes y Garantías
@@ -1580,4 +1583,3 @@ Route::post('/factura/guardar-nota/{id}', 'FacturacionController@guardarNotaInfo
 
 Route::post('/factura_manual/guardar-nota/{id}', 'FacturacionMController@guardarNotaInformativa')
     ->name('facturacionM.guardar_nota');
-

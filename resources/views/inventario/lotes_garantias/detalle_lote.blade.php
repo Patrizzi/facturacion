@@ -141,7 +141,7 @@
                             </div>
                         </div>
                         <div class="col-md-5 col-sm-12 text-md-right text-left">
-                            <a href="{{ route('lotes-garantias.garantia-cliente') }}?codigo_producto={{ request('codigo_producto') }}" class="btn btn-primary font-weight-bold shadow-sm" style="background-color: #2641f8; border-color: #2641f8; border-radius: 6px;">
+                            <a id="btn-consulta-garantia" href="{{ route('lotes-garantias.garantia-cliente') }}?codigo_producto={{ request('codigo_producto') }}" class="btn btn-primary font-weight-bold shadow-sm" style="background-color: #2641f8; border-color: #2641f8; border-radius: 6px;">
                                 <i class="fa fa-user-circle mr-1"></i> Consulta Garantía Cliente
                             </a>
                             <a href="{{ route('lotes-garantias.garantia-producto') }}" class="btn btn-outline-secondary font-weight-bold ml-1" style="border-radius: 6px;">
@@ -485,6 +485,7 @@ const DetalleLoteModule = (function () {
     const ajaxEndpoint = '{{ route("lotes-garantias.ajax.detalle-lote") }}';
     const seriesEndpoint = '{{ route("lotes-garantias.ajax.series-por-lote") }}';
     const busquedaSerieBaseUrl = '{{ route("lotes-garantias.busqueda-serie") }}';
+    const garantiaClienteBaseUrl = '{{ route("lotes-garantias.garantia-cliente") }}';
 
     function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
@@ -527,6 +528,14 @@ const DetalleLoteModule = (function () {
         })
         .then(data => {
             if (data.success) {
+                const botonGarantia = document.getElementById('btn-consulta-garantia');
+                const codigoProducto = String(data.producto_info ? data.producto_info.codigo || '' : '').trim();
+                if (botonGarantia) {
+                    botonGarantia.href = codigoProducto && codigoProducto !== '--'
+                        ? garantiaClienteBaseUrl + '?codigo_producto=' + encodeURIComponent(codigoProducto)
+                        : garantiaClienteBaseUrl;
+                }
+
                 // 1. Actualizar barra de cabecera
                 if (data.producto_info) {
                     document.getElementById('infoCodProducto').textContent = data.producto_info.codigo || '--';

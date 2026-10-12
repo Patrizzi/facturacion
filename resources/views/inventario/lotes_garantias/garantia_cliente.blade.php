@@ -26,6 +26,9 @@
                         <div class="alert alert-light border mb-4 text-muted" style="font-size: 13px;">
                             <i class="fa fa-info-circle text-primary mr-1"></i>
                             Ingrese el comprobante del cliente (Factura o Guía de Remisión) y el código del producto para validar la vigencia de su garantía.
+                            <a href="{{ route('lotes-garantias.reclamo-cliente', ['codigo_producto' => request('codigo_producto')]) }}" class="btn btn-sm btn-outline-primary ml-2">
+                                <i class="fa fa-wrench mr-1"></i> Presentar un reclamo
+                            </a>
                         </div>
 
                         {{-- Selector de Tipo de Documento --}}
