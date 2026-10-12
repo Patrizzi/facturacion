@@ -16,6 +16,7 @@ use App\Cotizacion_boleta_registro;
 use App\Cotizacion_factura_registro;
 use App\CotizacionManual;
 use App\Cuotas_credito;
+use App\Detracciones;
 use App\EmailBandejaEnvios;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailConfiguraciones;
@@ -2206,9 +2207,9 @@ class CotizacionController extends Controller
         $moneda2=Moneda::where('principal',0)->first();
 
 
-        $cotizacion_registros=Cotizacion_factura_registro::where('cotizacion_id',$id)->get();
-
-        foreach ($cotizacion_registros as $index0=> $cotizacion_registro) {
+        $cotizacion_registros=Cotizacion_factura_registro::where('cotizacion_id',$id_cotizador)->get();
+        // dd($cotizacion_registros);
+        foreach ($cotizacion_registros as $index0 => $cotizacion_registro) {
             if(isset($cotizacion_registro->producto_id)){
                 $productos = Producto::where('estado_id','!=',2)->where('id',$cotizacion_registro->producto_id)->get();
                 foreach ($productos as $index => $producto) {

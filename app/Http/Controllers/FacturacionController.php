@@ -1367,6 +1367,7 @@ class FacturacionController extends Controller
         if($registros_count == $count_art){
             // Editar los existentes
             foreach ($factura->registros as $index_reg => $edit_reg) {
+                // dd($request->get('cantidad')[$index_reg]);
                 $producto_busq = Producto::where('codigo_producto', $producto_id[$index_reg])->first();
                 if (isset($producto_busq)) {
                     $edit_reg->producto_id = $producto_busq->id;
@@ -1447,6 +1448,7 @@ class FacturacionController extends Controller
                     $edit_reg->save();
 
                 } else {
+                    // dd("ser");
                     $servicio = Servicios::where('codigo_servicio', $producto_id[$index_reg])->where('estado_anular', 0)->first();
                     $edit_reg->servicio_id = $servicio->id;
                     if ($request->get('descripcion_item')[$index_reg] == null) {
@@ -1454,7 +1456,7 @@ class FacturacionController extends Controller
                     } else {
                         $edit_reg->descripcion_item = $request->get('descripcion_item')[$index_reg];
                     }
-                    $edit_reg->numero_serie = $edit_reg->get('numero_serie')[$index_reg];
+                    $edit_reg->numero_serie = $request->get('numero_serie')[$index_reg];
                     if ($moneda->id == $facturacion->moneda_id) {
                         if ($moneda->tipo == 'nacional') {
                             $precio_prom = $servicio->precio_nacional;
@@ -1518,7 +1520,7 @@ class FacturacionController extends Controller
             }
         }else{ //* Si no es la misma cantidad se eliminan y se vuelven a crear
             // Eliminar registros anteriores
-            $eliminar_registros = Facturacion_registro::where('facturacion_id', $id)->delete();
+            $eliminar_registros = Facturacion_registro::where('facturacion_id', $facturacion->id)->delete();
             // Crear nuevos registros
             for ($i = 0; $i < $count_art; $i++) {
                 $producto_servicio = Producto::where('codigo_producto', $producto_id[$i])->first();
