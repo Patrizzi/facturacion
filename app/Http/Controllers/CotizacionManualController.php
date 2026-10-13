@@ -26,6 +26,7 @@ use App\Producto;
 use App\Servicios;
 use App\TipoCambio;
 use App\Cuotas_credito;
+use App\Detracciones;
 use App\Unidad_medida;
 use App\Tipo_operacion_f;
 use App\Validez;
@@ -50,6 +51,8 @@ use App\EmailBandejaEnvios;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailConfiguraciones;
 use App\Exports\CotizacionMExport;
+use App\MedioPagoDetraccion;
+use App\TipoDetraccion;
 
 class CotizacionManualController extends Controller
 {
@@ -1011,7 +1014,10 @@ public function update(Request $request, $id)
         // $bancos = Bancos::all();
         $fecha_hoy = Carbon::now()->add(1,'day');
         $fecha_1 = $fecha_hoy->format('Y-m-d');
-        return view('transaccion.venta.cotizacion.manual.facturar', compact('cotizacion','cotizacion_registros','empresa','factura_numero','forma_pagos','igv','fecha_1'));
+        $tipo_operacion = Tipo_operacion_f::all();
+        $detraccion = TipoDetraccion::all();
+        $medio_pago = MedioPagoDetraccion::all();
+        return view('transaccion.venta.cotizacion.manual.facturar', compact('cotizacion','cotizacion_registros','empresa','factura_numero','forma_pagos','igv','fecha_1','tipo_operacion','detraccion','medio_pago'));
     }
 
     public function facturar_store(Request $request){
@@ -1086,10 +1092,25 @@ public function update(Request $request, $id)
         $facturacion->observacion=$request->get('observacion');
         $facturacion->user_id =auth()->user()->id;
         $facturacion->estado='1';
-        $facturacion->tipo_operacion_id= $cotizacion->tipo_operacion_id;
+        $facturacion->tipo_operacion_id= $request->get('tipo_operacion');
         $facturacion->tipo_documento_id = $cotizacion->tipo_documento_id;
+        $retencion = $request->get('check_retencion');
+        if($retencion == "on"){
+            $facturacion->retencion = true;
+            $facturacion->porcentaje_retencion = $request->get('porcentaje_retencion');
+        }
         $facturacion->save();
-
+        if($request->get('tipo_operacion') == '12' || $request->get('tipo_operacion') == '13' || $request->get('tipo_operacion') == '14' ||$request->get('tipo_operacion') == '15'){
+            $fact_detra = new Detracciones();
+            $fact_detra->factura_m_id = $facturacion->id;
+            $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+            $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+            $fact_detra->monto_total_factura = $cotizacion->precio_total;
+            $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+            $fact_detra->monto_detraccion = $request->get('total_detraccion');
+            $fact_detra->estado = 1;
+            $fact_detra->save();
+        }
         //CAMBIAR EL ESTADO DE LA COTIZACION
         $cotizacion=CotizacionManual::where('id',$cotizacion->id)->first();
         $cotizacion->estado=1;
