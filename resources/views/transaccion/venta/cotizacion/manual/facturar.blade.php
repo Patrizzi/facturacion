@@ -1,14 +1,72 @@
-    @extends('layout')
+@extends('layout')
 @section('title', 'Cotizacion Manual Facturar')
 @section('breadcrumb', 'Cotizacion Manual Facturar')
 @section('breadcrumb2', 'Cotizacion Manual Facturar')
 @section('href_accion', back())
 @section('value_accion', 'Inicio')
 
-{{-- @section('button2', 'Nueva Cotización') --}}
-{{-- @section('config', route('cotizacion_manual.create')) --}}
-
 @section('content')
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <form action="{{ route('cotizacion_manual.facturar_store') }}" enctype="multipart/form-data" method="post"
+        onsubmit="return valida(this)">
+        @csrf
+        <div class="ibox">
+            <div class="ibox-title">
+                <a href="{{ route('cotizacion.show', $cotizacion->id)}}" class="no-hover-icon" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" style="cursor: pointer;">
+                    <i class="fa fa-arrow-left text-muted"></i>
+                </a>
+                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px;margin-right: 10px">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up text-muted"></i>
+                    </a>
+                    <a class="" href="{{ route('ventas.cotizacion') }}">
+                        <i class="fa fa-times text-muted"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h3 style="margin: 0;">{{ $factura_numero }}</h3>
+                            <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
+                        </div>
+                        <div class="col-12 col-md-4 text-center">
+                            <h2 class="mb-0 text-nowrap" style="text-align: center">
+                                COTIZACION M. -> FACTURA M.
+                            </h2>
+                        </div>
+                        <div class="col-md-4">
+                            
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12" style="margin-top: -26px;">
+                <div class="ibox-content">
+                    <div class="row form-label word-style">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
+                                <div class="col-md-10">
+                                    <input type="text" name="" class="form-control" value="{{$cotizacion->cliente->nombre.' - '.$cotizacion->cliente->numero_documento}}"  id="" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col-md-2"><strong>Cliente:</strong></label>
+                                <div class="col-md-10">
+                                    <input type="text" name="" class="form-control" value="{{$cotizacion->cliente->nombre.' - '.$cotizacion->cliente->numero_documento}}"  id="" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
@@ -336,7 +394,7 @@
 
 
     <style type="text/css">
-        .ruc {
+        /* .ruc {
             border-radius: 10px;
             height: 150px;
         }
@@ -344,7 +402,7 @@
         .form-control {
             border-radius: 10px;
             margin-bottom: 1em;
-        }
+        } */
     </style>
 
     <!-- Mainly scripts -->
