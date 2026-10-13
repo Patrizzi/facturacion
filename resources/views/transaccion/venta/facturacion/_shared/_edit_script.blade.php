@@ -59,7 +59,7 @@
             document.getElementById('fecha_vencimiento').removeAttribute('disabled');
 
         } else {
-            document.getElementById('credito_pago').style.display = "block";
+            document.getElementById('credito_pago').style.display = "contents";
 
             document.getElementsByClassName('pago_first_column')[0].classList.remove("col-sm-8");
             document.getElementsByClassName('pago_first_column')[0].classList.add("col-sm-5");

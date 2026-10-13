@@ -2157,7 +2157,7 @@ class CotizacionController extends Controller
         // $facturar->op_gravada=$cotizacion->op_gravada;
         // $facturar->op_inafecta=$cotizacion->op_inafecta;
         // $facturar->op_exonerada=$cotizacion->op_exonerada;
-        $facturar->tipo_operacion_id=$cotizacion->tipo_operacion_id;
+        $facturar->tipo_operacion_id=$request->get('tipo_operacion');
         $facturar->tipo_documento_id=$cotizacion->tipo_documento_id;
         $retencion = $request->get('check_retencion');
         if($retencion == "on"){
@@ -2171,7 +2171,7 @@ class CotizacionController extends Controller
             $fact_detra->factura_id = $facturar->id;
             $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
             $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
-            $fact_detra->monto_total_factura = $request->get('precio_final_igv');
+            $fact_detra->monto_total_factura = $cotizacion->precio_total;
             $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
             $fact_detra->monto_detraccion = $request->get('total_detraccion');
             $fact_detra->estado = 1;
