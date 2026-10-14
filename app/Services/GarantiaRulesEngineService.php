@@ -125,7 +125,7 @@ class GarantiaRulesEngineService
 
     private function normalizarTipoFalla(string $tipoFalla): string
     {
-        $tipoFalla = strtolower(trim($tipoFalla));
+        $tipoFalla = mb_strtolower(trim($tipoFalla), 'UTF-8');
 
         $mapa = [
             'daño físico' => 'daño físico',
@@ -153,7 +153,7 @@ class GarantiaRulesEngineService
         $normalizadas = [];
 
         foreach ($condicionesUso as $key => $valor) {
-            $normalizadas[strtolower((string) $key)] = (bool) $valor;
+            $normalizadas[mb_strtolower((string) $key, 'UTF-8')] = (bool) $valor;
         }
 
         return $normalizadas;

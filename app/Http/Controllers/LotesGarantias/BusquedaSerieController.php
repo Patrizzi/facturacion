@@ -22,6 +22,8 @@ class BusquedaSerieController extends Controller
             'facturacionRegistro.factura_ids.cliente',
             'boletaRegistro.boleta_i.cliente',
             'notaVentaRegistro.notaVenta.cliente',
+            'garantiaActual',
+            'estadoProducto',
         ]);
 
         if ($numeroSerie !== '') {
@@ -53,10 +55,18 @@ class BusquedaSerieController extends Controller
         $estadoGarantia = 'No Aplica';
         $diasRestantes = 0;
 
-        if ($serie->fecha_vencimiento_garantia) {
-            $vencimiento = Carbon::parse($serie->fecha_vencimiento_garantia);
+        $fechaVencimientoGarantia = $serie->garantiaActual?->fecha_vencimiento
+            ? Carbon::parse($serie->garantiaActual->fecha_vencimiento)->toDateString()
+            : ($serie->fecha_vencimiento_garantia ? Carbon::parse($serie->fecha_vencimiento_garantia)->toDateString() : null);
+
+        $fechaVentaGarantia = $serie->garantiaActual?->fecha_venta
+            ? Carbon::parse($serie->garantiaActual->fecha_venta)->toDateString()
+            : ($serie->fecha_venta ? Carbon::parse($serie->fecha_venta)->toDateString() : null);
+
+        if ($fechaVencimientoGarantia) {
+            $vencimiento = Carbon::parse($fechaVencimientoGarantia)->endOfDay();
             if (Carbon::today()->lte($vencimiento)) {
-                $estadoGarantia = 'Vigente';
+                $estadoGarantia = $serie->garantiaActual?->estado_garantia ?? 'Vigente';
                 $diasRestantes = Carbon::today()->diffInDays($vencimiento);
             } else {
                 $estadoGarantia = 'Vencido';
@@ -88,22 +98,30 @@ class BusquedaSerieController extends Controller
             'numero_factura' => $numeroComprobante ?? 'No asignado',
         ];
 
-        $historial = SerieProducto::where('codigo_producto', $serie->codigo_producto)
+        $historial = SerieProducto::with(['estadoProducto', 'garantiaActual'])
+            ->where('codigo_producto', $serie->codigo_producto)
             ->where('id', '!=', $serie->id)
             ->latest()
             ->take(10)
             ->get()
             ->map(function (SerieProducto $relacionada) {
+                $fechaVentaRel = $relacionada->garantiaActual?->fecha_venta
+                    ? Carbon::parse($relacionada->garantiaActual->fecha_venta)->toDateString()
+                    : ($relacionada->fecha_venta ? Carbon::parse($relacionada->fecha_venta)->toDateString() : '--');
+                $fechaVencimientoRel = $relacionada->garantiaActual?->fecha_vencimiento
+                    ? Carbon::parse($relacionada->garantiaActual->fecha_vencimiento)->toDateString()
+                    : ($relacionada->fecha_vencimiento_garantia ? Carbon::parse($relacionada->fecha_vencimiento_garantia)->toDateString() : '--');
+
                 return [
                     'id' => $relacionada->id,
                     'numero_serie' => $relacionada->numero_serie,
                     'codigo_producto' => $relacionada->codigo_producto,
                     'codigo_lote' => $relacionada->codigo_lote,
-                    'estado' => $relacionada->estado,
-                    'fecha_venta' => $relacionada->fecha_venta,
-                    'fecha_vencimiento_garantia' => $relacionada->fecha_vencimiento_garantia,
-                    'ubicacion' => $relacionada->ubicacion,
-                    'calidad' => $relacionada->calidad,
+                    'estado' => $relacionada->estadoProducto?->nombre_estado ?? ($relacionada->estado ?: 'En Stock'),
+                    'fecha_venta' => $fechaVentaRel,
+                    'fecha_vencimiento_garantia' => $fechaVencimientoRel,
+                    'ubicacion' => $relacionada->estadoProducto?->ubicacion ?? ($relacionada->ubicacion ?: 'Almacén Principal'),
+                    'calidad' => $relacionada->estadoProducto?->calidad ?? ($relacionada->calidad ?: 'A'),
                 ];
             })
             ->values();
@@ -123,14 +141,14 @@ class BusquedaSerieController extends Controller
                 ],
                 'garantia' => [
                     'estado' => $estadoGarantia,
-                    'fecha_venta' => $serie->fecha_venta ?: '--',
-                    'fecha_vencimiento' => $serie->fecha_vencimiento_garantia ?: '--',
+                    'fecha_venta' => $fechaVentaGarantia ?: '--',
+                    'fecha_vencimiento' => $fechaVencimientoGarantia ?: '--',
                     'dias_restantes' => $diasRestantes . ' días',
                 ],
                 'estado' => [
-                    'condicion' => $serie->estado,
-                    'ubicacion' => $serie->ubicacion ?: 'Almacén Principal',
-                    'calidad' => $serie->calidad ?: 'A',
+                    'condicion' => $serie->estadoProducto?->nombre_estado ?? ($serie->estado ?: 'En Stock'),
+                    'ubicacion' => $serie->estadoProducto?->ubicacion ?? ($serie->ubicacion ?: 'Almacén Principal'),
+                    'calidad' => $serie->estadoProducto?->calidad ?? ($serie->calidad ?: 'A'),
                     'ultimo_movimiento' => $serie->fecha_ultimo_movimiento
                         ? Carbon::parse($serie->fecha_ultimo_movimiento)->format('Y-m-d H:i')
                         : '--',
