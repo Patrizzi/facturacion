@@ -96,7 +96,11 @@
          if(data.retencion != ""){
             $('#modulo_retencion').css('display', 'block');
             $('#porcentaje_ret').val(data.retencion.porcentaje)
-            window.switchery_2.enable(); 
+            var det_op = $('#detraccion').val();
+            console.log("deta.ret "+det_op);
+            if(det_op == 1){
+                window.switchery_2.disable(); 
+            }
         }else{
             $('#modulo_retencion').css('display', 'none');
             var retencion_check = document.querySelector('.js-switch');

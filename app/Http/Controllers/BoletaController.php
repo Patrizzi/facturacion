@@ -34,6 +34,7 @@ use PDF;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Almacen;
 use App\Codigo_guia_almacen;
+use App\Detracciones;
 use App\Nota_Credito;
 use App\Nota_Debito;
 use Illuminate\Http\Request;
@@ -399,7 +400,7 @@ class BoletaController extends Controller
             $producto_id_3[$i] = substr(strstr($producto_id_2[$i], ' '), 1);
             $producto_id[$i] = strstr($producto_id_3[$i], ' ', true);
         }
-
+        // return $producto_id;
         //contador de valores de articulos
         $articulo = $request->input('articulo');
         $count_articulo = count($articulo);
@@ -553,7 +554,7 @@ class BoletaController extends Controller
         // CODIGO PARA BUSCAR EL ID DEL TIPO DE DOCUMENTO
         $operacion = $request->get('tipo_operacion');
         $nombre = strstr($operacion, '-', true);
-        $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
+        // $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
         $boleta = new Boleta;
         $boleta->codigo_boleta = $boleta_numero;
         $boleta->almacen_id = $request->get('almacen');
@@ -577,7 +578,7 @@ class BoletaController extends Controller
         }
         $boleta->tipo = 'producto';
         $boleta->tipo_documento_id = 3;
-        $boleta->tipo_operacion_id = $busca_ope->id;
+        $boleta->tipo_operacion_id = $request->get('tipo_operacion');
         $boleta->save();
 
         if ($boleta->forma_pago_id == 2) {
@@ -615,6 +616,20 @@ class BoletaController extends Controller
             $comisionista->observacion = 'Boleta';
             $comisionista->save();
         }
+
+        if($request->get('tipo_operacion') == '12' || $request->get('tipo_operacion') == '13' || $request->get('tipo_operacion') == '14' ||$request->get('tipo_operacion') == '15'){
+            $fact_detra = new Detracciones();
+            $fact_detra->boleta_id = $boleta->id;
+            $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+            $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+            $fact_detra->monto_total_factura = $request->get('precio_final_igv');
+            $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+            $fact_detra->monto_detraccion = $request->get('total_detraccion');
+            $fact_detra->estado = 1;
+            $fact_detra->save();
+        }
+
+        
         // modificacion para que se cierre el codigo en almacen
         // obtencion de la sucursal
         // $sucursal=auth()->user()->almacen->serie_boleta;

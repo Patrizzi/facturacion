@@ -1039,6 +1039,7 @@ class FacturacionController extends Controller
         }else{
             $detraccion = 'not';
         }
+        // return $detraccion;
         // CAMPOS PARA EL EDITAR
         $forma_pagos = Forma_pago::get();
         $remisiones = Guia_remision::select('id', 'cod_guia')
