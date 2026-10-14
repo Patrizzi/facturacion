@@ -8,6 +8,7 @@ use App\EstadoProducto;
 use App\Facturacion_registro;
 use App\Lote;
 use App\SerieProducto;
+use App\GarantiaSerie;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -114,8 +115,7 @@ class FacturacionRegistroObserver
                     $serie->estado_id = $estadoVendidoId;
                     $serie->fecha_ultimo_movimiento = $now;
                     $serie->save();
-
-                    // Persistencia transaccional de la garantía de la serie
+                    // Persistencia en la tabla normalizada garantias
                     $producto = $registro->producto;
                     $mesesGarantia = (int) (optional($producto)->garantia ?? optional($producto)->garantia_meses ?? 12);
                     if ($mesesGarantia <= 0) {
@@ -123,12 +123,13 @@ class FacturacionRegistroObserver
                     }
 
                     $factura = $registro->factura_ids;
-                    $fechaVenta = $factura && $factura->fecha_emision
+                    $fechaVenta = ($factura && $factura->fecha_emision)
                         ? Carbon::parse($factura->fecha_emision)->toDateString()
                         : ($registro->created_at ? Carbon::parse($registro->created_at)->toDateString() : Carbon::today()->toDateString());
+
                     $fechaVencimiento = Carbon::parse($fechaVenta)->addMonths($mesesGarantia)->toDateString();
 
-                    \App\GarantiaSerie::updateOrCreate(
+                    GarantiaSerie::updateOrCreate(
                         ['serie_id' => $serie->id],
                         [
                             'estado_garantia'   => 'Vigente',
