@@ -208,6 +208,8 @@ class BoletaController extends Controller
         $p_venta = Personal_venta::where('estado', '0')->get();
         $tipo_operacion = Tipo_operacion_f::all();
         $empresa = Empresa::first();
+        $detraccion = TipoDetraccion::all();
+        $medio_pago = MedioPagoDetraccion::all();
 
         // obtencion de la sucursal
         $almacen = $request->get('almacen');
@@ -244,7 +246,7 @@ class BoletaController extends Controller
 
         $fecha_hoy = Carbon::now()->add(1, 'day');;
         $fecha_1 = $fecha_hoy->format('Y-m-d');
-        return view('transaccion.venta.boleta.create', compact('forma_pagos', 'clientes', 'personales', 'igv', 'moneda', 'p_venta', 'empresa', 'sucursal', 'boleta_numero', 'tipo_operacion', 'fecha_1'));
+        return view('transaccion.venta.boleta.create', compact('forma_pagos', 'clientes', 'personales', 'igv', 'moneda', 'p_venta', 'empresa', 'sucursal', 'boleta_numero', 'tipo_operacion', 'fecha_1','detraccion','medio_pago'));
     }
 
     public function create_ms(Request $request)
