@@ -8,6 +8,7 @@ use App\Boleta_registro;
 use App\EstadoProducto;
 use App\Lote;
 use App\SerieProducto;
+use App\GarantiaSerie;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
