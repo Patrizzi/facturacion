@@ -5,50 +5,6 @@
 
 @section('value_accion', 'Atrás')
 @section('content')
-    {{-- <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-
-    .word-style select,
-    .word-style input,
-    .word-style textarea,
-    .word-style .select2-container--default .select2-selection--single {
-        font-family: 'Outfit', sans-serif;
-        font-size: 11px;
-        border-radius: 20px;
-        border: 1px solid #ddd;
-        height: 38px;
-        padding: 6px 14px;
-        box-shadow: none;
-        transition: border 0.2s ease;
-    }
-
-    .word-style .select2-container--default .select2-selection--single {
-        line-height: 24px;
-    }
-
-    .word-style .select2-selection__arrow {
-        height: 36px !important;
-        top: 3px !important;
-    }
-
-    .word-style .select2-container {
-        width: 100% !important;
-    }
-
-    .word-style select:focus,
-    .word-style input:focus,
-    .word-style textarea:focus,
-    .word-style .select2-container--default .select2-selection--single:focus {
-        border-color: #8ca9ff;
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(140, 169, 255, 0.25);
-    }
-
-    .required {
-        color: red;
-        margin-left: 2px;
-    }
-</style> --}}
 
     @if (session('repite'))
         <div class="alert alert-success">
@@ -127,6 +83,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-2"><strong>Detraccion:</strong></label>
+                                        <div class="col-md-10">
+                                            <input type="date" id="fecha_emision" name="fecha_emision" class="form-control"
+                                                value="{{ date('Y-m-d') }}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                </div>
+                            </div>
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>F. Emisión:</strong></label>
                                 <div class="col-md-10">
@@ -185,8 +155,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-2"><strong>Moneda:</strong></label>
-                                        <div class="col-md-10">
+                                        <label class="col-form-label col-md-4"><strong>Moneda:</strong></label>
+                                        <div class="col-md-8">
                                             <select name="" id="" class="form-control"
                                                 onchange="changeMoney()">
                                                 <option value="nacional"
@@ -200,14 +170,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row" id="data_1">
-                                <label class="col-form-label col-md-2"><strong>F. Vencimiento</strong></label>
-                                <div class="col-md-10 input-group">
-                                    <span class="input-group-addon" style="display: none">
-                                        <i class="fa fa-calendar"></i>
-                                    </span>
-                                    <input type="date" class="form-control" id="fecha_vencimiento"
-                                        name="fecha_vencimiento" value="{{ date('Y-m-d') }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4"><strong>F. Emisión:</strong></label>
+                                        <div class="col-md-8">
+                                            <input type="date" id="fecha_emision" name="fecha_emision" class="form-control"
+                                                value="{{ date('Y-m-d') }}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row" id="data_1">
+                                        <label class="col-form-label col-md-4"><strong>Vencimiento</strong></label>
+                                        <div class="col-md-8">
+                                            <input type="date" class="form-control" id="fecha_vencimiento"
+                                                name="fecha_vencimiento" value="{{ date('Y-m-d') }}">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -457,7 +437,8 @@
                             </div>
                         </div>
                     </div>
-                    {{--  --}}
+                    <!-- Modal DETRACCIONES DENTRO DEL FORM, EN EL CONTROLLER CONDICIONAL PARA TOMAR O NO DETRACCION-->
+                    @include('transaccion.venta.boleta._shared.modal_detraccion')
                 </form>
             </div>
         </div>
