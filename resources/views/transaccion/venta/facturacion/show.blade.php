@@ -370,7 +370,6 @@
                                     </div>
                                 @else
                                     @php
-                                        // Calculo de retencióñ
                                         $total_fact = $facturacion->total_precio_sin_forma; 
                                     @endphp
                                     <div class="col-sm-6 ">

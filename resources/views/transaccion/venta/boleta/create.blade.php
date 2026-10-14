@@ -125,10 +125,9 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
                                 <div class="col-md-10">
-                                    <select class="form-control select2_operacion" name="tipo_operacion">
-                                        @foreach ($tipo_operacion as $index => $t_op)
-                                            <option id="{{ $t_op->id }}"
-                                                @if ($index == 0) selected @endif>
+                                    <select class="select2_tipo_op" name="tipo_operacion">
+                                        @foreach ($tipo_operacion as $t_op)
+                                            <option value="{{ $t_op->id }}" >
                                                 {{ $t_op->codigo }} - {{ $t_op->informacion }}</option>
                                         @endforeach
                                     </select>
@@ -665,7 +664,6 @@
         }
     </style>
     
-    <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
@@ -674,11 +672,6 @@
 
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/fullcalendar/moment.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('js/plugins/datapicker/bootstrap-datepicker.js') }}"></script>
-
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
@@ -688,10 +681,15 @@
 
     <!-- Steps -->
     <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
-
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
-    <script src="{{ asset('js/icheck.min.js') }}"></script>
-    
+    <link href="{{ asset('css/plugins/switchery/switchery.css') }}" rel="stylesheet">
+    <!-- Switchery -->
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+
     <!-- TouchSpin -->
     <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
@@ -699,47 +697,30 @@
     {{-- @include('layout_agregado_rapido') --}}
 
     <script type="text/javascript">
-        $(".select2_demo_client").select2({
-            theme: "bootstrap",
-            placeholder: "Seleccionar Cliente",
-            ajax: {
-                minimumInputLength: 1,
-                url: "{{ route('pa.clients') }}",
-                dataType: 'json',
-                type: "POST",
-                delay: 10,
-                data: function(params) {
-                    var tipo_coti = 3;
-                    return {
-                        _token: "{{ csrf_token() }}",
-                        search: params.term, // search term
-                        tipo_coti: tipo_coti
-                    };
-                },
-                processResults: function(data) {
-                    return {
-                        results: $.map(data, function(item) {
-                            return {
-                                id: item.id,
-                                text: item.nombre + ' | ' + item.numero_documento,
-                                tipo_pago: item.tipo_pago_id
-                            };
-                        })
-                    };
-                },
-                cache: true
-            }
-        });
+        $('#detraccion').on('change', function() {
+            var selected = this.value;
+            console.log(selected);
+            if (selected == "1") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.setAttribute('required', 'required');
+                });
+                $('.select2_tipo_op').val('12').trigger('change.select2');
+                // var retencion_check = document.querySelector('.js-switch');
+                // if( retencion_check.checked == true){
+                //     window.switchery_2.element.click();
+                // }
+                // window.switchery_2.disable(); 
+            } else {
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.removeAttribute('required');
+                });
+                $('.select2_tipo_op').val('1').trigger('change.select2');
+                // window.switchery_2.enable(); 
 
-        $('.select2_demo_client').on('select2:selecting', function(e) {
-            var text = e.params.args.data.text.split(' | ');
-            $('#nombre_cliente').html(text[0]);
-            $('#rucdni_cliente').html(text[1]);
-        });
-        $('.select2_demo_client').on('select2:select', function(e) {
-            var data = e.params.data;
-            // Si el tipo de pago es desde cliente cambiar
-            $('select[name="forma_pago"]').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
+            }
         });
         $(".select2_demo_comisionista").select2({
             // placeholder: "Sin comisión"
@@ -810,52 +791,48 @@
             }
         });
 
-        function save_detraccion() {
-            var seletc_det = $('.select2_tipo_op').val();
-            var split_id = seletc_det.split(' ');
-            console.log(split_id[0]);
-            if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
-                var tipo_detra = $('#select_tipo_pago').val();
-                var ipt_medio = $('.select2_mediopago').val();
-                var porce_detra = $('#porcentaje_detc').val();
-                var tot_det = $('#tota_detra').val();
-
-                if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
-                    $('#modal_detraccion').modal('show');
-                    var inputs = document.querySelectorAll('.detracc_campo_required');
-                    inputs.forEach(function(input) {
-                        input.style.display = 'block';
-                    });
-                    return;
-                } else {
-                    var inputs = document.querySelectorAll('.detracc_campo_required');
-                    inputs.forEach(function(input) {
-                        input.style.display = 'none';
-                    });
-                    $('#modal_detraccion').modal('hide');
-                }
-
-            }
-        }
-        $('#detraccion').on('change', function() {
-            var selected = this.value;
-            console.log(selected);
-            if (selected == "1") {
-                $('#modal_detraccion').modal('show');
-                var inputs = document.querySelectorAll('.ipt_detrac');
-                inputs.forEach(function(input) {
-                    // input.setAttribute('required', 'required');
-                });
-                $('.select2_tipo_op').val('12').trigger('change.select2');
-            } else {
-                var inputs = document.querySelectorAll('.ipt_detrac');
-                inputs.forEach(function(input) {
-                    // input.removeAttribute('required');
-                });
-                $('.select2_tipo_op').val('1').trigger('change.select2');
+                $(".select2_demo_client").select2({
+            theme: "bootstrap",
+            placeholder: "Seleccionar Cliente",
+            ajax: {
+                minimumInputLength: 1,
+                url: "{{ route('pa.clients') }}",
+                dataType: 'json',
+                type: "POST",
+                delay: 10,
+                data: function(params) {
+                    var tipo_coti = 3;
+                    return {
+                        _token: "{{ csrf_token() }}",
+                        search: params.term, // search term
+                        tipo_coti: tipo_coti
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: $.map(data, function(item) {
+                            return {
+                                id: item.id,
+                                text: item.nombre + ' | ' + item.numero_documento,
+                                tipo_pago: item.tipo_pago_id
+                            };
+                        })
+                    };
+                },
+                cache: true
             }
         });
 
+        $('.select2_demo_client').on('select2:selecting', function(e) {
+            var text = e.params.args.data.text.split(' | ');
+            $('#nombre_cliente').html(text[0]);
+            $('#rucdni_cliente').html(text[1]);
+        });
+        $('.select2_demo_client').on('select2:select', function(e) {
+            var data = e.params.data;
+            // Si el tipo de pago es desde cliente cambiar
+            $('select[name="forma_pago"]').find('option[value="'+data.tipo_pago+'"]').attr("selected",true); 
+        });
         // Validar Formulario / No doble insercion de datos(Gente desdesperada)
 
         function valida(f) {
@@ -948,9 +925,6 @@
         $(document).ready(function() {
             articlesSelect2();
 
-            $('.select2_operacion').select2({
-                placeholder: "Seleccionar Tipo Operacion"
-            });
             $("form").keypress(function(e) {
                 if (e.which == 13) {
                     setTimeout(function() {
@@ -959,19 +933,19 @@
                     e.preventDefault();
                 }
             });
-            var mem = $('#data_1 .input-group.date').datepicker({
-                todayBtn: "linked",
-                keyboardNavigation: false,
-                forceParse: false,
-                autoclose: true,
-                dateFormat: 'dd-mm-yyyy'
-            });
-            $('.dataTables-example').DataTable({
-                pageLength: 25,
-                responsive: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: []
-            });
+            // var mem = $('#data_1 .input-group.date').datepicker({
+            //     todayBtn: "linked",
+            //     keyboardNavigation: false,
+            //     forceParse: false,
+            //     autoclose: true,
+            //     dateFormat: 'dd-mm-yyyy'
+            // });
+            // $('.dataTables-example').DataTable({
+            //     pageLength: 25,
+            //     responsive: true,
+            //     dom: '<"html5buttons"B>lTfgitp',
+            //     buttons: []
+            // });
         });
         //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
         function articlesSelect2() {
@@ -1241,6 +1215,20 @@
             document.getElementById("total_final").dispatchEvent(new Event('change'));
 
             var monto_c = document.getElementsByClassName('monto_pago');
+
+            if(parseFloat(end2) > 700){ 
+                $('#detraccion').attr('disabled', false);
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+            }else{
+                var select_det = $('.select2_tipo_op').val();
+                var split_id = select_det.split(' ');
+                if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                    // Se activa la opcion de detraccion
+                }else{
+                    $('#detraccion').attr('disabled', true);
+                    $('#button_detracc').attr('data-target', '#modal_detraccion');
+                }
+            }
 
             actualizarSaldoRestante();
             var inp_mont = document.getElementsByClassName('monto_pago').length;
@@ -1632,7 +1620,34 @@
                 l.start();
             }
         });
+        function save_detraccion() {
+            var seletc_det = $('.select2_tipo_op').val();
+            console.log(seletc_det);
+            var split_id = seletc_det.split(' ');
+            // Detracciones validas
+            if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
 
+                var tipo_detra = $('#select_tipo_pago').val();
+                var ipt_medio = $('.select2_mediopago').val();
+                var porce_detra = $('#porcentaje_detc').val();
+                var tot_det = $('#tota_detra').val();
+                console.log(tipo_detra, ipt_medio, porce_detra, tot_det);
+                if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                    $('#modal_detraccion').modal('show');
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+                    inputs.forEach(function(input) {
+                        input.style.display = 'block';
+                    });
+                    return;
+                } else {
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+                    inputs.forEach(function(input) {
+                        input.style.display = 'none';
+                    });
+                    $('#modal_detraccion').modal('hide');
+                }
+            }
+        }
         function filterFloat(evt, input) {
             var key = window.Event ? evt.which : evt.keyCode;
             var chark = String.fromCharCode(key);

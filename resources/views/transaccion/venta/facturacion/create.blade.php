@@ -713,8 +713,7 @@
                 console.log(total);
                 var porc_det = $('#porcentaje_detc').val();
                 var op_det = total * (porc_det / 100);
-                var sub_zero = Math.round(op_det * 100) / 100;
-                console.log(sub_zero);
+                var sub_zero = Math.round(op_det);
                 $('#tota_detra').val(sub_zero);
             }
         }
