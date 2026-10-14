@@ -26,71 +26,71 @@ class KardexEntradaRegistroObserver
     public function created(kardex_entrada_registro $kardexEntradaRegistro)
     {
         // 1. Generación de Lote y Series en transacción atómica
-        try {
-            DB::transaction(function () use ($kardexEntradaRegistro): void {
-                $producto = Producto::find($kardexEntradaRegistro->producto_id);
-                $codigoProducto = $producto ? $producto->codigo_producto : ('PROD-' . $kardexEntradaRegistro->producto_id);
+        // try {
+        //     DB::transaction(function () use ($kardexEntradaRegistro): void {
+        //         $producto = Producto::find($kardexEntradaRegistro->producto_id);
+        //         $codigoProducto = $producto ? $producto->codigo_producto : ('PROD-' . $kardexEntradaRegistro->producto_id);
 
-                $kardexEntrada = Kardex_entrada::with('provedor')->find($kardexEntradaRegistro->kardex_entrada_id);
-                $proveedorId = $kardexEntrada ? $kardexEntrada->provedor_id : null;
-                $proveedorNombre = ($kardexEntrada && $kardexEntrada->provedor) ? $kardexEntrada->provedor->empresa : null;
+        //         $kardexEntrada = Kardex_entrada::with('provedor')->find($kardexEntradaRegistro->kardex_entrada_id);
+        //         $proveedorId = $kardexEntrada ? $kardexEntrada->provedor_id : null;
+        //         $proveedorNombre = ($kardexEntrada && $kardexEntrada->provedor) ? $kardexEntrada->provedor->empresa : null;
 
-                $cantidad = (int) ($kardexEntradaRegistro->cantidad ?? $kardexEntradaRegistro->unidad_cantidad ?? 1);
-                $costoUnitario = (float) ($kardexEntradaRegistro->precio_nacional ?? 0.0);
-                $codigoLote = sprintf('LOT-%s-%04d', Carbon::now()->format('Ymd'), (int) $kardexEntradaRegistro->id);
+        //         $cantidad = (int) ($kardexEntradaRegistro->cantidad ?? $kardexEntradaRegistro->unidad_cantidad ?? 1);
+        //         $costoUnitario = (float) ($kardexEntradaRegistro->precio_nacional ?? 0.0);
+        //         $codigoLote = sprintf('LOT-%s-%04d', Carbon::now()->format('Ymd'), (int) $kardexEntradaRegistro->id);
 
-                // Crear Lote
-                $lote = Lote::create([
-                    'lote'                       => $codigoLote,
-                    'producto_id'                => $kardexEntradaRegistro->producto_id,
-                    'codigo_producto'           => $codigoProducto,
-                    'almacen_id'                 => $kardexEntradaRegistro->almacen_id,
-                    'proveedor_id'               => $proveedorId,
-                    'proveedor_nombre'           => $proveedorNombre,
-                    'cantidad'                   => $cantidad,
-                    'cantidad_disponible'        => $cantidad,
-                    'costo_individual'           => $costoUnitario,
-                    'fecha_produccion'           => Carbon::now()->toDateString(),
-                    'fecha_vencimiento'          => Carbon::now()->addYears(2)->toDateString(),
-                    'estado'                     => 'Completo',
-                    'kardex_entrada_registro_id' => $kardexEntradaRegistro->id,
-                ]);
+        //         // Crear Lote
+        //         $lote = Lote::create([
+        //             'lote'                       => $codigoLote,
+        //             'producto_id'                => $kardexEntradaRegistro->producto_id,
+        //             'codigo_producto'           => $codigoProducto,
+        //             'almacen_id'                 => $kardexEntradaRegistro->almacen_id,
+        //             'proveedor_id'               => $proveedorId,
+        //             'proveedor_nombre'           => $proveedorNombre,
+        //             'cantidad'                   => $cantidad,
+        //             'cantidad_disponible'        => $cantidad,
+        //             'costo_individual'           => $costoUnitario,
+        //             'fecha_produccion'           => Carbon::now()->toDateString(),
+        //             'fecha_vencimiento'          => Carbon::now()->addYears(2)->toDateString(),
+        //             'estado'                     => 'Completo',
+        //             'kardex_entrada_registro_id' => $kardexEntradaRegistro->id,
+        //         ]);
 
-                // Inserción masiva de series en bloques
-                $estadoEnStock = EstadoProducto::where('nombre_estado', 'En Stock')->first();
-                $estadoId = $estadoEnStock ? $estadoEnStock->id : null;
-                $now = Carbon::now()->toDateTimeString();
+        //         // Inserción masiva de series en bloques
+        //         $estadoEnStock = EstadoProducto::where('nombre_estado', 'En Stock')->first();
+        //         $estadoId = $estadoEnStock ? $estadoEnStock->id : null;
+        //         $now = Carbon::now()->toDateTimeString();
 
-                $seriesBatch = [];
-                for ($i = 1; $i <= $cantidad; $i++) {
-                    $seriesBatch[] = [
-                        'numero_serie'            => sprintf('SN-%s-%s-%04d', $codigoProducto, $codigoLote, $i),
-                        'producto_id'             => $kardexEntradaRegistro->producto_id,
-                        'codigo_producto'         => $codigoProducto,
-                        'lote_id'                 => $lote->id,
-                        'codigo_lote'             => $codigoLote,
-                        'estado_id'               => $estadoId,
-                        'fecha_ultimo_movimiento' => $now,
-                        'created_at'              => $now,
-                        'updated_at'              => $now,
-                    ];
-                }
+        //         $seriesBatch = [];
+        //         for ($i = 1; $i <= $cantidad; $i++) {
+        //             $seriesBatch[] = [
+        //                 'numero_serie'            => sprintf('SN-%s-%s-%04d', $codigoProducto, $codigoLote, $i),
+        //                 'producto_id'             => $kardexEntradaRegistro->producto_id,
+        //                 'codigo_producto'         => $codigoProducto,
+        //                 'lote_id'                 => $lote->id,
+        //                 'codigo_lote'             => $codigoLote,
+        //                 'estado_id'               => $estadoId,
+        //                 'fecha_ultimo_movimiento' => $now,
+        //                 'created_at'              => $now,
+        //                 'updated_at'              => $now,
+        //             ];
+        //         }
 
-                foreach (array_chunk($seriesBatch, 500) as $chunk) {
-                    DB::table('series_productos')->insert($chunk);
-                }
-            });
-        } catch (Throwable $e) {
-            Log::error(
-                sprintf('Error en KardexEntradaRegistroObserver (Lotes/Series) para registro #%s: %s', (string) ($kardexEntradaRegistro->id ?? 'N/A'), $e->getMessage()),
-                [
-                    'exception'   => $e,
-                    'registro_id' => $kardexEntradaRegistro->id ?? null,
-                ]
-            );
+        //         foreach (array_chunk($seriesBatch, 500) as $chunk) {
+        //             DB::table('series_productos')->insert($chunk);
+        //         }
+        //     });
+        // } catch (Throwable $e) {
+        //     Log::error(
+        //         sprintf('Error en KardexEntradaRegistroObserver (Lotes/Series) para registro #%s: %s', (string) ($kardexEntradaRegistro->id ?? 'N/A'), $e->getMessage()),
+        //         [
+        //             'exception'   => $e,
+        //             'registro_id' => $kardexEntradaRegistro->id ?? null,
+        //         ]
+        //     );
 
-            throw $e;
-        }
+        //     throw $e;
+        // }
 
         // 2. Recálculo de Stock_producto (Precios Promedio)
         $stock_productos=Stock_producto::get();

@@ -129,7 +129,7 @@ class BoletaRegistroObserver
                         : ($registro->created_at ? Carbon::parse($registro->created_at)->toDateString() : Carbon::today()->toDateString());
                     $fechaVencimiento = Carbon::parse($fechaVenta)->addMonths($mesesGarantia)->toDateString();
 
-                    \App\GarantiaSerie::updateOrCreate(
+                    GarantiaSerie::updateOrCreate(
                         ['serie_id' => $serie->id],
                         [
                             'estado_garantia'   => 'Vigente',
