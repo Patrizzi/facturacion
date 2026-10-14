@@ -83,27 +83,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-2"><strong>Detraccion:</strong></label>
-                                        <div class="col-md-10">
-                                            <input type="date" id="fecha_emision" name="fecha_emision" class="form-control"
-                                                value="{{ date('Y-m-d') }}" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-form-label col-md-2"><strong>F. Emisión:</strong></label>
-                                <div class="col-md-10">
-                                    <input type="date" id="fecha_emision" name="fecha_emision" class="form-control"
-                                        value="{{ date('Y-m-d') }}" readonly>
-                                </div>
-                            </div>
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>Comisionista:</strong></label>
                                 <div class="col-md-10">
@@ -117,6 +96,28 @@
                                             </option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4"><strong>Detraccion:</strong></label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" id="detraccion" name="detraccion_value" disabled>
+                                                <option value="0">Desactivo</option>
+                                                <option value="1">Activo</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2" style="display: flex">
+                                            <a href="" id="button_detracc" data-toggle="modal"
+                                                data-target="#modal_detraccion" style="margin: auto"><i
+                                                    class="fa fa-question-circle"
+                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
                                 </div>
                             </div>
                         </div>
@@ -586,7 +587,9 @@
             padding: 3px 12px;
             border: 1px solid #e5e6e7;
         }
-
+        span.select2-container.select2-container--default.select2-container--open {
+            z-index: 999999;
+        }
         .td_selected>span.select2.select2-container.select2-container--default {
             max-width: 700px !important;
             width: 30vw !important;
@@ -597,7 +600,7 @@
         }
 
         .a {
-            color: red
+            color: red;
         }
 
         #loaderGif {
@@ -655,6 +658,10 @@
         .table>thead:first-child>tr:first-child>th {
             vertical-align: middle;
             text-align: left;
+        }
+        .detracc_campo_required, .retenc_campo_required {
+            display: none;
+            color: red;
         }
     </style>
     
@@ -736,6 +743,117 @@
         });
         $(".select2_demo_comisionista").select2({
             // placeholder: "Sin comisión"
+        });
+        $('.select2_tipo_op').select2();
+        $('.select2_mediopago').select2();
+        $('.select2_tipodetrac').select2();
+        $('.select2_tipodetrac').on('select2:select', function(e) {
+
+            var data = e.params.data;
+            var id_data = data.id;
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.tipo_op_search') }}",
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'id_tipo_detra': data.id,
+                },
+                success: function(msg) {
+                    // console.log(msg.tasa)
+                    $('#porcentaje_detc').val(msg.tasa);
+                    multi_detraccion();
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        });
+        function multi_detraccion() {
+
+            var moneda = $('#moneda_id').val();
+
+            if (moneda == 1) { //soles
+                var total = $('#total_final').val();
+                var porc_det = $('#porcentaje_detc').val();
+                var op_det = total * (porc_det / 100);
+                var sub_zero = Math.round(op_det);
+                console.log(sub_zero);
+                $('#tota_detra').val(sub_zero);
+            } else { //dolares
+                var total_dol = $('#total_final').val();
+
+                var tipo_cam = $('#tc_paralelo').html();
+                var total = total_dol * tipo_cam;
+
+                var porc_det = $('#porcentaje_detc').val();
+                var op_det = total * (porc_det / 100);
+                var sub_zero = Math.round(op_det);
+
+                $('#tota_detra').val(sub_zero);
+            }
+        }
+
+        $('#porcentaje_detc').on('keyup', function() {
+            multi_detraccion();
+        });
+
+        $('.select2_tipo_op').on('select2:select', function(e) {
+            var id = e.params.data.id;
+            var split_id = id.split(' ');
+            if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                console.log('a');
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+                $('#detraccion').attr('disabled', false);
+            }
+        });
+
+        function save_detraccion() {
+            var seletc_det = $('.select2_tipo_op').val();
+            var split_id = seletc_det.split(' ');
+            console.log(split_id[0]);
+            if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
+                var tipo_detra = $('#select_tipo_pago').val();
+                var ipt_medio = $('.select2_mediopago').val();
+                var porce_detra = $('#porcentaje_detc').val();
+                var tot_det = $('#tota_detra').val();
+
+                if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                    $('#modal_detraccion').modal('show');
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+                    inputs.forEach(function(input) {
+                        input.style.display = 'block';
+                    });
+                    return;
+                } else {
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+                    inputs.forEach(function(input) {
+                        input.style.display = 'none';
+                    });
+                    $('#modal_detraccion').modal('hide');
+                }
+
+            }
+        }
+        $('#detraccion').on('change', function() {
+            var selected = this.value;
+            console.log(selected);
+            if (selected == "1") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.setAttribute('required', 'required');
+                });
+                $('.select2_tipo_op').val('12').trigger('change.select2');
+            } else {
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.removeAttribute('required');
+                });
+                $('.select2_tipo_op').val('1').trigger('change.select2');
+            }
         });
 
         // Validar Formulario / No doble insercion de datos(Gente desdesperada)
