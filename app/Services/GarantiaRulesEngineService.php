@@ -16,11 +16,16 @@ class GarantiaRulesEngineService
             $tipoFallaNormalizado = $this->normalizarTipoFalla($tipoFalla);
             $condiciones = $this->normalizarCondicionesUso($condicionesUso);
 
-            if ($serie->fecha_vencimiento_garantia !== null && $serie->fecha_vencimiento_garantia !== '') {
-                $fechaVencimiento = Carbon::parse($serie->fecha_vencimiento_garantia)->endOfDay();
-                if (Carbon::now()->greaterThan($fechaVencimiento)) {
-                    return VeredictoGarantia::rechazadoExclusion('La garantía está vencida por fecha de vigencia.');
-                }
+            // 1. Validación de existencia y vigencia de garantía con el modelo normalizado
+            $fechaVencimientoRaw = $serie->garantiaActual?->fecha_vencimiento ?? $serie->fecha_vencimiento_garantia;
+
+            if (empty($fechaVencimientoRaw)) {
+                return VeredictoGarantia::rechazadoExclusion('El producto no cuenta con un registro de garantía activo o ha expirado.');
+            }
+
+            $fechaVencimiento = Carbon::parse($fechaVencimientoRaw)->endOfDay();
+            if (Carbon::today()->gt($fechaVencimiento)) {
+                return VeredictoGarantia::rechazadoExclusion('La garantía está vencida por fecha de vigencia.');
             }
 
             if ($this->tieneExclusion($tipoFallaNormalizado, $condiciones)) {
@@ -97,13 +102,17 @@ class GarantiaRulesEngineService
             return 'Rechazado por daño físico del equipo.';
         }
 
-        if (in_array($tipoFalla, ['derrame de liquidos', 'derrame de líquidos', 'derrame_liquido'], true)
-            || ($condiciones['derrame_liquido'] ?? false)) {
+        if (
+            in_array($tipoFalla, ['derrame de liquidos', 'derrame de líquidos', 'derrame_liquido'], true)
+            || ($condiciones['derrame_liquido'] ?? false)
+        ) {
             return 'Rechazado por derrame de líquidos.';
         }
 
-        if (in_array($tipoFalla, ['manipulacion no autorizada', 'manipulación no autorizada', 'manipulacion_no_autorizada'], true)
-            || ($condiciones['manipulacion_no_autorizada'] ?? false)) {
+        if (
+            in_array($tipoFalla, ['manipulacion no autorizada', 'manipulación no autorizada', 'manipulacion_no_autorizada'], true)
+            || ($condiciones['manipulacion_no_autorizada'] ?? false)
+        ) {
             return 'Rechazado por manipulación no autorizada.';
         }
 
