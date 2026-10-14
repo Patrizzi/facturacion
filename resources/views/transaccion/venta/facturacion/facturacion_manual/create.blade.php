@@ -608,7 +608,6 @@
 
         .detracc_campo_required, .retenc_campo_required {
             display: none;
-            /* font-size: 9px; */
             color: red;
         }
 
