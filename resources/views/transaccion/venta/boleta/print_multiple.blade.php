@@ -338,12 +338,60 @@
                         <span style="display: block;float: left"> Importe Total: </span>
                         <span style="display: block;float: right">{{$boleta->moneda->simbolo}} {{number_format(round($end, 2),2)}}</span>
                     </div>
-                    <div class="col-sm-12 form-control" align="center" style="margin-top: 8px">
-                        <div align="left">
-                            <strong>Observación:</strong>
-                            <p> {{$boleta->observacion }} </p>
+                </div>
+                @php
+                    if ($detraccion != 'not' || $boleta->retencion == 1) {
+                        $columna_add = '1';
+                    } else {
+                        $columna_add = '0';
+                    }
+                @endphp
+                <div class="row">
+                    @if ($columna_add == '0')
+                        <div class="col-sm-12 form-control" style="height:  100px">
+                            <strong>Observaciones:</strong><br>
+                            {{ $boleta->observacion }}
                         </div>
-                    </div>
+                    @else
+                        <div class="col-sm-6 ">
+                            <div class="form-control" style="height: 100% !important">
+                                <strong>Observaciones:</strong><br>
+                                {{ $boleta->observacion }}
+                            </div>
+                        </div>
+                        @if ($detraccion != 'not')
+                            <div class="col-sm-6 ">
+                                <div class="form-control" style="height: 100% !important">
+                                    <strong>Informacion de Detraccion:</strong><br>
+                                    <strong>Tipo de Detraccion:</strong>
+                                    {{ $detraccion->tipo_detraccion->descripcion }} -
+                                    {{ $detraccion->porcentaje_detraccion }} %<br>
+                                    <strong>Medio de Pago:</strong>
+                                    {{ $detraccion->medio_pago->descripcion }} <br>
+                                    <strong>Monto de Detraccion:</strong>
+                                    S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
+                                </div>
+                            </div>
+                        @else
+                            @php
+                                $total_fact = $facturacion->total_precio_sin_forma;
+                            @endphp
+                            <div class="col-sm-6 ">
+                                <div class="form-control" style="height: 100% !important">
+                                    <strong>Informacion de Retención:</strong><br>
+                                    <strong>Importe Total Facturado:</strong>
+                                    {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
+                                    <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion }} %):</strong>
+                                    {{ $simbologia }} {{ number_format(round($facturacion->monto_retencion, 2), 2) }}
+                                    <br>
+                                    <strong>Monto Neto a Pagar:</strong>
+                                    {{ $simbologia }}
+                                    {{ number_format(round($facturacion->monto_retencion_pagar, 2), 2) }} <br>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+                    {{-- </div> --}}
                 </div>
                 <br>
                 @include('layout_bancos')

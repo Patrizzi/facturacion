@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-form-label col-md-4"><strong>G. Remisión: </strong>
+                                    <label class="col-form-label col-md-4"><strong>G. Remi: </strong>
                                         <small class="tooltip-demo"><i class="fa fa-info-circle" data-toggle="tooltip"
                                                 data-placement="bottom"
                                                 title="Ej: TE01-999  *  Mayusculas y separar solo con espacios en blanco"></i></small></label>
@@ -61,11 +61,27 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-form-label col-md-2"><strong>F. Emisión:</strong></label>
-                            <div class="col-md-10 pago_first_column">
-                                <input type="text" id="" name="" class="form-control"
-                                    value="{{ $boleta->fecha_emision }}" readonly>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row" >
+                                    <label class="col-form-label col-md-4"> <strong>Detracción:</strong> </label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="detraccion" name="detraccion_value">
+                                            <option value="0" @if($boleta->detracciones == null) selected @endif>Desactiva</option>
+                                            <option value="1" @if($boleta->detracciones != null) selected @endif>Activa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2" style="display: flex">
+                                        <a href="" id="button_detracc" data-toggle="modal"
+                                            @if ( $boleta->detracciones != null ) data-target="#modal_detraccion"  @else data-target="#" @endif style="margin: auto"><i
+                                                class="fa fa-question-circle"
+                                                style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
                             </div>
                         </div>
                         <div class="form-group row">
@@ -86,7 +102,7 @@
                     {{-- 2da Columna --}}
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
+                            <label class="col-form-label col-md-2"><strong>T. Operación</strong></label>
                             <div class="col-md-10">
                                 <select class="select2_tipo_op" name="tipo_operacion">
                                     @foreach ($tipo_operacion as $t_op)
@@ -144,19 +160,33 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-form-label col-md-2"><strong>F. Venc.:</strong></label>
-                            <div class="col-md-10">
-                                @if ($boleta->forma_pago_id == 1)
-                                    {{-- Si es contado --}}
-                                    <input type="date" class="form-control" id="fecha_vencimiento"
-                                        name="fecha_vencimiento" value="{{ $boleta->fecha_vencimiento_edit }}">
-                                @else
-                                    <input type="date" readonly class="form-control" id="fecha_vencimiento"
-                                        name="fecha_vencimiento" value="{{ $boleta->fecha_vencimiento_edit }}">
-                                @endif
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-4"><strong>F. Emisión:</strong></label>
+                                    <div class="col-md-8 pago_first_column">
+                                        <input type="text" id="" name="" class="form-control"
+                                            value="{{ $boleta->fecha_emision }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-4"><strong>F. Venc.:</strong></label>
+                                    <div class="col-md-8">
+                                        @if ($boleta->forma_pago_id == 1)
+                                            {{-- Si es contado --}}
+                                            <input type="date" class="form-control" id="fecha_vencimiento"
+                                                name="fecha_vencimiento" value="{{ $boleta->fecha_vencimiento_edit }}">
+                                        @else
+                                            <input type="date" readonly class="form-control" id="fecha_vencimiento"
+                                                name="fecha_vencimiento" value="{{ $boleta->fecha_vencimiento_edit }}">
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        
                         <div class="form-group row">
                             <label class="col-form-label col-md-2"><strong>Vendedor:</strong></label>
                             <div class="col-md-10">
@@ -405,6 +435,7 @@
                 </div>
                 {{-- Modal dentro del Form para que se envien los datos --}}
                 @include('transaccion.venta.boleta._shared.modal_cuota_edit')
+                @include('transaccion.venta.boleta._shared._edit_modal_detraccion')
             </form>
         </div>
     </div>

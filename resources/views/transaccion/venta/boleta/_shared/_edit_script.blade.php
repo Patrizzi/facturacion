@@ -31,6 +31,7 @@
     span.select2-container.select2-container--default.select2-container--open {
         z-index: 2126 !important;
     }
+    
 </style>
 <script>
     $(".select2_tipo_op").select2();
