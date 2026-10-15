@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,14 +11,14 @@
     <link href="{{ asset('font-awesome/css/font-awesome.css') }}" rel="stylesheet">
 
     <link href="{{ asset('css/animate.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style%20copy.css') }}" rel="stylesheet">
 
     <!-- <script src="@yield('vue_js', '#')" defer></script> -->
 
-    <link href="{{asset('css/plugins/iCheck/custom.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/steps/jquery.steps.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/iCheck/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/steps/jquery.steps.css') }}" rel="stylesheet">
 
-    <link href="{{asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css')}}" rel="stylesheet">
+    <link href="{{ asset('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css') }}" rel="stylesheet">
     {{-- FUNCION CERRAR AUTOMATICAMENTE --}}
     <SCRIPT LANGUAGE="JavaScript">
         function cerrar() {
@@ -25,20 +26,22 @@
         }
     </SCRIPT>
     <style>
-    @media print {
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    .avoid-break {
-        page-break-inside: avoid;
-    }
-    }
+        @media print {
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .avoid-break {
+                page-break-inside: avoid;
+            }
+        }
     </style>
 </head>
+
 <body class="white-bg" onLoad="setTimeout('cerrar()',1*1000)">
     <div class="row">
-        @if ($boleta->b_electronica != 0 || ($boleta->nota_credito == 1 && $boleta->motivo == "01"))
+        @if ($boleta->b_electronica != 0 || ($boleta->nota_credito == 1 && $boleta->motivo == '01'))
             <div id="watermark">
                 <p>Anulado</p>
             </div>
@@ -50,9 +53,9 @@
                     <div class="col-sm-4">
                         <div class="form-control ruc" style="height: 125px">
                             <center>
-                                <h3 style="padding-top:10px ">RUC : {{$empresa->ruc}}</h3>
+                                <h3 style="padding-top:10px ">RUC : {{ $empresa->ruc }}</h3>
                                 <h2>BOLETA ELECTRÓNICA</h2>
-                                <h5> {{$boleta->codigo_boleta}}</h5>
+                                <h5> {{ $boleta->codigo_boleta }}</h5>
                             </center>
                         </div>
                     </div>
@@ -64,39 +67,45 @@
                             <h3> Datos Generales</h3>
                             <div align="left">
                                 <strong>Cliente:</strong>
-                                @if(isset($boleta->cliente_id)){{$boleta->cliente->nombre}}
-                                @else{{$boleta->cotizacion->cliente->nombre}}
+                                @if (isset($boleta->cliente_id))
+                                    {{ $boleta->cliente->nombre }}
+                                    @else{{ $boleta->cotizacion->cliente->nombre }}
                                 @endif <br>
                                 <strong>N° de Documento:</strong>
-                                @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
-                                @else{{$boleta->cotizacion->cliente->numero_documento}}
+                                @if (isset($boleta->cliente_id))
+                                    {{ $boleta->cliente->numero_documento }}
+                                    @else{{ $boleta->cotizacion->cliente->numero_documento }}
                                 @endif <br>
                                 <strong>Dirección:</strong>
-                                @if(isset($boleta->cliente_id)){{$boleta->cliente->direccion}}
-                                @else{{$boleta->cotizacion->cliente->direccion}}
+                                @if (isset($boleta->cliente_id))
+                                    {{ $boleta->cliente->direccion }}
+                                    @else{{ $boleta->cotizacion->cliente->direccion }}
                                 @endif <br>
                                 <strong>Condiciones de Pago:</strong>
-                                @if(isset($boleta->cliente_id)){{$boleta->forma_pago->nombre }}
-                                @else{{$boleta->cotizacion->forma_pago->nombre }}
-                                @endif  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Tipo de Moneda:</strong>
-                                @if(isset($boleta->cliente_id)){{$boleta->moneda->nombre }}
-                                @else{{$boleta->cotizacion->moneda->nombre }}
+                                @if (isset($boleta->cliente_id))
+                                    {{ $boleta->forma_pago->nombre }}
+                                    @else{{ $boleta->cotizacion->forma_pago->nombre }}
+                                @endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Tipo de
+                                    Moneda:</strong>
+                                @if (isset($boleta->cliente_id))
+                                    {{ $boleta->moneda->nombre }}
+                                    @else{{ $boleta->cotizacion->moneda->nombre }}
                                 @endif <br>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-6" align="center">
-                        <div class="form-control" >
+                        <div class="form-control">
                             <h3>Condiciones Generales</h3>
                             <div align="left">
                                 <strong>Orden de Compra:</strong>
-                                {{$boleta->orden_compra}} <br>
+                                {{ $boleta->orden_compra }} <br>
                                 <strong>Guía de Remisión:</strong>
-                                {{$boleta->guia_remision}} <br>
+                                {{ $boleta->guia_remision }} <br>
                                 <strong>Fecha Emisión:</strong>
-                                {{$boleta->fecha_emision}} <br>
+                                {{ $boleta->fecha_emision }} <br>
                                 <strong>Fecha de Vencimiento:</strong>
-                                {{$boleta->fecha_vencimiento }} <br>
+                                {{ $boleta->fecha_vencimiento }} <br>
                             </div>
                         </div>
                     </div>
@@ -116,34 +125,47 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <span hidden="hidden">{{$i=1}} </span>
-                                @foreach($boleta_registro as $boleta_registros)
-                                <tr>
-                                    <td style="text-align: center;">{{$i}} </td>
-                                    @if(isset($boleta_registros->producto))
-                                        <td style="text-align: center;">{{$boleta_registros->producto->codigo_producto}}</td>
-                                        {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
-                                        <td>{{$boleta_registros->producto->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
-                                    @else
-                                        <td style="text-align: center;">{{$boleta_registros->servicio->codigo_servicio}}</td>
-                                        {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
-                                        <td>{{$boleta_registros->servicio->nombre}} {{$boleta_registros->descripcion_item}}@if(isset($boleta_registros->numero_serie)) <br><strong>N/S:</strong> {{$boleta_registros->numero_serie}}@endif</td>
-                                    @endif
-                                    <td style="text-align: center">{{$boleta_registros->cantidad}}</td>
-                                    {{-- <td>{{$boleta_registros->precio}}</td>
-                                    <td>{{$boleta_registros->descuento}}%</td> --}}
-                                    <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi,2)}}</td>
-                                    <td style="text-align: right;">{{number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad ,2)}}</td>
-                                    <td style="display: none">
-                                        {{$sub_total=($boleta->op_gravada)+($boleta->op_inafecta)+($boleta->op_exonerada)}}
-                                        {{$sub_total_gravado=($boleta->op_gravada)}}
-                                        {{$igv_p=round($sub_total_gravado, 2)*$igv->igv_total/100}}
-                                        {{$end=round($sub_total, 2)+round($igv_p, 2)}}
-                                        {{$end2=number_format(round($sub_total, 2)+round($igv_p, 2),2)}}
+                                <span hidden="hidden">{{ $i = 1 }} </span>
+                                @foreach ($boleta_registro as $boleta_registros)
+                            <tr>
+                                <td style="text-align: center;">{{ $i }} </td>
+                                @if (isset($boleta_registros->producto))
+                                    <td style="text-align: center;">{{ $boleta_registros->producto->codigo_producto }}
                                     </td>
-                                </tr>
-                                <span hidden="hidden">{{$i++}}</span>
-                                @endforeach
+                                    {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
+                                    <td>{{ $boleta_registros->producto->nombre }}
+                                        {{ $boleta_registros->descripcion_item }}@if (isset($boleta_registros->numero_serie))
+                                            <br><strong>N/S:</strong> {{ $boleta_registros->numero_serie }}
+                                        @endif
+                                    </td>
+                                @else
+                                    <td style="text-align: center;">{{ $boleta_registros->servicio->codigo_servicio }}
+                                    </td>
+                                    {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
+                                    <td>{{ $boleta_registros->servicio->nombre }}
+                                        {{ $boleta_registros->descripcion_item }}@if (isset($boleta_registros->numero_serie))
+                                            <br><strong>N/S:</strong> {{ $boleta_registros->numero_serie }}
+                                        @endif
+                                    </td>
+                                @endif
+                                <td style="text-align: center">{{ $boleta_registros->cantidad }}</td>
+                                {{-- <td>{{$boleta_registros->precio}}</td>
+                                    <td>{{$boleta_registros->descuento}}%</td> --}}
+                                <td style="text-align: right;">
+                                    {{ number_format($boleta_registros->precio_unitario_comi, 2) }}</td>
+                                <td style="text-align: right;">
+                                    {{ number_format($boleta_registros->precio_unitario_comi * $boleta_registros->cantidad, 2) }}
+                                </td>
+                                <td style="display: none">
+                                    {{ $sub_total = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
+                                    {{ $sub_total_gravado = $boleta->op_gravada }}
+                                    {{ $igv_p = (round($sub_total_gravado, 2) * $igv->igv_total) / 100 }}
+                                    {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
+                                    {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
+                                </td>
+                            </tr>
+                            <span hidden="hidden">{{ $i++ }}</span>
+                            @endforeach
                             </tr>
                         </tbody>
                     </table>
@@ -157,11 +179,11 @@
                             <div class="col-sm-8">
                                 <h3 align="left">
                                     <?php
-                                        use Luecano\NumeroALetras\NumeroALetras;
-                                        $v = new NumeroALetras();
-                                        $letra = ($v->toInvoice($end, 2));
+                                    use Luecano\NumeroALetras\NumeroALetras;
+                                    $v = new NumeroALetras();
+                                    $letra = $v->toInvoice($end, 2);
                                     ?>
-                                    Son: {{ucfirst(mb_strtolower($letra,'UTF-8'))}} {{ $boleta->moneda->nombre }}
+                                    Son: {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $boleta->moneda->nombre }}
                                 </h3>
                                 <br>
                                 <small style="font-size: 70%; display: block;">
@@ -176,7 +198,7 @@
                             </div>
                             <div class="col-sm-4 qr-container">
                                 <div class="qr-box">
-                                    @if(!empty($qrCode))
+                                    @if (!empty($qrCode))
                                         <img src="{{ $qrCode }}" alt="Código QR" class="qr-image">
                                     @else
                                         <span class="qr-placeholder">QR</span>
@@ -185,33 +207,84 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 form-control">
-                        <span style="display: block;float: left"> Subtotal:</span>
-                        <span style="display: block;float: right;"> {{$simbologia=$boleta->moneda->simbolo}} {{number_format($sub_total, 2)}}</span>
-                        <br>
-                        <span style="display: block;float: left"> Op. Gravada: </span>
-                        <span style="display: block;float: right">{{$simbologia}} {{number_format($boleta->op_gravada,2)}}</span><br>
-                        <span style="display: block;float: left"> Op. Inafecta: </span>
-                        <span style="display: block;float: right">{{$simbologia}} {{ number_format($boleta->op_inafecta,2)}}</span><br>
-                        <span style="display: block;float: left"> Op. Exonerada: </span>
-                        <span style="display: block;float: right">{{$simbologia}} {{number_format($boleta->op_exonerada,2)}} </span><br>
-                        <span style="display: block;float: left"> I.G.V.: </span>
-                        <span style="display: block;float: right">{{$boleta->moneda->simbolo}} {{number_format(round($igv_p, 2),2)}}</span><br>
-                        <span style="display: block;float: left"> Importe Total: </span>
-                        <span style="display: block;float: right">{{$boleta->moneda->simbolo}} {{number_format(round($end, 2),2)}}</span>
-                        {{-- <div class="col-sm-4 form-control" > --}}
-                        {{-- <span style="display: block;float: left"> Subtotal:</span>
-                        <span style="display: block;float: right;">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}} </span>
-                        <br> --}}
-                        {{-- <span style="display: block;float: left"><strong> Importe Total: </strong></span>
-                        <span style="display: block;float: right">{{$boleta->moneda->simbolo }} {{number_format(round($sub_total, 2),2)}}</span> --}}
-                    </div>
-                    <div class="col-sm-12 form-control" align="center" style="margin-top: 8px">
-                        <div align="left">
-                            <strong>Observación:</strong>
-                            <p> {{$boleta->observacion }} </p>
+                    <div class="col-sm-4 ">
+                        <div class="form-control">
+                            <span style="display: block;float: left"> Subtotal:</span>
+                            <span style="display: block;float: right;"> {{ $simbologia = $boleta->moneda->simbolo }}
+                                {{ number_format($sub_total, 2) }}</span>
+                            <br>
+                            <span style="display: block;float: left"> Op. Gravada: </span>
+                            <span style="display: block;float: right">{{ $simbologia }}
+                                {{ number_format($boleta->op_gravada, 2) }}</span><br>
+                            <span style="display: block;float: left"> Op. Inafecta: </span>
+                            <span style="display: block;float: right">{{ $simbologia }}
+                                {{ number_format($boleta->op_inafecta, 2) }}</span><br>
+                            <span style="display: block;float: left"> Op. Exonerada: </span>
+                            <span style="display: block;float: right">{{ $simbologia }}
+                                {{ number_format($boleta->op_exonerada, 2) }} </span><br>
+                            <span style="display: block;float: left"> I.G.V.: </span>
+                            <span style="display: block;float: right">{{ $boleta->moneda->simbolo }}
+                                {{ number_format(round($igv_p, 2), 2) }}</span><br>
+                            <span style="display: block;float: left"> Importe Total: </span>
+                            <span style="display: block;float: right">{{ $boleta->moneda->simbolo }}
+                                {{ number_format(round($end, 2), 2) }}</span><br>
                         </div>
                     </div>
+                </div>
+                <br>
+                @php
+                    if ($detraccion != 'not' || $boleta->retencion == 1) {
+                        $columna_add = '1';
+                    } else {
+                        $columna_add = '0';
+                    }
+                @endphp
+                <div class="row">
+                    @if ($columna_add == '0')
+                        <div class="col-sm-12 form-control" style="height:  100px">
+                            <strong>Observaciones:</strong><br>
+                            {{ $boleta->observacion }}
+                        </div>
+                    @else
+                        <div class="col-sm-6 ">
+                            <div class="form-control" style="height: 100% !important">
+                                <strong>Observaciones:</strong><br>
+                                {{ $boleta->observacion }}
+                            </div>
+                        </div>
+                        @if ($detraccion != 'not')
+                            <div class="col-sm-6 ">
+                                <div class="form-control" style="height: 100% !important">
+                                    <strong>Informacion de Detraccion:</strong><br>
+                                    <strong>Tipo de Detraccion:</strong>
+                                    {{ $detraccion->tipo_detraccion->descripcion }} -
+                                    {{ $detraccion->porcentaje_detraccion }} %<br>
+                                    <strong>Medio de Pago:</strong>
+                                    {{ $detraccion->medio_pago->descripcion }} <br>
+                                    <strong>Monto de Detraccion:</strong>
+                                    S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
+                                </div>
+                            </div>
+                        @else
+                            @php
+                                $total_fact = $facturacion->total_precio_sin_forma;
+                            @endphp
+                            <div class="col-sm-6 ">
+                                <div class="form-control" style="height: 100% !important">
+                                    <strong>Informacion de Retención:</strong><br>
+                                    <strong>Importe Total Facturado:</strong>
+                                    {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
+                                    <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion }} %):</strong>
+                                    {{ $simbologia }} {{ number_format(round($facturacion->monto_retencion, 2), 2) }}
+                                    <br>
+                                    <strong>Monto Neto a Pagar:</strong>
+                                    {{ $simbologia }}
+                                    {{ number_format(round($facturacion->monto_retencion_pagar, 2), 2) }} <br>
+                                </div>
+                            </div>
+                        @endif
+                    @endif
+                    {{-- </div> --}}
                 </div>
                 <br>
                 @include('layout_bancos')
@@ -220,16 +293,41 @@
         </div>
     </div>
     <style type="text/css">
-        .ruc{border-radius: 10px; height: 150px;}
-        .form-control{border-radius: 10px;border-color: #3D3D3D}
-        .a{height: 30px; margin:0;border-radius: 0px;text-align: center;}
-        .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {border-top-width: 0px;border-color: #3D3D3D}
-        *{
+        .ruc {
+            border-radius: 10px;
+            height: 150px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border-color: #3D3D3D
+        }
+
+        .a {
+            height: 30px;
+            margin: 0;
+            border-radius: 0px;
+            text-align: center;
+        }
+
+        .table>thead>tr>th,
+        .table>tbody>tr>th,
+        .table>tfoot>tr>th,
+        .table>thead>tr>td,
+        .table>tbody>tr>td,
+        .table>tfoot>tr>td {
+            border-top-width: 0px;
+            border-color: #3D3D3D
+        }
+
+        * {
             color: black;
         }
-        p.form-control{
+
+        p.form-control {
             border-color: #3D3D3D;
         }
+
         .qr-container {
             display: flex;
             justify-content: center;
@@ -259,6 +357,7 @@
             color: #999;
             text-align: center;
         }
+
         #watermark {
             display: flex;
             justify-content: center;
@@ -278,7 +377,7 @@
             top: 15%;
             right: 40%;
             z-index: 9999;
-            font-size: 90px !important; 
+            font-size: 90px !important;
         }
     </style>
     <!-- Mainly scripts -->
@@ -300,4 +399,5 @@
     </script>
 
 </body>
+
 </html>

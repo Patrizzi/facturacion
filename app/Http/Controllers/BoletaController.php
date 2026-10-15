@@ -517,6 +517,7 @@ class BoletaController extends Controller
 
         //calculo para el stock del producto
         $almacen_producto_validacion = $request->get('almacen');
+        // return $producto_id;
         for ($i = 0; $i < $count_articulo; $i++) {
             $producto_servicio = Producto::where('codigo_producto', $producto_id[$i])->first();
             if (isset($producto_servicio->id)) {
@@ -622,7 +623,7 @@ class BoletaController extends Controller
             $fact_detra->boleta_id = $boleta->id;
             $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
             $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
-            $fact_detra->monto_total_factura = $request->get('precio_final_igv');
+            $fact_detra->monto_total_factura = $request->get('total_comi');
             $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
             $fact_detra->monto_detraccion = $request->get('total_detraccion');
             $fact_detra->estado = 1;
@@ -963,13 +964,20 @@ class BoletaController extends Controller
         $tipo_operacion = Tipo_operacion_f::all();
         $moneda = Moneda::where('principal', '1')->first();
         $monedas_get = Moneda::all();
+
+        if($boleta->tipo_operacion_id == 12 || $boleta->tipo_operacion_id == 13 || $boleta->tipo_operacion_id == 14 ||$boleta->tipo_operacion_id == 15 ){
+            $detraccion = Detracciones::where('boleta_id', $boleta->id)->first();
+        }else{
+            $detraccion = 'not';
+        }
+
         // $forma_pago_id = Forma_pago::all();
         // return $remisiones;
-        // $tipo_detraccion = TipoDetraccion::all();
-        // $medio_pago_detraccion = MedioPagoDetraccion::all();
+        $tipo_detraccion = TipoDetraccion::all();
+        $medio_pago_detraccion = MedioPagoDetraccion::all();
 
-
-        return view('transaccion.venta.boleta.show', compact('boleta', 'almacen', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'forma_pagos', 'tipo_operacion', 'moneda', 'monedas_get'));
+        // return $boleta;
+        return view('transaccion.venta.boleta.show', compact('boleta', 'almacen', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'forma_pagos', 'tipo_operacion', 'moneda', 'monedas_get','detraccion','tipo_detraccion','medio_pago_detraccion'));
     }
 
     public function print($id)
@@ -988,8 +996,6 @@ class BoletaController extends Controller
             return back()->withErrors(['No hay Productos o Servicios Agregados: ' . $boleta->almacen->nombre . '']);
         }
 
-
-
         $boleta_registro = Boleta_registro::where('boleta_id', $id)->get();
         $igv = Igv::first();
         $banco = Banco::where('estado', 0)->get();
@@ -999,7 +1005,13 @@ class BoletaController extends Controller
         $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
 
-        return view('transaccion.venta.boleta.print', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'qrCode', 'textoQR'));
+        if($boleta->tipo_operacion_id == 12 || $boleta->tipo_operacion_id == 13 || $boleta->tipo_operacion_id == 14 ||$boleta->tipo_operacion_id == 15 ){
+            $detraccion = Detracciones::where('boleta_id', $boleta->id)->first();
+        }else{
+            $detraccion = 'not';
+        }
+        
+        return view('transaccion.venta.boleta.print', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'qrCode', 'textoQR','detraccion'));
     }
     public function pdf(Request $request, $id)
     {
@@ -1013,11 +1025,15 @@ class BoletaController extends Controller
         $sub_total = 0;
         $boleta = Boleta::find($id);
         $i = 1;
-
+        if($boleta->tipo_operacion_id == 12 || $boleta->tipo_operacion_id == 13 || $boleta->tipo_operacion_id == 14 ||$boleta->tipo_operacion_id == 15 ){
+            $detraccion = Detracciones::where('boleta_id', $boleta->id)->first();
+        }else{
+            $detraccion = 'not';
+        }
         $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
-
-        $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i', 'qrCode', 'textoQR'));
+        // return $detraccion;
+        $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i', 'qrCode', 'textoQR','detraccion'));
         return $pdf->download('Boleta - ' . $boleta->codigo_boleta . '.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
@@ -1104,11 +1120,12 @@ class BoletaController extends Controller
         } else {
             $boleta->estado = '1'; //! Si ya no se puede editar
         }
-        $boleta->tipo_operacion_id = $request->get('tipo_operacion_id');
+        $boleta->tipo_operacion_id = $request->get('tipo_operacion');
         $boleta->op_gravada = 0;
         $boleta->op_inafecta = 0;
         $boleta->op_exonerada = 0;
         $boleta->op_gratuita = 0;
+
         $boleta->save();
 
         $moneda = Moneda::where('principal', 1)->first();
@@ -1139,6 +1156,36 @@ class BoletaController extends Controller
                     $cuota_cred->fecha_pago = $fecha_pago_forma[$c];
                     $cuota_cred->save();
                 }
+            }
+        }
+        // Detraccion
+        if($request->get('detraccion_value') == 1){ //Si  Activamos Detraccion
+            // Editar
+            $search_det = Detracciones::where('boleta_id', $id)->first();
+            if(isset($search_det)){
+                $search_det->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+                $search_det->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+                $search_det->monto_total_factura = $request->get('total_comi');
+                $search_det->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+                $search_det->monto_detraccion = $request->get('total_detraccion');
+                $search_det->estado = 1;
+                $search_det->save();
+            }else{
+                $fact_detra = new Detracciones();
+                $fact_detra->boleta_id = $boleta->id;
+                $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+                $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+                $fact_detra->monto_total_factura = $request->get('total_comi');
+                $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+                $fact_detra->monto_detraccion = $request->get('total_detraccion');
+                $fact_detra->estado = 1;
+                $fact_detra->save();
+            }
+        }else{
+            $search_det = Detracciones::where('factura_id', $id)->first();
+            // Eliminar
+            if(isset($search_det)){
+                $eliminar_detraccion = Detracciones::where('factura_id', $id)->delete();
             }
         }
         // Comision

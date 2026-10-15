@@ -65,7 +65,7 @@
                             {{-- Divisor --}}
                             <div style="width: 1px; height: 30px; background-color: #ccc; margin: 0 6px;"></div>
                         @endif
-                        <form class="btn" style="padding: 0;" action="{{ route('boleta_manual.pdf', $boleta->id) }}">
+                        <form class="btn" style="padding: 0;" action="{{ route('pdf_bol', $boleta->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $boleta->codigo_boleta }}">
                             <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
                                 data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i></button>
@@ -272,35 +272,85 @@
                                     {{-- {{$end2}} --}}
                                 </h3>
                             </div>
-                            <div class="col-sm-4 form-control">
-                                <span style="display: block;float: left"> Subtotal:</span>
-                                <span style="display: block;float: right;"> {{ $simbologia = $boleta->moneda->simbolo }}
-                                    {{ number_format($sub_total, 2) }}</span>
-                                <br>
-                                <span style="display: block;float: left"> Op. Gravada: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($boleta->op_gravada, 2) }}</span><br>
-                                <span style="display: block;float: left"> Op. Inafecta: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($boleta->op_inafecta, 2) }}</span><br>
-                                <span style="display: block;float: left"> Op. Exonerada: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($boleta->op_exonerada, 2) }} </span><br>
-                                <span style="display: block;float: left"> I.G.V.: </span>
-                                <span style="display: block;float: right">{{ $boleta->moneda->simbolo }}
-                                    {{ number_format(round($igv_p, 2), 2) }}</span><br>
-                                <span style="display: block;float: left"> Importe Total: </span>
-                                <span style="display: block;float: right">{{ $boleta->moneda->simbolo }}
-                                    {{ number_format(round($end, 2), 2) }}</span>
+                            <div class="col-sm-4">
+                                <div class="form-control">
+                                    <span style="display: block;float: left"> Subtotal:</span>
+                                    <span style="display: block;float: right;"> {{ $simbologia = $boleta->moneda->simbolo }}
+                                        {{ number_format($sub_total, 2) }}</span>
+                                    <br>
+                                    <span style="display: block;float: left"> Op. Gravada: </span>
+                                    <span style="display: block;float: right">{{ $simbologia }}
+                                        {{ number_format($boleta->op_gravada, 2) }}</span><br>
+                                    <span style="display: block;float: left"> Op. Inafecta: </span>
+                                    <span style="display: block;float: right">{{ $simbologia }}
+                                        {{ number_format($boleta->op_inafecta, 2) }}</span><br>
+                                    <span style="display: block;float: left"> Op. Exonerada: </span>
+                                    <span style="display: block;float: right">{{ $simbologia }}
+                                        {{ number_format($boleta->op_exonerada, 2) }} </span><br>
+                                    <span style="display: block;float: left"> I.G.V.: </span>
+                                    <span style="display: block;float: right">{{ $boleta->moneda->simbolo }}
+                                        {{ number_format(round($igv_p, 2), 2) }}</span><br>
+                                    <span style="display: block;float: left"> Importe Total: </span>
+                                    <span style="display: block;float: right">{{ $boleta->moneda->simbolo }}
+                                        {{ number_format(round($end, 2), 2) }}</span><br>
+                                </div>
 
                             </div>
-                            <div class="col-sm-12 form-control" align="center" style="margin-top: 8px">
-                                <div align="left">
-                                    <strong>Observación :</strong>
-                                    <p> {{ $boleta->observacion }} </p>
+                        </div>
+                        <br>
+                        @php 
+                            if($detraccion != "not" || $boleta->retencion == 1){
+                                $columna_add = "1";
+                            }else{
+                                $columna_add = "0";
+                            }
+                        @endphp
+                        <div class="row">
+                            @if ($columna_add == "0")
+                                <div class="col-sm-12 form-control" style="height:  100px">
+                                    <strong>Observaciones:</strong><br>
+                                    {{ $boleta->observacion }}
                                 </div>
-                            </div>
-                        </div><br>
+                            @else
+                                <div class="col-sm-6 ">
+                                    <div class="form-control" style="height: 100% !important">
+                                        <strong>Observaciones:</strong><br>
+                                        {{ $boleta->observacion }}
+                                    </div>
+                                </div>
+                                @if($detraccion != "not")
+                                    <div class="col-sm-6 ">
+                                        <div class="form-control" style="height: 100% !important">
+                                            <strong>Informacion de Detraccion:</strong><br>
+                                            <strong>Tipo de Detraccion:</strong>
+                                            {{ $detraccion->tipo_detraccion->descripcion }} -
+                                            {{ $detraccion->porcentaje_detraccion }} %<br>
+                                            <strong>Medio de Pago:</strong>
+                                            {{ $detraccion->medio_pago->descripcion }} <br>
+                                            <strong>Monto de Detraccion:</strong>
+                                            S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
+                                        </div>
+                                    </div>
+                                @else
+                                    @php
+                                        $total_fact = $boleta->total_precio_sin_forma; 
+                                    @endphp
+                                    <div class="col-sm-6 ">
+                                        <div class="form-control" style="height: 100% !important">
+                                            <strong>Informacion de Retención:</strong><br>
+                                            <strong>Importe Total de la Boleta:</strong>
+                                            {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
+                                            <strong>Monto Retenido ({{ $boleta->porcentaje_retencion}} %):</strong>
+                                            {{ $simbologia }} {{ number_format(round($boleta->monto_retencion,2),2)}} <br>
+                                            <strong>Monto Neto a Pagar:</strong>
+                                            {{ $simbologia }}  {{ number_format(round($boleta->monto_retencion_pagar,2),2)}} <br>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endif
+                        {{-- </div> --}}
+                        </div>
+                        <br>
                         @include('layout_bancos')
                         <br>
                     </div>
@@ -449,6 +499,11 @@
         .select2-results__option.select2-results__option--highlighted {
             background-color: #1c84c6 !important;
             color: white !important;
+        }
+        .detracc_campo_required, .retenc_campo_required {
+            display: none;
+            /* font-size: 9px; */
+            color: red;
         }
     </style>
     <!-- Mainly scripts -->
