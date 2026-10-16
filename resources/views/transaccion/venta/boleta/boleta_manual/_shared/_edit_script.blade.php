@@ -581,7 +581,7 @@
         
         if (parseFloat(end2) > 700) {
             console.log('mayor a 700');
-            $('#detraccion').attr('disabled', false);
+            $('#detraccion').attr('readonly', false);
             $('#button_detracc').attr('data-target', '#modal_detraccion');
         } else {
             var select_det = $('.select2_tipo_op').val();
@@ -589,7 +589,8 @@
             if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
                 // Se activa la opcion de detraccion
             } else {
-                $('#detraccion').attr('disabled', true);
+                $('#detraccion').val(0);
+                $('#detraccion').attr('readonly', true);
                 $('#button_detracc').attr('data-target', '#modal_detraccion');
             }
             // var det_op = $('#detraccion').val();
@@ -856,116 +857,114 @@
     }
     // Detracción
 
-    // function multi_detraccion() {
+    function multi_detraccion() {
 
-    //     var moneda = $('#moneda_id').val();
+        var moneda = $('#moneda_id').val();
 
-    //     if (moneda == 1) { //soles
-    //         var total = $('#total_final').val();
-    //         var porc_det = $('#porcentaje_detc').val();
-    //         var op_det = total * (porc_det / 100);
-    //         var sub_zero = Math.round(op_det * 100) / 100;
-    //         console.log(sub_zero);
-    //         $('#tota_detra').val(sub_zero);
-    //     } else { //dolares
-    //         var total_dol = $('#total_final').val();
+        if (moneda == 1) { //soles
+            var total = $('#total_final').val();
+            var porc_det = $('#porcentaje_detc').val();
+            var op_det = total * (porc_det / 100);
+            var sub_zero = Math.round(op_det);
+            $('#tota_detra').val(sub_zero);
+        } else { //dolares
+            var total_dol = $('#total_final').val();
 
-    //         var tipo_cam = $('#tc_paralelo').html();
-    //         var total = total_dol * tipo_cam;
+            var tipo_cam = $('#tc_paralelo').html();
+            var total = total_dol * tipo_cam;
 
-    //         var porc_det = $('#porcentaje_detc').val();
-    //         var op_det = total * (porc_det / 100);
-    //         var sub_zero = Math.round(op_det * 100) / 100;
-    //         console.log(sub_zero);
-    //         $('#tota_detra').val(sub_zero);
-    //     }
-    // }
+            var porc_det = $('#porcentaje_detc').val();
+            var op_det = total * (porc_det / 100);
+            var sub_zero = Math.round(op_det);
+            $('#tota_detra').val(sub_zero);
+        }
+    }
 
-    // $('#porcentaje_detc').on('keyup', function() {
-    //     console.log('porcentaje cambiando');
-    //     multi_detraccion();
-    // });
+    $('#porcentaje_detc').on('keyup', function() {
+        console.log('porcentaje cambiando');
+        multi_detraccion();
+    });
 
-    // $('.select2_tipodetrac').on('select2:select', function(e) {
+    $('.select2_tipodetrac').on('select2:select', function(e) {
 
-    //     var data = e.params.data;
-    //     var id_data = data.id;
-    //     $.ajax({
-    //         type: "post",
-    //         url: "{{ route('pa.tipo_op_search') }}",
-    //         data: {
-    //             '_token': '{{ csrf_token() }}',
-    //             'id_tipo_detra': data.id,
-    //         },
-    //         success: function(msg) {
-    //             // console.log(msg.tasa)
-    //             $('#porcentaje_detc').val(msg.tasa);
-    //             multi_detraccion();
-    //         },
-    //         error: function(eject) {
-    //             if (eject.status === 400) {
-    //                 console.log(eject.responseJSON.error);
-    //             }
-    //         },
-    //         cache: true
-    //     });
-    // });
+        var data = e.params.data;
+        var id_data = data.id;
+        $.ajax({
+            type: "post",
+            url: "{{ route('pa.tipo_op_search') }}",
+            data: {
+                '_token': '{{ csrf_token() }}',
+                'id_tipo_detra': data.id,
+            },
+            success: function(msg) {
+                // console.log(msg.tasa)
+                $('#porcentaje_detc').val(msg.tasa);
+                multi_detraccion();
+            },
+            error: function(eject) {
+                if (eject.status === 400) {
+                    console.log(eject.responseJSON.error);
+                }
+            },
+            cache: true
+        });
+    });
 
-    // $('.select2_tipo_op').on('select2:select', function(e) {
-    //     var id = e.params.data.id;
-    //     var split_id = id.split(' ');
-    //     if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
-    //         console.log('a');
-    //         $('#button_detracc').attr('data-target', '#modal_detraccion');
-    //         $('#detraccion').attr('disabled', false);
-    //     }
-    // });
+    $('.select2_tipo_op').on('select2:select', function(e) {
+        var id = e.params.data.id;
+        var split_id = id.split(' ');
+        if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+            console.log('a');
+            $('#button_detracc').attr('data-target', '#modal_detraccion');
+            $('#detraccion').attr('readonly', false);
+        }
+    });
 
-    // function save_detraccion() {
-    //     var seletc_det = $('.select2_tipo_op').val();
-    //     var split_id = seletc_det.split(' ');
-    //     if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
-    //         var tipo_detra = $('#select_tipo_pago').val();
-    //         var ipt_medio = $('.select2_mediopago').val();
-    //         var porce_detra = $('#porcentaje_detc').val();
-    //         var tot_det = $('#tota_detra').val();
+    function save_detraccion() {
+        var seletc_det = $('.select2_tipo_op').val();
+        var split_id = seletc_det.split(' ');
+        if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
+            var tipo_detra = $('#select_tipo_pago').val();
+            var ipt_medio = $('.select2_mediopago').val();
+            var porce_detra = $('#porcentaje_detc').val();
+            var tot_det = $('#tota_detra').val();
 
-    //         if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
-    //             $('#modal_detraccion').modal('show');
-    //             var inputs = document.querySelectorAll('.detracc_campo_required');
-    //             inputs.forEach(function(input) {
-    //                 input.style.display = 'block';
-    //             });
-    //             return;
-    //         } else {
-    //             var inputs = document.querySelectorAll('.detracc_campo_required');
-    //             inputs.forEach(function(input) {
-    //                 input.style.display = 'none';
-    //             });
-    //             $('#modal_detraccion').modal('hide');
-    //         }
+            if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.detracc_campo_required');
+                inputs.forEach(function(input) {
+                    input.style.display = 'block';
+                });
+                return;
+            } else {
+                var inputs = document.querySelectorAll('.detracc_campo_required');
+                inputs.forEach(function(input) {
+                    input.style.display = 'none';
+                });
+                $('#modal_detraccion').modal('hide');
+            }
 
-    //     }
-    // }
+        }
+    }
 
-    // $('#detraccion').on('change', function() {
-    //     var selected = this.value;
-    //     console.log(selected);
-    //     if (selected == "1") {
-    //         $('#modal_detraccion').modal('show');
-    //         var inputs = document.querySelectorAll('.ipt_detrac');
-    //         inputs.forEach(function(input) {
-    //             // input.setAttribute('required', 'required');
-    //         });
-    //         $('.select2_tipo_op').val('12').trigger('change.select2');
-    //     } else {
-    //         var inputs = document.querySelectorAll('.ipt_detrac');
-    //         inputs.forEach(function(input) {
-    //             // input.removeAttribute('required');
-    //         });
-    //         $('.select2_tipo_op').val('1').trigger('change.select2');
-    //     }
-    // });
+    $('#detraccion').on('change', function() {
+        var selected = this.value;
+        console.log(selected);
+        if (selected == "1") {
+            $('#modal_detraccion').modal('show');
+            var inputs = document.querySelectorAll('.ipt_detrac');
+            inputs.forEach(function(input) {
+                // input.setAttribute('required', 'required');
+            });
+            $('.select2_tipo_op').val('12').trigger('change.select2');
+        } else {
+            var inputs = document.querySelectorAll('.ipt_detrac');
+            inputs.forEach(function(input) {
+                // input.removeAttribute('required');
+            });
+            $('.select2_tipo_op').val('1').trigger('change.select2');
+        }
+    });
 
     $(document).on('click', '#button_cuotas_save', function(event) {
 
