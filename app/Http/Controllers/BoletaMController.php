@@ -551,6 +551,34 @@ class BoletaMController extends Controller
         $boleta->op_exonerada = 0;
         $boleta->op_gratuita = 0;
         $boleta->save();
+        if($request->get('detraccion_value') == "0"){
+            Detracciones::where('boleta_m_id', $id)->delete();
+        }
+        if($request->get('tipo_operacion') == '12' || $request->get('tipo_operacion') == '13' || $request->get('tipo_operacion') == '14' ||$request->get('tipo_operacion') == '15'){
+
+            $search_det = Detracciones::where('boleta_m_id', $id)->first();
+                if($search_det){
+                    // Editar
+                    $search_det->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+                    $search_det->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+                    $search_det->monto_total_factura = $request->get('costo_total');
+                    $search_det->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+                    $search_det->monto_detraccion = $request->get('total_detraccion');
+                    $search_det->estado = 1;
+                    $search_det->save();
+                }else{
+                    // Crear
+                    $fact_detra = new Detracciones();
+                    $fact_detra->boleta_m_id = $boleta->id;
+                    $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+                    $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+                    $fact_detra->monto_total_factura = $request->get('costo_total');
+                    $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+                    $fact_detra->monto_detraccion = $request->get('total_detraccion');
+                    $fact_detra->estado = 1;
+                    $fact_detra->save();
+                }
+        }
 
         //! Crear o Editar cuotas dependiendo de la logica anterior
         if($create_cuotas == 1){

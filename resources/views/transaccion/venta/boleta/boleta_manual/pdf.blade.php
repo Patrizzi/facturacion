@@ -44,7 +44,7 @@
                     <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
                         <strong>Señor(es)</strong>&nbsp;
                         @if(isset($boleta->cliente_id)){{$boleta->cliente->nombre}}
-                        @else{{$facturacion->cotizacion->cliente->nombre}}
+                        @else{{$boleta->cotizacion->cliente->nombre}}
                         @endif<br>
                         <strong>N° de Doc. :</strong>&nbsp;
                         @if(isset($boleta->cliente_id)){{$boleta->cliente->numero_documento}}
@@ -169,12 +169,29 @@
                 </table>
                 <br>
                 <br>
-                <table style="width: 100%;height: 120px;border-collapse:separate;margin-bottom: -10px">
+                <table style="width: 100%;height: 120px;border-collapse:separate">
                     <tr>
-                        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
-                            <strong>Observaciones:</strong><br>
-                            {{$boleta->observacion}}
-                        </td>
+                        @if($boleta->detracciones)
+                            <td colspan="2"  style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+                                <strong>Observaciones:</strong><br>
+                                {{$boleta->observacion}}
+                            </td>
+                            <th style="width: 5%;border-color: white"></th>
+                            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
+                                <strong>Informacion de Detraccion:</strong><br>
+                                <strong>Tipo de Detraccion:</strong>
+                                {{$boleta->detracciones->tipo_detraccion->descripcion}} - {{$boleta->detracciones->porcentaje_detraccion}} %<br>
+                                <strong>Medio de Pago:</strong>
+                                {{$boleta->detracciones->medio_pago->descripcion}} <br>
+                                <strong>Monto de Detraccion:</strong>
+                                S/. {{number_format($boleta->detracciones->monto_detraccion,2)}} <br>
+                            </td>
+                        @else
+                            <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+                                <strong>Observaciones:</strong><br>
+                                {{$boleta->observacion}}
+                            </td>
+                        @endif
                     </tr>
                 </table>
                 <!-- Fin Totales de Productos -->

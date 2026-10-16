@@ -72,7 +72,7 @@
                                 <div class="form-group row" >
                                     <label class="col-form-label col-md-4"> <strong>Detracción:</strong> </label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" id="detraccion" name="detraccion_value">
+                                        <select class="form-control" id="detraccion" name="detraccion_value"  @if ($boleta->total_precio_sin_forma < 700) readonly @endif>
                                             <option value="0" @if($boleta->detracciones == null) selected @endif>Desactiva</option>
                                             <option value="1" @if($boleta->detracciones != null) selected @endif>Activa</option>
                                         </select>
@@ -109,7 +109,7 @@
                                 <select class="form-control select2_tipo_op" name="tipo_operacion">
                                     @foreach ($tipo_operacion as $index => $t_op)
                                         <option value="{{ $t_op->id }}"
-                                            @if ($index == 0) selected @endif>
+                                            @if ($boleta->tipo_operacion_id == $t_op->id) selected @endif>
                                             {{ $t_op->codigo }} - {{ $t_op->informacion }}</option>
                                     @endforeach
                                 </select>
