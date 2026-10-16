@@ -21,6 +21,7 @@ use App\Boleta_registros_m;
 use App\Cuotas_credito;
 use App\Banco;
 use App\Boleta_m as AppBoleta_m;
+use App\Detracciones;
 use App\Nota_Credito;
 use App\Nota_Debito;
 use PDF;
@@ -38,6 +39,8 @@ use App\EmailConfiguraciones;
 use App\EmailBandejaEnviosArchivos;
 use App\EmailBandejaEnvios;
 use App\Exports\BoletasMExport;
+use App\MedioPagoDetraccion;
+use App\TipoDetraccion;
 
 class BoletaMController extends Controller
 {
@@ -117,6 +120,9 @@ class BoletaMController extends Controller
 
         // Tipo de operación
         $tipo_operacion = Tipo_operacion_f::all();
+        $detraccion = TipoDetraccion::all();
+        $medio_pago = MedioPagoDetraccion::all();
+        
 
         //Almacen
         $almacenes = Almacen::all();
@@ -156,7 +162,7 @@ class BoletaMController extends Controller
         // return $boleta_numero;
         $fecha_hoy = Carbon::now()->add(1,'day');
         $fecha_1 = $fecha_hoy->format('Y-m-d');
-        return view('transaccion.venta.boleta.boleta_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','empresa','tipo_operacion','almacenes','sucursal','boleta_numero','fecha_1'));
+        return view('transaccion.venta.boleta.boleta_manual.create',compact('productos','servicios','forma_pagos','clientes','personales','igv','moneda','p_venta','empresa','categoria','empresa','tipo_operacion','almacenes','sucursal','boleta_numero','fecha_1','detraccion','medio_pago'));
 
     }
 
@@ -298,11 +304,6 @@ class BoletaMController extends Controller
 
         $boleta_numa ="BA".$sucursal_nr."-".$boleta_nr ;
 
-        // obtención de Tipo de operación
-        $operacion=$request->get('tipo_operacion');
-        $nombre = strstr($operacion, '-',true);
-        $busca_ope=Tipo_operacion_f::where('codigo',$nombre)->first();
-
         //obtención de moneda
         $moneda_get=Moneda::where('nombre',$request->moneda)->first();
 
@@ -324,9 +325,23 @@ class BoletaMController extends Controller
         }else{
             $boleta->estado = '1'; //! Si ya no se puede editar
         }
-        $boleta->tipo_operacion_id= $busca_ope->id;
+        $boleta->tipo_operacion_id= $request->get('tipo_operacion');
         $boleta->tipo_documento_id = 2;
         $boleta->save();
+
+        if($request->get('tipo_operacion') == '12' || $request->get('tipo_operacion') == '13' || $request->get('tipo_operacion') == '14' ||$request->get('tipo_operacion') == '15'){
+            //
+            // $detracciones = Tipo_operacion_f::where('codigo', $tipo_ex[0])->first();
+            $fact_detra = new Detracciones();
+            $fact_detra->boleta_m_id = $boleta->id;
+            $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+            $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+            $fact_detra->monto_total_factura = $request->get('costo_total');
+            $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+            $fact_detra->monto_detraccion = $request->get('total_detraccion');
+            $fact_detra->estado = 1;
+            $fact_detra->save();
+        }
 
         // modificación para que se cierre el codigo en almacen
         $boleta_primero=Codigo_guia_almacen::where('id', $sucursal->id)->first();
@@ -444,14 +459,20 @@ class BoletaMController extends Controller
         $banco=Banco::where('estado',0)->get();
         $j = 1;
         $almacen = Almacen::all(); // o tu filtro real
-
+        if ($boleta->forma_pago_id == 2) {
+            $cuotas = Cuotas_credito::where('boleta_m_id', $boleta->id)->get();
+        }else{
+            $cuotas = "not";
+        }
         // Para editar
         $forma_pagos=Forma_pago::all();
         $tipo_operacion = Tipo_operacion_f::all();
         $almacenes = Almacen::all();
         $moneda=Moneda::where('principal','1')->first();
         $sucursal =Almacen::where('id', '1')->first();
-        return view('transaccion.venta.boleta.boleta_manual.show', compact('j','almacen','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','forma_pagos','tipo_operacion','almacenes','moneda','sucursal'));
+        $tipo_detraccion = TipoDetraccion::all();
+        $medio_pago_detraccion = MedioPagoDetraccion::all();
+        return view('transaccion.venta.boleta.boleta_manual.show', compact('j','almacen','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','forma_pagos','tipo_operacion','almacenes','moneda','sucursal','tipo_detraccion','medio_pago_detraccion','cuotas'));
     }
 
     /**
@@ -709,7 +730,19 @@ class BoletaMController extends Controller
         $textoQR = $this->generarTextoQRBoletaM($boleta, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
 
-        return view('transaccion.venta.boleta.boleta_manual.print', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','textoQR','qrCode'));
+        if($boleta->tipo_operacion_id == 12 || $boleta->tipo_operacion_id == 13 || $boleta->tipo_operacion_id == 14 ||$boleta->tipo_operacion_id == 15 ){
+            $detraccion = Detracciones::where('boleta_m_id', $boleta->id)->first();
+            if ($boleta->forma_pago_id == 2) {
+                $cuotas = Cuotas_credito::where('boleta_m_id', $boleta->id)->get();
+            }else{
+                $cuotas = "not";
+            }
+        }else{
+            $detraccion = 'not';
+            $cuotas = "not";
+        }
+
+        return view('transaccion.venta.boleta.boleta_manual.print', compact('j','boleta','empresa','boleta_registro','sum','igv','sub_total','banco','textoQR','qrCode','detraccion', 'cuotas'));
     }
 
     public function pdf(Request $request,$id)

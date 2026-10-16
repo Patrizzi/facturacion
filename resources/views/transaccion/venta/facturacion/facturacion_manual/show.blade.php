@@ -274,27 +274,30 @@
                                     {{-- {{$end2}} --}}
                                 </h3>
                             </div>
-                            <div class="col-sm-4 form-control">
+                            <div class="col-sm-4">
                                 {{-- <div class="col-sm-4 form-control" > --}}
-                                <span style="display: block;float: left"> Sub Total:</span>
-                                <span style="display: block;float: right;">{{ $simbologia }}
-                                    {{ number_format($sub_total, 2) }}</span>
-                                <br>
-                                <span style="display: block;float: left"> Op. Agravada: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($facturacion->op_gravada, 2) }}</span><br>
-                                <span style="display: block;float: left"> Op. Inafecta: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($facturacion->op_inafecta, 2) }}</span><br>
-                                <span style="display: block;float: left"> Op. Exonerada: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($facturacion->op_exonerada, 2) }} </span><br>
-                                <span style="display: block;float: left"> I.G.V.: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format(round($igv_p, 2), 2) }}</span><br>
-                                <span style="display: block;float: left"> Importe Total: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format(round($end, 2), 2) }}</span>
+                                <div class="form-control">
+                                    <span style="display: block;float: left"> Sub Total:</span>
+                                    <span style="display: block;float: right;">{{ $simbologia }}
+                                        {{ number_format($sub_total, 2) }}</span>
+                                    <br>
+                                    <span style="display: block;float: left"> Op. Agravada: </span>
+                                    <span style="display: block;float: right">{{ $simbologia }}
+                                        {{ number_format($facturacion->op_gravada, 2) }}</span><br>
+                                    <span style="display: block;float: left"> Op. Inafecta: </span>
+                                    <span style="display: block;float: right">{{ $simbologia }}
+                                        {{ number_format($facturacion->op_inafecta, 2) }}</span><br>
+                                    <span style="display: block;float: left"> Op. Exonerada: </span>
+                                    <span style="display: block;float: right">{{ $simbologia }}
+                                        {{ number_format($facturacion->op_exonerada, 2) }} </span><br>
+                                    <span style="display: block;float: left"> I.G.V.: </span>
+                                    <span style="display: block;float: right">{{ $simbologia }}
+                                        {{ number_format(round($igv_p, 2), 2) }}</span><br>
+                                    <span style="display: block;float: left"> Importe Total: </span>
+                                    <span style="display: block;float: right">{{ $simbologia }}
+                                        {{ number_format(round($end, 2), 2) }}</span>
+                                    <br>
+                                </div>
 
                             </div>
                         </div>

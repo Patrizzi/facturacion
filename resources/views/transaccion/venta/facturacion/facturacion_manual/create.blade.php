@@ -1184,6 +1184,7 @@
                 $('#button_detracc').attr('data-target', '#modal_detraccion');
             }else{
                 var select_det = $('.select2_tipo_op').val();
+                
                 var split_id = select_det.split(' ');
                 if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
                     // Se activa la opcion de detraccion

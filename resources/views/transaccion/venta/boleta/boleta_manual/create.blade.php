@@ -97,27 +97,34 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label"><strong>Vendedor:</strong></label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="personal" disabled required="required"
+                                        value="{{ auth()->user()->name }}">
+                                </div>
+                            </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-6" id="detraccion_retencion">
+                                    <!-- Detracción -->
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-4"><strong>F. Emis.:</strong></label>
-                                        <div class="col-md-8">
-                                            <input type="date" id="fecha_emision" name="fecha_emision"
-                                                class="form-control" value="{{ date('Y-m-d') }}" readonly>
+                                        <label class="col-sm-4 col-form-label"><strong>Detracción:</strong></label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" id="detraccion" name="detraccion_value" disabled>
+                                                <option value="0">Desactivo</option>
+                                                <option value="1">Activo</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2" style="display: flex">
+                                            <a href="" id="button_detracc" data-toggle="modal"
+                                                data-target="#modal_detraccion" style="margin: auto"><i
+                                                    class="fa fa-question-circle"
+                                                    style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group row" id="data_1">
-                                        <label class="col-form-label col-md-4"><strong>F. Venci.</strong></label>
-                                        <div class="col-md-8 input-group date">
-                                            <span class="input-group-addon" style="display: none">
-                                                <i class="fa fa-calendar"></i>
-                                            </span>
-                                            <input type="date" class="form-control" id="fecha_vencimiento"
-                                                name="fecha_vencimiento" value="{{ date('Y-m-d') }}">
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                             {{-- <div class="form-group row">
@@ -140,10 +147,9 @@
                             <div class="form-group row">
                                 <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
                                 <div class="col-md-10">
-                                    <select class="form-control select2_operacion" name="tipo_operacion">
+                                    <select class="form-control select2_tipo_op" name="tipo_operacion">
                                         @foreach ($tipo_operacion as $index => $t_op)
-                                            <option id="{{ $t_op->id }}"
-                                                @if ($index == 0) selected @endif>
+                                            <option value="{{ $t_op->id }}">
                                                 {{ $t_op->codigo }} - {{ $t_op->informacion }}</option>
                                         @endforeach
                                     </select>
@@ -183,8 +189,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-2"><strong>Moneda:</strong></label>
-                                        <div class="col-md-10">
+                                        <label class="col-form-label col-md-4"><strong>Moneda:</strong></label>
+                                        <div class="col-md-8">
                                             <select name="" id="" class="form-control"
                                                 onchange="changeMoney()">
                                                 <option value="nacional"
@@ -194,6 +200,29 @@
                                             </select>
                                             <input type="hidden" name="moneda" id="moneda" class="form-control "
                                                 value="{{ ucwords($moneda->nombre) }}" readonly="readonly">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-4"><strong>F. Emis.:</strong></label>
+                                        <div class="col-md-8">
+                                            <input type="date" id="fecha_emision" name="fecha_emision"
+                                                class="form-control" value="{{ date('Y-m-d') }}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row" id="data_1">
+                                        <label class="col-form-label col-md-4"><strong>F. Venci.</strong></label>
+                                        <div class="col-md-8 input-group date">
+                                            <span class="input-group-addon" style="display: none">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                            <input type="date" class="form-control" id="fecha_vencimiento"
+                                                name="fecha_vencimiento" value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -415,6 +444,8 @@
                         </div>
                     </div>
                     <!-- Modal de Cuotas -->
+                    <!-- Modal DETRACCIONES DENTRO DEL FORM, EN EL CONTROLLER CONDICIONAL PARA TOMAR O NO DETRACCION-->
+                    @include('transaccion.venta.boleta._shared.modal_detraccion')
                 </form>
             </div>
         </div>
@@ -531,14 +562,21 @@
             text-align: left;
         }
 
-        .input-group-addon {
+        /* .input-group-addon {
             height: 28px !important;
             padding-top: 6px;
-        }
+        } */
 
         .td_selected>span.select2.select2-container.select2-container--default {
             max-width: 700px !important;
             width: 30vw !important;
+        }
+        .detracc_campo_required, .retenc_campo_required {
+            display: none;
+            color: red;
+        }
+        span.select2-container.select2-container--default.select2-container--open {
+            z-index: 999999;
         }
     </style>
     <!-- Mainly scripts -->
@@ -577,7 +615,7 @@
         $(".select2_demo_almacen").select2({
             placeholder: "Seleccionar Almacen",
         });
-        $(".select2_operacion").select2({
+        $(".select2_tipo_op").select2({
             placeholder: "Seleccionar Operacion",
         });
     </script>
@@ -594,6 +632,125 @@
         }
     </script>
     <script>
+        $('.select2_tipo_op').select2();
+        $('.select2_mediopago').select2();
+        $('.select2_tipodetrac').select2();
+        $('.select2_tipodetrac').on('select2:select', function(e) {
+
+            var data = e.params.data;
+            var id_data = data.id;
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.tipo_op_search') }}",
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'id_tipo_detra': data.id,
+                },
+                success: function(msg) {
+                    // console.log(msg.tasa)
+                    $('#porcentaje_detc').val(msg.tasa);
+                    multi_detraccion();
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        });
+
+        function multi_detraccion() {
+
+            var moneda = $('#moneda_id').val();
+
+            if (moneda == 1) { //soles
+                var total = $('#total_final').val();
+                var porc_det = $('#porcentaje_detc').val();
+                var op_det = total * (porc_det / 100);
+                var sub_zero = Math.round(op_det * 100) / 100;
+                console.log(sub_zero);
+                $('#tota_detra').val(sub_zero);
+            } else { //dolares
+                var total_dol = $('#total_final').val();
+
+                var tipo_cam = $('#tc_paralelo').html();
+                var total = total_dol * tipo_cam;
+
+                var porc_det = $('#porcentaje_detc').val();
+                var op_det = total * (porc_det / 100);
+                var sub_zero = Math.round(op_det * 100) / 100;
+
+                $('#tota_detra').val(sub_zero);
+            }
+        }
+
+        $('#porcentaje_detc').on('keyup', function() {
+            multi_detraccion();
+        });
+
+        $('.select2_tipo_op').on('select2:select', function(e) {
+            var id = e.params.data.id;
+            var split_id = id.split(' ');
+            if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                console.log('a');
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+                $('#detraccion').attr('disabled', false);
+            }
+        });
+
+        function save_detraccion() {
+            var seletc_det = $('.select2_tipo_op').val();
+            var split_id = seletc_det.split(' ');
+            console.log(split_id[0]);
+            if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
+                var tipo_detra = $('#select_tipo_pago').val();
+                var ipt_medio = $('.select2_mediopago').val();
+                var porce_detra = $('#porcentaje_detc').val();
+                var tot_det = $('#tota_detra').val();
+
+                if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                    $('#modal_detraccion').modal('show');
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+                    inputs.forEach(function(input) {
+                        input.style.display = 'block';
+                    });
+                    return;
+                } else {
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+                    inputs.forEach(function(input) {
+                        input.style.display = 'none';
+                    });
+                    $('#modal_detraccion').modal('hide');
+                }
+
+            }
+        }
+        $('#detraccion').on('change', function() {
+            var selected = this.value;
+            console.log(selected);
+            if (selected == "1") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.setAttribute('required', 'required');
+                });
+                $('.select2_tipo_op').val('12').trigger('change.select2');
+                var retencion_check = document.querySelector('.js-switch');
+                if( retencion_check.checked == true){
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable(); 
+            } else {
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.removeAttribute('required');
+                });
+                $('.select2_tipo_op').val('1').trigger('change.select2');
+                window.switchery_2.enable(); 
+            }
+        });
+
         // TODO Selección de cliente por medio de ajax para mostrar los datos del cliente en el formularios
         // $('').val();
         $(".select2_demo_client").select2({
@@ -913,6 +1070,23 @@
                 document.getElementById("monto_pago0").value = Math.round(total_tt * multiplier) / multiplier;
             }
             $("#cuotas_footer").html(total_tt.T);
+
+            if(parseFloat(end2) > 700){
+                console.log('mayor a 700');
+                $('#detraccion').attr('disabled', false);                
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+            }else{
+                var select_det = $('.select2_tipo_op').val();
+                console.log(select_det);
+                var split_id = select_det.split(' ');
+                if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                    // Se activa la opcion de detraccion
+                }else{
+                    $('#detraccion').attr('disabled', true);
+                    $('#button_detracc').attr('data-target', '#modal_detraccion');
+                }
+            }
+
         }
 
         //Función de borrado de fila de articulos (Producto-Servicio)
