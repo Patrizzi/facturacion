@@ -59,6 +59,10 @@ class Boleta_m extends Model
     {
         return $this->hasMany(Cuotas_credito::class, 'boleta_m_id');
     }
+    public function detracciones()
+    {
+        return $this->hasOne(Detracciones::class, 'boleta_m_id');
+    }
     public function getFechaEmisionAttribute()
     {
         $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d-m-Y');

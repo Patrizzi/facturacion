@@ -58,56 +58,55 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label"><strong>Vendedor:</strong></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="personal" disabled required="required"
+                                    value="{{ $boleta->user->name }}">
+                            </div>
+                        </div>
+                        <!-- Detracción -->
+                        <div class="row" style="justify-content: flex-start !important;">
                             <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="col-form-label col-md-4"><strong>F. Emis.:</strong></label>
-                                    <div class="col-md-8">
-                                        <input type="text" id="fecha_emision" name="fecha_emision"
-                                            class="form-control" value="{{ $boleta->fecha_emision }}" readonly>
+                                <div class="form-group row" >
+                                    <label class="col-form-label col-md-4"> <strong>Detracción:</strong> </label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="detraccion" name="detraccion_value">
+                                            <option value="0" @if($boleta->detracciones == null) selected @endif>Desactiva</option>
+                                            <option value="1" @if($boleta->detracciones != null) selected @endif>Activa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2" style="display: flex">
+                                        <a href="" id="button_detracc" data-toggle="modal"
+                                            @if ( $boleta->detracciones != null ) data-target="#modal_detraccion"  @else data-target="#" @endif style="margin: auto"><i
+                                                class="fa fa-question-circle"
+                                                style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group row" id="data_1">
-                                    <label class="col-form-label col-md-4"><strong>F. Venci.</strong></label>
-                                    <div class="col-md-8 input-group date">
-                                        <span class="input-group-addon" style="display: none">
-                                            <i class="fa fa-calendar"></i>
-                                        </span>
-                                        @if ($boleta->forma_pago_id == 1)
-                                            {{-- Si es contado --}}
-                                            <input type="date" class="form-control" id="fecha_vencimiento"
-                                                name="fecha_vencimiento" value="{{ $boleta->fecha_vencimiento_edit }}">
-                                        @else
-                                            <input type="date" disabled class="form-control" id="fecha_vencimiento"
-                                                name="fecha_vencimiento" value="{{ $boleta->fecha_vencimiento_edit }}">
-                                        @endif
+                            <div class="col-sm-6" id="modulo_retencion" @if($boleta->cliente->retencion != true) style="display: none" @endif >
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label"><strong>Retención:</strong></label>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" name="check_retencion" id="retencion_check" class="js-switch" @if($boleta->retencion == true) checked @endif>
+                                    </div>
+                                    <div class="col-sm-2" style="display: flex" id="popup_detraccion" style="">
+                                        <a href="" id="button_retencion" data-toggle="modal"
+                                            data-target="#modal_retencion" style="margin: auto"><i
+                                                class="fa fa-question-circle"
+                                                style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="form-group row">
-                                <label class="col-form-label col-md-2"><strong>Comisionista:</strong></label>
-                                <div class="col-md-10">
-                                    <select name="comisionista" id="comisionista" class="select2_demo_comisionista"
-                                        onchange="comision()">
-                                        <option value="Sin Comisión - 0 %">Sin Comisión - 0 %</option>
-                                        @foreach ($p_venta as $comisionista)
-                                            <option id="{{ $comisionista->id }}">{{ $comisionista->cod_vendedor }} -
-                                                {{ $comisionista->personal->personal_l->nombres }} -
-                                                <span style="color: red">{{ $comisionista->comision }} %</span>
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
                             <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
                             <div class="col-md-10">
-                                <select class="form-control select2_operacion" name="tipo_operacion">
+                                <select class="form-control select2_tipo_op" name="tipo_operacion">
                                     @foreach ($tipo_operacion as $index => $t_op)
                                         <option value="{{ $t_op->id }}"
                                             @if ($index == 0) selected @endif>
@@ -168,6 +167,35 @@
                                             value="{{ ucwords($moneda->nombre) }}" readonly="readonly">
                                         <input type="hidden" id="moneda_id" class="form-control" name="moneda_id"
                                             value="{{ $boleta->moneda_id }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-4"><strong>F. Emis.:</strong></label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="fecha_emision" name="fecha_emision"
+                                            class="form-control" value="{{ $boleta->fecha_emision }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row" id="data_1">
+                                    <label class="col-form-label col-md-4"><strong>F. Venci.</strong></label>
+                                    <div class="col-md-8 input-group date">
+                                        <span class="input-group-addon" style="display: none">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        @if ($boleta->forma_pago_id == 1)
+                                            {{-- Si es contado --}}
+                                            <input type="date" class="form-control" id="fecha_vencimiento"
+                                                name="fecha_vencimiento" value="{{ $boleta->fecha_vencimiento_edit }}">
+                                        @else
+                                            <input type="date" disabled class="form-control" id="fecha_vencimiento"
+                                                name="fecha_vencimiento" value="{{ $boleta->fecha_vencimiento_edit }}">
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -321,7 +349,7 @@
                                     <tr style="background-color: #f5f5f500;" align="right">
                                         <td colspan="5"><strong>Subtotal :</strong></td>
                                         <td colspan="2">
-                                            <input id='sub_total_view' type="number"  readonly
+                                            <input id='sub_total_view' type="text"  readonly
                                                 class="form-control inp" required
                                                 value="{{ number_format(round($boleta->sub_total_precio_sin_forma,2),2) }}" />
                                             <input type="hidden" id="sub_total" name="sub_total_sin_igv" value="{{$boleta->sub_total_precio_sin_forma}}" >
@@ -334,7 +362,7 @@
                                     <tr style="background-color: #f5f5f500;" align="right">
                                         <td colspan="5"><strong>IGV :</strong></td>
                                         <td colspan="2">
-                                            <input id='igv_view' type="number" disabled="disabled"
+                                            <input id='igv_view' type="text" disabled="disabled"
                                                 class="form-control inp" required
                                                 value="{{ number_format(round($boleta->igv_sin_forma,2),2) }}" />
                                             <input type="hidden" id="igv" name="igv" value="{{$boleta->igv_sin_forma}}">
@@ -343,7 +371,7 @@
                                     <tr align="right">
                                         <td colspan="5"><strong>Total :</strong></td>
                                         <td colspan="2">
-                                            <input id='total_final_view' type="number" name=""
+                                            <input id='total_final_view' type="text" name=""
                                                 readonly="readonly" class="form-control inp" required
                                                 value="{{ number_format(round($boleta->total_precio_sin_forma,2),2) }}" />
                                             <input type="hidden" name="costo_total" id="total_final" value="{{$boleta->total_precio_sin_forma}}">    
@@ -370,6 +398,8 @@
                 </div>
                 {{-- Modal dentro del Form para que se envien los datos de cuotas --}}
                 @include('transaccion.venta.boleta._shared.modal_cuota_edit')
+                {{-- Modal dentro del Form para que se envien los datos de DETRACCION --}}
+                @include('transaccion.venta.boleta._shared._edit_modal_detraccion')
             </form>
         </div>
     </div>

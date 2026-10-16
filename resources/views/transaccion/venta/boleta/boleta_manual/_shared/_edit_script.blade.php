@@ -579,24 +579,24 @@
         var end2 = Math.round(end * multiplier) / multiplier;
         var end2 = end;
         
-        // if (parseFloat(end2) > 700) {
-        //     console.log('mayor a 700');
-        //     $('#detraccion').attr('disabled', false);
-        //     $('#button_detracc').attr('data-target', '#modal_detraccion');
-        // } else {
-        //     var select_det = $('.select2_tipo_op').val();
-        //     var split_id = select_det.split(' ');
-        //     if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
-        //         // Se activa la opcion de detraccion
-        //     } else {
-        //         $('#detraccion').attr('disabled', true);
-        //         $('#button_detracc').attr('data-target', '#modal_detraccion');
-        //     }
-        //     // var det_op = $('#detraccion').val();
-        //     // if (det_op == 1) {
-        //     //     $('#detraccion').val(0).trigger('change.select2');
-        //     // }
-        // }
+        if (parseFloat(end2) > 700) {
+            console.log('mayor a 700');
+            $('#detraccion').attr('disabled', false);
+            $('#button_detracc').attr('data-target', '#modal_detraccion');
+        } else {
+            var select_det = $('.select2_tipo_op').val();
+            var split_id = select_det.split(' ');
+            if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                // Se activa la opcion de detraccion
+            } else {
+                $('#detraccion').attr('disabled', true);
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+            }
+            // var det_op = $('#detraccion').val();
+            // if (det_op == 1) {
+            //     $('#detraccion').val(0).trigger('change.select2');
+            // }
+        }
 
         // Operacion para total
         // var totalInp = $('[name="total"]');
@@ -626,7 +626,8 @@
             actualizarSaldoRestante();
         }
         $("#cuotas_footer").html(end2);
-        resetModalCuotas()
+        resetModalCuotas();
+        multi_detraccion();
         // multi_detraccion();
     }
 
