@@ -672,6 +672,10 @@
         .limp{
             min-width: 85px !important;
         }
+        .detracc_campo_required, .retenc_campo_required {
+            display: none;
+            color: red;
+        }
     </style>
 
     <!-- Mainly scripts -->
@@ -694,7 +698,6 @@
     <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
     <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
     {{-- //TICKET --}}
-    {{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
     <!-- TouchSpin -->
     <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
@@ -865,24 +868,6 @@
                 clic = 1;
             }
         }
-
-        // function ajax_l() {
-        //     var numeros = $('[id="total_final"]').val();
-        //     var moneda = $('[id="moneda"]').val();
-        //     $.ajax({
-        //         type: "post",
-        //         url: "{{ route('pa.numberletters') }}",
-        //         data: {
-        //             '_token': $('input[name=_token]').val(),
-        //             'numeros': numeros,
-        //             'moneda': moneda
-        //         },
-        //         success: function(msg) {
-        //             console.log(msg);
-        //             $('.h3-total').html(msg);
-        //         }
-        //     });
-        // }
 
         //AUMENTO DE INPUTS
         var i = $('#count_articles').val();

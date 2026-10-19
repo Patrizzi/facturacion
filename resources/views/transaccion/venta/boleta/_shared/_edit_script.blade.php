@@ -1,39 +1,12 @@
-<style>
-    .text_des {
-        border-radius: 10px;
-        border: 1px solid #e5e6e7;
-        width: 80px;
-        padding: 6px 12px;
-    }
-
-    .check {
-        -webkit-appearance: none;
-        height: 34px;
-        background-color: #ffffff00;
-        -moz-appearance: none;
-        border: none;
-        appearance: none;
-        width: 80px;
-        border-radius: 10px;
-    }
-
-    .div_check {
-        position: relative;
-        top: -33px;
-        left: 0px;
-        background-color: #ffffff00;
-        top: -35;
-    }
-
-    .check:checked {
-        background: #0375bd6b;
-    }
-    span.select2-container.select2-container--default.select2-container--open {
-        z-index: 2126 !important;
-    }
-    
-</style>
 <script>
+    let articulosAgregados = new Set();
+    $('.celda').each(function() {
+        var valor = $(this).val();
+        var partes = valor.split('|').map(p => p.trim());
+        var id = partes[0];
+        articulosAgregados.add(String(id));
+    });
+    console.log(articulosAgregados)
     $(".select2_tipo_op").select2();
     // Almacen
     // $('.select2_tipo_almacen').select2();
@@ -67,8 +40,8 @@
     var tipo_coti = 1;
     var cliente_default = $('#cliente_id_input').val();
     $(".select2_demo_client").select2({
-        theme: "bootstrap",
         placeholder: "Seleccionar Cliente",
+        // width: '100%',
         ajax: {
             minimumInputLength: 1,
             url: "{{ route('pa.clients') }}",
@@ -177,7 +150,7 @@
         var data = `[
         <tr>
             <td>
-                <button type="button" class='delete e borrar btn btn-sm btn-danger'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
+                <button type="button" class='delete e borrar btn btn-sm btn-primary'> <i class="fa fa-trash" aria-hidden="true"></i> </button>
             </td>";
             <td class="td_selected">
                 <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})" autocomplete="off" required></select>
@@ -249,6 +222,7 @@
     function articlesSelect2() {
         var almacen = "{{ $boleta->almacen_id }}";
         $(".select2_demo_3").select2({
+            width: "400px",
             placeholder: "Seleccionar Articulo",
             ajax: {
                 minimumInputLength: 1,
@@ -690,175 +664,288 @@
             search_multiple(busqueda);
         }, 500); // Espera 300 ms antes de ejecutar la acción
     });
+    
+    $('#add_new_product').on('click', function(){
+        search_multiple("");
+        $('#search_product').val('');
+    });
+
+    let filtrarConStock = false;
 
     function search_multiple(busqueda) {
-        // CLEAN DATABLE(?)
+        // Limpiar DataTable previo
         if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
             $('.data_table_multiple').DataTable().clear().destroy();
         }
         $('.data_table_multiple tbody').empty();
 
-        var almacen = $('[id="almacen_id"]').val();
-        var moneda = $('[id="moneda_id"]').val();
         $.ajax({
             type: "post",
             url: "{{ route('pa.search_multiple') }}",
             data: {
                 '_token': $('input[name=_token]').val(),
                 'articulo': busqueda,
-                'almacen': "{{ $boleta->almacen_id }}",
-                'moneda': $('#moneda_id').val(),
-                'fecha_tipo_cambio': "{{ $boleta->fecha_emision }}",
+                'stock': filtrarConStock ? 1 : 0,
+                'moneda': $('[id="moneda_id"]').val(),
+                'almacen': $('[id="almacen_id"]').val()
             },
             success: function(msg) {
-                // console.log(data.mone)
-                if (validarJson(msg)) {
-                    var data = JSON.parse(msg);
-                    if (data.length === 0) {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
-                        return;
-                    }
-                } else if (msg == "[]") {
-                    toastr.warning("No se encontraron resultados",
-                        '', {
-                            timeOut: 3000
-                        });
-                    return;
-                } else {
-                    toastr.warning("No se encontraron resultados",
-                        '', {
-                            timeOut: 3000
-                        });
+                // Intentar parsear si el backend no manda las cabeceras application/json correctas
+                let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+                // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
+                if (!data || data.length === 0) {
+                    toastr.warning("No se encontraron resultados", '', { timeOut: 3000 });
                     return;
                 }
-                var quantity = $('#quantity_modal').val();
-                if (quantity == "") {
-                    quantity = 1;
-                }
+
+                // Inicializar DataTable
                 $('.data_table_multiple').DataTable({
+                    "bLengthChange": false,
+                    "searching": false,
                     "autoWidth": false,
-                    pageLength: 10,
+                    pageLength: 7,
                     responsive: true,
                     "aaData": data,
-                    "columns": [{
-                            "data": "id"
+                    drawCallback: function (settings) {
+                        $(".touchspin1").each(function () {
+                            const $input = $(this);
+                            // Evitar doble inicialización si el plugin ya envolvió este input
+                            if (!$input.hasClass('js-touchspin-init')) {
+                                $input.addClass('js-touchspin-init').TouchSpin({
+                                    buttondown_class: 'btn btn-link btn-sm',
+                                    buttonup_class: 'btn btn-link btn-sm',
+                                    min: 1,
+                                    max: parseFloat($input.attr('max')) || 0,
+                                });
+                            }
+                        });
+                        activarSliderSiDesborda();
+                    },
+                    dom: '<"top"f>rt<"dt-left-info"ip>', // i = info ("Mostrando X-Y de Z"), p = paginación
+                    language: {
+                        info: "Mostrando _START_-_END_ de _TOTAL_ artículos",
+                        infoEmpty: "No hay artículos",
+                        paginate: {
+                            previous: '<i class="fa fa-chevron-left"></i>',
+                            next: '<i class="fa fa-chevron-right"></i>'
+                        }
+                    },
+                    pagingType: "simple_numbers",
+                    "columns": [
+                        // { "data": "id" },
+                        { 
+                            "data": "codigo",
+                            "width": "130px",
+                            render: function(data, type, row) {
+                                    return `
+                                    <span class="codigo-toggle" 
+                                        data-producto="${row.codigo_producto}" 
+                                        data-original="${row.codigo_original ?? ''}" 
+                                        data-showing="producto"
+                                        style="cursor:pointer; display:inline-block; min-width:80px;">
+                                        <span class="badge badge-info">${row.codigo_producto}</span>
+                                    </span>
+                                `;
+                            }
                         },
-                        {
-                            "data": "codigo"
+                        { 
+                            "data": "nombre", 
+                            "defaultContent": "",
+                            render: function(data, type, row) {
+                                return `
+                                    <div class="articulo-nombre"><span><strong>${row.nombre}</strong></span></div>
+                                        <div class="small-description"><small>${row.description}</small></div>
+                                `;
+                            } 
                         },
-                        {
-                            "data": "nombre",
-                            "defaultContent": ""
-                        },
-                        {
-                            "data": "stock",
-                            "defaultContent": ""
+                        { 
+                            "data": "stock", 
+                            "className": "precio_search precio_cantidad",  
+                            "defaultContent": "",
+                            render: function(data, type, row) {
+                                let claseCss;
+                                if (`${row.stock}` == 0) {
+                                    claseCss = "badge badge-danger"; // ver nota abajo sobre badge-error
+                                } else {
+                                    claseCss = "badge badge-success";
+                                }
+                                return `<span class="${claseCss}">${row.stock}</span>`;
+                            } 
                         },
                         {
                             data: null,
                             title: 'CANTIDAD',
-                            render: function(data, type, row, meta) {
-                                return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
-
+                            "className": "precio_cantidad",
+                            "width": "100px",
+                            render: function(data, type, row) {
+                                return `
+                                    <input class="touchspin1 form-control-sm input-cantidad" type="text" value="1" name="demo1" min="1" max="${row.stock}" data-simbolo="${row.moneda.simbolo}" value="1" data-price="${row.price}" data-id="${row.id}">
+                                `;
                             }
                         },
                         {
                             data: 'price',
-                            title: 'PRECIO U.',
+                            title: 'P. UNITARIO',
+                            "width": "100px",
+                            "className": "precio_dt",
                             render: function(data, type, row) {
-                                const simbolo = row.moneda
-                                    .simbolo; // Obtén el símbolo de la moneda
-                                const formattedPrice = $.fn.dataTable.render.number(',',
-                                    '.', 2).display(data); // Formatea el precio
-                                return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
+                                const formattedPrice = $.fn.dataTable.render.number(',', '.', 2).display(data);
+                                return `${row.moneda.simbolo} ${formattedPrice}`;
                             }
                         },
                         {
                             data: null,
-                            title: 'PRECIO TOTAL',
-                            render: function(data, type, row, meta) {
-                                return `<span class="total" data-id="${row.id}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                            title: 'TOTAL',
+                            "width": "100px",
+                            "className": "precio_dt",
+                            render: function(data, type, row) {
+                                return `<span class="total" data-id="${row.id}" data-simbolo="${row.moneda.simbolo}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
                             }
                         },
+                        {
+                            "width": "100px",
+                            "className": "precio_search precio_cantidad",
+                            render: function(data, type, row) {
+                                const yaAgregado = articulosAgregados.has(String(row.id));
+                                if (`${row.stock}` != 0) {
+                                    return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}" ${yaAgregado ? 'disabled' : ''}> <i class="fa fa-plus"></i> Agregar</button>`;
+                                }else{ 
+                                    return `<button class="btn btn-danger btn-xs btn-agregar-articulo" disabled><i class="fa fa-times"></i> Sin stock</button>`;
+                                }
+                            }
+                        }
                     ]
                 });
             },
             error: function(eject) {
                 if (eject.status === 400) {
-                    console.log(eject.responseJSON.error);
+                    console.error('Error en la petición: ', eject.responseJSON);
                 }
-            },
-            cache: true
+            }
         });
     }
-    $('.data_table_multiple').on('input', '.input-cantidad', function() {
+    $('.data_table_multiple').on('input change', '.input-cantidad', function() {
         const cantidad = parseFloat($(this).val()) || 0;
         const price = parseFloat($(this).data('price'));
+        const simbolo = $(this).data('simbolo');
         const total = cantidad * price;
-        var simbolo = $('#basic-addon3').html();
         const id = $(this).data('id');
-        $(`.total[data-id="${id}"]`).text(`${simbolo}` + `${total.toFixed(2)}`);
+        $(`.total[data-id="${id}"]`).text(`${simbolo} ` + `${total.toFixed(2)}`);
     });
 
-    $('.data_table_multiple').on('click', 'tbody > tr', function(e) {
-        if ($(e.target).is('input') || $(e.target).closest('td').index() === 4) {
-            return;
-        }
-        var stock = $(this).find("td:eq(3)").text();
-        var cantidad = $(this).find('input').val();
-        console.log(stock);
-        console.log(cantidad);
-        if (parseFloat(cantidad) > parseFloat(stock)) {
-            console.log("dentro del if");
-            toastr.warning("Cantidad mayor al stock",
-                '', {
-                    timeOut: 3000
-                });
-            return;
-        }
-        var count_artc = $('#count_articles').val();
-        var id = $(this).find("td:eq(0)").text();
-        var codigos = $(this).find("td:eq(1)").text();
-        var nombres = $(this).find("td:eq(2)").text();
+    $('.data_table_multiple').on('click', '.btn-agregar-articulo', function(e) {
+        var $btn = $(this);
+        var $row = $(this).closest('tr');
 
-        var concat_data = id + " | " + codigos + " | " + nombres;
+        var stock = $row.find("td:eq(3)").text();
+        var cantidad = $row.find('input').val();
+
+        if (parseFloat(cantidad) > parseFloat(stock)) {
+            toastr.warning("Cantidad mayor al stock", '', { timeOut: 3000 });
+            return;
+        }
+
+        var count_artc = $('#count_articles').val();
+        var id =  $(this).data('id');
+        var cod_prod = $(this).data('cod_producto');
+        var cod_origi = $(this).data('cod_original');
+        var nombres =$(this).data('nombre');
+
+        articulosAgregados.add(id);
+
+        var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
         const newOption = new Option(concat_data, concat_data, true, true);
         const selectedValue = $('#articulo').val();
+
         if (count_artc == "" && selectedValue == null) {
             $('#articulo').append(newOption).trigger('change');
             $('#count_articles').val(1);
-            //
+
             let debounceTimer;
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 $(`#cantidad0`).val(cantidad);
-                console.log("se cambio de cantidad");
-                resetModalCuotas()
-            }, 1500);
-            //
+                multi(0);
+            }, 1000);
         } else {
             $('.addmore').click();
             var count_artc = $('#count_articles').val();
             $(`#articulo${count_artc}`).append(newOption).trigger('change');
 
-            //
             let debounceTimer;
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 $(`#cantidad${count_artc}`).val(cantidad);
-                console.log("se cambio de cantidad")
-                resetModalCuotas()
-            }, 1500);
-            //
+                multi(`${count_artc}`);
+            }, 1000);
         }
-        toastr.info("Se agregó el Articulo correctamente",
-            '', {
-                timeOut: 3000
-            });
+        $btn.prop('disabled', true);
+
+        toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
     });
+
+    $('#total_final').on('input change', function(){
+        var total = $(this).val();
+        $('#subtotal-monto').html(total);
+    });
+    
+    setInterval(function () {
+        $('.codigo-toggle').each(function () {
+            const $el = $(this);
+            const showing = $el.data('showing');
+
+            if (showing === 'producto') {
+                $el.fadeOut(150, function () {
+                    $el.html(`<span class="badge badge-info">${$el.data('original')}</span>`).fadeIn(150);
+                });
+                $el.data('showing', 'original');
+            } else {
+                $el.fadeOut(150, function () {
+                    $el.html(`<span class="badge badge-info">${$el.data('producto')}</span>`).fadeIn(150);
+                });
+                $el.data('showing', 'producto');
+            }
+        });
+    }, 5000); // cambia cada 2 segundos
+
+    function activarSliderSiDesborda() {
+        setTimeout(function() {
+            $('.articulo-nombre').each(function() {
+                const el = this; // elemento DOM nativo, no jQuery
+                if (el.scrollWidth > el.clientWidth) {
+                    $(el).addClass('is-overflowing');
+                } else {
+                    $(el).removeClass('is-overflowing');
+                }
+            });
+        }, 50);
+        setTimeout(function() {
+            $('.small-description').each(function() {
+                const el = this; // elemento DOM nativo, no jQuery
+                if (el.scrollWidth > el.clientWidth) {
+                    $(el).addClass('is-overflowing');
+                } else {
+                    $(el).removeClass('is-overflowing');
+                }
+            });
+        }, 10);
+    }
+    $('#add_product_data').on('shown.bs.modal', function () {
+        activarSliderSiDesborda();
+    });
+    $('#button_filter_stock').on('click', function() {
+        const $btn = $(this);
+        filtrarConStock = !$btn.hasClass('active');
+        search_multiple($('#buscador_articulo').val());
+    });
+    function reactivarBotonModal(id) {
+        var $btn = $(`.btn-agregar-articulo[data-id="${id}"]`);
+        console.log($btn);
+        if ($btn.length) {
+            $btn.prop('disabled', false);
+        }
+    }
+
     // Para las cuotas
     var total = document.getElementById('total_final').value;
     var x = 1;
@@ -982,6 +1069,13 @@
         var e = document.getElementsByClassName("e").length;
         var fila = $(this).parents("tr");
         var input_text_opt = fila.find('input[class="celda"]').val();
+        if (input_text_opt) {
+            var partes = input_text_opt.split('|').map(p => p.trim());
+            var id = partes[0];
+            articulosAgregados.delete(String(id));
+            reactivarBotonModal(id);
+            // console.log(articulosAgregados);
+        }
         $('option[value="' + input_text_opt + '"]').prop("disabled", false);
         $(".addmore").prop("disabled", false);
         $(".select2_demo_3").select2({
@@ -992,41 +1086,53 @@
             fila.closest('tr').remove();
             $(".borrar").prop("disabled", false);
             $(".addmore").prop("disabled", false);
+
+            var multiplier = 100;
+            var totalInp = $('[name="afectacion"]');
+            var total_t = 0;
+
+            totalInp.each(function() {
+                total_t += parseFloat($(this).val());
+            });
+
+            $('#subtotal_gravado').val(total_t);
+            //GRAVADO
+            var totalInpG = $('[name="total"]');
+            var total_tt = 0;
+
+            totalInpG.each(function() {
+                total_tt += parseFloat($(this).val());
+            });
+            $('#sub_total').val(total_tt);
+
+            var igv_valor = ({{ $igv->renta }});
+            var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
+            var subtotal = document.querySelector(`#sub_total`).value;
+            var igv_val = parseFloat(subtotal_gravado) * igv_valor / 100;
+            var igv = Math.round(igv_val * multiplier) / multiplier;
+            var end_2 = parseFloat(igv) + parseFloat(subtotal);
+            var end = Math.round(end_2 * multiplier) / multiplier;
+
+            document.getElementById("igv").value = igv;
+            document.getElementById("total_final").value = end;
+            articlesSelect2();
         } else {
-            $(".borrar").prop("disabled", true);
+            if(input_text_opt == ""){
+                return;
+            }
             $(".addmore").prop("disabled", false);
+            $(".select2_demo_3").val(null).trigger("change");
+            limpiar_inputs();
+
         }
-        var multiplier = 100;
-        var totalInp = $('[name="afectacion"]');
-        var total_t = 0;
 
-        totalInp.each(function() {
-            total_t += parseFloat($(this).val());
-        });
-
-        $('#subtotal_gravado').val(total_t);
-        //GRAVADO
-        var totalInpG = $('[name="total"]');
-        var total_tt = 0;
-
-        totalInpG.each(function() {
-            total_tt += parseFloat($(this).val());
-        });
-        $('#sub_total').val(total_tt);
-
-        var igv_valor = ({{ $igv->renta }});
-        var subtotal_gravado = document.querySelector(`#subtotal_gravado`).value;
-        var subtotal = document.querySelector(`#sub_total`).value;
-        var igv_val = parseFloat(subtotal_gravado) * igv_valor / 100;
-        var igv = Math.round(igv_val * multiplier) / multiplier;
-        var end_2 = parseFloat(igv) + parseFloat(subtotal);
-        var end = Math.round(end_2 * multiplier) / multiplier;
-
-        document.getElementById("igv").value = igv;
-        document.getElementById("total_final").value = end;
-        articlesSelect2();
     })
+    function limpiar_inputs() {
+        $(`.td-width`).val("");
+        $(`#sub_total`).val("");
+        $(`#igv`).val("");
 
+    }
     // Boton para Solamente Guardar
     $("#boton").on("click", function(buton) {
         $('#button_submit').val('0');
@@ -1387,5 +1493,7 @@
             $(`.button_money`).removeClass('not-active');
         }, 10000);
     }
+
+    
 </script>
     
