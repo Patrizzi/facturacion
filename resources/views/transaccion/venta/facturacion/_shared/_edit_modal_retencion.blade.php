@@ -19,7 +19,7 @@
                                     <label for=""><strong>Porcentaje de
                                             Retención</strong></label>
                                     <input type="text" class="form-control ipt_reten" name="porcentaje_retencion"
-                                        id="porcentaje_ret" @if($detraccion !=  "not") value="{{$facturacion->porcentaje_retencion ?? 0}}" @else value="{{$facturacion->cliente->retencion->porcentaje}}" @endif>
+                                        id="porcentaje_ret" value="{{$facturacion->porcentaje_retencion ?? 0}}" >
                                     <div class="retenc_campo_required">
                                         <small>Rellena este campo</small>
                                     </div>

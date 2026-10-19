@@ -1147,7 +1147,7 @@ class BoletaController extends Controller
             }
         }
         // Detraccion
-        if($request->get('detraccion_value') == 1){ //Si  Activamos Detraccion
+        if($request->get('detraccion_value') == "1"){ //Si  Activamos Detraccion
             // Editar
             $search_det = Detracciones::where('boleta_id', $id)->first();
             if(isset($search_det)){
@@ -1170,10 +1170,10 @@ class BoletaController extends Controller
                 $fact_detra->save();
             }
         }else{
-            $search_det = Detracciones::where('factura_id', $id)->first();
+            $search_det = Detracciones::where('boleta_id', $id)->first();
             // Eliminar
             if(isset($search_det)){
-                $eliminar_detraccion = Detracciones::where('factura_id', $id)->delete();
+                $eliminar_detraccion = Detracciones::where('boleta_id', $id)->delete();
             }
         }
         // Comision

@@ -11,7 +11,7 @@
     $showDropdown = $useAlmacen && $isAdmin && (!$hideDropdownIfSingle || $hasManyAlmacenes);
     $dropdownId = 'dropdownMenuButton_' . uniqid();
 @endphp
-<div style="margin-top: 5px; margin-bottom: 8px; margin-left: 10px;">
+<div style="">
     {{-- 1) Dropdown de ALMACENES (solo si useAlmacen=true y admin corresponde) --}}
     @if ($showDropdown)
         <span class="dropdown">
@@ -50,7 +50,7 @@
                 @if ($useAlmacen)
                     <input type="hidden" name="almacen" value="{{ auth()->user()->almacen_id }}">
                 @endif
-                <button class="btn btn-link no-hover-icon" type="submit" style="cursor: pointer;">
+                <button class="btn btn-sm btn-link no-hover-icon" type="submit" style="cursor: pointer;">
                     <i class="fa fa-arrow-left text-muted"></i>
                 </button>
             </form>
