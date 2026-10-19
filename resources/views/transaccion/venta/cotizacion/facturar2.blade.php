@@ -60,103 +60,109 @@
                                             id="" readonly>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-form-label col-md-2"><strong>Moneda:</strong></label>
-                                    <div class="col-md-10">
-                                        <input type="text" name="" class="form-control"
-                                            value="{{ $cotizacion->moneda->nombre }}" id="" readonly>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                         <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>Moneda:</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="text" name="" class="form-control"
+                                                    value="{{ $cotizacion->moneda->nombre }}" id="" readonly>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row" style="justify-content: left">
-                                    <label class="col-form-label col-md-2"><strong>F. Pago:</strong></label>
-                                    <div class="col-md-8" class="">
-                                        <select class="form-control" name="forma_pago" id="forma_pago"
-                                            onchange="seleccionado_fp()">
-                                            @foreach ($forma_pagos as $forma_pago)
-                                                <option value="{{ $forma_pago->id }}"
-                                                    @if ($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>
-                                                    {{ $forma_pago->nombre }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2" id="credito_pago" style="display: none;">
-                                        <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
-                                            data-toggle="modal" data-target="#cuotas_modal"><i
-                                                class="fa fa-calendar"></i></button>
-                                        <!-- Modal -->
-                                        <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1"
-                                            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas
-                                                        </h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="alert alert-danger alert-dismissible fade show"
-                                                            role="alert" id="alert_campos" style="display: none">
-                                                            <strong style="font-size:11px">Rellenar todos los
-                                                                campos</strong>
-                                                            <button type="button" class="close_model_rc close"
-                                                                onclick="cerrar_but_rc()" style="padding: 6;">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="alert alert-danger alert-dismissible fade show"
-                                                            role="alert" id="suma_campos" style="display: none">
-                                                            <strong style="font-size:11px">La suma de las cuotas es
-                                                                diferente del monto total</strong>
-                                                            <button type="button" class="close_model_mt close"
-                                                                onclick="cerrar_but_mt()" style="padding: 6;">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="row_number">
-                                                            <div class="pago_modal row">
-                                                                <div class="col-sm-1"><label>Fecha:</label></div>
-                                                                <div class="col-sm-4">
-                                                                    <input type="date" name="fecha_pago[]"
-                                                                        id="fecha_pago0" class="fecha_pago form-control"
-                                                                        min="{{ $fecha_1 }}">
+                                    <div class="col-md-6">
+                                        <div class="form-group row" style="justify-content: left">
+                                            <label class="col-form-label col-md-4"><strong>F. Pago:</strong></label>
+                                            <div class="col-md-6" class="">
+                                                <select class="form-control" name="forma_pago" id="forma_pago"
+                                                    onchange="seleccionado_fp()">
+                                                    @foreach ($forma_pagos as $forma_pago)
+                                                        <option value="{{ $forma_pago->id }}"
+                                                            @if ($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>
+                                                            {{ $forma_pago->nombre }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2" id="credito_pago" style="display: none;">
+                                                <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
+                                                    data-toggle="modal" data-target="#cuotas_modal"><i
+                                                        class="fa fa-calendar"></i></button>
+                                                <!-- Modal -->
+                                                <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1"
+                                                    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="alert alert-danger alert-dismissible fade show"
+                                                                    role="alert" id="alert_campos" style="display: none">
+                                                                    <strong style="font-size:11px">Rellenar todos los
+                                                                        campos</strong>
+                                                                    <button type="button" class="close_model_rc close"
+                                                                        onclick="cerrar_but_rc()" style="padding: 6;">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
                                                                 </div>
-                                                                <div class="col-sm-1"><label>Monto:</label></div>
-                                                                <div class="col-sm-4">
-                                                                    <div class="input-group mb-3"
-                                                                        style="padding-right:15px">
-                                                                        <div class="input-group-prepend">
-                                                                            <span class="input-group-text"
-                                                                                id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
+                                                                <div class="alert alert-danger alert-dismissible fade show"
+                                                                    role="alert" id="suma_campos" style="display: none">
+                                                                    <strong style="font-size:11px">La suma de las cuotas es
+                                                                        diferente del monto total</strong>
+                                                                    <button type="button" class="close_model_mt close"
+                                                                        onclick="cerrar_but_mt()" style="padding: 6;">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="row_number">
+                                                                    <div class="pago_modal row">
+                                                                        <div class="col-sm-1"><label>Fecha:</label></div>
+                                                                        <div class="col-sm-4">
+                                                                            <input type="date" name="fecha_pago[]"
+                                                                                id="fecha_pago0" class="fecha_pago form-control"
+                                                                                min="{{ $fecha_1 }}">
                                                                         </div>
-                                                                        <input type="text" name="monto_pago[]"
-                                                                            id="monto_pago0"
-                                                                            class="monto_pago form-control"
-                                                                            onkeypress="return filterFloat(event,this);">
+                                                                        <div class="col-sm-1"><label>Monto:</label></div>
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group mb-3"
+                                                                                style="padding-right:15px">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text"
+                                                                                        id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
+                                                                                </div>
+                                                                                <input type="text" name="monto_pago[]"
+                                                                                    id="monto_pago0"
+                                                                                    class="monto_pago form-control"
+                                                                                    onkeypress="return filterFloat(event,this);">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <label><button type="button" aria-hidden="true"
+                                                                                    id="add_pago"
+                                                                                    class="add_pago btn btn-success"><i
+                                                                                        class="fa fa-plus-square-o fa-lg">
+                                                                                    </i></button></label>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-2">
-                                                                    <label><button type="button" aria-hidden="true"
-                                                                            id="add_pago"
-                                                                            class="add_pago btn btn-success"><i
-                                                                                class="fa fa-plus-square-o fa-lg">
-                                                                            </i></button></label>
+                                                            </div>
+                                                            <div class="modal-footer" style="display: block">
+                                                                <div class="row">
+                                                                    <div class="col-sm-6" style="">
+                                                                        <label for=""><strong>Precio Total:
+                                                                                &nbsp;</strong>{{ $cotizacion->moneda->simbolo }}&nbsp;</label><label
+                                                                            id="cuotas_footer"></label>
+                                                                    </div>
+                                                                    <div class="col-sm-6" align="right">
+                                                                        <button type="button" id="button_cuotas_save"
+                                                                            class="btn btn-primary">Guardar</button>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer" style="display: block">
-                                                        <div class="row">
-                                                            <div class="col-sm-6" style="">
-                                                                <label for=""><strong>Precio Total:
-                                                                        &nbsp;</strong>{{ $cotizacion->moneda->simbolo }}&nbsp;</label><label
-                                                                    id="cuotas_footer"></label>
-                                                            </div>
-                                                            <div class="col-sm-6" align="right">
-                                                                <button type="button" id="button_cuotas_save"
-                                                                    class="btn btn-primary">Guardar</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -165,6 +171,8 @@
                                         </div>
                                     </div>
                                 </div>
+                               
+                               
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group row">
@@ -238,18 +246,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-form-label col-md-2"><strong>Emision</strong></label>
-                                    <div class="col-md-10">
-                                        <input type="date" class="form-control" value="{{ date('Y-m-d') }}"
-                                            readonly="readonly" name=fecha_emision>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>Emision</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="date" class="form-control" value="{{ date('Y-m-d') }}"
+                                                    readonly="readonly" name=fecha_emision>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-form-label col-md-2"><strong>Vencimiento:</strong></label>
-                                    <div class="col-md-10">
-                                        <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
-                                            class="form-control" value="{{ date('Y-m-d') }}">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>Vencimiento:</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
+                                                    class="form-control" value="{{ date('Y-m-d') }}">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -623,24 +637,24 @@
         $(".add_pago").on('click', function() {
             var total = document.getElementById('total_final').value;
             var data = `
-        <div class="delete_modal${x} row">
-        <div class="col-sm-1"><label>Fecha:</label></div>
-        <div class="col-sm-4">
-            <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control" min="{{ $fecha_1 }}" >
-        </div>
-        <div class="col-sm-1"><label>Monto:</label></div>
-        <div class="col-sm-4">
-            <div class="input-group mb-3" style="padding-right:15px">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
-            </div>
-            <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}" onkeypress="return filterFloat(event,this);"    >
-            </div>
-        </div>
-        <div class="col-sm-2">
-            <label ><button type="button"  class="xd btn btn-danger" onclick="eliminar(${x})"><i class="fa fa-trash-o fa-lg" > </i></button></label>
-        </div>
-        </div>`;
+                <div class="delete_modal${x} row">
+                <div class="col-sm-1"><label>Fecha:</label></div>
+                <div class="col-sm-4">
+                    <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control" min="{{ $fecha_1 }}" >
+                </div>
+                <div class="col-sm-1"><label>Monto:</label></div>
+                <div class="col-sm-4">
+                    <div class="input-group mb-3" style="padding-right:15px">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
+                    </div>
+                    <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}" onkeypress="return filterFloat(event,this);"    >
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <label ><button type="button"  class="xd btn btn-danger" onclick="eliminar(${x})"><i class="fa fa-trash-o fa-lg" > </i></button></label>
+                </div>
+            </div>`;
             $('.row_number').append(data);
 
             var inp_mont = document.getElementsByClassName('monto_pago').length;

@@ -10,7 +10,7 @@
     {{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 
 
-    
+
     <div class="wrapper wrapper-content animated fadeInRight">
         <form action="{{ route('cotizacion.boletear_store') }}" enctype="multipart/form-data" method="post"
             onsubmit="return valida(this)">
@@ -42,7 +42,8 @@
                             </h2>
                         </div>
                         <div class="col-md-4">
-
+                            <input type="text" value="{{ $cotizacion->id }}" name="id_cotizador"
+                                hidden="hidden">
                         </div>
                     </div>
                 </div>
@@ -60,213 +61,11 @@
                                             id="" readonly>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <head>
-        <script type="text/javascript">
-            $(document).ready(function() {
-
-                $("form").keypress(function(e) {
-                    if (e.which == 13) {
-                        setTimeout(function() {
-                            e.target.value += ' | ';
-                        }, 4);
-                        e.preventDefault();
-                    }
-                });
-
-
-            });
-        </script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                if ({{ $cotizacion->forma_pago_id }} == 1) {
-                    document.getElementById('credito_pago').style.display = "none";
-                    document.getElementById('colum-col').className = "col-sm-5";
-                    document.getElementById('ven_1p').style.visibility = "initial";
-                    document.getElementById('ven_3p').style.visibility = "initial";
-                    document.getElementById('fecha_vencimiento').removeAttribute('disabled');
-
-                } else {
-                    document.getElementById('credito_pago').style.display = "block";
-                    document.getElementById('ven_1p').style.visibility = "hidden";
-                    document.getElementById('ven_3p').style.visibility = "hidden";
-                    document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
-                }
-
-            });
-        </script>
-    </head>
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <form action="{{ route('cotizacion.boletear_store') }}" enctype="multipart/form-data" method="post"
-            onsubmit="return valida(this)">
-            @csrf
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                        <div class="row">
-                            <div class="col-sm-4 text-left" align="left">
-                                <address class="col-sm-4" align="left">
-                                    <img src="{{ asset('img/logos') }}/{{ $empresa->foto }}" alt="" width="300px">
-                                </address>
-                            </div>
-                            <div class="col-sm-4 text-center" style="font-size: 13px"><br>
-                                <strong>{{ $empresa->razon_social }}</strong>
-                                <br>
-                                Tel.: {{ $empresa->telefono }} / Móvil: {{ $empresa->movil }}
-                                <br>
-                                {{ $empresa->correo }}
-                                <br>
-                                {{ $empresa->calle }} - {{ $empresa->ciudad }} - {{ $empresa->region_provincia }} -
-                                {{ $empresa->pais }}
-
-
-                            </div>
-                            <div class="col-sm-4 ">
-                                <div class="form-control ruc" style="height: 125px">
-                                    <center>
-                                        <h3 style="padding-top:10px ">R.U.C {{ $empresa->ruc }}</h3>
-                                        <h2>BOLETA ELECTRÓNICA</h2>
-                                        <input type="text" value="{{ $cotizacion->id }}" name="id_cotizador"
-                                            hidden="hidden">
-                                        <p>{{ $cod_bol }}</p>
-                                        <input type="text" value="{{ $cotizacion->comisionista_id }}"
-                                            name="id_comisionista" hidden="hidden">
-                                    </center>
-                                </div>
-                            </div>
-                        </div><br>
-                        <div class="row">
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <div align="left">
-                                        <div class="row">
-                                            <div class="col-sm-2"><strong>Cliente:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    name="" value="{{ $cotizacion->cliente->nombre }}"
-                                                    readonly=""></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>R.U.C:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    name="" value="{{ $cotizacion->cliente->numero_documento }}"
-                                                    readonly=""></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>Dirección:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    name="" value="  {{ $cotizacion->cliente->direccion }}"
-                                                    readonly></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>Condiciones de Pago:</strong></div>
-                                            <div class="col-sm-3" id="colum-col">
-                                                <select class="form-control" name="forma_pago" id ="forma_pago"
-                                                    onchange="seleccionado_fp()">
-                                                    <option value="{{ $cotizacion->forma_pago->id }}">
-                                                        {{ $cotizacion->forma_pago->nombre }}</option>
-                                                    <option disabled>--------------------</option>
-                                                    @foreach ($forma_pagos as $forma_pago)
-                                                        <option value="{{ $forma_pago->id }}">{{ $forma_pago->nombre }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-2" id="credito_pago" style="display: none;">
-                                                <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
-                                                    data-toggle="modal" data-target="#cuotas_modal">Cuotas</button>
-                                            </div>
-                                            <!-- Modal -->
-                                            <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1"
-                                                role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">Registrar cuotas
-                                                            </h5>
-                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="alert alert-danger alert-dismissible fade show"
-                                                                role="alert" id="alert_campos" style="display: none">
-                                                                <strong style="font-size:11px">Rellenar todos los
-                                                                    campos</strong>
-                                                                <button type="button" class="close_model_rc close"
-                                                                    onclick="cerrar_but_rc()" style="padding: 6;">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="alert alert-danger alert-dismissible fade show"
-                                                                role="alert" id="suma_campos" style="display: none">
-                                                                <strong style="font-size:11px">La suma de las cuotas
-                                                                    exceden el monto total</strong>
-                                                                <button type="button" class="close_model_mt close"
-                                                                    onclick="cerrar_but_mt()" style="padding: 6;">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="row_number">
-                                                                <div class="pago_modal row">
-                                                                    <div class="col-sm-1"><label>Fecha:</label></div>
-                                                                    <div class="col-sm-4">
-                                                                        <input type="date" name="fecha_pago[]"
-                                                                            id="fecha_pago0"
-                                                                            class="fecha_pago form-control"
-                                                                            min="{{ $fecha_1 }}">
-                                                                    </div>
-                                                                    <div class="col-sm-1"><label>Monto:</label></div>
-                                                                    <div class="col-sm-4">
-                                                                        <div class="input-group mb-3"
-                                                                            style="padding-right:15px">
-                                                                            <div class="input-group-prepend">
-                                                                                <span class="input-group-text"
-                                                                                    id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
-                                                                            </div>
-                                                                            <input type="text" name="monto_pago[]"
-                                                                                id="monto_pago0"
-                                                                                class="monto_pago form-control"
-                                                                                onkeypress="return filterFloat(event,this);">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-sm-2">
-                                                                        <label><button type="button" aria-hidden="true"
-                                                                                id="add_pago"
-                                                                                class="add_pago btn btn-success"><i
-                                                                                    class="fa fa-plus-square-o fa-lg">
-                                                                                </i></button></label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer" style="display: block">
-                                                            <div class="row">
-                                                                <div class="col-sm-6" style="">
-                                                                    <label for=""><strong>Precio Total:
-                                                                            &nbsp;</strong><span
-                                                                            id="simb_fot">{{ $cotizacion->moneda->simbolo }}</span>&nbsp;</label><label
-                                                                        id="cuotas_footer"></label>
-                                                                </div>
-                                                                <div class="col-sm-6" align="right">
-                                                                    <button type="button" id="button_cuotas_save"
-                                                                        class="btn btn-primary">Guardar</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <strong>Tipo de Moneda:</strong>
-                                            </div>
-                                            <div class="col-sm-3">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>Moneda:</strong></label>
+                                            <div class="col-md-8">
                                                 <input type="text" class="form-control"
                                                     value="{{ $cotizacion->moneda->nombre }}" name="" readonly>
                                                 <input type="text" name="tipo_moneda"
@@ -274,251 +73,490 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row" style="justify-content: left">
+                                            <label class="col-form-label col-md-4"><strong>F. Pago:</strong></label>
+                                            <div class="col-md-6" class="">
+                                                <select class="form-control" name="forma_pago" id="forma_pago"
+                                                    onchange="seleccionado_fp()">
+                                                    @foreach ($forma_pagos as $forma_pago)
+                                                        <option value="{{ $forma_pago->id }}"
+                                                            @if ($cotizacion->forma_pago_id == $forma_pago->id) selected @endif>
+                                                            {{ $forma_pago->nombre }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2" id="credito_pago" style="display: none;">
+                                                <button type="button" class='cuota_modal btn btn-info' id="cuota_modal"
+                                                    data-toggle="modal" data-target="#cuotas_modal"><i
+                                                        class="fa fa-calendar"></i></button>
+                                                <!-- Modal -->
+                                                <div class="modal fade bd-example-modal-lg" id="cuotas_modal" tabindex="-1"
+                                                    role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Registrar
+                                                                    cuotas
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="alert alert-danger alert-dismissible fade show"
+                                                                    role="alert" id="alert_campos" style="display: none">
+                                                                    <strong style="font-size:11px">Rellenar todos los
+                                                                        campos</strong>
+                                                                    <button type="button" class="close_model_rc close"
+                                                                        onclick="cerrar_but_rc()" style="padding: 6;">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="alert alert-danger alert-dismissible fade show"
+                                                                    role="alert" id="suma_campos"
+                                                                    style="display: none">
+                                                                    <strong style="font-size:11px">La suma de las cuotas
+                                                                        exceden el monto total</strong>
+                                                                    <button type="button" class="close_model_mt close"
+                                                                        onclick="cerrar_but_mt()" style="padding: 6;">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="row_number">
+                                                                    <div class="pago_modal row">
+                                                                        <div class="col-sm-1"><label>Fecha:</label></div>
+                                                                        <div class="col-sm-4">
+                                                                            <input type="date" name="fecha_pago[]"
+                                                                                id="fecha_pago0"
+                                                                                class="fecha_pago form-control"
+                                                                                min="{{ $fecha_1 }}">
+                                                                        </div>
+                                                                        <div class="col-sm-1"><label>Monto:</label></div>
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group mb-3"
+                                                                                style="padding-right:15px">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text"
+                                                                                        id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
+                                                                                </div>
+                                                                                <input type="text" name="monto_pago[]"
+                                                                                    id="monto_pago0"
+                                                                                    class="monto_pago form-control"
+                                                                                    onkeypress="return filterFloat(event,this);">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <label><button type="button"
+                                                                                    aria-hidden="true" id="add_pago"
+                                                                                    class="add_pago btn btn-success"><i
+                                                                                        class="fa fa-plus-square-o fa-lg">
+                                                                                    </i></button></label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer" style="display: block">
+                                                                <div class="row">
+                                                                    <div class="col-sm-6" style="">
+                                                                        <label for=""><strong>Precio Total:
+                                                                                &nbsp;</strong><span
+                                                                                id="simb_fot">{{ $cotizacion->moneda->simbolo }}</span>&nbsp;</label><label
+                                                                            id="cuotas_footer"></label>
+                                                                    </div>
+                                                                    <div class="col-sm-6" align="right">
+                                                                        <button type="button" id="button_cuotas_save"
+                                                                            class="btn btn-primary">Guardar</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label"><strong>Detracción:</strong></label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" id="detraccion" name="detraccion_value"
+                                                    @if ($cotizacion->precio_total < 700) disabled @endif>
+                                                    <option value="0">Desactiva</option>
+                                                    <option value="1">Activa</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2" style="display: flex" id="popup_detraccion"
+                                                style="">
+                                                <a href="" id="button_detracc" data-toggle="modal"
+                                                    style="margin: auto"><i class="fa fa-question-circle"
+                                                        style="cursor: pointer;fo/nt-size: 15px;transition: 1s;z-index:9999;pointer-events: none"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6" align="center">
-                                <div class="form-control">
-                                    <div align="left">
-                                        <div class="row">
-                                            <div class="col-sm-2"><strong>Orden de Compra:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    value="0" name="orden_compra"></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>Guía de Remisión:</strong></div>
-                                            <div class="col-sm-10"><input type="text" class="form-control"
-                                                    name="" value="0" name="guia_remision"></div>
-                                            <br>
-                                            <div class="col-sm-2"><strong>Fecha de Emisión:</strong></div>
-                                            <div class="col-sm-10"><input type="date" class="form-control"
-                                                    value="{{ date('Y-m-d') }}" readonly="readonly" name=fecha_emision>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-form-label col-md-2"><strong>T. Operación </strong></label>
+                                    <div class="col-md-10">
+                                        <select class="select2_tipo_op" name="tipo_operacion">
+                                            @foreach ($tipo_operacion as $t_op)
+                                                <option value="{{ $t_op->id }}">{{ $t_op->codigo }} -
+                                                    {{ $t_op->informacion }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>O. Compra:</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" value="0"
+                                                    name="orden_compra">
                                             </div>
-                                            <div class="col-sm-2" id="ven_1p" style="visibility: initial;">
-                                                <strong>Fecha de Vencimiento:</strong>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>G. Remision:</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-control" name="" value="0"
+                                                    name="guia_remision">
                                             </div>
-                                            <div class="col-sm-10" id="ven_3p" style="visibility: initial;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>Emision</strong></label>
+                                            <div class="col-md-8">
+                                                <input type="date" class="form-control" value="{{ date('Y-m-d') }}"
+                                                    readonly="readonly" name=fecha_emision>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-4"><strong>Vencimiento:</strong></label>
+                                            <div class="col-md-8">
                                                 <input type="date" name="fecha_vencimiento" id="fecha_vencimiento"
                                                     class="form-control" value="{{ date('Y-m-d') }}">
                                             </div>
-                                            <br>
-                                            <br>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 " style="height:  120px">
-                                <div class="form-control">
-                                    <strong>Observaciones:</strong><br>
-                                    <textarea class="form-control">{{ $cotizacion->observacion }}</textarea>
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label for=""
+                                        class="col-form-label col-md-1"><strong>Observacion</strong></label>
+                                    <div class="col-md-11">
+                                        <textarea class="form-control" name="observacion" rows="1">{{ $cotizacion->observacion }}</textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <br>
-                        <div class="table-responsive">
-                            <table class="table ">
-                                <thead>
-                                    <tr>
-                                        <th style="width:10%">Código Item</th>
-                                        <th style="width:10%">Cantidad</th>
-                                        <th>Descripción</th>
-                                        <th>Stock</th>
-                                        <th style="width:10%">Valor Unitario</th>
-                                        <th style="width:10%">Valor Venta </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($cotizacion_registros as $index => $cotizacion_registro)
-                                        {{-- @if ($validor[$index] == 1) --}}
-                                        <tr>
-                                            @if (isset($cotizacion_registro->producto_id))
-                                                <td>{{ $cotizacion_registro->producto->codigo_producto }}</td>
-                                                <td>{{ $cotizacion_registro->cantidad }}</td>
-                                                <td>
-
-                                                    {{ $cotizacion_registro->producto->nombre }}
-                                                    {{-- / {{$cotizacion_registro->producto->descripcion}} --}}
-                                                    <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2"
-                                                        cols="2">{{ $cotizacion_registro->descripcion_item }}</textarea>
-                                                    <input type="text" class="form-control col-sm-4"
-                                                        name="numero_serie[{{ $index }}]"
-                                                        placeholder="N° de Serie">
-                                                </td>
-                                                <div style="display: none">
-                                                    @if (strpos($cotizacion_registro->producto->tipo_afec_i_producto->informacion, 'Gravado') !== false)
-                                                        {{ $descu = $array[$index] - ($array_promedio[$index] * $cotizacion_registro->descuento) / 100 }}
-                                                        {{ $comici = $descu + $descu * ($comi / 100) }}
-                                                        {{ $comis_array = round($comici + $comici * ($igv->igv_total / 100), 2) }}
+                            <div class="col-md-12">
+                                <hr style="border: 1px solid #ddd; margin: 10px 0;width: 100%;">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table tables">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 130px">Código</th>
+                                                <th>Descripcion</th>
+                                                <th style="width: 110px">Cantidad</th>
+                                                <th style="width: 110px">Stock </th>
+                                                <th style="width: 150px">Precio U.</th>
+                                                <th style="width: 150px">Precio T.</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $stock_total = true;
+                                            ?>
+                                            @foreach ($cotizacion_registros as $index => $cotizacion_registro)
+                                                <tr>
+                                                    @if (isset($cotizacion_registro->producto_id))
+                                                        <td>
+                                                            <input type="text" class="form-control" name=""
+                                                                id=""
+                                                                value="{{ $cotizacion_registro->producto->codigo_producto }}"
+                                                                readonly>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" readonly
+                                                                value="{{ $cotizacion_registro->producto->nombre }}"
+                                                                name="" id="" class="form-control">
+                                                            <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2"
+                                                                cols="2" style="margin-top: 5px">{{ $cotizacion_registro->descripcion_item }}</textarea>
+                                                            <input type="text" class="form-control"
+                                                                name="numero_serie[{{ $index }}]"
+                                                                placeholder="N° Serie" style="margin-top: 5px">
+                                                        </td>
                                                     @else
-                                                        {{ $descu = $array[$index] - ($array_promedio[$index] * $cotizacion_registro->descuento) / 100 }}
-                                                        {{ $comici = $descu + $descu * ($comi / 100) }}
-                                                        {{ $comis_array = round($comici, 2) }}
+                                                        <td>
+                                                            <input type="text" class="form-control" name=""
+                                                                id=""
+                                                                value="{{ $cotizacion_registro->servicio->codigo_servicio }}"
+                                                                readonly>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" readonly
+                                                                value="{{ $cotizacion_registro->servicio->nombre }}"
+                                                                name="" id="" class="form-control">
+                                                            <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2"
+                                                                cols="2" style="margin-top: 5px">{{ $cotizacion_registro->descripcion_item }}</textarea>
+
+                                                            <input type="text" class="form-control"
+                                                                name="numero_serie[{{ $index }}]"
+                                                                placeholder="N° de Serie" style="margin-top: 5px">
+                                                        </td>
                                                     @endif
-                                                </div>
-                                            @else
-                                                <td>{{ $cotizacion_registro->servicio->codigo_servicio }}</td>
-                                                <td>{{ $cotizacion_registro->cantidad }}</td>
-                                                <td>
-                                                    {{ $cotizacion_registro->servicio->nombre }}
-                                                    <textarea class="form-control" name="descripcion_item[]" placeholder="Descripción del item" rows="2"
-                                                        cols="2">{{ $cotizacion_registro->descripcion_item }}</textarea>
-                                                    <input type="text" class="form-control col-sm-4"
-                                                        name="numero_serie[{{ $index }}]"
-                                                        placeholder="N° de Serie">
+                                                    <td>
+                                                        <input type="text" class="form-control" name=""
+                                                            id="" value="{{ $cotizacion_registro->cantidad }}"
+                                                            readonly>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" readonly
+                                                            value="{{ $array_cantidad[$index] }}" name=""
+                                                            id="" class="form-control"
+                                                            @if ($array_cantidad[$index] < $cotizacion_registro->cantidad) style="border-color: red" {{ $stock_total = false }} @endif>
+                                                    </td>
+                                                    {{-- MODIFICAR ESTA PARTE CON LOGICA DE REPROGRAMACION PARA UN NUEVO PRODUCTO DIRECTAMENTE DESDE KARDEX --}}
+                                                    <td style="display: none;">
+                                                        {{ $desc_array = round($array[$index] - ($array_promedio[$index] * $cotizacion_registro->descuento) / 100, 2) }}
+                                                        {{ $comis_array = round($desc_array + $desc_array * ($comi / 100), 2) }}
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group m-b">
+                                                            <div class="input-group-prepend">
+                                                                <span
+                                                                    class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                            </div>
+                                                            <input type="text" readonly class="form-control"
+                                                                value="{{ round($comis_array, 2) }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group m-b">
+                                                            <div class="input-group-prepend">
+                                                                <span
+                                                                    class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                            </div>
+                                                            <input type="text" readonly class="form-control"
+                                                                value="{{ number_format(round($comis_array * $cotizacion_registro->cantidad, 2), 2) }}">
+                                                        </div>
+                                                    </td>
+
+                                                    <td style="display: none">
+                                                        {{ $sub_total = $cotizacion->op_gravada + $cotizacion->op_exonerada + $cotizacion->op_inafecta }}
+                                                        {{ $sub_total_gravado = $cotizacion->op_gravada }}
+                                                        S/.{{ $igv_p = round($sub_total_gravado, 2) * ($igv->igv_total / 100) }}
+                                                        {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
+                                                        {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="3" style="vertical-align: middle">
+                                                    <?php
+                                                    use Luecano\NumeroALetras\NumeroALetras;
+                                                    $v = new NumeroALetras();
+                                                    $letra = $v->toInvoice($end, 2);
+                                                    // $end_final_point=strstr($end2, '.',false);
+                                                    // $end_final=str_replace('.', '',$end_final_point);
+                                                    ?>
+                                                    <strong>Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }}
+                                                        {{ $cotizacion->moneda->nombre }}</strong>
+                                                    <!-- {{-- {{$end2}} --}} -->
                                                 </td>
-                                                <div style="display: none">
-                                                    @if (strpos($cotizacion_registro->servicio->tipo_afec_i_serv->informacion, 'Gravado') !== false)
-                                                        {{ $descu = $array[$index] - ($array_promedio[$index] * $cotizacion_registro->descuento) / 100 }}
-                                                        {{ $comici = $descu + $descu * ($comi / 100) }}
-                                                        {{ $comis_array = round($comici + $comici * ($igv->igv_total / 100), 2) }}
-                                                    @else
-                                                        {{ $descu = $array[$index] - ($array_promedio[$index] * $cotizacion_registro->descuento) / 100 }}
-                                                        {{ $comici = $descu + $descu * ($comi / 100) }}
-                                                        {{ $comis_array = round($comici, 2) }}
-                                                    @endif
-                                                </div>
-                                            @endif
-
-                                            <td>{{ $array_cantidad[$index] }}</td>
-                                            {{-- MODIFICAR ESTA PARTE CON LOGICA DE REPROGRAMACION PARA UN NUEVO PRODUCTO DIRECTAMENTE DESDE KARDEX --}}
-                                            {{-- [$comi] = porcentaje de comision --}}
-
-                                            <td>{{ $cotizacion->moneda->simbolo }}. {{ round($comis_array, 2) }}</td>
-                                            <td>{{ $cotizacion->moneda->simbolo }}.
-                                                {{ round($comis_array, 2) * $cotizacion_registro->cantidad }}</td>
-
-                                            <td style="display: none">
-                                                {{ $sub_total = $cotizacion->op_gravada + $cotizacion->op_exonerada + $cotizacion->op_inafecta }}
-                                                {{ $sub_total_gravado = $cotizacion->op_gravada }}
-                                                S/.{{ $igv_p = round($sub_total_gravado, 2) * ($igv->igv_total / 100) }}
-                                                {{ $end = round($sub_total, 2) + round($igv_p, 2) }}
-                                                {{ $end2 = number_format(round($sub_total, 2) + round($igv_p, 2), 2) }}
-                                            </td>
-                                        </tr>
-                                        {{-- @endif --}}
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <h3>
-                                    <?php use Luecano\NumeroALetras\NumeroALetras;
-                                    $v = new NumeroALetras();
-                                    $letra = $v->toInvoice($end, 2);
-                                    // $end_final_point=strstr($end2, '.',false);
-                                    // $end_final=str_replace('.', '',$end_final_point);
-                                    ?>
-                                    Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $cotizacion->moneda->nombre }}
-                                    <!-- {{-- {{$end2}} --}} -->
-                                </h3>
+                                                <td style="vertical-align: middle"><strong>Subtotal: </strong></td>
+                                                <td colspan="2">
+                                                    <div class="input-group m-b">
+                                                        <div class="input-group-prepend">
+                                                            <span
+                                                                class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                        </div>
+                                                        <input id='subtotal_gravado' disabled="disabled" hidden=""
+                                                            class="form-control limp_txt" required
+                                                            value="{{ $sub_total }}" />
+                                                        <input type="text" id="sub_total" name="sub_total" disabled
+                                                            class="form-control limp_txt" value="{{ $sub_total }}">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"></td>
+                                                <td style="vertical-align: middle"><strong>Igv:</strong></td>
+                                                <td colspan="2">
+                                                    <div class="input-group m-b">
+                                                        <div class="input-group-prepend">
+                                                            <span
+                                                                class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                        </div>
+                                                        <input type="text" id="igv_input" name="igv_input" disabled
+                                                            class="form-control limp_txt"
+                                                            value="{{ number_format(round($igv_p, 2), 2) }}">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3"></td>
+                                                <td style="vertical-align: middle"><strong>Total :</strong></td>
+                                                <td colspan="2">
+                                                    <div class="input-group m-b">
+                                                        <div class="input-group-prepend">
+                                                            <span
+                                                                class="input-group-addon">{{ $cotizacion->moneda->simbolo }}</span>
+                                                        </div>
+                                                        <input type="text" id="" name="" disabled
+                                                            class="form-control limp_txt"
+                                                            value="{{ number_format(round($end, 2), 2) }}">
+                                                        <input type="hidden" name="total_final" id="total_final"
+                                                            value="{{ round($end, 2) }}">
+                                                    </div>
+                                                </td>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            {{-- <div class="col-sm-4 form-control">
-                        <span style="display: block;float: left"><strong> Importe Total:</strong> </span>
-                        <span style="display: block;float: right"> {{$cotizacion->moneda->simbolo}} {{round($sub_total, 2)}}</span>
-                        <input type="text" name="total" hidden="hidden" value="{{number_format(round($sub_total, 2),2)}}"id="total" >
-                    </div> --}}
-                            <div class="col-sm-4 form-control">
-                                <span style="display: block;float: left"> Subtotal:</span>
-                                <span style="display: block;float: right;">
-                                    {{ $simbologia = $cotizacion->moneda->simbolo }}
-                                    {{ number_format(round($sub_total, 2), 2) }}</span><br>
-                                <input type="text" hidden="" name="sub_total_sin_igv"
-                                    value="{{ number_format(round($sub_total, 2), 2) }}">
-                                <span style="display: block;float: left"> Op. Agravada: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($cotizacion->op_gravada, 2) }}</span><br>
-                                <span style="display: block;float: left"> Op. Inafecta: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($cotizacion->op_inafecta, 2) }}</span><br>
-                                <span style="display: block;float: left"> Op. Exonerada: </span>
-                                <span style="display: block;float: right">{{ $simbologia }}
-                                    {{ number_format($cotizacion->op_exonerada, 2) }}</span><br>
-                                <input type="text" value="{{ $end }}" hidden="hidden"
-                                    name="precio_final_igv">
-                                <span style="display: block;float: left"> I.G.V.: </span>
-                                <span style="display: block;float: right">{{ $cotizacion->moneda->simbolo }}
-                                    {{ number_format(round($igv_p, 2), 2) }}</span><br>
-                                <input type="text" value="{{ $end }}" hidden="hidden"
-                                    name="precio_final_igv">
-                                <span style="display: block;float: left"> Importe Total: </span>
-                                <span style="display: block;float: right">{{ $cotizacion->moneda->simbolo }}
-                                    {{ number_format($end, 2) }}</span>
-                                <input type="text" value="{{ $end }}" hidden="hidden"
-                                    name="precio_final_igv" id="total">
-                                <input type="text" name="total" hidden="hidden"
-                                    value="{{ number_format(round($sub_total, 2), 2) }}"id="total">
-                                <br>
+                            <br>
+                            <br>
+                            <div class="col-sm-12" align="right">
+                                <button class="btn btn-primary boton_submit" style="margin-top: 5px;margin-right: 8px"
+                                    type="button" @if ($stock_total == false) disabled @endif id="boton">
+                                    Guardar
+                                </button>
+                                <button type="submit" hidden id="submit_button">Guardar DB</button>
                             </div>
                         </div>
-                        <input type="text" name="name" maxlength="50" hidden=""
-                            value="{{ $cotizacion->cod_cotizacion }}">
-                        <input type="text" name="id" maxlength="50" hidden=""
-                            value="{{ $cotizacion->id }}">
-                        <input type="text" name="remitente" hidden=""
-                            value="{{ $cotizacion->cliente->email }}">
-                        <div class="row" align="center">
-
-                            <div class="col-sm-4">
-                            </div>
-                            <div class="col-sm-4">
-                            </div>
-                            <!-- @if (auth()->user()->email_creado == 1)
-<div class="  col-sm-6 alert alert-info" >
-                            <input type="hidden" name="verificacion" value="1" id="">
-                            <p style="margin-bottom: 0px">!Al momento de Facturar se le enviará una copia al correo del cliente!</p>
-                        </div>
-@else
--->
-                            <!-- <div class="  col-sm-6 alert alert-info" > -->
-                            <input type="hidden" name="verificacion" value="0" id="">
-                            <!-- <p style="margin-bottom: 0px">!Solo se guardará la factura!</p> -->
-                            <!-- </div> -->
-                            <!--
-@endif -->
-                            <div class="col-sm-4" align="center">
-                                <button class="btn btn-primary boton_submit" style="margin-top: 5px" type="button"
-                                    id="boton"><i class="fa fa-cloud-upload"
-                                        aria-hidden="true">Guardar</i></button>&nbsp;
-                                <button type="submit" hidden id="button_submit">Guardar Hidden</button>
-                            </div>
-                        </div>
-                        <br>
-                        @include('layout_bancos')
                     </div>
                 </div>
             </div>
+            {{-- Detraccion --}}
+            @include('transaccion.venta.cotizacion._shared.modal_detraccion')
         </form>
     </div>
 
-
     <style type="text/css">
-        .ruc {
-            border-radius: 10px;
-            height: 150px;
+        .word-style select,
+        .word-style input,
+        .word-style textarea,
+        .word-style span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 11px;
         }
 
-        .form-control {
-            border-radius: 10px;
-            margin-bottom: 1em;
+        .m-b {
+            margin-bottom: 0px;
+        }
+
+        .input-group>.select2-container--bootstrap .select2-selection--single {
+            height: 100%;
+            line-height: inherit;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e6e7;
+        }
+
+        .select2-results__option.select2-results__option--highlighted {
+            background-color: #1c84c6 !important;
+            color: white !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            font-size: 12px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none;
+        }
+
+        span.select2.select2-container.select2-container--default {
+            width: 100% !important;
+            background-color: #FFFFFF;
+            background-image: none;
+            border-radius: 1px;
+            display: block;
+            padding: 3px 12px;
+            border: 1px solid #e5e6e7;
+        }
+
+        span.select2-container.select2-container--default.select2-container--open {
+            z-index: 999999;
+        }
+
+        .detracc_campo_required,
+        .retenc_campo_required {
+            display: none;
+            /* font-size: 9px; */
+            color: red;
         }
     </style>
 
-    <!-- Mainly scripts -->
+     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
     <script src="{{ asset('js/popper.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.js') }}"></script>
     <script src="{{ asset('js/plugins/metisMenu/jquery.metisMenu.js') }}"></script>
     <script src="{{ asset('js/plugins/slimscroll/jquery.slimscroll.min.js') }}"></script>
-
     <script src="{{ asset('js/plugins/dataTables/datatables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables/dataTables.bootstrap4.min.js') }}"></script>
     <!-- Custom and plugin javascript -->
     <script src="{{ asset('js/inspinia.js') }}"></script>
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
+    <!-- Jquery Validate -->
+    <script src="{{ asset('js/plugins/validate/jquery.validate.min.js') }}"></script>
+    <!-- Steps -->
+    <script src="{{ asset('js/plugins/steps/jquery.steps.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/iCheck/icheck.min.js') }}"></script>
+    <!-- Sweet alert -->
+    <link href="{{ asset('css/plugins/sweetalert/sweetalert.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/plugins/sweetalert/sweetalert.min.js') }}"></script>
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+
+
+    @if ($stock_total == false)
+        <script>
+            $(document).ready(function() {
+                toastr.error('Producto con Stock Insuficiente', '', {
+                    timeOut: 0,
+                    extendedTimeOut: 0,
+                    tapToDismiss: false
+                });
+            });
+        </script>
+    @endif
 
     {{-- Validar Formulario / No doble insercion de datos(Gente desdesperada) --}}
     <script>
+        $(document).ready(function() {
+            $("form").keypress(function(e) {
+                if (e.which == 13) {
+                    setTimeout(function() {
+                        e.target.value += ' | ';
+                    }, 4);
+                    e.preventDefault();
+                }
+            });
+        });
+
         function valida(f) {
             var boton = document.getElementById("boton");
             var completo = true;
@@ -540,14 +578,7 @@
             }
         }
     </script>
-    {{-- <script type="text/javascript">
-$(document).ready(function() {
-// show the alert
-setTimeout(function() {
-    $(".alert").alert('close');
-}, 2000);
-});
-</script> --}}
+
     <script>
         // funcion dinamica de actualizar el total a cuotas
         function actualizarSaldoRestante() {
@@ -581,24 +612,24 @@ setTimeout(function() {
         $(".add_pago").on('click', function() {
             var total = document.getElementById('total').value;
             var data = `
-<div class="delete_modal${x} row">
-<div class="col-sm-1"><label>Fecha:</label></div>
-<div class="col-sm-4">
-    <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control"  min="{{ $fecha_1 }}" >
-</div>
-<div class="col-sm-1"><label>Monto:</label></div>
-<div class="col-sm-4">
-    <div class="input-group mb-3" style="padding-right:15px">
-        <div class="input-group-prepend">
-        <span class="input-group-text" id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
-        </div>
-        <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"    onkeypress="return filterFloat(event,this);" >
-    </div>
-</div>
-<div class="col-sm-2">
-    <label ><button type="button"  class="xd btn btn-danger" onclick="eliminar(${x})"><i class="fa fa-trash-o fa-lg" > </i></button></label>
-</div>
-</div>`;
+                <div class="delete_modal${x} row">
+                <div class="col-sm-1"><label>Fecha:</label></div>
+                <div class="col-sm-4">
+                    <input type="date" name="fecha_pago[]" id="fecha_pago${x}" class="fecha_pago form-control"  min="{{ $fecha_1 }}" >
+                </div>
+                <div class="col-sm-1"><label>Monto:</label></div>
+                <div class="col-sm-4">
+                    <div class="input-group mb-3" style="padding-right:15px">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon3">{{ $cotizacion->moneda->simbolo }}</span>
+                        </div>
+                        <input type="text" name="monto_pago[]" class="monto_pago form-control" id="monto_pago${x}"    onkeypress="return filterFloat(event,this);" >
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <label ><button type="button"  class="xd btn btn-danger" onclick="eliminar(${x})"><i class="fa fa-trash-o fa-lg" > </i></button></label>
+                </div>
+                </div>`;
             $('.row_number').append(data);
 
             var inp_mont = document.getElementsByClassName('monto_pago').length;
@@ -661,13 +692,12 @@ setTimeout(function() {
     <script>
         $("#boton").on(" click", function(buton) {
             var l = Ladda.create(document.querySelector('.boton_submit'));
-            // var l = Ladda.create(document.querySelector('.button-ladda'));
             var forma_pago = $("#forma_pago option:selected").val();
             if (forma_pago == 2) {
                 var monto_c = document.getElementsByClassName('monto_pago');
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
-                var total = parseFloat(document.getElementById('total').value) || 0;
+                var total = parseFloat(document.getElementById('total_final').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
@@ -695,12 +725,12 @@ setTimeout(function() {
                 } else {
                     // console.log('e')
                     l.start();
-                    document.getElementById('button_submit').click();
+                    document.getElementById('submit_button').click();
                 }
                 // buton.preventDefault();
             } else {
                 l.start();
-                document.getElementById('button_submit').click();
+                document.getElementById('submit_button').click();
             }
         });
     </script>
@@ -744,6 +774,168 @@ setTimeout(function() {
             var total = document.getElementById('total').value;
             document.getElementById("monto_pago0").value = total
 
+        });
+    </script>
+    <script type="text/javascript">
+        $('#button_retencion').on('click', function() {
+            multi_retencion();
+        });
+        $('#detraccion').on('change', function() {
+            var selected = this.value;
+            console.log(selected);
+            if (selected == "1") {
+                $('#modal_detraccion').modal('show');
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.setAttribute('required', 'required');
+                });
+                $('.select2_tipo_op').val('12').trigger('change.select2');
+                var retencion_check = document.querySelector('.js-switch');
+                if (retencion_check.checked == true) {
+                    window.switchery_2.element.click();
+                }
+                window.switchery_2.disable();
+            } else {
+                var inputs = document.querySelectorAll('.ipt_detrac');
+                inputs.forEach(function(input) {
+                    // input.removeAttribute('required');
+                });
+                $('.select2_tipo_op').val('1').trigger('change.select2');
+                window.switchery_2.enable();
+
+            }
+        });
+        $('.select2_tipo_op').select2();
+        $('.select2_mediopago').select2();
+        $('.select2_tipodetrac').select2();
+
+        $('.select2_tipodetrac').on('select2:select', function(e) {
+
+            var data = e.params.data;
+            var id_data = data.id;
+            $.ajax({
+                type: "post",
+                url: "{{ route('pa.tipo_op_search') }}",
+                data: {
+                    '_token': '{{ csrf_token() }}',
+                    'id_tipo_detra': data.id,
+                },
+                success: function(msg) {
+                    // console.log(msg.tasa)
+                    $('#porcentaje_detc').val(msg.tasa);
+                    multi_detraccion();
+                },
+                error: function(eject) {
+                    if (eject.status === 400) {
+                        console.log(eject.responseJSON.error);
+                    }
+                },
+                cache: true
+            });
+        });
+
+        function save_detraccion() {
+            var seletc_det = $('.select2_tipo_op').val();
+            var split_id = seletc_det.split(' ');
+            // Detracciones validas
+            if (split_id[0] == '12' || split_id[0] == '13' || split_id[0] == '14' || split_id[0] == '15') {
+
+                var tipo_detra = $('#select_tipo_pago').val();
+                var ipt_medio = $('.select2_mediopago').val();
+                var porce_detra = $('#porcentaje_detc').val();
+                var tot_det = $('#tota_detra').val();
+                console.log(tipo_detra, ipt_medio, porce_detra, tot_det);
+                if (tipo_detra == "" || ipt_medio == "" || porce_detra == "" || tot_det == "") {
+                    $('#modal_detraccion').modal('show');
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+                    inputs.forEach(function(input) {
+                        input.style.display = 'block';
+                    });
+                    return;
+                } else {
+                    var inputs = document.querySelectorAll('.detracc_campo_required');
+                    inputs.forEach(function(input) {
+                        input.style.display = 'none';
+                    });
+                    $('#modal_detraccion').modal('hide');
+                }
+            }
+        }
+
+        function multi_detraccion() {
+
+            var moneda = `{{ $cotizacion->moneda->id }}`;
+
+            if (moneda == 1) { //soles
+                var total = $('#total_final').val();
+                var porc_det = $('#porcentaje_detc').val();
+                var op_det = total * (porc_det / 100);
+                var sub_zero = Math.round(op_det);
+                console.log(sub_zero);
+                $('#tota_detra').val(sub_zero);
+            } else { //dolares
+                var total_dol = $('#total_final').val();
+
+                var tipo_cam = $('#tc_paralelo').html();
+                console.log(tipo_cam);
+                var total = total_dol * tipo_cam;
+                console.log(total);
+                var porc_det = $('#porcentaje_detc').val();
+                var op_det = total * (porc_det / 100);
+                var sub_zero = Math.round(op_det);
+                console.log(sub_zero);
+                $('#tota_detra').val(sub_zero);
+            }
+        }
+
+        $('#porcentaje_detc').on('keyup', function() {
+            multi_detraccion();
+        });
+        $('.select2_tipo_op').on('select2:select', function(e) {
+            var id = e.params.data.id;
+            var split_id = id.split(' ');
+            if (split_id[0] == '1001' || split_id[0] == '1002' || split_id[0] == '1003' || split_id[0] == '1004') {
+                console.log('a');
+                $('#button_detracc').attr('data-target', '#modal_detraccion');
+                $('#detraccion').attr('disabled', false);
+            }
+        });
+
+        function multi_retencion() {
+            var ret_porc = $('#porcentaje_ret').val();
+            var total = $('#total_final').val();
+            var op_ret = total * (parseInt(ret_porc) / 100);
+            var sub_zero = Math.round(op_ret * 100) / 100;
+            $('#tota_reten').val(sub_zero);
+        }
+        $('#porcentaje_ret').on('keyup', function() {
+            multi_retencion();
+        });
+        // $(".delete_pago").on('click', function () {
+        function eliminar(x) {
+            $(`.delete_modal${x}`).remove();
+            var monto_c = document.getElementsByClassName('monto_pago');
+            var inp_mont = document.getElementsByClassName('monto_pago').length;
+            var multiplier2 = 100;
+
+            for (var i = 0; i < inp_mont; i++) {
+                var monto = monto_c[i].id;
+                var total = document.getElementById('total_final').value;
+                var fin = (total / inp_mont)
+                document.getElementById("monto_pago0").value = '';
+                // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
+            }
+            if (inp_mont > 5) {
+                document.getElementById('add_pago').setAttribute('disabled', "true");
+            } else if (inp_mont == 1) {
+                document.getElementById("monto_pago0").value = total;
+            } else {
+                document.getElementById('add_pago').removeAttribute('disabled');
+            }
+            actualizarSaldoRestante();
+        };
+        $(document).on('input', '.monto_pago', function() {
+            actualizarSaldoRestante();
         });
     </script>
     <script>
