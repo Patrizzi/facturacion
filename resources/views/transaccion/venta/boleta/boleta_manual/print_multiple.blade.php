@@ -287,27 +287,52 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 form-control">
-                        <span style="display:block; float:left">Subtotal:</span>
-                        <span style="display:block; float:right">{{$simbologia=$boleta->moneda->simbolo}} {{number_format($sub_total,2)}}</span>
-                        <br>
-                        <span style="display:block; float:left">Op. Gravada:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format($boleta->op_gravada,2)}}</span><br>
-                        <span style="display:block; float:left">Op. Inafecta:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format($boleta->op_inafecta,2)}}</span><br>
-                        <span style="display:block; float:left">Op. Exonerada:</span>
-                        <span style="display:block; float:right">{{$simbologia}} {{number_format($boleta->op_exonerada,2)}}</span><br>
-                        <span style="display:block; float:left">I.G.V.:</span>
-                        <span style="display:block; float:right">{{$boleta->moneda->simbolo}} {{number_format(round($igv_p,2),2)}}</span><br>
-                        <span style="display:block; float:left">Importe Total:</span>
-                        <span style="display:block; float:right">{{$boleta->moneda->simbolo}} {{number_format(round($end,2),2)}}</span>
-                    </div>
-                    <div class="col-sm-12 form-control" align="center" style="margin-top: 8px">
-                        <div align="left">
-                            <strong>Observación:</strong>
-                            <p>{{$boleta->observacion}}</p>
+                    <div class="col-sm-4 ">
+                        <div class="form-control">
+                            <span style="display:block; float:left">Subtotal:</span>
+                            <span style="display:block; float:right">{{$simbologia=$boleta->moneda->simbolo}} {{number_format($sub_total,2)}}</span>
+                            <br>
+                            <span style="display:block; float:left">Op. Gravada:</span>
+                            <span style="display:block; float:right">{{$simbologia}} {{number_format($boleta->op_gravada,2)}}</span><br>
+                            <span style="display:block; float:left">Op. Inafecta:</span>
+                            <span style="display:block; float:right">{{$simbologia}} {{number_format($boleta->op_inafecta,2)}}</span><br>
+                            <span style="display:block; float:left">Op. Exonerada:</span>
+                            <span style="display:block; float:right">{{$simbologia}} {{number_format($boleta->op_exonerada,2)}}</span><br>
+                            <span style="display:block; float:left">I.G.V.:</span>
+                            <span style="display:block; float:right">{{$boleta->moneda->simbolo}} {{number_format(round($igv_p,2),2)}}</span><br>
+                            <span style="display:block; float:left">Importe Total:</span>
+                            <span style="display:block; float:right">{{$boleta->moneda->simbolo}} {{number_format(round($end,2),2)}}</span>
+                            <br>
                         </div>
                     </div>
+                </div>
+                <br>
+                <div class="row">
+                    @if ($boleta->detracciones)
+                        <div class="col-sm-6 ">
+                            <div class="form-control" style="height: 100% !important">
+                                <strong>Observaciones:</strong><br>
+                                {{ $boleta->observacion }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 ">
+                            <div class="form-control" style="height: 100% !important">
+                                <strong>Informacion de Detraccion:</strong><br>
+                                <strong>Tipo de Detraccion:</strong>
+                                {{ $boleta->detracciones->tipo_detraccion->descripcion }} -
+                                {{ $boleta->detracciones->porcentaje_detraccion }} %<br>
+                                <strong>Medio de Pago:</strong>
+                                {{ $boleta->detracciones->medio_pago->descripcion }} <br>
+                                <strong>Monto de Detraccion:</strong>
+                                S/. {{ number_format($boleta->detracciones->monto_detraccion, 2) }} <br>
+                            </div>
+                        </div>
+                    @else
+                        <div class="col-sm-12 form-control" style="height:  100px">
+                            <strong>Observaciones:</strong><br>
+                            {{ $boleta->observacion }}
+                        </div>
+                    @endif
                 </div>
                 <br>
                 @include('layout_bancos')

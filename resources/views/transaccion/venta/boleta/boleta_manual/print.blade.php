@@ -294,12 +294,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    @if ($detraccion == "not" )
-                        <div class="col-sm-12 form-control" style="height:  100px">
-                            <strong>Observaciones:</strong><br>
-                            {{ $boleta->observacion }}
-                        </div>
-                    @else
+                    @if ($boleta->detracciones)
                         <div class="col-sm-6 ">
                             <div class="form-control" style="height: 100% !important">
                                 <strong>Observaciones:</strong><br>
@@ -310,13 +305,18 @@
                             <div class="form-control" style="height: 100% !important">
                                 <strong>Informacion de Detraccion:</strong><br>
                                 <strong>Tipo de Detraccion:</strong>
-                                {{ $detraccion->tipo_detraccion->descripcion }} -
-                                {{ $detraccion->porcentaje_detraccion }} %<br>
+                                {{ $boleta->detracciones->tipo_detraccion->descripcion }} -
+                                {{ $boleta->detracciones->porcentaje_detraccion }} %<br>
                                 <strong>Medio de Pago:</strong>
-                                {{ $detraccion->medio_pago->descripcion }} <br>
+                                {{ $boleta->detracciones->medio_pago->descripcion }} <br>
                                 <strong>Monto de Detraccion:</strong>
-                                S/. {{ number_format($detraccion->monto_detraccion, 2) }} <br>
+                                S/. {{ number_format($boleta->detracciones->monto_detraccion, 2) }} <br>
                             </div>
+                        </div>
+                    @else
+                        <div class="col-sm-12 form-control" style="height:  100px">
+                            <strong>Observaciones:</strong><br>
+                            {{ $boleta->observacion }}
                         </div>
                     @endif
                 </div>

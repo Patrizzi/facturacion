@@ -2668,7 +2668,7 @@ class CotizacionController extends Controller
 
     public function boletear_store(Request $request)
     {
-        return $request;
+        // return $request;
         //LLAMA A LA FECHA Y COMVIERTE LOS SIGNOS
         $id_cotizador=$request->get('id_cotizador');
         $date_sp = Carbon::now();
