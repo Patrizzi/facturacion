@@ -1238,10 +1238,13 @@ public function update(Request $request, $id)
         $forma_pagos = Forma_pago::get();
         $empresa = Empresa::first();
         $igv = Igv::first();
+        $detraccion = TipoDetraccion::all();
+        $medio_pago = MedioPagoDetraccion::all();
+        $tipo_operacion = Tipo_operacion_f::all();
         $fecha_hoy = Carbon::now()->add(1,'day');
         $fecha_1 = $fecha_hoy->format('Y-m-d');
         // return $cotizacion;
-        return view('transaccion.venta.cotizacion.manual.boletear', compact('cotizacion','cotizacion_registros','empresa','boleta_numero','forma_pagos','igv','fecha_1'));
+        return view('transaccion.venta.cotizacion.manual.boletear', compact('cotizacion','cotizacion_registros','empresa','boleta_numero','forma_pagos','igv','fecha_1','detraccion','medio_pago','tipo_operacion'));
     }
     public function boletear_store(Request $request){
         // return $request;
@@ -1323,7 +1326,17 @@ public function update(Request $request, $id)
             $boleta_primera->cod_boleta_m='NN';
             $boleta_primera->save();
         }
-
+        if($request->get('tipo_operacion') == '12' || $request->get('tipo_operacion') == '13' || $request->get('tipo_operacion') == '14' ||$request->get('tipo_operacion') == '15'){
+            $fact_detra = new Detracciones();
+            $fact_detra->boleta_m_id = $boleta->id;
+            $fact_detra->id_cod_tipo_detraccion = $request->get('tipo_detraccion');
+            $fact_detra->id_cod_medio_pago = $request->get('medio_pago_detraccion');
+            $fact_detra->monto_total_factura = $cotizacion->precio_total;
+            $fact_detra->porcentaje_detraccion = $request->get('porcentaje_detraccion');
+            $fact_detra->monto_detraccion = $request->get('total_detraccion');
+            $fact_detra->estado = 1;
+            $fact_detra->save();
+        }
          //Registro de forma de pago
         if($boleta->forma_pago_id == 2){
 
