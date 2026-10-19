@@ -168,7 +168,7 @@
     <footer style="padding-top: 120px">
         <table style="width: 100%;border-collapse:collapse;margin-bottom: -10px; border-radius: 8px">
             <tr>
-                <td style="width: 70%;border: none">
+                <td style="width: 50%;border: none">
                     <h3 align="left">
                         <?php
                         use Luecano\NumeroALetras\NumeroALetras;
@@ -222,47 +222,28 @@
         </table>
         <br>
         <!-- Fin Totales de Productos -->
-        @php 
-            if($detraccion != "not" || $facturacion->retencion == 1){
-                $columna_add = "1";
-            }else{
-                $columna_add = "0";
-            }
-        @endphp
         <table style="width: 100%;height: 120px;border-collapse:separate">
             <tr>
-                @if($columna_add == "0")
-                    <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
-                        <strong>Observaciones:</strong><br>
-                        {{$boleta->observacion}}
-                    </td>
-                @else
+                @if($boleta->detracciones)
                     <td colspan="2"  style="border: 1px #808080 solid;border-radius: 8px;width: auto">
                         <strong>Observaciones:</strong><br>
                         {{$boleta->observacion}}
                     </td>
                     <th style="width: 5%;border-color: white"></th>
-                    @if($detraccion != "not")
-                        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
-                            <strong>Informacion de Detraccion:</strong><br>
-                            <strong>Tipo de Detraccion:</strong>
-                            {{$detraccion->tipo_detraccion->descripcion}} - {{$detraccion->porcentaje_detraccion}} %<br>
-                            <strong>Medio de Pago:</strong>
-                            {{$detraccion->medio_pago->descripcion}} <br>
-                            <strong>Monto de Detraccion:</strong>
-                            S/. {{number_format($detraccion->monto_detraccion,2)}} <br>
-                        </td>
-                    @else
-                        <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
-                            <strong>Informacion de Retencion:</strong><br>
-                            <strong>Importe Total Facturado:</strong>
-                            {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
-                            <strong>Monto Retenido ({{ $boleta->porcentaje_retencion}} %):</strong>
-                            {{ $simbologia }} {{ number_format(round($boleta->monto_retencion,2),2)}} <br>
-                            <strong>Monto Neto a Pagar:</strong>
-                            {{ $simbologia }}  {{ number_format(round($boleta->monto_retencion_pagar,2),2)}} <br>
-                        </td>
-                    @endif
+                    <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto" >
+                        <strong>Informacion de Detraccion:</strong><br>
+                        <strong>Tipo de Detraccion:</strong>
+                        {{$boleta->detracciones->tipo_detraccion->descripcion}} - {{$boleta->detracciones->porcentaje_detraccion}} %<br>
+                        <strong>Medio de Pago:</strong>
+                        {{$boleta->detracciones->medio_pago->descripcion}} <br>
+                        <strong>Monto de Detraccion:</strong>
+                        S/. {{number_format($boleta->detracciones->monto_detraccion,2)}} <br>
+                    </td>
+                @else
+                    <td colspan="2" style="border: 1px #808080 solid;border-radius: 8px;width: auto">
+                        <strong>Observaciones:</strong><br>
+                        {{$boleta->observacion}}
+                    </td>
                 @endif
             </tr>
         </table>
@@ -272,72 +253,103 @@
             <br>
         </div>
     </footer>
-    <style>
-        * {
-            color: black;
-            font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            color: black
-        }
+            <style>
+                * {
+                    color: black;
+                    font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+                }
 
-        .cero {
-            margin-bottom: 0px;
+                .cero {
+                    margin-bottom: 0px;
 
-        }
+                }
 
-        .table-bordered .blanco {
-            border: none;
-        }
+                .table-bordered .blanco {
+                    border: none;
+                }
 
-        .blanco {
-            border: none;
-            border-color: #3D3D3D;
-        }
+                .blanco {
+                    border: none;
+                    border: border-color: #808080;
+                }
 
-        .border {
-            border-color: #3D3D3D;
-            border-width: 1px;
-            border-style: solid;
-        }
+                .border {
+                    border-color: #808080;
+                    border-width: 1px;
+                    border-style: solid;
+                }
 
-        .table {
-            /* width: 100%;
-                max-width: 100%; */
-            margin-bottom: 1rem;
-            background-color: transparent;
-            border-top-width: 0px;
+                .table {
+                    /* width: 100%;
+            max-width: 100%; */
+                    margin-bottom: 1rem;
+                    background-color: transparent;
+                    border-top-width: 0px;
 
-        }
+                }
 
-        .qr-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+                #watermark {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 0;
+                }
 
-        .qr-box {
-            width: 120px;
-            height: 120px;
-            border: 2px solid #3D3D3D;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 5px;
-            background: white;
-        }
+                #watermark p {
+                    position: absolute;
+                    color: rgba(120, 120, 120, 0.31);
+                    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif !important;
+                    font-weight: bolder;
+                    font-size: 95px;
+                    pointer-events: none;
+                    -webkit-transform: rotate(-45deg);
+                    -moz-transform: rotate(-45deg);
+                    top: 25%;
+                    right: 35%;
+                    z-index: 0;
+                }
 
-        .qr-image {
-            max-width: 100%;
-            max-height: 100%;
-            display: block;
-        }
+                .form-control {
+                    background-color: transparent !important;
+                }
 
-        .qr-placeholder {
-            font-size: 12px;
-            color: #999;
-            text-align: center;
-        }
-    </style>
+                .tr_table_item {
+                    border-top: 0px white;
+                    text-align: initial;
+                }
+                .qr-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: none;
+                    padding-top: 0px;
+                    padding-bottom: 0px
+                }
+
+                .qr-box {
+                    width: 70px;
+                    height: 70px;
+                    border: 2px solid #3D3D3D;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 3px;
+                    background: white;
+                }
+
+                .qr-image {
+                    max-width: 100%;
+                    max-height: 100%;
+                    display: block;
+                }
+
+                .qr-placeholder {
+                    font-size: 12px;
+                    color: #999;
+                    text-align: center;
+                }
+            </style>
 </body>
 
 </html>

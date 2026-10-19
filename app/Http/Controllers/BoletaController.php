@@ -965,11 +965,11 @@ class BoletaController extends Controller
         $moneda = Moneda::where('principal', '1')->first();
         $monedas_get = Moneda::all();
 
-        if($boleta->tipo_operacion_id == 12 || $boleta->tipo_operacion_id == 13 || $boleta->tipo_operacion_id == 14 ||$boleta->tipo_operacion_id == 15 ){
-            $detraccion = Detracciones::where('boleta_id', $boleta->id)->first();
-        }else{
-            $detraccion = 'not';
-        }
+        // if($boleta->tipo_operacion_id == 12 || $boleta->tipo_operacion_id == 13 || $boleta->tipo_operacion_id == 14 ||$boleta->tipo_operacion_id == 15 ){
+        //     $detraccion = Detracciones::where('boleta_id', $boleta->id)->first();
+        // }else{
+        //     $detraccion = 'not';
+        // }
 
         // $forma_pago_id = Forma_pago::all();
         // return $remisiones;
@@ -977,7 +977,7 @@ class BoletaController extends Controller
         $medio_pago_detraccion = MedioPagoDetraccion::all();
 
         // return $boleta;
-        return view('transaccion.venta.boleta.show', compact('boleta', 'almacen', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'forma_pagos', 'tipo_operacion', 'moneda', 'monedas_get','detraccion','tipo_detraccion','medio_pago_detraccion'));
+        return view('transaccion.venta.boleta.show', compact('boleta', 'almacen', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'forma_pagos', 'tipo_operacion', 'moneda', 'monedas_get','tipo_detraccion','medio_pago_detraccion'));
     }
 
     public function print($id)
@@ -1004,14 +1004,7 @@ class BoletaController extends Controller
 
         $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
-
-        if($boleta->tipo_operacion_id == 12 || $boleta->tipo_operacion_id == 13 || $boleta->tipo_operacion_id == 14 ||$boleta->tipo_operacion_id == 15 ){
-            $detraccion = Detracciones::where('boleta_id', $boleta->id)->first();
-        }else{
-            $detraccion = 'not';
-        }
-        
-        return view('transaccion.venta.boleta.print', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'qrCode', 'textoQR','detraccion'));
+        return view('transaccion.venta.boleta.print', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'qrCode', 'textoQR'));
     }
     public function pdf(Request $request, $id)
     {
@@ -1025,15 +1018,10 @@ class BoletaController extends Controller
         $sub_total = 0;
         $boleta = Boleta::find($id);
         $i = 1;
-        if($boleta->tipo_operacion_id == 12 || $boleta->tipo_operacion_id == 13 || $boleta->tipo_operacion_id == 14 ||$boleta->tipo_operacion_id == 15 ){
-            $detraccion = Detracciones::where('boleta_id', $boleta->id)->first();
-        }else{
-            $detraccion = 'not';
-        }
         $textoQR = $this->generarTextoQRBoleta($boleta, $empresa, $igv);
         $qrCode  = $this->generarImagenQR($textoQR);
         // return $detraccion;
-        $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i', 'qrCode', 'textoQR','detraccion'));
+        $pdf = PDF::loadView('transaccion.venta.boleta.pdf', compact('boleta', 'empresa', 'banco', 'boleta_registro', 'igv', 'sub_total', 'banco_count', 'i', 'qrCode', 'textoQR'));
         return $pdf->download('Boleta - ' . $boleta->codigo_boleta . '.pdf');
 
         // return view('transaccion.venta.facturacion.print', compact('facturacion','empresa','facturacion_registro','sum','igv','sub_total','banco'));
