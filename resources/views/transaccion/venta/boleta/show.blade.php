@@ -623,6 +623,9 @@
         span.select2-container.select2-container--default.select2-container--open {
             z-index: 999999;
         }
+        .td-width{
+            min-width: 85px;
+        }
     </style>
     <!-- Mainly scripts -->
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>

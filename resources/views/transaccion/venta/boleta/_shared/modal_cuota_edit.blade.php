@@ -87,7 +87,7 @@
                     <div class="col-sm-6" style="">
                         <label for=""><strong>Precio Total: &nbsp;</strong><span
                                 id="simb_fot">{{ $moneda->simbolo }}</span>&nbsp;</label><label
-                            id="cuotas_footer"></label>
+                            id="cuotas_footer">{{$boleta->total_precio_sin_forma}}</label>
                     </div>
                     <div class="col-sm-6" align="right">
                         <button type="button" id="button_cuotas_save" class="btn btn-primary">Guardar</button>

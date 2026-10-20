@@ -708,13 +708,13 @@
         articulosAgregados.add(String(id));
 
         var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
-            const newOption = new Option(concat_data, concat_data, true, true);
+        const newOption = new Option(concat_data, concat_data, true, true);
 
-            var $primerSelect = $('#articulo');
-            var existePrimerSelect = $primerSelect.length > 0;
-            var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
+        var $primerSelect = $('#articulo');
+        var existePrimerSelect = $primerSelect.length > 0;
+        var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
 
-            if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
+        if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
                 // Busca todos los selects existentes (incluyendo #articulo si existe)
                 var $selectsExistentes = $('select[id^="articulo"]');
 

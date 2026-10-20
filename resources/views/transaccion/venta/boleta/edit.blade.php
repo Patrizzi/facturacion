@@ -189,7 +189,7 @@
         <div class="col-md-12">
             <hr style="border: 1px solid #ddd; margin: 10px 0;width: 100%;">
             <input type="hidden" name="comparador_edicion" id="comparador_edicion" value="0">
-            <input type="hidden" name="" id="count_articles" value="{{ count($boleta->registros) - 1 }}">
+            <input type="hidden" name="" id="count_articles" value="{{ count($boleta->registros) + 1 }}">
         </div>
         <div class="col-md-12">
             <div class="table-responsive">
@@ -229,7 +229,7 @@
                                 </td>
                                 <td class="td_selected">
                                     <select class="monto{{ $i_edit }} select2_demo_3 select_change"
-                                        required="" id="articulo" onchange="ajax({{ $i_edit }})"
+                                        required="" id="articulo{{ $i_edit }}" onchange="ajax({{ $i_edit }})"
                                         autocomplete="off">
                                         @if ($registros->producto?->id)
                                             <option
