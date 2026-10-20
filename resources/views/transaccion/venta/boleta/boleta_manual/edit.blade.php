@@ -251,7 +251,7 @@
                                             <td class="td_selected">
                                                 <select class="monto{{ $i_edit }} select2_demo_3 select_change"
                                                     required=""
-                                                    @if ($i_edit == 0) id="articulo" @else id="articulo{{ $i_edit }}" @endif
+                                                    id="articulo{{ $i_edit }}"
                                                     onchange="ajax({{ $i_edit }})" autocomplete="off">
                                                     @if ($registros->producto?->id)
                                                         <option

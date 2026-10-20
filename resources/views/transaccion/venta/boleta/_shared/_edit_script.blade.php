@@ -272,21 +272,14 @@
 
     // TODO funcion ajax para obtener los parametros requeridos de articulo (PRODUCTOS - SERVICIOS)
     function ajax(a) {
-        // $('#comparador_edicion').val('1');
-        // var cont_origi = Number("{{ count($boleta->registros) }}");
-        console.log('value of a: ' + a);
-        if (a == 0) {
-            var articulo = document.getElementById(`articulo`).value;
-            console.log('arituclo 0: ' + articulo);
-            document.getElementById(`input_prod0`).value = articulo;
-        } else {
-            var articulo = document.getElementById(`articulo${a}`).value;
-            console.log('articulo: ' + articulo);
-            document.getElementById(`input_prod${a}`).value = articulo;
-        }
+        console.log(a);
+        var articulo = document.getElementById(`articulo${a}`).value;
+        console.log(articulo);
+        document.getElementById(`input_prod${a}`).value = articulo;
 
         var almacen = "{{ $boleta->almacen_id }}";
-        var moneda = $('#moneda_id').val();
+        var moneda = $('[id="moneda_id"]').val();
+
         $.ajax({
             type: "post",
             url: "{{ route('pa.description') }}",
@@ -306,7 +299,6 @@
                 } else if ($input.length) {
                     $input.val(1);
                 }
-
                 $(`#precio_unitario_descuento${a}`).val(msg.price);
                 $(`#promedio_original${a}`).val(msg.average);
                 $(`#stock${a}`).val(msg.amount);
@@ -553,7 +545,7 @@
             var total = $('#total_final').val();
             var porc_det = $('#porcentaje_detc').val();
             var op_det = total * (porc_det / 100);
-            var sub_zero = Math.round(op_det * 100) / 100;
+            var sub_zero = Math.round(op_det);
             console.log(sub_zero);
             $('#tota_detra').val(sub_zero);
         } else { //dolares
@@ -564,7 +556,7 @@
 
             var porc_det = $('#porcentaje_detc').val();
             var op_det = total * (porc_det / 100);
-            var sub_zero = Math.round(op_det * 100) / 100;
+            var sub_zero = Math.round(op_det);
 
             $('#tota_detra').val(sub_zero);
         }
@@ -845,43 +837,86 @@
             return;
         }
 
-        var count_artc = $('#count_articles').val();
         var id =  $(this).data('id');
         var cod_prod = $(this).data('cod_producto');
         var cod_origi = $(this).data('cod_original');
         var nombres =$(this).data('nombre');
 
-        articulosAgregados.add(id);
+        articulosAgregados.add(String(id));
 
         var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
         const newOption = new Option(concat_data, concat_data, true, true);
-        const selectedValue = $('#articulo').val();
 
-        if (count_artc == "" && selectedValue == null) {
-            $('#articulo').append(newOption).trigger('change');
-            $('#count_articles').val(1);
+        var $primerSelect = $('#articulo');
+        console.log($primerSelect);
+        var existePrimerSelect = $primerSelect.length > 0;
+        var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
 
-            let debounceTimer;
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                $(`#cantidad0`).val(cantidad);
-                multi(0);
-            }, 1000);
-        } else {
-            $('.addmore').click();
-            var count_artc = $('#count_articles').val();
-            $(`#articulo${count_artc}`).append(newOption).trigger('change');
+        if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
+                // Busca todos los selects existentes (incluyendo #articulo si existe)
+                var $selectsExistentes = $('select[id^="articulo"]');
+
+            if ($selectsExistentes.length === 0) {
+                // No queda NINGÚN select en el formulario: crear uno desde cero
+                $('.addmore').prop('disabled', false).click();
+                $selectsExistentes = $('select[id^="articulo"]');
+            }
+
+            var $selectDestino = $selectsExistentes.last();
+            var idAttr = $selectDestino.attr('id');
+            var count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+            var valorDestino = $selectDestino.val();
+
+            if (valorDestino != null && valorDestino != "") {
+                // El último select ya tiene algo: crea uno nuevo
+                $('.addmore').prop('disabled', false).click();
+                $selectsExistentes = $('select[id^="articulo"]');
+                $selectDestino = $selectsExistentes.last();
+                idAttr = $selectDestino.attr('id');
+                count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+            }
+
+            $selectDestino.append(newOption).trigger('change');
 
             let debounceTimer;
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 $(`#cantidad${count_artc}`).val(cantidad);
-                multi(`${count_artc}`);
+                multi(count_artc);
+            }, 1000);
+
+        } else {
+            var $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+            var count_artc = $selectsNumerados.length > 0
+                ? Math.max(...$selectsNumerados.map(function () {
+                    return parseInt($(this).attr('id').replace('articulo', ''));
+                }).get())
+                : null;
+            var $ultimoSelect = count_artc === null ? $('#articulo') : $(`#articulo${count_artc}`);
+            var valorActual = $ultimoSelect.val();
+            if (valorActual != null && valorActual != "") {
+                $('.addmore').prop('disabled', false).click();
+                // Recalcular tras crear la fila
+                $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                count_artc = Math.max(...$selectsNumerados.map(function () {
+                    return parseInt($(this).attr('id').replace('articulo', ''));
+                }).get());
+                $ultimoSelect = $(`#articulo${count_artc}`);
+            }
+
+            $ultimoSelect.append(newOption).trigger('change');
+
+            let debounceTimer;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                $(`#cantidad${count_artc}`).val(cantidad);
+                multi(count_artc);
             }, 1000);
         }
-        $btn.prop('disabled', true);
 
-        toastr.info("Se agregó el Articulo correctamente", '', { timeOut: 3000 });
+        toastr.info("Se agregó el Articulo correctamente", '', {
+            timeOut: 3000
+        });
     });
 
     $('#total_final').on('input change', function(){
@@ -1078,9 +1113,9 @@
         }
         $('option[value="' + input_text_opt + '"]').prop("disabled", false);
         $(".addmore").prop("disabled", false);
-        $(".select2_demo_3").select2({
-            placeholder: "Seleccionar Producto",
-        });
+        // $(".select2_demo_3").select2({
+        //     placeholder: "Seleccionar Producto",
+        // });
         // ELIMINAR TR
         if (e > 1) {
             fila.closest('tr').remove();
@@ -1128,6 +1163,7 @@
 
     })
     function limpiar_inputs() {
+        $(".select_change").select2("val", "");
         $(`.td-width`).val("");
         $(`#sub_total`).val("");
         $(`#igv`).val("");

@@ -92,7 +92,7 @@
                                 <div class="form-group row" >
                                     <label class="col-form-label col-md-4"> <strong>Detracción:</strong> </label>
                                     <div class="col-sm-6">
-                                        <select class="form-control" id="detraccion" name="detraccion_value" @if ($facturacio->total_precio_sin_forma < 700) disabled @endif>
+                                        <select class="form-control" id="detraccion" name="detraccion_value" @if ($facturacion->total_precio_sin_forma < 700) disabled @endif>
                                             <option value="0" @if($facturacion->detracciones == null) selected @endif>Desactiva</option>
                                             <option value="1" @if($facturacion->detracciones != null) selected @endif>Activa</option>
                                         </select>
@@ -265,62 +265,41 @@
                             @foreach ($facturacion->registros_m as $i_edit => $registros)
                                 <tr>
                                     <td>
-                                        <button type="button" class='delete borrar e btn btn-sm btn-danger'> <i
-                                                class="fa fa-trash" aria-hidden="true"></i> </button>
+                                        <input type="hidden" name="elem_delete[]" value="{{ $registros->id }}">
+                                        <input type="hidden" name="n_registros_ori[]" id="n_registros_ori" value="existente">
+                                        <button type="button" class="btn btn-primary btn-sm borrar e "><i
+                                                class="fa fa-trash"></i></button>
                                     </td>
+                                    {{$i_edit}}
                                     <td class="td_selected">
                                         <select class="monto{{ $i_edit }} select2_demo_3 select_change"
-                                            required=""
-                                            @if ($i_edit == 0) id="articulo" @else id="articulo{{ $i_edit }}" @endif
-                                            onchange="ajax({{ $i_edit }})" autocomplete="off">
+                                            required="" id="articulo{{ $i_edit }}"
+                                            onchange="ajax({{ $i_edit }})" autocomplete="off" required>
                                             @if ($registros->producto?->id)
-                                                <option
-                                                    value="{{ $registros->producto->id }} | {{ $registros->producto->codigo_producto }} | {{ $registros->producto->codigo_original }} | {{ $registros->producto->nombre }}"
-                                                    selected>
-                                                    {{ $registros->producto->id }} |
-                                                    {{ $registros->producto->codigo_producto }} |
-                                                    {{ $registros->producto->codigo_original }} |
-                                                    {{ $registros->producto->nombre }}</option>
                                                 @php
                                                     $precio_sug = $registros->producto->stockAlmacenProducto(
                                                         $facturacion->almacen_id,
                                                     )->stock;
                                                     $input_prod =
-                                                        $registros->producto->id .
-                                                        ' | ' .
-                                                        $registros->producto->codigo_producto .
-                                                        ' | ' .
-                                                        $registros->producto->codigo_original .
-                                                        ' | ' .
-                                                        $registros->producto->nombre;
+                                                        $registros->producto->id .' | ' .$registros->producto->codigo_producto.' | ' .$registros->producto->codigo_original.' | ' .$registros->producto->nombre;
                                                     $afect = explode(
                                                         ' - ',
                                                         $registros->producto->tipo_afec_i_producto->informacion,
                                                     )[0];
                                                 @endphp
+                                                <option value="{{ $input_prod }}">{{ $input_prod }}</option>
+                                                
                                             @else
-                                                <option
-                                                    value="{{ $registros->servicio->id }} | {{ $registros->servicio->codigo_servicio }} | {{ $registros->servicio->codigo_original }} | {{ $registros->servicio->nombre }}"
-                                                    selected>
-                                                    {{ $registros->servicio->id }} |
-                                                    {{ $registros->servicio->codigo_servicio }} |
-                                                    {{ $registros->servicio->codigo_original }} |
-                                                    {{ $registros->servicio->nombre }}</option>
                                                 @php
                                                     $precio_sug = 1000;
                                                     $input_prod =
-                                                        $registros->servicio->id .
-                                                        ' | ' .
-                                                        $registros->servicio->codigo_servicio .
-                                                        ' | ' .
-                                                        $registros->servicio->codigo_original .
-                                                        ' | ' .
-                                                        $registros->servicio->nombre;
+                                                        $registros->servicio->id .' | ' .$registros->servicio->codigo_servicio .' | ' .$registros->servicio->codigo_original .' | ' .$registros->servicio->nombre;
                                                     $afect = explode(
                                                         ' - ',
                                                         $registros->servicio->tipo_afec_i_serv->informacion,
                                                     )[0];
                                                 @endphp
+                                                <option value="{{ $input_prod }}">{{ $input_prod }}</option>
                                             @endif
                                         </select>
                                         <textarea type='text' {{-- id='descripcion0' --}} name='descripcion_item[]' class="form-control" autocomplete="off"
