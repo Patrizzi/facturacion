@@ -731,7 +731,7 @@
                 var total = $('#total_final').val();
                 var porc_det = $('#porcentaje_detc').val();
                 var op_det = total * (porc_det / 100);
-                var sub_zero = Math.round(op_det * 100) / 100;
+                var sub_zero = Math.round(op_det);
                 console.log(sub_zero);
                 $('#tota_detra').val(sub_zero);
             } else { //dolares
@@ -742,7 +742,7 @@
 
                 var porc_det = $('#porcentaje_detc').val();
                 var op_det = total * (porc_det / 100);
-                var sub_zero = Math.round(op_det * 100) / 100;
+                var sub_zero = Math.round(op_det);
 
                 $('#tota_detra').val(sub_zero);
             }

@@ -17,14 +17,14 @@
 
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
-            <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+            <div class="ibox-title d-flex justify-content-between">
                 @include('transaccion.comprobantes._shared.btn_create_with_almacen', [
                     'routeCreate' => 'boleta.create',
                     'almacen' => $almacen,
                     'useAlmacen' => true,
                     'method' => 'POST',
                 ])
-                <div class="ibox-tools" style="margin-top: 5px;margin-right: 10px">
+                <div class="ibox-tools" style="margin-right: 10px">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up text-muted"></i>
                     </a>
@@ -33,19 +33,19 @@
                     </a>
                 </div>
             </div>
-            <div class="ibox-content">
+            <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="row align-items-center">
-                    <div class="col-12 col-md-5">
+                    <div class="col-12 col-md-4">
                         <h3 style="margin: 0;">{{ $boleta->codigo_boleta }}</h5>
                             <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
-                    <div class="col-12 col-md-2 text-center">
+                    <div class="col-12 col-md-4 text-center">
                         <h2 class="mb-0 text-nowrap">
                             BOLETA ELECTRÓNICA
                         </h2>
                     </div>
-                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                        @phpuse Carbon\Carbon;
+                    <div class="col-12 col-md-4 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                        @php use Carbon\Carbon;
                         use App\Boleta; @endphp
                         @if ($boleta->nota_credito != 0)
                             <div class="d-flex align-items-center" style="overflow: hidden;">
@@ -139,7 +139,7 @@
                         <div id="watermark">
                             <p>Anulado</p>
                         </div>
-                        @endif
+                    @endif
                     <br>
                     <div class="table-no mostrar">
                         <div class="row" align="center" style="padding-bottom: 5px">

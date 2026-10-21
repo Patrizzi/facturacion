@@ -57,6 +57,17 @@
         @endif
     @endif
 </div>
+<style>
+    .btn.btn-sm.btn-link.no-hover-icon, .no-hover-icon{
+        padding: 0px !important;
+        margin-left: 10px !important;
+    }
+    .btn.btn-sm.btn-link.no-hover-icon:hover{
+        transform: none !important;
+        transition: none !important;
+        box-shadow: none !important;
+    }
+</style>
 
 
 

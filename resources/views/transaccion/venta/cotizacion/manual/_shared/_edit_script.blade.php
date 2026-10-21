@@ -460,8 +460,8 @@
         $('#igv_view').val("");
         $('#total_final_view').val("");
         $('.total').val("");
-
     }
+    
     let status = 0;
     function changeMoney() {
         console.log("moneda cambiada");
