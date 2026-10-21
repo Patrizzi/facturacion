@@ -212,12 +212,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-
                                 <tr>
                                     <span hidden="hidden">{{ $i = 1 }} </span>
                                     @foreach ($boleta_registro as $boleta_registros)
-                                <tr>
                                     <td>{{ $i++ }} </td>
                                     @if (isset($boleta_registros->producto))
                                         <td>{{ $boleta_registros->producto->codigo_producto }}</td>
@@ -650,19 +647,6 @@
     <!-- TouchSpin -->
     <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
-    <script>
-        var clic = 1;
-
-        function divAuto() {
-            if (clic == 1) {
-                document.getElementById("div-mostrar").style.height = "50px";
-                clic = clic + 1;
-            } else {
-                document.getElementById("div-mostrar").style.height = "0px";
-                clic = 1;
-            }
-        }
-    </script>
     <script>
         var clic = 1;
 

@@ -6,7 +6,7 @@
         var id = partes[0];
         articulosAgregados.add(String(id));
     });
-    console.log(articulosAgregados)
+
     $(".select2_tipo_op").select2();
     // Almacen
     // $('.select2_tipo_almacen').select2();
@@ -1167,7 +1167,6 @@
         $(`.td-width`).val("");
         $(`#sub_total`).val("");
         $(`#igv`).val("");
-
     }
     // Boton para Solamente Guardar
     $("#boton").on("click", function(buton) {
