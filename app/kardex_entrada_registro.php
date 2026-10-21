@@ -27,18 +27,14 @@ class kardex_entrada_registro extends Model
 
     public static function stock_producto_precio(){
 
-        $stock_productos=Stock_producto::get();
-        $stocks_activos = kardex_entrada_registro::where('estado',1)->get();
+        $prod = kardex_entrada_registro::where('estado', 1)
+            ->whereNotNull('producto_id')
+            ->distinct()
+            ->pluck('producto_id')
+            ->values()
+            ->all();
 
-        if(count($stocks_activos )> 0){
-            foreach ($stocks_activos as $stocks_activo) {
-               $productos[]=$stocks_activo->producto->id;
-            }
-            $prod=array_unique($productos, SORT_REGULAR);
-
-
-            //ordena valores(?) funciona asi we
-            $prod = array_values($prod);
+        if(count($prod) > 0){
             $count_cantidad=count($prod);
 
             for($x=0;$x<$count_cantidad;$x++){

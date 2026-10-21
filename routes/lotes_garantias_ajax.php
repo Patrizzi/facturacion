@@ -17,6 +17,8 @@ Route::prefix('inventario/lotes-garantias/ajax')->group(function () {
         ->name('lotes-garantias.ajax.detalle-lote');
     Route::post('/series-por-lote', 'LotesGarantias\DetalleLoteController@ajaxSeriesPorLote')
         ->name('lotes-garantias.ajax.series-por-lote');
+    Route::post('/actualizar-numero-serie', 'LotesGarantias\DetalleLoteController@actualizarNumeroSerie')
+        ->name('lotes-garantias.ajax.actualizar-numero-serie');
 
     // DEV 2: Búsqueda por Serie (Ivan)
     Route::post('/busqueda-serie', 'LotesGarantias\BusquedaSerieController@ajaxBuscarSerie')

@@ -737,6 +737,7 @@ Route::group(
             Route::get('/', 'LotesGarantiasController@inventarioInicial')->name('lotes-garantias.index');
             Route::get('/inventario-inicial', 'LotesGarantiasController@inventarioInicial')->name('lotes-garantias.inventario-inicial');
             Route::get('/detalle-lote', 'LotesGarantiasController@detalleLote')->name('lotes-garantias.detalle-lote');
+            Route::get('/lote/{loteId}/series', 'LotesGarantias\DetalleLoteController@paginaSeries')->name('lotes-garantias.series-lote');
             Route::get('/busqueda-serie', 'LotesGarantiasController@busquedaSerie')->name('lotes-garantias.busqueda-serie');
             Route::get('/garantia-producto', 'LotesGarantiasController@garantiaProducto')->name('lotes-garantias.garantia-producto');
             Route::get('/garantia-cliente', 'LotesGarantiasController@garantiaCliente')->name('lotes-garantias.garantia-cliente');
@@ -1580,4 +1581,3 @@ Route::post('/factura/guardar-nota/{id}', 'FacturacionController@guardarNotaInfo
 
 Route::post('/factura_manual/guardar-nota/{id}', 'FacturacionMController@guardarNotaInformativa')
     ->name('facturacionM.guardar_nota');
-

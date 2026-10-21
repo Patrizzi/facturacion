@@ -93,13 +93,7 @@ class KardexEntradaRegistroObserver
         }
 
         // 2. Recálculo de Stock_producto (Precios Promedio)
-        $stock_productos=Stock_producto::get();
-        $stocks_activos = kardex_entrada_registro::where('estado',1)->get();
-
-        foreach ($stocks_activos as $stocks_activo) {
-           $productos[]=$stocks_activo->producto->id;
-        }
-        $prod=array_unique($productos, SORT_REGULAR);
+        $prod = [$kardexEntradaRegistro->producto_id];
         $count_cantidad=count($prod);
 
         for($x=0;$x<$count_cantidad;$x++){
@@ -110,10 +104,18 @@ class KardexEntradaRegistroObserver
 
         $contador=0;
         $array_registros[]=0;
+        $registrosConPrecio = DB::table('kardex_entrada_registro')->where('producto_id', $prod[0])
+            ->where('precio_nacional', '!=', 0)
+            ->orderBy('id', 'DESC')
+            ->get(['id', 'cantidad_inicial']);
+        $registroPrecioIndex = 0;
         // $array_registros[]=3;
         for($x=0;$x<$count_cantidad;$x++){
             while($cantidad[$x] > $contador){
-                $kardex_almacen_principal_desc= kardex_entrada_registro::where('producto_id',$prod[$x])->where('precio_nacional',"!=",0)->orderBy('id', 'DESC')->whereNotIn('id',$array_registros)->first();
+                if (!isset($registrosConPrecio[$registroPrecioIndex])) {
+                    break;
+                }
+                $kardex_almacen_principal_desc = $registrosConPrecio[$registroPrecioIndex++];
                 $contador=$contador+$kardex_almacen_principal_desc->cantidad_inicial;
                 $array_registros[]=$kardex_almacen_principal_desc->id;
             }
@@ -143,13 +145,7 @@ class KardexEntradaRegistroObserver
      */
     public function updated(kardex_entrada_registro $kardexEntradaRegistro)
     {
-        $stock_productos=Stock_producto::get();
-        $stocks_activos = kardex_entrada_registro::where('estado',1)->get();
-
-        foreach ($stocks_activos as $stocks_activo) {
-           $productos[]=$stocks_activo->producto->id;
-        }
-        $prod=array_unique($productos, SORT_REGULAR);
+        $prod = [$kardexEntradaRegistro->producto_id];
         $count_cantidad=count($prod);
 
         for($x=0;$x<$count_cantidad;$x++){
@@ -159,13 +155,20 @@ class KardexEntradaRegistroObserver
         //$prod -> los productos en orden
         //$cantidad -> obtiene el stock en orden al producto
 
-        $kardex_almacen_principal_desc= kardex_entrada_registro::where('precio_nacional',"!=",0)->orderBy('id', 'DESC')->get();
         $contador=0;
         $array_registros[]=0;
+        $registrosConPrecio = DB::table('kardex_entrada_registro')->where('producto_id', $prod[0])
+            ->where('precio_nacional', '!=', 0)
+            ->orderBy('id', 'DESC')
+            ->get(['id', 'cantidad_inicial']);
+        $registroPrecioIndex = 0;
         // $array_registros[]=3;
         for($x=0;$x<$count_cantidad;$x++){
             while($cantidad[$x] > $contador){
-                $kardex_almacen_principal_desc= kardex_entrada_registro::where('producto_id',$prod[$x])->where('precio_nacional',"!=",0)->orderBy('id', 'DESC')->whereNotIn('id',$array_registros)->get()->first();
+                if (!isset($registrosConPrecio[$registroPrecioIndex])) {
+                    break;
+                }
+                $kardex_almacen_principal_desc = $registrosConPrecio[$registroPrecioIndex++];
                 $contador=$contador+$kardex_almacen_principal_desc->cantidad_inicial;
                 $array_registros[]=$kardex_almacen_principal_desc->id;
             }

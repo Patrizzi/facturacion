@@ -91,6 +91,18 @@
         border-radius: 3px;
         transition: width 0.4s ease;
     }
+    .table-lotes {
+        min-width: 1120px;
+    }
+    .table-lotes td {
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    .table-lotes .lote-proveedor {
+        max-width: 190px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
     .chip-detail {
         display: inline-flex;
@@ -242,6 +254,11 @@
                     </ul>
                 </div>
                 <div class="ibox-content p-3 pt-4">
+                    <div class="d-flex justify-content-end mb-2">
+                        <small class="text-muted" id="lotesActualizados">
+                            <i class="fa fa-refresh mr-1"></i>Actualización automática cada 30 segundos
+                        </small>
+                    </div>
 
                     {{-- Panel de Filtros de Búsqueda --}}
                     <div class="card border-0 mb-4 p-3" style="background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0 !important;">
@@ -334,7 +351,7 @@
                         {{-- Tab 1: Lotes Activos --}}
                         <div class="tab-pane fade show active" id="lotes-activos" role="tabpanel">
                             <div class="table-responsive border" style="border-radius: 8px;">
-                                <table class="table table-bordered table-hover text-center table-modern mb-0" id="tablaLotesActivos">
+                                <table class="table table-bordered table-hover text-center table-modern table-lotes mb-0" id="tablaLotesActivos">
                                     <thead>
                                         <tr>
                                             <th class="align-middle">ID</th>
@@ -369,7 +386,7 @@
                         {{-- Tab 2: Lotes Vencidos --}}
                         <div class="tab-pane fade" id="lotes-vencidos" role="tabpanel">
                             <div class="table-responsive border" style="border-radius: 8px;">
-                                <table class="table table-bordered table-hover text-center table-modern mb-0" id="tablaLotesVencidos">
+                                <table class="table table-bordered table-hover text-center table-modern table-lotes mb-0" id="tablaLotesVencidos">
                                     <thead>
                                         <tr>
                                             <th class="align-middle">ID</th>
@@ -441,6 +458,11 @@
                     </div>
                 </div>
 
+                <div class="alert alert-info py-2 mb-3 small">
+                    <i class="fa fa-info-circle mr-1"></i>
+                    Puedes corregir números de serie existentes que sigan en stock. Las series vendidas o vinculadas a comprobantes, garantías o reclamos no se pueden editar; las unidades nuevas se ingresan desde Kardex.
+                </div>
+
                 <div class="table-responsive border bg-white" style="max-height: 380px; overflow-y: auto; border-radius: 8px;">
                     <table class="table table-bordered table-hover text-center table-modern mb-0" style="font-size: 12px;">
                         <thead class="sticky-top">
@@ -482,8 +504,12 @@
 const DetalleLoteModule = (function () {
     let currentTab = 'activos';
     let currentPage = 1;
+    let currentLoteId = null;
+    let latestRequestId = 0;
     const ajaxEndpoint = '{{ route("lotes-garantias.ajax.detalle-lote") }}';
     const seriesEndpoint = '{{ route("lotes-garantias.ajax.series-por-lote") }}';
+    const updateSerieEndpoint = '{{ route("lotes-garantias.ajax.actualizar-numero-serie") }}';
+    const seriesLoteBaseUrl = '{{ route("lotes-garantias.series-lote", ["loteId" => "__LOTE__"]) }}';
     const busquedaSerieBaseUrl = '{{ route("lotes-garantias.busqueda-serie") }}';
 
     function getQueryParams() {
@@ -494,19 +520,22 @@ const DetalleLoteModule = (function () {
         };
     }
 
-    function cargarLotes(page = 1) {
+    function cargarLotes(page = 1, silencioso = false) {
         currentPage = page;
+        const requestId = ++latestRequestId;
         const tbody = currentTab === 'vencidos' 
             ? document.getElementById('tbodyLotesVencidos') 
             : document.getElementById('tbodyLotesActivos');
 
-        tbody.innerHTML = `
+        if (!silencioso) {
+            tbody.innerHTML = `
             <tr>
                 <td colspan="10" class="text-center py-5 text-muted">
                     <i class="fa fa-spin fa-spinner fa-2x mb-2 text-primary d-block"></i>
                     <p class="font-weight-bold mb-0">Consultando lotes...</p>
                 </td>
             </tr>`;
+        }
 
         const form = document.getElementById('formFiltroLotes');
         const formData = new FormData(form);
@@ -526,6 +555,7 @@ const DetalleLoteModule = (function () {
             return response.json();
         })
         .then(data => {
+            if (requestId !== latestRequestId) return;
             if (data.success) {
                 // 1. Actualizar barra de cabecera
                 if (data.producto_info) {
@@ -550,10 +580,18 @@ const DetalleLoteModule = (function () {
 
                 // 4. Renderizar paginador
                 renderPaginacion(data.paginacion, currentTab);
+                const actualizado = new Date().toLocaleTimeString('es-PE', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                document.getElementById('lotesActualizados').innerHTML =
+                    `<i class="fa fa-refresh mr-1"></i>Datos de la base actualizados: ${actualizado} · cada 30 segundos`;
             }
         })
         .catch(err => {
             console.error('Error cargando detalle de lotes:', err);
+            if (requestId !== latestRequestId || silencioso) return;
             tbody.innerHTML = `
                 <tr>
                     <td colspan="10" class="text-center py-4 text-danger">
@@ -601,7 +639,14 @@ const DetalleLoteModule = (function () {
             }
 
             // Barra de progreso de disponibilidad
-            const porcentaje = lote.cantidad > 0 ? Math.min(100, Math.round((lote.cantidad_disponible / lote.cantidad) * 100)) : 0;
+            const porcentaje = lote.cantidad > 0
+                ? Math.max(0, Math.min(100, Math.round((lote.cantidad_disponible / lote.cantidad) * 100)))
+                : 0;
+            const cantidadFormato = new Intl.NumberFormat('es-PE');
+            const costoFormato = new Intl.NumberFormat('es-PE', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
             let barraColor = '#10b981'; // verde
             if (porcentaje < 20) {
                 barraColor = '#ef4444'; // rojo
@@ -610,10 +655,10 @@ const DetalleLoteModule = (function () {
             }
 
             const serieBtn = lote.total_series > 0
-                ? `<button type="button" class="btn btn-xs btn-primary font-weight-bold btn-ver-series shadow-sm" 
-                           style="background-color: #2641f8; border-color: #2641f8; border-radius: 4px;" data-lote-id="${lote.id}">
-                       <i class="fa fa-barcode mr-1"></i> ${lote.total_series} Series
-                   </button>`
+                ? `<a href="${seriesLoteBaseUrl.replace('__LOTE__', encodeURIComponent(lote.id))}" class="btn btn-xs btn-primary font-weight-bold shadow-sm"
+                           style="background-color: #2641f8; border-color: #2641f8; border-radius: 4px;" title="Abrir y editar las series de este lote">
+                       <i class="fa fa-barcode mr-1"></i> ${lote.total_series} series registradas
+                   </a>`
                 : `<span class="badge badge-light border text-muted">Sin series</span>`;
 
             return `
@@ -622,35 +667,28 @@ const DetalleLoteModule = (function () {
                     <td class="font-weight-bold text-dark">
                         <code class="px-2 py-1 bg-light border rounded text-primary">${escapeHtml(lote.lote)}</code>
                     </td>
-                    <td><span class="font-weight-bold">${lote.cantidad}</span></td>
+                    <td><span class="font-weight-bold">${cantidadFormato.format(lote.cantidad)}</span></td>
                     <td class="text-left" style="min-width: 140px;">
                         <div class="d-flex justify-content-between font-weight-bold small">
-                            <span class="${lote.cantidad_disponible > 0 ? 'text-primary' : 'text-danger'}">${lote.cantidad_disponible}</span>
+                            <span class="${lote.cantidad_disponible > 0 ? 'text-primary' : 'text-danger'}">${cantidadFormato.format(lote.cantidad_disponible)}</span>
                             <span class="text-muted">${porcentaje}%</span>
                         </div>
-                        <div class="progress-bar-mini">
+                        <div class="progress-bar-mini" role="progressbar" aria-valuenow="${porcentaje}" aria-valuemin="0" aria-valuemax="100" title="${cantidadFormato.format(lote.cantidad_disponible)} de ${cantidadFormato.format(lote.cantidad)} disponibles">
                             <div class="progress-bar-mini-fill" style="width: ${porcentaje}%; background-color: ${barraColor};"></div>
                         </div>
                     </td>
-                    <td><strong>$ ${lote.costo_individual}</strong></td>
-                    <td class="small text-muted">${lote.fecha_produccion}</td>
+                    <td><strong>${escapeHtml(lote.simbolo_moneda)} ${costoFormato.format(Number(lote.costo_individual) || 0)}</strong></td>
+                    <td class="small text-muted">${escapeHtml(lote.fecha_produccion)}</td>
                     <td class="${lote.es_vencido ? 'text-danger font-weight-bold' : 'small text-muted'}">
-                        ${lote.fecha_vencimiento}
+                        ${escapeHtml(lote.fecha_vencimiento)}
                         ${lote.es_vencido ? '<small class="d-block text-danger font-weight-bold"><i class="fa fa-exclamation-triangle"></i> Expirado</small>' : ''}
                     </td>
-                    <td class="text-left"><small class="font-weight-bold text-dark">${escapeHtml(lote.proveedor)}</small></td>
+                    <td class="text-left lote-proveedor" title="${escapeHtml(lote.proveedor)}"><small class="font-weight-bold text-dark">${escapeHtml(lote.proveedor)}</small></td>
                     <td>${estadoBadge}</td>
                     <td>${serieBtn}</td>
                 </tr>`;
         }).join('');
 
-        // Vincular eventos a los botones de series
-        tbody.querySelectorAll('.btn-ver-series').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const loteId = this.getAttribute('data-lote-id');
-                abrirModalSeries(loteId);
-            });
-        });
     }
 
     function renderPaginacion(pag, tab) {
@@ -701,6 +739,7 @@ const DetalleLoteModule = (function () {
     }
 
     function abrirModalSeries(loteId) {
+        currentLoteId = loteId;
         const tbodyModal = document.getElementById('tbodyModalSeries');
         tbodyModal.innerHTML = `
             <tr>
@@ -738,23 +777,33 @@ const DetalleLoteModule = (function () {
                     return;
                 }
 
-                tbodyModal.innerHTML = data.series.map((s, idx) => `
-                    <tr>
-                        <td><strong>${idx + 1}</strong></td>
-                        <td class="font-weight-bold text-dark"><code class="text-primary font-weight-bold">${escapeHtml(s.numero_serie)}</code></td>
-                        <td><span class="badge ${s.estado === 'En Stock' ? 'badge-soft-success' : 'badge-soft-secondary'}">${escapeHtml(s.estado)}</span></td>
-                        <td>${escapeHtml(s.ubicacion)}</td>
-                        <td><span class="badge badge-light border font-weight-bold">${escapeHtml(s.calidad)}</span></td>
-                        <td class="small text-muted">${s.fecha_venta}</td>
-                        <td class="small text-muted">${s.fecha_vencimiento_garantia}</td>
-                        <td>
-                            <a href="${busquedaSerieBaseUrl}?numero_serie=${encodeURIComponent(s.numero_serie)}" 
-                               class="btn btn-xs btn-outline-primary font-weight-bold" target="_blank" title="Trazar en Búsqueda por Serie" style="border-radius: 4px;">
-                                <i class="fa fa-search mr-1"></i> Trazar
-                            </a>
-                        </td>
-                    </tr>
-                `).join('');
+                tbodyModal.innerHTML = data.series.map((s, idx) => {
+                    const editButton = s.editable
+                        ? `<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold btn-editar-serie mr-1" data-serie-id="${s.id}" title="Modificar número de serie"><i class="fa fa-pencil"></i> Editar</button>`
+                        : '<span class="small text-muted mr-1">No editable</span>';
+
+                    return `
+                        <tr data-serie-id="${s.id}">
+                            <td><strong>${idx + 1}</strong></td>
+                            <td class="font-weight-bold text-dark celda-numero-serie"><code class="text-primary font-weight-bold">${escapeHtml(s.numero_serie)}</code></td>
+                            <td><span class="badge ${s.estado === 'En Stock' ? 'badge-soft-success' : 'badge-soft-secondary'}">${escapeHtml(s.estado)}</span></td>
+                            <td>${escapeHtml(s.ubicacion)}</td>
+                            <td><span class="badge badge-light border font-weight-bold">${escapeHtml(s.calidad)}</span></td>
+                            <td class="small text-muted">${escapeHtml(s.fecha_venta)}</td>
+                            <td class="small text-muted">${escapeHtml(s.fecha_vencimiento_garantia)}</td>
+                            <td>
+                                ${editButton}
+                                <a href="${busquedaSerieBaseUrl}?numero_serie=${encodeURIComponent(s.numero_serie)}"
+                                   class="btn btn-xs btn-outline-primary font-weight-bold" target="_blank" title="Trazar en Búsqueda por Serie" style="border-radius: 4px;">
+                                    <i class="fa fa-search mr-1"></i> Trazar
+                                </a>
+                            </td>
+                        </tr>`;
+                }).join('');
+
+                tbodyModal.querySelectorAll('.btn-editar-serie').forEach(btn => {
+                    btn.addEventListener('click', iniciarEdicionSerie);
+                });
             } else {
                 tbodyModal.innerHTML = `
                     <tr>
@@ -772,6 +821,72 @@ const DetalleLoteModule = (function () {
                         <i class="fa fa-exclamation-triangle mr-1"></i> Error al conectar con el servidor.
                     </td>
                 </tr>`;
+        });
+    }
+
+    function iniciarEdicionSerie(event) {
+        const boton = event.currentTarget;
+        const fila = boton.closest('tr');
+        const celda = fila.querySelector('.celda-numero-serie');
+        const numeroActual = celda.textContent.trim();
+        const serieId = fila.dataset.serieId;
+
+        celda.innerHTML = `
+            <input type="text" class="form-control form-control-sm input-numero-serie"
+                   maxlength="50" value="${escapeHtml(numeroActual)}" aria-label="Número de serie">
+            <small class="text-danger mensaje-serie"></small>`;
+        fila.querySelector('td:last-child').innerHTML = `
+            <button type="button" class="btn btn-xs btn-success btn-guardar-serie mr-1"><i class="fa fa-check"></i> Guardar</button>
+            <button type="button" class="btn btn-xs btn-secondary btn-cancelar-serie">Cancelar</button>`;
+
+        fila.querySelector('.input-numero-serie').focus();
+        fila.querySelector('.btn-guardar-serie').addEventListener('click', () => guardarNumeroSerie(fila, serieId));
+        fila.querySelector('.btn-cancelar-serie').addEventListener('click', () => abrirModalSeries(currentLoteId));
+    }
+
+    function guardarNumeroSerie(fila, serieId) {
+        const input = fila.querySelector('.input-numero-serie');
+        const numeroSerie = input.value.trim();
+        const boton = fila.querySelector('.btn-guardar-serie');
+        const mensaje = fila.querySelector('.mensaje-serie');
+
+        if (!numeroSerie) {
+            mensaje.textContent = 'Ingresa un número de serie.';
+            input.focus();
+            return;
+        }
+
+        boton.disabled = true;
+        boton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Guardando';
+
+        fetch(updateSerieEndpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                lote_id: currentLoteId,
+                serie_id: serieId,
+                numero_serie: numeroSerie
+            })
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                const validationMessage = data.errors && data.errors.numero_serie
+                    ? data.errors.numero_serie[0]
+                    : data.message;
+                throw new Error(validationMessage || 'No se pudo actualizar el número de serie.');
+            }
+            abrirModalSeries(currentLoteId);
+        })
+        .catch(error => {
+            boton.disabled = false;
+            boton.innerHTML = '<i class="fa fa-check"></i> Guardar';
+            mensaje.textContent = error.message;
         });
     }
 
@@ -793,6 +908,11 @@ const DetalleLoteModule = (function () {
 
         // Carga inicial
         cargarLotes(1);
+        window.setInterval(function () {
+            if (!document.hidden) {
+                cargarLotes(currentPage, true);
+            }
+        }, 30000);
 
         // Envío del formulario de filtros
         const form = document.getElementById('formFiltroLotes');
