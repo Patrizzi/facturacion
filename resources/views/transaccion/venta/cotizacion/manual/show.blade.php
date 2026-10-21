@@ -14,12 +14,12 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
             <div class="ibox-title d-flex justify-content-between">
-                <div style="margin-top: 5px;margin-bottom: 8px; margin-left: 10px">
+                <div style="margin-left: 10px">
                     <a href="{{ route('cotizacion_manual.create') }}">
                         <i class="fa fa-arrow-left text-muted"></i>
                     </a>
                 </div>
-                <div class="ibox-tools" style="margin-top: 5px;margin-bottom: 8px; margin-right: 10px">
+                <div class="ibox-tools" style="margin-right: 10px">
                     <a class="collapse-link">
                         <i class="fa fa-chevron-up text-muted"></i>
                     </a>
@@ -30,18 +30,18 @@
             </div>
             <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="row align-items-center tooltip-demo">
-                    <div class="col-12 col-md-5">
+                    <div class="col-12 col-md-4">
                         <h3 style="margin: 0;">{{ $cotizacion->cod_cotizacion }}</h3>
                         <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
 
-                    <div class="col-12 col-md-2 text-center">
+                    <div class="col-12 col-md-4 text-center">
                         <h2 class="mb-0 text-nowrap" style="text-align: center">
                             COTIZACIÓN M.
                         </h2>
                     </div>
 
-                    <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
+                    <div class="col-12 col-md-4 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
                         <div class="d-flex align-items-center" style="overflow: hidden;">
                             <div id="btn-slider-cotizacion-manual"
                                 style="width: 0; overflow: hidden; transition: width 0.3s ease; display: flex; align-items: center;">
@@ -195,8 +195,8 @@
         <div class="row">
             <div class="col-lg-12" style="margin-top: -26px;">
                 <div class="ibox-content" style=" margin-bottom: 20px;padding-bottom: 50px;">
-                    <br>
                     <div class="table-no mostrar">
+                        <br>
                         <div class="row" align="center" style="padding-bottom: 5px">
                             <div class="col-sm-6" align="center">
                                 <div class="form-control">

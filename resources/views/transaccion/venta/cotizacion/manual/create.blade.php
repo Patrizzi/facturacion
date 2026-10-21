@@ -70,7 +70,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-4"><strong>Fecha Emisión:</strong></label>
+                                        <label class="col-form-label col-md-4"><strong>F. Emisión:</strong></label>
                                         <div class="col-md-8">
                                             <input type="text" name="fecha_emision" class="form-control"
                                                 value="{{ date('d-m-Y') }}" readonly="readonly">
