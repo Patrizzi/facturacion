@@ -324,7 +324,7 @@
                             </div>
                         </footer>
                         <br>
-                       <div class="row">
+                        <div class="row">
                             @if ($boleta->detracciones)
                                 <div class="col-sm-6" >
                                     <div class="form-control" style="min-height: 100% !important">

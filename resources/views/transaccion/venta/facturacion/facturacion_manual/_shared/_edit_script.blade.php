@@ -1,39 +1,12 @@
-<style>
-    .text_des {
-        border-radius: 10px;
-        border: 1px solid #e5e6e7;
-        width: 80px;
-        padding: 6px 12px;
-    }
-
-    .check {
-        -webkit-appearance: none;
-        height: 34px;
-        background-color: #ffffff00;
-        -moz-appearance: none;
-        border: none;
-        appearance: none;
-        width: 80px;
-        border-radius: 10px;
-    }
-
-    .div_check {
-        position: relative;
-        top: -33px;
-        left: 0px;
-        background-color: #ffffff00;
-        top: -35;
-    }
-
-    .check:checked {
-        background: #0375bd6b;
-    }
-
-    span.select2-container.select2-container--default.select2-container--open {
-        z-index: 2126 !important;
-    }
-</style>
 <script>
+    let articulosAgregados = new Set();
+    $('.celda').each(function() {
+        var valor = $(this).val();
+        var partes = valor.split('|').map(p => p.trim());
+        var id = partes[0];
+        articulosAgregados.add(String(id));
+    });
+
     $(function() {
         $('[data-toggle="tooltip"]').tooltip()
     })
@@ -53,7 +26,6 @@
 
     // Clientes
     $(".select2_demo_client").select2({
-        theme: "bootstrap",
         placeholder: "Seleccionar Cliente",
         ajax: {
             minimumInputLength: 1,
@@ -432,7 +404,9 @@
         var data = `[
             <tr>
                 <td>
-                    <button type="button" class='delete borrar e btn btn-sm btn-danger'><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <button type="button" class='delete borrar e btn btn-primary btn-sm'>
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
                 </td>
                 <td class="td_selected">
                     <select class="monto0 select2_demo_3 select_change" id='articulo${i}' onchange="ajax(${i})" autocomplete="off" required></select>
@@ -481,6 +455,7 @@
     //Funcion para el select articles "AJAX" (productos- servicios), ejecutandose cada vez realizada una llamada
     function articlesSelect2() {
         $(".select2_demo_3").select2({
+            width: '100%',
             placeholder: "Seleccionar Articulo",
             ajax: {
                 minimumInputLength: 1,
@@ -786,120 +761,150 @@
             search_multiple(busqueda);
         }, 500); // Espera 300 ms antes de ejecutar la acción
     });
+    
+    $('#add_new_product').on('click', function(){
+        search_multiple("");
+        $('#search_product').val('');
+    });
+
+    let filtrarConStock = false;
 
     function search_multiple(busqueda) {
-        // CLEAN DATABLE(?)
+        // Limpiar DataTable previo
         if ($.fn.DataTable.isDataTable('.data_table_multiple')) {
             $('.data_table_multiple').DataTable().clear().destroy();
         }
         $('.data_table_multiple tbody').empty();
 
-        var almacen = $('[id="almacen_id"]').val();
-        var moneda = $('[id="moneda_id"]').val();
         $.ajax({
             type: "post",
-            url: "{{ route('pa.search_multiple_manual') }}",
+            url: "{{ route('pa.search_multiple') }}",
             data: {
                 '_token': $('input[name=_token]').val(),
                 'articulo': busqueda,
-                'almacen': almacen,
-                'moneda': moneda
+                'stock': filtrarConStock ? 1 : 0,
+                'moneda': $('[id="moneda_id"]').val(),
+                'almacen': $('[id="almacen_id"]').val()
             },
             success: function(msg) {
-                // console.log(data.mone)
-                if (validarJson(msg)) {
-                    var data = JSON.parse(msg);
-                    if (data.length === 0) {
-                        toastr.warning("No se encontraron resultados",
-                            '', {
-                                timeOut: 3000
-                            });
-                        return;
-                    }
-                } else if (msg == "[]") {
-                    toastr.warning("No se encontraron resultados",
-                        '', {
-                            timeOut: 3000
-                        });
-                    return;
-                } else {
-                    toastr.warning("No se encontraron resultados",
-                        '', {
-                            timeOut: 3000
-                        });
+                // Intentar parsear si el backend no manda las cabeceras application/json correctas
+                let data = typeof msg === 'string' ? JSON.parse(msg) : msg;
+                // Validación unificada: Si no hay data o está vacío, mostrar alerta y salir
+                if (!data || data.length === 0) {
+                    toastr.warning("No se encontraron resultados", '', { timeOut: 3000 });
                     return;
                 }
-                var igv = $('#igv_input').val();
-                var quantity = $('#quantity_modal').val();
-                if (quantity == "") {
-                    quantity = 1;
-                }
+
+                // Inicializar DataTable
                 $('.data_table_multiple').DataTable({
+                    "bLengthChange": false,
+                    "searching": false,
                     "autoWidth": false,
-                    pageLength: 10,
+                    pageLength: 7,
                     responsive: true,
                     "aaData": data,
-                    "columns": [{
-                            "data": "id"
+                    drawCallback: function (settings) {
+                        $(".touchspin1").each(function () {
+                            const $input = $(this);
+                            // Evitar doble inicialización si el plugin ya envolvió este input
+                            if (!$input.hasClass('js-touchspin-init')) {
+                                $input.addClass('js-touchspin-init').TouchSpin({
+                                    buttondown_class: 'btn btn-link btn-sm',
+                                    buttonup_class: 'btn btn-link btn-sm',
+                                    min: 1,
+                                    max: parseFloat($input.attr('max')) || 0,
+                                });
+                            }
+                        });
+                        activarSliderSiDesborda();
+                    },
+                    dom: '<"top"f>rt<"dt-left-info"ip>', // i = info ("Mostrando X-Y de Z"), p = paginación
+                    language: {
+                        info: "Mostrando _START_-_END_ de _TOTAL_ artículos",
+                        infoEmpty: "No hay artículos",
+                        paginate: {
+                            previous: '<i class="fa fa-chevron-left"></i>',
+                            next: '<i class="fa fa-chevron-right"></i>'
+                        }
+                    },
+                    pagingType: "simple_numbers",
+                    "columns": [
+                        // { "data": "id" },
+                        { 
+                            "data": "codigo",
+                            "width": "130px",
+                            render: function(data, type, row) {
+                                    return `
+                                    <span class="codigo-toggle" 
+                                        data-producto="${row.codigo_producto}" 
+                                        data-original="${row.codigo_original ?? ''}" 
+                                        data-showing="producto"
+                                        style="cursor:pointer; display:inline-block; min-width:80px;">
+                                        <span class="badge badge-info">${row.codigo_producto}</span>
+                                    </span>
+                                `;
+                            }
                         },
-                        {
-                            "data": "codigo"
+                        { 
+                            "data": "nombre", 
+                            "defaultContent": "",
+                            render: function(data, type, row) {
+                                return `
+                                    <div class="articulo-nombre"><span><strong>${row.nombre}</strong></span></div>
+                                        <div class="small-description"><small>${row.description}</small></div>
+                                `;
+                            } 
                         },
-                        {
-                            "data": "nombre",
-                            "defaultContent": ""
+                        { 
+                            "data": "stock", 
+                            "className": "precio_search precio_cantidad",  
+                            "defaultContent": "",
+                            render: function(data, type, row) {
+                                let claseCss;
+                                if (`${row.stock}` == 0) {
+                                    claseCss = "badge badge-danger"; // ver nota abajo sobre badge-error
+                                } else {
+                                    claseCss = "badge badge-success";
+                                }
+                                return `<span class="${claseCss}">${row.stock}</span>`;
+                            } 
                         },
                         {
                             data: null,
                             title: 'CANTIDAD',
-                            render: function(data, type, row, meta) {
-                                return `<input type="number" class="form-control form-control-sm input-cantidad" min="1" max="${row.stock}" value="1" data-price="${row.price}" data-id="${row.id}" />`;
-
-                            }
-                        },
-                        {
-                            data: 'price',
-                            title: 'PRECIO S. C / IGV',
+                            "className": "precio_cantidad",
+                            "width": "100px",
                             render: function(data, type, row) {
-                                const simbolo = row.moneda
-                                    .simbolo; // Obtén el símbolo de la moneda
-                                const formattedPrice = $.fn.dataTable.render.number(',',
-                                    '.', 2).display(data); // Formatea el precio
-                                return `${simbolo} ${formattedPrice}`; // Retorna el precio con el símbolo
-                            }
-                        },
-                        {
-                            data: 'price',
-                            title: 'PRECIO S / IGV',
-                            render: function(data, type, row) {
-                                const simbolo = row.moneda.simbolo;
-                                const formattedPrice = $.fn.dataTable.render.number(',',
-                                    '.', 2).display(data); // Formatea el precio
                                 return `
-                                        <div class="input-group input-group-sm" >
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-addon" id="basic-addon3">${simbolo}</span>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm total_s_igv" value="${formattedPrice}" id="precio_s_igv${row.id}" data-id="${row.id}">
-                                        </div>
-                                    `;
+                                    <input class="touchspin1 form-control-sm input-cantidad" type="text" value="1" name="demo1" min="1" max="${row.stock}" data-simbolo="${row.moneda.simbolo}" value="1" data-price="${row.price}" data-id="${row.id}">
+                                `;
                             }
                         },
                         {
                             data: 'price',
-                            title: 'PRECIO  C / IGV',
+                            title: 'P. UNITARIO',
+                            "width": "100px",
+                            "className": "precio_dt",
                             render: function(data, type, row) {
-                                const simbolo = row.moneda.simbolo;
-                                const formattedPrice = $.fn.dataTable.render.number(',',
-                                    '.', 2).display(data); // Formatea el precio
-                                return `
-                                         <div class="input-group input-group-sm" >
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-addon" >${simbolo}</span>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm total_c_igv" value="${formattedPrice}" id="precio_c_igv${row.id}" data-id="${row.id}">
-                                        </div>
-                                    `; // Retorna el precio con el símbolo
+                                const formattedPrice = $.fn.dataTable.render.number(',', '.', 2).display(data);
+                                return `${row.moneda.simbolo} ${formattedPrice}`;
+                            }
+                        },
+                        {
+                            data: null,
+                            title: 'TOTAL',
+                            "width": "100px",
+                            "className": "precio_dt",
+                            render: function(data, type, row) {
+                                return `<span class="total" data-id="${row.id}" data-simbolo="${row.moneda.simbolo}">${row.moneda.simbolo} ${row.price.toFixed(2)}</span>`;
+                            }
+                        },
+                        {
+                            "width": "100px",
+                            "className": "precio_search precio_cantidad",
+                            render: function(data, type, row) {
+                                const yaAgregado = articulosAgregados.has(String(row.id));
+                                return `<button class="btn btn-primary btn-xs btn-agregar-articulo" data-id="${row.id}" data-cod_producto="${row.codigo_producto}" data-cod_original="${row.codigo_original}" data-nombre="${row.nombre}"> <i class="fa fa-plus"></i> Agregar</button>`;
                             }
                         }
                     ]
@@ -907,11 +912,174 @@
             },
             error: function(eject) {
                 if (eject.status === 400) {
-                    console.log(eject.responseJSON.error);
+                    console.error('Error en la petición: ', eject.responseJSON);
                 }
-            },
-            cache: true
+            }
         });
+    }
+    $('.data_table_multiple').on('input change', '.input-cantidad', function() {
+        const cantidad = parseFloat($(this).val()) || 0;
+        const price = parseFloat($(this).data('price'));
+        const simbolo = $(this).data('simbolo');
+        const total = cantidad * price;
+        const id = $(this).data('id');
+        $(`.total[data-id="${id}"]`).text(`${simbolo} ` + `${total.toFixed(2)}`);
+    });
+
+    $('.data_table_multiple').on('click', '.btn-agregar-articulo', function(e) {
+        var $btn = $(this);
+        var $row = $(this).closest('tr');
+
+        var stock = $row.find("td:eq(3)").text();
+        var cantidad = $row.find('input').val();
+
+        if (parseFloat(cantidad) > parseFloat(stock)) {
+            toastr.warning("Cantidad mayor al stock", '', { timeOut: 3000 });
+            return;
+        }
+
+        var id =  $(this).data('id');
+        var cod_prod = $(this).data('cod_producto');
+        var cod_origi = $(this).data('cod_original');
+        var nombres =$(this).data('nombre');
+
+        articulosAgregados.add(String(id));
+
+        var concat_data = id + " | " + cod_prod + " | " + cod_origi + " | " + nombres;
+        const newOption = new Option(concat_data, concat_data, true, true);
+
+        var $primerSelect = $('#articulo');
+        console.log($primerSelect);
+        var existePrimerSelect = $primerSelect.length > 0;
+        var valorPrimerSelect = existePrimerSelect ? $primerSelect.val() : null;
+
+        if (!existePrimerSelect || valorPrimerSelect == null || valorPrimerSelect == "") {
+                // Busca todos los selects existentes (incluyendo #articulo si existe)
+                var $selectsExistentes = $('select[id^="articulo"]');
+
+            if ($selectsExistentes.length === 0) {
+                // No queda NINGÚN select en el formulario: crear uno desde cero
+                $('.addmore').prop('disabled', false).click();
+                $selectsExistentes = $('select[id^="articulo"]');
+            }
+
+            var $selectDestino = $selectsExistentes.last();
+            var idAttr = $selectDestino.attr('id');
+            var count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+            var valorDestino = $selectDestino.val();
+
+            if (valorDestino != null && valorDestino != "") {
+                // El último select ya tiene algo: crea uno nuevo
+                $('.addmore').prop('disabled', false).click();
+                $selectsExistentes = $('select[id^="articulo"]');
+                $selectDestino = $selectsExistentes.last();
+                idAttr = $selectDestino.attr('id');
+                count_artc = idAttr === 'articulo' ? 0 : parseInt(idAttr.replace('articulo', ''));
+            }
+
+            $selectDestino.append(newOption).trigger('change');
+
+            let debounceTimer;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                $(`#cantidad${count_artc}`).val(cantidad);
+                multi(count_artc);
+            }, 1000);
+
+        } else {
+            var $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+            var count_artc = $selectsNumerados.length > 0
+                ? Math.max(...$selectsNumerados.map(function () {
+                    return parseInt($(this).attr('id').replace('articulo', ''));
+                }).get())
+                : null;
+            var $ultimoSelect = count_artc === null ? $('#articulo') : $(`#articulo${count_artc}`);
+            var valorActual = $ultimoSelect.val();
+            if (valorActual != null && valorActual != "") {
+                $('.addmore').prop('disabled', false).click();
+                // Recalcular tras crear la fila
+                $selectsNumerados = $('select[id^="articulo"]').not('#articulo');
+                count_artc = Math.max(...$selectsNumerados.map(function () {
+                    return parseInt($(this).attr('id').replace('articulo', ''));
+                }).get());
+                $ultimoSelect = $(`#articulo${count_artc}`);
+            }
+
+            $ultimoSelect.append(newOption).trigger('change');
+
+            let debounceTimer;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                $(`#cantidad${count_artc}`).val(cantidad);
+                multi(count_artc);
+            }, 1000);
+        }
+
+        toastr.info("Se agregó el Articulo correctamente", '', {
+            timeOut: 3000
+        });
+    });
+
+    $('#total_final').on('input change', function(){
+        var total = $(this).val();
+        $('#subtotal-monto').html(total);
+    });
+    
+    setInterval(function () {
+        $('.codigo-toggle').each(function () {
+            const $el = $(this);
+            const showing = $el.data('showing');
+
+            if (showing === 'producto') {
+                $el.fadeOut(150, function () {
+                    $el.html(`<span class="badge badge-info">${$el.data('original')}</span>`).fadeIn(150);
+                });
+                $el.data('showing', 'original');
+            } else {
+                $el.fadeOut(150, function () {
+                    $el.html(`<span class="badge badge-info">${$el.data('producto')}</span>`).fadeIn(150);
+                });
+                $el.data('showing', 'producto');
+            }
+        });
+    }, 5000); // cambia cada 2 segundos
+
+    function activarSliderSiDesborda() {
+        setTimeout(function() {
+            $('.articulo-nombre').each(function() {
+                const el = this; // elemento DOM nativo, no jQuery
+                if (el.scrollWidth > el.clientWidth) {
+                    $(el).addClass('is-overflowing');
+                } else {
+                    $(el).removeClass('is-overflowing');
+                }
+            });
+        }, 50);
+        setTimeout(function() {
+            $('.small-description').each(function() {
+                const el = this; // elemento DOM nativo, no jQuery
+                if (el.scrollWidth > el.clientWidth) {
+                    $(el).addClass('is-overflowing');
+                } else {
+                    $(el).removeClass('is-overflowing');
+                }
+            });
+        }, 10);
+    }
+    $('#add_product_data').on('shown.bs.modal', function () {
+        activarSliderSiDesborda();
+    });
+    $('#button_filter_stock').on('click', function() {
+        const $btn = $(this);
+        filtrarConStock = !$btn.hasClass('active');
+        search_multiple($('#buscador_articulo').val());
+    });
+    function reactivarBotonModal(id) {
+        var $btn = $(`.btn-agregar-articulo[data-id="${id}"]`);
+        console.log($btn);
+        if ($btn.length) {
+            $btn.prop('disabled', false);
+        }
     }
 
     // PRECIO SIN IGV
@@ -1010,7 +1178,7 @@
             var total = $('#total_final').val();
             var porc_det = $('#porcentaje_detc').val();
             var op_det = total * (porc_det / 100);
-            var sub_zero = Math.round(op_det * 100) / 100;
+            var sub_zero = Math.round(op_det);
             console.log(sub_zero);
             $('#tota_detra').val(sub_zero);
         } else { //dolares
@@ -1021,7 +1189,7 @@
 
             var porc_det = $('#porcentaje_detc').val();
             var op_det = total * (porc_det / 100);
-            var sub_zero = Math.round(op_det * 100) / 100;
+            var sub_zero = Math.round(op_det);
             console.log(sub_zero);
             $('#tota_detra').val(sub_zero);
         }
