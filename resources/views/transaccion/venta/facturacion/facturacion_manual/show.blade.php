@@ -22,7 +22,7 @@
     </style>
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox">
-            <div class="ibox-title d-flex justify-content-between" style="padding-right: 3.1%">
+            <div class="ibox-title d-flex justify-content-between">
                 @include('transaccion.comprobantes._shared.btn_create_with_almacen', [
                     'routeCreate' => 'facturacion_manual.create',
                     'useAlmacen' => false,
@@ -38,25 +38,24 @@
                     </a>
                 </div>
             </div>
-            <div class="ibox-content" style="padding-right: 3.1%;padding-left: 3.1%; padding-bottom: 10px;">
+            <div class="ibox-content" style="padding-bottom: 10px;">
                 <div class="row align-items-center">
                     <div class="col-12 col-md-3">
                         <h3 style="margin: 0;">{{ $facturacion->codigo_fac }}</h5>
-                        <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
+                            <strong style="margin: 0;">R.U.C : </strong>{{ $empresa->ruc }}
                     </div>
                     <div class="col-12 col-md-4 text-center">
                         <h2 class="mb-0 text-nowrap" style="margin-left:200px;">
-                            FACTURA ELECTRÓNICA
+                            FACTURA M. ELECTRÓNICA
                         </h2>
                     </div>
                     <div class="col-12 col-md-5 d-flex flex-wrap justify-content-end align-items-center" style="gap: 4px;">
-                        @php use Carbon\Carbon;
-                        use App\Facturacion_m; @endphp
+                        @php use Carbon\Carbon; use App\Facturacion_m; @endphp
                         @if ($facturacion->nota_credito != 0)
                             <div class="d-flex align-items-center" style="overflow: hidden;">
                                 {{-- Botón NC (oculto por defecto) --}}
                                 <div id="nc-slider" style="width: 0; overflow: hidden; transition: width 0.3s ease;">
-                                    <a class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                                    <a class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom"
                                         data-original-title="Motivo: {{ Facturacion_m::search_motivo_nc($facturacion->id) }}"
                                         href="{{ route('nota-credito.show', Facturacion_m::nota_credito_id($facturacion->id)) }}"
                                         style="white-space: nowrap; margin-right: 4px;">
@@ -64,7 +63,7 @@
                                     </a>
                                 </div>
                                 {{-- Flecha toggle --}}
-                                <button id="nc-toggle" onclick="toggleNC()" class="btn btn-default"
+                                <button id="nc-toggle" onclick="toggleNC()" class="btn btn-default btn-sm"
                                     style="border: 1px solid #ccc; padding: 5px 8px; transition: transform 0.3s;">
                                     <i class="fa fa-chevron-left" id="nc-arrow"></i>
                                 </button>
@@ -74,20 +73,23 @@
                         @endif
                         <!-- PDF -->
                         <form class="btn" style="padding: 0;" action="{{ route('pdf_fac_m', $facturacion->id) }}">
-                            <input type="text" name="name" maxlength="50" hidden value="{{ $facturacion->codigo_fac }}">
-                            <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom"
-                                data-original-title="Descargar PDF"><i class="fa fa-file-pdf-o fa-lg"></i></button>
+                            <input type="text" name="name" maxlength="50" hidden
+                                value="{{ $facturacion->codigo_fac }}">
+                            <button type="submit" class="btn btn-success btn-sm" data-toggle="tooltip"
+                                data-placement="bottom" data-original-title="Descargar PDF"><i
+                                    class="fa fa-file-pdf-o fa-lg"></i></button>
                         </form>
-                        <a href="{{ route('facturacion_manual.ticket', $facturacion->id) }}" class="btn btn-info"
+                        <a href="{{ route('facturacion_manual.ticket', $facturacion->id) }}" class="btn btn-info btn-sm"
                             target="_blank"><i class="fa fa-ticket fa-lg"></i></a>
                         <input type="text" value="{{ $facturacion->id }}" name="id" id="id" hidden="">
-                        <a class="btn btn-success" href="{{ route('facturacion_manual.print', $facturacion->id) }}"
-                            target="_blank" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom"
+                        <a class="btn btn-success btn-sm" href="{{ route('facturacion_manual.print', $facturacion->id) }}"
+                            target="_blank" class="btn btn-primary btn-sm" data-toggle="tooltip" data-placement="bottom"
                             title="" data-original-title="Imprimir"><i class="fa fa-print fa-lg"></i></a>
                         @if (Auth::user()->email_creado == 1)
-                            <form action="{{ route('email.factura', $facturacion->id) }}" method="post" style="padding: 0;" class="btn">
+                            <form action="{{ route('email.factura', $facturacion->id) }}" method="post"
+                                style="padding: 0;" class="btn">
                                 @csrf
-                                <button type="submit" class="btn btn-secondary" data-toggle="tooltip"
+                                <button type="submit" class="btn btn-secondary btn-sm" data-toggle="tooltip"
                                     data-placement="bottom" title="" formtarget="_blank"
                                     data-original-title="Enviar por correo">
                                     <i class="fa fa-envelope fa-lg"></i>
@@ -96,7 +98,7 @@
                         @endif
                         <div style="position: relative; display: inline-block;">
                             <div id="auto" onclick="divAuto()">
-                                <a class="btn btn-success" style="background: green; border-color: green;" ...>
+                                <a class="btn btn-success btn-sm" style="background: green; border-color: green;" ...>
                                     <i class="fa fa-whatsapp fa-lg" style="color: white"></i>
                                 </a>
                             </div>
@@ -104,16 +106,17 @@
 
                         @if ($facturacion->estado == 0)
                             @can('factura_m.editar')
-                                <button class="btn btn-warning btn-editar" id="edit" onclick="click_editar()">
+                                <button class="btn btn-warning btn-sm btn-editar" id="edit" onclick="click_editar()">
                                     <i class="fa fa-pencil"></i>
                                 </button>
-                                <button class="btn-no-editar no_mostrar btn btn-warning" onclick="click_cancelar_editar()">
+                                <button class="btn-no-editar no_mostrar btn btn-warning btn-sm"
+                                    onclick="click_cancelar_editar()">
                                     <i class="fa fa-times"></i>
                                 </button>
                             @endcan
                         @endif
-                    </div>
-                    <div  id="div-mostrar" style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 15px;">
+                        <div id="div-mostrar"
+                            style="height: 0px; overflow: hidden; width: 100%; transition: height .4s; margin-right: 15px;">
                             <form action="{{ route('agregado.whatsapp_send') }}" method="post" class="btn"
                                 style="text-align: none;padding-right: 0;padding-left: 0;">
                                 @csrf
@@ -128,20 +131,24 @@
                                     data-toggle="tooltip" data-placement="bottom" title=""
                                     data-original-title="Enviar por Whatsapp"><i class="fa fa-send fa-lg"></i> </button>
                             </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="mostrar" id="show_factura">
-            <div class="row">
-                <div class="col-lg-12" style="margin-top: -26px;">
-                    @if ($facturacion->f_electronica == 2 || ($facturacion->nota_credito == 1 || $facturacion->nota_credito == 2 && $facturacion->nota_credito_register->motivo == "01"))
+        <div class="row">
+            <div class="col-lg-12" style="margin-top: -26px;">
+                <div class="ibox-content" style=" margin-bottom: 20px;padding-bottom: 50px;">
+                    @if (
+                        $facturacion->f_electronica == 2 ||
+                            ($facturacion->nota_credito == 1 ||
+                                ($facturacion->nota_credito == 2 && $facturacion->nota_credito_register->motivo == '01')))
                         <div id="watermark">
                             <p>Anulado</p>
                         </div>
-                    @else
                     @endif
-                    <div class="ibox-content p-xl" style=" margin-bottom: 20px;padding-bottom: 50px;">
+                    <br>
+                    <div class="table-no mostrar">
                         <div class="row" align="center" style="padding-bottom: 5px">
                             <div class="col-sm-6" align="center">
                                 <div class="form-control">
@@ -202,115 +209,120 @@
 
                         </div>
                         <br>
-                        <div class="table-responsive">
-                            <table class="table ">
-                                <thead>
+                    </div>
+                    <div class="table-no mostrar">
+                        <table class="table ">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">Item</th>
+                                    <th style="text-align:center">Código Producto</th>
+                                    <th>Descripción</th>
+                                    <th style="text-align:center">Cantidad</th>
+                                    <th style="text-align:center">Valor Unitario</th>
+
+                                    <th style="text-align:center">Valor Venta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <span hidden="hidden">{{ $i = 1 }} </span>
+                                @foreach ($facturacion_registro as $facturacion_registros)
                                     <tr>
-                                        <th style="text-align:center">Item</th>
-                                        <th style="text-align:center">Código Producto</th>
-                                        <th>Descripción</th>
-                                        <th style="text-align:center">Cantidad</th>
-                                        <th style="text-align:center">Valor Unitario</th>
+                                        <td style="text-align:center">{{ $i }} </td>
+                                        @if (isset($facturacion_registros->producto))
+                                            <td style="text-align:center">
+                                                {{ $facturacion_registros->producto->codigo_producto }}</td>
+                                            <td>{{ $facturacion_registros->producto->nombre }}
+                                                {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
+                                                    <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
+                                                @endif
+                                            </td>
+                                        @else
+                                            <td style="text-align:center">
+                                                {{ $facturacion_registros->servicio->codigo_servicio }}</td>
+                                            <td>{{ $facturacion_registros->servicio->nombre }}
+                                                {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
+                                                    <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
+                                                @endif
+                                        @endif
+                                        <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
+                                        <td style="text-align:right">
+                                            {{ round($facturacion_registros->precio, 8) }}
+                                        </td>
 
-                                        <th style="text-align:center">Valor Venta</th>
+                                        <td style="text-align:right">
+                                            {{ round($facturacion_registros->precio * $facturacion_registros->cantidad, 8) }}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <span hidden="hidden">{{ $i = 1 }} </span>
-                                    @foreach ($facturacion_registro as $facturacion_registros)
-                                        <tr>
-                                            <td style="text-align:center">{{ $i }} </td>
-                                            @if (isset($facturacion_registros->producto))
-                                                <td style="text-align:center">
-                                                    {{ $facturacion_registros->producto->codigo_producto }}</td>
-                                                <td>{{ $facturacion_registros->producto->nombre }}
-                                                    {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
-                                                        <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
-                                                    @endif
-                                                </td>
-                                            @else
-                                                <td style="text-align:center">
-                                                    {{ $facturacion_registros->servicio->codigo_servicio }}</td>
-                                                <td>{{ $facturacion_registros->servicio->nombre }}
-                                                    {{ $facturacion_registros->descripcion_item }} @if (isset($facturacion_registros->numero_serie))
-                                                        <br><strong>N/S:</strong> {{ $facturacion_registros->numero_serie }}
-                                                    @endif
-                                            @endif
-                                            <td style="text-align:center">{{ $facturacion_registros->cantidad }}</td>
-                                            <td style="text-align:right">
-                                                {{ round($facturacion_registros->precio, 8) }}
-                                            </td>
-
-                                            <td style="text-align:right">
-                                                {{ round($facturacion_registros->precio * $facturacion_registros->cantidad, 8) }}
-                                            </td>
-                                        </tr>
-                                        <span hidden="hidden">{{ $i++ }}</span>
-                                    @endforeach
-                                    @php
-                                        $sub_total = $facturacion->op_gravada + $facturacion->op_inafecta + $facturacion->op_exonerada;
-                                        // $sub_total_gravado = $facturacion_registros->factura_ids->op_gravada;
-                                        $igv_p = $facturacion->op_gravada * ($igv->igv_total / 100);
-                                        $end = $sub_total + $igv_p;
-                                        $end2 = number_format(round($end, 2), 2);
-                                        $simbologia =  $facturacion->moneda->simbolo;
-                                    @endphp
-                                </tbody>
-                            </table>
-                        </div><br><br><br><br>
-
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <h3 align="left">
-                                    @php use Luecano\NumeroALetras\NumeroALetras;
-                                    $v = new NumeroALetras();
-                                    $letra = $v->toInvoice($end, 2);
-                                    // $letra = $v->convertirEurosEnLetras($end);
-                                    // $letra_final = ucfirst(strstr($letra, 'soles', true));
-                                    // $end_final_point = strstr($end2, '.', false);
-                                    // $end_final = str_replace('.', '', $end_final_point);
-                                    @endphp
-                                    Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }} {{ $facturacion->moneda->nombre }}
-                                    {{-- {{$end2}} --}}
-                                </h3>
-                            </div>
-                            <div class="col-sm-4">
-                                {{-- <div class="col-sm-4 form-control" > --}}
-                                <div class="form-control">
-                                    <span style="display: block;float: left"> Sub Total:</span>
-                                    <span style="display: block;float: right;">{{ $simbologia }}
-                                        {{ number_format($sub_total, 2) }}</span>
-                                    <br>
-                                    <span style="display: block;float: left"> Op. Agravada: </span>
-                                    <span style="display: block;float: right">{{ $simbologia }}
-                                        {{ number_format($facturacion->op_gravada, 2) }}</span><br>
-                                    <span style="display: block;float: left"> Op. Inafecta: </span>
-                                    <span style="display: block;float: right">{{ $simbologia }}
-                                        {{ number_format($facturacion->op_inafecta, 2) }}</span><br>
-                                    <span style="display: block;float: left"> Op. Exonerada: </span>
-                                    <span style="display: block;float: right">{{ $simbologia }}
-                                        {{ number_format($facturacion->op_exonerada, 2) }} </span><br>
-                                    <span style="display: block;float: left"> I.G.V.: </span>
-                                    <span style="display: block;float: right">{{ $simbologia }}
-                                        {{ number_format(round($igv_p, 2), 2) }}</span><br>
-                                    <span style="display: block;float: left"> Importe Total: </span>
-                                    <span style="display: block;float: right">{{ $simbologia }}
-                                        {{ number_format(round($end, 2), 2) }}</span>
-                                    <br>
+                                    <span hidden="hidden">{{ $i++ }}</span>
+                                @endforeach
+                                @php
+                                    $sub_total =
+                                        $facturacion->op_gravada +
+                                        $facturacion->op_inafecta +
+                                        $facturacion->op_exonerada;
+                                    // $sub_total_gravado = $facturacion_registros->factura_ids->op_gravada;
+                                    $igv_p = $facturacion->op_gravada * ($igv->igv_total / 100);
+                                    $end = $sub_total + $igv_p;
+                                    $end2 = number_format(round($end, 2), 2);
+                                    $simbologia = $facturacion->moneda->simbolo;
+                                @endphp
+                            </tbody>
+                        </table>
+                        <footer style="padding-top: 120px">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h3 align="left">
+                                        @php use Luecano\NumeroALetras\NumeroALetras;
+                                            $v = new NumeroALetras();
+                                            $letra = $v->toInvoice($end, 2);
+                                            // $letra = $v->convertirEurosEnLetras($end);
+                                            // $letra_final = ucfirst(strstr($letra, 'soles', true));
+                                            // $end_final_point = strstr($end2, '.', false);
+                                            // $end_final = str_replace('.', '', $end_final_point);
+                                        @endphp
+                                        Son : {{ ucfirst(mb_strtolower($letra, 'UTF-8')) }}
+                                        {{ $facturacion->moneda->nombre }}
+                                        {{-- {{$end2}} --}}
+                                    </h3>
                                 </div>
+                                <div class="col-sm-4">
+                                    {{-- <div class="col-sm-4 form-control" > --}}
+                                    <div class="form-control">
+                                        <span style="display: block;float: left"> Sub Total:</span>
+                                        <span style="display: block;float: right;">{{ $simbologia }}
+                                            {{ number_format($sub_total, 2) }}</span>
+                                        <br>
+                                        <span style="display: block;float: left"> Op. Agravada: </span>
+                                        <span style="display: block;float: right">{{ $simbologia }}
+                                            {{ number_format($facturacion->op_gravada, 2) }}</span><br>
+                                        <span style="display: block;float: left"> Op. Inafecta: </span>
+                                        <span style="display: block;float: right">{{ $simbologia }}
+                                            {{ number_format($facturacion->op_inafecta, 2) }}</span><br>
+                                        <span style="display: block;float: left"> Op. Exonerada: </span>
+                                        <span style="display: block;float: right">{{ $simbologia }}
+                                            {{ number_format($facturacion->op_exonerada, 2) }} </span><br>
+                                        <span style="display: block;float: left"> I.G.V.: </span>
+                                        <span style="display: block;float: right">{{ $simbologia }}
+                                            {{ number_format(round($igv_p, 2), 2) }}</span><br>
+                                        <span style="display: block;float: left"> Importe Total: </span>
+                                        <span style="display: block;float: right">{{ $simbologia }}
+                                            {{ number_format(round($end, 2), 2) }}</span>
+                                        <br>
+                                    </div>
 
+                                </div>
                             </div>
-                        </div>
+                        </footer>
                         <br>
-                        @php 
-                            if($detraccion != "not" && $facturacion->retencion == true){
-                                $columna_add = "1";
-                            }else{
-                                $columna_add = "0";
-                            }
-                        @endphp
                         <div class="row">
-                            @if ($columna_add == "1")
+                            @php
+                                if ($detraccion != 'not' && $facturacion->retencion == true) {
+                                    $columna_add = '1';
+                                } else {
+                                    $columna_add = '0';
+                                }
+                            @endphp
+                            @if ($columna_add == '1')
                                 <div class="col-sm-12 form-control" style="height:  100px">
                                     <strong>Observaciones:</strong><br>
                                     {{ $facturacion->observacion }}
@@ -322,7 +334,7 @@
                                         {{ $facturacion->observacion }}
                                     </div>
                                 </div>
-                                @if($detraccion != "not")
+                                @if ($detraccion != 'not')
                                     <div class="col-sm-6 ">
                                         <div class="form-control" style="height: 100% !important">
                                             <strong>Informacion de Detraccion:</strong><br>
@@ -338,33 +350,36 @@
                                 @else
                                     @php
                                         // Calculo de retencióñ
-                                        $total_fact = $facturacion->total_precio_sin_forma; 
+                                        $total_fact = $facturacion->total_precio_sin_forma;
                                     @endphp
                                     <div class="col-sm-6 ">
                                         <div class="form-control" style="height: 100% !important">
                                             <strong>Informacion de Retención:</strong><br>
                                             <strong>Importe Total Facturado:</strong>
                                             {{ $simbologia }} {{ number_format(round($end, 2), 2) }}<br>
-                                            <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion}} %):</strong>
-                                            {{ $simbologia }} {{ number_format(round($facturacion->monto_retencion,2),2)}} <br>
+                                            <strong>Monto Retenido ({{ $facturacion->porcentaje_retencion }} %):</strong>
+                                            {{ $simbologia }}
+                                            {{ number_format(round($facturacion->monto_retencion, 2), 2) }}
+                                            <br>
                                             <strong>Monto Neto a Pagar:</strong>
-                                            {{ $simbologia }}  {{ number_format(round($facturacion->monto_retencion_pagar,2),2)}} <br>
+                                            {{ $simbologia }}
+                                            {{ number_format(round($facturacion->monto_retencion_pagar, 2), 2) }} <br>
                                         </div>
                                     </div>
                                 @endif
                             @endif
                         </div>
-                        <br>
-                        @include('layout_bancos')
-                        <br>
                     </div>
+                    <br>
+                    <div class="div-editar no_mostrar">
+                        @if ($facturacion->estado == 0)
+                            @include('transaccion.venta.facturacion.facturacion_manual.edit')
+                        @endif
+                    </div>
+                    @include('layout_bancos')
+                    <br>
                 </div>
             </div>
-        </div>
-        <div class="no_mostrar" id="edicion_factura">
-            @if ($facturacion->estado == 0)
-                @include('transaccion.venta.facturacion.facturacion_manual.edit')
-            @endif
         </div>
     </div>
 
@@ -467,31 +482,71 @@
             </div>
         </div>
     </div>
+
     <style>
-        .input-group>.select2-container--bootstrap {
+        .input-group > .select2-container {
             width: auto;
             flex: 1 1 auto;
         }
 
-        .input-group>.select2-container--bootstrap .select2-selection--single {
+        .input-group > .select2-container .select2-selection--single {
             height: 100%;
             line-height: inherit;
-            padding: 0.5rem 1rem;
+        }
+        .check {
+            -webkit-appearance: none;
+            height: 34px;
+            background-color: #ffffff00;
+            -moz-appearance: none;
+            border: none;
+            appearance: none;
+            width: 90px;
+            border-radius: 10px;
+        }
+
+        .div_check {
+            position: relative;
+            top: -33px;
+            left: 0px;
+            background-color: #ffffff00;
+            top: -35;
+        }
+
+        .check:checked {
+            background: #0375bd6b;
+        }
+
+        .text_des {
+            border-radius: 10px;
             border: 1px solid #e5e6e7;
+            width: 80px;
+            padding: 6px 12px;
         }
 
-        .row_form {
-            align-items: center;
-            margin-bottom: 0px;
+        #div-mostrar {
+            margin: auto;
+            margin-right: 15px;
+            height: 0px;
+            transition: height .4s;
+            color: white;
+            text-align: right;
+            width: 100%;
         }
 
-        .edit_form {
-            margin: 0px !important;
-            padding-bottom: 0px !important;
+        #div-mostrar>form {
+            text-align: none;
+            padding-right: 0;
+            padding-left: 0;
+            margin-top: 10px;
+            margin-right: 0px;
+        }
+
+        .no_mostrar {
+            display: none;
         }
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
-            font-size: 12px;
+            /* font-size: 12px; */
         }
 
         .select2-container--default .select2-selection--single {
@@ -499,7 +554,6 @@
         }
 
         span.select2.select2-container.select2-container--default {
-            width: 100% !important;
             background-color: #FFFFFF;
             background-image: none;
             border-radius: 1px;
@@ -508,10 +562,134 @@
             border: 1px solid #e5e6e7;
         }
 
-        @media only screen and (max-width: 1497px) {
-            .td_selected>span.select2.select2-container.select2-container--default {
-                min-width: 376px !important;
+        /* Renovacion */
+        .renovacion {
+            padding: 0;
+            margin-bottom: 15px;
+            margin-top: 8px;
+        }
+
+        .switch-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked+.slider {
+            background-color: #1ab394;
+        }
+
+        input:focus+.slider {
+            box-shadow: 0 0 2px #1ab394;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        .switch-label {
+            font-size: 13px;
+            color: #676a6c;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            margin: 0;
+            line-height: 24px;
+            white-space: nowrap;
+        }
+
+        #renovacion_container {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
             }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .renovacion select:focus {
+            outline: none;
+            box-shadow: none;
+            border-color: #e5e6e7;
+        }
+
+        .renovacion hr {
+            display: none;
+        }
+
+        #renovacion_container select {
+            font-size: 13px;
+            height: 34px;
+            padding: 0.375rem 0.75rem;
+            line-height: 1.5;
+            border: 1px solid #e5e6e7;
+            width: 100%;
+        }
+
+        #extra_selects select {
+            font-size: 13px;
+            height: 34px;
+            padding: 0.375rem 0.75rem;
+            line-height: 1.5;
+            margin-bottom: 0;
+            border: 1px solid #e5e6e7;
+            width: 100%;
+        }
+
+        .renovacion .row {
+            margin-bottom: 6px;
+        }
+
+        .row_articulo {
+            width: 45% !important;
+            max-width: 45% !important;
         }
 
         @media (min-width: 992px) {
@@ -520,140 +698,74 @@
             }
         }
 
-        .item_guia {
+        .dataTables_wrapper {
+            padding: 0px;
+        }
+
+        #DataTables_Table_0_wrapper {
+            display: flex;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            height: 100% !important;
+        }
+
+        #DataTables_Table_0_wrapper>.top {
+            display: none;
+        }
+
+        #DataTables_Table_0_wrapper>.row>.col-sm-12 {
+            padding: 0px !important;
+        }
+
+        .data_table_multiple {
+            border: 1px solid #e7eaec;
+            margin-bottom: 0px !important;
+        }
+
+        #DataTables_Table_0_info {
+            margin-bottom: 5px !important;
+        }
+
+        span.select2.select2-container.select2-container--default.select2-container--below {
+            /* max-width: 400px !important; */
+            /* min-width: 400px !important; */
+        }
+
+        .word-style select,
+        .word-style input,
+        .word-style textarea,
+        .word-style span {
+            font-family: 'Outfit', sans-serif;
             font-size: 11px;
-            margin: 0px 7px;
-            cursor: hand;
         }
 
-        a.item_guia::after {
-            content: "x";
-            font-size: 9px;
-            color: red;
-            vertical-align: top;
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
+        .select2-nowrap .select2-results__option {
+            white-space: nowrap;
+        }
+
+        .select2-nowrap {
+            min-width: 400px;
+        }
+
+        .limp {
+            min-width: 85px !important;
+        }
         .detracc_campo_required, .retenc_campo_required {
             display: none;
-            /* font-size: 9px; */
             color: red;
         }
-
-        .td_selected>span.select2.select2-container.select2-container--default {
-            max-width: 700px !important;
-            width: 30vw !important;
+        span.select2-container.select2-container--default.select2-container--open {
+            z-index: 999999;
         }
-
-        .input-cantidad,
-        .total_s_igv,
-        .total_c_igv {
-            max-width: 100px;
+        .td-width{
+            min-width: 85px;
         }
-
-        .mostrar {
-            display: ;
-        }
-
-        .no_mostrar {
-            display: none;
-        }
-
-        .select2-results__option.select2-results__option--highlighted {
-            background-color: #1c84c6 !important;
-            color: white !important;
-        }
-
-        .ruc {
-            border-radius: 10px;
-            height: 150px;
-        }
-
-        /* .form-control {
-                    border-radius: 10px;
-                } */
-        .a {
-            height: 30px;
-            margin: 0;
-            border-radius: 0px;
-            text-align: center;
-        }
-
-        #auto {
-            /*padding: -100px;*/
-            /*background: orange;*/
-            /*width: 95px;*/
-            cursor: pointer;
-            /*margin-top: 10px;*/
-            /*margin-bottom: 10px;*/
-            box-shadow: 0px 0px 1px #000;
-            display: inline-block;
-        }
-
-        #div-mostrar {
-            /*width: 50%;*/
-            margin: auto;
-            height: 0px;
-            /*margin-top: -5px*/
-            /*background: #000;*/
-            /*box-shadow: 10px 10px 3px #D8D8D8;*/
-            transition: height .4s;
-            color: white;
-            text-align: right;
-        }
-
-        #auto:hover {
-            opacity: .8;
-        }
-
-        #auto:hover+#div-mostrar {
-            height: 50px;
-        }
-
-        /* .form-control {
-                    margin-top: 5px;
-                    border-radius: 5px
-                } */
-
-        p#texto {
-            text-align: center;
-            color: black;
-        }
-
-        input#archivoInput {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            right: 0px;
-            bottom: 0px;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-        }
-
-        #watermark {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 0;
-        }
-
-        #watermark p {
-            position: absolute;
-            color: rgba(120, 120, 120, 0.31);
-            font-weight: bolder;
-            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-            font-size: 95px;
-            pointer-events: none;
-            -webkit-transform: rotate(-45deg);
-            -moz-transform: rotate(-45deg);
-            top: 45%;
-            right: 40%;
-            z-index: 99999999;
-        }
-
-        /* .form-control {
-                    background-color: transparent !important;
-                } */
     </style>
 
     <!-- Mainly scripts -->
@@ -676,6 +788,8 @@
     <script src="{{ asset('js/plugins/pace/pace.min.js') }}"></script>
 
     <script src="{{ asset('js/plugins/switchery/switchery.js') }}"></script>
+    <!-- TouchSpin -->
+    <script src="{{ asset('js/plugins/touchspin/jquery.bootstrap-touchspin.min.js') }}"></script>
 
     <script type="text/javascript">
         function mostrarPassword() {
@@ -728,10 +842,10 @@
 
         function click_editar() {
             // MOSTRAR LOS INPUTS
-            $('#edicion_factura').removeClass('no_mostrar');
-            $('#edicion_factura').addClass('mostrar');
+            $('.div-editar').removeClass('no_mostrar');
+            $('.div-editar').addClass('mostrar');
             // OCULTAR TABLA
-            $('#show_factura').addClass('no_mostrar');
+            $('.table-no').addClass('no_mostrar');
             // BOTONES
             $('.btn-no-editar').removeClass('no_mostrar');
             $('.btn-editar').addClass('no_mostrar');
@@ -739,11 +853,11 @@
 
         function click_cancelar_editar() {
             // OCULTAR INPUTS
-            $('#edicion_factura').removeClass('mostrar');
-            $('#edicion_factura').addClass('no_mostrar');
+            $('.div-editar').removeClass('mostrar');
+            $('.div-editar').addClass('no_mostrar');
             // MOSTRAR TABLA
-            $('#show_factura').removeClass('no_mostrar');
-            $('#show_factura').addClass('mostrar');
+            $('.table-no').removeClass('no_mostrar');
+            $('.table-no').addClass('mostrar');
 
             $('.btn-editar').removeClass('no_mostrar');
             $('.btn-no-editar').addClass('no_mostrar');
@@ -752,6 +866,7 @@
 
     <script>
         var ncAbierto = false;
+
         function toggleNC() {
             var slider = document.getElementById('nc-slider');
             var arrow = document.getElementById('nc-arrow');
