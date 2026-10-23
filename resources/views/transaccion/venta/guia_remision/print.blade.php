@@ -128,7 +128,7 @@
 
         .sign {
             width: 130px;
-            height: 60px;
+            height: 93px;
             border: 1px solid #111;
             border-radius: 8px;
             display: block;
@@ -156,12 +156,16 @@
 
         .tac {
             text-align: center;
+            font-size: 8px;
         }
 
         .tar {
             text-align: right;
         }
-
+        .tal{
+            text-align: left;
+            font-size: 8px;
+        }
         .desc-small {
             font-size: 8px;
             color: #333;
@@ -192,13 +196,13 @@
         /* ========== PRINT ========== */
         @media print {
             @page {
-                size: auto;
+                size: A4;
                 margin: 0mm;
             }
 
             body {
                 font-size: 8.6px;
-                margin: 10mm 15mm;
+                margin: 5mm 8mm;
             }
         }
     </style>
@@ -334,8 +338,8 @@
             <table>
                 <thead>
                 <tr>
-                    <th style="width:5%" class="tac">N°</th>
-                    <th style="width:11%" class="tac">CÓDIGO</th>
+                    <th style="width:3%" class="tac">N°</th>
+                    <th style="width:8%" class="tac">CÓDIGO</th>
                     <th style="width:10%" class="tac">MARCA</th>
                     <th>DESCRIPCIÓN</th>
                     <th style="width:10%" class="tac">UNIDAD</th>
@@ -353,7 +357,7 @@
                         <td class="tac">{{ $i++ }}</td>
                         <td class="tac">{{ $guia_registros->producto->codigo_original ?? '-' }}</td>
                         <td class="tac">{{ $guia_registros->producto->marcas_i_producto->nombre ?? '-' }}</td>
-                        <td>
+                        <td class="tal">
                             {{ $guia_registros->producto->nombre ?? '' }}
                             @if(!empty($guia_registros->numero_serie) || !empty($guia_registros->descripcion))
                                 <div class="desc-small">
@@ -361,7 +365,7 @@
                                         N/S: {{ $guia_registros->numero_serie }}
                                     @endif
                                     @if(!empty($guia_registros->descripcion))
-                                        {{ $guia_registros->descripcion }}
+                                        <small>{{ $guia_registros->descripcion }}</small>
                                     @endif
                                 </div>
                             @endif

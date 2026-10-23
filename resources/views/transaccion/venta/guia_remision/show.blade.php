@@ -194,7 +194,7 @@
                                             <tr>
                                                 <th>Item</th>
                                                 <th>Codigo Producto </th>
-                                                <th>Marca / Descripcion</th>
+                                                <th>Artículo</th>
                                                 <th>Unid.Medida</th>
                                                 <th>Cantidad</th>
                                                 <th>Peso</th>
@@ -205,9 +205,8 @@
                                                 <tr>
                                                     <td>{{ $z++ }}</td>
                                                     <td>{{ $guia_registros->producto->codigo_original }}</td>
-                                                    <td>{{ $guia_registros->producto->marcas_i_producto->nombre }} /
-                                                        {{ $guia_registros->producto->nombre }} /
-                                                        {{ $guia_registros->descripcion }}
+                                                    <td>{{ $guia_registros->producto->nombre }}
+                                                        @if($guia_registros->descripcion) / <small>{{ $guia_registros->descripcion }} </small>@endif
                                                         <br>
                                                         <strong>N/S: </strong>{{ $guia_registros->numero_serie }}
                                                     </td>
