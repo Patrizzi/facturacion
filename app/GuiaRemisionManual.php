@@ -69,6 +69,11 @@ class GuiaRemisionManual extends Model
             return $this->attributes['fecha_emision'];
         }
     }
+    public function getFechaEntregaAttribute()
+    {
+        $new_emision = Carbon::parse($this->attributes['fecha_entrega'])->format('d/m/Y');
+        return $new_emision;
+    }
     public static function count_month_comprobantes($fecha)
     {
         $fecha_conv = Carbon::createFromFormat('d-m-Y', $fecha)->format('Y-m-d');
