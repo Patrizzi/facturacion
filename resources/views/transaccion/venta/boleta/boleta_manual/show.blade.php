@@ -85,18 +85,19 @@
 
                         <form class="m-0 p-0" action="{{ route('boleta_manual.pdf', $boleta->id) }}">
                             <input type="text" name="name" maxlength="50" hidden value="{{ $boleta->codigo_boleta }}">
-                            <button type="submit" class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom"
-                                data-original-title="Descargar PDF">
+                            <button type="submit" class="btn btn-success btn-sm" data-toggle="tooltip"
+                                data-placement="bottom" data-original-title="Descargar PDF">
                                 <i class="fa fa-file-pdf-o fa-lg"></i>
                             </button>
                         </form>
 
-                        <a href="{{ route('boleta_manual.ticket', $boleta->id) }}" class="btn btn-info btn-sm" target="_blank">
+                        <a href="{{ route('boleta_manual.ticket', $boleta->id) }}" class="btn btn-info btn-sm"
+                            target="_blank">
                             <i class="fa fa-ticket fa-lg"></i>
                         </a>
 
-                        <a class="btn btn-success btn-sm" href="{{ route('boleta_manual.print', $boleta->id) }}" target="_blank"
-                            data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
+                        <a class="btn btn-success btn-sm" href="{{ route('boleta_manual.print', $boleta->id) }}"
+                            target="_blank" data-toggle="tooltip" data-placement="bottom" data-original-title="Imprimir">
                             <i class="fa fa-print fa-lg"></i>
                         </a>
 
@@ -120,7 +121,8 @@
                             <button class="btn btn-warning btn-sm btn-editar" id="edit" onclick="click_editar()">
                                 <i class="fa fa-pencil"></i>
                             </button>
-                            <button class="btn-no-editar no_mostrar btn btn-warning btn-sm" onclick="click_cancelar_editar()">
+                            <button class="btn-no-editar no_mostrar btn btn-warning btn-sm"
+                                onclick="click_cancelar_editar()">
                                 <i class="fa fa-times"></i>
                             </button>
                         @endif
@@ -221,64 +223,64 @@
                     </div>
                     <div class="table-no mostrar">
                         <table class="table">
-                                <thead>
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">Item</th>
+                                    <th style="text-align:center">Código Producto</th>
+                                    <th>Descripción</th>
+                                    <th style="text-align:center">Cantidad</th>
+                                    <th style="text-align:center">Valor Unitario</th>
+
+                                    <th style="text-align:center">Valor Venta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <span hidden="hidden">{{ $i = 1 }} </span>
+
+                                @foreach ($boleta_registro as $boletas_registros)
                                     <tr>
-                                        <th style="text-align:center">Item</th>
-                                        <th style="text-align:center">Código Producto</th>
-                                        <th>Descripción</th>
-                                        <th style="text-align:center">Cantidad</th>
-                                        <th style="text-align:center">Valor Unitario</th>
-
-                                        <th style="text-align:center">Valor Venta</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <span hidden="hidden">{{ $i = 1 }} </span>
-
-                                        @foreach ($boleta_registro as $boletas_registros)
-                                            <tr>
-                                                <td style="text-align:center">{{ $i }} </td>
-                                                @if (isset($boletas_registros->producto_id))
-                                                    <td style="text-align:center">
-                                                        {{ $boletas_registros->producto->codigo_producto }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $boletas_registros->producto->nombre }}
-                                                        {{ $boletas_registros->descripcion_item }}
-                                                        @if (isset($boletas_registros->numero_serie))
-                                                            <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
-                                                        @endif
-                                                    </td>
-                                                @else
-                                                    <td style="text-align:center">
-                                                        {{ $boletas_registros->servicio->codigo_servicio }}</td>
-                                                    <td>
-                                                        {{ $boletas_registros->servicio->nombre }}
-                                                        {{ $boletas_registros->descripcion_item }}
-                                                        @if (isset($boletas_registros->numero_serie))
-                                                            <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
-                                                        @endif
-                                                    </td>
+                                        <td style="text-align:center">{{ $i }} </td>
+                                        @if (isset($boletas_registros->producto_id))
+                                            <td style="text-align:center">
+                                                {{ $boletas_registros->producto->codigo_producto }}
+                                            </td>
+                                            <td>
+                                                {{ $boletas_registros->producto->nombre }}
+                                                {{ $boletas_registros->descripcion_item }}
+                                                @if (isset($boletas_registros->numero_serie))
+                                                    <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
                                                 @endif
-                                                <td style="text-align:center">{{ $boletas_registros->cantidad }}</td>
-                                                <td style="text-align:center">
-                                                    {{ round($boletas_registros->precio, 8) }}</td>
+                                            </td>
+                                        @else
+                                            <td style="text-align:center">
+                                                {{ $boletas_registros->servicio->codigo_servicio }}</td>
+                                            <td>
+                                                {{ $boletas_registros->servicio->nombre }}
+                                                {{ $boletas_registros->descripcion_item }}
+                                                @if (isset($boletas_registros->numero_serie))
+                                                    <br><strong>N/S:</strong> {{ $boletas_registros->numero_serie }}
+                                                @endif
+                                            </td>
+                                        @endif
+                                        <td style="text-align:center">{{ $boletas_registros->cantidad }}</td>
+                                        <td style="text-align:center">
+                                            {{ round($boletas_registros->precio, 8) }}</td>
 
-                                                <td style="text-align:center">
-                                                    {{ round($boletas_registros->precio * $boletas_registros->cantidad,8) }}
-                                                </td>
-                                                <span hidden="hidden">{{ $i++ }}</span>
-                                            </tr>
-                                        @endforeach
-
-
-                                        <td style="display: none">
-                                            {{ $sub_total = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
-                                            {{ $igv_p = $boleta->op_gravada * ($igv->igv_total / 100) }}
-                                            {{ $end = $sub_total + $igv_p }}
-                                            {{ $end2 = number_format( round($end, 2), 2) }}
+                                        <td style="text-align:center">
+                                            {{ round($boletas_registros->precio * $boletas_registros->cantidad, 8) }}
                                         </td>
-                                </tbody>
+                                        <span hidden="hidden">{{ $i++ }}</span>
+                                    </tr>
+                                @endforeach
+
+
+                                <td style="display: none">
+                                    {{ $sub_total = $boleta->op_gravada + $boleta->op_inafecta + $boleta->op_exonerada }}
+                                    {{ $igv_p = $boleta->op_gravada * ($igv->igv_total / 100) }}
+                                    {{ $end = $sub_total + $igv_p }}
+                                    {{ $end2 = number_format(round($end, 2), 2) }}
+                                </td>
+                            </tbody>
                         </table>
                         <footer style="padding-top: 120px">
                             <div class="row">
@@ -299,7 +301,8 @@
                                     {{-- <div class="col-sm-4 form-control" > --}}
                                     <div class="form-control">
                                         <span style="display: block;float: left"> Sub Total:</span>
-                                        <span style="display: block;float: right;"> {{ $simbologia = $boleta->moneda->simbolo }}
+                                        <span style="display: block;float: right;">
+                                            {{ $simbologia = $boleta->moneda->simbolo }}
                                             {{ number_format($sub_total, 2) }}</span>
                                         <br>
                                         <span style="display: block;float: left"> Op. Agravada: </span>
@@ -326,13 +329,13 @@
                         <br>
                         <div class="row">
                             @if ($boleta->detracciones)
-                                <div class="col-sm-6" >
+                                <div class="col-sm-6">
                                     <div class="form-control" style="min-height: 100% !important">
                                         <strong>Observaciones:</strong><br>
                                         {{ $boleta->observacion }}
                                     </div>
                                 </div>
-                                <div class="col-sm-6" >
+                                <div class="col-sm-6">
                                     <div class="form-control" style="min-height: 100% !important">
                                         <strong>Informacion de Detraccion:</strong><br>
                                         <strong>Tipo de Detraccion:</strong>
@@ -352,7 +355,7 @@
                                     </div>
                                 </div>
                             @endif
-                       </div>
+                        </div>
                     </div>
                     <br>
                     <div class="div-editar no_mostrar">
@@ -367,15 +370,16 @@
         </div>
     </div>
     <style>
-        .input-group > .select2-container {
+        .input-group>.select2-container {
             width: auto;
             flex: 1 1 auto;
         }
 
-        .input-group > .select2-container .select2-selection--single {
+        .input-group>.select2-container .select2-selection--single {
             height: 100%;
             line-height: inherit;
         }
+
         .check {
             -webkit-appearance: none;
             height: 34px;
@@ -639,14 +643,18 @@
         .limp {
             min-width: 85px !important;
         }
-        .detracc_campo_required, .retenc_campo_required {
+
+        .detracc_campo_required,
+        .retenc_campo_required {
             display: none;
             color: red;
         }
+
         span.select2-container.select2-container--default.select2-container--open {
             z-index: 999999;
         }
-        .td-width{
+
+        .td-width {
             min-width: 85px;
         }
     </style>
@@ -739,6 +747,7 @@
 
     <script>
         var ncAbierto = false;
+
         function toggleNC() {
             var slider = document.getElementById('nc-slider');
             var arrow = document.getElementById('nc-arrow');

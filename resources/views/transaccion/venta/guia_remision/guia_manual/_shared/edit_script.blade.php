@@ -14,7 +14,7 @@
     });
 
     $(".select2_demo_client").select2({
-        theme: "bootstrap",
+        // width: "100%",
         placeholder: "Seleccionar Cliente",
         ajax: {
             minimumInputLength: 1,
@@ -114,7 +114,7 @@
         var data = `[
 <tr>
     <td>
-        <button type="button" class='delete borrar e btn btn-sm btn-danger'><i class="fa fa-trash"
+        <button type="button" class='delete borrar e btn btn-sm btn-primary'><i class="fa fa-trash"
                 aria-hidden="true"></i></button>
     </td>
     <td class="td_selected">
