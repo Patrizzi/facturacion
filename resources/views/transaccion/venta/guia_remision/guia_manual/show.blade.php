@@ -32,7 +32,7 @@
                     </div>
                     <div class="col-12 col-md-4 text-center">
                         <h2 class="mb-0 text-nowrap">
-                            GUÍA DE REMISIÓN ELECTRÓNICA
+                            GUÍA DE REMISIÓN M. ELECTRÓNICA
                         </h2>
                     </div>
 

@@ -48,7 +48,7 @@ class Guia_remision extends Model
         $new_emision = Carbon::parse($this->attributes['fecha_emision'])->format('d/m/Y');
         return $new_emision;
     }
-     public function getFechaEntregaAttribute()
+    public function getFechaEntregaAttribute()
     {
         $new_emision = Carbon::parse($this->attributes['fecha_entrega'])->format('d/m/Y');
         return $new_emision;

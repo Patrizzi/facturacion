@@ -13,7 +13,6 @@
     });
 
     $(".select2_demo_client").select2({
-        theme: "bootstrap",
         placeholder: "Seleccionar Cliente",
         ajax: {
             minimumInputLength: 1,
@@ -47,7 +46,7 @@
         var data = `[
         <tr>
         <td>
-        <button type='button' class='btn btn-danger btn-xs' style='margin-top: 5px; margin-left: 5px;' onclick='$(this).closest("tr").remove();'><i class='fa fa-trash'></i></button>
+        <button type='button' class='btn btn-primary btn-sm' style='margin-top: 5px; margin-left: 5px;' onclick='$(this).closest("tr").remove();'><i class='fa fa-trash'></i></button>
         </td>";
         <td class="td_selected">
         <select class="select2_demo_productos" name="articulo[]" id="articulo${i}" style="width: 100%;" onchange="ajax(${i});" required></select>

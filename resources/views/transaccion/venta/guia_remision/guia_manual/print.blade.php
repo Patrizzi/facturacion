@@ -154,7 +154,10 @@
         .tar {
             text-align: right;
         }
-
+        .tal{
+            text-align: left;
+            font-size: 8px;
+        }
         .desc-small {
             font-size: 8px;
             color: #333;
@@ -184,13 +187,13 @@
 
         @media print {
             @page {
-                size: auto;
+                size: A4;
                 margin: 0mm;
             }
 
             body {
                 font-size: 8.6px;
-                margin: 10mm 15mm;
+                margin: 5mm 8mm;
             }
         }
     </style>
@@ -327,7 +330,7 @@
                     @endphp
                     <div><b>Peso bruto total carga:</b> {{ number_format($pesoTotal, 2) }} kg</div>
                     <div><b>N° Bultos o Pallets:</b> -</div>
-                    <div><b>Modalidad:</b> -</div>
+                    <div><b>Modalidad:</b> @if($guia_remision_m->tipo_transporte == 1) Transporte Público @else Transporte Privado @endif</div>
                     <div><b>Fecha Emisión:</b> {{ $guia_remision_m->fecha_emision ?? '' }}</div>
                     <div><b>Inicio traslado:</b> {{ $guia_remision_m->fecha_entrega ?? '' }}</div>
                 </div>
@@ -339,8 +342,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width:5%" class="tac">N°</th>
-                        <th style="width:11%" class="tac">CÓDIGO</th>
+                        <th style="width:3%" class="tac">N°</th>
+                        <th style="width:8%" class="tac">CÓDIGO</th>
                         {{-- <th style="width:80px" class="tac">CÓDIGO SUNAT</th> --}}
                         <th>DESCRIPCIÓN</th>
                         <th style="width:10%" class="tac">UNIDAD</th>

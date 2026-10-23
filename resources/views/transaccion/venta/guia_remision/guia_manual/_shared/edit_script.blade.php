@@ -14,7 +14,6 @@
     });
 
     $(".select2_demo_client").select2({
-        // width: "100%",
         placeholder: "Seleccionar Cliente",
         ajax: {
             minimumInputLength: 1,
