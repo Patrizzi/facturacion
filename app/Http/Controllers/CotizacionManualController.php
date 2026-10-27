@@ -1417,6 +1417,7 @@ public function update(Request $request, $id)
         $empresa = Empresa::first();
         $forma_pagos = Forma_pago::get();
         $igv = Igv::first();
+        $garantia=Garantia::where('estado',0)->get();
         $cotizacion = CotizacionManual::where('id', $id)->first();
         $cotizacion_registros = CotizacionManual_registros::where('cotizacion_m_id', $cotizacion->id)->get();
 
@@ -1428,7 +1429,7 @@ public function update(Request $request, $id)
         $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
         // return $request;
 
-        return view('transaccion.venta.cotizacion.manual.nota_venta',compact('empresa','forma_pagos','cotizacion','cotizacion_registros','cod_nota_venta','igv'));
+        return view('transaccion.venta.cotizacion.manual.nota_venta',compact('empresa','forma_pagos','cotizacion','cotizacion_registros','cod_nota_venta','igv','garantia'));
     }
     public function nota_venta_store(Request $request){
         // return $request;

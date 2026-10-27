@@ -3184,12 +3184,12 @@ class CotizacionController extends Controller
         $correlativo=str_pad($count_nota_venta, 8, "0", STR_PAD_LEFT);
         $cod_nota_venta="NV ".$sucursal_nr."-".$correlativo;
 
-
+        $garantia=Garantia::where('estado',0)->get();
 
         $forma_pagos=Forma_pago::all();
 
         if ($cotizacion->estado==0) {
-            return view('transaccion.venta.cotizacion.nota_venta', compact('cotizacion','empresa','cotizacion_registros','cod_nota_venta','forma_pagos','comi','igv'));
+            return view('transaccion.venta.cotizacion.nota_venta', compact('cotizacion','empresa','cotizacion_registros','cod_nota_venta','forma_pagos','comi','igv','garantia'));
         }elseif ($cotizacion->estado==1) {
             return redirect()->route('cotizacion.show',$cotizacion->id);
         }

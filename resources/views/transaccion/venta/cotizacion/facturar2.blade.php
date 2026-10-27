@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                         <div class="form-group row">
+                                        <div class="form-group row">
                                             <label class="col-form-label col-md-4"><strong>Moneda:</strong></label>
                                             <div class="col-md-8">
                                                 <input type="text" name="" class="form-control"
@@ -464,8 +464,6 @@
             @include('transaccion.venta.cotizacion._shared.modal_retencion')
         </form>
     </div>
-
-
 
     <style type="text/css">
         .word-style select,
