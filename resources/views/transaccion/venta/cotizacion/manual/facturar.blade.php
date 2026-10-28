@@ -103,8 +103,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        @if($cotizacion->cliente->retencion)
+                                    <div class="col-md-6" @if(!$cotizacion->cliente->retencion) style="display: none" @endif>
                                             <div class="form-group row">
                                                 <label class="col-form-label col-sm-4"><strong>Retención:</strong></label>
                                                 <div class="col-sm-6">
@@ -119,7 +118,6 @@
                                                             style="cursor: pointer;font-size: 15px;transition: 1s;z-index:9999"></i></a>
                                                 </div>
                                             </div>
-                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -523,15 +521,15 @@
         $(document).ready(function() {
             if ({{ $cotizacion->forma_pago_id }} == 1) {
                 document.getElementById('credito_pago').style.display = "none";
-                document.getElementById('colum-col').className = "col-sm-5";
-                document.getElementById('ven_1p').style.visibility = "initial";
-                document.getElementById('ven_3p').style.visibility = "initial";
+                // document.getElementById('colum-col').className = "col-sm-5";
+                // document.getElementById('ven_1p').style.visibility = "initial";
+                // document.getElementById('ven_3p').style.visibility = "initial";
                 document.getElementById('fecha_vencimiento').removeAttribute('disabled');
 
             } else {
                 document.getElementById('credito_pago').style.display = "block";
-                document.getElementById('ven_1p').style.visibility = "hidden";
-                document.getElementById('ven_3p').style.visibility = "hidden";
+                // document.getElementById('ven_1p').style.visibility = "hidden";
+                // document.getElementById('ven_3p').style.visibility = "hidden";
                 document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
             }
             var retencion_check = document.querySelector('.js-switch');
@@ -560,7 +558,7 @@
         function most_tot() {
             var monto_0 = document.getElementById("monto_pago0").value;
             if (monto_0.length == 0) {
-                var total_final = document.getElementById('total').value;
+                var total_final = document.getElementById('total_final').value;
                 document.getElementById("monto_pago0").value = total_final;
             }
         }
@@ -573,7 +571,7 @@
         });
         // funcion dinamica de actualizar el total a cuotas
         function actualizarSaldoRestante() {
-            var total = parseFloat(document.getElementById('total').value) || 0;
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
             var sumaMontos = 0;
 
             // Sumar todos los montos ingresados
@@ -599,10 +597,10 @@
             }
         }
 
-        var total = document.getElementById('total').value;
+        var total = document.getElementById('total_final').value;
         var x = 1;
         $(".add_pago").on('click', function() {
-            var total = document.getElementById('total').value;
+            var total = document.getElementById('total_final').value;
             var data = `
                 <div class="delete_modal${x} row">
                     <div class="col-sm-1"><label>Fecha:</label></div>
@@ -802,7 +800,7 @@
 
             for (var i = 0; i < inp_mont; i++) {
                 var monto = monto_c[i].id;
-                var total = document.getElementById('total').value;
+                var total = document.getElementById('total_final').value;
                 var fin = (total / inp_mont)
                 document.getElementById("monto_pago0").value = '';
                 // document.getElementById(`${monto}`).value = Math.round(fin * multiplier2)/ multiplier2;
@@ -828,7 +826,7 @@
                 var monto_fc = document.getElementsByClassName('fecha_pago');
                 var inp_mont = document.getElementsByClassName('monto_pago').length;
                 // var total =  $("#cuotas_footer").html();
-                var total = parseFloat(document.getElementById('total').value) || 0;
+                var total = parseFloat(document.getElementById('total_final').value) || 0;
                 var fin = 0.00;
                 var comp = 0;
                 for (var i = 0; i < inp_mont; i++) {
@@ -878,21 +876,21 @@
 
                 document.getElementById('credito_pago').style.display = "none";
                 // document.getElementById('colum-col').className = "col-sm-5";
-                document.getElementById('ven_1p').style.visibility = "initial";
-                document.getElementById('ven_3p').style.visibility = "initial";
+                // document.getElementById('ven_1p').style.visibility = "initial";
+                // document.getElementById('ven_3p').style.visibility = "initial";
                 document.getElementById('fecha_vencimiento').removeAttribute('disabled');
             } else {
                 document.getElementById('credito_pago').style.display = "block";
                 // document.getElementById('colum-col').className = "col-sm-3";
-                document.getElementById('ven_1p').style.visibility = "hidden";
-                document.getElementById('ven_3p').style.visibility = "hidden";
+                // document.getElementById('ven_1p').style.visibility = "hidden";
+                // document.getElementById('ven_3p').style.visibility = "hidden";
                 document.getElementById('fecha_vencimiento').setAttribute('disabled', 'true');
             }
         }
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
-            var total = document.getElementById('total').value;
+            var total = document.getElementById('total_final').value;
             document.getElementById("monto_pago0").value = total
             $("#cuotas_footer").html(total);
 
@@ -905,7 +903,7 @@
             console.log(monto_c)
             var inp_mont = document.getElementsByClassName('monto_pago').length;
             // var total =  $("#cuotas_footer").html();
-            var total = parseFloat(document.getElementById('total').value) || 0;
+            var total = parseFloat(document.getElementById('total_final').value) || 0;
             var fin = 0.00;
             for (var i = 0; i < inp_mont; i++) {
                 fin = parseFloat(fin) + parseFloat(monto_c[i].value);
