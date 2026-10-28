@@ -161,241 +161,188 @@
 
                 </div>
             </nav>
-            {{-- Menu Superior --}}
-            <div id="page-wrapper" class="gray-bg">
-                <div class="row border-bottom">
-                    <nav class="navbar navbar-static-top bg-white" role="navigation" style="margin-bottom: 0">
-                        <div class="container-fluid">
-                            <div class="start-header">
-                                <div class="navbar-center">
-                                    <div class="col-lg-12">
-                                        <div class="row tipo_cambio">
-                                            @if (isset($tipo_cambio->fecha))
-                                                <div class="col-sm-4">
-                                                    <div style="color: black" class="text-center">
-                                                        <strong>Compra:</strong>
-                                                        <div><span>{{ $tipo_cambio->compra }}</span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div style="color: black" class="text-center">
-                                                        <strong>Venta:</strong>
-                                                        <div><span>{{ $tipo_cambio->venta }}</span></div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <div style="color: black" class="text-center">
-                                                        <strong>Paralelo:</strong>
-                                                        <div><span id="tc_paralelo">{{ $tipo_cambio->paralelo }}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+          {{-- Menu Superior Estilo Gesener (Adaptado para Leonosoft) --}}
+        <div id="page-wrapper" class="gray-bg">
+            
+            @php
+                // 1. Cálculo del total de comprobantes pendientes de envío a SUNAT
+                $total_pendientes_sunat = (int)($fact_view_count ?? 0) + (int)($fact_m_view_count ?? 0)
+                    + (int)($bol_view_count ?? 0) + (int)($bol_m_view_count ?? 0)
+                    + (int)($guia_view_count ?? 0) + (int)($guia_m_view_count ?? 0)
+                    + (int)($n_credito_view_count ?? 0)
+                    + (int)($n_debito_view_count ?? 0);
 
-                            <div class="mensajes1">
-                                @php $mostrar = false; @endphp
-                                <div class="custom-container">
-                                    <div class="left-side left">
-                                        <i class="fa fa-bell mx-3"></i>
-                                        <div class="left-side-slider">
-                                            @once @php $x = 0; @endphp @endonce
-                                            <div class="slides">
-                                                @canany(['factura.emitir', 'factura_m.emitir'])
-                                                    @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                        <span class="span_slide"
-                                                            style="--i:{{ $x }}">{{ (int) $fact_view_count + (int) $fact_m_view_count ?? '0' }}
-                                                            &nbsp; &nbsp;Facturas</span>
-                                                        @php $x++ @endphp
-                                                        @php $mostrar = true; @endphp
-                                                    @endif
-                                                @endcan
-                                                @canany(['boleta.emitir', 'boleta_m.emitir'])
-                                                    @if ($bol_view_count > 0 || $bol_m_view_count > 0)
-                                                        <span class="span_slide"
-                                                            style="--i:{{ $x }}">{{ (int) $bol_view_count + (int) $bol_m_view_count ?? '0' }}
-                                                            &nbsp; &nbsp;Boletas</span>
-                                                        @php $x++ @endphp
-                                                        @php $mostrar = true; @endphp
-                                                    @endif
-                                                @endcan
-                                                @canany(['guia_remision.emitir', 'guia_remision_m.emitir'])
-                                                    @if ($guia_view_count > 0 || $guia_m_view_count > 0)
-                                                        <span class="span_slide"
-                                                            style="--i:{{ $x }}">{{ (int) $guia_view_count + (int) $guia_m_view_count ?? '0' }}
-                                                            &nbsp; &nbsp;Guías R.</span>
-                                                        @php $x++ @endphp
-                                                        @php $mostrar = true; @endphp
-                                                    @endif
-                                                @endcan
-                                                @can('nota_credito.emitir')
-                                                    @if ($n_credito_view_count > 0)
-                                                        <span class="span_slide"
-                                                            style="--i:{{ $x }}">{{ $n_credito_view_count ?? '0' }}
-                                                            &nbsp; &nbsp;Nota C.</span>
-                                                        @php $x++ @endphp
-                                                        @php $mostrar = true; @endphp
-                                                    @endif
-                                                @endcan
-                                                @can('nota_debito.emitir')
-                                                    @if ($n_debito_view_count > 0)
-                                                        <span class="span_slide"
-                                                            style="--i:{{ $x }}">{{ $n_debito_view_count ?? '0' }}
-                                                            &nbsp; &nbsp; Nota D.</span>
-                                                        @php $x++ @endphp
-                                                        @php $mostrar = true; @endphp
-                                                    @endif
-                                                @endcan
-                                                @if (!$mostrar)
-                                                    <span class="span_slide" style="--i:{{ $x }}">0 &nbsp;
-                                                        &nbsp;Ningún doc.</span>
-                                                    @php $x++ @endphp
-                                                @endif
-                                            </div>
-                                            <style>
-                                                :root {
-                                                    --top_marg: {{ $x }};
-                                                }
-                                            </style>
-                                            @if ($x > 0)
-                                                <style>
-                                                    .left-side.left>i {
-                                                        animation: scalePulse 1.2s ease-in-out infinite;
-                                                        will-change: transform;
-                                                        /* sugiere al navegador optimizar */
-                                                        backface-visibility: hidden;
-                                                        /* evita parpadeo */
-                                                        transform-origin: center center;
-                                                    }
-                                                </style>
-                                            @endif
-                                        </div>
+                // 2. Ruta directa de envío según el comprobante con prioridad
+                $ruta_envio_directo = route('facturacion_electronica.index');
+                if (($fact_view_count ?? 0) + ($fact_m_view_count ?? 0) > 0) {
+                    $ruta_envio_directo = route('facturacion_electronica.index');
+                } elseif (($bol_view_count ?? 0) + ($bol_m_view_count ?? 0) > 0) {
+                    $ruta_envio_directo = route('facturacion_electronica.index_boleta');
+                } elseif (($guia_view_count ?? 0) + ($guia_m_view_count ?? 0) > 0) {
+                    $ruta_envio_directo = route('facturacion_electronica.index_guia_remision');
+                } elseif (($n_credito_view_count ?? 0) > 0) {
+                    $ruta_envio_directo = route('facturacion_electronica.index_nota_credito');
+                } elseif (($n_debito_view_count ?? 0) > 0) {
+                    $ruta_envio_directo = route('facturacion_electronica.index_nota_debito');
+                }
+            @endphp
 
-                                    </div>
-                                    <div class="right-side">
-                                        {{-- <i class="fa fa-bell mx-3"></i> --}}
-                                        <div class="left-side-slider">
-                                            <div class="slides2">
-
-                                                @if ($fact_view_count > 0 || $fact_m_view_count > 0)
-                                                    <a class="link span_slide2"
-                                                        href="{{ route('facturacion_electronica.index') }}">Enviar a
-                                                        Sunat</a>
-                                                @endif
-                                                @if ($bol_view_count > 0 || $bol_m_view_count > 0)
-                                                    <a class="link span_slide2"
-                                                        href="{{ route('facturacion_electronica.index_boleta') }}">Enviar
-                                                        a Sunat</a>
-                                                @endif
-                                                @if ($guia_view_count > 0 || $guia_m_view_count > 0)
-                                                    <a class="link span_slide2"
-                                                        href="{{ route('facturacion_electronica.index_guia_remision') }}">Enviar
-                                                        a Sunat</a>
-                                                @endif
-                                                @if ($n_credito_view_count > 0)
-                                                    <a class="link span_slide2"
-                                                        href="{{ route('facturacion_electronica.index_nota_credito') }}">Enviar
-                                                        a Sunat</a>
-                                                @endif
-                                                @if ($n_debito_view_count > 0)
-                                                    <a class="link span_slide2"
-                                                        href="{{ route('facturacion_electronica.index_nota_debito') }}">Enviar
-                                                        a Sunat</a>
-                                                @endif
-                                                @if (!$mostrar)
-                                                    <a class="link span_slide2 disabled" href="javascript:void(0)">Enviar
-                                                        a Sunat</a>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+            <nav class="navbar navbar-static-top bg-white border-bottom" role="navigation" style="margin-bottom: 0; min-height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #e7eaec;">
+                
+                <!-- SECCIÓN IZQUIERDA: Tipo de Cambio Compacto Gesener -->
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    @if (isset($tipo_cambio->fecha))
+                        <div style="display: flex; align-items: center; gap: 15px; font-family: monospace, sans-serif; font-size: 0.85rem;">
+                            <div style="text-align: center; line-height: 1.2;">
+                                <span style="display: block; font-size: 0.7rem; font-weight: bold; color: #888; text-transform: uppercase;">Compra:</span>
+                                <strong style="color: #222; font-size: 0.95rem;">{{ $tipo_cambio->compra }}</strong>
                             </div>
-
-                            <div class="mensajes2">
-                                <div class="custom-container">
-                                    <div class="left-side">
-                                        <i class="fa fa-exclamation-circle fa-2x mx-3"></i>
-                                        <span>0 de 0</span>
-                                    </div>
-                                    <div class="right-side">
-                                        <a class="link">Mensajes</a>
-                                    </div>
-                                </div>
+                            <div style="text-align: center; line-height: 1.2; border-left: 1px solid #e7eaec; padding-left: 15px;">
+                                <span style="display: block; font-size: 0.7rem; font-weight: bold; color: #888; text-transform: uppercase;">Venta:</span>
+                                <strong style="color: #222; font-size: 0.95rem;">{{ $tipo_cambio->venta }}</strong>
                             </div>
-                            <div class="mensajes2-mobile">
-                                <li>
-                                    <a href="" class="count-info">
-                                        <i class="fa fa-bell fa-lg fa-3x" style="color: #1a3bb3;"></i><span
-                                            class="label label-warning">0</span>
-                                    </a>
-                                </li>
+                            <div style="text-align: center; line-height: 1.2; border-left: 1px solid #e7eaec; padding-left: 15px;">
+                                <span style="display: block; font-size: 0.7rem; font-weight: bold; color: #888; text-transform: uppercase;">Paralelo:</span>
+                                <strong style="color: #222; font-size: 0.95rem;" id="tc_paralelo">{{ $tipo_cambio->paralelo }}</strong>
                             </div>
-
-                            <div class="calendar-none">
-                                <li class="">
-                                    <a href="{{ route('eventos.user_indes') }}" class="count-info">
-                                        <i class="fa fa-calendar fa-lg fa-3x " style="color: #1a3bb3"></i>
-                                        {{-- @if ($count_eventos != 0) --}}
-                                        <span class="label label-warning">{{ $count_eventos }}</span>
-                                        {{-- @endif --}}
-                                    </a>
-                                </li>
-                            </div>
-                            {{-- @can('')
-                            <div>
-                                <li class="">
-                                    <a href="{{ route('email.index') }}" class="count-info">
-                                        <i class="fa fa-envelope fa-lg fa-3x " style="color: #1a3bb3"></i>
-                                    </a>
-                                </li>
-                            </div>
-                        @endcan --}}
                         </div>
+                    @endif
                 </div>
 
-                {{-- <div class="row wrapper border-bottom white-bg page-heading">
+                <!-- SECCIÓN DERECHA: Botón Compuesto SUNAT + Usuario (Omitidos Mensajes y Calendario) -->
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    
+                    <!-- BOTÓN COMPUESTO SUNAT (ESTILO GESENER CON DROPDOWN) -->
+                    <div class="btn-group" role="group" style="box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 4px; overflow: visible;">
+                        <!-- Botón Contador / Desplegable -->
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #1a4da0; border-color: #1a4da0; color: #ffffff; font-weight: 600; padding: 6px 14px; display: inline-flex; align-items: center; gap: 8px;">
+                            <i class="fa fa-bell"></i>
+                            <span>{{ $total_pendientes_sunat }} {{ $total_pendientes_sunat === 1 ? 'Pendiente' : 'Pendientes' }}</span>
+                            <span class="caret" style="margin-left: 4px;"></span>
+                        </button>
+
+                        <!-- Menú Desplegable con detalle por tipo de documento -->
+                        <ul class="dropdown-menu dropdown-menu-right" style="min-width: 270px; padding: 6px 0; border: 1px solid #e7eaec; box-shadow: 0 6px 12px rgba(0,0,0,0.15); border-radius: 4px;">
+                            <li class="dropdown-header" style="font-size: 0.75rem; font-weight: bold; color: #676a6c; text-transform: uppercase; padding: 8px 16px; border-bottom: 1px solid #f3f3f4; display: flex; justify-content: space-between; align-items: center;">
+                               <span>Pendientes SUNAT</span>
+                                <span class="badge {{ $total_pendientes_sunat > 0 ? 'badge-danger' : 'badge-primary' }}">{{ $total_pendientes_sunat }}</span>
+                            </li>
+
+                            @canany(['factura.emitir', 'factura_m.emitir'])
+                                @if (($fact_view_count ?? 0) + ($fact_m_view_count ?? 0) > 0)
+                                    <li>
+                                        <a href="{{ route('facturacion_electronica.index') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
+                                            <span><i class="fa fa-file-text-o text-primary" style="margin-right: 8px;"></i> Facturas</span>
+                                            <span class="label label-primary">{{ (int)$fact_view_count + (int)$fact_m_view_count }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endcanany
+
+                            @canany(['boleta.emitir', 'boleta_m.emitir'])
+                                @if (($bol_view_count ?? 0) + ($bol_m_view_count ?? 0) > 0)
+                                    <li>
+                                        <a href="{{ route('facturacion_electronica.index_boleta') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
+                                            <span><i class="fa fa-file-o text-info" style="margin-right: 8px;"></i> Boletas</span>
+                                            <span class="label label-info">{{ (int)$bol_view_count + (int)$bol_m_view_count }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endcanany
+
+                            @canany(['guia_remision.emitir', 'guia_remision_m.emitir'])
+                                @if (($guia_view_count ?? 0) + ($guia_m_view_count ?? 0) > 0)
+                                    <li>
+                                        <a href="{{ route('facturacion_electronica.index_guia_remision') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
+                                            <span><i class="fa fa-truck text-warning" style="margin-right: 8px;"></i> Guías Remisión</span>
+                                            <span class="label label-warning">{{ (int)$guia_view_count + (int)$guia_m_view_count }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endcanany
+
+                            @can('nota_credito.emitir')
+                                @if (($n_credito_view_count ?? 0) > 0)
+                                    <li>
+                                        <a href="{{ route('facturacion_electronica.index_nota_credito') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
+                                            <span><i class="fa fa-minus-circle text-danger" style="margin-right: 8px;"></i> Notas Crédito</span>
+                                            <span class="label label-danger">{{ $n_credito_view_count }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endcan
+
+                            @can('nota_debito.emitir')
+                                @if (($n_debito_view_count ?? 0) > 0)
+                                    <li>
+                                        <a href="{{ route('facturacion_electronica.index_nota_debito') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
+                                            <span><i class="fa fa-plus-circle text-success" style="margin-right: 8px;"></i> Notas Débito</span>
+                                            <span class="label label-success">{{ $n_debito_view_count }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            @endcan
+
+                            @if ($total_pendientes_sunat === 0)
+                                <li style="padding: 10px 16px; text-align: center; color: #888; font-size: 0.8rem;">
+                                    <i class="fa fa-check-circle text-success" style="margin-right: 4px;"></i> Todos los comprobantes al día
+                                </li>
+                            @endif
+                        </ul>
+
+                        <!-- Botón Acción Directa -->
+                        <a href="{{ $ruta_envio_directo }}" class="btn btn-dark btn-sm" style="background-color: #0d2346; border-color: #0d2346; color: #ffffff; font-weight: 600; padding: 6px 14px; display: inline-flex; align-items: center; gap: 5px;">
+                            <span>Enviar a Sunat</span>
+                            <i class="fa fa-arrow-right" style="font-size: 0.8rem;"></i>
+                        </a>
+                    </div>
+
+                    <!-- USUARIO Y CERRAR SESIÓN ESTILO GESENER -->
+                    <div style="display: flex; align-items: center; gap: 10px; padding-left: 15px; border-left: 1px solid #e7eaec;">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64" alt="Avatar" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid #d2d6de;">
+                        <span style="font-weight: 600; font-size: 0.85rem; color: #333;">{{ auth()->user()->name ?? 'Administrador' }}</span>
+
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-topbar').submit();" style="color: #ed5565; margin-left: 8px; text-decoration: none;" title="Cerrar Sesión">
+                            <i class="fa fa-sign-out fa-lg"></i>
+                        </a>
+                        <form id="logout-form-topbar" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
+
+                </div>
+            </nav>
+
+            {{-- Bloque opcional de cabecera/breadcrumbs de vistas internas --}}
+            <div class="row wrapper border-bottom white-bg page-heading" style="margin-bottom: 20px;">
                 <div class="col-sm-4">
                     <h2>@yield('title', 'Inicio')</h2>
                 </div>
                 <div class="col-sm-8">
                     <div class="title-action">
-                        <a style="visibility:@yield('visibility', 'hidden')"href="@yield('ruta', '')"
-                            class="btn btn-primary">@yield('name', '')</a>
+                        <a style="visibility:@yield('visibility', 'hidden')" href="@yield('ruta', '')" class="btn btn-primary">@yield('name', '')</a>
 
                         @yield('boton_opcional')
 
-                        <a data-toggle="@yield('data-toggle', '')" onclick="@yield('onclick1', '')" href="@yield('href_accion', '#')"
-                            class="btn btn-primary" @yield('atributo_1', '')>@yield('value_accion', '#')</a>
+                        <a data-toggle="@yield('data-toggle', '')" onclick="@yield('onclick1', '')" href="@yield('href_accion', '#')" class="btn btn-primary" @yield('atributo_1', '')>{{ trim($__env->yieldContent('value_accion')) !== '' ? $__env->yieldContent('value_accion') : '#' }}</a>
 
-                        <a id="actualizar" data-toggle="@yield('data-config', '')" onclick="@yield('onclick', '')"
-                            href="@yield('config', '')" class="@yield('class', 'btn btn-primary')"
-                            @yield('atributo_actu', '')>@yield('button2', 'Actualizar')</a>
+                        <a id="actualizar" data-toggle="@yield('data-config', '')" onclick="@yield('onclick', '')" href="@yield('config', '')" class="@yield('class', 'btn btn-primary')" @yield('atributo_actu', '')>@yield('button2', 'Actualizar')</a>
                     </div>
-                </div>
-            </div> --}}
-
-                @yield('content')
-
-
-                <div class="footer">
-                    <div class="float-right">
-                        Visitanos: &nbsp;&nbsp; <a href="https://www.facebook.com/JYPPERIFERICOSSAC" target="_blank"><i
-                                class="fa fa-facebook-square" aria-hidden="true"></i></a>&nbsp;
-                        <a href="https://api.whatsapp.com/send?phone=51946201443&text=Hola!%20Necesito%20Ayuda%20con%20el%20sistema%20de%20Facturación,%20Gracias!%20"
-                            target="_blank"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
-                    </div>
-                    <div>
-                        <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank"> JyP
-                            Periféricos</a>&nbsp; &copy; 2019-{{ date('Y') }}
-                    </div>
-
                 </div>
             </div>
-            </nav>
+
+            @yield('content')
+
+            <div class="footer">
+                <div class="float-right">
+                    Visitanos: &nbsp;&nbsp; <a href="https://www.facebook.com/JYPPERIFERICOSSAC" target="_blank"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>&nbsp;
+                    <a href="https://api.whatsapp.com/send?phone=51946201443&text=Hola!%20Necesito%20Ayuda%20con%20el%20sistema%20de%20Facturación,%20Gracias!%20" target="_blank"><i class="fa fa-whatsapp" aria-hidden="true"></i></a>
+                </div>
+                <div>
+                    <strong>Copyright </strong> &nbsp;<a href="http://www.jypsac.com" target="_blank"> JyP Periféricos</a>&nbsp; &copy; 2019-{{ date('Y') }}
+                </div>
+            </div>
+        </div>
         </div>
     </body>
 
