@@ -256,7 +256,7 @@ const InventarioInicialModule = (function () {
                 <td><small class="text-muted">${escapeHtml(p.almacen)}</small></td>
                 <td class="font-weight-bold">$ ${p.valor_total}</td>
                 <td>
-                    <a href="${detalleLoteUrlBase}?codigo_producto=${encodeURIComponent(p.codigo)}" 
+                    <a href="${detalleLoteUrlBase}?id_producto=${encodeURIComponent(p.id)}" 
                        class="btn btn-xs btn-primary font-weight-bold" 
                        style="background-color: #2641f8; border-color: #2641f8;" title="Ver Detalle de Lote">
                         <i class="fa fa-cubes mr-1"></i> Lotes

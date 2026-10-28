@@ -46,6 +46,7 @@ class DetalleLoteController extends Controller
      */
     public function ajaxLotes(Request $request)
     {
+        $idProducto = $request->filled('id_producto') ? (int) $request->input('id_producto') : ($request->filled('producto_id') ? (int) $request->input('producto_id') : 0);
         $codigoProducto = trim((string) $request->input('codigo_producto', ''));
         $almacenId = $request->filled('almacen') ? (int) $request->input('almacen') : 0;
         $proveedorId = $request->filled('proveedor') ? (int) $request->input('proveedor') : 0;
@@ -63,22 +64,32 @@ class DetalleLoteController extends Controller
 
         // 1. Obtener información de contexto del producto y almacén
         $producto = null;
-        if (!empty($codigoProducto)) {
+        if ($idProducto > 0) {
+            $producto = Producto::find($idProducto);
+            if ($producto) {
+                $codigoProducto = $producto->codigo_producto;
+            }
+        } elseif (!empty($codigoProducto)) {
             $producto = Producto::where('codigo_producto', $codigoProducto)->first();
+            if ($producto) {
+                $idProducto = $producto->id;
+            }
         }
 
-        // Si no se proporcionó código de producto pero hay lotes, tomar el primer producto disponible
+        // Si no se proporcionó producto pero hay lotes, tomar el primer producto disponible
         if (!$producto) {
             $primerLote = Lote::first();
             if ($primerLote) {
                 $producto = Producto::find($primerLote->producto_id);
                 if ($producto) {
+                    $idProducto = $producto->id;
                     $codigoProducto = $producto->codigo_producto;
                 }
             }
         }
 
         $productoInfo = [
+            'id' => $producto ? $producto->id : ($idProducto ?: null),
             'codigo' => $producto ? $producto->codigo_producto : ($codigoProducto ?: '--'),
             'nombre' => $producto ? $producto->nombre : 'Todos los productos',
             'modelo' => $producto && !empty($producto->modelo) ? $producto->modelo : ($producto ? $producto->nombre : '--'),
@@ -96,7 +107,9 @@ class DetalleLoteController extends Controller
         $baseQuery = Lote::with(['proveedor', 'almacen', 'producto'])
             ->withCount('series');
 
-        if (!empty($codigoProducto)) {
+        if ($idProducto > 0) {
+            $baseQuery->where('producto_id', $idProducto);
+        } elseif (!empty($codigoProducto)) {
             $baseQuery->where('codigo_producto', $codigoProducto);
         }
 

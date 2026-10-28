@@ -153,7 +153,7 @@
                             </div>
                         </div>
                         <div class="col-md-5 col-sm-12 text-md-right text-left">
-                            <a href="{{ route('lotes-garantias.garantia-cliente') }}?codigo_producto={{ request('codigo_producto') }}" class="btn btn-primary font-weight-bold shadow-sm" style="background-color: #2641f8; border-color: #2641f8; border-radius: 6px;">
+                            <a href="{{ route('lotes-garantias.garantia-cliente') }}?{{ request()->has('id_producto') ? 'id_producto=' . request('id_producto') : (request()->has('producto_id') ? 'producto_id=' . request('producto_id') : 'codigo_producto=' . request('codigo_producto')) }}" class="btn btn-primary font-weight-bold shadow-sm" style="background-color: #2641f8; border-color: #2641f8; border-radius: 6px;">
                                 <i class="fa fa-user-circle mr-1"></i> Consulta Garantía Cliente
                             </a>
                             <a href="{{ route('lotes-garantias.garantia-producto') }}" class="btn btn-outline-secondary font-weight-bold ml-1" style="border-radius: 6px;">
@@ -271,6 +271,8 @@
                             </span>
                         </div>
                         <form id="formFiltroLotes">
+                            <input type="hidden" name="id_producto" id="filtroIdProducto" value="">
+                            <input type="hidden" name="producto_id" id="filtroProductoId" value="">
                             <input type="hidden" name="codigo_producto" id="filtroCodigoProducto" value="">
                             <input type="hidden" name="almacen" id="filtroAlmacen" value="">
 
@@ -514,7 +516,10 @@ const DetalleLoteModule = (function () {
 
     function getQueryParams() {
         const params = new URLSearchParams(window.location.search);
+        const idProd = params.get('id_producto') || params.get('producto_id') || '';
         return {
+            id_producto: idProd,
+            producto_id: idProd,
             codigo_producto: params.get('codigo_producto') || '',
             almacen: params.get('almacen') || ''
         };
@@ -927,6 +932,10 @@ const DetalleLoteModule = (function () {
     // Inicialización del módulo al cargar el DOM
     document.addEventListener('DOMContentLoaded', function () {
         const queryParams = getQueryParams();
+        if (queryParams.id_producto) {
+            document.getElementById('filtroIdProducto').value = queryParams.id_producto;
+            document.getElementById('filtroProductoId').value = queryParams.id_producto;
+        }
         if (queryParams.codigo_producto) {
             document.getElementById('filtroCodigoProducto').value = queryParams.codigo_producto;
         }
@@ -962,6 +971,8 @@ const DetalleLoteModule = (function () {
         document.getElementById('btnLimpiarFiltros').addEventListener('click', function () {
             form.reset();
             const qp = getQueryParams();
+            document.getElementById('filtroIdProducto').value = qp.id_producto;
+            document.getElementById('filtroProductoId').value = qp.id_producto;
             document.getElementById('filtroCodigoProducto').value = qp.codigo_producto;
             document.getElementById('filtroAlmacen').value = qp.almacen;
             cargarLotes(1);

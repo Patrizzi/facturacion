@@ -14,7 +14,7 @@
                 <i class="fa fa-barcode mr-2 text-primary"></i>
                 Series del lote <strong>{{ $lote->lote }}</strong>
             </h5>
-            <a href="{{ route('lotes-garantias.detalle-lote') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('lotes-garantias.detalle-lote') }}?id_producto={{ $lote->producto_id }}" class="btn btn-outline-secondary btn-sm">
                 <i class="fa fa-arrow-left mr-1"></i> Volver a lotes
             </a>
         </div>

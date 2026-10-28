@@ -117,6 +117,7 @@ class InventarioInicialController extends Controller
             $valorTotal = $stock * $costoPromedio;
 
             $items[] = [
+                'id' => $prod->id,
                 'codigo' => $prod->codigo_producto ?? '--',
                 'producto' => $prod->nombre ?? '--',
                 'categoria' => optional($prod->categoria_i_producto)->nombre ?? 'General',
