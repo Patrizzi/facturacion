@@ -460,7 +460,7 @@
 
                 <div class="alert alert-info py-2 mb-3 small">
                     <i class="fa fa-info-circle mr-1"></i>
-                    Puedes corregir números de serie existentes que sigan en stock. Las series vendidas o vinculadas a comprobantes, garantías o reclamos no se pueden editar; las unidades nuevas se ingresan desde Kardex.
+                    Puedes corregir números de serie existentes que sigan en stock. Presiona Enter para guardar y pasar a la siguiente serie editable. Las series vendidas o vinculadas a comprobantes, garantías o reclamos no se pueden editar; las unidades nuevas se ingresan desde Kardex.
                 </div>
 
                 <div class="table-responsive border bg-white" style="max-height: 380px; overflow-y: auto; border-radius: 8px;">
@@ -738,7 +738,7 @@ const DetalleLoteModule = (function () {
         });
     }
 
-    function abrirModalSeries(loteId) {
+    function abrirModalSeries(loteId, serieIdParaEditar = null) {
         currentLoteId = loteId;
         const tbodyModal = document.getElementById('tbodyModalSeries');
         tbodyModal.innerHTML = `
@@ -804,6 +804,13 @@ const DetalleLoteModule = (function () {
                 tbodyModal.querySelectorAll('.btn-editar-serie').forEach(btn => {
                     btn.addEventListener('click', iniciarEdicionSerie);
                 });
+
+                if (serieIdParaEditar !== null) {
+                    const siguienteFila = Array.from(tbodyModal.querySelectorAll('tr[data-serie-id]'))
+                        .find(fila => fila.dataset.serieId === String(serieIdParaEditar));
+                    const botonEditar = siguienteFila && siguienteFila.querySelector('.btn-editar-serie');
+                    if (botonEditar) botonEditar.click();
+                }
             } else {
                 tbodyModal.innerHTML = `
                     <tr>
@@ -839,16 +846,35 @@ const DetalleLoteModule = (function () {
             <button type="button" class="btn btn-xs btn-success btn-guardar-serie mr-1"><i class="fa fa-check"></i> Guardar</button>
             <button type="button" class="btn btn-xs btn-secondary btn-cancelar-serie">Cancelar</button>`;
 
-        fila.querySelector('.input-numero-serie').focus();
+        const input = fila.querySelector('.input-numero-serie');
+        input.focus();
+        input.addEventListener('keydown', event => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                guardarNumeroSerie(fila, serieId, true);
+            }
+        });
         fila.querySelector('.btn-guardar-serie').addEventListener('click', () => guardarNumeroSerie(fila, serieId));
         fila.querySelector('.btn-cancelar-serie').addEventListener('click', () => abrirModalSeries(currentLoteId));
     }
 
-    function guardarNumeroSerie(fila, serieId) {
+    function guardarNumeroSerie(fila, serieId, avanzarAlSiguiente = false) {
         const input = fila.querySelector('.input-numero-serie');
         const numeroSerie = input.value.trim();
         const boton = fila.querySelector('.btn-guardar-serie');
         const mensaje = fila.querySelector('.mensaje-serie');
+        let siguienteSerieId = null;
+
+        if (avanzarAlSiguiente) {
+            let siguienteFila = fila.nextElementSibling;
+            while (siguienteFila) {
+                if (siguienteFila.querySelector('.btn-editar-serie')) {
+                    siguienteSerieId = siguienteFila.dataset.serieId;
+                    break;
+                }
+                siguienteFila = siguienteFila.nextElementSibling;
+            }
+        }
 
         if (!numeroSerie) {
             mensaje.textContent = 'Ingresa un número de serie.';
@@ -857,6 +883,7 @@ const DetalleLoteModule = (function () {
         }
 
         boton.disabled = true;
+        input.disabled = true;
         boton.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Guardando';
 
         fetch(updateSerieEndpoint, {
@@ -881,10 +908,11 @@ const DetalleLoteModule = (function () {
                     : data.message;
                 throw new Error(validationMessage || 'No se pudo actualizar el número de serie.');
             }
-            abrirModalSeries(currentLoteId);
+            abrirModalSeries(currentLoteId, siguienteSerieId);
         })
         .catch(error => {
             boton.disabled = false;
+            input.disabled = false;
             boton.innerHTML = '<i class="fa fa-check"></i> Guardar';
             mensaje.textContent = error.message;
         });

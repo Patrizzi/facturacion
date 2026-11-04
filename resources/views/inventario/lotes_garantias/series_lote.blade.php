@@ -27,7 +27,7 @@
 
             <div class="alert alert-info py-2 small">
                 <i class="fa fa-info-circle mr-1"></i>
-                Usa <strong>Editar</strong> junto a una serie para corregir su número. Solo se permiten cambios en series en stock que no estén vinculadas a ventas, comprobantes, garantías ni reclamos. Para agregar unidades nuevas, regístralas desde Kardex.
+                Usa <strong>Editar</strong> junto a una serie para corregir su número. Presiona <strong>Enter</strong> para guardar y pasar a la siguiente serie editable. Solo se permiten cambios en series en stock que no estén vinculadas a ventas, comprobantes, garantías ni reclamos. Para agregar unidades nuevas, regístralas desde Kardex.
             </div>
 
             <div id="seriesFeedback" class="alert d-none" role="alert"></div>
@@ -46,7 +46,7 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="tbodySeriesLote">
                         @forelse($series as $index => $serie)
                             @php
                                 $garantia = $hayTablaGarantias ? $serie->garantiaActual : null;
@@ -90,83 +90,131 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const updateUrl = @json(route('lotes-garantias.ajax.actualizar-numero-serie'));
+    const traceUrl = @json(route('lotes-garantias.busqueda-serie'));
     const loteId = @json($lote->id);
     const csrfToken = @json(csrf_token());
     const feedback = document.getElementById('seriesFeedback');
+    const tbody = document.getElementById('tbodySeriesLote');
 
     function showFeedback(message, isError) {
         feedback.textContent = message;
         feedback.className = 'alert ' + (isError ? 'alert-danger' : 'alert-success');
     }
 
-    document.querySelectorAll('.btn-editar-serie').forEach(function (button) {
-        button.addEventListener('click', function () {
-            const row = button.closest('tr');
-            const cell = row.querySelector('.numero-serie');
-            const actions = row.querySelector('.acciones-serie');
-            const oldNumber = cell.textContent.trim();
-            const serieId = row.dataset.serieId;
-
-            cell.innerHTML = '<input type="text" maxlength="50" class="form-control form-control-sm" aria-label="Número de serie">';
-            const input = cell.querySelector('input');
-            input.value = oldNumber;
-            input.focus();
-
-            actions.innerHTML = `
-                <button type="button" class="btn btn-sm btn-success btn-guardar-serie mr-1">
-                    <i class="fa fa-check mr-1"></i> Guardar
-                </button>
-                <button type="button" class="btn btn-sm btn-secondary btn-cancelar-serie">Cancelar</button>`;
-
-            actions.querySelector('.btn-cancelar-serie').addEventListener('click', function () {
-                window.location.reload();
-            });
-
-            actions.querySelector('.btn-guardar-serie').addEventListener('click', async function () {
-                const saveButton = this;
-                const newNumber = input.value.trim();
-                if (!newNumber) {
-                    showFeedback('El número de serie es obligatorio.', true);
-                    input.focus();
-                    return;
-                }
-
-                saveButton.disabled = true;
-                saveButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> Guardando';
-
-                try {
-                    const response = await fetch(updateUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken,
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({
-                            lote_id: loteId,
-                            serie_id: serieId,
-                            numero_serie: newNumber
-                        })
-                    });
-                    const result = await response.json();
-
-                    if (!response.ok || !result.success) {
-                        const validationError = result.errors && result.errors.numero_serie
-                            ? result.errors.numero_serie[0]
-                            : result.message;
-                        throw new Error(validationError || 'No se pudo actualizar la serie.');
-                    }
-
-                    window.location.reload();
-                } catch (error) {
-                    saveButton.disabled = false;
-                    saveButton.innerHTML = '<i class="fa fa-check mr-1"></i> Guardar';
-                    showFeedback(error.message, true);
-                }
-            });
-        });
+    tbody.addEventListener('click', function (event) {
+        const button = event.target.closest('.btn-editar-serie');
+        if (button) iniciarEdicion(button);
     });
+
+    function iniciarEdicion(button) {
+        const row = button.closest('tr');
+        const cell = row.querySelector('.numero-serie');
+        const actions = row.querySelector('.acciones-serie');
+        const oldNumber = cell.textContent.trim();
+        const serieId = row.dataset.serieId;
+
+        cell.innerHTML = '<input type="text" maxlength="50" class="form-control form-control-sm" aria-label="Número de serie">';
+        const input = cell.querySelector('input');
+        input.value = oldNumber;
+        input.focus();
+        input.select();
+
+        actions.innerHTML = `
+            <button type="button" class="btn btn-sm btn-success btn-guardar-serie mr-1">
+                <i class="fa fa-check mr-1"></i> Guardar
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary btn-cancelar-serie">Cancelar</button>`;
+
+        actions.querySelector('.btn-cancelar-serie').addEventListener('click', function () {
+            window.location.reload();
+        });
+
+        const saveButton = actions.querySelector('.btn-guardar-serie');
+        saveButton.addEventListener('click', function () {
+            guardarSerie(row, serieId, input, saveButton, false);
+        });
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                guardarSerie(row, serieId, input, saveButton, true);
+            }
+        });
+    }
+
+    async function guardarSerie(row, serieId, input, saveButton, avanzarAlSiguiente) {
+        const newNumber = input.value.trim();
+        if (!newNumber) {
+            showFeedback('El número de serie es obligatorio.', true);
+            input.focus();
+            return;
+        }
+
+        let nextEditableId = null;
+        if (avanzarAlSiguiente) {
+            let nextRow = row.nextElementSibling;
+            while (nextRow) {
+                if (nextRow.querySelector('.btn-editar-serie')) {
+                    nextEditableId = nextRow.dataset.serieId;
+                    break;
+                }
+                nextRow = nextRow.nextElementSibling;
+            }
+        }
+
+        saveButton.disabled = true;
+        input.disabled = true;
+        saveButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> Guardando';
+
+        try {
+            const response = await fetch(updateUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    lote_id: loteId,
+                    serie_id: serieId,
+                    numero_serie: newNumber
+                })
+            });
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                const validationError = result.errors && result.errors.numero_serie
+                    ? result.errors.numero_serie[0]
+                    : result.message;
+                throw new Error(validationError || 'No se pudo actualizar la serie.');
+            }
+
+            row.querySelector('.numero-serie').textContent = newNumber;
+            const updatedTraceUrl = new URL(traceUrl, window.location.origin);
+            updatedTraceUrl.searchParams.set('numero_serie', newNumber);
+            row.querySelector('.acciones-serie').innerHTML = `
+                <button type="button" class="btn btn-sm btn-primary btn-editar-serie">
+                    <i class="fa fa-pencil mr-1"></i> Editar
+                </button>
+                <a class="btn btn-sm btn-outline-secondary" href="${updatedTraceUrl.toString()}" target="_blank" rel="noopener">
+                    <i class="fa fa-search mr-1"></i> Trazar
+                </a>`;
+            showFeedback('Número de serie actualizado.', false);
+
+            if (nextEditableId !== null) {
+                const nextRow = Array.from(tbody.querySelectorAll('tr[data-serie-id]'))
+                    .find(candidate => candidate.dataset.serieId === nextEditableId);
+                const nextEditButton = nextRow && nextRow.querySelector('.btn-editar-serie');
+                if (nextEditButton) nextEditButton.click();
+            }
+        } catch (error) {
+            saveButton.disabled = false;
+            input.disabled = false;
+            saveButton.innerHTML = '<i class="fa fa-check mr-1"></i> Guardar';
+            showFeedback(error.message, true);
+            input.focus();
+        }
+    }
 });
 </script>
 @endsection
