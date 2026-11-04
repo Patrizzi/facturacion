@@ -410,6 +410,32 @@
     <script src="{{ asset('js/plugins/toastr/toastr.min.js') }}"></script>
 
     <script>
+        document.addEventListener("keydown", function(event) {
+            const serieInput = event.target;
+            if (!(serieInput instanceof HTMLTextAreaElement) ||
+                serieInput.name !== "numero_serie[]" ||
+                event.key !== "Enter" ||
+                event.shiftKey) {
+                return;
+            }
+
+            const form = serieInput.closest("form");
+            if (!form) {
+                return;
+            }
+
+            const series = Array.from(form.querySelectorAll('textarea[name="numero_serie[]"]'));
+            const currentIndex = series.indexOf(serieInput);
+            const nextSerie = series.slice(currentIndex + 1).find(function(input) {
+                return !input.disabled && !input.hidden;
+            });
+
+            if (nextSerie) {
+                event.preventDefault();
+                nextSerie.focus();
+            }
+        });
+
         document.addEventListener("DOMContentLoaded", () => {
             const slides = document.querySelector(".slides");
             const items = slides.querySelectorAll(".span_slide");
