@@ -46,11 +46,14 @@ class Stock_almacen extends Model
     public static function sincronizarLotesConStock($almacen, $producto, $stockDisponible = null){
         DB::transaction(function () use ($almacen, $producto, $stockDisponible) {
             if ($stockDisponible === null) {
-                $stockDisponible = Stock_almacen::where('almacen_id', $almacen)
+                $stockRow = Stock_almacen::where('almacen_id', $almacen)
                     ->where('producto_id', $producto)
                     ->lockForUpdate()
-                    ->firstOrFail()
-                    ->stock;
+                    ->first();
+                if (!$stockRow) {
+                    return;
+                }
+                $stockDisponible = $stockRow->stock;
             }
 
             $lotes = Lote::where('almacen_id', $almacen)

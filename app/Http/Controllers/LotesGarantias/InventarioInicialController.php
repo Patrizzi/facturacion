@@ -90,7 +90,7 @@ class InventarioInicialController extends Controller
         }
 
         // Nombre de almacén para mostrar
-        $almacenNombre = 'Almacén Principal';
+        $almacenNombre = 'Todos los almacenes';
         if ($almacenId > 0) {
             $almObj = Almacen::find($almacenId);
             if ($almObj) {

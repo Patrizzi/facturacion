@@ -238,8 +238,15 @@ const InventarioInicialModule = (function () {
         }
 
         const detalleLoteUrlBase = '{{ route("lotes-garantias.detalle-lote") }}';
+        const selectAlmacenEl = document.getElementById('selectAlmacen');
+        const selectedAlmacen = selectAlmacenEl ? selectAlmacenEl.value : '';
 
-        tbody.innerHTML = productos.map(p => `
+        tbody.innerHTML = productos.map(p => {
+            let loteUrl = `${detalleLoteUrlBase}?id_producto=${encodeURIComponent(p.id)}`;
+            if (selectedAlmacen) {
+                loteUrl += `&almacen=${encodeURIComponent(selectedAlmacen)}`;
+            }
+            return `
             <tr>
                 <td class="font-weight-bold"><code>${escapeHtml(p.codigo)}</code></td>
                 <td class="text-left font-weight-bold text-dark">${escapeHtml(p.producto)}</td>
@@ -256,14 +263,14 @@ const InventarioInicialModule = (function () {
                 <td><small class="text-muted">${escapeHtml(p.almacen)}</small></td>
                 <td class="font-weight-bold">$ ${p.valor_total}</td>
                 <td>
-                    <a href="${detalleLoteUrlBase}?id_producto=${encodeURIComponent(p.id)}" 
+                    <a href="${loteUrl}" 
                        class="btn btn-xs btn-primary font-weight-bold" 
                        style="background-color: #2641f8; border-color: #2641f8;" title="Ver Detalle de Lote">
                         <i class="fa fa-cubes mr-1"></i> Lotes
                     </a>
                 </td>
-            </tr>
-        `).join('');
+            </tr>`;
+        }).join('');
     }
 
     function renderPaginacion(pag) {

@@ -12,6 +12,7 @@ use App\SerieProducto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use App\Services\LoteSyncService;
 
 class DetalleLoteController extends Controller
 {
@@ -87,6 +88,7 @@ class DetalleLoteController extends Controller
         $tab = $request->input('tab', 'activos'); // 'activos' o 'vencidos'
         $perPage = (int) $request->input('per_page', 15);
         $hoy = Carbon::today()->toDateString();
+        $simboloMoneda = '$';
 
         // 1. Obtener información de contexto del producto y almacén
         $producto = null;
@@ -102,8 +104,8 @@ class DetalleLoteController extends Controller
             }
         }
 
-        // Si no se proporcionó producto pero hay lotes, tomar el primer producto disponible
-        if (!$producto) {
+        // Si no se proporcionó producto (ni por id ni por código), tomar el primer producto disponible
+        if (!$producto && $idProducto <= 0 && empty($codigoProducto)) {
             $primerLote = Lote::first();
             if ($primerLote) {
                 $producto = Producto::find($primerLote->producto_id);
@@ -111,13 +113,27 @@ class DetalleLoteController extends Controller
                     $idProducto = $producto->id;
                     $codigoProducto = $producto->codigo_producto;
                 }
+            } else {
+                $primerProductoConStock = Producto::whereHas('stock_almacen', function ($q) {
+                    $q->where('stock', '>', 0);
+                })->first();
+                if ($primerProductoConStock) {
+                    LoteSyncService::asegurarLotesParaProducto($primerProductoConStock);
+                    $producto = $primerProductoConStock;
+                    $idProducto = $producto->id;
+                    $codigoProducto = $producto->codigo_producto;
+                }
             }
+        }
+
+        if ($producto) {
+            LoteSyncService::asegurarLotesParaProducto($producto, $almacenId);
         }
 
         $productoInfo = [
             'id' => $producto ? $producto->id : ($idProducto ?: null),
             'codigo' => $producto ? $producto->codigo_producto : ($codigoProducto ?: '--'),
-            'nombre' => $producto ? $producto->nombre : 'Todos los productos',
+            'nombre' => $producto ? $producto->nombre : ($idProducto > 0 || !empty($codigoProducto) ? 'Producto no encontrado' : 'Todos los productos'),
             'modelo' => $producto && !empty($producto->modelo) ? $producto->modelo : ($producto ? $producto->nombre : '--'),
             'almacen' => 'Todos los almacenes',
         ];
@@ -221,14 +237,9 @@ class DetalleLoteController extends Controller
         });
         $conteoActivos = $lotesActivos->count();
         $conteoVencidos = $lotesVencidos->count();
-        $paresActivos = [];
-        foreach ($lotesActivos as $loteActivo) {
-            $paresActivos[$loteActivo->producto_id . ':' . $loteActivo->almacen_id] = true;
-        }
-        $unidadesDisponibles = 0;
-        foreach (array_keys($paresActivos) as $par) {
-            $unidadesDisponibles += $stockPorPar[$par] ?? 0;
-        }
+        $unidadesDisponibles = (int) $lotesActivos->sum(function ($lote) use ($disponiblePorLote) {
+            return (int) ($disponiblePorLote[$lote->id] ?? 0);
+        });
 
         // 4. Filtrar por pestaña y paginar después de aplicar la disponibilidad real.
         if ($tab === 'vencidos') {
@@ -303,11 +314,12 @@ class DetalleLoteController extends Controller
             ]);
 
             return response()->json([
-                'success' => true,
+                'success' => false,
+                'message' => 'Ocurrió un error al cargar los lotes del producto: ' . $e->getMessage(),
                 'producto_info' => [
                     'id' => null,
                     'codigo' => '--',
-                    'nombre' => 'Todos los productos',
+                    'nombre' => 'Error al cargar producto',
                     'modelo' => '--',
                     'almacen' => 'Todos los almacenes',
                 ],
@@ -324,7 +336,7 @@ class DetalleLoteController extends Controller
                     'current_page' => 1,
                     'last_page' => 1,
                 ],
-            ]);
+            ], 500);
         }
     }
 

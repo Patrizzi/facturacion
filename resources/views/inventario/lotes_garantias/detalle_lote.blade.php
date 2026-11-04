@@ -274,7 +274,6 @@
                             <input type="hidden" name="id_producto" id="filtroIdProducto" value="">
                             <input type="hidden" name="producto_id" id="filtroProductoId" value="">
                             <input type="hidden" name="codigo_producto" id="filtroCodigoProducto" value="">
-                            <input type="hidden" name="almacen" id="filtroAlmacen" value="">
 
                             <div class="form-row">
                                 <div class="col-md-3 col-sm-6 mb-2">
@@ -309,7 +308,7 @@
                                 </div>
                             </div>
                             <div class="form-row mt-2 align-items-end">
-                                <div class="col-md-4 col-sm-6 mb-2">
+                                <div class="col-md-3 col-sm-6 mb-2">
                                     <label class="font-weight-bold text-muted" style="font-size: 11px; text-transform: uppercase;">Proveedor:</label>
                                     <select class="form-control form-control-sm" name="proveedor" id="filtroProveedor">
                                         <option value="">Todos los proveedores</option>
@@ -321,15 +320,26 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3 col-sm-6 mb-2">
-                                    <label class="font-weight-bold text-muted" style="font-size: 11px; text-transform: uppercase;">Cantidad Ingresada (Mín - Máx):</label>
+                                    <label class="font-weight-bold text-muted" style="font-size: 11px; text-transform: uppercase;">Almacén:</label>
+                                    <select class="form-control form-control-sm" name="almacen" id="filtroAlmacen">
+                                        <option value="">Todos los almacenes</option>
+                                        @isset($almacenes)
+                                            @foreach($almacenes as $alm)
+                                                <option value="{{ $alm->id }}">{{ $alm->nombre }}</option>
+                                            @endforeach
+                                        @endisset
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-sm-6 mb-2">
+                                    <label class="font-weight-bold text-muted" style="font-size: 11px; text-transform: uppercase;">Cant. Ingresada:</label>
                                     <div class="input-group input-group-sm">
                                         <input type="number" class="form-control" name="cant_min" id="filtroCantMin" placeholder="Mín">
                                         <div class="input-group-prepend input-group-append"><span class="input-group-text">-</span></div>
                                         <input type="number" class="form-control" name="cant_max" id="filtroCantMax" placeholder="Máx">
                                     </div>
                                 </div>
-                                <div class="col-md-3 col-sm-6 mb-2">
-                                    <label class="font-weight-bold text-muted" style="font-size: 11px; text-transform: uppercase;">Cant. Disponible (Mín - Máx):</label>
+                                <div class="col-md-2 col-sm-6 mb-2">
+                                    <label class="font-weight-bold text-muted" style="font-size: 11px; text-transform: uppercase;">Cant. Disponible:</label>
                                     <div class="input-group input-group-sm">
                                         <input type="number" class="form-control" name="disp_min" id="filtroDispMin" placeholder="Mín">
                                         <div class="input-group-prepend input-group-append"><span class="input-group-text">-</span></div>
@@ -592,6 +602,13 @@ const DetalleLoteModule = (function () {
                 });
                 document.getElementById('lotesActualizados').innerHTML =
                     `<i class="fa fa-refresh mr-1"></i>Datos de la base actualizados: ${actualizado} · cada 30 segundos`;
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="10" class="text-center py-4 text-danger">
+                            <i class="fa fa-exclamation-triangle mr-1"></i> ${escapeHtml(data.message || 'Error al cargar los lotes.')}
+                        </td>
+                    </tr>`;
             }
         })
         .catch(err => {
@@ -682,7 +699,7 @@ const DetalleLoteModule = (function () {
                             <div class="progress-bar-mini-fill" style="width: ${porcentaje}%; background-color: ${barraColor};"></div>
                         </div>
                     </td>
-                    <td><strong>${escapeHtml(lote.simbolo_moneda)} ${costoFormato.format(Number(lote.costo_individual) || 0)}</strong></td>
+                    <td><strong>${escapeHtml(lote.simbolo_moneda || '$')} ${costoFormato.format(Number(lote.costo_individual) || 0)}</strong></td>
                     <td class="small text-muted">${escapeHtml(lote.fecha_produccion)}</td>
                     <td class="${lote.es_vencido ? 'text-danger font-weight-bold' : 'small text-muted'}">
                         ${escapeHtml(lote.fecha_vencimiento)}
@@ -957,6 +974,20 @@ const DetalleLoteModule = (function () {
             e.preventDefault();
             cargarLotes(1);
         });
+
+        // Auto-filtrar al cambiar selectores (Almacén, Estado, Proveedor)
+        const filtroAlmacenEl = document.getElementById('filtroAlmacen');
+        if (filtroAlmacenEl) {
+            filtroAlmacenEl.addEventListener('change', () => cargarLotes(1));
+        }
+        const filtroEstadoEl = document.getElementById('filtroEstado');
+        if (filtroEstadoEl) {
+            filtroEstadoEl.addEventListener('change', () => cargarLotes(1));
+        }
+        const filtroProveedorEl = document.getElementById('filtroProveedor');
+        if (filtroProveedorEl) {
+            filtroProveedorEl.addEventListener('change', () => cargarLotes(1));
+        }
 
         // Cambio de pestañas (Activos vs Vencidos)
         $('#loteTabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {

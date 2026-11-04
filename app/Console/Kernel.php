@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\TestTask::class,
         Commands\VerificarLotesVencidos::class,
+        Commands\SincronizarLotesStock::class,
     ];
 
     /**
