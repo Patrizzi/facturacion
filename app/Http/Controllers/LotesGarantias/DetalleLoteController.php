@@ -46,6 +46,32 @@ class DetalleLoteController extends Controller
      */
     public function ajaxLotes(Request $request)
     {
+        try {
+            if (!Schema::hasTable('lotes')) {
+                return response()->json([
+                    'success' => true,
+                    'producto_info' => [
+                        'id' => null,
+                        'codigo' => '--',
+                        'nombre' => 'Todos los productos',
+                        'modelo' => '--',
+                        'almacen' => 'Todos los almacenes',
+                    ],
+                    'metricas' => [
+                        'total_lotes' => 0,
+                        'unidades_disponibles' => 0,
+                        'conteo_activos' => 0,
+                        'conteo_vencidos' => 0,
+                    ],
+                    'lotes' => [],
+                    'paginacion' => [
+                        'total' => 0,
+                        'per_page' => (int) $request->input('per_page', 15),
+                        'current_page' => 1,
+                        'last_page' => 1,
+                    ],
+                ]);
+            }
         $idProducto = $request->filled('id_producto') ? (int) $request->input('id_producto') : ($request->filled('producto_id') ? (int) $request->input('producto_id') : 0);
         $codigoProducto = trim((string) $request->input('codigo_producto', ''));
         $almacenId = $request->filled('almacen') ? (int) $request->input('almacen') : 0;
@@ -271,6 +297,35 @@ class DetalleLoteController extends Controller
                 'last_page' => $ultimaPagina,
             ],
         ]);
+        } catch (\Throwable $e) {
+            \Log::error('Error en DetalleLoteController@ajaxLotes: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'producto_info' => [
+                    'id' => null,
+                    'codigo' => '--',
+                    'nombre' => 'Todos los productos',
+                    'modelo' => '--',
+                    'almacen' => 'Todos los almacenes',
+                ],
+                'metricas' => [
+                    'total_lotes' => 0,
+                    'unidades_disponibles' => 0,
+                    'conteo_activos' => 0,
+                    'conteo_vencidos' => 0,
+                ],
+                'lotes' => [],
+                'paginacion' => [
+                    'total' => 0,
+                    'per_page' => (int) $request->input('per_page', 15),
+                    'current_page' => 1,
+                    'last_page' => 1,
+                ],
+            ]);
+        }
     }
 
     private function disponibilidadActualPorLote($lotesFiltrados)
