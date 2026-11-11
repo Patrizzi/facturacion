@@ -156,6 +156,9 @@ class KardexEntradaController extends Controller
           // 'clasificacion' => ['required','exists:categorias,id'],
           'provedor' => ['required','exists:provedores,empresa'],
           'moneda' => ['required','exists:monedas,nombre'],
+          'fecha_compra' => ['required', 'date'],
+          'garantia_compra_meses' => ['nullable', 'array'],
+          'garantia_compra_meses.*' => ['nullable', 'integer', 'min:0', 'max:1200'],
       ]);
 
       // PROVEEDORES BUSQUEDA
@@ -330,6 +333,7 @@ class KardexEntradaController extends Controller
               $kardex_entrada_registro=new kardex_entrada_registro();
               $kardex_entrada_registro->kardex_entrada_id=$kardex_entrada->id;
               $kardex_entrada_registro->producto_id=$producto_id[$i];
+              $kardex_entrada_registro->garantia_compra_meses = $request->input('garantia_compra_meses.' . $i);
               $kardex_entrada_registro->unidad=$request->get('unidad')[$i];
               $kardex_entrada_registro->unidad_cantidad=$request->get('cantidad')[$i];
               $kardex_entrada_registro->cantidad_inicial=$cantidad_total_no_zero;

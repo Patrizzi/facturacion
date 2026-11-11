@@ -18,23 +18,59 @@ class DetalleLoteController extends Controller
 {
     public function paginaSeries($loteId)
     {
-        $lote = Lote::with(['producto', 'proveedor'])->findOrFail($loteId);
-        $hayTablaGarantias = Schema::hasTable('garantias');
-        $consultaSeries = SerieProducto::with('estadoProducto')
-            ->where('lote_id', $lote->id);
+        $lote = Lote::with(['producto', 'proveedor', 'kardexEntradaRegistro.producto', 'kardexEntradaRegistro.kardex_entrada'])->findOrFail($loteId);
+        $series = SerieProducto::with([
+            'estadoProducto',
+            'facturacionRegistro.factura_ids',
+            'boletaRegistro.boleta_i',
+            'notaVentaRegistro.notaVenta',
+            'producto',
+        ])->where('lote_id', $lote->id)->orderBy('id')->get();
 
-        if ($hayTablaGarantias) {
-            $consultaSeries->with('garantiaActual');
+        $kardexRegistro = $lote->kardexEntradaRegistro;
+        $kardexEntrada = optional($kardexRegistro)->kardex_entrada;
+        $fechaCompra = $kardexEntrada->fecha_compra ?? null;
+        $mesesGarantiaCompra = optional($kardexRegistro)->garantia_compra_meses;
+        $vencimientoCompra = $fechaCompra && $mesesGarantiaCompra
+            ? Carbon::parse($fechaCompra)->addMonths((int) $mesesGarantiaCompra)
+            : null;
+        $estadoGarantiaCompra = $vencimientoCompra
+            ? (Carbon::today()->lte($vencimientoCompra) ? 'Vigente' : 'Fuera de tiempo')
+            : 'Sin datos';
+
+        foreach ($series as $serie) {
+            $factura = optional($serie->facturacionRegistro)->factura_ids;
+            $boleta = optional($serie->boletaRegistro)->boleta_i;
+            $notaVenta = optional($serie->notaVentaRegistro)->notaVenta;
+            $fechaVentaRaw = $factura
+                ? ($factura->getOriginal('fecha_emision') ?: $factura->created_at)
+                : ($boleta
+                    ? ($boleta->getOriginal('fecha_emision') ?: $boleta->created_at)
+                    : ($notaVenta
+                        ? ($notaVenta->getOriginal('fecha_emision') ?: $notaVenta->created_at)
+                        : null));
+            $fechaVenta = $fechaVentaRaw ? Carbon::parse($fechaVentaRaw) : null;
+            $mesesGarantiaVenta = $this->mesesGarantia(optional($serie->producto)->garantia);
+            $vencimientoVenta = $fechaVenta && $mesesGarantiaVenta
+                ? (clone $fechaVenta)->addMonths($mesesGarantiaVenta)
+                : null;
+
+            $serie->setAttribute('fecha_compra_kardex', $fechaCompra);
+            $serie->setAttribute('garantia_compra_meses', $mesesGarantiaCompra);
+            $serie->setAttribute('estado_garantia_compra', $estadoGarantiaCompra);
+            $serie->setAttribute('fecha_venta_garantia', $fechaVenta);
+            $serie->setAttribute('garantia_venta_meses', $mesesGarantiaVenta);
+            $serie->setAttribute('estado_garantia_venta', $vencimientoVenta
+                ? (Carbon::today()->lte($vencimientoVenta) ? 'Vigente' : 'Fuera de tiempo')
+                : 'Sin datos');
         }
 
-        $series = $consultaSeries->orderBy('id')->get();
         $seriesEditables = $this->seriesEditables($series);
 
         return view('inventario.lotes_garantias.series_lote', compact(
             'lote',
             'series',
-            'seriesEditables',
-            'hayTablaGarantias'
+            'seriesEditables'
         ));
     }
 
@@ -420,22 +456,31 @@ class DetalleLoteController extends Controller
             ], 404);
         }
 
-        $hayTablaGarantias = Schema::hasTable('garantias');
-        $consultaSeries = SerieProducto::with('estadoProducto')
+        $consultaSeries = SerieProducto::with([
+            'estadoProducto',
+            'producto',
+            'facturacionRegistro.factura_ids',
+            'boletaRegistro.boleta_i',
+            'notaVentaRegistro.notaVenta',
+        ])
             ->where('lote_id', $loteId);
-
-        if ($hayTablaGarantias) {
-            $consultaSeries->with('garantiaActual');
-        }
 
         $series = $consultaSeries
             ->orderBy('id', 'asc')
             ->get();
         $seriesEditables = $this->seriesEditables($series);
-        $series = $series->map(function (SerieProducto $serie) use ($hayTablaGarantias, $seriesEditables) {
-                $garantia = $hayTablaGarantias ? $serie->garantiaActual : null;
-                $fechaVenta = $garantia ? $garantia->fecha_venta : null;
-                $fechaVencimiento = $garantia ? $garantia->fecha_vencimiento : null;
+        $series = $series->map(function (SerieProducto $serie) use ($seriesEditables) {
+                $factura = optional($serie->facturacionRegistro)->factura_ids;
+                $boleta = optional($serie->boletaRegistro)->boleta_i;
+                $notaVenta = optional($serie->notaVentaRegistro)->notaVenta;
+                $fechaVentaRaw = $factura
+                    ? ($factura->getOriginal('fecha_emision') ?: $factura->created_at)
+                    : ($boleta
+                        ? ($boleta->getOriginal('fecha_emision') ?: $boleta->created_at)
+                        : ($notaVenta ? ($notaVenta->getOriginal('fecha_emision') ?: $notaVenta->created_at) : null));
+                $fechaVenta = $fechaVentaRaw ? Carbon::parse($fechaVentaRaw) : null;
+                $meses = $this->mesesGarantia(optional($serie->producto)->garantia);
+                $vencimiento = $fechaVenta && $meses ? (clone $fechaVenta)->addMonths($meses) : null;
 
                 return [
                     'id' => $serie->id,
@@ -443,8 +488,8 @@ class DetalleLoteController extends Controller
                     'estado' => $serie->estadoProducto?->nombre_estado ?? 'En Stock',
                     'ubicacion' => $serie->estadoProducto?->ubicacion ?? 'Almacén Principal',
                     'calidad' => $serie->estadoProducto?->calidad ?? 'A',
-                    'fecha_venta' => $fechaVenta ? Carbon::parse($fechaVenta)->format('Y-m-d') : '--',
-                    'fecha_vencimiento_garantia' => $fechaVencimiento ? Carbon::parse($fechaVencimiento)->format('Y-m-d') : '--',
+                    'fecha_venta' => $fechaVenta ? $fechaVenta->format('Y-m-d') : '--',
+                    'fecha_vencimiento_garantia' => $vencimiento ? $vencimiento->format('Y-m-d') : '--',
                     'editable' => $seriesEditables[$serie->id] ?? false,
                 ];
             });
@@ -527,7 +572,6 @@ class DetalleLoteController extends Controller
             'boleta_registros_m',
             'nota_venta_registro',
             'reclamos_garantia',
-            'garantias',
         ];
 
         foreach ($referencias as $tabla) {
@@ -562,5 +606,29 @@ class DetalleLoteController extends Controller
         }
 
         return $editables;
+    }
+
+    private function mesesGarantia($garantia): ?int
+    {
+        if ($garantia === null || trim((string) $garantia) === '') {
+            return null;
+        }
+
+        if (preg_match('/(\d+)/', (string) $garantia, $coincidencia) !== 1) {
+            return null;
+        }
+
+        $cantidad = (int) $coincidencia[1];
+        $texto = mb_strtolower((string) $garantia);
+
+        if (strpos($texto, 'año') !== false || strpos($texto, 'ano') !== false || strpos($texto, 'year') !== false) {
+            $cantidad *= 12;
+        } elseif (strpos($texto, 'día') !== false || strpos($texto, 'dia') !== false || strpos($texto, 'day') !== false) {
+            $cantidad = (int) ceil($cantidad / 30);
+        } elseif (strpos($texto, 'semana') !== false || strpos($texto, 'week') !== false) {
+            $cantidad = (int) ceil($cantidad / 4);
+        }
+
+        return $cantidad > 0 ? $cantidad : null;
     }
 }

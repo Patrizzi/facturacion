@@ -22,6 +22,8 @@ class BusquedaSerieController extends Controller
             'facturacionRegistro.factura_ids.cliente',
             'boletaRegistro.boleta_i.cliente',
             'notaVentaRegistro.notaVenta.cliente',
+            'producto',
+            'lote.kardexEntradaRegistro.kardex_entrada',
         ]);
 
         if ($numeroSerie !== '') {
@@ -50,18 +52,28 @@ class BusquedaSerieController extends Controller
             $lote = DB::table('lotes')->where('id', $serie->lote_id)->first();
         }
 
-        $estadoGarantia = 'No Aplica';
-        $diasRestantes = 0;
-
-        if ($serie->fecha_vencimiento_garantia) {
-            $vencimiento = Carbon::parse($serie->fecha_vencimiento_garantia);
-            if (Carbon::today()->lte($vencimiento)) {
-                $estadoGarantia = 'Vigente';
-                $diasRestantes = Carbon::today()->diffInDays($vencimiento);
-            } else {
-                $estadoGarantia = 'Vencido';
-            }
-        }
+        $facturacionRegistro = $serie->facturacionRegistro;
+        $boletaRegistro = $serie->boletaRegistro;
+        $notaVentaRegistro = $serie->notaVentaRegistro;
+        $factura = $facturacionRegistro ? $facturacionRegistro->factura_ids : null;
+        $boleta = $boletaRegistro ? $boletaRegistro->boleta_i : null;
+        $notaVenta = $notaVentaRegistro ? $notaVentaRegistro->notaVenta : null;
+        $fechaVentaRaw = $factura
+            ? ($factura->getOriginal('fecha_emision') ?: $factura->created_at)
+            : ($boleta
+                ? ($boleta->getOriginal('fecha_emision') ?: $boleta->created_at)
+                : ($notaVenta ? ($notaVenta->getOriginal('fecha_emision') ?: $notaVenta->created_at) : null));
+        $fechaVenta = $fechaVentaRaw ? Carbon::parse($fechaVentaRaw) : null;
+        $mesesGarantia = $this->mesesGarantia(optional($serie->producto)->garantia);
+        $vencimiento = $fechaVenta && $mesesGarantia
+            ? (clone $fechaVenta)->addMonths($mesesGarantia)
+            : null;
+        $estadoGarantia = $vencimiento
+            ? (Carbon::today()->lte($vencimiento) ? 'Vigente' : 'Vencido')
+            : 'No disponible';
+        $diasRestantes = $vencimiento && Carbon::today()->lte($vencimiento)
+            ? Carbon::today()->diffInDays($vencimiento)
+            : 0;
 
         $facturacion = $serie->facturacionRegistro?->factura_ids;
         $boleta = $serie->boletaRegistro?->boleta_i;
@@ -88,22 +100,36 @@ class BusquedaSerieController extends Controller
             'numero_factura' => $numeroComprobante ?? 'No asignado',
         ];
 
-        $historial = SerieProducto::where('codigo_producto', $serie->codigo_producto)
+        $historial = SerieProducto::with([
+            'estadoProducto',
+            'facturacionRegistro.factura_ids',
+            'boletaRegistro.boleta_i',
+            'notaVentaRegistro.notaVenta',
+        ])->where('codigo_producto', $serie->codigo_producto)
             ->where('id', '!=', $serie->id)
             ->latest()
             ->take(10)
             ->get()
             ->map(function (SerieProducto $relacionada) {
+                $facturaRelacionada = optional($relacionada->facturacionRegistro)->factura_ids;
+                $boletaRelacionada = optional($relacionada->boletaRegistro)->boleta_i;
+                $notaVentaRelacionada = optional($relacionada->notaVentaRegistro)->notaVenta;
+                $fechaVentaRelacionada = $facturaRelacionada
+                    ? ($facturaRelacionada->getOriginal('fecha_emision') ?: $facturaRelacionada->created_at)
+                    : ($boletaRelacionada
+                        ? ($boletaRelacionada->getOriginal('fecha_emision') ?: $boletaRelacionada->created_at)
+                        : ($notaVentaRelacionada ? ($notaVentaRelacionada->getOriginal('fecha_emision') ?: $notaVentaRelacionada->created_at) : null));
+
                 return [
                     'id' => $relacionada->id,
                     'numero_serie' => $relacionada->numero_serie,
                     'codigo_producto' => $relacionada->codigo_producto,
                     'codigo_lote' => $relacionada->codigo_lote,
-                    'estado' => $relacionada->estado,
-                    'fecha_venta' => $relacionada->fecha_venta,
-                    'fecha_vencimiento_garantia' => $relacionada->fecha_vencimiento_garantia,
-                    'ubicacion' => $relacionada->ubicacion,
-                    'calidad' => $relacionada->calidad,
+                    'estado' => optional($relacionada->estadoProducto)->nombre_estado ?? 'En Stock',
+                    'fecha_venta' => $fechaVentaRelacionada ? Carbon::parse($fechaVentaRelacionada)->format('Y-m-d') : '--',
+                    'fecha_vencimiento_garantia' => '--',
+                    'ubicacion' => optional($relacionada->estadoProducto)->ubicacion ?? 'Almacén Principal',
+                    'calidad' => optional($relacionada->estadoProducto)->calidad ?? 'A',
                 ];
             })
             ->values();
@@ -123,8 +149,8 @@ class BusquedaSerieController extends Controller
                 ],
                 'garantia' => [
                     'estado' => $estadoGarantia,
-                    'fecha_venta' => $serie->fecha_venta ?: '--',
-                    'fecha_vencimiento' => $serie->fecha_vencimiento_garantia ?: '--',
+                    'fecha_venta' => $fechaVenta ? $fechaVenta->format('Y-m-d') : '--',
+                    'fecha_vencimiento' => $vencimiento ? $vencimiento->format('Y-m-d') : '--',
                     'dias_restantes' => $diasRestantes . ' días',
                 ],
                 'estado' => [
@@ -138,5 +164,24 @@ class BusquedaSerieController extends Controller
             ],
             'historial_relacionadas' => $historial,
         ]);
+    }
+
+    private function mesesGarantia($garantia): ?int
+    {
+        if ($garantia === null || trim((string) $garantia) === '' || preg_match('/(\d+)/', (string) $garantia, $coincidencia) !== 1) {
+            return null;
+        }
+
+        $cantidad = (int) $coincidencia[1];
+        $texto = mb_strtolower((string) $garantia);
+        if (strpos($texto, 'año') !== false || strpos($texto, 'ano') !== false || strpos($texto, 'year') !== false) {
+            $cantidad *= 12;
+        } elseif (strpos($texto, 'día') !== false || strpos($texto, 'dia') !== false || strpos($texto, 'day') !== false) {
+            $cantidad = (int) ceil($cantidad / 30);
+        } elseif (strpos($texto, 'semana') !== false || strpos($texto, 'week') !== false) {
+            $cantidad = (int) ceil($cantidad / 4);
+        }
+
+        return $cantidad > 0 ? $cantidad : null;
     }
 }

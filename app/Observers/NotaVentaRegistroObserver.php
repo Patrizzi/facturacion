@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\EstadoProducto;
-use App\GarantiaSerie;
 use App\Lote;
 use App\NotaVentaRegistro;
 use App\SerieProducto;
@@ -20,7 +19,7 @@ class NotaVentaRegistroObserver
     /**
      * Se ejecuta automáticamente al persistir un registro de Nota de Venta.
      * Decrementa el stock disponible del lote vinculado con bloqueo pesimista,
-     * actualiza la serie a "Vendido" y persiste el registro de garantía.
+     * actualiza la serie a "Vendido".
      *
      * @param NotaVentaRegistro $registro
      * @return void
@@ -121,36 +120,6 @@ class NotaVentaRegistroObserver
                     $serie->fecha_ultimo_movimiento = $now;
                     $serie->save();
 
-                    // 3. Crear o actualizar el registro de garantía en GarantiaSerie
-                    $producto = $serie->producto;
-                    $notaVenta = $registro->notaVenta;
-
-                    $mesesGarantia = (int) (
-                        optional($notaVenta)->garantia 
-                        ?? optional($producto)->garantia 
-                        ?? optional($producto)->garantia_meses 
-                        ?? 12
-                    );
-                    if ($mesesGarantia <= 0) {
-                        $mesesGarantia = 12;
-                    }
-
-                    $fechaEmisionRaw = $notaVenta ? ($notaVenta->getOriginal('fecha_emision') ?? $notaVenta->fecha_emision) : null;
-                    $fechaVenta = $fechaEmisionRaw
-                        ? Carbon::parse($fechaEmisionRaw)->toDateString()
-                        : ($registro->created_at ? Carbon::parse($registro->created_at)->toDateString() : Carbon::today()->toDateString());
-
-                    $fechaVencimiento = Carbon::parse($fechaVenta)->addMonths($mesesGarantia)->toDateString();
-
-                    GarantiaSerie::updateOrCreate(
-                        ['serie_id' => $serie->id],
-                        [
-                            'estado_garantia'   => 'Vigente',
-                            'fecha_venta'       => $fechaVenta,
-                            'fecha_vencimiento' => $fechaVencimiento,
-                            'duracion_meses'    => $mesesGarantia,
-                        ]
-                    );
                 }
             });
         } catch (Throwable $e) {

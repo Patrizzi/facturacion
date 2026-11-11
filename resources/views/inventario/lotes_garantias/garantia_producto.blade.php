@@ -223,9 +223,16 @@ const GarantiaProductoModule = (function () {
 
         fetch('{{ route("lotes-garantias.ajax.garantia-producto") }}', {
             method: 'POST',
+            headers: { 'Accept': 'application/json' },
             body: formData
         })
-        .then(res => res.json())
+        .then(async res => {
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.success) {
+                throw new Error(data.message || 'No se pudo consultar la garant?a. C?digo HTTP ' + res.status);
+            }
+            return data;
+        })
         .then(data => {
             if (data.success) {
                 // Cuadro 1: Garantía
@@ -253,6 +260,10 @@ const GarantiaProductoModule = (function () {
             } else {
                 alert(data.message || 'Error en la consulta');
             }
+        })
+        .catch(error => {
+            alert(error.message || 'No se pudo conectar con el servidor.');
+            console.error('Error consultando garant?a de producto:', error);
         });
     }
 

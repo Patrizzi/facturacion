@@ -37,19 +37,6 @@ class SerieProducto extends Model
         return $this->belongsTo(EstadoProducto::class, 'estado_id');
     }
 
-    public function garantias()
-    {
-        return $this->hasMany(GarantiaSerie::class, 'serie_id');
-    }
-
-    public function garantiaActual()
-    {
-        return $this->hasOne(GarantiaSerie::class, 'serie_id')
-            ->where('estado_garantia', 'Vigente')
-            ->orderBy('fecha_vencimiento', 'desc')
-            ->orderBy('id', 'desc');
-    }
-
     public function facturacionRegistro()
     {
         return $this->hasOne(Facturacion_registro::class, 'serie_id');

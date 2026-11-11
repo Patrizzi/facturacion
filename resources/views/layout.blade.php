@@ -42,9 +42,7 @@
     </head>
 
 
-    {{-- <body class="mini-navbar"> --}}
-
-    <body class="" style="margin: 0px !important;">
+    <body class="mini-navbar" style="margin: 0px !important;">
         <div id="wrapper" style="">
             <nav class="navbar-default navbar-static-side" role="navigation">
                 <div class="sidebar-collapse">
@@ -77,12 +75,12 @@
                                         <span class="nav-label">{{ $menu['label'] }}</span>
                                     </a>
 
-                                    <ul class="nav nav-second-level">
+                                    <ul class="nav nav-second-level collapse">
                                         @foreach ($menu['children'] as $child)
                                             @if (isset($child['children']))
                                                 <li>
                                                     <a href="#">{{ $child['label'] }}</a>
-                                                    <ul class="nav nav-third-level">
+                                                    <ul class="nav nav-third-level collapse">
                                                         @foreach ($child['children'] as $sub)
                                                             <li>
                                                                 <a href="{{ $sub['route'] }}">
@@ -478,14 +476,6 @@
                     $('body').addClass('mini-navbar');
                     $('.navbar-minimalize').off('click');
 
-                    $('.navbar-static-side').hover(
-                        function() {
-                            $('body').removeClass('mini-navbar');
-                        },
-                        function() {
-                            $('body').addClass('mini-navbar');
-                        }
-                    );
                 } else {
                     $('body').addClass('mini-navbar');
                     $('.navbar-static-side').off('mouseenter mouseleave click');
@@ -514,7 +504,57 @@
             }
         });
     </script>
+    <script>
+        (function () {
+            const sidebar = document.querySelector('.navbar-static-side');
+            if (!sidebar) return;
+
+            const applySidebarHover = function () {
+                if (window.matchMedia('(min-width: 768px)').matches) {
+                    sidebar.addEventListener('mouseenter', function () {
+                        document.body.classList.remove('mini-navbar');
+                    });
+                    sidebar.addEventListener('mouseleave', function () {
+                        document.body.classList.add('mini-navbar');
+                    });
+                } else {
+                    document.body.classList.add('mini-navbar');
+                }
+            };
+
+            applySidebarHover();
+        })();
+    </script>
     @yield('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const menu = document.getElementById('side-menu');
+            if (window.jQuery && window.jQuery.fn.metisMenu) {
+                window.jQuery(menu).metisMenu();
+                return;
+            }
+
+            menu.querySelectorAll('li > a[href="#"] + ul.collapse').forEach(function (submenu) {
+                const trigger = submenu.previousElementSibling;
+                trigger.setAttribute('aria-expanded', 'false');
+                trigger.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    const shouldOpen = !submenu.classList.contains('in');
+                    const siblings = submenu.parentElement.parentElement.children;
+                    Array.from(siblings).forEach(function (item) {
+                        const branch = item.querySelector(':scope > ul.collapse');
+                        if (branch) {
+                            const open = branch === submenu && shouldOpen;
+                            branch.classList.toggle('in', open);
+                            item.classList.toggle('active', open);
+                            branch.previousElementSibling.setAttribute('aria-expanded', String(open));
+                        }
+                    });
+                });
+            });
+        });
+    </script>
     @if (!request()->routeIs('inicio') && !isset($tipo_cambio->fecha))
         <script>
             // cargar esto en el layout principal, no solo en la vista de espera

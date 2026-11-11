@@ -48,7 +48,11 @@ class GarantiasController extends Controller
             $serie = class_exists('\App\SerieProducto')
                 ? SerieProducto::with([
                     'lote.kardexEntradaRegistro.kardex_entrada.provedor',
-                    'lote.proveedor'
+                    'lote.proveedor',
+                    'producto',
+                    'facturacionRegistro.factura_ids',
+                    'boletaRegistro.boleta_i',
+                    'notaVentaRegistro.notaVenta',
                 ])->where('numero_serie', $serialProducto)->first()
                 : null;
 
@@ -58,21 +62,45 @@ class GarantiasController extends Controller
             }
         }
 
-        $fechaCompra = $serie && $serie->fecha_venta ? $serie->fecha_venta : Carbon::now()->subMonths(2)->toDateString();
-        $mesesGarantia = (int)(optional($producto)->garantia ?? 12);
-        if ($mesesGarantia <= 0) {
-            $mesesGarantia = 12;
-        }
-        $vigencia = $this->garantiaService->calcularVigencia($fechaCompra, $mesesGarantia);
-
-        // Trazabilidad dinámica de la cadena de suministro mediante Eloquent ORM
         $lote = $serie ? $serie->lote : ($producto ? Lote::with(['kardexEntradaRegistro.kardex_entrada.provedor', 'proveedor'])->where('producto_id', $producto->id)->latest()->first() : null);
         $kardexRegistro = $lote ? $lote->kardexEntradaRegistro : null;
-        $kardexEntrada = $kardexRegistro ? ($kardexRegistro->kardex_entrada ?? $kardexRegistro->kardex_entrada_reg_id) : null;
+        $kardexEntrada = $kardexRegistro ? $kardexRegistro->kardex_entrada : null;
+        $fechaCompra = $kardexEntrada && $kardexEntrada->fecha_compra
+            ? Carbon::parse($kardexEntrada->fecha_compra)
+            : null;
+        $mesesGarantiaCompra = (int) (optional($kardexRegistro)->garantia_compra_meses ?? 0);
+        $vencimientoCompra = $fechaCompra && $mesesGarantiaCompra > 0
+            ? (clone $fechaCompra)->addMonths($mesesGarantiaCompra)
+            : null;
+        $factura = $serie && $serie->facturacionRegistro ? $serie->facturacionRegistro->factura_ids : null;
+        $boleta = $serie && $serie->boletaRegistro ? $serie->boletaRegistro->boleta_i : null;
+        $notaVenta = $serie && $serie->notaVentaRegistro ? $serie->notaVentaRegistro->notaVenta : null;
+        $fechaVentaRaw = $factura
+            ? ($factura->getOriginal('fecha_emision') ?: $factura->created_at)
+            : ($boleta
+                ? ($boleta->getOriginal('fecha_emision') ?: $boleta->created_at)
+                : ($notaVenta ? ($notaVenta->getOriginal('fecha_emision') ?: $notaVenta->created_at) : null));
+        $fechaVenta = $fechaVentaRaw ? Carbon::parse($fechaVentaRaw) : null;
+        $garantiaVenta = optional($serie ? $serie->producto : $producto)->garantia;
+        $mesesGarantiaVenta = $this->mesesGarantia($garantiaVenta);
+        $vencimientoVenta = $fechaVenta && $mesesGarantiaVenta
+            ? (clone $fechaVenta)->addMonths($mesesGarantiaVenta)
+            : null;
+        $estadoGarantiaVenta = $vencimientoVenta
+            ? (Carbon::today()->lte($vencimientoVenta) ? 'Vigente' : 'Fuera de tiempo')
+            : 'Sin datos';
+        $vigencia = [
+            'fecha_compra' => $fechaCompra ? $fechaCompra->format('Y-m-d') : '--',
+            'fecha_vencimiento' => $vencimientoCompra ? $vencimientoCompra->format('Y-m-d') : '--',
+            'tiempo_garantia' => $mesesGarantiaCompra > 0 ? $mesesGarantiaCompra . ' meses' : '--',
+            'estado' => $estadoGarantiaVenta,
+        ];
+
+        // Trazabilidad dinámica de la cadena de suministro mediante Eloquent ORM
         $proveedor = ($kardexEntrada && $kardexEntrada->provedor) ? $kardexEntrada->provedor : ($lote ? $lote->proveedor : null);
 
         $codProv = $proveedor ? ($proveedor->ruc ?? ('P-' . str_pad((string)$proveedor->id, 4, '0', STR_PAD_LEFT))) : ($lote && $lote->proveedor_id ? 'P-' . str_pad((string)$lote->proveedor_id, 4, '0', STR_PAD_LEFT) : 'S/P');
-        $nomProv = $proveedor ? $proveedor->empresa : ($lote->proveedor_nombre ?? 'Proveedor No Registrado');
+        $nomProv = $proveedor ? $proveedor->empresa : ($lote ? ($lote->proveedor_nombre ?? 'Proveedor No Registrado') : 'Proveedor No Registrado');
         $numGuia = $kardexEntrada ? ($kardexEntrada->codigo_guia ?? 'S/G') : 'S/G';
         $numFactura = $kardexEntrada ? ($kardexEntrada->factura ?? 'S/F') : 'S/F';
         $guiaRemision = $kardexEntrada ? ($kardexEntrada->guia_remision ?? 'S/G') : 'S/G';
@@ -85,10 +113,10 @@ class GarantiasController extends Controller
                 'tiempo_total' => $vigencia['tiempo_garantia']
             ],
             'producto' => [
-                'num_lote' => optional($lote)->lote ?? ($serie->codigo_lote ?? 'L-001'),
-                'cod_interno' => optional($producto)->codigo_producto ?? ($serie->codigo_producto ?? '3242'),
-                'marca' => optional(optional($producto)->marcas_i_producto)->nombre ?? 'Marca Oficial',
-                'producto' => optional($producto)->nombre ?? 'Producto General'
+                'num_lote' => optional($lote)->lote ?? optional($serie)->codigo_lote ?? '--',
+                'cod_interno' => optional($producto)->codigo_producto ?? optional($serie)->codigo_producto ?? '--',
+                'marca' => optional(optional($producto)->marcas_i_producto)->nombre ?? '--',
+                'producto' => optional($producto)->nombre ?? '--'
             ],
             'proveedor' => [
                 'cod_prov' => $codProv,
@@ -104,12 +132,31 @@ class GarantiasController extends Controller
                     'codigo' => optional($producto)->codigo_producto ?? ($codigoProducto ?: ($serialProducto ?: 'S/N')),
                     'marca' => optional(optional($producto)->marcas_i_producto)->nombre ?? '--',
                     'producto' => optional($producto)->nombre ?? '--',
-                    'fecha_venta' => $vigencia['fecha_compra'],
-                    'fecha_venc_garantia' => $vigencia['fecha_vencimiento'],
-                    'estado_garantia' => $vigencia['estado']
+                    'fecha_venta' => $fechaVenta ? $fechaVenta->format('Y-m-d') : '--',
+                    'fecha_venc_garantia' => $vencimientoVenta ? $vencimientoVenta->format('Y-m-d') : '--',
+                    'estado_garantia' => $estadoGarantiaVenta
                 ]
             ]
         ]);
+    }
+
+    private function mesesGarantia($garantia): ?int
+    {
+        if ($garantia === null || trim((string) $garantia) === '' || preg_match('/(\d+)/', (string) $garantia, $coincidencia) !== 1) {
+            return null;
+        }
+
+        $cantidad = (int) $coincidencia[1];
+        $texto = mb_strtolower((string) $garantia);
+        if (strpos($texto, 'año') !== false || strpos($texto, 'ano') !== false || strpos($texto, 'year') !== false) {
+            $cantidad *= 12;
+        } elseif (strpos($texto, 'día') !== false || strpos($texto, 'dia') !== false || strpos($texto, 'day') !== false) {
+            $cantidad = (int) ceil($cantidad / 30);
+        } elseif (strpos($texto, 'semana') !== false || strpos($texto, 'week') !== false) {
+            $cantidad = (int) ceil($cantidad / 4);
+        }
+
+        return $cantidad > 0 ? $cantidad : null;
     }
 
     /**

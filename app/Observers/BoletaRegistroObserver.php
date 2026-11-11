@@ -115,28 +115,6 @@ class BoletaRegistroObserver
                     $serie->fecha_ultimo_movimiento = $now;
                     $serie->save();
 
-                    // Persistencia transaccional de la garantía de la serie
-                    $producto = $registro->producto;
-                    $mesesGarantia = (int) (optional($producto)->garantia ?? optional($producto)->garantia_meses ?? 12);
-                    if ($mesesGarantia <= 0) {
-                        $mesesGarantia = 12;
-                    }
-
-                    $boleta = $registro->boleta_i;
-                    $fechaVenta = $boleta && $boleta->fecha_emision
-                        ? Carbon::parse($boleta->fecha_emision)->toDateString()
-                        : ($registro->created_at ? Carbon::parse($registro->created_at)->toDateString() : Carbon::today()->toDateString());
-                    $fechaVencimiento = Carbon::parse($fechaVenta)->addMonths($mesesGarantia)->toDateString();
-
-                    \App\GarantiaSerie::updateOrCreate(
-                        ['serie_id' => $serie->id],
-                        [
-                            'estado_garantia'   => 'Vigente',
-                            'fecha_venta'       => $fechaVenta,
-                            'fecha_vencimiento' => $fechaVencimiento,
-                            'duracion_meses'    => $mesesGarantia,
-                        ]
-                    );
                 }
             });
         } catch (Throwable $e) {

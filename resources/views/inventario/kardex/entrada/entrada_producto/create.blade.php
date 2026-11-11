@@ -123,6 +123,12 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label for="fecha_compra" class="col-form-label col-md-2"><strong>Fecha de compra (factura/boleta)</strong></label>
+                                <div class="col-md-10">
+                                    <input type="date" class="form-control" name="fecha_compra" id="fecha_compra" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label for="transporte" class="col-form-label col-md-2"><strong>Tipo de
                                         transporte</strong></label>
                                 <div class="col-md-10">
@@ -204,6 +210,7 @@
                                 <th style="width: 100px">Unidad</th>
                                 <th style="width: 100px">Cantidad</th>
                                 <th style="width: 100px">Precio</th>
+                                <th style="width: 150px">Garantia compra (meses)</th>
                                 <th style="width: 100px">Total</th>
                             </tr>
                         </thead>
@@ -234,13 +241,14 @@
                                         onkeyup="multi2(1);" required /></td>
                                 <td><input type='text' name='precio[]' class="form-control monto2_1"
                                         onkeyup="multi2(1);" required /></td>
+                                <td><input type="number" name="garantia_compra_meses[]" class="form-control" min="0" step="1" placeholder="Meses" /></td>
                                 <td><input type='text' name='total[]' id='total2_1' class="form-control" readonly />
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                     <button class="ladda-button btn btn-primary float-right" type="submit"
                                         id="boton2">
                                         Guardar
@@ -330,6 +338,7 @@
 		<td>
 		<input type='text' id='precio${i}' name='precio[]' class="monto${i} precio${i} form-control"  onkeyup="multi(${i});" required/>
 		</td>
+		<td><input type="number" name="garantia_compra_meses[]" class="form-control" min="0" step="1" placeholder="Meses"/></td>
 		<td>
 		<input type='text' id='total${i}' name='total[]' class="form-control" required/>
 		</td>
@@ -571,6 +580,7 @@
             <td><input type='text' name='unidad[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" value="1" required/></td>
             <td><input type='text' name='cantidad[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
             <td><input type='text' name='precio[]' class="form-control monto2_${contador}" onkeyup="multi2(${contador});" required/></td>
+                                <td><input type="number" name="garantia_compra_meses[]" class="form-control" min="0" step="1" placeholder="Meses" /></td>
             <td><input type='text' name='total[]' id='total2_${contador}' class="form-control" readonly/></td>
         </tr>
         `;

@@ -41,15 +41,18 @@
                             <th>Estado</th>
                             <th>Ubicación</th>
                             <th>Calidad</th>
-                            <th>Fecha de venta</th>
-                            <th>Vencimiento de garantía</th>
+                            <th>Compra: fecha</th>
+                            <th>Compra: garantia (meses)</th>
+                            <th>Compra: estado</th>
+                            <th>Venta: fecha</th>
+                            <th>Venta: garantia (meses)</th>
+                            <th>Venta: estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="tbodySeriesLote">
                         @forelse($series as $index => $serie)
                             @php
-                                $garantia = $hayTablaGarantias ? $serie->garantiaActual : null;
                                 $editable = $seriesEditables[$serie->id] ?? false;
                             @endphp
                             <tr data-serie-id="{{ $serie->id }}">
@@ -58,8 +61,20 @@
                                 <td>{{ $serie->estadoProducto->nombre_estado ?? 'En Stock' }}</td>
                                 <td>{{ $serie->estadoProducto->ubicacion ?? 'Almacén Principal' }}</td>
                                 <td>{{ $serie->estadoProducto->calidad ?? 'A' }}</td>
-                                <td>{{ $garantia && $garantia->fecha_venta ? $garantia->fecha_venta->format('Y-m-d') : '--' }}</td>
-                                <td>{{ $garantia && $garantia->fecha_vencimiento ? $garantia->fecha_vencimiento->format('Y-m-d') : '--' }}</td>
+                                <td>{{ $serie->fecha_compra_kardex ? \Carbon\Carbon::parse($serie->fecha_compra_kardex)->format('Y-m-d') : '--' }}</td>
+                                <td>{{ $serie->garantia_compra_meses !== null ? $serie->garantia_compra_meses : '--' }}</td>
+                                <td>
+                                    <span class="badge {{ $serie->estado_garantia_compra === 'Vigente' ? 'badge-success' : ($serie->estado_garantia_compra === 'Fuera de tiempo' ? 'badge-danger' : 'badge-secondary') }}">
+                                        {{ $serie->estado_garantia_compra }}
+                                    </span>
+                                </td>
+                                <td>{{ $serie->fecha_venta_garantia ? $serie->fecha_venta_garantia->format('Y-m-d') : '--' }}</td>
+                                <td>{{ $serie->garantia_venta_meses !== null ? $serie->garantia_venta_meses : '--' }}</td>
+                                <td>
+                                    <span class="badge {{ $serie->estado_garantia_venta === 'Vigente' ? 'badge-success' : ($serie->estado_garantia_venta === 'Fuera de tiempo' ? 'badge-danger' : 'badge-secondary') }}">
+                                        {{ $serie->estado_garantia_venta }}
+                                    </span>
+                                </td>
                                 <td class="acciones-serie">
                                     @if($editable)
                                         <button type="button" class="btn btn-sm btn-primary btn-editar-serie">
@@ -77,7 +92,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-muted py-4">Este lote no tiene números de serie registrados.</td>
+                                <td colspan="12" class="text-muted py-4">Este lote no tiene números de serie registrados.</td>
                             </tr>
                         @endforelse
                     </tbody>
