@@ -459,8 +459,8 @@ Route::group(
 
         Route::post('/boleta/create_ms', 'BoletaController@create_ms')->name('boleta.create_ms');
         Route::get('/boleta/print/{id}', 'BoletaController@print')->name('boleta.print');
+        Route::match(['get', 'post'], '/boleta/create', 'BoletaController@create')->name('boleta.create');
         Route::resource('/boleta', 'BoletaController')->except(['store', 'create']);
-        Route::post('/boleta/create', 'BoletaController@create')->name('boleta.create');
         Route::put('/boleta/store/{id_moneda}', 'BoletaController@store')->name('boleta.store');
         Route::post('/boleta/update/{id}', 'BoletaController@update')->name('boleta.update');
         Route::get('/boleta/ticket/{id}', 'BoletaController@ticket')->name('boleta.ticket');
@@ -477,8 +477,8 @@ Route::group(
 
         Route::post('/boleta/create_ms', 'BoletaController@create_ms')->name('boleta.create_ms');
         Route::get('/boleta/print/{id}', 'BoletaController@print')->name('boleta.print');
+        Route::match(['get', 'post'], '/boleta/create', 'BoletaController@create')->name('boleta.create');
         Route::resource('/boleta', 'BoletaController')->except(['store', 'create']);
-        Route::post('/boleta/create', 'BoletaController@create')->name('boleta.create');
         Route::put('/boleta/store/{id_moneda}', 'BoletaController@store')->name('boleta.store');
         Route::get('/boleta/ticket/{id}', 'BoletaController@ticket')->name('boleta.ticket');
         //* Guia Remision *//

@@ -157,9 +157,19 @@ class KardexEntradaController extends Controller
           'provedor' => ['required','exists:provedores,empresa'],
           'moneda' => ['required','exists:monedas,nombre'],
           'fecha_compra' => ['required', 'date'],
-          'garantia_compra_meses' => ['nullable', 'array'],
-          'garantia_compra_meses.*' => ['nullable', 'integer', 'min:0', 'max:1200'],
+          'registro_opt' => ['required', 'array', 'min:1'],
+          'garantia_compra_meses' => ['required', 'array'],
+          'garantia_compra_meses.*' => ['required', 'integer', 'min:0', 'max:1200'],
+      ], [
+          'garantia_compra_meses.required' => 'Indica los meses de garantía de compra de cada producto. Usa 0 si no tiene garantía.',
+          'garantia_compra_meses.*.required' => 'Indica los meses de garantía de compra de cada producto. Usa 0 si no tiene garantía.',
       ]);
+
+      if (array_keys($request->input('garantia_compra_meses')) !== array_keys($request->input('registro_opt'))) {
+          throw \Illuminate\Validation\ValidationException::withMessages([
+              'garantia_compra_meses' => 'Indica los meses de garantía de compra en cada línea del ingreso.',
+          ]);
+      }
 
       // PROVEEDORES BUSQUEDA
       $provedor_totc = Provedor::where('empresa',$request->get('provedor'))->first();

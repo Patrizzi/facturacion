@@ -64,8 +64,7 @@ class GenerarLoteYSeriesListener
                 ]);
 
                 // 3. Inserción masiva en `series_productos`
-                $estadoEnStock = EstadoProducto::where('nombre_estado', 'En Stock')->first();
-                $estadoId = $estadoEnStock ? $estadoEnStock->id : null;
+                $estadoId = EstadoProducto::enStock()->id;
 
                 $now = Carbon::now()->toDateTimeString();
                 $seriesBatch = [];

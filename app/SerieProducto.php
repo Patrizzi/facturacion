@@ -47,6 +47,23 @@ class SerieProducto extends Model
         return $this->hasOne(Boleta_registro::class, 'serie_id');
     }
 
+    public function boletaRegistroAgrupado()
+    {
+        return $this->hasOneThrough(
+            Boleta_registro::class,
+            BoletaRegistroSerie::class,
+            'serie_id',
+            'id',
+            'id',
+            'boleta_registro_id'
+        )->orderByDesc('boleta_registro.id');
+    }
+
+    public function getDetalleBoletaAttribute(): ?Boleta_registro
+    {
+        return $this->boletaRegistroAgrupado ?? $this->boletaRegistro;
+    }
+
     public function notaVentaRegistro()
     {
         return $this->hasOne(NotaVentaRegistro::class, 'serie_id');

@@ -35,6 +35,11 @@ class BoletaRegistroObserver
             DB::transaction(function () use ($registro): void {
                 $cantidadVenta = (int) ($registro->cantidad ?? 1);
 
+                if ($registro->seriesIngresadas) {
+                    $this->registrarSeries($registro);
+                    return;
+                }
+
                 // Enlaza la serie individual con la línea de boleta cuando se vendió una unidad.
                 $serie = null;
                 if (!empty($registro->serie_id)) {
@@ -205,5 +210,77 @@ class BoletaRegistroObserver
 
             throw $e;
         }
+    }
+
+    private function registrarSeries(Boleta_registro $registro): void
+    {
+        $numeros = $registro->seriesIngresadas;
+        $error = static function (string $mensaje): void {
+            throw \Illuminate\Validation\ValidationException::withMessages(['numero_serie' => $mensaje]);
+        };
+
+        if ((float) $registro->cantidad !== (float) count($numeros)) {
+            $error('Ingresa una serie por cada unidad de la línea.');
+        }
+
+        $almacenId = $registro->boleta_i->almacen_id;
+        $series = SerieProducto::where('producto_id', $registro->producto_id)
+            ->whereIn('numero_serie', $numeros)
+            ->orderBy('id')
+            ->lockForUpdate()
+            ->get()
+            ->keyBy('numero_serie');
+
+        $enStock = EstadoProducto::where('nombre_estado', 'En Stock')->value('id');
+        $vendido = EstadoProducto::where('nombre_estado', 'Vendido')->value('id');
+        if (!$enStock || !$vendido) {
+            $error('Configura los estados En Stock y Vendido antes de registrar la venta.');
+        }
+
+        $filas = [];
+        $cantidadesPorLote = [];
+        foreach ($numeros as $posicion => $numero) {
+            $serie = $series->get($numero);
+            if (!$serie || !$serie->lote_id || (int) $serie->estado_id !== (int) $enStock) {
+                $error("La serie $numero no está disponible para este producto.");
+            }
+            if (isset($filas[$serie->id])) {
+                $error("La serie $numero está repetida.");
+            }
+
+            $filas[$serie->id] = [
+                'boleta_registro_id' => $registro->id,
+                'serie_id' => $serie->id,
+                'numero_serie' => $serie->numero_serie,
+                'posicion' => $posicion,
+            ];
+            $cantidadesPorLote[$serie->lote_id] = ($cantidadesPorLote[$serie->lote_id] ?? 0) + 1;
+        }
+
+        ksort($cantidadesPorLote);
+        foreach ($cantidadesPorLote as $loteId => $cantidad) {
+            $lote = Lote::whereKey($loteId)->lockForUpdate()->first();
+            if (!$lote || (int) $lote->almacen_id !== (int) $almacenId
+                || (int) $lote->producto_id !== (int) $registro->producto_id
+                || $lote->cantidad_disponible < $cantidad) {
+                $error("El lote $loteId no tiene stock suficiente en el almacén de la boleta.");
+            }
+
+            $lote->cantidad_disponible -= $cantidad;
+            $lote->recalcularEstado();
+
+            if (count($cantidadesPorLote) === 1) {
+                DB::table('boleta_registro')->where('id', $registro->id)->update([
+                    'lote_id' => $lote->id,
+                    'codigo_lote' => $lote->lote,
+                ]);
+            }
+        }
+
+        DB::table('boleta_registro_series')->insert(array_values($filas));
+        SerieProducto::whereIn('id', array_keys($filas))->update([
+            'estado_id' => $vendido,
+            'fecha_ultimo_movimiento' => Carbon::now(),
+        ]);
     }
 }
