@@ -59,6 +59,7 @@ use App\TipoDetraccion;
 use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Greenter\Model\Retention\Retention;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 
 class BoletaController extends Controller
 {
@@ -742,8 +743,29 @@ class BoletaController extends Controller
                     if (strpos($producto->tipo_afec_i_producto->informacion, 'Inafecto') !== false) {
                         $boleta_2->op_inafecta += ($boleta_registro->precio_unitario_comi * $boleta_registro->cantidad);
                     }
-                    $boleta_2->save();
-                    $boleta_registro->save();
+                    DB::transaction(function () use ($boleta_2, $boleta_registro, $boleta, $producto_servicio): void {
+                        $boleta_2->save();
+                        $boleta_registro->save();
+
+                        $stockAlmacen = Stock_almacen::where('almacen_id', $boleta->almacen_id)
+                            ->where('producto_id', $producto_servicio->id)
+                            ->lockForUpdate()
+                            ->first();
+
+                        if ($stockAlmacen) {
+                            $cantidadVenta = (int) $boleta_registro->cantidad;
+                            if ((int) $stockAlmacen->stock < $cantidadVenta) {
+                                throw new \RuntimeException(sprintf(
+                                    'Stock insuficiente en el almacén. Disponible: %d, solicitado: %d.',
+                                    (int) $stockAlmacen->stock,
+                                    $cantidadVenta
+                                ));
+                            }
+
+                            $stockAlmacen->stock = (int) $stockAlmacen->stock - $cantidadVenta;
+                            $stockAlmacen->save();
+                        }
+                    });
                     // return $array;
 
                     //! YA NO EXISTE LA REDUCCION DE STOCK POR FACTURA O BOLETA , SOLO POR GUIA DE REMISION

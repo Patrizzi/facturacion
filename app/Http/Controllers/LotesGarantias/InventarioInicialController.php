@@ -61,7 +61,7 @@ class InventarioInicialController extends Controller
         if ($almacenId > 0) {
             $unidadesTotales = (int) Stock_almacen::where('almacen_id', $almacenId)->sum('stock');
         } else {
-            $unidadesTotales = (int) Stock_producto::sum('stock');
+            $unidadesTotales = (int) Stock_almacen::sum('stock');
         }
 
         // Cálculo de valorización total y productos con stock bajo
@@ -76,7 +76,7 @@ class InventarioInicialController extends Controller
             if ($almacenId > 0) {
                 $stockActual = (int) optional($p->stock_almacen->firstWhere('almacen_id', $almacenId))->stock ?? 0;
             } else {
-                $stockActual = (int) optional($p->stock_producto)->stock ?? 0;
+                $stockActual = (int) $p->stock_almacen->sum('stock');
             }
 
             $stockMinimo = (int) ($p->stock_minimo ?? 0);
@@ -104,7 +104,7 @@ class InventarioInicialController extends Controller
             if ($almacenId > 0) {
                 $stock = (int) optional($prod->stock_almacen->firstWhere('almacen_id', $almacenId))->stock ?? 0;
             } else {
-                $stock = (int) optional($prod->stock_producto)->stock ?? 0;
+                $stock = (int) $prod->stock_almacen->sum('stock');
             }
 
             $costo = (float) (optional($prod->stock_producto)->precio_nacional ?? 0);
