@@ -63,14 +63,14 @@
                         <td class="col-desc">
                             @if (isset($item->producto))
                                 {{ $item->producto->nombre }}
-                                @if (isset($item->numero_serie))
-                                    <br><strong>N/S:</strong> {{ $item->numero_serie }}
+                                @if (isset($item->series_impresas))
+                                    <br><strong>N/S:</strong> {{ $item->series_impresas }}
                                 @endif
                                 <br>({{ $item->producto->codigo_producto }})
                             @else
                                 {{ $item->servicio->nombre }}
-                                @if (isset($item->numero_serie))
-                                    <br><strong>N/S:</strong> {{ $item->numero_serie }}
+                                @if (isset($item->series_impresas))
+                                    <br><strong>N/S:</strong> {{ $item->series_impresas }}
                                 @endif
                                 <br>({{ $item->servicio->codigo_servicio }})
                             @endif

@@ -14,6 +14,16 @@ class EstadoProducto extends Model
         'calidad',
     ];
 
+    public static function enStock(): self
+    {
+        return static::firstOrCreate(['nombre_estado' => 'En Stock'], ['calidad' => 'A']);
+    }
+
+    public static function vendido(): self
+    {
+        return static::firstOrCreate(['nombre_estado' => 'Vendido']);
+    }
+
     public function seriesProductos()
     {
         return $this->hasMany(SerieProducto::class, 'estado_id');

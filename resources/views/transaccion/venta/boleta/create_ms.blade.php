@@ -277,7 +277,7 @@
                                                     @endforeach
                                                 </select>
                                                 <textarea  type='text' id='descripcion0'  name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-                                                <textarea id='numero_serie0'  name='numero_serie[]' placeholder="N° de Serie" class="form-control"   autocomplete="off" style="margin-top: 5px"></textarea>
+                                                <textarea id='numero_serie0'  name='numero_serie[]' placeholder="Números de serie (uno por renglón)" class="form-control"   autocomplete="off" style="margin-top: 5px"></textarea>
                                                 <input style="width: 76px" type='text' id='tipo_afec0' name='tipo_afec[]' readonly="readonly" class="monto0 form-control" onkeyup="multi(0)" hidden="" required  autocomplete="off"  />
                                                 <input type="hidden" class="celda"  name="articulo[]" id="input_prod1" >
 
@@ -443,7 +443,7 @@
         </select>
 
         <textarea type='text' id='descripcion${i}'  name='descripcion_item[]' placeholder="Descripcion de Item" class="form-control"   autocomplete="off" style="margin-top: 5px;"></textarea>
-        <textarea  id='numero_serie${i}' placeholder="N° de Serie" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px"></textarea>
+        <textarea  id='numero_serie${i}' placeholder="Números de serie (uno por renglón)" name='numero_serie[]' class="form-control"   autocomplete="off" style="margin-top: 5px"></textarea>
         <input type='text' style="width: 76px"  id='tipo_afec${i}' name='tipo_afec[]' readonly="readonly" class="monto${i} form-control" onkeyup="multi(${i})" required hidden   autocomplete="off" />
         <input type="hidden"    class="celda"  name="articulo[]" id="input_prod${i}">
         </td>

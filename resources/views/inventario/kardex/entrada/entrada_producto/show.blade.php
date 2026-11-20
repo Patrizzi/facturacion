@@ -52,6 +52,7 @@
                                 <th>Código</th>
                                 <th style="text-align: left;">Nombre/Descripción</th>
                                 <th>Cantidad</th>
+                                <th>Garantía de compra (meses)</th>
                                 <th>Precio {{$moneda_nacional->nombre}}</th>
                                 <th style="background: #f3f3f4">Precio Total {{$moneda_nacional->nombre}}</th>
                                 <th>Precio {{$moneda_extranjera->nombre}}</th>
@@ -66,6 +67,7 @@
                               {{$kardex_entradas_registro->producto->nombre}}/{{$kardex_entradas_registro->producto->codigo_original}}<br>{{$kardex_entradas_registro->producto->descripcion}}
                             </td>
                             <td>{{$kardex_entradas_registro->cantidad_inicial}}</td>
+                            <td>{{ $kardex_entradas_registro->garantia_compra_meses ?? 'Sin datos' }}</td>
                             <td>{{$moneda_nacional->simbolo}} {{$kardex_entradas_registro->precio_nacional}}</td>
                             <td style="background: #f3f3f4">{{$moneda_nacional->simbolo}}.{{$kardex_entradas_registro->precio_nacional * $kardex_entradas_registro->cantidad_inicial}}</td>
 

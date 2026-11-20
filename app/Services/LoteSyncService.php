@@ -37,10 +37,8 @@ class LoteSyncService
         $lotesKardexCreados = 0;
         $seriesCreadas = 0;
 
-        $estadoEnStock = EstadoProducto::where('nombre_estado', 'En Stock')->first();
-        $estadoVendido = EstadoProducto::where('nombre_estado', 'Vendido')->first();
-        $enStockId = $estadoEnStock ? $estadoEnStock->id : 1;
-        $vendidoId = $estadoVendido ? $estadoVendido->id : 2;
+        $enStockId = EstadoProducto::enStock()->id;
+        $vendidoId = EstadoProducto::vendido()->id;
         $hoy = Carbon::today();
 
         DB::transaction(function () use ($kardexSinLote, &$lotesKardexCreados, &$seriesCreadas, $enStockId, $vendidoId, $hoy) {
@@ -239,10 +237,8 @@ class LoteSyncService
                 ->orderBy('id', 'asc')
                 ->get();
 
-            $estadoEnStock = EstadoProducto::where('nombre_estado', 'En Stock')->first();
-            $estadoVendido = EstadoProducto::where('nombre_estado', 'Vendido')->first();
-            $enStockId = $estadoEnStock ? $estadoEnStock->id : 1;
-            $vendidoId = $estadoVendido ? $estadoVendido->id : 2;
+            $enStockId = EstadoProducto::enStock()->id;
+            $vendidoId = EstadoProducto::vendido()->id;
             $hoy = Carbon::today();
 
             if ($kardexSinLote->isNotEmpty()) {

@@ -23,6 +23,7 @@ class DetalleLoteController extends Controller
             'estadoProducto',
             'facturacionRegistro.factura_ids',
             'boletaRegistro.boleta_i',
+            'boletaRegistroAgrupado.boleta_i',
             'notaVentaRegistro.notaVenta',
             'producto',
         ])->where('lote_id', $lote->id)->orderBy('id')->get();
@@ -36,11 +37,11 @@ class DetalleLoteController extends Controller
             : null;
         $estadoGarantiaCompra = $vencimientoCompra
             ? (Carbon::today()->lte($vencimientoCompra) ? 'Vigente' : 'Fuera de tiempo')
-            : 'Sin datos';
+            : ($mesesGarantiaCompra !== null && (int) $mesesGarantiaCompra === 0 ? 'Sin garantía' : 'Sin datos');
 
         foreach ($series as $serie) {
             $factura = optional($serie->facturacionRegistro)->factura_ids;
-            $boleta = optional($serie->boletaRegistro)->boleta_i;
+            $boleta = optional($serie->detalle_boleta)->boleta_i;
             $notaVenta = optional($serie->notaVentaRegistro)->notaVenta;
             $fechaVentaRaw = $factura
                 ? ($factura->getOriginal('fecha_emision') ?: $factura->created_at)
@@ -461,6 +462,7 @@ class DetalleLoteController extends Controller
             'producto',
             'facturacionRegistro.factura_ids',
             'boletaRegistro.boleta_i',
+            'boletaRegistroAgrupado.boleta_i',
             'notaVentaRegistro.notaVenta',
         ])
             ->where('lote_id', $loteId);
@@ -471,7 +473,7 @@ class DetalleLoteController extends Controller
         $seriesEditables = $this->seriesEditables($series);
         $series = $series->map(function (SerieProducto $serie) use ($seriesEditables) {
                 $factura = optional($serie->facturacionRegistro)->factura_ids;
-                $boleta = optional($serie->boletaRegistro)->boleta_i;
+                $boleta = optional($serie->detalle_boleta)->boleta_i;
                 $notaVenta = optional($serie->notaVentaRegistro)->notaVenta;
                 $fechaVentaRaw = $factura
                     ? ($factura->getOriginal('fecha_emision') ?: $factura->created_at)
@@ -569,6 +571,7 @@ class DetalleLoteController extends Controller
             'facturacion_registro',
             'facturacion_registro_m',
             'boleta_registro',
+            'boleta_registro_series',
             'boleta_registros_m',
             'nota_venta_registro',
             'reclamos_garantia',

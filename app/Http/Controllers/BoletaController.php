@@ -383,11 +383,149 @@ class BoletaController extends Controller
      */
     public function store(Request $request, $id_moneda)
     {
+        try {
+            $destino = DB::transaction(function () use ($request, $id_moneda) {
+                return $this->guardarBoleta(clone $request, $id_moneda);
+            });
+        } catch (\Illuminate\Validation\ValidationException $error) {
+            if ($request->expectsJson()) {
+                throw $error;
+            }
+
+            return redirect()->route('boleta.create', ['almacen' => $request->input('almacen')])
+                ->withErrors($error->errors())
+                ->withInput();
+        }
+
+        return $request->expectsJson()
+            ? response()->json(['destino' => $destino->getTargetUrl()])
+            : $destino;
+    }
+
+    private function buscarTipoOperacion($valor): Tipo_operacion_f
+    {
+        $valor = is_string($valor) || is_int($valor) ? trim((string) $valor) : '';
+        if (ctype_digit($valor)) {
+            $tipo = Tipo_operacion_f::find($valor);
+        } elseif (preg_match('/^(\d+)\s*-/', $valor, $partes)) {
+            $tipo = Tipo_operacion_f::where('codigo', $partes[1])->first();
+        }
+
+        if (empty($tipo)) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'tipo_operacion' => 'Selecciona un tipo de operación válido.',
+            ]);
+        }
+
+        return $tipo;
+    }
+
+
+    private function agruparLineasConSeries(Request $request): array
+    {
+        $lineas = [];
+        foreach ($request->input('articulo') as $indice => $articulo) {
+            $cantidad = (float) $request->input("cantidad.$indice");
+            $separador = $cantidad > 1 ? '/\R|,/u' : '/\R/u';
+            $series = preg_split($separador, (string) $request->input("numero_serie.$indice", '')) ?: [];
+            $series = array_values(array_filter(array_map('trim', $series), 'strlen'));
+
+            if ($series && (float) count($series) !== $cantidad) {
+                $linea = count($lineas) + 1;
+                $totalSeries = count($series);
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    "numero_serie.$indice" => "Línea $linea: cantidad $cantidad, series ingresadas $totalSeries. Ingresa una serie por unidad en esa línea.",
+                ]);
+            }
+
+            $lineas[] = [
+                'articulo' => $articulo,
+                'cantidad' => $request->input("cantidad.$indice"),
+                'check_descuento' => $request->input("check_descuento.$indice"),
+                'descripcion_item' => $request->input("descripcion_item.$indice"),
+                'series' => $series,
+            ];
+        }
+
+        $conSeries = array_filter($lineas, static function ($linea) {
+            return $linea['series'] !== [];
+        });
+
+        if (count($conSeries) > 1) {
+            $numeros = array_merge(...array_column($conSeries, 'series'));
+            $seriesRegistradas = \App\SerieProducto::whereIn('numero_serie', $numeros)
+                ->get(['numero_serie', 'lote_id', 'producto_id'])
+                ->keyBy('numero_serie');
+            $grupos = [];
+            $agrupadas = [];
+
+            foreach ($lineas as $linea) {
+                $partes = array_map('trim', explode('|', $linea['articulo'], 4));
+                $productoId = $partes[0];
+                $loteId = null;
+
+                foreach ($linea['series'] as $numero) {
+                    $serie = $seriesRegistradas->get($numero);
+                    if (!$serie || !$serie->lote_id || (string) $serie->producto_id !== $productoId
+                        || ($loteId !== null && $loteId !== $serie->lote_id)) {
+                        $loteId = null;
+                        break;
+                    }
+                    $loteId = $serie->lote_id;
+                }
+
+                if ($loteId !== null && isset($partes[1])) {
+                    $clave = serialize([$productoId, $partes[1], $loteId, (float) $linea['check_descuento'], $linea['descripcion_item'] ?? '']);
+                    if (isset($grupos[$clave])) {
+                        $indice = $grupos[$clave];
+                        $agrupadas[$indice]['cantidad'] += $linea['cantidad'];
+                        $agrupadas[$indice]['series'] = array_merge($agrupadas[$indice]['series'], $linea['series']);
+                        continue;
+                    }
+                    $grupos[$clave] = count($agrupadas);
+                }
+
+                $agrupadas[] = $linea;
+            }
+
+            $lineas = $agrupadas;
+        }
+
+        $request->merge([
+            'articulo' => array_column($lineas, 'articulo'),
+            'cantidad' => array_column($lineas, 'cantidad'),
+            'check_descuento' => array_column($lineas, 'check_descuento'),
+            'descripcion_item' => array_column($lineas, 'descripcion_item'),
+        ]);
+
+        return array_column($lineas, 'series');
+    }
+
+    private function guardarBoleta(Request $request, $id_moneda)
+    {
+        $request->validate([
+            'articulo' => 'required|array|min:1',
+            'articulo.*' => 'required|string',
+            'cantidad' => 'required|array|min:1',
+            'cantidad.*' => 'required|numeric|gt:0',
+            'check_descuento' => 'required|array|min:1',
+        ]);
+
+        if (array_keys($request->input('articulo')) !== array_keys($request->input('cantidad'))
+            || array_keys($request->input('articulo')) !== array_keys($request->input('check_descuento'))) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'articulo' => 'Revisa el producto, la cantidad y el descuento de cada línea.',
+            ]);
+        }
+
+        $operacion = $request->input('tipo_operacion');
+        $tipoOperacion = $this->buscarTipoOperacion($operacion);
         // $nuevafechas = Carbon::createFromFormat('d/m/Y', $request->fecha_vencimiento);
         // return $request;
         $print = $request->get('print');
 
         //codigo para convertir nombre a producto
+        $seriesPorLinea = $this->agruparLineasConSeries($request);
         $cantidad_p = $request->input('cantidad');
         $count_cantidad_p = count($cantidad_p);
 
@@ -473,7 +611,9 @@ class BoletaController extends Controller
         //buscador al cambio
         $cambio = TipoCambio::where('fecha', Carbon::now()->format('Y-m-d'))->first();
         if (!$cambio) {
-            return "error por no hacer el cambio diario";
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'moneda' => 'Registra el tipo de cambio del día antes de guardar la boleta.',
+            ]);
         }
 
         // obtencion de la sucursal
@@ -521,6 +661,7 @@ class BoletaController extends Controller
                 $kardex_entrada_v = Kardex_entrada::where('almacen_id', $almacen_producto_validacion)->get();
                 $kardex_entrada_count_v = Kardex_entrada::where('almacen_id', $almacen_producto_validacion)->count();
 
+                $nueva_v = [];
                 //return $kardex_entrada;
                 foreach ($kardex_entrada_v as $kardex_entradas_v) {
                     $kadex_entrada_id_v[] = $kardex_entradas_v->id;
@@ -531,7 +672,7 @@ class BoletaController extends Controller
                         $nueva_v[] = Kardex_entrada_registro::where('producto_id', $producto_servicio->id)->where('kardex_entrada_id', $kadex_entrada_id_v[$x])->where('estado', 1)->where('tipo_registro_id', '!=', 2)->first();
                     }
                 }
-                $comparacion_v = $nueva_v;
+                $comparacion_v = $nueva_v ?? [];
                 //buble para la cantidad
                 $cantidad_v = 0;
                 foreach ($comparacion_v as $comparaciones_v) {
@@ -539,7 +680,9 @@ class BoletaController extends Controller
                 }
                 $cantidad_entrada = $request->get('cantidad')[$i];
                 if ($cantidad_v < $cantidad_entrada) {
-                    return "cantidad mayor al stock";
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'cantidad' => 'La cantidad solicitada supera el stock del artículo ' . $producto_servicio->codigo_producto . '.',
+                    ]);
                 }
             } else {
             }
@@ -550,9 +693,6 @@ class BoletaController extends Controller
         // return $request->get('cantidad');
         $tipo_cambio = TipoCambio::latest('created_at')->first();
         // CODIGO PARA BUSCAR EL ID DEL TIPO DE DOCUMENTO
-        $operacion = $request->get('tipo_operacion');
-        $nombre = strstr($operacion, '-', true);
-        $busca_ope = Tipo_operacion_f::where('codigo', $nombre)->first();
         $boleta = new Boleta;
         $boleta->codigo_boleta = $boleta_numero;
         $boleta->almacen_id = $request->get('almacen');
@@ -576,7 +716,7 @@ class BoletaController extends Controller
         }
         $boleta->tipo = 'producto';
         $boleta->tipo_documento_id = 3;
-        $boleta->tipo_operacion_id = $busca_ope->id;
+        $boleta->tipo_operacion_id = $tipoOperacion->id;
         $boleta->save();
 
         if ($boleta->forma_pago_id == 2) {
@@ -639,7 +779,7 @@ class BoletaController extends Controller
         $moneda = Moneda::where('principal', 1)->first();
         $moneda_registrada = $boleta->moneda_id;
 
-        if ($count_articulo = $count_cantidad  = $count_check) {
+        if ($count_articulo === $count_cantidad && $count_articulo === $count_check) {
             for ($i = 0; $i < $count_articulo; $i++) {
                 $producto_servicio = Producto::where('codigo_producto', $producto_id[$i])->first();
                 if (isset($producto_servicio)) {
@@ -647,7 +787,9 @@ class BoletaController extends Controller
                     $boleta_registro = new Boleta_registro;
                     $boleta_registro->boleta_id = $boleta->id;
                     $boleta_registro->producto_id = $producto_servicio->id;
-                    $boleta_registro->numero_serie = $request->get('numero_serie')[$i];
+                    $series = $seriesPorLinea[$i];
+                    $boleta_registro->seriesIngresadas = count($series) > 1 ? $series : [];
+                    $boleta_registro->numero_serie = count($series) === 1 ? $series[0] : null;
                     if ($request->get('descripcion_item')[$i] == null) {
                         $boleta_registro->descripcion_item = null;
                     } else {
@@ -815,6 +957,11 @@ class BoletaController extends Controller
                     // $stock_productos->save();
                 } else {
                     $servicio = Servicios::where('codigo_servicio', $producto_id[$i])->where('estado_anular', 0)->first();
+                    if (!$servicio) {
+                        throw \Illuminate\Validation\ValidationException::withMessages([
+                            "articulo.$i" => 'Vuelve a seleccionar el artículo de la línea ' . ($i + 1) . '.',
+                        ]);
+                    }
 
                     $boleta_registro = new Boleta_registro();
                     $boleta_registro->boleta_id = $boleta->id;
@@ -919,7 +1066,9 @@ class BoletaController extends Controller
             }
             Kardex_entrada_registro::stock_producto_precio();
         } else {
-            return redirect()->route('boleta.create')->with('campo', 'Falto introducir un campo de la tabla productos');
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'articulo' => 'Completa los datos de todos los artículos de la boleta.',
+            ]);
         }
         return redirect()->route('boleta.show', $boleta->id);
     }

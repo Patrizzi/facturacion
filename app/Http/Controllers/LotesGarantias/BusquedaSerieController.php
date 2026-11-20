@@ -21,6 +21,7 @@ class BusquedaSerieController extends Controller
         $query = SerieProducto::with([
             'facturacionRegistro.factura_ids.cliente',
             'boletaRegistro.boleta_i.cliente',
+            'boletaRegistroAgrupado.boleta_i.cliente',
             'notaVentaRegistro.notaVenta.cliente',
             'producto',
             'lote.kardexEntradaRegistro.kardex_entrada',
@@ -53,7 +54,7 @@ class BusquedaSerieController extends Controller
         }
 
         $facturacionRegistro = $serie->facturacionRegistro;
-        $boletaRegistro = $serie->boletaRegistro;
+        $boletaRegistro = $serie->detalle_boleta;
         $notaVentaRegistro = $serie->notaVentaRegistro;
         $factura = $facturacionRegistro ? $facturacionRegistro->factura_ids : null;
         $boleta = $boletaRegistro ? $boletaRegistro->boleta_i : null;
@@ -76,7 +77,7 @@ class BusquedaSerieController extends Controller
             : 0;
 
         $facturacion = $serie->facturacionRegistro?->factura_ids;
-        $boleta = $serie->boletaRegistro?->boleta_i;
+        $boleta = $serie->detalle_boleta?->boleta_i;
         $notaVenta = $serie->notaVentaRegistro?->notaVenta;
 
         $cliente = null;
@@ -104,6 +105,7 @@ class BusquedaSerieController extends Controller
             'estadoProducto',
             'facturacionRegistro.factura_ids',
             'boletaRegistro.boleta_i',
+            'boletaRegistroAgrupado.boleta_i',
             'notaVentaRegistro.notaVenta',
         ])->where('codigo_producto', $serie->codigo_producto)
             ->where('id', '!=', $serie->id)
@@ -112,7 +114,7 @@ class BusquedaSerieController extends Controller
             ->get()
             ->map(function (SerieProducto $relacionada) {
                 $facturaRelacionada = optional($relacionada->facturacionRegistro)->factura_ids;
-                $boletaRelacionada = optional($relacionada->boletaRegistro)->boleta_i;
+                $boletaRelacionada = optional($relacionada->detalle_boleta)->boleta_i;
                 $notaVentaRelacionada = optional($relacionada->notaVentaRegistro)->notaVenta;
                 $fechaVentaRelacionada = $facturaRelacionada
                     ? ($facturaRelacionada->getOriginal('fecha_emision') ?: $facturaRelacionada->created_at)

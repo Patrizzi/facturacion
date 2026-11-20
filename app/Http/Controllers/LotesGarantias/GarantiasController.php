@@ -52,6 +52,7 @@ class GarantiasController extends Controller
                     'producto',
                     'facturacionRegistro.factura_ids',
                     'boletaRegistro.boleta_i',
+                    'boletaRegistroAgrupado.boleta_i',
                     'notaVentaRegistro.notaVenta',
                 ])->where('numero_serie', $serialProducto)->first()
                 : null;
@@ -73,7 +74,7 @@ class GarantiasController extends Controller
             ? (clone $fechaCompra)->addMonths($mesesGarantiaCompra)
             : null;
         $factura = $serie && $serie->facturacionRegistro ? $serie->facturacionRegistro->factura_ids : null;
-        $boleta = $serie && $serie->boletaRegistro ? $serie->boletaRegistro->boleta_i : null;
+        $boleta = $serie && $serie->detalle_boleta ? $serie->detalle_boleta->boleta_i : null;
         $notaVenta = $serie && $serie->notaVentaRegistro ? $serie->notaVentaRegistro->notaVenta : null;
         $fechaVentaRaw = $factura
             ? ($factura->getOriginal('fecha_emision') ?: $factura->created_at)

@@ -22,6 +22,18 @@ class Boleta_registro extends Model
         return $this->belongsTo(SerieProducto::class, 'serie_id');
     }
 
+    public $seriesIngresadas = [];
+
+    public function getSeriesImpresasAttribute()
+    {
+        $series = \Illuminate\Support\Facades\DB::table('boleta_registro_series')
+            ->where('boleta_registro_id', $this->id)
+            ->orderBy('posicion')
+            ->pluck('numero_serie');
+
+        return $series->isEmpty() ? $this->numero_serie : $series->implode(', ');
+    }
+
     public function servicio(){
         return $this->belongsTo(Servicios::class,'servicio_id');
     }

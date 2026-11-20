@@ -133,16 +133,16 @@
                             @if (isset($boleta_registros->producto))
                                 <td style="text-align: center">{{ $boleta_registros->producto->codigo_producto }}</td>
                                 <td>{{ $boleta_registros->producto->nombre }}
-                                    {{ $boleta_registros->descripcion_item }}@if (isset($boleta_registros->numero_serie))
-                                        <br><strong>N/S:</strong> {{ $boleta_registros->numero_serie }}
+                                    {{ $boleta_registros->descripcion_item }}@if (isset($boleta_registros->series_impresas))
+                                        <br><strong>N/S:</strong> {{ $boleta_registros->series_impresas }}
                                     @endif
                                 </td>
                             @else
                                 <td style="text-align: center">{{ $boleta_registros->servicio->codigo_servicio }}</td>
                                 {{-- <td>{{$boleta_registros->producto->unidad_i_producto->medida}}</td> --}}
                                 <td>{{ $boleta_registros->servicio->nombre }}
-                                    {{ $boleta_registros->descripcion_item }}@if (isset($boleta_registros->numero_serie))
-                                        <br><strong>N/S:</strong> {{ $boleta_registros->numero_serie }}
+                                    {{ $boleta_registros->descripcion_item }}@if (isset($boleta_registros->series_impresas))
+                                        <br><strong>N/S:</strong> {{ $boleta_registros->series_impresas }}
                                     @endif
                                 </td>
                             @endif

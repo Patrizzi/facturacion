@@ -57,8 +57,7 @@ class KardexEntradaRegistroObserver
                 ]);
 
                 // Inserción masiva de series en bloques
-                $estadoEnStock = EstadoProducto::where('nombre_estado', 'En Stock')->first();
-                $estadoId = $estadoEnStock ? $estadoEnStock->id : null;
+                $estadoId = EstadoProducto::enStock()->id;
                 $now = Carbon::now()->toDateTimeString();
 
                 $seriesBatch = [];
