@@ -44,20 +44,18 @@
 
     {{-- <body class="mini-navbar"> --}}
 
-    <body class="" style="margin: 0px !important;">
-        <div id="wrapper" style="">
+    <body class="">
+        <div id="wrapper">
             <nav class="navbar-default navbar-static-side" role="navigation">
                 <div class="sidebar-collapse">
-                    <ul class="nav metismenu" id="side-menu"
-                        style="height:90vh !important; overflow-y: auto;  display: block; top: 0px">
-                        <li class="first-element" style="background-color: white;width: 100% !important;">
-                            <a href="{{ route('usuario.index') }}" class="head-nav-logo" style=" padding: 20px 0px;">
-                                <img alt="image" class="rounded-circle"
-                                    src="{{ asset('/archivos/imagenes/layout/Leonosoft.png') }}"
-                                    style="width: 60px; height: 60px;" />
-                                <span class="nav-label"
-                                    style="color: #2641f8; font-size: 18px; font-weight: bold;">LEONO</span><span
-                                    style="color: gray; font-size: 18px; font-weight: bold;">SOFT</span>
+                    <ul class="nav metismenu" id="side-menu">
+                        <li class="first-element">
+                            <a href="{{ route('usuario.index') }}" class="head-nav-logo">
+                                <img alt="image" class="head-nav-logo-img"
+                                    src="{{ asset('/archivos/imagenes/layout/Leonosoft.png') }}" />
+                                <span class="nav-label head-nav-brand-text">
+                                    <span class="head-nav-brand-primary">LEONO</span><span class="head-nav-brand-secondary">SOFT</span>
+                                </span>
                             </a>
                         </li>
                         @foreach ($menus as $menu)
@@ -105,55 +103,43 @@
                             @endif
                         @endforeach
                     </ul>
-                    <div style="max-height: 70px;" class="nav-last-footer">
-                        <div class="" style="width: 100%">
-                            <div class="nav-label"
-                                style="display: flex;flex-direction: row;align-items: center;white-space: initial !important;justify-content: space-between;">
-                                <a href="{{ route('usuario.perfil') }}"
-                                    style="display: flex;flex-direction: row;align-items: center;">
-                                    <img alt="image" class="rounded-circle"
-                                        src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)"
-                                        style="border: 1px solid black;background-color: white;height:45px;width: 45px" />
-                                    <div class="nav-label" style="margin-left: 10px;">
-                                        <span class="block m-t-xs font-bold spans"
-                                            style="font-size: 14px;color: white">{{ $empresa->nombre }}</span>
-                                        <span class="block m-t-xs text-white font-bold mr-3">@yield('area', auth()->user()->name)</span>
-                                    </div>
-                                </a>
-                                <div class="nav-label" style="">
-                                    <i class="fa fa-ellipsis-v" id="menuIcon"
-                                        style="color: white; font-size: 19px; margin-right: 15px; cursor: pointer;"></i>
-                                    <!-- Menú desplegable -->
-                                    <div id="dropdownMenu"
-                                        style="display: none; position: absolute; bottom: 50px; right: 0; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 5px; padding: 10px; width: 150px;">
-                                        @canany(['perfil_usuario.ver', 'perfil_usuario.editar'])
-                                            <a href="{{ route('usuario.perfil') }}" class="dropdown-item"
-                                                style="display: block; color: black; padding: 8px; text-decoration: none;">
-                                                <i class="fa fa-user-circle-o fa-lg"></i> Mi perfil</a>
-                                        @endcan
-                                        @canany(['empresa.ver', 'empresa.editar'])
-                                            <a href="{{ route('empresa.index') }}" class="dropdown-item"
-                                                style="display: block; color: black; padding: 8px; text-decoration: none;">
-                                                <i class="fa fa-university "></i> Mi Empresa</a>
-                                        @endcan
-                                        @canany(['almacen.listar', 'apariencia.ver', 'familia.listar', 'subfamilia.ver',
-                                            'garantia_doc.listar', 'marcas.listar', 'motivos.listar', 'tipo_cambio.listar',
-                                            'unidad_m.listar', 'usuarios.listar', 'roles.listar', 'validez.listar',
-                                            'validez.crear', 'alarma.listar'])
-                                            <a href="{{ route('configuracion.general') }}" class="dropdown-item"
-                                                style="display: block; color: black; padding: 8px; text-decoration: none;">
-                                                <i class="fa fa-cog fa-lg"></i> Configuración</a>
-                                        @endcan
-                                        <a href="#" class="dropdown-item"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                            style="display: block; color: black; padding: 8px; text-decoration: none;">
-                                            <i class="fa fa-sign-out fa-lg"></i> Cerrar Sesión
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                                style="display: none;">
-                                                @csrf
-                                            </form>
-                                        </a>
-                                    </div>
+                    <div class="nav-last-footer">
+                        <div class="gesener-sidebar-user-row">
+                            <a href="{{ route('usuario.perfil') }}" class="gesener-sidebar-user-link">
+                                <img alt="image" class="gesener-sidebar-user-avatar"
+                                    src="{{ asset('/profile/images/') }}/@yield('foto', auth()->user()->avatar)" />
+                                <div class="nav-label gesener-sidebar-user-info">
+                                    <span class="gesener-sidebar-user-empresa">{{ $empresa->nombre }}</span>
+                                    <span class="gesener-sidebar-user-name">@yield('area', auth()->user()->name)</span>
+                                </div>
+                            </a>
+                            <div class="nav-label gesener-sidebar-user-actions">
+                                <i class="fa fa-ellipsis-v gesener-sidebar-menu-icon" id="menuIcon"></i>
+                                <!-- Menú desplegable -->
+                                <div id="dropdownMenu" style="display: none;">
+                                    @canany(['perfil_usuario.ver', 'perfil_usuario.editar'])
+                                        <a href="{{ route('usuario.perfil') }}" class="dropdown-item">
+                                            <i class="fa fa-user-circle-o fa-lg"></i> Mi perfil</a>
+                                    @endcan
+                                    @canany(['empresa.ver', 'empresa.editar'])
+                                        <a href="{{ route('empresa.index') }}" class="dropdown-item">
+                                            <i class="fa fa-university"></i> Mi Empresa</a>
+                                    @endcan
+                                    @canany(['almacen.listar', 'apariencia.ver', 'familia.listar', 'subfamilia.ver',
+                                        'garantia_doc.listar', 'marcas.listar', 'motivos.listar', 'tipo_cambio.listar',
+                                        'unidad_m.listar', 'usuarios.listar', 'roles.listar', 'validez.listar',
+                                        'validez.crear', 'alarma.listar'])
+                                        <a href="{{ route('configuracion.general') }}" class="dropdown-item">
+                                            <i class="fa fa-cog fa-lg"></i> Configuración</a>
+                                    @endcan
+                                    <a href="#" class="dropdown-item"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <i class="fa fa-sign-out fa-lg"></i> Cerrar Sesión
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                        </form>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -187,52 +173,50 @@
                 }
             @endphp
 
-            <nav class="navbar navbar-static-top bg-white border-bottom" role="navigation" style="margin-bottom: 0; min-height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 8px 20px; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #e7eaec;">
+            <nav class="navbar navbar-static-top gesener-topbar" role="navigation">
                 
                 <!-- SECCIÓN IZQUIERDA: Tipo de Cambio Compacto Gesener -->
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    @if (isset($tipo_cambio->fecha))
-                        <div style="display: flex; align-items: center; gap: 15px; font-family: monospace, sans-serif; font-size: 0.85rem;">
-                            <div style="text-align: center; line-height: 1.2;">
-                                <span style="display: block; font-size: 0.7rem; font-weight: bold; color: #888; text-transform: uppercase;">Compra:</span>
-                                <strong style="color: #222; font-size: 0.95rem;">{{ $tipo_cambio->compra }}</strong>
-                            </div>
-                            <div style="text-align: center; line-height: 1.2; border-left: 1px solid #e7eaec; padding-left: 15px;">
-                                <span style="display: block; font-size: 0.7rem; font-weight: bold; color: #888; text-transform: uppercase;">Venta:</span>
-                                <strong style="color: #222; font-size: 0.95rem;">{{ $tipo_cambio->venta }}</strong>
-                            </div>
-                            <div style="text-align: center; line-height: 1.2; border-left: 1px solid #e7eaec; padding-left: 15px;">
-                                <span style="display: block; font-size: 0.7rem; font-weight: bold; color: #888; text-transform: uppercase;">Paralelo:</span>
-                                <strong style="color: #222; font-size: 0.95rem;" id="tc_paralelo">{{ $tipo_cambio->paralelo }}</strong>
-                            </div>
+                <div class="gesener-topbar-left">
+                    <div class="gesener-tc-strip">
+                        <div class="gesener-tc-item">
+                            <span class="gesener-tc-label">Compra:</span>
+                            <strong class="gesener-tc-value">{{ $tipo_cambio->compra ?? '--' }}</strong>
                         </div>
-                    @endif
+                        <div class="gesener-tc-item">
+                            <span class="gesener-tc-label">Venta:</span>
+                            <strong class="gesener-tc-value">{{ $tipo_cambio->venta ?? '--' }}</strong>
+                        </div>
+                        <div class="gesener-tc-item">
+                            <span class="gesener-tc-label">Paralelo:</span>
+                            <strong class="gesener-tc-value" id="tc_paralelo">{{ $tipo_cambio->paralelo ?? '--' }}</strong>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SECCIÓN DERECHA: Botón Compuesto SUNAT + Usuario (Omitidos Mensajes y Calendario) -->
-                <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="gesener-topbar-right">
                     
                     <!-- BOTÓN COMPUESTO SUNAT (ESTILO GESENER CON DROPDOWN) -->
-                    <div class="btn-group" role="group" style="box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 4px; overflow: visible;">
+                    <div class="btn-group gesener-sunat-group" role="group">
                         <!-- Botón Contador / Desplegable -->
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #1a4da0; border-color: #1a4da0; color: #ffffff; font-weight: 600; padding: 6px 14px; display: inline-flex; align-items: center; gap: 8px;">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle gesener-btn-sunat-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-bell"></i>
                             <span>{{ $total_pendientes_sunat }} {{ $total_pendientes_sunat === 1 ? 'Pendiente' : 'Pendientes' }}</span>
-                            <span class="caret" style="margin-left: 4px;"></span>
+                            <span class="caret"></span>
                         </button>
 
                         <!-- Menú Desplegable con detalle por tipo de documento -->
-                        <ul class="dropdown-menu dropdown-menu-right" style="min-width: 270px; padding: 6px 0; border: 1px solid #e7eaec; box-shadow: 0 6px 12px rgba(0,0,0,0.15); border-radius: 4px;">
-                            <li class="dropdown-header" style="font-size: 0.75rem; font-weight: bold; color: #676a6c; text-transform: uppercase; padding: 8px 16px; border-bottom: 1px solid #f3f3f4; display: flex; justify-content: space-between; align-items: center;">
-                               <span>Pendientes SUNAT</span>
+                        <ul class="dropdown-menu dropdown-menu-right gesener-sunat-dropdown">
+                            <li class="dropdown-header gesener-sunat-dropdown-header">
+                                <span>Pendientes SUNAT</span>
                                 <span class="badge {{ $total_pendientes_sunat > 0 ? 'badge-danger' : 'badge-primary' }}">{{ $total_pendientes_sunat }}</span>
                             </li>
 
                             @canany(['factura.emitir', 'factura_m.emitir'])
                                 @if (($fact_view_count ?? 0) + ($fact_m_view_count ?? 0) > 0)
                                     <li>
-                                        <a href="{{ route('facturacion_electronica.index') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
-                                            <span><i class="fa fa-file-text-o text-primary" style="margin-right: 8px;"></i> Facturas</span>
+                                        <a href="{{ route('facturacion_electronica.index') }}" class="gesener-sunat-item">
+                                            <span><i class="fa fa-file-text-o text-primary"></i> Facturas</span>
                                             <span class="label label-primary">{{ (int)$fact_view_count + (int)$fact_m_view_count }}</span>
                                         </a>
                                     </li>
@@ -242,8 +226,8 @@
                             @canany(['boleta.emitir', 'boleta_m.emitir'])
                                 @if (($bol_view_count ?? 0) + ($bol_m_view_count ?? 0) > 0)
                                     <li>
-                                        <a href="{{ route('facturacion_electronica.index_boleta') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
-                                            <span><i class="fa fa-file-o text-info" style="margin-right: 8px;"></i> Boletas</span>
+                                        <a href="{{ route('facturacion_electronica.index_boleta') }}" class="gesener-sunat-item">
+                                            <span><i class="fa fa-file-o text-info"></i> Boletas</span>
                                             <span class="label label-info">{{ (int)$bol_view_count + (int)$bol_m_view_count }}</span>
                                         </a>
                                     </li>
@@ -253,8 +237,8 @@
                             @canany(['guia_remision.emitir', 'guia_remision_m.emitir'])
                                 @if (($guia_view_count ?? 0) + ($guia_m_view_count ?? 0) > 0)
                                     <li>
-                                        <a href="{{ route('facturacion_electronica.index_guia_remision') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
-                                            <span><i class="fa fa-truck text-warning" style="margin-right: 8px;"></i> Guías Remisión</span>
+                                        <a href="{{ route('facturacion_electronica.index_guia_remision') }}" class="gesener-sunat-item">
+                                            <span><i class="fa fa-truck text-warning"></i> Guías Remisión</span>
                                             <span class="label label-warning">{{ (int)$guia_view_count + (int)$guia_m_view_count }}</span>
                                         </a>
                                     </li>
@@ -264,8 +248,8 @@
                             @can('nota_credito.emitir')
                                 @if (($n_credito_view_count ?? 0) > 0)
                                     <li>
-                                        <a href="{{ route('facturacion_electronica.index_nota_credito') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
-                                            <span><i class="fa fa-minus-circle text-danger" style="margin-right: 8px;"></i> Notas Crédito</span>
+                                        <a href="{{ route('facturacion_electronica.index_nota_credito') }}" class="gesener-sunat-item">
+                                            <span><i class="fa fa-minus-circle text-danger"></i> Notas Crédito</span>
                                             <span class="label label-danger">{{ $n_credito_view_count }}</span>
                                         </a>
                                     </li>
@@ -275,8 +259,8 @@
                             @can('nota_debito.emitir')
                                 @if (($n_debito_view_count ?? 0) > 0)
                                     <li>
-                                        <a href="{{ route('facturacion_electronica.index_nota_debito') }}" style="display: flex; justify-content: space-between; align-items: center; padding: 7px 16px; color: #333;">
-                                            <span><i class="fa fa-plus-circle text-success" style="margin-right: 8px;"></i> Notas Débito</span>
+                                        <a href="{{ route('facturacion_electronica.index_nota_debito') }}" class="gesener-sunat-item">
+                                            <span><i class="fa fa-plus-circle text-success"></i> Notas Débito</span>
                                             <span class="label label-success">{{ $n_debito_view_count }}</span>
                                         </a>
                                     </li>
@@ -284,25 +268,25 @@
                             @endcan
 
                             @if ($total_pendientes_sunat === 0)
-                                <li style="padding: 10px 16px; text-align: center; color: #888; font-size: 0.8rem;">
-                                    <i class="fa fa-check-circle text-success" style="margin-right: 4px;"></i> Todos los comprobantes al día
+                                <li class="gesener-sunat-empty">
+                                    <i class="fa fa-check-circle text-success"></i> Todos los comprobantes al día
                                 </li>
                             @endif
                         </ul>
 
                         <!-- Botón Acción Directa -->
-                        <a href="{{ $ruta_envio_directo }}" class="btn btn-dark btn-sm" style="background-color: #0d2346; border-color: #0d2346; color: #ffffff; font-weight: 600; padding: 6px 14px; display: inline-flex; align-items: center; gap: 5px;">
+                        <a href="{{ $ruta_envio_directo }}" class="btn btn-dark btn-sm gesener-btn-sunat-send">
                             <span>Enviar a Sunat</span>
-                            <i class="fa fa-arrow-right" style="font-size: 0.8rem;"></i>
+                            <i class="fa fa-arrow-right"></i>
                         </a>
                     </div>
 
                     <!-- USUARIO Y CERRAR SESIÓN ESTILO GESENER -->
-                    <div style="display: flex; align-items: center; gap: 10px; padding-left: 15px; border-left: 1px solid #e7eaec;">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64" alt="Avatar" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid #d2d6de;">
-                        <span style="font-weight: 600; font-size: 0.85rem; color: #333;">{{ auth()->user()->name ?? 'Administrador' }}</span>
+                    <div class="gesener-topbar-user">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&h=64" alt="Avatar" class="gesener-topbar-avatar">
+                        <span class="gesener-topbar-username">{{ auth()->user()->name ?? 'Administrador' }}</span>
 
-                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-topbar').submit();" style="color: #ed5565; margin-left: 8px; text-decoration: none;" title="Cerrar Sesión">
+                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form-topbar').submit();" class="gesener-topbar-logout" title="Cerrar Sesión">
                             <i class="fa fa-sign-out fa-lg"></i>
                         </a>
                         <form id="logout-form-topbar" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -313,7 +297,7 @@
                 </div>
             </nav>
 
-            {{-- Bloque opcional de cabecera/breadcrumbs de vistas internas --}}
+            {{-- Bloque opcional de cabecera/breadcrumbs de vistas internas
             <div class="row wrapper border-bottom white-bg page-heading" style="margin-bottom: 20px;">
                 <div class="col-sm-4">
                     <h2>@yield('title', 'Inicio')</h2>
@@ -330,6 +314,7 @@
                     </div>
                 </div>
             </div>
+            --}}
 
             @yield('content')
 
